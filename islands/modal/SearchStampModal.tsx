@@ -1,7 +1,6 @@
 /* @baba - commentary + global styles */
-import { Icon } from "$icon";
-import { SearchErrorDisplay } from "$islands/modal/SearchErrorDisplay.tsx";
-import { SearchInputField } from "$islands/modal/SearchInputField.tsx";
+import { SearchErrorDisplay, SearchInputField } from "$form";
+import { Icon, PlaceholderImage } from "$icon";
 import { closeModal, openModal, searchState } from "$islands/modal/states.ts";
 import { ModalSearchBase, transitionColors } from "$layout";
 import { generateSearchErrorMessage } from "$lib/utils/data/search/searchInputClassifier.ts";
@@ -13,6 +12,7 @@ import {
   useAutoFocus,
   useDebouncedSearch,
 } from "$lib/utils/ui/search/searchHooks.ts";
+import { useState } from "preact/hooks";
 
 export function openStampSearch() {
   const inputRef = {
@@ -130,6 +130,29 @@ export function openStampSearch() {
   scheduleFocus();
 }
 
+function StampResultImage(
+  { src, alt }: { src?: string; alt: string },
+) {
+  const [error, setError] = useState(false);
+
+  if (!src || error) {
+    return (
+      <div class="w-10 h-10 flex-shrink-0">
+        <PlaceholderImage variant="no-image" className="!rounded" />
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      class="w-10 h-10 flex-shrink-0 rounded object-contain pixelart"
+      onError={() => setError(true)}
+    />
+  );
+}
+
 function SearchContent({
   setSearchTerm,
   inputRef,
@@ -218,10 +241,9 @@ function SearchContent({
                       onClick={() => handleResultClick(result.stamp)}
                       class={`flex items-center gap-5 px-7.5 py-1.5 hover:bg-color-background/60 ${transitionColors} cursor-pointer`}
                     >
-                      <img
+                      <StampResultImage
                         src={result.preview}
                         alt={`Stamp ${result.stamp}`}
-                        class="w-10 h-10 rounded object-cover"
                       />
                       <div class="flex flex-col flex-1">
                         <span class="text-sm font-medium text-color-grey-light">

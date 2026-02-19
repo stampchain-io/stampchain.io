@@ -123,6 +123,40 @@ export default function CarouselGallery(props: CarouselHomeProps) {
             );
             return;
           }
+
+          // Handle SVG content - check for recursive external references
+          if (stamp.stamp_mimetype === "image/svg+xml") {
+            (async () => {
+              try {
+                const response = await fetch(src);
+                if (!response.ok) return;
+                const svgContent = await response.text();
+                if (
+                  svgContent.includes("ordinals.com/content/") ||
+                  svgContent.includes("arweave.net/")
+                ) {
+                  setValidatedContent((prev) => ({
+                    ...prev,
+                    [stamp.tx_hash]: (
+                      <a target="_top" href={`/stamp/${stamp.tx_hash}`}>
+                        <img
+                          src={`/api/v2/stamp/${stamp.stamp}/preview`}
+                          alt={`Stamp #${stamp.stamp}`}
+                          loading="lazy"
+                          class="object-contain cursor-pointer desktop:min-w-[408px] tablet:min-w-[269px] mobileLg:min-w-[200px] mobileMd:min-w-[242px] min-w-[150px] rounded-2xl pixelart stamp-image"
+                          onLoad={handleLoad}
+                        />
+                      </a>
+                    ),
+                  }));
+                }
+                // Non-recursive SVG: leave stampSources as-is for <img> rendering
+              } catch {
+                // Leave as default <img> rendering on network error
+              }
+            })();
+            return;
+          }
         });
 
         // Update state after each batch

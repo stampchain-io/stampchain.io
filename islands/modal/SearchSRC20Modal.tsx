@@ -1,7 +1,6 @@
 /*@baba-styles is not config properly*/
+import { SearchErrorDisplay, SearchInputField } from "$form";
 import { Icon } from "$icon";
-import { SearchErrorDisplay } from "$islands/modal/SearchErrorDisplay.tsx";
-import { SearchInputField } from "$islands/modal/SearchInputField.tsx";
 import { closeModal, openModal, searchState } from "$islands/modal/states.ts";
 import { ModalSearchBase, transitionColors } from "$layout";
 import { generateSearchErrorMessage } from "$lib/utils/data/search/searchInputClassifier.ts";
@@ -224,7 +223,7 @@ function SearchContent({
                           ? constructStampUrl(result.tx_hash)
                           : "/img/placeholder/broken.png"}
                         alt={result.tick}
-                        class="w-10 h-10 rounded object-cover"
+                        class="w-10 h-10 rounded object-contain pixelart"
                       />
                       <div class="flex flex-col flex-1">
                         <span class="text-sm font-medium text-color-grey-light uppercase">

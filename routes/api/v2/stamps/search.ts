@@ -24,6 +24,7 @@ export const handler: Handlers = {
         skipTotalCount: true,
         cacheDuration: 60,
         excludeSrc20: true,
+        excludeSrc101: true,
       };
 
       switch (type) {
@@ -38,17 +39,11 @@ export const handler: Handlers = {
           queryOptions.limit = 11;
           break;
 
-        case "stamp_number": {
-          const num = parseInt(sanitized);
-          queryOptions.stampNumberPrefix = {
-            exact: num,
-            rangeStart: num * 10,
-            rangeEnd: num * 10 + 9,
-          };
+        case "stamp_number":
+          queryOptions.stampNumberPrefix = sanitized;
           queryOptions.limit = 11;
           queryOptions.sortBy = "ASC";
           break;
-        }
 
         case "address":
           queryOptions.addressPrefix = sanitized;

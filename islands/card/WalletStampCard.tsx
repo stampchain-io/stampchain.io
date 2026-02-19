@@ -272,7 +272,7 @@ const WalletStampCardComponent = (
     if (stamp.stamp_mimetype === "text/html") {
       return (
         <div class="relative w-full h-full">
-          <div class="relative pt-[100%]">
+          <div class="relative aspect-square">
             <iframe
               width="100%"
               height="100%"

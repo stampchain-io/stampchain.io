@@ -724,8 +724,9 @@ export class StampRepository {
     cpidPrefix?: string;
     addressPrefix?: string;
     txHashPrefix?: string;
-    stampNumberPrefix?: { exact: number; rangeStart: number; rangeEnd: number };
+    stampNumberPrefix?: string;
     excludeSrc20?: boolean;
+    excludeSrc101?: boolean;
   }) {
     // Extract all parameters including both filter types
     const {
@@ -778,6 +779,7 @@ export class StampRepository {
       txHashPrefix,
       stampNumberPrefix,
       excludeSrc20 = false,
+      excludeSrc101 = false,
     } = options;
 
     // Combine both filter types for processing
@@ -840,16 +842,10 @@ export class StampRepository {
       queryParams.push(`${cpidPrefix}%`);
     }
 
-    // Stamp number prefix search (exact match OR range of next magnitude)
+    // Stamp number prefix search (string prefix match on stamp column)
     if (stampNumberPrefix) {
-      whereConditions.push(
-        "(st.stamp = ? OR (st.stamp >= ? AND st.stamp <= ?))",
-      );
-      queryParams.push(
-        stampNumberPrefix.exact,
-        stampNumberPrefix.rangeStart,
-        stampNumberPrefix.rangeEnd,
-      );
+      whereConditions.push("CAST(st.stamp AS CHAR) LIKE ?");
+      queryParams.push(`${stampNumberPrefix}%`);
     }
 
     // Address prefix search (creator column only)
@@ -867,6 +863,11 @@ export class StampRepository {
     // Exclude SRC-20 entries (used by stamp search endpoint)
     if (excludeSrc20) {
       whereConditions.push("st.ident != 'SRC-20'");
+    }
+
+    // Exclude SRC-101 entries (used by stamp search endpoint)
+    if (excludeSrc101) {
+      whereConditions.push("st.ident != 'SRC-101'");
     }
 
     // Use either the object or direct parameters

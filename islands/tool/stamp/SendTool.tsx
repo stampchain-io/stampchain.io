@@ -2,10 +2,9 @@
 import { useTransactionForm } from "$client/hooks/useTransactionForm.ts";
 import { walletContext } from "$client/wallet/wallet.ts";
 import { ProgressiveEstimationIndicator } from "$components/indicators/ProgressiveEstimationIndicator.tsx";
-import { inputField, inputFieldSquare } from "$form";
-import { Icon } from "$icon";
+import { inputField, inputFieldDropdown, inputFieldSquare } from "$form";
+import { Icon, PlaceholderImage } from "$icon";
 import { SendToolSkeleton } from "$indicators";
-import { SelectField } from "$islands/form/SelectField.tsx";
 import {
   bodyTool,
   containerBackground,
@@ -17,11 +16,16 @@ import {
   rowForm,
 } from "$layout";
 import { useTransactionConstructionService } from "$lib/hooks/useTransactionConstructionService.ts";
+import {
+  getStampImageSrc,
+  handleImageError,
+  processSVG,
+} from "$lib/utils/ui/media/imageUtils.ts";
 import { FeeCalculatorBase } from "$section";
 import { labelLg, labelSm, titleGreyLD } from "$text";
 import type { StampRow } from "$types/stamp.d.ts";
 import { JSX } from "preact";
-import { useEffect, useMemo, useState } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 
 /* ===== COMPONENT ===== */
 export function StampSendTool() {
@@ -53,8 +57,20 @@ export function StampSendTool() {
   });
   const [tosAgreed, setTosAgreed] = useState<boolean>(false);
   const [isImageLoading, setIsImageLoading] = useState(true);
-  const [showFallbackIcon, setShowFallbackIcon] = useState(false);
-  const [isLoadingStamps, setIsLoadingStamps] = useState(true); // Add loading state
+  const [isLoadingStamps, setIsLoadingStamps] = useState(true);
+  const [validatedSVGNode, setValidatedSVGNode] = useState<
+    JSX.Element | null
+  >(null);
+
+  /* ===== DROPDOWN STATE ===== */
+  const [openDrop, setOpenDrop] = useState(false);
+  const [dropdownAnimation, setDropdownAnimation] = useState<
+    "enter" | "exit" | null
+  >(null);
+
+  /* ===== REFS ===== */
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const animationTimeoutRef = useRef<number | null>(null);
 
   /* ===== FORM HANDLING ===== */
   const {
@@ -76,8 +92,7 @@ export function StampSendTool() {
   const {
     getBestEstimate,
     isPreFetching,
-    estimateExact, // Phase 3: Exact estimation before sending
-    // Phase-specific results for UI indicators
+    estimateExact,
     phase1,
     phase2,
     phase3,
@@ -87,54 +102,82 @@ export function StampSendTool() {
   } = useTransactionConstructionService({
     toolType: "stamp",
     feeRate: isSubmitting ? 0 : formState.fee,
-    walletAddress: wallet?.address || "", // Provide empty string instead of undefined
+    walletAddress: wallet?.address || "",
     isConnected: !!wallet && !isSubmitting,
     isSubmitting,
-    // Stamp send specific parameters
     asset: selectedStamp?.cpid || "",
     transferQuantity: quantity,
     recipientAddress: formState.recipientAddress || "",
   });
 
-  // Get the best available fee estimate
   const progressiveFeeDetails = getBestEstimate();
 
-  // Local state for exact fee details (updated when Phase 3 completes) - StampingTool pattern
   const [exactFeeDetails, setExactFeeDetails] = useState<
     typeof progressiveFeeDetails | null
   >(null);
 
-  // Reset exactFeeDetails when fee rate changes to allow slider updates - StampingTool pattern
+  /* ===== DROPDOWN ANIMATION HANDLER ===== */
+  const closeDropdownWithAnimation = () => {
+    setDropdownAnimation("exit");
+    if (animationTimeoutRef.current) {
+      clearTimeout(animationTimeoutRef.current);
+    }
+    animationTimeoutRef.current = setTimeout(() => {
+      setOpenDrop(false);
+      setDropdownAnimation(null);
+    }, 200);
+  };
+
+  /* ===== ANIMATION CLEANUP ===== */
   useEffect(() => {
-    // Clear exact fee details when fee rate changes so slider updates work
+    return () => {
+      if (animationTimeoutRef.current) {
+        clearTimeout(animationTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  /* ===== CLICK-OUTSIDE HANDLER ===== */
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
+        closeDropdownWithAnimation();
+      }
+    };
+
+    if (openDrop) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [openDrop]);
+
+  useEffect(() => {
     setExactFeeDetails(null);
   }, [formState.fee]);
 
-  // Wrapper function for sending that gets exact fees first - StampingTool pattern
   const handleSendWithExactFees = async () => {
     try {
-      // Get exact fees before final submission
       const exactFees = await estimateExact();
       if (exactFees) {
-        // Calculate net spend amount (matches wallet display)
         const netSpendAmount = exactFees.totalValue || 0;
         setExactFeeDetails({
           ...exactFees,
-          totalValue: netSpendAmount, // Matches wallet
+          totalValue: netSpendAmount,
         });
       }
-
-      // Call the original transfer submission
       await handleTransferSubmit();
     } catch (error) {
       console.error("SENDTOOL: Error in exact fee estimation", error);
-      // Still proceed with submission even if exact fees fail
       await handleTransferSubmit();
     }
   };
 
   /* ===== EFFECTS ===== */
-  // Fetch stamps effect
   useEffect(() => {
     const fetchStamps = async () => {
       try {
@@ -143,7 +186,7 @@ export function StampSendTool() {
           return;
         }
 
-        setIsLoadingStamps(true); // Set loading when starting fetch
+        setIsLoadingStamps(true);
         const endpoint = `/api/v2/stamps/balance/${wallet.address}`;
         const response = await fetch(endpoint);
 
@@ -169,56 +212,58 @@ export function StampSendTool() {
           setError(String(error));
         }
       } finally {
-        setIsLoadingStamps(false); // Clear loading when done
+        setIsLoadingStamps(false);
       }
     };
 
     fetchStamps();
   }, [wallet?.address]);
 
-  // Set initial stamp effect
   useEffect(() => {
-    if (stamps.data.length > 0 && !selectedStamp) {
-      const firstStamp = stamps.data[0];
-      setSelectedStamp(firstStamp);
-      setFormState((prev) => ({
-        ...prev,
-        stampId: firstStamp.stamp,
-        cpid: firstStamp.cpid,
-      }));
-    }
-  }, [stamps.data]);
-
-  // Progressive fee estimation effect
-  useEffect(() => {
-    // This useEffect is no longer needed as the fee estimation is handled by useTransactionConstructionService
-    // However, we keep it to ensure the formState.fee is updated correctly if the user changes it.
-    // The useTransactionConstructionService will re-trigger this effect if feeRate changes.
-  }, [formState.fee]);
-
-  // Reset loading state when selected stamp changes
-  useEffect(() => {
-    console.log(
-      "[SendTool] Effect triggered by selectedStamp?.tx_hash change. New tx_hash:",
-      selectedStamp?.tx_hash,
-    );
     if (selectedStamp) {
-      console.log(
-        "[SendTool] Effect: selectedStamp is present. Setting isImageLoading=true, showFallbackIcon=false.",
-      );
       setIsImageLoading(true);
-      setShowFallbackIcon(false);
       setMaxQuantity(selectedStamp.unbound_quantity);
     } else {
-      console.log(
-        "[SendTool] Effect: selectedStamp is null/undefined. Setting loader/fallback for empty state.",
-      );
-      setIsImageLoading(false); // No image to load
-      setShowFallbackIcon(true); // Show placeholder for no selection
+      setIsImageLoading(false);
     }
-  }, [selectedStamp?.tx_hash]); // Depend on tx_hash (or a unique ID) instead of the whole object
+  }, [selectedStamp?.tx_hash]);
 
-  // Add at the top level of the component
+  /* ===== SVG VALIDATION EFFECT ===== */
+  useEffect(() => {
+    if (selectedStamp?.stamp_mimetype !== "image/svg+xml") {
+      setValidatedSVGNode(null);
+      return;
+    }
+    const src = getStampImageSrc(selectedStamp);
+    if (!src) {
+      setValidatedSVGNode(<PlaceholderImage variant="no-image" />);
+      setIsImageLoading(false);
+      return;
+    }
+    (async () => {
+      try {
+        const response = await fetch(src);
+        if (!response.ok) throw new Error(`Fetch failed: ${response.status}`);
+        const svgContent = await response.text();
+        const processed = processSVG(svgContent);
+        if (processed) {
+          setValidatedSVGNode(
+            <div
+              class="w-full h-full flex items-center justify-center"
+              dangerouslySetInnerHTML={{ __html: processed }}
+            />,
+          );
+        } else {
+          setValidatedSVGNode(<PlaceholderImage variant="error" />);
+        }
+      } catch {
+        setValidatedSVGNode(<PlaceholderImage variant="error" />);
+      } finally {
+        setIsImageLoading(false);
+      }
+    })();
+  }, [selectedStamp?.tx_hash]);
+
   useEffect(() => {
     console.log("Values updated:", {
       recipientAddress: formState.recipientAddress,
@@ -239,14 +284,10 @@ export function StampSendTool() {
         {
           stamp_id: selectedItem.stamp,
           tx_hash: selectedItem.tx_hash,
-          currentIsImageLoadingState: isImageLoading,
-          currentShowFallbackState: showFallbackIcon,
         },
       );
 
-      // Set loading to true FIRST to ensure UI shows loader before src changes
       setIsImageLoading(true);
-      setShowFallbackIcon(false);
       setSelectedStamp({ ...selectedItem });
 
       setFormState((prev) => ({
@@ -254,11 +295,13 @@ export function StampSendTool() {
         stampId: selectedItem.stamp,
         cpid: selectedItem.cpid,
       }));
+
+      closeDropdownWithAnimation();
     }
   };
 
   const handleQuantityChange = (e: Event) => {
-    e.preventDefault(); // Prevent form submission
+    e.preventDefault();
 
     const input = e.target as HTMLInputElement;
     if (!input.value || input.value === "0") {
@@ -310,7 +353,7 @@ export function StampSendTool() {
           throw new Error("Invalid quantity specified.");
         }
 
-        const feeRateKB = formState.fee * 1000; // Assuming formState.fee is in sat/vB
+        const feeRateKB = formState.fee * 1000;
 
         const requestBody = {
           address: wallet.address,
@@ -321,8 +364,7 @@ export function StampSendTool() {
           options: {
             return_psbt: true,
             fee_per_kb: feeRateKB,
-            allow_unconfirmed_inputs: true, // Or your preferred setting
-            // Add other necessary options based on CounterpartyApiManager.composeSend or similar
+            allow_unconfirmed_inputs: true,
           },
         };
 
@@ -415,16 +457,12 @@ export function StampSendTool() {
     }
   };
 
-  /* ===== MEMOIZED VALUES ===== */
-  const stampOptions = useMemo(() => {
-    return (stamps.data ?? []).map((stamp) => ({
-      value: stamp.stamp?.toString() ?? "",
-      label: `Stamp ${stamp.stamp}${stamp.ident ? ` - ${stamp.ident}` : ""}`,
-      disabled: false,
-    }));
-  }, [stamps.data]);
-
   /* ===== RENDER HELPERS ===== */
+  const isLibraryFile = selectedStamp?.stamp_mimetype === "text/css" ||
+    selectedStamp?.stamp_mimetype === "text/javascript" ||
+    selectedStamp?.stamp_mimetype === "application/javascript" ||
+    selectedStamp?.stamp_mimetype === "application/gzip";
+
   const renderStampContent = () => {
     if (!selectedStamp) {
       return (
@@ -439,58 +477,63 @@ export function StampSendTool() {
       );
     }
 
-    // Use a stable timestamp based on selectedStamp to prevent infinite re-renders
-    const stampUrl = `/s/${selectedStamp.tx_hash}`;
+    const src = getStampImageSrc(selectedStamp);
 
-    console.log("Rendering stamp (renderStampContent call):", {
-      stamp_id: selectedStamp.stamp,
-      tx_hash: selectedStamp.tx_hash,
-      url: stampUrl,
-      isImageLoadingState: isImageLoading,
-      showFallbackIconState: showFallbackIcon,
-    });
+    if (selectedStamp.stamp_mimetype === "text/html") {
+      return (
+        <div class="relative aspect-square w-full">
+          <iframe
+            src={src}
+            width="100%"
+            height="100%"
+            sandbox="allow-scripts allow-same-origin"
+            class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden rounded-2xl"
+            style={{ border: "none", backgroundColor: "transparent" }}
+          />
+        </div>
+      );
+    }
+
+    if (selectedStamp.stamp_mimetype === "image/svg+xml") {
+      return validatedSVGNode || (
+        <div class="relative w-full h-full flex items-center justify-center">
+          <div class={loaderSpinGrey} />
+        </div>
+      );
+    }
+
+    if (selectedStamp.stamp_mimetype === "text/plain") {
+      return <PlaceholderImage variant="no-image" />;
+    }
+
+    if (selectedStamp.stamp_mimetype?.startsWith("audio/")) {
+      return <PlaceholderImage variant="audio" />;
+    }
+
+    if (isLibraryFile) {
+      return <PlaceholderImage variant="library" />;
+    }
+
+    if (!src) {
+      return <PlaceholderImage variant="no-image" />;
+    }
 
     return (
       <div class="relative w-full h-full">
-        {/* <div class="relative w-full h-full flex items-center justify-center bg-color-grey rounded"> */}
-        {/* Image - always rendered, visibility controlled by class */}
         <img
           key={`stamp-${selectedStamp.tx_hash}`}
-          src={stampUrl}
+          src={src}
           alt={`Stamp #${selectedStamp.stamp}`}
           class={`w-full h-full object-contain pixelart transition-opacity duration-300 ${
-            (isImageLoading || showFallbackIcon) ? "opacity-0" : "opacity-100"
+            isImageLoading ? "opacity-0" : "opacity-100"
           }`}
-          onLoad={() => {
-            console.log("[SendTool] Image loaded successfully:", stampUrl);
-            setIsImageLoading(false);
-            setShowFallbackIcon(false);
-          }}
-          onError={(_e) => {
-            console.error("[SendTool] Image failed to load:", stampUrl, _e);
-            setIsImageLoading(false);
-            setShowFallbackIcon(true);
-          }}
+          onLoad={() => setIsImageLoading(false)}
+          onError={handleImageError}
         />
 
-        {/* Loader - shown when isImageLoading is true */}
         {isImageLoading && (
           <div class="absolute inset-0 flex items-center justify-center">
             <div class={loaderSpinGrey} />
-          </div>
-        )}
-
-        {/* Fallback Icon - shown if !isImageLoading and showFallbackIcon is true */}
-        {!isImageLoading && showFallbackIcon && (
-          <div class="absolute inset-0 flex items-center justify-center w-full h-full">
-            <Icon
-              type="icon"
-              name="previewImage"
-              weight="normal"
-              size="xl"
-              color="custom"
-              className="stroke-color-grey-dark"
-            />
           </div>
         )}
       </div>
@@ -521,25 +564,104 @@ export function StampSendTool() {
         class={`${containerBackground} relative`}
         onSubmit={(e) => {
           e.preventDefault();
-          // If we want the form submit to also try, but FeeCalc is primary:
-          // console.log("FORM SUBMIT (SendTool): onSubmit triggered!");
-          // handleTransferSubmit();
         }}
         aria-label="Send stamp"
         novalidate
       >
-        {/* Progressive Fee Status Indicator removed - using simplified approach */}
         <div class={`${containerRowForm} mb-5`}>
           <div class={imagePreviewTool}>
             {renderStampContent()}
           </div>
 
           <div class={containerColForm}>
-            <SelectField
-              options={stampOptions}
-              onChange={handleStampSelect}
-              value={selectedStamp?.stamp?.toString() ?? ""}
-            />
+            {/* ===== STAMP DROPDOWN ===== */}
+            <div
+              class={`relative ${
+                openDrop && stamps.data.length > 0 ? "input-open" : ""
+              }`}
+              ref={dropdownRef}
+            >
+              {/* Trigger */}
+              <div
+                class={`${inputField} flex items-center gap-3 select-none ${
+                  !wallet?.address || stamps.data.length === 0
+                    ? "cursor-default"
+                    : "cursor-pointer"
+                }`}
+                onClick={() => {
+                  if (openDrop) {
+                    closeDropdownWithAnimation();
+                  } else {
+                    setOpenDrop(true);
+                    setDropdownAnimation("enter");
+                  }
+                }}
+              >
+                {selectedStamp
+                  ? (
+                    <span class="font-medium text-color-grey-light">
+                      #{selectedStamp.stamp}
+                    </span>
+                  )
+                  : !wallet?.address
+                  ? (
+                    <span class="font-light text-color-grey-semidark uppercase">
+                      Connect your wallet
+                    </span>
+                  )
+                  : stamps.data.length === 0
+                  ? (
+                    <span class="font-light text-color-grey-semidark uppercase">
+                      No stamps in wallet
+                    </span>
+                  )
+                  : (
+                    <span class="font-light text-color-grey-semidark uppercase">
+                      Select stamp
+                    </span>
+                  )}
+              </div>
+
+              {/* Dropdown list */}
+              {(openDrop || dropdownAnimation === "exit") &&
+                stamps.data.length > 0 && (
+                <ul
+                  class={`${inputFieldDropdown} max-h-[134px] ${
+                    dropdownAnimation === "exit"
+                      ? "dropdown-exit"
+                      : dropdownAnimation === "enter"
+                      ? "dropdown-enter"
+                      : ""
+                  }`}
+                >
+                  {stamps.data.map((stamp) => (
+                    <li
+                      key={stamp.tx_hash}
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        handleStampSelect(stamp.stamp?.toString() ?? "");
+                      }}
+                      class="flex items-center gap-5 px-2 py-2 border-b-[1px] border-color-border last:border-b-0 hover:bg-color-background/60 hover:border-color-border transition-colors duration-200 cursor-pointer"
+                    >
+                      <img
+                        src={`/api/v2/stamp/${stamp.stamp}/preview`}
+                        alt=""
+                        class="w-7 h-7 rounded object-contain pixelart flex-shrink-0"
+                        onError={handleImageError}
+                      />
+                      <div class="flex items-center justify-between flex-1 min-w-0">
+                        <span class="text-sm font-medium text-color-grey-light">
+                          #{stamp.stamp}
+                        </span>
+                        <span class="hidden min-[480px]:block text-xs font-normal text-color-grey">
+                          {stamp.unbound_quantity} EDITIONS
+                        </span>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
 
             <div class="flex w-full justify-end items-center -my-[3px] gap-5">
               <div class="flex flex-col justify-start -space-y-0.5">
@@ -611,17 +733,17 @@ export function StampSendTool() {
             ? {
               minerFee: (exactFeeDetails || progressiveFeeDetails)?.minerFee ||
                 0,
-              dustValue: 0, // Send transactions use OP_RETURN encoding, no dust outputs created
+              dustValue: 0,
               totalValue:
                 (exactFeeDetails || progressiveFeeDetails)?.totalValue || 0,
               hasExactFees:
                 (exactFeeDetails || progressiveFeeDetails)?.hasExactFees ||
                 false,
-              estimatedSize: 300, // Default transaction size for stamp sends
+              estimatedSize: 300,
             }
             : {
               minerFee: 0,
-              dustValue: 0, // Send transactions use OP_RETURN encoding, no dust outputs created
+              dustValue: 0,
               totalValue: 0,
               hasExactFees: false,
               estimatedSize: 300,

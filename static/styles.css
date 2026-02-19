@@ -226,7 +226,8 @@ b, strong {
 }
 
 /* Remove border radius for input field when dropdown is open */
-.input-open input {
+.input-open input,
+.input-open > div {
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
 }

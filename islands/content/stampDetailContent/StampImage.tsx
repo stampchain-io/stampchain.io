@@ -731,7 +731,7 @@ export function StampImage(
             }`}
           >
             <div className="stamp-container">
-              <div className="relative pt-[100%] rounded-2xl overflow-hidden">
+              <div className="relative aspect-square rounded-2xl overflow-hidden">
                 {/* Show placeholder image as background while loading */}
                 <div
                   className="absolute top-0 left-0 w-full h-full"
