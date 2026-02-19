@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #6034 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "6034.png",
+  "external_url": "https://kevin420.xyz/nft/6034",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:47.519Z",
+  "hash": "251de5af3b51e54bb6093382e5b4e271db2d413ae8552eebcd97a4b56f81fac4",
+  "dna": "251de5af3b51e54b",
+  "edition": 6034,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

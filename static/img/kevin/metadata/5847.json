@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #5847 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "5847.png",
+  "external_url": "https://kevin420.xyz/nft/5847",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:47.056Z",
+  "hash": "625a5066603cf28389c45426c23740f1d28f0bda4ceb4be5745fd1eb7fd5a1cb",
+  "dna": "625a5066603cf283",
+  "edition": 5847,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #9306 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "9306.png",
+  "external_url": "https://kevin420.xyz/nft/9306",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:55.660Z",
+  "hash": "7c5612c01abb897fb5731855c41a3d38c5bc1456b0cda211b69c28079fb0ef1d",
+  "dna": "7c5612c01abb897f",
+  "edition": 9306,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

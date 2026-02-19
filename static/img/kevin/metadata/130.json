@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #130 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "130.png",
+  "external_url": "https://kevin420.xyz/nft/130",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:33.380Z",
+  "hash": "a71ee92690482b66436e9a568a9541f4f2392d66aef93a11792c88fd61e5077b",
+  "dna": "a71ee92690482b66",
+  "edition": 130,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

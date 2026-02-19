@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #8914 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "8914.png",
+  "external_url": "https://kevin420.xyz/nft/8914",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:54.658Z",
+  "hash": "70f6b09b64300ae4496c5e78452e3cfa6ac3d6ad6a34a9ba6b9fa4f715c87689",
+  "dna": "70f6b09b64300ae4",
+  "edition": 8914,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

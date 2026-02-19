@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #70 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "70.png",
+  "external_url": "https://kevin420.xyz/nft/70",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:33.245Z",
+  "hash": "5dbe24dae677f257244f4ef040ef9509687e0549ad7cbc3a5e26d6e129a63969",
+  "dna": "5dbe24dae677f257",
+  "edition": 70,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

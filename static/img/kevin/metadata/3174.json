@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #3174 - Witch Nose",
+  "description": "A mystical Kevin with the rare Witch Nose!",
+  "image": "3174.png",
+  "external_url": "https://kevin420.xyz/nft/3174",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:40.529Z",
+  "hash": "1c5f8600dbb8387b932ba581cddabc50c5e6ffdcc7763e8da397a54f276aa3a5",
+  "dna": "1c5f8600dbb8387b",
+  "edition": 3174,
+  "special": "Witch Nose",
+  "rarity": "Rare"
+}

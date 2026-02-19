@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #2872 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "2872.png",
+  "external_url": "https://kevin420.xyz/nft/2872",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:39.845Z",
+  "hash": "28723f229c0f97720dfc9827cb91b86b68fac4f3da06cea0053b72736b78d30d",
+  "dna": "28723f229c0f9772",
+  "edition": 2872,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

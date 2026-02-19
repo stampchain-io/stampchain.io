@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #8074 - Viva Enthusiast",
+  "description": "A true Viva fan with 3 Viva traits!",
+  "image": "8074.png",
+  "external_url": "https://kevin420.xyz/nft/8074",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:52.522Z",
+  "hash": "81934c9d8c0ed5347343f00a1d98a43669db67181f83461e6f61ccfc12a59b44",
+  "dna": "81934c9d8c0ed534",
+  "edition": 8074,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

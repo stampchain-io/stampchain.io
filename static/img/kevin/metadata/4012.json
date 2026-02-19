@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #4012 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "4012.png",
+  "external_url": "https://kevin420.xyz/nft/4012",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:42.562Z",
+  "hash": "acc72d6ae815e716cff0312f410e8565d54b67e379078bc715955d6a17bd72e1",
+  "dna": "acc72d6ae815e716",
+  "edition": 4012,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

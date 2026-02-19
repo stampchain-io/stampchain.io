@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #774 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "774.png",
+  "external_url": "https://kevin420.xyz/nft/774",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.871Z",
+  "hash": "df823b1fd1dca08d3f4436dec9c0381707d65aaa9aade98c25f4236b4792616d",
+  "dna": "df823b1fd1dca08d",
+  "edition": 774,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

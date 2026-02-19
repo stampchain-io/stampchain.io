@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #3040 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "3040.png",
+  "external_url": "https://kevin420.xyz/nft/3040",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Fez"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:40.228Z",
+  "hash": "e4f3af0ae5ac5a92dbfe4bce7e60470a4cd5f09399c5cdba97e8cde14f49751d",
+  "dna": "e4f3af0ae5ac5a92",
+  "edition": 3040,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

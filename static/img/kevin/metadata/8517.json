@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #8517 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "8517.png",
+  "external_url": "https://kevin420.xyz/nft/8517",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:53.591Z",
+  "hash": "4b9e89c12e1606df0adcac46afd85b8203bb0c26820b2530c14e095e744e7c1b",
+  "dna": "4b9e89c12e1606df",
+  "edition": 8517,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #794 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DITA!",
+  "image": "794.png",
+  "external_url": "https://kevin420.xyz/nft/794",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.920Z",
+  "hash": "ab7b4d48ae93d8390ebfffae4fd3990385f1cf5ec84467489a424a994dc71b1b",
+  "dna": "ab7b4d48ae93d839",
+  "edition": 794,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

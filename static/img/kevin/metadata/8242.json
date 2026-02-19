@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #8242 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "8242.png",
+  "external_url": "https://kevin420.xyz/nft/8242",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:52.932Z",
+  "hash": "377e7dc6353cd3420728e08ea7e1e41faa915900ffd66ada1a72a693a17a2736",
+  "dna": "377e7dc6353cd342",
+  "edition": 8242,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

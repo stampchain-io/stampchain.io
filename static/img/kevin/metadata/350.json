@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #350 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "350.png",
+  "external_url": "https://kevin420.xyz/nft/350",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:33.894Z",
+  "hash": "d1eb6aac224407e3ec84028f0c5130750df1f2877309bf1be38a56fde5d64a59",
+  "dna": "d1eb6aac224407e3",
+  "edition": 350,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

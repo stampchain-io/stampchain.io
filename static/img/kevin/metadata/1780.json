@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #1780 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "1780.png",
+  "external_url": "https://kevin420.xyz/nft/1780",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.220Z",
+  "hash": "251e9218a110633908bc1b55082914660085c37be567a6b1f98ff5e5d6726115",
+  "dna": "251e9218a1106339",
+  "edition": 1780,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

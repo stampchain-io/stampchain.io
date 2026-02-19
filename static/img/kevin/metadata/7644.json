@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #7644 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "7644.png",
+  "external_url": "https://kevin420.xyz/nft/7644",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:51.450Z",
+  "hash": "c9c946cecad75ab9f29654111a1528a9d27acc2b0901c379bfe3f8553ebf733d",
+  "dna": "c9c946cecad75ab9",
+  "edition": 7644,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

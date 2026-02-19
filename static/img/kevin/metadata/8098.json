@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #8098 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DITA!",
+  "image": "8098.png",
+  "external_url": "https://kevin420.xyz/nft/8098",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Fez"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:52.593Z",
+  "hash": "561619385d08eae9c709feeca791671ec644d32906cf61b288ca7ac31dc0afcc",
+  "dna": "561619385d08eae9",
+  "edition": 8098,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

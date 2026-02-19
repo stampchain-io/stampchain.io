@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #6888 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "6888.png",
+  "external_url": "https://kevin420.xyz/nft/6888",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:49.591Z",
+  "hash": "d2e8c640f48cebf43250dacf63e61a5befa10915595e7d62be86167f6979f41c",
+  "dna": "d2e8c640f48cebf4",
+  "edition": 6888,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

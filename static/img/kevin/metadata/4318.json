@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #4318 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "4318.png",
+  "external_url": "https://kevin420.xyz/nft/4318",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:43.317Z",
+  "hash": "44729cb011a31555b69d835c3f5955471ac3d4e0d144cacf6c14c583e9dcc9d2",
+  "dna": "44729cb011a31555",
+  "edition": 4318,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

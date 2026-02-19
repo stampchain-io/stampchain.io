@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #7490 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "7490.png",
+  "external_url": "https://kevin420.xyz/nft/7490",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Fez"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:51.088Z",
+  "hash": "fda05253e4d779cb4171464efea827ed22c3dd01176ac775f07eb9856cebdead",
+  "dna": "fda05253e4d779cb",
+  "edition": 7490,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

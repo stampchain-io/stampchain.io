@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #6046 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "6046.png",
+  "external_url": "https://kevin420.xyz/nft/6046",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:47.547Z",
+  "hash": "de75dd1d6a62ade06c982ec4dc5596e2bc3464bec3d3975ad1c0d5b7d3c73411",
+  "dna": "de75dd1d6a62ade0",
+  "edition": 6046,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

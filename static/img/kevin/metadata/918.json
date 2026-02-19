@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #918 - NEXUS Convergence",
+  "description": "An extremely rare NEXUS convergence - when background and face align in perfect NEXUS harmony.",
+  "image": "918.png",
+  "external_url": "https://kevin420.xyz/nft/918",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:35.214Z",
+  "hash": "008cd2d27e8db1c38aaa2e43d77899461f9c6684c15fb2cb810af789f25637dd",
+  "dna": "008cd2d27e8db1c3",
+  "edition": 918,
+  "special": "Complete NEXUS",
+  "rarity": "Mythic"
+}

@@ -1,0 +1,51 @@
+{
+  "name": "Kevin #4513 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "4513.png",
+  "external_url": "https://kevin420.xyz/nft/4513",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 8
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Fez"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:43.767Z",
+  "hash": "ad7947034dbeab7b6a5af1f19338c7028aed0fde9afc047bdfeb96d02c877a4a",
+  "dna": "ad7947034dbeab7b",
+  "edition": 4513,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

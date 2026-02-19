@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #7962 - NEXUS Convergence",
+  "description": "An extremely rare NEXUS convergence - when background and face align in perfect NEXUS harmony.",
+  "image": "7962.png",
+  "external_url": "https://kevin420.xyz/nft/7962",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:52.247Z",
+  "hash": "6f3c5e2c9b2f42b5647ca85305e609173d0a0318810386cf96924bc24204a67b",
+  "dna": "6f3c5e2c9b2f42b5",
+  "edition": 7962,
+  "special": "Complete NEXUS",
+  "rarity": "Mythic"
+}

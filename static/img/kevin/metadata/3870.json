@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #3870 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "3870.png",
+  "external_url": "https://kevin420.xyz/nft/3870",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:42.215Z",
+  "hash": "e5dda07bfedc8e154be31aeac47a5e2a0e7244535c142cb1c93f17fe7fb6bace",
+  "dna": "e5dda07bfedc8e15",
+  "edition": 3870,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

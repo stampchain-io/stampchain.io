@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #3258 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "3258.png",
+  "external_url": "https://kevin420.xyz/nft/3258",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:40.723Z",
+  "hash": "aa17f64ecbf1a6ac87cedc4fd47728debc545d87b0c778f90bab5656ac943e0f",
+  "dna": "aa17f64ecbf1a6ac",
+  "edition": 3258,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

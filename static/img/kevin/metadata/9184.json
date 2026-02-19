@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #9184 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "9184.png",
+  "external_url": "https://kevin420.xyz/nft/9184",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:55.351Z",
+  "hash": "98f6fd49a0215528f5b704dfa77c3928bed192f3b3651de94acc727a00344020",
+  "dna": "98f6fd49a0215528",
+  "edition": 9184,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

@@ -1,0 +1,51 @@
+{
+  "name": "Kevin #2006 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "2006.png",
+  "external_url": "https://kevin420.xyz/nft/2006",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 8
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.810Z",
+  "hash": "9635b5ab1529b85e10f5e9c29a0b3e03a0abecc9ed4c8d497deddef8aa8167e9",
+  "dna": "9635b5ab1529b85e",
+  "edition": 2006,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

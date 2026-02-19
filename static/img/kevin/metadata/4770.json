@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #4770 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DITA!",
+  "image": "4770.png",
+  "external_url": "https://kevin420.xyz/nft/4770",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:44.391Z",
+  "hash": "cad0920c39220b67b3840db24c13619f47caf006dff5f622c444d5c858efd90c",
+  "dna": "cad0920c39220b67",
+  "edition": 4770,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

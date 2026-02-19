@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #3100 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "3100.png",
+  "external_url": "https://kevin420.xyz/nft/3100",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:40.361Z",
+  "hash": "35f63e6aa90570496e29ecd678af343cfe9190f3fb33c208474d2a4f36aee4e9",
+  "dna": "35f63e6aa9057049",
+  "edition": 3100,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

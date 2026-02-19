@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #1559 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "1559.png",
+  "external_url": "https://kevin420.xyz/nft/1559",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:36.702Z",
+  "hash": "7ed117983e47f6d67c3e4cc18c0c920f6bb520efb00472b2e1c468c72cfd3f8f",
+  "dna": "7ed117983e47f6d6",
+  "edition": 1559,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

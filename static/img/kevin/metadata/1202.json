@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #1202 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "1202.png",
+  "external_url": "https://kevin420.xyz/nft/1202",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:35.867Z",
+  "hash": "7af31437cb872f67697ade749289db5fbb58f2b6b66acfdb423d0cb699acf927",
+  "dna": "7af31437cb872f67",
+  "edition": 1202,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

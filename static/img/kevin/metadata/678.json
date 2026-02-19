@@ -1,0 +1,55 @@
+{
+  "name": "Kevin #678 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "678.png",
+  "external_url": "https://kevin420.xyz/nft/678",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 9
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.646Z",
+  "hash": "172bcdde1f121b61b038c21adf3d6044892db40ac40d27deade2613d9ac213f1",
+  "dna": "172bcdde1f121b61",
+  "edition": 678,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

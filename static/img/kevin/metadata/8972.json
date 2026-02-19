@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #8972 - Viva Mexico",
+  "description": "Celebrating Mexico with Viva style!",
+  "image": "8972.png",
+  "external_url": "https://kevin420.xyz/nft/8972",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:54.809Z",
+  "hash": "35fd7b221557665adecddca11ad76ee9afcb5db1f4ac26c45205a25d7c4b4d0c",
+  "dna": "35fd7b221557665a",
+  "edition": 8972,
+  "special": "Viva Mexico",
+  "rarity": "Uncommon"
+}

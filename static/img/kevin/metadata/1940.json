@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #1940 - Viva Enthusiast",
+  "description": "A true Viva fan with 3 Viva traits!",
+  "image": "1940.png",
+  "external_url": "https://kevin420.xyz/nft/1940",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.633Z",
+  "hash": "bc092a44258ca423c59027bc6bc16e85262c47da20750cb531177bff9c40d79f",
+  "dna": "bc092a44258ca423",
+  "edition": 1940,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

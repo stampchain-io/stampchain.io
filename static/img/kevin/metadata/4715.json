@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #4715 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "4715.png",
+  "external_url": "https://kevin420.xyz/nft/4715",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:44.234Z",
+  "hash": "5773ee9d219d5bf5e74bec5b066cd2cd68f5d4d280018630cbbcf4f0ccf757a7",
+  "dna": "5773ee9d219d5bf5",
+  "edition": 4715,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

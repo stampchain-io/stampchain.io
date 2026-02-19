@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #667 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "667.png",
+  "external_url": "https://kevin420.xyz/nft/667",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.621Z",
+  "hash": "00a2bee44fa77f3981a4695fb9a2e5b11e968ed83456e5253a243cedb353846b",
+  "dna": "00a2bee44fa77f39",
+  "edition": 667,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

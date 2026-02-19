@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #9051 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "9051.png",
+  "external_url": "https://kevin420.xyz/nft/9051",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:55.030Z",
+  "hash": "50161c4ff97d3dc2e68fc71e4de4900e299382f888e38957e8f6c7ab50af446c",
+  "dna": "50161c4ff97d3dc2",
+  "edition": 9051,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

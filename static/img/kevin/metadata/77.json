@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #77 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "77.png",
+  "external_url": "https://kevin420.xyz/nft/77",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:33.258Z",
+  "hash": "c1013d118a986bb80b0fc2a73a10b81e9d9e7d8d97bb9a7ac97b1b19b279fb65",
+  "dna": "c1013d118a986bb8",
+  "edition": 77,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

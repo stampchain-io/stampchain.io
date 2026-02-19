@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #8713 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "8713.png",
+  "external_url": "https://kevin420.xyz/nft/8713",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:54.073Z",
+  "hash": "aebe74a1a11c999584bec8ffc36c4d4f65d20b2800028f7f7d82f56607059c9d",
+  "dna": "aebe74a1a11c9995",
+  "edition": 8713,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

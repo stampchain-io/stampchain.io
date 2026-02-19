@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #904 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "904.png",
+  "external_url": "https://kevin420.xyz/nft/904",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:35.176Z",
+  "hash": "4d79e127adc829d4d84dcc00c16199b5cbb3f63a0a863bb0a47615e2ab373c1a",
+  "dna": "4d79e127adc829d4",
+  "edition": 904,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

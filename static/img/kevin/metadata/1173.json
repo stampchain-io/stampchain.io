@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #1173 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "1173.png",
+  "external_url": "https://kevin420.xyz/nft/1173",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:35.806Z",
+  "hash": "460ec9d83a8be2a7b6eb8386ba63657cfd605683a2243bbe87c0b79824d12878",
+  "dna": "460ec9d83a8be2a7",
+  "edition": 1173,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

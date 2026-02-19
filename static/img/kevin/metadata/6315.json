@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #6315 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "6315.png",
+  "external_url": "https://kevin420.xyz/nft/6315",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:48.173Z",
+  "hash": "37533d227c41b75957a3cac283751d0bd37facd626da7d9293f646999a3d1a25",
+  "dna": "37533d227c41b759",
+  "edition": 6315,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

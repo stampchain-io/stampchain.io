@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #1867 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "1867.png",
+  "external_url": "https://kevin420.xyz/nft/1867",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.459Z",
+  "hash": "0bafff2dde6c12ac4f007d5680996ee500bdb1e41ce143de266352ef05cd8a66",
+  "dna": "0bafff2dde6c12ac",
+  "edition": 1867,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

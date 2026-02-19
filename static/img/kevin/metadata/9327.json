@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #9327 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "9327.png",
+  "external_url": "https://kevin420.xyz/nft/9327",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:55.713Z",
+  "hash": "88251389887a85f27996cbbd2cb8b843018297efeed299f29fd1a6386f035df9",
+  "dna": "88251389887a85f2",
+  "edition": 9327,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #6132 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "6132.png",
+  "external_url": "https://kevin420.xyz/nft/6132",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:47.756Z",
+  "hash": "8b2c954d2abbaa9817f32cb3e2ccb8e58e9148a1ca7fa7630f2fc5d3f0bc6793",
+  "dna": "8b2c954d2abbaa98",
+  "edition": 6132,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

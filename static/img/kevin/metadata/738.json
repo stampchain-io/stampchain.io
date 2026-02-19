@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #738 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "738.png",
+  "external_url": "https://kevin420.xyz/nft/738",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.788Z",
+  "hash": "2e6a4f19be36a679f6f34289507890336081ea71887940433f38049841ab2493",
+  "dna": "2e6a4f19be36a679",
+  "edition": 738,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

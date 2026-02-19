@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #5371 - Night Mode",
+  "description": "Ready for the night with Blackhat and Cool Shades!",
+  "image": "5371.png",
+  "external_url": "https://kevin420.xyz/nft/5371",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:45.884Z",
+  "hash": "9f14c6055a42121d3a7430cc45f0ee2c749de8bda6d47e7d2a9e543b3fc8ff4d",
+  "dna": "9f14c6055a42121d",
+  "edition": 5371,
+  "special": "Night Mode",
+  "rarity": "Rare"
+}

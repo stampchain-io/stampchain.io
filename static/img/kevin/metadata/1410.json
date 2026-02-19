@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #1410 - NEXUS Convergence",
+  "description": "An extremely rare NEXUS convergence - when background and face align in perfect NEXUS harmony.",
+  "image": "1410.png",
+  "external_url": "https://kevin420.xyz/nft/1410",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:36.363Z",
+  "hash": "efc3158eec439a3eb3a5b0e1b9482a7921435f80b3d435b690c6c226c85fb8a9",
+  "dna": "efc3158eec439a3e",
+  "edition": 1410,
+  "special": "Complete NEXUS",
+  "rarity": "Mythic"
+}

@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #7103 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "7103.png",
+  "external_url": "https://kevin420.xyz/nft/7103",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:50.086Z",
+  "hash": "006b04fca4de7d2143f4c47cd6cf98953906c3bef490f64a016a7cbd400eddf4",
+  "dna": "006b04fca4de7d21",
+  "edition": 7103,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #1694 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DITA!",
+  "image": "1694.png",
+  "external_url": "https://kevin420.xyz/nft/1694",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.022Z",
+  "hash": "1fd4924a039411603ca9d3892293350d0ec69ecae807556bfd0aa0ad41f48b76",
+  "dna": "1fd4924a03941160",
+  "edition": 1694,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

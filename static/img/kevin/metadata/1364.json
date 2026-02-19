@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #1364 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "1364.png",
+  "external_url": "https://kevin420.xyz/nft/1364",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:36.251Z",
+  "hash": "35501a94623d4f31cec2f9e6be480ff0504c55b5066f1d114e3643feaf73f532",
+  "dna": "35501a94623d4f31",
+  "edition": 1364,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

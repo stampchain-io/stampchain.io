@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #2924 - Minimal Neon",
+  "description": "Pure neon essence - minimal traits with maximum impact.",
+  "image": "2924.png",
+  "external_url": "https://kevin420.xyz/nft/2924",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:39.969Z",
+  "hash": "ff8eb4439ad936a417604786ad99c5d87ffac797c6dbb041e124c4d991edffcc",
+  "dna": "ff8eb4439ad936a4",
+  "edition": 2924,
+  "special": "Minimal Neon",
+  "rarity": "Ultra Rare"
+}

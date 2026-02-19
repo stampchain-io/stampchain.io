@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #6423 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DITA!",
+  "image": "6423.png",
+  "external_url": "https://kevin420.xyz/nft/6423",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:48.452Z",
+  "hash": "94080ba2b3fe7e1737a37dffac186386f72ef2dc44025baa1aee4485105bc6a1",
+  "dna": "94080ba2b3fe7e17",
+  "edition": 6423,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

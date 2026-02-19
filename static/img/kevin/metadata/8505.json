@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #8505 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "8505.png",
+  "external_url": "https://kevin420.xyz/nft/8505",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:53.562Z",
+  "hash": "e8e58e160c53e0fe88f57aa449e984a6801efae0a733f10f7960851d6d905d9c",
+  "dna": "e8e58e160c53e0fe",
+  "edition": 8505,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

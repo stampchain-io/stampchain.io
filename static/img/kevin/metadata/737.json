@@ -1,0 +1,27 @@
+{
+  "name": "Kevin #737 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "737.png",
+  "external_url": "https://kevin420.xyz/nft/737",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 2
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.786Z",
+  "hash": "e2489bcf7ee2822dcb6f3817113e39dc040ef22ddc1eb550f22f86e3472543c0",
+  "dna": "e2489bcf7ee2822d",
+  "edition": 737,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

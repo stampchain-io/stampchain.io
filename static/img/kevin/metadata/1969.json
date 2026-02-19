@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #1969 - Witch Nose",
+  "description": "A mystical Kevin with the rare Witch Nose!",
+  "image": "1969.png",
+  "external_url": "https://kevin420.xyz/nft/1969",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.708Z",
+  "hash": "ba899e8498a46d45c083ceb00e32043cbfcf315000e698eccac363dd013ddfc0",
+  "dna": "ba899e8498a46d45",
+  "edition": 1969,
+  "special": "Witch Nose",
+  "rarity": "Rare"
+}
