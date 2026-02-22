@@ -7,7 +7,9 @@ import { Handlers } from "$fresh/server.ts";
 import { body, containerBackground, containerGap } from "$layout";
 import { logger, LogNamespace } from "$lib/utils/logger.ts";
 import { StampGallery } from "$section";
+import { serverConfig } from "$server/config/config.ts";
 import { StampController } from "$server/controller/stampController.ts";
+import { getPreviewUrl } from "$server/services/aws/previewStorageService.ts";
 import { CounterpartyDispenserService } from "$server/services/counterpartyApiService.ts";
 import { RouteType } from "$server/services/infrastructure/cacheService.ts";
 import { DetailsTableBase, HoldersTable } from "$table";
@@ -31,6 +33,7 @@ interface StampData {
   htmlTitle?: string;
   error?: string;
   url: string;
+  previewImageUrl?: string;
 }
 
 /* ===== SERVER HANDLER ===== */
@@ -127,10 +130,18 @@ export const handler: Handlers<StampData> = {
         }
       }
 
+      // When S3 storage is active, provide direct CloudFront URL for og:image
+      // (avoids 302 redirect that some social media crawlers don't follow)
+      const previewImageUrl =
+        serverConfig.PREVIEW_STORAGE === "s3" && stampWithPrices.stamp
+          ? getPreviewUrl(stampWithPrices.stamp.toString())
+          : undefined;
+
       return ctx.render({
         ...stampData.data,
         stamp: stampWithPrices,
         htmlTitle: htmlTitle,
+        previewImageUrl,
         last_block: stampData.last_block,
         stamps_recent: mainCategories[0]?.stamps ?? [],
         holders: holders.data,
@@ -224,18 +235,27 @@ export default function StampDetailPage(props: StampDetailPageProps) {
   const getMetaImageInfo = (stamp: StampRow | undefined, baseUrl: string) => {
     if (!stamp) {
       return {
-        url: `${baseUrl}/default-stamp-image.png`, // You should add a default image
+        url: `${baseUrl}/default-stamp-image.png`,
         width: 1200,
         height: 1200,
       };
     }
 
-    // For all content, use preview endpoint
-    // Default to square (1200x1200) since most stamps are square
+    // When S3 storage is active, use direct CloudFront URL (serves 200 PNG)
+    // instead of preview endpoint (returns 302 redirect some crawlers don't follow)
+    if (props.data.previewImageUrl) {
+      return {
+        url: props.data.previewImageUrl,
+        width: 1200,
+        height: 1200,
+      };
+    }
+
+    // Fallback: use preview endpoint (works for Redis storage mode)
     return {
       url: `${baseUrl}/api/v2/stamp/${stamp.stamp}/preview`,
       width: 1200,
-      height: 1200, // Square format works best for both X and Telegram
+      height: 1200,
     };
   };
 

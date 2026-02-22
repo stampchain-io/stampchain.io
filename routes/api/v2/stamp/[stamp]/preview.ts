@@ -31,7 +31,7 @@ import {
 } from "$lib/utils/ui/rendering/svgUtils.ts";
 import { StampController } from "$server/controller/stampController.ts";
 import { dbManager } from "$server/database/databaseManager.ts";
-import { Image } from "https://deno.land/x/imagescript@1.3.0/mod.ts";
+import { GIF, Image } from "https://deno.land/x/imagescript@1.3.0/mod.ts";
 import { initWasm, Resvg } from "npm:@resvg/resvg-wasm@2.6.0";
 
 // Initialize WASM on module load
@@ -218,9 +218,22 @@ async function renderRasterPreview(
   }
 
   const imageBuffer = await imageResponse.arrayBuffer();
+  const imageBytes = new Uint8Array(imageBuffer);
 
   try {
-    const sourceImage = await Image.decode(new Uint8Array(imageBuffer));
+    // For animated GIFs, use GIF.decode() to extract first frame
+    // (Image.decode() throws on animated GIFs)
+    let sourceImage;
+    if (stamp_mimetype === "image/gif") {
+      const gif = await GIF.decode(imageBytes);
+      sourceImage = gif[0];
+      if (!sourceImage) {
+        console.error(`GIF has no frames: stamp ${stampNumber}`);
+        return null;
+      }
+    } else {
+      sourceImage = await Image.decode(imageBytes);
+    }
 
     const maxDimension = Math.max(sourceImage.width, sourceImage.height);
     const targetSize = 1200;
@@ -496,8 +509,19 @@ async function renderImageWithChrome(
   stamp_mimetype: string,
   stampNumber: number | undefined,
 ): Promise<CachedPreview | null> {
+  // Wrap image in HTML for proper centering and scaling
+  // (raw URL causes Chrome to show default image viewer with grey background)
+  const imageHtml = `<!DOCTYPE html>
+<html><head><style>
+  * { margin: 0; padding: 0; }
+  body { background: transparent; display: flex; align-items: center; justify-content: center; width: 1200px; height: 1200px; overflow: hidden; }
+  img { max-width: 100%; max-height: 100%; object-fit: contain; image-rendering: pixelated; }
+</style></head><body>
+<img src="${stamp_url}" />
+</body></html>`;
+
   const cfBuffer = await renderWithCloudflare({
-    url: stamp_url,
+    html: imageHtml,
     viewport: { width: 1200, height: 1200 },
     delay: 2000,
   });
