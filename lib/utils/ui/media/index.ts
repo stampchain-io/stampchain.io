@@ -6,3 +6,4 @@
  */
 
 export * from "./imageUtils.ts";
+export * from "./recursivePreview.ts";

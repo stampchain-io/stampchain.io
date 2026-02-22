@@ -1,4 +1,4 @@
-import { Button } from "$button";
+import { Button, ButtonProcessing } from "$button";
 import { ToggleSwitchButton } from "$components/button/ToggleSwitchButton.tsx";
 import { MaraModeBadge } from "$components/indicators/MaraModeIndicator.tsx";
 import { FeeSkeletonLoader } from "$components/indicators/ProgressIndicator.tsx";
@@ -63,6 +63,7 @@ export function FeeCalculatorBase({
   maraFeeRate = null,
   isLoadingMaraFee = false,
   progressIndicator,
+  cpid,
 }: ExtendedBaseFeeCalculatorProps) {
   const { fees } = useFees();
   const [visible, setVisible] = useState(false);
@@ -336,6 +337,14 @@ export function FeeCalculatorBase({
             </h6>
           )}
 
+          {/* CPID - Only show for stamp type */}
+          {type === "stamp" && (
+            <h6 class={textXs}>
+              <span class={labelXs}>CPID</span>&nbsp;&nbsp;
+              {cpid ? cpid : <span class="animate-pulse">AUTO GENERATED</span>}
+            </h6>
+          )}
+
           {/* Editions - Only show for stamp type */}
           {type === "stamp" && (
             <h6 class={textXs}>
@@ -418,7 +427,19 @@ export function FeeCalculatorBase({
           </h6>
 
           {/* Service Fee - Display if available in feeDetails */}
-          {feeDetails?.serviceFee && feeDetails.serviceFee > 0 && (
+          {/* #region agent log */}
+          {(() => {
+            console.log("[DEBUG-e6a2b1] HypA serviceFee:", {
+              serviceFee: feeDetails?.serviceFee,
+              exprResult: feeDetails?.serviceFee && feeDetails.serviceFee > 0,
+              exprType:
+                typeof (feeDetails?.serviceFee && feeDetails.serviceFee > 0),
+              maraMode,
+            });
+            return null;
+          })()}
+          {/* #endregion */}
+          {!!feeDetails?.serviceFee && feeDetails.serviceFee > 0 && (
             <h6 class={textXs}>
               <span class={labelXs}>
                 SERVICE FEE
@@ -929,10 +950,11 @@ export function FeeCalculatorBase({
                 {cancelText}
               </Button>
             )}
-            <Button
+            <ButtonProcessing
               variant="flat"
               color="grey"
               size="mdR"
+              isSubmitting={!!isSubmitting}
               onClick={() => {
                 console.log(
                   "FEE_CALCULATOR_BASE: Internal button onClick fired! About to call props.onSubmit.",
@@ -941,10 +963,10 @@ export function FeeCalculatorBase({
                   onSubmit();
                 }
               }}
-              disabled={!!(disabled || isSubmitting || !tosAgreed)}
+              disabled={!!(disabled || !tosAgreed)}
             >
-              {isSubmitting ? "PROCESSING" : confirmText || buttonName}
-            </Button>
+              {confirmText || buttonName}
+            </ButtonProcessing>
           </div>
         </div>
       </div>

@@ -3476,6 +3476,7 @@ export interface ToastProviderProps {
 export interface ToastComponentProps {
   id: string;
   message: string;
+  body?: ComponentChildren;
   type: "success" | "error" | "warning" | "info";
   onClose: () => void;
   autoDismiss: boolean;

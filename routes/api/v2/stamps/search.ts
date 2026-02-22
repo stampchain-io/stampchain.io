@@ -31,6 +31,7 @@ export const handler: Handlers = {
           queryOptions.cpidPrefix = sanitized;
           queryOptions.limit = 11;
           queryOptions.sortBy = "ASC";
+          queryOptions.sortColumn = "stamp";
           break;
 
         case "tx_hash":
@@ -46,7 +47,10 @@ export const handler: Handlers = {
             rangeEnd: num * 10 + 9,
           };
           queryOptions.limit = 11;
-          queryOptions.sortBy = "ASC";
+          queryOptions.sortColumn = "stamp";
+          // Negative stamps: DESC puts -1 before -2 before -10 (closest to 0 first)
+          // Positive stamps: ASC puts 1 before 10 before 19 (natural order)
+          queryOptions.sortBy = num < 0 ? "DESC" : "ASC";
           break;
         }
 

@@ -172,6 +172,7 @@ export interface BaseToast {
   type: "success" | "error" | "warning" | "info";
   message: string;
   autoDismiss?: boolean;
+  body?: import("preact").ComponentChildren;
 }
 
 export interface ProgressiveFeeEstimationResult {

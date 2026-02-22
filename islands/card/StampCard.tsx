@@ -59,11 +59,13 @@ export function StampCard({
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  // Library file detection
+  // Library file detection (CSS, JS, GZIP, JSON)
   const isLibraryFile = stamp.stamp_mimetype === "text/css" ||
     stamp.stamp_mimetype === "text/javascript" ||
     stamp.stamp_mimetype === "application/javascript" ||
-    stamp.stamp_mimetype === "application/gzip";
+    stamp.stamp_mimetype === "application/gzip" ||
+    stamp.stamp_mimetype === "application/json" ||
+    stamp.stamp_mimetype === "text/json";
 
   /* ===== HANDLERS ===== */
   const handleImageError = (e: Event) => {
@@ -278,6 +280,22 @@ export function StampCard({
         <div class="stamp-container">
           <div class="relative z-10 aspect-square">
             <PlaceholderImage variant="no-image" />
+          </div>
+        </div>
+      );
+    }
+
+    // Unrenderable content: no image URL, unknown/missing type, or raw binary
+    if (
+      !src ||
+      !stamp.stamp_mimetype ||
+      stamp.stamp_mimetype === "UNKNOWN" ||
+      stamp.stamp_mimetype === "application/octet-stream"
+    ) {
+      return (
+        <div class="stamp-container relative">
+          <div class="relative z-10 aspect-square">
+            <PlaceholderImage variant="error" />
           </div>
         </div>
       );

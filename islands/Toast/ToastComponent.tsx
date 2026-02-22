@@ -14,6 +14,7 @@ export const ToastComponent = (
   {
     id,
     message,
+    body,
     type,
     onClose,
     autoDismiss,
@@ -106,11 +107,17 @@ export const ToastComponent = (
 
         <div class="flex-1 ml-6 break-words">
           <div class={notificationHeading}>{firstLine}</div>
-          {remainingLines.length > 0 && (
-            <div class={`${notificationBody} whitespace-pre-line`}>
-              {remainingLines.join("\n")}
-            </div>
-          )}
+          {body
+            ? (
+              <div class={notificationBody}>
+                {body}
+              </div>
+            )
+            : remainingLines.length > 0 && (
+              <div class={`${notificationBody} whitespace-pre-line`}>
+                {remainingLines.join("\n")}
+              </div>
+            )}
         </div>
 
         <Icon

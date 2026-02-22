@@ -1,5 +1,5 @@
-import type { InputFieldProps } from "$types/ui.d.ts";
 import { inputField } from "$form";
+import type { InputFieldProps } from "$types/ui.d.ts";
 
 export function InputField({
   type,
@@ -39,7 +39,7 @@ export function InputField({
         disabled={disabled}
         style={{ textAlign }}
       />
-      {error && <p class="text-red-500 mt-2">{error}</p>}
+      {error && <p class="text-red-500 mt-2 text-xs">{error}</p>}
     </div>
   );
 }

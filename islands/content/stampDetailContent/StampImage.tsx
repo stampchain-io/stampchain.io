@@ -686,7 +686,12 @@ export function StampImage(
   const isLibraryFile = stamp.stamp_mimetype === "text/css" ||
     stamp.stamp_mimetype === "text/javascript" ||
     stamp.stamp_mimetype === "application/javascript" ||
-    stamp.stamp_mimetype === "application/gzip";
+    stamp.stamp_mimetype === "application/gzip" ||
+    stamp.stamp_mimetype === "application/json" ||
+    stamp.stamp_mimetype === "text/json";
+  const isUnrenderable = !stamp.stamp_mimetype ||
+    stamp.stamp_mimetype === "UNKNOWN" ||
+    stamp.stamp_mimetype === "application/octet-stream";
 
   // Update the toggleCodeModal function to use the new pattern
   const toggleCodeModal = () => {
@@ -717,9 +722,9 @@ export function StampImage(
 
   return (
     <>
-      {!src && (
+      {(!src || isUnrenderable) && (
         <div className={`${glassmorphism} p-5`}>
-          <PlaceholderImage variant="no-image" />
+          <PlaceholderImage variant={isUnrenderable ? "error" : "no-image"} />
         </div>
       )}
 
@@ -904,7 +909,7 @@ export function StampImage(
       )}
 
       {src && !isHtml && !isPlainText && !isAudio &&
-        !isLibraryFile && (
+        !isLibraryFile && !isUnrenderable && (
           flag
             ? (
               <div class={`${body} ${containerGap}`}>

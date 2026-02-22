@@ -32,10 +32,10 @@ export const ToastProvider = ({ children }: ToastProviderProps) => {
     message: string,
     type: BaseToast["type"],
     autoDismiss?: boolean,
+    body?: BaseToast["body"],
   ) => {
     const id = Math.random().toString(36).substr(2, 9);
     const duration = getDuration(type);
-    // Use provided autoDismiss value, or default based on type
     const shouldDismiss = autoDismiss !== undefined
       ? autoDismiss
       : shouldAutoDismiss(type);
@@ -45,6 +45,7 @@ export const ToastProvider = ({ children }: ToastProviderProps) => {
       {
         id,
         message,
+        body,
         type,
         autoDismiss: shouldDismiss,
         duration,
@@ -93,6 +94,7 @@ export const ToastProvider = ({ children }: ToastProviderProps) => {
           toastMsg.message,
           toastMsg.type,
           toastMsg.autoDismiss,
+          toastMsg.body,
         );
       }
     });
@@ -107,6 +109,7 @@ export const ToastProvider = ({ children }: ToastProviderProps) => {
           key={toast.id}
           id={toast.id}
           message={toast.message}
+          body={toast.body}
           type={toast.type}
           onClose={() => handleManualClose(toast.id)}
           autoDismiss={toast.autoDismiss}

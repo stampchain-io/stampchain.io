@@ -1,7 +1,7 @@
 /* ===== BUTTON COMPONENT ===== */
 import { button, buttonStyles } from "$button";
 import { IS_BROWSER } from "$fresh/runtime.ts";
-import { loaderSpinSmGrey } from "$layout";
+import { loaderSpinSmGrey, loaderSpinXsGrey } from "$layout";
 import type {
   ExtendedButtonProps,
   ExtendedIconButtonProps,
@@ -219,7 +219,14 @@ export function ButtonProcessing({
     ...props,
   });
 
-  const content = isSubmitting ? <div class={loaderSpinSmGrey} /> : children;
+  const content = isSubmitting
+    ? (
+      <span class="inline-flex items-center gap-3">
+        <div class={`${loaderSpinXsGrey} !border-current`} />
+        PROCESSING
+      </span>
+    )
+    : children;
 
   return href
     ? (
