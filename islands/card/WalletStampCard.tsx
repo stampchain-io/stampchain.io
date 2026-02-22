@@ -24,7 +24,10 @@ import {
   abbreviateAddress,
   formatBalanceDisplay,
 } from "$lib/utils/ui/formatting/formatUtils.ts";
-import { getStampImageSrc } from "$lib/utils/ui/media/imageUtils.ts";
+import {
+  getStampImageSrc,
+  getStampPreviewUrl,
+} from "$lib/utils/ui/media/imageUtils.ts";
 
 /* ===== TYPES ===== */
 
@@ -270,32 +273,19 @@ const WalletStampCardComponent = (
       return <StampTextContent src={src} />;
     }
 
-    // Handle HTML content
+    // Handle HTML content — show cached preview PNG instead of iframe
     if (stamp.stamp_mimetype === "text/html") {
       return (
-        <div class="relative w-full h-full">
-          <div class="relative aspect-square">
-            <iframe
-              width="100%"
-              height="100%"
-              scrolling="no"
+        <div class="stamp-container relative">
+          <div class="relative z-10 aspect-square">
+            <img
+              src={getStampPreviewUrl(stamp)}
               loading="lazy"
-              sandbox="allow-scripts allow-same-origin"
-              src={src}
-              class="absolute top-0 left-0 w-full h-full object-contain pointer-events-none"
-              onError={(e) => {
-                console.error("iframe error (detailed):", {
-                  error: e,
-                  target: e.target,
-                  src: (e.target as HTMLIFrameElement).src,
-                  contentWindow: (e.target as HTMLIFrameElement).contentWindow
-                    ? "present"
-                    : "missing",
-                });
-                handleImageError(e);
-              }}
+              alt={`Stamp No. ${stamp.stamp}`}
+              class="max-w-none object-contain rounded-2xl pixelart stamp-image h-full w-full"
+              onLoad={() => setLoading(false)}
+              onError={handleImageError}
             />
-            <div class="absolute inset-0 cursor-pointer" />
           </div>
         </div>
       );

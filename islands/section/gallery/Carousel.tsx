@@ -5,7 +5,10 @@ import { IS_BROWSER } from "$fresh/runtime.ts";
 import { PlaceholderImage } from "$icon";
 import { glassmorphismL2, shadowGlowPurple } from "$layout";
 import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
-import { getStampImageSrc } from "$lib/utils/ui/media/imageUtils.ts";
+import {
+  getStampImageSrc,
+  getStampPreviewUrl,
+} from "$lib/utils/ui/media/imageUtils.ts";
 import type { CarouselHomeProps } from "$types/ui.d.ts";
 import { ComponentChildren } from "preact";
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
@@ -105,18 +108,15 @@ export default function CarouselGallery(props: CarouselHomeProps) {
             return;
           }
 
-          // Handle HTML content
+          // Handle HTML content — show cached preview PNG instead of iframe
           if (stamp.stamp_mimetype === "text/html") {
             validated[stamp.tx_hash] = (
               <a target="_top" href={`/stamp/${stamp.tx_hash}`}>
-                <iframe
-                  width="100%"
-                  height="100%"
-                  scrolling="no"
-                  class="object-contain cursor-pointer desktop:min-w-[408px] tablet:min-w-[269px] mobileLg:min-w-[200px] mobileMd:min-w-[242px] min-w-[150px] rounded-2xl aspect-square"
-                  sandbox="allow-scripts allow-same-origin"
-                  src={src}
+                <img
+                  src={getStampPreviewUrl(stamp)}
+                  alt={`Stamp #${stamp.stamp}`}
                   loading="lazy"
+                  class="object-contain cursor-pointer desktop:min-w-[408px] tablet:min-w-[269px] mobileLg:min-w-[200px] mobileMd:min-w-[242px] min-w-[150px] rounded-2xl aspect-square pixelart stamp-image"
                   onLoad={handleLoad}
                 />
               </a>
