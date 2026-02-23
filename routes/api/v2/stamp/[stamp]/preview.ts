@@ -453,45 +453,84 @@ async function renderHtmlPreview(
   stamp_mimetype: string,
   stampNumber: number | undefined,
 ): Promise<CachedPreview | null> {
-  const isComplex = stamp_url?.includes("recursive") ||
-    stamp_url?.includes("fractal") ||
-    stamp_url?.includes("canvas");
-  const delay = isComplex ? 8000 : 5000;
+  if (!isCfWorkerConfigured) {
+    console.error(
+      "[HTML Preview] CF Worker not configured",
+      { stamp: stampNumber },
+    );
+    return null;
+  }
 
-  // Try CF Worker first: fetch raw HTML from CDN, clean it, send to Worker
-  if (isCfWorkerConfigured) {
-    try {
-      const htmlResponse = await fetch(stamp_url);
-      if (htmlResponse.ok) {
-        const rawHtml = await htmlResponse.text();
-        const cleanedHtml = cleanHtmlForRendering(rawHtml);
-
-        const cfBuffer = await renderWithCloudflare({
-          html: cleanedHtml,
-          viewport: { width: 1200, height: 1200 },
-          delay,
-        });
-
-        if (cfBuffer) {
-          console.log(
-            `[HTML Preview] Stamp ${stampNumber} rendered via CF Worker`,
-          );
-          const result = await centerOnCanvas(cfBuffer, {
-            stampNumber,
-            stamp_mimetype,
-            method: "cloudflare-browser",
-          });
-          result.meta["X-Render-Time"] = isComplex ? "extended" : "standard";
-          result.meta["X-Rendering-Engine"] = "cloudflare-worker";
-          return result;
-        }
-      }
-    } catch (error) {
-      const msg = error instanceof Error ? error.message : String(error);
+  try {
+    const htmlResponse = await fetch(stamp_url);
+    if (!htmlResponse.ok) {
       console.error(
-        `[HTML Preview] CF Worker path failed for stamp ${stampNumber}: ${msg}`,
+        `[HTML Preview] Failed to fetch HTML: ${htmlResponse.status}`,
+        { stamp: stampNumber },
       );
+      return null;
     }
+
+    const rawHtml = await htmlResponse.text();
+
+    // Detect if HTML contains iframes or external references (recursive stamps).
+    // These need URL-based rendering so Chrome can load cross-origin content.
+    const hasIframe = rawHtml.includes("<iframe");
+    const hasExternalRef = rawHtml.includes("ordinals.com/") ||
+      rawHtml.includes("arweave.net/") ||
+      rawHtml.includes("github.io/");
+    const isRecursive = hasIframe || hasExternalRef;
+
+    const isComplex = isRecursive ||
+      stamp_url?.includes("recursive") ||
+      stamp_url?.includes("fractal") ||
+      stamp_url?.includes("canvas");
+    const delay = isComplex ? 8000 : 5000;
+
+    let cfBuffer: Uint8Array | null = null;
+
+    if (isRecursive) {
+      // Recursive stamps: navigate Chrome to the actual URL so iframes
+      // can load cross-origin content (inline html: has no origin)
+      console.log(
+        `[HTML Preview] Stamp ${stampNumber} has recursive content — using URL mode`,
+      );
+      cfBuffer = await renderWithCloudflare({
+        url: stamp_url,
+        viewport: { width: 1200, height: 1200 },
+        delay,
+      });
+    } else {
+      // Standard HTML: fetch, clean Rocket Loader artifacts, render inline
+      const cleanedHtml = cleanHtmlForRendering(rawHtml);
+      cfBuffer = await renderWithCloudflare({
+        html: cleanedHtml,
+        viewport: { width: 1200, height: 1200 },
+        delay,
+      });
+    }
+
+    if (cfBuffer) {
+      console.log(
+        `[HTML Preview] Stamp ${stampNumber} rendered via CF Worker (${
+          isRecursive ? "url" : "html"
+        } mode)`,
+      );
+      const result = await centerOnCanvas(cfBuffer, {
+        stampNumber,
+        stamp_mimetype,
+        method: "cloudflare-browser",
+      });
+      result.meta["X-Render-Time"] = isComplex ? "extended" : "standard";
+      result.meta["X-Rendering-Engine"] = "cloudflare-worker";
+      result.meta["X-Recursive"] = isRecursive ? "true" : "false";
+      return result;
+    }
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error(
+      `[HTML Preview] CF Worker path failed for stamp ${stampNumber}: ${msg}`,
+    );
   }
 
   console.error(
