@@ -2874,6 +2874,7 @@ export interface StampDetailPageProps {
     stamps_recent: any;
     lowestPriceDispenser: any;
     htmlTitle?: string;
+    previewImageUrl?: string;
     error?: string;
     initialCounts?: {
       dispensers: number;
