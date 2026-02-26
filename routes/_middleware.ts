@@ -10,6 +10,7 @@ const ROUTE_CONFIG = {
     "/api/",
     "/internal/",
     "/test/",
+    "/sitemap.xml",
   ],
   CACHED_ROUTES: [
     "/",

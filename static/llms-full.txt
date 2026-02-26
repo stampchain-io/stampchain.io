@@ -1,0 +1,181 @@
+# stampchain.io — Complete Reference for LLMs
+
+> The official Bitcoin Stamps block explorer, API, and minting platform.
+
+## Overview
+
+stampchain.io is the primary block explorer and API for the Bitcoin Stamps protocol. Bitcoin Stamps embed data directly into the Bitcoin UTXO set using bare multisig transactions, creating truly permanent on-chain artifacts that cannot be pruned from Bitcoin full nodes. This makes Bitcoin Stamps fundamentally different from ordinals (which use witness data that can be pruned).
+
+The tagline is: "Unprunable UTXO Art, Because Sats Don't Exist."
+
+## Bitcoin Stamps Protocol
+
+### How It Works
+Bitcoin Stamps encode data (images, text, tokens) into Bitcoin transactions using bare multisig outputs. Each output stores a small chunk of data in the public keys of the multisig. Because these outputs remain in the UTXO set (they are unspent), full nodes must retain them indefinitely — making the data permanent.
+
+### Protocol Standards
+
+**SRC-20 (Fungible Tokens)**
+- Deploy, mint, and transfer fungible tokens on Bitcoin
+- Account-based balance model (not UTXO-based)
+- Balances tracked per address by the indexer
+- Operations: deploy (create token), mint (claim supply), transfer (send to address)
+
+**SRC-721 (Non-Fungible Tokens)**
+- Unique digital artifacts stored permanently on Bitcoin
+- Each stamp has a unique stamp number
+- Image data embedded directly in transactions
+- Supports multiple formats: PNG, GIF, SVG, HTML, WEBP
+
+**SRC-101 (Bitcoin Name Service)**
+- Human-readable names on Bitcoin (like ENS for Ethereum)
+- Register and manage .btc names
+- Transfer and resolve name ownership
+
+## Block Explorer Features
+
+### Stamp Gallery (https://stampchain.io/stamp)
+Browse all Bitcoin Stamps with filtering by type, date, and creator. Each stamp page shows:
+- Stamp image/content (rendered from on-chain data)
+- Transaction details (tx_hash, block height, timestamp)
+- Creator address and ownership history
+- Stamp metadata (MIME type, file size, encoding)
+
+### SRC-20 Token Explorer (https://stampchain.io/src20)
+Browse all SRC-20 tokens with:
+- Token details: tick, max supply, minted supply, holders count
+- Holder distribution and top holders
+- Mint progress and deployment info
+- Transfer history
+
+### Collection Browser (https://stampchain.io/collection)
+Curated collections of related stamps with:
+- Collection metadata and description
+- Gallery view of included stamps
+- Creator information
+
+### Block Explorer (https://stampchain.io/explorer)
+Bitcoin block data showing:
+- Blocks with stamp transactions
+- Stamp count per block
+- Block details with included stamps
+
+### Wallet View (https://stampchain.io/wallet/:address)
+Per-address view showing:
+- Owned stamps
+- SRC-20 token balances
+- Transaction history
+
+## Minting Tools
+
+### Stamp Creation (https://stampchain.io/tool/stamp/create)
+Create new Bitcoin Stamps on-chain using the OLGA minting engine:
+- Upload image/content
+- Select encoding method
+- Build and sign transaction
+- Broadcast to Bitcoin network
+
+### SRC-20 Tools
+- Deploy new tokens: https://stampchain.io/tool/src20/deploy
+- Mint tokens: https://stampchain.io/tool/src20/mint
+- Transfer tokens: https://stampchain.io/tool/src20/transfer
+
+### SRC-101 Tools
+- Register names: https://stampchain.io/tool/src101/register
+
+### Supported Wallets
+- Leather (Hiro) wallet
+- UniSat wallet
+- OKX wallet
+- Gate wallet
+- Phantom wallet
+
+## API Reference
+
+Base URL: https://stampchain.io/api/v2
+Full OpenAPI/Swagger docs: https://stampchain.io/docs
+
+### Stamps Endpoints
+
+**GET /api/v2/stamps**
+List stamps with pagination. Query params: page, limit, sort_order, type, ident.
+
+**GET /api/v2/stamps/:id**
+Get a specific stamp by stamp number or tx_hash.
+
+**GET /api/v2/stamps/:id/preview**
+Get the rendered preview image for a stamp.
+
+### SRC-20 Endpoints
+
+**GET /api/v2/src20**
+List all SRC-20 tokens. Query params: page, limit, sort_order, op (deploy/mint/transfer).
+
+**GET /api/v2/src20/:tick**
+Get details for a specific SRC-20 token by ticker symbol.
+
+**GET /api/v2/src20/balance/:address**
+Get all SRC-20 token balances for a Bitcoin address.
+
+**GET /api/v2/src20/:tick/holders**
+Get holder list for a specific SRC-20 token.
+
+### Block Endpoints
+
+**GET /api/v2/blocks**
+List Bitcoin blocks that contain stamp transactions.
+
+**GET /api/v2/blocks/:index**
+Get details for a specific block including all stamps in that block.
+
+### Collection Endpoints
+
+**GET /api/v2/collections**
+List stamp collections.
+
+**GET /api/v2/collections/:id**
+Get a specific collection with its stamps.
+
+### Utility Endpoints
+
+**GET /api/v2/health**
+API health check. Returns system status.
+
+**GET /api/v2/version**
+API version information and changelog.
+
+### Rate Limiting
+API endpoints are rate-limited. Standard limits apply per IP. Check response headers for rate limit status.
+
+## How-To Guides
+
+The site includes step-by-step guides for common operations:
+
+- How to create a stamp: https://stampchain.io/howto/stamp
+- How to send a stamp: https://stampchain.io/howto/sendstamp
+- How to deploy an SRC-20 token: https://stampchain.io/howto/deploytoken
+- How to mint an SRC-20 token: https://stampchain.io/howto/minttoken
+- How to transfer an SRC-20 token: https://stampchain.io/howto/transfertoken
+- How to connect Leather wallet: https://stampchain.io/howto/leatherconnect
+- How to create a Leather wallet: https://stampchain.io/howto/leathercreate
+
+## Technology Stack
+
+- Framework: Deno Fresh (SSR + Islands architecture)
+- Runtime: Deno
+- Database: MySQL (read-only access)
+- Caching: Redis
+- Hosting: AWS ECS (Fargate)
+- CDN: CloudFront
+- API: RESTful with OpenAPI/Swagger documentation
+
+## Related Resources
+
+- Website: https://stampchain.io
+- Protocol documentation: https://bitcoinstamps.xyz
+- Twitter/X: https://x.com/ArtOnBTC
+- GitHub: https://github.com/stampchain-io
+- Press kit: https://stampchain.io/presskit
+- Terms of service: https://stampchain.io/termsofservice
+- FAQ: https://stampchain.io/faq
+- About: https://stampchain.io/about
