@@ -1,0 +1,57 @@
+# stampchain.io
+
+> The official Bitcoin Stamps block explorer, API, and minting platform.
+
+stampchain.io is the primary block explorer and API for the Bitcoin Stamps protocol — a method of storing data permanently in the Bitcoin UTXO set using bare multisig transactions. Unlike ordinals, Bitcoin Stamps data cannot be pruned from full nodes, making it truly permanent on-chain art and data.
+
+## Key Facts
+
+- Protocol: Bitcoin Stamps (SRC-20, SRC-721, SRC-101)
+- Data storage: Embedded in Bitcoin UTXO set via bare multisig
+- Permanence: Unprunable — data persists as long as Bitcoin exists
+- Explorer: Browse all stamps, SRC-20 tokens, collections, and blocks
+- API: RESTful API with OpenAPI/Swagger documentation
+- Minting: On-chain stamp creation tools (OLGA minting engine)
+- URL: https://stampchain.io
+
+## Protocol Standards
+
+- SRC-20: Fungible token standard on Bitcoin Stamps (deploy, mint, transfer)
+- SRC-721: NFT standard for unique digital artifacts on Bitcoin
+- SRC-101: Bitcoin Name Service (BNS) for human-readable addresses
+
+## API Endpoints
+
+Base URL: https://stampchain.io/api/v2
+
+- GET /stamps — List stamps with pagination and filters
+- GET /stamps/:id — Individual stamp data and metadata
+- GET /src20 — List SRC-20 tokens
+- GET /src20/:tick — SRC-20 token details and holders
+- GET /src20/balance/:address — Token balances for a wallet
+- GET /blocks — Bitcoin blocks with stamp transactions
+- GET /blocks/:index — Block details with included stamps
+- GET /health — API health check
+
+Full API docs: https://stampchain.io/docs
+
+## Pages
+
+- Home: https://stampchain.io
+- Stamp Gallery: https://stampchain.io/stamp
+- SRC-20 Tokens: https://stampchain.io/src20
+- Collections: https://stampchain.io/collection
+- Block Explorer: https://stampchain.io/explorer
+- Minting Tools: https://stampchain.io/tool/stamp/create
+- How-To Guides: https://stampchain.io/howto
+- About: https://stampchain.io/about
+- FAQ: https://stampchain.io/faq
+- API Docs: https://stampchain.io/docs
+
+## Links
+
+- Website: https://stampchain.io
+- Protocol docs: https://bitcoinstamps.xyz
+- Twitter/X: https://x.com/ArtOnBTC
+- GitHub: https://github.com/stampchain-io
+- Full LLM context: https://stampchain.io/llms-full.txt

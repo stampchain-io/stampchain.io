@@ -39,6 +39,8 @@ export default function App({ Component, state, url }: PageProps<unknown>) {
           skipTitle={isStampPage}
           skipDescription={isStampPage}
           skipOgMeta={isStampPage}
+          canonicalUrl={`https://stampchain.io${url.pathname}`}
+          ogUrl={`https://stampchain.io${url.pathname}`}
         />
 
         {/* ===== ENHANCED RESOURCE PRELOADING ===== */}
