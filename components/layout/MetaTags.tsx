@@ -12,7 +12,12 @@ export function MetaTags({
   skipTitle = false,
   skipDescription = false,
   skipOgMeta = false,
+  canonicalUrl,
+  ogUrl,
 }: MetaTagsProps) {
+  const resolvedCanonical = canonicalUrl || "https://stampchain.io";
+  const resolvedOgUrl = ogUrl || resolvedCanonical;
+
   return (
     <>
       {/* Essential meta tags */}
@@ -20,8 +25,12 @@ export function MetaTags({
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>{title}</title>
       <meta name="description" content={description} />
-      <meta name="keywords" content="Bitcoin, Stamps, UTXO, Art, Blockchain" />
-      <meta name="author" content="Stampchain.io" />
+      <meta
+        name="keywords"
+        content="Bitcoin Stamps, SRC-20, SRC-721, UTXO Art, Bitcoin NFT, block explorer, on-chain art, unprunable, stampchain"
+      />
+      <meta name="author" content="stampchain.io" />
+      <meta name="robots" content="index, follow" />
 
       {/* Icons */}
       <link
@@ -34,11 +43,23 @@ export function MetaTags({
         rel="apple-touch-icon"
         href={STAMPCHAIN_FAVICON_IMAGE}
       />
-      <link rel="canonical" href="https://stampchain.io" />
+      <link rel="canonical" href={resolvedCanonical} />
+
+      {/* Machine-readable alternate content */}
+      <link
+        rel="alternate"
+        type="text/plain"
+        href="https://stampchain.io/llms.txt"
+        title="LLM-readable site summary"
+      />
 
       {/* OpenGraph tags */}
       {!skipTitle && (
-        <meta property="og:title" content="Stampchain.io" key="og-title" />
+        <meta
+          property="og:title"
+          content={title}
+          key="og-title"
+        />
       )}
       {!skipDescription && (
         <meta
@@ -62,6 +83,11 @@ export function MetaTags({
             content="630"
             key="og:image:height"
           />
+          <meta
+            property="og:image:alt"
+            content="stampchain.io — Bitcoin Stamps block explorer"
+            key="og:image:alt"
+          />
         </>
       )}
       {!skipOgMeta && (
@@ -69,25 +95,37 @@ export function MetaTags({
           <meta property="og:type" content="website" key="og-type" />
           <meta
             property="og:url"
-            content="https://stampchain.io"
+            content={resolvedOgUrl}
             key="og-url"
           />
           <meta property="og:locale" content="en_US" key="og-locale" />
+          <meta
+            property="og:site_name"
+            content="stampchain.io"
+            key="og-site-name"
+          />
         </>
       )}
 
       {/* Twitter Card tags */}
       {!skipOgMeta && (
-        <meta
-          name="twitter:card"
-          content="summary_large_image"
-          key="twitter-card"
-        />
+        <>
+          <meta
+            name="twitter:card"
+            content="summary_large_image"
+            key="twitter-card"
+          />
+          <meta
+            name="twitter:site"
+            content="@ArtOnBTC"
+            key="twitter-site"
+          />
+        </>
       )}
       {!skipTitle && (
         <meta
           name="twitter:title"
-          content="stampchain.io"
+          content={title}
           key="twitter-title"
         />
       )}

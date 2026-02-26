@@ -1,0 +1,15 @@
+# stampchain.io - Official Bitcoin Stamps Block Explorer & API
+# We welcome all search engines and AI crawlers
+
+User-agent: *
+Allow: /
+Disallow: /api/internal/
+Disallow: /test/
+
+# LLM-readable content
+# See https://llmstxt.org for the llms.txt standard
+# llms.txt:      concise project summary for LLMs
+# llms-full.txt: comprehensive project details for LLMs
+
+# Sitemap
+Sitemap: https://stampchain.io/sitemap.xml
