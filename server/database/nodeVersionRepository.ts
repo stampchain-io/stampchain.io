@@ -15,7 +15,7 @@ export class NodeVersionRepository {
    */
   static async getCurrentVersions(): Promise<NodeVersionInfo[]> {
     try {
-      const rows = await this.db.executeQueryWithCache(
+      const result = await this.db.executeQueryWithCache(
         `SELECT component_name, version_string, version_major, version_minor,
                 version_revision, version_suffix, extra_info, detected_at
          FROM node_version_history
@@ -25,6 +25,8 @@ export class NodeVersionRepository {
         SHORT_CACHE_DURATION,
       );
 
+      // deno mysql driver returns { rows: [...], fields: [...] }
+      const rows = (result as any)?.rows ?? result;
       if (!rows || !Array.isArray(rows)) {
         return [];
       }
