@@ -117,7 +117,7 @@ export function MetaTags({
           />
           <meta
             name="twitter:site"
-            content="@ArtOnBTC"
+            content="@stampchain"
             key="twitter-site"
           />
         </>
