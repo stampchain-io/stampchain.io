@@ -1273,6 +1273,16 @@ REPLACE INTO `stamp_sales_history` (`tx_hash`, `block_index`, `block_time`, `cpi
   ('5add37589c0963d61e2a6b11cc981d281ad479c9cbec9c4dfeec23fc7f27b2b5', 918392, 1760069394, 'A1010101010100001010', 'dispenser', 'bc1qav6a72ynrztjrs0haeg9apuuv0gdcerdxacy3j', '14xyFwHGmrGJjGtMbjJoJHqrLZvf6MibYU', 1, 25000, 25000, 'c5804286afaabe41aaaa5738698bc8a7f98bd1b4aaaa79078cd486e5d0cbb4e8', NULL, NULL, NULL, 'counterparty', NULL, '2025-12-09 18:38:57'),
   ('9b7ad7ef2a935d05ba36a1173e9e704e173f040788168f155c8ac43d2875192a', 918351, 1760040555, 'A2550002550002550000', 'dispenser', '1PKuvrxf6Ld2VbPqtiiDVMqLru28scW1Nn', 'bc1pl0y454ul2qmgrdhnu3ppxztwtxaxwsly5nu2nwvgcyfdsahxa52se5npnz', 100, 1000, 10, 'e640517c0bf2a7d29c0c5546199e23c38ad37ebc2b1a55fe84d4e154faeb9916', NULL, NULL, NULL, 'counterparty', NULL, '2025-12-09 18:38:20');
 
+-- ============================================================
+-- Node Version History (test data for health endpoint)
+-- ============================================================
+
+INSERT INTO node_version_history (component_name, version_string, version_major, version_minor, version_revision, version_suffix, extra_info, is_current, detected_at) VALUES
+  ('bitcoin_core', '28.0.0', 28, 0, 0, NULL, '{"subversion": "/Satoshi:28.0.0/", "protocolversion": 70016, "connections": 125}', TRUE, '2026-01-15 00:00:00'),
+  ('counterparty:local', '11.0.3', 11, 0, 3, NULL, '{"last_block": 928000, "last_message_index": 5000000, "network": "mainnet", "server_ready": true}', TRUE, '2026-01-15 00:00:00'),
+  ('counterparty:public', '11.0.3', 11, 0, 3, NULL, '{"last_block": 928000, "last_message_index": 5000000, "network": "mainnet", "server_ready": true}', TRUE, '2026-01-15 00:00:00'),
+  ('stamps_indexer', '1.8.26+canary.258', 1, 8, 26, 'canary.258', NULL, TRUE, '2026-01-15 00:00:00');
+
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- ============================================================

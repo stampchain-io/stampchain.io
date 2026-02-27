@@ -1806,7 +1806,15 @@
                   "        pm.expect(json.services[key]).to.be.a('boolean', `service ${key} should be boolean`);",
                   "      }",
                   "    });",
-                  "    // Optional nested objects are allowed (blockSync, stats, circuitBreaker)",
+                  "    // Optional nested objects are allowed (blockSync, stats, circuitBreaker, nodeVersions)",
+                  "    if (json.services.nodeVersions !== undefined) {",
+                  "      pm.expect(json.services.nodeVersions).to.be.an('array', 'nodeVersions should be an array');",
+                  "      json.services.nodeVersions.forEach(function(v, i) {",
+                  "        pm.expect(v.component_name).to.be.a('string', 'nodeVersions[' + i + '].component_name should be string');",
+                  "        pm.expect(v.version_string).to.be.a('string', 'nodeVersions[' + i + '].version_string should be string');",
+                  "        pm.expect(v.detected_at).to.be.a('string', 'nodeVersions[' + i + '].detected_at should be string');",
+                  "      });",
+                  "    }",
                   "  }",
                   "});"
                 ]
