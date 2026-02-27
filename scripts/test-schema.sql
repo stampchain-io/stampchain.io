@@ -499,6 +499,30 @@ CREATE TABLE IF NOT EXISTS `stamp_sales_history` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_as_ci;
 
 -- ============================================================
+-- Node Version History (PR #704)
+-- ============================================================
+
+DROP TABLE IF EXISTS node_version_history;
+
+CREATE TABLE `node_version_history` (
+  `id`               BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `component_name`   VARCHAR(100) NOT NULL,
+  `version_string`   VARCHAR(100) NOT NULL,
+  `version_major`    INT NULL,
+  `version_minor`    INT NULL,
+  `version_revision` INT NULL,
+  `version_suffix`   VARCHAR(50) NULL,
+  `extra_info`       JSON NULL,
+  `is_current`       BOOLEAN NULL DEFAULT TRUE,
+  `detected_at`      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `superseded_at`    TIMESTAMP NULL,
+
+  UNIQUE KEY `unique_current_component` (`component_name`, `is_current`),
+  INDEX `idx_component_history` (`component_name`, `detected_at` DESC),
+  INDEX `idx_current_versions` (`is_current`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_as_ci;
+
+-- ============================================================
 -- Compatibility Views
 -- ============================================================
 
