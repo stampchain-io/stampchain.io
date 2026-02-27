@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #4054 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "4054.png",
+  "external_url": "https://kevin420.xyz/nft/4054",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:42.654Z",
+  "hash": "17477f7d4a97f5eb433f2addd4801ea75c72d31d1aa919b8cb47fb82c6bbea79",
+  "dna": "17477f7d4a97f5eb",
+  "edition": 4054,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

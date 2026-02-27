@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #5000 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "5000.png",
+  "external_url": "https://kevin420.xyz/nft/5000",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:44.928Z",
+  "hash": "c1cb2aa90d06bc868e96d473d64fff6a9dc1d815cf39d2f8e89d8793f432848e",
+  "dna": "c1cb2aa90d06bc86",
+  "edition": 5000,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

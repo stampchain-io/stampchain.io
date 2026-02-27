@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #1521 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DITA!",
+  "image": "1521.png",
+  "external_url": "https://kevin420.xyz/nft/1521",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:36.613Z",
+  "hash": "d6966a1d7cf58ef5f237545aad743bc67a6e9f323ed34a5605e4f29828544a3d",
+  "dna": "d6966a1d7cf58ef5",
+  "edition": 1521,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

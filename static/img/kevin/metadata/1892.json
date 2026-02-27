@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #1892 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DITA!",
+  "image": "1892.png",
+  "external_url": "https://kevin420.xyz/nft/1892",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.515Z",
+  "hash": "b41ab28ce70ba7516f77e93b76df6d3715f2ff6d091b4a2f7b6b259d93ae4c1a",
+  "dna": "b41ab28ce70ba751",
+  "edition": 1892,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

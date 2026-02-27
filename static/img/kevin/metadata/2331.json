@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #2331 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "2331.png",
+  "external_url": "https://kevin420.xyz/nft/2331",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:38.540Z",
+  "hash": "57818ea8844177426443bb95c68160b1d6c4a1bc9892ce61f13c6b37aedcb6f5",
+  "dna": "57818ea884417742",
+  "edition": 2331,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

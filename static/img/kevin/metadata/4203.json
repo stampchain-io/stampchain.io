@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #4203 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "4203.png",
+  "external_url": "https://kevin420.xyz/nft/4203",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:43.035Z",
+  "hash": "2de33feeaad2276d265d114d5c07be8afa832351d16daea21bb84555340f5cca",
+  "dna": "2de33feeaad2276d",
+  "edition": 4203,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

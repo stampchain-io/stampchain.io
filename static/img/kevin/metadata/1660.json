@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #1660 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "1660.png",
+  "external_url": "https://kevin420.xyz/nft/1660",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:36.948Z",
+  "hash": "8dcc2f39556d311524e78e8c4defb99612b217762f2a38b495bd82bbdfea1a90",
+  "dna": "8dcc2f39556d3115",
+  "edition": 1660,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

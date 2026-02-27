@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #8357 - Vision Master",
+  "description": "Enhanced vision with both glasses and special eyes!",
+  "image": "8357.png",
+  "external_url": "https://kevin420.xyz/nft/8357",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Fez"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:53.195Z",
+  "hash": "f1406ea3c6e217aee8154bb4358b5efa3f86cf6a4acffb73ddceb441f691e4cd",
+  "dna": "f1406ea3c6e217ae",
+  "edition": 8357,
+  "special": "Vision Master",
+  "rarity": "Rare"
+}

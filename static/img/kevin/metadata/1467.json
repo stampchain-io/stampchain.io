@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #1467 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "1467.png",
+  "external_url": "https://kevin420.xyz/nft/1467",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Fez"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:36.495Z",
+  "hash": "635a72820c1f0c495c425d51ac66552411b96d10c1a4ee3c5388f4b329a832ef",
+  "dna": "635a72820c1f0c49",
+  "edition": 1467,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

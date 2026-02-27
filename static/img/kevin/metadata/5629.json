@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #5629 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "5629.png",
+  "external_url": "https://kevin420.xyz/nft/5629",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:46.496Z",
+  "hash": "ab36d15a1a1eca82098f120c9a25d0d2f4c3a2e675047dbee39af448829f7674",
+  "dna": "ab36d15a1a1eca82",
+  "edition": 5629,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

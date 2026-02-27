@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #6703 - NEXUS Convergence",
+  "description": "An extremely rare NEXUS convergence - when background and face align in perfect NEXUS harmony.",
+  "image": "6703.png",
+  "external_url": "https://kevin420.xyz/nft/6703",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:49.109Z",
+  "hash": "06e834670034d138c956e06d4b96538d445ca95893bdd2685b599f8c4ab389d5",
+  "dna": "06e834670034d138",
+  "edition": 6703,
+  "special": "Complete NEXUS",
+  "rarity": "Mythic"
+}

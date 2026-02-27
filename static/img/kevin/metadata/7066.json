@@ -1,0 +1,51 @@
+{
+  "name": "Kevin #7066 - NEXUS Convergence",
+  "description": "An extremely rare NEXUS convergence - when background and face align in perfect NEXUS harmony.",
+  "image": "7066.png",
+  "external_url": "https://kevin420.xyz/nft/7066",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 8
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:49.999Z",
+  "hash": "ff9c06dcd970af1bb03f2e2af998c2f8a1bda796de8c321e1966b9acfceee95d",
+  "dna": "ff9c06dcd970af1b",
+  "edition": 7066,
+  "special": "Complete NEXUS",
+  "rarity": "Mythic"
+}

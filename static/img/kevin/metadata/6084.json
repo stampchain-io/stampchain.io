@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #6084 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "6084.png",
+  "external_url": "https://kevin420.xyz/nft/6084",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:47.643Z",
+  "hash": "4b1eac3eb59bc9f6c12739425161e77ad0b43017019072bda8addde5ac75d662",
+  "dna": "4b1eac3eb59bc9f6",
+  "edition": 6084,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

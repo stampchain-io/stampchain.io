@@ -1,0 +1,37 @@
+{
+  "name": "Kevin #167",
+  "description": "Kevin is a generative PFP collection showcasing unique and fun characters.",
+  "image": "167.png",
+  "external_url": "https://kevin420.xyz/nft/167",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:33.461Z",
+  "hash": "42ee9dbd9751ba62dfcf55dc8dad8441c653b2f4984ddbec52debe46c26e5ef9",
+  "dna": "42ee9dbd9751ba62",
+  "edition": 167
+}

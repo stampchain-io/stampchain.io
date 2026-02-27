@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #2623 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "2623.png",
+  "external_url": "https://kevin420.xyz/nft/2623",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:39.217Z",
+  "hash": "f162c2bd2abbd6df8f1cc7e52064cfc6a0361ace32525c89128fbed9f43ab13b",
+  "dna": "f162c2bd2abbd6df",
+  "edition": 2623,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

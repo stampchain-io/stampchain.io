@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #5359 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "5359.png",
+  "external_url": "https://kevin420.xyz/nft/5359",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:45.854Z",
+  "hash": "4866345461215ba903f26e90ec7b49eab13790d7c4662adee249643676788277",
+  "dna": "4866345461215ba9",
+  "edition": 5359,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

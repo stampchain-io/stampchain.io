@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #3282 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "3282.png",
+  "external_url": "https://kevin420.xyz/nft/3282",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:40.788Z",
+  "hash": "2d79d7b1f66748fb6ac6c07fb47bbfcd8260b07a7e4fcf6f62728bcbdbfd5a3f",
+  "dna": "2d79d7b1f66748fb",
+  "edition": 3282,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

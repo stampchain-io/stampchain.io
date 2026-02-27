@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #7148 - Night Mode",
+  "description": "Ready for the night with Blackhat and Cool Shades!",
+  "image": "7148.png",
+  "external_url": "https://kevin420.xyz/nft/7148",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:50.195Z",
+  "hash": "3963057e8c4dca06157663c175ea771acc4b80dcb25156ae417bf74cbd122549",
+  "dna": "3963057e8c4dca06",
+  "edition": 7148,
+  "special": "Night Mode",
+  "rarity": "Rare"
+}

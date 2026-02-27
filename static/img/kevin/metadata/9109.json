@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #9109 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "9109.png",
+  "external_url": "https://kevin420.xyz/nft/9109",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:55.171Z",
+  "hash": "131cbf6c23e4f983c6a21ef9e617229f78f1abf382e252fac32aaf9fbd4ef18c",
+  "dna": "131cbf6c23e4f983",
+  "edition": 9109,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

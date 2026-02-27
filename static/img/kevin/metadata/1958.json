@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #1958 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "1958.png",
+  "external_url": "https://kevin420.xyz/nft/1958",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.675Z",
+  "hash": "9070b77878b29c7f36749921e4de87039894d108ae1226686f2cb8e4be5a29b9",
+  "dna": "9070b77878b29c7f",
+  "edition": 1958,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

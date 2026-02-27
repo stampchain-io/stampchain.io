@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #4015 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "4015.png",
+  "external_url": "https://kevin420.xyz/nft/4015",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:42.569Z",
+  "hash": "424ac62955b4b8103b50961b57d706eadc60035b73b8b8c32d09a0847457dc26",
+  "dna": "424ac62955b4b810",
+  "edition": 4015,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

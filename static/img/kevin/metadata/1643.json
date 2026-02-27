@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #1643 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "1643.png",
+  "external_url": "https://kevin420.xyz/nft/1643",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:36.909Z",
+  "hash": "db69f982fd6ba4d6cdf8c45356d44180dc3148105d941077bf1ceae00ada3f07",
+  "dna": "db69f982fd6ba4d6",
+  "edition": 1643,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

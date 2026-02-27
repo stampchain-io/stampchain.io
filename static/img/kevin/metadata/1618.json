@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #1618 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DITA!",
+  "image": "1618.png",
+  "external_url": "https://kevin420.xyz/nft/1618",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:36.850Z",
+  "hash": "ddde86ea3f417997a7bfb872cc11750103acaf4271186abf91369a2819cb4e53",
+  "dna": "ddde86ea3f417997",
+  "edition": 1618,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

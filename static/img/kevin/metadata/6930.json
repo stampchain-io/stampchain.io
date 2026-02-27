@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #6930 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DITA!",
+  "image": "6930.png",
+  "external_url": "https://kevin420.xyz/nft/6930",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:49.691Z",
+  "hash": "3c90bfcd76653ea3cb16e614d2572868041fa33b7894dcc9f0e806e9e1c80bfb",
+  "dna": "3c90bfcd76653ea3",
+  "edition": 6930,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

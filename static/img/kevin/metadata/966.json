@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #966 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "966.png",
+  "external_url": "https://kevin420.xyz/nft/966",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:35.331Z",
+  "hash": "dca953ece43094b958eb7eedab78cdce54bf57108b52afb6d66666a014d59aaa",
+  "dna": "dca953ece43094b9",
+  "edition": 966,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

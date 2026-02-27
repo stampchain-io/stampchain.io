@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #7223 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DITA!",
+  "image": "7223.png",
+  "external_url": "https://kevin420.xyz/nft/7223",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:50.436Z",
+  "hash": "b1db16a0f3bbc33259f8e91eec5717fe039b32fc90c342dd314587366880aaac",
+  "dna": "b1db16a0f3bbc332",
+  "edition": 7223,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #6963 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "6963.png",
+  "external_url": "https://kevin420.xyz/nft/6963",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:49.764Z",
+  "hash": "1fab174ce04ef18b9dd0679191f7c0cdf81ca33ea4190ade2f7a617176957ec3",
+  "dna": "1fab174ce04ef18b",
+  "edition": 6963,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

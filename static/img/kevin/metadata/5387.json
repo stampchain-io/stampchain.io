@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #5387 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "5387.png",
+  "external_url": "https://kevin420.xyz/nft/5387",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:45.920Z",
+  "hash": "0be2d1656dee661a23474f274c7fca385085473a0b2ede8730e734a1bc7f5e49",
+  "dna": "0be2d1656dee661a",
+  "edition": 5387,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

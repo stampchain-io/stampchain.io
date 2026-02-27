@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #2089 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "2089.png",
+  "external_url": "https://kevin420.xyz/nft/2089",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:38.001Z",
+  "hash": "39713218d78491dafb63bb2a6a0f613f85933448e34423bdc165f60e4e44807e",
+  "dna": "39713218d78491da",
+  "edition": 2089,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

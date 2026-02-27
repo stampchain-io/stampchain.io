@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #8120 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "8120.png",
+  "external_url": "https://kevin420.xyz/nft/8120",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:52.648Z",
+  "hash": "5176b7143cd06642fe699543d543e44130b07c82f5cad558ded66a83554e3443",
+  "dna": "5176b7143cd06642",
+  "edition": 8120,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

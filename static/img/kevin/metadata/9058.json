@@ -1,0 +1,51 @@
+{
+  "name": "Kevin #9058 - Perfect Pepe",
+  "description": "The perfect alignment of Pepe face and Pepe Vision!",
+  "image": "9058.png",
+  "external_url": "https://kevin420.xyz/nft/9058",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 8
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:55.050Z",
+  "hash": "6b2b4bc3f5ed87b35d8462bfd49cc8c4865611abec10f614b02d80ec7098c12e",
+  "dna": "6b2b4bc3f5ed87b3",
+  "edition": 9058,
+  "special": "Perfect Pepe",
+  "rarity": "Rare"
+}

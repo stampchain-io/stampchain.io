@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #985 - NEXUS Convergence",
+  "description": "An extremely rare NEXUS convergence - when background and face align in perfect NEXUS harmony.",
+  "image": "985.png",
+  "external_url": "https://kevin420.xyz/nft/985",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:35.376Z",
+  "hash": "70060588e518a630050de6450dbb36df27c3b7f523e5f9b7457ea5a534610d9b",
+  "dna": "70060588e518a630",
+  "edition": 985,
+  "special": "Complete NEXUS",
+  "rarity": "Mythic"
+}

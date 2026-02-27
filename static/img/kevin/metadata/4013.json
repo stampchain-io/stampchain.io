@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #4013 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "4013.png",
+  "external_url": "https://kevin420.xyz/nft/4013",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:42.564Z",
+  "hash": "6c6ff023deccadf6919f73091b17811fee2f3433ebbfde3caf4cfb7c0857394e",
+  "dna": "6c6ff023deccadf6",
+  "edition": 4013,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

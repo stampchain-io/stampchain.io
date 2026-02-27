@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #1503 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "1503.png",
+  "external_url": "https://kevin420.xyz/nft/1503",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:36.575Z",
+  "hash": "3cfe8bccae183e5fb7555a335da822cfb466c75a1d8b0ca9feeffef58b6430ee",
+  "dna": "3cfe8bccae183e5f",
+  "edition": 1503,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

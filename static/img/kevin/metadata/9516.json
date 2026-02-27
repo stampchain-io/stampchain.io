@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #9516 - Viva Mexico",
+  "description": "Celebrating Mexico with Viva style!",
+  "image": "9516.png",
+  "external_url": "https://kevin420.xyz/nft/9516",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:56.214Z",
+  "hash": "935c61b82b51bf387301dcc2e9a11185481ec458fd7992f7a5b87ff1e53cfa24",
+  "dna": "935c61b82b51bf38",
+  "edition": 9516,
+  "special": "Viva Mexico",
+  "rarity": "Uncommon"
+}

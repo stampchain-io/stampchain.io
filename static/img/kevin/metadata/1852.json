@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #1852 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "1852.png",
+  "external_url": "https://kevin420.xyz/nft/1852",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.422Z",
+  "hash": "972d0af644b1d402c73e4be1901760296041b9817903e3f1590e167a7a6d67ae",
+  "dna": "972d0af644b1d402",
+  "edition": 1852,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #7219 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "7219.png",
+  "external_url": "https://kevin420.xyz/nft/7219",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:50.424Z",
+  "hash": "c4582c0f5546f5424ad58adfd9b48cdce02533ba09070bbbc7a0b90af36d6517",
+  "dna": "c4582c0f5546f542",
+  "edition": 7219,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

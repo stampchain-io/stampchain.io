@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #8366 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "8366.png",
+  "external_url": "https://kevin420.xyz/nft/8366",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:53.215Z",
+  "hash": "7712eec38369f60b1ba954374ea72ee2d2209863815777226ce7012d2d5c92da",
+  "dna": "7712eec38369f60b",
+  "edition": 8366,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

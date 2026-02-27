@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #1995 - Perfect Pepe",
+  "description": "The perfect alignment of Pepe face and Pepe Vision!",
+  "image": "1995.png",
+  "external_url": "https://kevin420.xyz/nft/1995",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.784Z",
+  "hash": "dbe5396452e66077d42a7bde425ab2a46db3c34b24d817a2169eb53eac9d5204",
+  "dna": "dbe5396452e66077",
+  "edition": 1995,
+  "special": "Perfect Pepe",
+  "rarity": "Rare"
+}

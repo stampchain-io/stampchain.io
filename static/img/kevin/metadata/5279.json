@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #5279 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "5279.png",
+  "external_url": "https://kevin420.xyz/nft/5279",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:45.646Z",
+  "hash": "13ad8643f89090ff302ee8b31008a751a340804bf1fe913ed628bddda59b8574",
+  "dna": "13ad8643f89090ff",
+  "edition": 5279,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #322 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "322.png",
+  "external_url": "https://kevin420.xyz/nft/322",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:33.828Z",
+  "hash": "9059ee542b14058578abfe1267e58a5c0ebbd1bb30608857b76a464f77717979",
+  "dna": "9059ee542b140585",
+  "edition": 322,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

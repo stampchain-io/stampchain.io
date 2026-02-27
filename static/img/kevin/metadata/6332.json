@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #6332 - Perfect Pepe",
+  "description": "The perfect alignment of Pepe face and Pepe Vision!",
+  "image": "6332.png",
+  "external_url": "https://kevin420.xyz/nft/6332",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:48.210Z",
+  "hash": "d4ae882a6a0bd065dbafe5bfa714be8318d17ab033393ee6e27cd7ce47523b48",
+  "dna": "d4ae882a6a0bd065",
+  "edition": 6332,
+  "special": "Perfect Pepe",
+  "rarity": "Rare"
+}

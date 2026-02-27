@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #7398 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "7398.png",
+  "external_url": "https://kevin420.xyz/nft/7398",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:50.865Z",
+  "hash": "3b525039955f04ce021b94885a46ed1e6f1ad6d45e9df3cb7a3fe45443657ada",
+  "dna": "3b525039955f04ce",
+  "edition": 7398,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

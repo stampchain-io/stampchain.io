@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #6427 - Viva Enthusiast",
+  "description": "A true Viva fan with 3 Viva traits!",
+  "image": "6427.png",
+  "external_url": "https://kevin420.xyz/nft/6427",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:48.461Z",
+  "hash": "fb9863f45d16b899ffdfd34ee3d9e6b74654346f4b0e086e2914ee1612785973",
+  "dna": "fb9863f45d16b899",
+  "edition": 6427,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

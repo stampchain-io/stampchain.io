@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #5506 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "5506.png",
+  "external_url": "https://kevin420.xyz/nft/5506",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:46.205Z",
+  "hash": "b0c6e6ba87a15a708f4e42f814bd49f7762070b57429660ac9967fa838df329f",
+  "dna": "b0c6e6ba87a15a70",
+  "edition": 5506,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

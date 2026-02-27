@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #8316 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "8316.png",
+  "external_url": "https://kevin420.xyz/nft/8316",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:53.099Z",
+  "hash": "321f08d18a7c9d7db81063da0d4e97dd1be405aecb260d1b4dbbd2960cf3ad4c",
+  "dna": "321f08d18a7c9d7d",
+  "edition": 8316,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

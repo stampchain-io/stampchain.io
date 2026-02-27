@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #2844 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "2844.png",
+  "external_url": "https://kevin420.xyz/nft/2844",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:39.769Z",
+  "hash": "548336cf8d8586ae87610f564bae803dace785ad355d4cbee453f9b53ec62919",
+  "dna": "548336cf8d8586ae",
+  "edition": 2844,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

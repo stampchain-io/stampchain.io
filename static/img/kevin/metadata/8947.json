@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #8947 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "8947.png",
+  "external_url": "https://kevin420.xyz/nft/8947",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:54.742Z",
+  "hash": "c098ee318c5dddbd8547c6925245df7ebb8cc27aa2606745497096323cbfaa4e",
+  "dna": "c098ee318c5dddbd",
+  "edition": 8947,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #9325 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "9325.png",
+  "external_url": "https://kevin420.xyz/nft/9325",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:55.707Z",
+  "hash": "d59a96c5cddfb13c1dee920855ef64c1685212f9e9f8d00e9e880c5728a57421",
+  "dna": "d59a96c5cddfb13c",
+  "edition": 9325,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

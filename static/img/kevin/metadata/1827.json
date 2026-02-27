@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #1827 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "1827.png",
+  "external_url": "https://kevin420.xyz/nft/1827",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.362Z",
+  "hash": "5401fce48950149c54011dae8b90794aaea60171dbfd7f8114435ef826dc464f",
+  "dna": "5401fce48950149c",
+  "edition": 1827,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

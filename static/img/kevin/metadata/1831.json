@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #1831 - Vision Master",
+  "description": "Enhanced vision with both glasses and special eyes!",
+  "image": "1831.png",
+  "external_url": "https://kevin420.xyz/nft/1831",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.373Z",
+  "hash": "146c471fa47fe4b3d17bc4135c757762fa4b8ef256dec4c26b9db7c84bb30876",
+  "dna": "146c471fa47fe4b3",
+  "edition": 1831,
+  "special": "Vision Master",
+  "rarity": "Rare"
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #5617 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DITA!",
+  "image": "5617.png",
+  "external_url": "https://kevin420.xyz/nft/5617",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:46.470Z",
+  "hash": "356873708dbb045c14b526c5d8b6abb20dcef357ac289457152cdc9ee5613b37",
+  "dna": "356873708dbb045c",
+  "edition": 5617,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

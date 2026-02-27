@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #9729 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "9729.png",
+  "external_url": "https://kevin420.xyz/nft/9729",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:56.779Z",
+  "hash": "6d6589980562f84852683ef64cac56ebfdd45d479a68571463c47da5ae3e47f7",
+  "dna": "6d6589980562f848",
+  "edition": 9729,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

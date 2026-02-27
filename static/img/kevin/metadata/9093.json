@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #9093 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "9093.png",
+  "external_url": "https://kevin420.xyz/nft/9093",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:55.133Z",
+  "hash": "26d2265fbfed2007c4068b2c368b45eb681a2392c6eece2af2a4a23d47eaf339",
+  "dna": "26d2265fbfed2007",
+  "edition": 9093,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

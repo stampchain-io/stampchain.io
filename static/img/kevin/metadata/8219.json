@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #8219 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "8219.png",
+  "external_url": "https://kevin420.xyz/nft/8219",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Fez"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:52.880Z",
+  "hash": "bb163cdf8892b5110753dac4b1b2a268173a8f7bd1708c85f9faa886f15bd471",
+  "dna": "bb163cdf8892b511",
+  "edition": 8219,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

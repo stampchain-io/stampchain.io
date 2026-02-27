@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #1761 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "1761.png",
+  "external_url": "https://kevin420.xyz/nft/1761",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.179Z",
+  "hash": "3511ad246687891c0257b6b7b6d94bc639782ea689ff53e9cf9590aabba1122c",
+  "dna": "3511ad246687891c",
+  "edition": 1761,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

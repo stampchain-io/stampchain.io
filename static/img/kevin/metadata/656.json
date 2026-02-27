@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #656 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "656.png",
+  "external_url": "https://kevin420.xyz/nft/656",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.596Z",
+  "hash": "52380290154c298a5da39009147f1a7c451c7a72af845da70bf7725407244d14",
+  "dna": "52380290154c298a",
+  "edition": 656,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

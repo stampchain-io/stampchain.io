@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #803 - Night Mode",
+  "description": "Ready for the night with Blackhat and Cool Shades!",
+  "image": "803.png",
+  "external_url": "https://kevin420.xyz/nft/803",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.940Z",
+  "hash": "55235492940cea67b939bcf3191b2a951c4e81c505325dae5570ef6af2a227cb",
+  "dna": "55235492940cea67",
+  "edition": 803,
+  "special": "Night Mode",
+  "rarity": "Rare"
+}

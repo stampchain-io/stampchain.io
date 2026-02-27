@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #6323 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "6323.png",
+  "external_url": "https://kevin420.xyz/nft/6323",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:48.190Z",
+  "hash": "23ca9384b622863695ee71f4e4bf9e3601e9d50e75efcfb4e9763b9eda9a268f",
+  "dna": "23ca9384b6228636",
+  "edition": 6323,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

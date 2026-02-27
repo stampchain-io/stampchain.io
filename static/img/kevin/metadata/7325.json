@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #7325 - NEXUS Convergence",
+  "description": "An extremely rare NEXUS convergence - when background and face align in perfect NEXUS harmony.",
+  "image": "7325.png",
+  "external_url": "https://kevin420.xyz/nft/7325",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:50.697Z",
+  "hash": "f818a111165ce49edf94f63d167c3d6cf355e3f37fd18b8c3ae14df9a378f39d",
+  "dna": "f818a111165ce49e",
+  "edition": 7325,
+  "special": "Complete NEXUS",
+  "rarity": "Mythic"
+}

@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #9041 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "9041.png",
+  "external_url": "https://kevin420.xyz/nft/9041",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:55.003Z",
+  "hash": "be16014c03b7ab02f6b07f16c976ae62810fc1d71ca7410ca0f27d62eae6daa9",
+  "dna": "be16014c03b7ab02",
+  "edition": 9041,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

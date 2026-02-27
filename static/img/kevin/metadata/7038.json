@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #7038 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "7038.png",
+  "external_url": "https://kevin420.xyz/nft/7038",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:49.936Z",
+  "hash": "7f4fd8eefa602b7a1784033e68a45028110ceaa8ba1f0c49e1e26b8856bbc541",
+  "dna": "7f4fd8eefa602b7a",
+  "edition": 7038,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

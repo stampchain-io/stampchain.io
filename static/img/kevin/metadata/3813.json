@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #3813 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "3813.png",
+  "external_url": "https://kevin420.xyz/nft/3813",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Fez"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:42.080Z",
+  "hash": "ea454ee8b7c164b63055e200ff716e80cbcabad237812c5941c0071c3459a465",
+  "dna": "ea454ee8b7c164b6",
+  "edition": 3813,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #5748 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "5748.png",
+  "external_url": "https://kevin420.xyz/nft/5748",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:46.795Z",
+  "hash": "13f7d19fb4c991a6278b985483131ed033ae8dd484140eb859df5f73f5de1245",
+  "dna": "13f7d19fb4c991a6",
+  "edition": 5748,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

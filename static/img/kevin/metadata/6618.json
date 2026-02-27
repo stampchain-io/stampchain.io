@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #6618 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "6618.png",
+  "external_url": "https://kevin420.xyz/nft/6618",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:48.913Z",
+  "hash": "6155d699b6c3793c47a7be4584d910fb33067c987e8a66753591a61637041d12",
+  "dna": "6155d699b6c3793c",
+  "edition": 6618,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

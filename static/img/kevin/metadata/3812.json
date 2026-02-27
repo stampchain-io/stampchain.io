@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #3812 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "3812.png",
+  "external_url": "https://kevin420.xyz/nft/3812",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:42.078Z",
+  "hash": "31a835fa8a2a2a5edb2287ed31e83a9ed41aee2a39b72669ff136577c360ce1b",
+  "dna": "31a835fa8a2a2a5e",
+  "edition": 3812,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

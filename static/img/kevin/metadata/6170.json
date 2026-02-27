@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #6170 - Viva Mexico",
+  "description": "Celebrating Mexico with Viva style!",
+  "image": "6170.png",
+  "external_url": "https://kevin420.xyz/nft/6170",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:47.843Z",
+  "hash": "918fb25fdc330b37e0e886baeb314fb22937d47b6b8333a7a18025e870935191",
+  "dna": "918fb25fdc330b37",
+  "edition": 6170,
+  "special": "Viva Mexico",
+  "rarity": "Uncommon"
+}

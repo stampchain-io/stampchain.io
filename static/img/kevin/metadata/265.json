@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #265 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DITA!",
+  "image": "265.png",
+  "external_url": "https://kevin420.xyz/nft/265",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:33.688Z",
+  "hash": "43a3e917cd4aeb0b407c4f49949c22d7edf8a575a652f64253e4d46cf9093dff",
+  "dna": "43a3e917cd4aeb0b",
+  "edition": 265,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

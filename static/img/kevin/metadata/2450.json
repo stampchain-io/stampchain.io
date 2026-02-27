@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #2450 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "2450.png",
+  "external_url": "https://kevin420.xyz/nft/2450",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Fez"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:38.811Z",
+  "hash": "69f41100c4b4550d5d63196cc4bd38e5670ff68bed74aa39d2a19964b9810d16",
+  "dna": "69f41100c4b4550d",
+  "edition": 2450,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

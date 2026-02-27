@@ -1,0 +1,51 @@
+{
+  "name": "Kevin #2031 - Witch Nose",
+  "description": "A mystical Kevin with the rare Witch Nose!",
+  "image": "2031.png",
+  "external_url": "https://kevin420.xyz/nft/2031",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 8
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.869Z",
+  "hash": "9640bc3f15ffc8dac9fd5c65d7dc3a1ca1e7c305e72df9fa49e3429bf057c98e",
+  "dna": "9640bc3f15ffc8da",
+  "edition": 2031,
+  "special": "Witch Nose",
+  "rarity": "Rare"
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #1985 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "1985.png",
+  "external_url": "https://kevin420.xyz/nft/1985",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.757Z",
+  "hash": "0547841cc5f5ad3f9a66b8831d84f05f4bd15f2b27846d6d56d69a14d85c0b53",
+  "dna": "0547841cc5f5ad3f",
+  "edition": 1985,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #102 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "102.png",
+  "external_url": "https://kevin420.xyz/nft/102",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:33.317Z",
+  "hash": "381e2534337c605261e49c22a34417b942c94645f5c44bfa5cb472be0e2e79c5",
+  "dna": "381e2534337c6052",
+  "edition": 102,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

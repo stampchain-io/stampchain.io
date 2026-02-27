@@ -1,0 +1,27 @@
+{
+  "name": "Kevin #528 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "528.png",
+  "external_url": "https://kevin420.xyz/nft/528",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 2
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.316Z",
+  "hash": "3b358f1475043e18ea945af9308e51a96db8ca7dad3aeff7bd42b8a995fda057",
+  "dna": "3b358f1475043e18",
+  "edition": 528,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

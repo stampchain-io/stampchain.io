@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #8911 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "8911.png",
+  "external_url": "https://kevin420.xyz/nft/8911",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:54.651Z",
+  "hash": "8f024ea77a20c1c262e465edf4f979fa037de92768c1cfaabc9a1a699933659c",
+  "dna": "8f024ea77a20c1c2",
+  "edition": 8911,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

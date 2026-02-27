@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #2218 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "2218.png",
+  "external_url": "https://kevin420.xyz/nft/2218",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:38.289Z",
+  "hash": "4195955646f1e65fae07bb3526f28e05d3b6ca82c60971b9a6091f408e964c5a",
+  "dna": "4195955646f1e65f",
+  "edition": 2218,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #810 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "810.png",
+  "external_url": "https://kevin420.xyz/nft/810",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.956Z",
+  "hash": "2c775467091f2ed63b586be202e8c6aa15ec776914d8d61aefb6f7501e093471",
+  "dna": "2c775467091f2ed6",
+  "edition": 810,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

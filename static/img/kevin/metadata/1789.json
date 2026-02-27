@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #1789 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "1789.png",
+  "external_url": "https://kevin420.xyz/nft/1789",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.240Z",
+  "hash": "f2f798ec11ae73851fc9a984e5fc55be95dd01d9dfa584de75742ce1133ff893",
+  "dna": "f2f798ec11ae7385",
+  "edition": 1789,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

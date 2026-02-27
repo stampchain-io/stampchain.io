@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #7421 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "7421.png",
+  "external_url": "https://kevin420.xyz/nft/7421",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:50.922Z",
+  "hash": "3098e709ca02abb504e86c0638e5d6d673e1ae6226400e066409a8824a9e2072",
+  "dna": "3098e709ca02abb5",
+  "edition": 7421,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

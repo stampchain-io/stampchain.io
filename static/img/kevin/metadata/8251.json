@@ -1,0 +1,51 @@
+{
+  "name": "Kevin #8251 - Night Mode",
+  "description": "Ready for the night with Blackhat and Cool Shades!",
+  "image": "8251.png",
+  "external_url": "https://kevin420.xyz/nft/8251",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 8
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:52.952Z",
+  "hash": "7adef4c07d7c2890c254a9dd19642b04cba2b7a8154e5f11d308e1dbeffb0a18",
+  "dna": "7adef4c07d7c2890",
+  "edition": 8251,
+  "special": "Night Mode",
+  "rarity": "Rare"
+}

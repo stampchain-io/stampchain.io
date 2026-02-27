@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #7543 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "7543.png",
+  "external_url": "https://kevin420.xyz/nft/7543",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:51.209Z",
+  "hash": "b1c3d4ff3c259bba9e7081dbf238d48f37fa2be4133ca787dbea2d1cabe7787c",
+  "dna": "b1c3d4ff3c259bba",
+  "edition": 7543,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

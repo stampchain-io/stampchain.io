@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #8806 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "8806.png",
+  "external_url": "https://kevin420.xyz/nft/8806",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:54.336Z",
+  "hash": "122607c69fac4da827f0e6e6733ef5adee5ee42a7ccb0c614d6977dba43658f1",
+  "dna": "122607c69fac4da8",
+  "edition": 8806,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

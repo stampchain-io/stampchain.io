@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #5029 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "5029.png",
+  "external_url": "https://kevin420.xyz/nft/5029",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:44.996Z",
+  "hash": "b45495464abe0d3ee2b267bfe5165ac11b6b835afbea2d8a2e0bd0464a750a9a",
+  "dna": "b45495464abe0d3e",
+  "edition": 5029,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

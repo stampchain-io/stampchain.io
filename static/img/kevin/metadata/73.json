@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #73 - Witch Nose",
+  "description": "A mystical Kevin with the rare Witch Nose!",
+  "image": "73.png",
+  "external_url": "https://kevin420.xyz/nft/73",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:33.250Z",
+  "hash": "307913c6ccce822225f45946d8f487efd2a679cfaa62b54f4957cfa56f00b079",
+  "dna": "307913c6ccce8222",
+  "edition": 73,
+  "special": "Witch Nose",
+  "rarity": "Rare"
+}

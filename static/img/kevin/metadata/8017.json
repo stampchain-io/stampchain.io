@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #8017 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "8017.png",
+  "external_url": "https://kevin420.xyz/nft/8017",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:52.375Z",
+  "hash": "96de5ec727bbe827308fe4d1f3338bbe12ef93bb91442a3c2c38d1425620ccf6",
+  "dna": "96de5ec727bbe827",
+  "edition": 8017,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

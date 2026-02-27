@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #1720 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DITA!",
+  "image": "1720.png",
+  "external_url": "https://kevin420.xyz/nft/1720",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.082Z",
+  "hash": "89f4101b733e7bbe5b294b260f8140615b56684ec0e2a9fb199f0a6b5e4420c0",
+  "dna": "89f4101b733e7bbe",
+  "edition": 1720,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

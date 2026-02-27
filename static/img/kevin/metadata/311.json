@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #311 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "311.png",
+  "external_url": "https://kevin420.xyz/nft/311",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:33.804Z",
+  "hash": "0537428403b7440f93d37b8c4348593d8e0421f2688d1f1f3c656aae05145434",
+  "dna": "0537428403b7440f",
+  "edition": 311,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

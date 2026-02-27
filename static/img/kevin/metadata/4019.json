@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #4019 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "4019.png",
+  "external_url": "https://kevin420.xyz/nft/4019",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:42.577Z",
+  "hash": "06b4854dc0c369cda3695c278fab5b6da0d360fdcb4a34026bff1b301eacd6ba",
+  "dna": "06b4854dc0c369cd",
+  "edition": 4019,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

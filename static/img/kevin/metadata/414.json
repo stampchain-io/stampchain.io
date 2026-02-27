@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #414 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "414.png",
+  "external_url": "https://kevin420.xyz/nft/414",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.050Z",
+  "hash": "149f4b8a9190e2ccc18b73e9d18c9c68455e9ed675c81bdf036ac6856e613d16",
+  "dna": "149f4b8a9190e2cc",
+  "edition": 414,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #4623 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "4623.png",
+  "external_url": "https://kevin420.xyz/nft/4623",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:44.017Z",
+  "hash": "0db2526f270f24832bf37b3a2eed9488ec43a47c21ad4237254bec103ad558eb",
+  "dna": "0db2526f270f2483",
+  "edition": 4623,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

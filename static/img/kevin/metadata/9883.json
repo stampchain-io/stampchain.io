@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #9883 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "9883.png",
+  "external_url": "https://kevin420.xyz/nft/9883",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:57.142Z",
+  "hash": "9e851ce99b346c2e4b16ab87dcee6e75f5f9f49ac94989a52591c42355af66ba",
+  "dna": "9e851ce99b346c2e",
+  "edition": 9883,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

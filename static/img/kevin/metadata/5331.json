@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #5331 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "5331.png",
+  "external_url": "https://kevin420.xyz/nft/5331",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:45.777Z",
+  "hash": "a13ea6b4c295370b783f85a0e10b2179a2bbc529439bc489e7e7c3e7b705ac0c",
+  "dna": "a13ea6b4c295370b",
+  "edition": 5331,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

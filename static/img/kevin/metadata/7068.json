@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #7068 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DITA!",
+  "image": "7068.png",
+  "external_url": "https://kevin420.xyz/nft/7068",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:50.003Z",
+  "hash": "bcac4c509a8f0a5a16046c7d93877e6c2afc42c4487c8055b4b9af355047c3ec",
+  "dna": "bcac4c509a8f0a5a",
+  "edition": 7068,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

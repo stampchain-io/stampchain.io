@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #5628 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "5628.png",
+  "external_url": "https://kevin420.xyz/nft/5628",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:46.494Z",
+  "hash": "4a5fa34ae2e01e6087e4cf80c9ee2edd8207a751478b0d73a50d289c07964305",
+  "dna": "4a5fa34ae2e01e60",
+  "edition": 5628,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

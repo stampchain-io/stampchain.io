@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #497 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "497.png",
+  "external_url": "https://kevin420.xyz/nft/497",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.249Z",
+  "hash": "f9450dcb9712f4e85fdf32a994ff1bd0cdfe0254ab0e3b2ab5bcc505e3880711",
+  "dna": "f9450dcb9712f4e8",
+  "edition": 497,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

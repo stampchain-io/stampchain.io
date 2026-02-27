@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #5659 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DITA!",
+  "image": "5659.png",
+  "external_url": "https://kevin420.xyz/nft/5659",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:46.572Z",
+  "hash": "3d1c7977320fc8e5c8f81f9dbd56e7ad3bc1884d7b08248f474efa4c4e5088f6",
+  "dna": "3d1c7977320fc8e5",
+  "edition": 5659,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

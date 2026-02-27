@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #1998 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "1998.png",
+  "external_url": "https://kevin420.xyz/nft/1998",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.792Z",
+  "hash": "17b66cbb7eeaeba102bcf7166590ae750c19fc346b858f3c048d653d88c5ab76",
+  "dna": "17b66cbb7eeaeba1",
+  "edition": 1998,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #8394 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "8394.png",
+  "external_url": "https://kevin420.xyz/nft/8394",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:53.277Z",
+  "hash": "81a1d14b64bef3fa4af85a646c194fd3a27a8f4ec44c0e974ed4a90b6a9119c1",
+  "dna": "81a1d14b64bef3fa",
+  "edition": 8394,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

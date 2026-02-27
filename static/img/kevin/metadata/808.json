@@ -1,0 +1,55 @@
+{
+  "name": "Kevin #808 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "808.png",
+  "external_url": "https://kevin420.xyz/nft/808",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 9
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.952Z",
+  "hash": "ef37ff284d0f32f8fcad46d32088918388c6802867af64d3724551013d950d74",
+  "dna": "ef37ff284d0f32f8",
+  "edition": 808,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

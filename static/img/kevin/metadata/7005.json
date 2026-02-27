@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #7005 - Minimal DEDKEV",
+  "description": "The minimalist DEDKEV - pure essence with minimal traits.",
+  "image": "7005.png",
+  "external_url": "https://kevin420.xyz/nft/7005",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:49.861Z",
+  "hash": "c291074e423121f0e911d6ac35745603c174ba48fabb4d04849f1090546e73b2",
+  "dna": "c291074e423121f0",
+  "edition": 7005,
+  "special": "Minimal DEDKEV",
+  "rarity": "Ultra Rare"
+}

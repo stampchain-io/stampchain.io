@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #7800 - Night Mode",
+  "description": "Ready for the night with Blackhat and Cool Shades!",
+  "image": "7800.png",
+  "external_url": "https://kevin420.xyz/nft/7800",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:51.816Z",
+  "hash": "a22f9124d4696263b9856619f645680fa467f8563801f031f6511fe9ecca7a53",
+  "dna": "a22f9124d4696263",
+  "edition": 7800,
+  "special": "Night Mode",
+  "rarity": "Rare"
+}

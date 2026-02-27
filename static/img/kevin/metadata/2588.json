@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #2588 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DITA!",
+  "image": "2588.png",
+  "external_url": "https://kevin420.xyz/nft/2588",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:39.129Z",
+  "hash": "6e92dc8f3ac1fb402547129424dcd34687cda8d4c891f9a2febaad16a15bf30e",
+  "dna": "6e92dc8f3ac1fb40",
+  "edition": 2588,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

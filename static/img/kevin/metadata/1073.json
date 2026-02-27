@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #1073 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "1073.png",
+  "external_url": "https://kevin420.xyz/nft/1073",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:35.578Z",
+  "hash": "2e40bc6dce55e4fcb95c54ea3a87edd2008ce080a327ea9092758b50608ca98d",
+  "dna": "2e40bc6dce55e4fc",
+  "edition": 1073,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

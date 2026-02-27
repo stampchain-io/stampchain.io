@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #1830 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "1830.png",
+  "external_url": "https://kevin420.xyz/nft/1830",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.371Z",
+  "hash": "4c828e1f7dcc929e868d2291fe01ad0749087690cd2b15315e83e0db80211a9f",
+  "dna": "4c828e1f7dcc929e",
+  "edition": 1830,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

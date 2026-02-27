@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #692 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "692.png",
+  "external_url": "https://kevin420.xyz/nft/692",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.678Z",
+  "hash": "a542cc0190b8d8d702c33289cc189415088cd02201e6f936a571feeef1cc97f0",
+  "dna": "a542cc0190b8d8d7",
+  "edition": 692,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

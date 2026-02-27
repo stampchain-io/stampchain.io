@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #2070 - Minimal Neon",
+  "description": "Pure neon essence - minimal traits with maximum impact.",
+  "image": "2070.png",
+  "external_url": "https://kevin420.xyz/nft/2070",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.958Z",
+  "hash": "90dd6153b2b134aeb5918d39ffcce4545a590cedc9e39ec3f1ef8987dd4ef860",
+  "dna": "90dd6153b2b134ae",
+  "edition": 2070,
+  "special": "Minimal Neon",
+  "rarity": "Ultra Rare"
+}

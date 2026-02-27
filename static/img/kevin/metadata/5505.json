@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #5505 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "5505.png",
+  "external_url": "https://kevin420.xyz/nft/5505",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Fez"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:46.203Z",
+  "hash": "369bd0a33bcb699d49fe18b9d757c5284207fdf1ed43663fd8994014f057ab04",
+  "dna": "369bd0a33bcb699d",
+  "edition": 5505,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

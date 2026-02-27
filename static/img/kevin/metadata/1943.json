@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #1943 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "1943.png",
+  "external_url": "https://kevin420.xyz/nft/1943",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.639Z",
+  "hash": "08f71580b80a1342581d1bb60527603f47a2b831b78151ead537136b6b9845bb",
+  "dna": "08f71580b80a1342",
+  "edition": 1943,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

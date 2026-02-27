@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #6714 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "6714.png",
+  "external_url": "https://kevin420.xyz/nft/6714",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:49.135Z",
+  "hash": "5d3126167e3fa562030474ed6b534ad14e91d73bb1739743fb2d8a6a390704b6",
+  "dna": "5d3126167e3fa562",
+  "edition": 6714,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

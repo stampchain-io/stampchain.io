@@ -1,0 +1,51 @@
+{
+  "name": "Kevin #2827 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "2827.png",
+  "external_url": "https://kevin420.xyz/nft/2827",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 8
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:39.716Z",
+  "hash": "108594b474ddf275c5efb75d8e1f939724ebef0f0e51bd86cd572ac84b3ac45d",
+  "dna": "108594b474ddf275",
+  "edition": 2827,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

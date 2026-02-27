@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #6415 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "6415.png",
+  "external_url": "https://kevin420.xyz/nft/6415",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:48.431Z",
+  "hash": "4a5ded35cae1525805df996b9639a339706ce972249cd056ab7d3151bef3f75c",
+  "dna": "4a5ded35cae15258",
+  "edition": 6415,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

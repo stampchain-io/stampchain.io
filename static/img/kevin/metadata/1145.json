@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #1145 - Perfect Pepe",
+  "description": "The perfect alignment of Pepe face and Pepe Vision!",
+  "image": "1145.png",
+  "external_url": "https://kevin420.xyz/nft/1145",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:35.746Z",
+  "hash": "14d60db6940901e9be2b4a6681845e92cb74df211a5d381732e64c3efeeca3be",
+  "dna": "14d60db6940901e9",
+  "edition": 1145,
+  "special": "Perfect Pepe",
+  "rarity": "Rare"
+}

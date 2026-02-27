@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #6329 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "6329.png",
+  "external_url": "https://kevin420.xyz/nft/6329",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:48.203Z",
+  "hash": "cb6b3fbe674a1dc828e81f6bdc5a408a8230ce509632e081f8902521f32efd9d",
+  "dna": "cb6b3fbe674a1dc8",
+  "edition": 6329,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

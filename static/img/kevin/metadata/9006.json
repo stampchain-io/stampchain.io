@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #9006 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "9006.png",
+  "external_url": "https://kevin420.xyz/nft/9006",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:54.904Z",
+  "hash": "3de1c41294a3c1dad9e29916a3f6713c8bd59a578c6ed225119595ebf3f72e53",
+  "dna": "3de1c41294a3c1da",
+  "edition": 9006,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #3391 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "3391.png",
+  "external_url": "https://kevin420.xyz/nft/3391",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:41.064Z",
+  "hash": "8d1ae4430b7b66aa3f0099cce6efe51cdc4d25cd12b252549b023f7e6eb221b8",
+  "dna": "8d1ae4430b7b66aa",
+  "edition": 3391,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

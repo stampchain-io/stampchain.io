@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #7259 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "7259.png",
+  "external_url": "https://kevin420.xyz/nft/7259",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:50.529Z",
+  "hash": "b185aeb12804aea00d68c339a5ddfc9a14fc52fb8f7c48824dde8e03ff2cc989",
+  "dna": "b185aeb12804aea0",
+  "edition": 7259,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #4273 - Witch Nose",
+  "description": "A mystical Kevin with the rare Witch Nose!",
+  "image": "4273.png",
+  "external_url": "https://kevin420.xyz/nft/4273",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:43.191Z",
+  "hash": "9664d4a6bc7336bca46701ed474f94462d2a9df9fe28c6419a788bb6d229f5e8",
+  "dna": "9664d4a6bc7336bc",
+  "edition": 4273,
+  "special": "Witch Nose",
+  "rarity": "Rare"
+}

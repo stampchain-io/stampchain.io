@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #1902 - Witch Nose",
+  "description": "A mystical Kevin with the rare Witch Nose!",
+  "image": "1902.png",
+  "external_url": "https://kevin420.xyz/nft/1902",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.539Z",
+  "hash": "0867b9a3704504cbc4340ea1802ec0209f8d2395797d5dc32f9308b3d1516f1e",
+  "dna": "0867b9a3704504cb",
+  "edition": 1902,
+  "special": "Witch Nose",
+  "rarity": "Rare"
+}

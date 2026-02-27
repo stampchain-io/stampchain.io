@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #2009 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "2009.png",
+  "external_url": "https://kevin420.xyz/nft/2009",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.817Z",
+  "hash": "3bcee07c0a9f1906412f07ad0cff95e66085b832f2bd39ef2abd012507bb2509",
+  "dna": "3bcee07c0a9f1906",
+  "edition": 2009,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

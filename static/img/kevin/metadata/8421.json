@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #8421 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "8421.png",
+  "external_url": "https://kevin420.xyz/nft/8421",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:53.344Z",
+  "hash": "c79da2eea8de1f7caabd640e5b072658d4d60616bc4b702d7f10e63c40b4a06e",
+  "dna": "c79da2eea8de1f7c",
+  "edition": 8421,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

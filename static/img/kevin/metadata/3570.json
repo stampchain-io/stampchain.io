@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #3570 - Minimal BBleiztz",
+  "description": "The minimalist BBleiztz - nothing but the iconic glasses and essentials.",
+  "image": "3570.png",
+  "external_url": "https://kevin420.xyz/nft/3570",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:41.495Z",
+  "hash": "91f5445fefae6ad09025b767899769e7e69e649ad028a36f635a726733440f34",
+  "dna": "91f5445fefae6ad0",
+  "edition": 3570,
+  "special": "Minimal BBleiztz",
+  "rarity": "Ultra Rare"
+}

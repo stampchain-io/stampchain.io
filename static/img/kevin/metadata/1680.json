@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #1680 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "1680.png",
+  "external_url": "https://kevin420.xyz/nft/1680",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:36.992Z",
+  "hash": "8431ff878f4b5de3dde6815da80a869c146deb79650b694baa86923ad9759557",
+  "dna": "8431ff878f4b5de3",
+  "edition": 1680,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

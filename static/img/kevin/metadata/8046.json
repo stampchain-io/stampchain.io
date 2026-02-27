@@ -1,0 +1,37 @@
+{
+  "name": "Kevin #8046",
+  "description": "Kevin is a generative PFP collection showcasing unique and fun characters.",
+  "image": "8046.png",
+  "external_url": "https://kevin420.xyz/nft/8046",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:52.448Z",
+  "hash": "1fcb9b81be3092963b42f2fc0a2bfd7cb9cabc07b6626550e5f83ce850d20467",
+  "dna": "1fcb9b81be309296",
+  "edition": 8046
+}

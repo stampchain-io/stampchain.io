@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #4070 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "4070.png",
+  "external_url": "https://kevin420.xyz/nft/4070",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:42.692Z",
+  "hash": "317878c77d83ef5f352d4bcb7781041b4f1a896b9a39a43182bd0b3bb494ecde",
+  "dna": "317878c77d83ef5f",
+  "edition": 4070,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

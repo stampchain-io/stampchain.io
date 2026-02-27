@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #1282 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "1282.png",
+  "external_url": "https://kevin420.xyz/nft/1282",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:36.056Z",
+  "hash": "274976d8c4b59d58e614bbcc34266ffcfe70a5c264e222e5dad850c8abfed934",
+  "dna": "274976d8c4b59d58",
+  "edition": 1282,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

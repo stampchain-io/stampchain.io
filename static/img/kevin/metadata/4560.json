@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #4560 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "4560.png",
+  "external_url": "https://kevin420.xyz/nft/4560",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:43.872Z",
+  "hash": "b6f0f6e37cc912c4346911646d99b1d6a7458268fed39065e69702e1d016c060",
+  "dna": "b6f0f6e37cc912c4",
+  "edition": 4560,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

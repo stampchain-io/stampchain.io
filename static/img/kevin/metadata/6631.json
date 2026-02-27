@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #6631 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DITA!",
+  "image": "6631.png",
+  "external_url": "https://kevin420.xyz/nft/6631",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:48.943Z",
+  "hash": "7984b1ca64e57dc9139b422b2e4db966993513887eb70f0df1ceb5e581b2294f",
+  "dna": "7984b1ca64e57dc9",
+  "edition": 6631,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

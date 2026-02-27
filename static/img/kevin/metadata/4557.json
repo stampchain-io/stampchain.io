@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #4557 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "4557.png",
+  "external_url": "https://kevin420.xyz/nft/4557",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Fez"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:43.866Z",
+  "hash": "8f7ba5f992d859ad7a48aa7d8de74a991b35862a10a81871f9eceba17bce0b54",
+  "dna": "8f7ba5f992d859ad",
+  "edition": 4557,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

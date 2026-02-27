@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #2881 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "2881.png",
+  "external_url": "https://kevin420.xyz/nft/2881",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:39.867Z",
+  "hash": "9ad2109236eb70e1f1f9f1775d034eb38f473c232e035354224a7a89f2465d29",
+  "dna": "9ad2109236eb70e1",
+  "edition": 2881,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

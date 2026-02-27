@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #4496 - NEXUS Convergence",
+  "description": "An extremely rare NEXUS convergence - when background and face align in perfect NEXUS harmony.",
+  "image": "4496.png",
+  "external_url": "https://kevin420.xyz/nft/4496",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:43.728Z",
+  "hash": "4f7b035f8bb9be1c5163c00f4d55b2efcf22ae9ba8e2229cd476a86393ba0493",
+  "dna": "4f7b035f8bb9be1c",
+  "edition": 4496,
+  "special": "Complete NEXUS",
+  "rarity": "Mythic"
+}

@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #4639 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "4639.png",
+  "external_url": "https://kevin420.xyz/nft/4639",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:44.053Z",
+  "hash": "eedf81b7f94661686d75ec3ecadcf0a343e092f69f6c7590f38c97f9dce836a6",
+  "dna": "eedf81b7f9466168",
+  "edition": 4639,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

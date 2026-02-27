@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #8024 - Perfect Pepe",
+  "description": "The perfect alignment of Pepe face and Pepe Vision!",
+  "image": "8024.png",
+  "external_url": "https://kevin420.xyz/nft/8024",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:52.393Z",
+  "hash": "b9242bbb5312b9761061e2f97fb9ca1eee8df47ec12ca4622ab419a200c53937",
+  "dna": "b9242bbb5312b976",
+  "edition": 8024,
+  "special": "Perfect Pepe",
+  "rarity": "Rare"
+}

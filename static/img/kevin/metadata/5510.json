@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #5510 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "5510.png",
+  "external_url": "https://kevin420.xyz/nft/5510",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:46.214Z",
+  "hash": "b55746b1fd5b694c32409fb168d4db9cb1400bf922bdf19e575eb31e1b85d0bb",
+  "dna": "b55746b1fd5b694c",
+  "edition": 5510,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #4236 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "4236.png",
+  "external_url": "https://kevin420.xyz/nft/4236",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Fez"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:43.110Z",
+  "hash": "24051f3032451f7b687fb6f170161996f2022aa40a8f45c19d31636e849ad72d",
+  "dna": "24051f3032451f7b",
+  "edition": 4236,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

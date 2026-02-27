@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #383 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "383.png",
+  "external_url": "https://kevin420.xyz/nft/383",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:33.972Z",
+  "hash": "224c42f1a0ef50c509f888dcda1f716fb5365a1c5c927a41f17bd8d48efa18cb",
+  "dna": "224c42f1a0ef50c5",
+  "edition": 383,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

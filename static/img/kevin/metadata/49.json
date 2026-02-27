@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #49 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "49.png",
+  "external_url": "https://kevin420.xyz/nft/49",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:33.199Z",
+  "hash": "cd55c362bb13fad29c915f028a7bc6df98a4116c7eb2906683ea3a09eb598301",
+  "dna": "cd55c362bb13fad2",
+  "edition": 49,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

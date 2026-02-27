@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #2063 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "2063.png",
+  "external_url": "https://kevin420.xyz/nft/2063",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.943Z",
+  "hash": "9f7b6f93deddd81c1c93c8a85d16234f8badaa9a0379d0a1adfed5cd55b4973b",
+  "dna": "9f7b6f93deddd81c",
+  "edition": 2063,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

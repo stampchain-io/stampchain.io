@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #7863 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "7863.png",
+  "external_url": "https://kevin420.xyz/nft/7863",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:52.000Z",
+  "hash": "6c9ffb49297a7078688775dab210d417cdc364c614a435db9fffb04b7d75dd0a",
+  "dna": "6c9ffb49297a7078",
+  "edition": 7863,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

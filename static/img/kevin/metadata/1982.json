@@ -1,0 +1,37 @@
+{
+  "name": "Kevin #1982",
+  "description": "Kevin is a generative PFP collection showcasing unique and fun characters.",
+  "image": "1982.png",
+  "external_url": "https://kevin420.xyz/nft/1982",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Fez"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.747Z",
+  "hash": "5de7ebc7cf634715c7aa3da3d9208fc767c3297b789b312a70e31ec441a18145",
+  "dna": "5de7ebc7cf634715",
+  "edition": 1982
+}

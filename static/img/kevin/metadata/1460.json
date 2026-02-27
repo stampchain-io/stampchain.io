@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #1460 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "1460.png",
+  "external_url": "https://kevin420.xyz/nft/1460",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:36.480Z",
+  "hash": "7abf667cdd7e060308532b67f08ad4c776cb8b517ed1c4a056d2d1c348eb6c00",
+  "dna": "7abf667cdd7e0603",
+  "edition": 1460,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

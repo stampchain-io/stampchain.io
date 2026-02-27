@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #5147 - Viva Enthusiast",
+  "description": "A true Viva fan with 3 Viva traits!",
+  "image": "5147.png",
+  "external_url": "https://kevin420.xyz/nft/5147",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:45.306Z",
+  "hash": "b005d92b26ced11c3da2dcad2a1b1220a44844c88d25e78a9f37cadce669f69e",
+  "dna": "b005d92b26ced11c",
+  "edition": 5147,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

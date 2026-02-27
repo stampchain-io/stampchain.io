@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #1396 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "1396.png",
+  "external_url": "https://kevin420.xyz/nft/1396",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:36.328Z",
+  "hash": "f43062540d6f8d7f2d56e65062841b98b045f39f1a0b7091151a4efe9271c691",
+  "dna": "f43062540d6f8d7f",
+  "edition": 1396,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

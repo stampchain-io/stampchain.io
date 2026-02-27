@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #8398 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DITA!",
+  "image": "8398.png",
+  "external_url": "https://kevin420.xyz/nft/8398",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:53.286Z",
+  "hash": "a323501668872b1e4aa8937d602ec8f6ef2dd6abbfa8acaf6d4db827b2ab9f4f",
+  "dna": "a323501668872b1e",
+  "edition": 8398,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

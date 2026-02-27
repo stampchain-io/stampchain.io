@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #9133 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "9133.png",
+  "external_url": "https://kevin420.xyz/nft/9133",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:55.227Z",
+  "hash": "5a141d1fc911836e25b4fe1933378565b75102d98c1c34b34267a776d15e7701",
+  "dna": "5a141d1fc911836e",
+  "edition": 9133,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

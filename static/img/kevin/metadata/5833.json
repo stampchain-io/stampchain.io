@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #5833 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "5833.png",
+  "external_url": "https://kevin420.xyz/nft/5833",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:47.023Z",
+  "hash": "4858e79f10c7bdb6f78609e07a885808594272ea432d46dab3e3b0c53b9f21da",
+  "dna": "4858e79f10c7bdb6",
+  "edition": 5833,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

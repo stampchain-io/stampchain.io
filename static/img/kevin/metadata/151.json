@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #151 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "151.png",
+  "external_url": "https://kevin420.xyz/nft/151",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:33.428Z",
+  "hash": "3106ba283c9fae9c0e96a7de86680531ecdebcbef5da002f984e70e164a001c7",
+  "dna": "3106ba283c9fae9c",
+  "edition": 151,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

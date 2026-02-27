@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #8003 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "8003.png",
+  "external_url": "https://kevin420.xyz/nft/8003",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:52.338Z",
+  "hash": "207e577be35b8ff152b9d74d7344be97a4ec306e4f5bb1c89a29e862328b1dfe",
+  "dna": "207e577be35b8ff1",
+  "edition": 8003,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

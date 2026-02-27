@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #988 - Perfect Pepe",
+  "description": "The perfect alignment of Pepe face and Pepe Vision!",
+  "image": "988.png",
+  "external_url": "https://kevin420.xyz/nft/988",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:35.384Z",
+  "hash": "eda697b721fde44567843ad48976f51dd8a91f876371c76c2f7a65fcdebc1706",
+  "dna": "eda697b721fde445",
+  "edition": 988,
+  "special": "Perfect Pepe",
+  "rarity": "Rare"
+}

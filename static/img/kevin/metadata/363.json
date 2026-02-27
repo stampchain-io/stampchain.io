@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #363 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "363.png",
+  "external_url": "https://kevin420.xyz/nft/363",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:33.924Z",
+  "hash": "fc0eb5fe25c7021caf197cf0bd8f8ffbf49f70e1f1afccdaba52a02c1bf5399c",
+  "dna": "fc0eb5fe25c7021c",
+  "edition": 363,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

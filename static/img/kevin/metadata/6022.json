@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #6022 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "6022.png",
+  "external_url": "https://kevin420.xyz/nft/6022",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:47.490Z",
+  "hash": "9ef50d9c8e3fd444ed35a3f09d17f827b613ccec833933c81752bbffb696889f",
+  "dna": "9ef50d9c8e3fd444",
+  "edition": 6022,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

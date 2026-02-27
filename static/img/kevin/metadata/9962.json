@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #9962 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DITA!",
+  "image": "9962.png",
+  "external_url": "https://kevin420.xyz/nft/9962",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:57.344Z",
+  "hash": "cac9f17478bec8187662ed6bfc8235462deb2487e11b790a08b39a1ee385cbb4",
+  "dna": "cac9f17478bec818",
+  "edition": 9962,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

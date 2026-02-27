@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #7655 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "7655.png",
+  "external_url": "https://kevin420.xyz/nft/7655",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:51.474Z",
+  "hash": "919be7945057db748fbfbdf6696c2bad7952060b288b9329f1dc4f86d52dc4d2",
+  "dna": "919be7945057db74",
+  "edition": 7655,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

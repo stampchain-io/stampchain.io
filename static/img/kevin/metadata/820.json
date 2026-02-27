@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #820 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "820.png",
+  "external_url": "https://kevin420.xyz/nft/820",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.977Z",
+  "hash": "1520bca827c341fc7c2af07127537a942365472213ba60c4d51c2d431c1bb0af",
+  "dna": "1520bca827c341fc",
+  "edition": 820,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #4008 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "4008.png",
+  "external_url": "https://kevin420.xyz/nft/4008",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:42.554Z",
+  "hash": "acb29df68964a59600e7a61336c059fcda323832f3e350431a1b22f88873eb33",
+  "dna": "acb29df68964a596",
+  "edition": 4008,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

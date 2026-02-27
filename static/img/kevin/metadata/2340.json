@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #2340 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "2340.png",
+  "external_url": "https://kevin420.xyz/nft/2340",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:38.558Z",
+  "hash": "04cda14e5333145e8013c135f2347091d54e1ee76919b1efd3f43a4c6d9683b4",
+  "dna": "04cda14e5333145e",
+  "edition": 2340,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

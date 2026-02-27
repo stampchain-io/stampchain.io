@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #944 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "944.png",
+  "external_url": "https://kevin420.xyz/nft/944",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:35.277Z",
+  "hash": "0c6fc429f13dce079608aa0bc304f06ed29e4b1f575b0d659205b315d7829f55",
+  "dna": "0c6fc429f13dce07",
+  "edition": 944,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

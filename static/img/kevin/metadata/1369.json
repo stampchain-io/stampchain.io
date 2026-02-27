@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #1369 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "1369.png",
+  "external_url": "https://kevin420.xyz/nft/1369",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:36.262Z",
+  "hash": "d6fde69e133be0e677e1bf50a63321180651ece37c64a19f75c064adecb23437",
+  "dna": "d6fde69e133be0e6",
+  "edition": 1369,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

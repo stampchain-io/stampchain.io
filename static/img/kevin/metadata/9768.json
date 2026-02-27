@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #9768 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "9768.png",
+  "external_url": "https://kevin420.xyz/nft/9768",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:56.880Z",
+  "hash": "c1f1b00c903e2faad7709b3a4326721c410a25249a30d2b7831d3b06c8325489",
+  "dna": "c1f1b00c903e2faa",
+  "edition": 9768,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #6758 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "6758.png",
+  "external_url": "https://kevin420.xyz/nft/6758",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:49.243Z",
+  "hash": "e08f4b224456c9a7173b2fee17ba3131850490df1c3fe05f147f412734f0ef83",
+  "dna": "e08f4b224456c9a7",
+  "edition": 6758,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

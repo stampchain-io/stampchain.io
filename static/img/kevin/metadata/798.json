@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #798 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "798.png",
+  "external_url": "https://kevin420.xyz/nft/798",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.929Z",
+  "hash": "09226a170f76ce2c9ad510153341525cde7002131025f0882f99a0e6cf71c2e2",
+  "dna": "09226a170f76ce2c",
+  "edition": 798,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

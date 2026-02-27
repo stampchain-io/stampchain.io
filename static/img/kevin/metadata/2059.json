@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #2059 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "2059.png",
+  "external_url": "https://kevin420.xyz/nft/2059",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.934Z",
+  "hash": "da543c1d9eb27f8c73258fa15349f2ff53d4ae35d9d1abdf7579172f26278567",
+  "dna": "da543c1d9eb27f8c",
+  "edition": 2059,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

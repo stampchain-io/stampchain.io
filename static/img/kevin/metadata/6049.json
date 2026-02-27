@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #6049 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "6049.png",
+  "external_url": "https://kevin420.xyz/nft/6049",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:47.554Z",
+  "hash": "0e45bc777d9cdd5beb71165e33b78f62063a57c0d238f31a6a3d0826da2e3e69",
+  "dna": "0e45bc777d9cdd5b",
+  "edition": 6049,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

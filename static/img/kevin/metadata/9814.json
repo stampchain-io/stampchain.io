@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #9814 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "9814.png",
+  "external_url": "https://kevin420.xyz/nft/9814",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:56.986Z",
+  "hash": "9e37cac2bf45fa04c4d44f01c5ab5f342a61fa2abef8cfb7532ccae276f41191",
+  "dna": "9e37cac2bf45fa04",
+  "edition": 9814,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

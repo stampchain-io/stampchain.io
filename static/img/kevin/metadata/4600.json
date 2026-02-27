@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #4600 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "4600.png",
+  "external_url": "https://kevin420.xyz/nft/4600",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:43.964Z",
+  "hash": "f2041417aebb1ada07a218e9dc26183355e8523c4277d8c69be9b11caa780468",
+  "dna": "f2041417aebb1ada",
+  "edition": 4600,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}
