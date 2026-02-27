@@ -39,6 +39,18 @@
               "pm.test('Health response has status', function () {",
               "    const json = pm.response.json();",
               "    pm.expect(json).to.have.property('status');",
+              "});",
+              "",
+              "pm.test('Health response nodeVersions is valid when present', function () {",
+              "    const json = pm.response.json();",
+              "    if (json.services && json.services.nodeVersions) {",
+              "        pm.expect(json.services.nodeVersions).to.be.an('array');",
+              "        json.services.nodeVersions.forEach(function(v) {",
+              "            pm.expect(v).to.have.property('component_name');",
+              "            pm.expect(v).to.have.property('version_string');",
+              "            pm.expect(v).to.have.property('detected_at');",
+              "        });",
+              "    }",
               "});"
             ]
           }

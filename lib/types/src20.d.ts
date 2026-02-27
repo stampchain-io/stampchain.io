@@ -933,6 +933,17 @@ export interface SRC20TokenWithMarketData {
 /**
  * HealthStatus - Migrated from health.ts
  */
+export interface NodeVersionInfo {
+  component_name: string;
+  version_string: string;
+  version_major: number | null;
+  version_minor: number | null;
+  version_revision: number | null;
+  version_suffix: string | null;
+  extra_info: Record<string, unknown> | null;
+  detected_at: string;
+}
+
 export interface HealthStatus {
   status: "OK" | "ERROR";
   services: {
@@ -954,6 +965,7 @@ export interface HealthStatus {
       src20Deployments: number;
       totalStamps: number;
     };
+    nodeVersions?: NodeVersionInfo[];
   };
 }
 

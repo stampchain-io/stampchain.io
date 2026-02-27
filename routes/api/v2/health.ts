@@ -1,35 +1,13 @@
 import { Handlers } from "$fresh/server.ts";
 import { ApiResponseUtil } from "$lib/utils/api/responses/apiResponseUtil.ts";
 import { getCurrentBlock } from "$lib/utils/mempool.ts";
+import type { HealthStatus } from "$types/src20.d.ts";
 import { circuitBreakerDbManager } from "$server/database/circuitBreakerDatabaseManager.ts";
+import { NodeVersionRepository } from "$server/database/nodeVersionRepository.ts";
 import { SRC20Repository } from "$server/database/src20Repository.ts";
 import { BlockService } from "$server/services/core/blockService.ts";
 import { CounterpartyApiManager } from "$server/services/counterpartyApiService.ts";
 import { StampService } from "$server/services/stampService.ts";
-
-interface HealthStatus {
-  status: "OK" | "ERROR";
-  services: {
-    api: boolean;
-    indexer: boolean;
-    mempool: boolean;
-    database: boolean;
-    xcp: boolean;
-    circuitBreaker?: {
-      state: string;
-      isHealthy: boolean;
-    };
-    blockSync?: {
-      indexed: number;
-      network: number;
-      isSynced: boolean;
-    };
-    stats?: {
-      src20Deployments: number;
-      totalStamps: number;
-    };
-  };
-}
 
 export const handler: Handlers = {
   /**
@@ -63,6 +41,7 @@ export const handler: Handlers = {
         stampCountResult,
         src20DeploymentsResult,
         xcpHealthResult,
+        nodeVersionsResult,
       ] = await Promise.allSettled([
         BlockService.getLastBlock(),
         getCurrentBlock().catch(() => null), // Catch mempool.space failures
@@ -72,6 +51,7 @@ export const handler: Handlers = {
           console.error("XCP health check failed in health endpoint:", error);
           return false;
         }), // 30 seconds cache for health checks (was 30000ms)
+        NodeVersionRepository.getCurrentVersions(),
       ]);
 
       // Extract values from settled promises
@@ -90,6 +70,9 @@ export const handler: Handlers = {
       const xcpHealth = xcpHealthResult.status === "fulfilled"
         ? xcpHealthResult.value
         : false;
+      const nodeVersions = nodeVersionsResult.status === "fulfilled"
+        ? nodeVersionsResult.value
+        : [];
 
       // Update service statuses
       health.services.indexer = !!lastIndexedBlock;
@@ -132,6 +115,11 @@ export const handler: Handlers = {
           state: "UNKNOWN",
           isHealthy: false,
         };
+      }
+
+      // Add node version information (non-essential, graceful if table missing)
+      if (nodeVersions.length > 0) {
+        health.services.nodeVersions = nodeVersions;
       }
 
       // Update overall status
