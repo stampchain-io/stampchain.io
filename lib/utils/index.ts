@@ -53,6 +53,7 @@ export * from "./navigation/freshNavigationUtils.ts";
 export * from "./monitoring/logging/logger.ts";
 export * from "./performance/fees/feeMonitoring.ts";
 export { ErrorHandlingUtils, type ErrorInfo } from "./errorHandling.ts";
+export * from "./jsonLd.ts";
 export { showToast } from "./ui/notifications/toastSignal.ts";
 export * from "./performance/debounce.ts";
 export * from "./performance/storage/localStorage.ts";
