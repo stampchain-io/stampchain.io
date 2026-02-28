@@ -459,6 +459,96 @@ describe("CollectionRepository Unit Tests", () => {
     });
   });
 
+  describe("getCollectionByStamp", () => {
+    it("should return collection info for a valid stamp number", async () => {
+      // Skip if in RUN_DB_TESTS mode
+      if (!mockDb) return;
+
+      const mockCollection = {
+        collection_id: "015F0478516E4273DD90FE59C766DD98",
+        collection_name: "KEVIN",
+        collection_description: null,
+      };
+
+      // Use mockQueryResult to return our expected collection row
+      mockDb.mockQueryResult([mockCollection]);
+
+      const result = await CollectionRepository.getCollectionByStamp(4258);
+
+      assertExists(result);
+      assertEquals(result!.collection_id, "015F0478516E4273DD90FE59C766DD98");
+      assertEquals(result!.collection_name, "KEVIN");
+      assertEquals(result!.collection_description, null);
+    });
+
+    it("should return null when stamp has no collection", async () => {
+      // Skip if in RUN_DB_TESTS mode
+      if (!mockDb) return;
+
+      // Return empty rows to simulate no collection found
+      mockDb.mockQueryResult([]);
+
+      const result = await CollectionRepository.getCollectionByStamp(99999999);
+
+      assertEquals(result, null);
+    });
+
+    it("should use correct SQL query structure with stamp number parameter", async () => {
+      // Skip if in RUN_DB_TESTS mode
+      if (!mockDb) return;
+
+      mockDb.mockQueryResult([]);
+
+      await CollectionRepository.getCollectionByStamp(4258);
+
+      const fullHistory = mockDb.getFullQueryHistory();
+      assertExists(fullHistory[0]);
+
+      const { query, params } = fullHistory[0];
+      // Verify JOIN with collection_stamps on stamp parameter
+      assertEquals(query.includes("collection_stamps cs"), true);
+      assertEquals(query.includes("cs.stamp = ?"), true);
+      // Verify HEX() is used for collection_id
+      assertEquals(query.includes("HEX(c.collection_id)"), true);
+      // Verify stamp number is passed as parameter
+      assertEquals(params.includes(4258), true);
+    });
+
+    it("should include stamp number in cache key via query params", async () => {
+      // Skip if in RUN_DB_TESTS mode
+      if (!mockDb) return;
+
+      mockDb.mockQueryResult([]);
+
+      const stampNumber = 1234;
+      await CollectionRepository.getCollectionByStamp(stampNumber);
+
+      const fullHistory = mockDb.getFullQueryHistory();
+      assertExists(fullHistory[0]);
+
+      // The stamp number must be passed as a query parameter
+      // ensuring the cache key is unique per stamp
+      assertEquals(fullHistory[0].params.includes(stampNumber), true);
+    });
+
+    it("should handle database errors gracefully", async () => {
+      // Skip if in RUN_DB_TESTS mode
+      if (!mockDb) return;
+
+      // Override executeQueryWithCache to throw
+      mockDb.executeQueryWithCache = () =>
+        Promise.reject(new Error("DB connection failed"));
+
+      try {
+        await CollectionRepository.getCollectionByStamp(4258);
+        assertEquals(true, false, "Should have thrown an error");
+      } catch (error) {
+        assertExists(error);
+        assertEquals(error.message, "DB connection failed");
+      }
+    });
+  });
+
   describe("Binary collection_id handling", () => {
     it("should query with BINARY(16) handling", async () => {
       // Skip if in RUN_DB_TESTS mode

@@ -5,9 +5,11 @@ import { StampImage, StampInfo } from "$content";
 import { Head } from "$fresh/runtime.ts";
 import { Handlers } from "$fresh/server.ts";
 import { body, containerBackground, containerGap } from "$layout";
+import { generateStampJsonLd } from "$lib/utils/jsonLd.ts";
 import { logger, LogNamespace } from "$lib/utils/logger.ts";
 import { StampGallery } from "$section";
 import { serverConfig } from "$server/config/config.ts";
+import { CollectionRepository } from "$server/database/collectionRepository.ts";
 import { StampController } from "$server/controller/stampController.ts";
 import { getPreviewUrl } from "$server/services/aws/previewStorageService.ts";
 import { CounterpartyDispenserService } from "$server/services/counterpartyApiService.ts";
@@ -34,6 +36,11 @@ interface StampData {
   error?: string;
   url: string;
   previewImageUrl?: string;
+  collectionInfo?: {
+    collection_id: string;
+    collection_name: string;
+    collection_description: string;
+  } | null;
 }
 
 /* ===== SERVER HANDLER ===== */
@@ -65,9 +72,11 @@ export const handler: Handlers<StampData> = {
       });
 
       // Use the CPID from stamp data for other queries
+      const stampNumber = stampData.data.stamp.stamp;
       const [
         holders,
         mainCategories,
+        collectionInfo,
       ] = await Promise.all([
         StampController.getStampHolders(
           stampData.data.stamp.cpid,
@@ -84,6 +93,19 @@ export const handler: Handlers<StampData> = {
             sortBy: "DESC",
           },
         ]),
+        // Fetch collection membership for this stamp (graceful degradation on error)
+        stampNumber != null
+          ? CollectionRepository.getCollectionByStamp(stampNumber).catch(
+            (err) => {
+              logger.error("stamps" as LogNamespace, {
+                message: "Failed to fetch collection info for stamp",
+                stampNumber,
+                error: err instanceof Error ? err.message : String(err),
+              });
+              return null;
+            },
+          )
+          : Promise.resolve(null),
       ]);
 
       // Log holders data structure
@@ -146,6 +168,7 @@ export const handler: Handlers<StampData> = {
         stamps_recent: mainCategories[0]?.stamps ?? [],
         holders: holders.data,
         lowestPriceDispenser: lowestPriceDispenser,
+        collectionInfo,
         url: req.url,
         initialCounts: {
           dispensers: 0,
@@ -222,6 +245,7 @@ export default function StampDetailPage(props: StampDetailPageProps) {
     holders,
     stamps_recent,
     lowestPriceDispenser = null,
+    collectionInfo,
   } = props.data;
 
   /* ===== META INFORMATION ===== */
@@ -266,6 +290,15 @@ export default function StampDetailPage(props: StampDetailPageProps) {
   const metaDescription = stamp
     ? stamp.name || "Unprunable UTXO Art"
     : "Unprunable UTXO Art";
+
+  const jsonLd = stamp
+    ? generateStampJsonLd(
+      stamp,
+      { url: metaInfo.url, baseUrl },
+      collectionInfo,
+      lowestPriceDispenser,
+    )
+    : null;
 
   /* ===== SECTION CONFIGURATION ===== */
   const latestStampsSection = {
@@ -365,6 +398,12 @@ export default function StampDetailPage(props: StampDetailPageProps) {
           content="1200"
           key="og:image:height"
         />
+        {jsonLd && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          />
+        )}
       </Head>
 
       <div class={`${body} ${containerGap}`}>

@@ -2876,6 +2876,11 @@ export interface StampDetailPageProps {
     htmlTitle?: string;
     previewImageUrl?: string;
     error?: string;
+    collectionInfo?: {
+      collection_id: string;
+      collection_name: string;
+      collection_description: string;
+    } | null;
     initialCounts?: {
       dispensers: number;
       sales: number;
