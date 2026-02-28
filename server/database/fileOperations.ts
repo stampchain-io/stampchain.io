@@ -10,10 +10,10 @@ export class FileOperations {
   ): Promise<boolean> {
     const query = `
       INSERT INTO ${SRC20_BACKGROUND_TABLE} (tick, tick_hash, base64)
-      VALUES (?, ?, ?)
+      VALUES (?, ?, ?) AS new_row
       ON DUPLICATE KEY UPDATE
-        tick_hash = VALUES(tick_hash),
-        base64 = VALUES(base64)
+        tick_hash = new_row.tick_hash,
+        base64 = new_row.base64
     `;
 
     try {
