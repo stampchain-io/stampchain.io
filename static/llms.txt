@@ -53,5 +53,6 @@ Full API docs: https://stampchain.io/docs
 - Website: https://stampchain.io
 - Protocol docs: https://bitcoinstamps.xyz
 - Twitter/X: https://x.com/stampchain
+- Telegram: https://t.me/BitcoinStamps
 - GitHub: https://github.com/stampchain-io
 - Full LLM context: https://stampchain.io/llms-full.txt

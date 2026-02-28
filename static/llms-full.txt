@@ -174,6 +174,7 @@ The site includes step-by-step guides for common operations:
 - Website: https://stampchain.io
 - Protocol documentation: https://bitcoinstamps.xyz
 - Twitter/X: https://x.com/stampchain
+- Telegram: https://t.me/BitcoinStamps
 - GitHub: https://github.com/stampchain-io
 - Press kit: https://stampchain.io/presskit
 - Terms of service: https://stampchain.io/termsofservice
