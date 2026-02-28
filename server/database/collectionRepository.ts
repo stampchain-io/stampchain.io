@@ -191,6 +191,49 @@ export class CollectionRepository {
     return result.rows.length > 0 ? result.rows[0] : null;
   }
 
+  static async getCollectionByStamp(
+    stampNumber: number,
+  ): Promise<{
+    collection_id: string;
+    collection_name: string;
+    collection_description: string;
+  } | null> {
+    const query = `
+      SELECT collection_name, collection_description, HEX(c.collection_id) as collection_id
+      FROM collections c
+      JOIN collection_stamps cs ON c.collection_id = cs.collection_id
+      WHERE cs.stamp = ?
+    `;
+
+    try {
+      const result = await this.db.executeQueryWithCache(
+        query,
+        [stampNumber],
+        60 * 5, // 5 minutes cache in seconds
+      ) as { rows: Array<{ collection_id: string; collection_name: string; collection_description: string }> };
+
+      if (result.rows.length === 0) {
+        return null;
+      }
+
+      const row = result.rows[0];
+      console.debug(
+        `getCollectionByStamp: stamp=${stampNumber} -> collection="${row.collection_name}" (${row.collection_id})`,
+      );
+      return {
+        collection_id: row.collection_id,
+        collection_name: row.collection_name,
+        collection_description: row.collection_description,
+      };
+    } catch (error) {
+      console.error(
+        `getCollectionByStamp: error fetching collection for stamp=${stampNumber}:`,
+        error,
+      );
+      throw error;
+    }
+  }
+
   static async getCollectionById(
     collectionId: string,
     options: {
