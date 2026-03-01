@@ -108,7 +108,25 @@ export async function handleContentRequest(
       return response;
     }
 
-    // For non-HTML or non-redirect responses, preserve as-is
+    // For direct 200 HTML responses, add edge caching headers.
+    // Stamp content is immutable — once inscribed it never changes.
+    // CDN-Cache-Control tells Cloudflare to cache HTML at the edge,
+    // which is critical for recursive stamp sub-resources loaded via
+    // iframes in the CF Browser Rendering worker.
+    const contentType = response.headers.get("content-type") || "";
+    if (response.ok && contentType.includes("text/html")) {
+      const body = await response.text();
+      const headers = new Headers(response.headers);
+      headers.set("Cache-Control", "public, max-age=3600, no-transform");
+      headers.set("CDN-Cache-Control", "public, max-age=86400");
+      headers.set("X-Frame-Options", "SAMEORIGIN");
+      headers.set("X-Content-Type-Options", "nosniff");
+      return new Response(body, {
+        status: response.status,
+        headers,
+      });
+    }
+
     return response;
   } catch (error) {
     logger.error("content", {
