@@ -1,5 +1,6 @@
 # dotenv environment variable files
 .env
+!.env.enc
 .env.*
 .env.development.local
 .env.test.local
