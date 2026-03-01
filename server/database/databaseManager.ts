@@ -582,6 +582,22 @@ class DatabaseManager {
       compress: this.#ENABLE_COMPRESSION,
     };
 
+    // Enable TLS for MySQL 8.4+ caching_sha2_password support.
+    // The deno-mysql driver's RSA key exchange is broken over plaintext;
+    // TLS bypasses RSA entirely by sending credentials over the encrypted channel.
+    if (Deno.env.get("DB_ENABLE_TLS") !== "false") {
+      try {
+        const caCertPath = Deno.env.get("DB_CA_CERT_PATH") || "certs/rds-ca-bundle.pem";
+        const caCert = await Deno.readTextFile(caCertPath);
+        connectionOptions.tls = {
+          mode: "verify_identity",
+          caCerts: [caCert],
+        };
+      } catch {
+        // CA cert not found — fall back to plaintext connection
+      }
+    }
+
     if (this.#ENABLE_CONNECTION_LOGGING) {
       console.log(`[DB Connection] Connecting to ${DB_HOST}:${DB_PORT} with timeout=${queryTimeout}ms, compression=${this.#ENABLE_COMPRESSION}`);
     }
