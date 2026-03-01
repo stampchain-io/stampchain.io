@@ -5,7 +5,10 @@ import { IS_BROWSER } from "$fresh/runtime.ts";
 import { PlaceholderImage } from "$icon";
 import { glassmorphismL2, shadowGlowPurple } from "$layout";
 import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
-import { getStampImageSrc } from "$lib/utils/ui/media/imageUtils.ts";
+import {
+  getStampImageSrc,
+  getStampPreviewUrl,
+} from "$lib/utils/ui/media/imageUtils.ts";
 import type { CarouselHomeProps } from "$types/ui.d.ts";
 import { ComponentChildren } from "preact";
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
@@ -105,22 +108,15 @@ export default function CarouselGallery(props: CarouselHomeProps) {
             return;
           }
 
-          // Handle HTML content — render in sandboxed iframe
-          // Preview endpoint is unreliable for HTML stamps (CF Worker may
-          // fail or produce blank renders), so use live iframe rendering
-          // which matches the detail page behavior.
+          // Handle HTML content — show cached preview PNG instead of iframe
           if (stamp.stamp_mimetype === "text/html") {
-            const contentSrc = getStampImageSrc(stamp) ||
-              `/content/${stamp.tx_hash}`;
             validated[stamp.tx_hash] = (
               <a target="_top" href={`/stamp/${stamp.tx_hash}`}>
-                <iframe
-                  src={contentSrc}
-                  sandbox="allow-scripts"
-                  scrolling="no"
+                <img
+                  src={getStampPreviewUrl(stamp)}
+                  alt={`Stamp #${stamp.stamp}`}
                   loading="lazy"
-                  class="w-full aspect-square rounded-2xl pointer-events-none"
-                  style="border: none; background: transparent;"
+                  class="object-contain cursor-pointer desktop:min-w-[408px] tablet:min-w-[269px] mobileLg:min-w-[200px] mobileMd:min-w-[242px] min-w-[150px] rounded-2xl aspect-square pixelart stamp-image"
                   onLoad={handleLoad}
                 />
               </a>
