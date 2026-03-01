@@ -1048,22 +1048,39 @@ async function handleRedisPreview(
 
 // Handler-level timeout: prevent the request from hanging indefinitely
 // when rendering takes too long (e.g. complex recursive stamps).
-const HANDLER_TIMEOUT_MS = 55000; // 55s — just under typical proxy timeouts
+const HANDLER_TIMEOUT_MS = 50000; // 50s — must beat ALB 60s idle timeout
 
 export const handler: Handlers = {
   async GET(req, ctx) {
+    const handlerStart = Date.now();
     try {
       const { stamp } = ctx.params;
       const url = new URL(req.url);
       const forceRefresh = url.searchParams.get("refresh") === "true";
 
-      const previewPromise = useS3Storage
-        ? handleS3Preview(stamp, forceRefresh)
-        : handleRedisPreview(stamp, forceRefresh);
+      console.log(
+        `[Preview] Handler start for stamp ${stamp}, forceRefresh=${forceRefresh}`,
+      );
+
+      const previewPromise = (async () => {
+        const result = useS3Storage
+          ? await handleS3Preview(stamp, forceRefresh)
+          : await handleRedisPreview(stamp, forceRefresh);
+        console.log(
+          `[Preview] Render complete for stamp ${stamp} in ${
+            Date.now() - handlerStart
+          }ms`,
+        );
+        return result;
+      })();
 
       const timeoutPromise = new Promise<Response>((resolve) => {
         setTimeout(() => {
-          console.warn(`[Preview] Handler timeout for stamp ${stamp}`);
+          console.warn(
+            `[Preview] Handler timeout for stamp ${stamp} after ${
+              Date.now() - handlerStart
+            }ms`,
+          );
           resolve(WebResponseUtil.redirect(FALLBACK_LOGO, 302, {
             headers: {
               "X-Fallback": "handler-timeout",
@@ -1073,7 +1090,13 @@ export const handler: Handlers = {
         }, HANDLER_TIMEOUT_MS);
       });
 
-      return await Promise.race([previewPromise, timeoutPromise]);
+      const response = await Promise.race([previewPromise, timeoutPromise]);
+      console.log(
+        `[Preview] Response ready for stamp ${stamp} in ${
+          Date.now() - handlerStart
+        }ms`,
+      );
+      return response;
     } catch (error) {
       const errName = error instanceof Error ? error.name : "unknown";
       const errMsg = error instanceof Error ? error.message : String(error);
