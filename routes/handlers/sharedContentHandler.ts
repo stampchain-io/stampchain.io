@@ -80,9 +80,13 @@ export async function handleContentRequest(
             return WebResponseUtil.htmlResponse(htmlContent, {
               headers: {
                 ...Object.fromEntries(recursiveHeaders),
-                // Add headers to prevent Cloudflare from modifying the response
-                "CF-Cache-Level": "bypass",
-                "Cache-Control": "no-transform",
+                // Allow Cloudflare CDN to cache stamp content at the edge.
+                // Stamp data is immutable — once inscribed it never changes.
+                // Edge caching is critical for recursive stamps where the CF
+                // Browser Rendering worker loads sub-resources via iframes;
+                // without it every sub-request round-trips to ECS origin.
+                "Cache-Control":
+                  "public, max-age=3600, s-maxage=86400, no-transform",
                 "X-Frame-Options": "SAMEORIGIN",
                 "X-Content-Type-Options": "nosniff",
                 "X-Content-Transformed": "true",

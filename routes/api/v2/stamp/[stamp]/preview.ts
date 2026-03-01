@@ -583,7 +583,7 @@ async function renderHtmlPreview(
 
     // If inline mode produced a suspiciously small image (blank render),
     // retry with URL mode as a fallback before giving up.
-    const MIN_VALID_PNG_SIZE = 10_000;
+    const MIN_VALID_PNG_SIZE = 5_000;
     if (cfBuffer && cfBuffer.length < MIN_VALID_PNG_SIZE && !isRecursive) {
       console.warn(
         `[HTML Preview] Stamp ${stampNumber} inline render too small (${cfBuffer.length}B) — retrying with URL mode`,
