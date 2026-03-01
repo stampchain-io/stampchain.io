@@ -473,13 +473,19 @@ async function renderHtmlPreview(
 
     const rawHtml = await htmlResponse.text();
 
-    // Detect if HTML contains iframes or external references (recursive stamps).
-    // These need URL-based rendering so Chrome can load cross-origin content.
+    // Detect if HTML contains iframes, external references, or relative
+    // script/resource loads that require a proper origin to resolve.
     const hasIframe = rawHtml.includes("<iframe");
     const hasExternalRef = rawHtml.includes("ordinals.com/") ||
       rawHtml.includes("arweave.net/") ||
       rawHtml.includes("github.io/");
-    const isRecursive = hasIframe || hasExternalRef;
+    // Stamps loading other stamps via relative /s/ paths (e.g. <script src="/s/...">)
+    // or CPID references (e.g. Append().js(["A1234..."]))
+    const hasRelativeScriptSrc = /src\s*=\s*["']\//.test(rawHtml);
+    const hasStampContentRef = /["']\/s\//.test(rawHtml) ||
+      /["']A\d{10,}["']/.test(rawHtml);
+    const isRecursive = hasIframe || hasExternalRef || hasRelativeScriptSrc ||
+      hasStampContentRef;
 
     const isComplex = isRecursive ||
       stamp_url?.includes("recursive") ||
@@ -487,21 +493,31 @@ async function renderHtmlPreview(
       stamp_url?.includes("canvas");
     const delay = isComplex ? 8000 : 5000;
 
+    // Build content URL for URL-mode rendering — uses the /content/ endpoint
+    // so relative paths (like /s/) resolve against stampchain.io origin.
+    const txHash = stamp_url.split("/stamps/").pop()?.replace(
+      /\.html?$/i,
+      "",
+    );
+    const contentUrl = txHash
+      ? `https://stampchain.io/content/${txHash}`
+      : stamp_url;
+
     let cfBuffer: Uint8Array | null = null;
 
     if (isRecursive) {
-      // Recursive stamps: navigate Chrome to the actual URL so iframes
-      // can load cross-origin content (inline html: has no origin)
+      // Recursive/dependent stamps: navigate Chrome to the /content/ endpoint.
+      // The /content/ endpoint already cleans Rocket Loader artifacts.
       console.log(
-        `[HTML Preview] Stamp ${stampNumber} has recursive content — using URL mode`,
+        `[HTML Preview] Stamp ${stampNumber} has recursive/dependent content — using URL mode (${contentUrl})`,
       );
       cfBuffer = await renderWithCloudflare({
-        url: stamp_url,
+        url: contentUrl,
         viewport: { width: 1200, height: 1200 },
         delay,
       });
     } else {
-      // Standard HTML: fetch, clean Rocket Loader artifacts, render inline
+      // Simple static HTML: clean Rocket Loader artifacts, render inline
       const cleanedHtml = cleanHtmlForRendering(rawHtml);
       cfBuffer = await renderWithCloudflare({
         html: cleanedHtml,
@@ -510,11 +526,25 @@ async function renderHtmlPreview(
       });
     }
 
-    if (cfBuffer) {
+    // If inline mode produced a suspiciously small image (blank render),
+    // retry with URL mode as a fallback before giving up.
+    const MIN_VALID_PNG_SIZE = 10_000;
+    if (cfBuffer && cfBuffer.length < MIN_VALID_PNG_SIZE && !isRecursive) {
+      console.warn(
+        `[HTML Preview] Stamp ${stampNumber} inline render too small (${cfBuffer.length}B) — retrying with URL mode`,
+      );
+      cfBuffer = await renderWithCloudflare({
+        url: contentUrl,
+        viewport: { width: 1200, height: 1200 },
+        delay: 8000,
+      });
+    }
+
+    if (cfBuffer && cfBuffer.length >= MIN_VALID_PNG_SIZE) {
       console.log(
         `[HTML Preview] Stamp ${stampNumber} rendered via CF Worker (${
           isRecursive ? "url" : "html"
-        } mode)`,
+        } mode, ${cfBuffer.length}B)`,
       );
       const result = await centerOnCanvas(cfBuffer, {
         stampNumber,
@@ -525,6 +555,12 @@ async function renderHtmlPreview(
       result.meta["X-Rendering-Engine"] = "cloudflare-worker";
       result.meta["X-Recursive"] = isRecursive ? "true" : "false";
       return result;
+    }
+
+    if (cfBuffer) {
+      console.warn(
+        `[HTML Preview] Stamp ${stampNumber} render too small after retry (${cfBuffer.length}B) — treating as failed`,
+      );
     }
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error);
