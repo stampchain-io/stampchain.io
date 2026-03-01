@@ -73,40 +73,78 @@ async function renderWithCloudflare(params: {
   html?: string;
   viewport?: { width: number; height: number };
   delay?: number;
+  timeout?: number;
 }): Promise<Uint8Array | null> {
   if (!isCfWorkerConfigured) return null;
 
-  try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 30000);
+  const fetchTimeout = params.timeout ?? 30000;
+  const maxRetries = 2;
+  const retryDelays = [2000, 4000];
 
-    const response = await fetch(CF_WORKER_URL!, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${CF_WORKER_SECRET}`,
-      },
-      body: JSON.stringify(params),
-      signal: controller.signal,
-    });
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), fetchTimeout);
 
-    clearTimeout(timeout);
+      const response = await fetch(CF_WORKER_URL!, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${CF_WORKER_SECRET}`,
+        },
+        body: JSON.stringify(params),
+        signal: controller.signal,
+      });
 
-    if (!response.ok) {
+      clearTimeout(timer);
+
+      if (response.ok) {
+        const buffer = await response.arrayBuffer();
+        return new Uint8Array(buffer);
+      }
+
       const errorBody = await response.text().catch(() => "");
+
+      // Only retry on 500+ (server errors) — not 400/401/403
+      if (response.status >= 500 && attempt < maxRetries) {
+        console.warn(
+          `[Preview] CF Worker returned ${response.status} (attempt ${
+            attempt + 1
+          }/${maxRetries + 1}): ${errorBody} — retrying in ${
+            retryDelays[attempt]
+          }ms`,
+        );
+        await new Promise((r) => setTimeout(r, retryDelays[attempt]));
+        continue;
+      }
+
       console.error(
         `[Preview] CF Worker returned ${response.status}: ${errorBody}`,
       );
       return null;
-    }
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : String(error);
+      const isRetryable = msg.includes("abort") ||
+        msg.includes("network") ||
+        msg.includes("ECONNREFUSED") ||
+        msg.includes("ETIMEDOUT");
 
-    const buffer = await response.arrayBuffer();
-    return new Uint8Array(buffer);
-  } catch (error) {
-    const msg = error instanceof Error ? error.message : String(error);
-    console.error(`[Preview] CF Worker request failed: ${msg}`);
-    return null;
+      if (isRetryable && attempt < maxRetries) {
+        console.warn(
+          `[Preview] CF Worker request failed (attempt ${attempt + 1}/${
+            maxRetries + 1
+          }): ${msg} — retrying in ${retryDelays[attempt]}ms`,
+        );
+        await new Promise((r) => setTimeout(r, retryDelays[attempt]));
+        continue;
+      }
+
+      console.error(`[Preview] CF Worker request failed: ${msg}`);
+      return null;
+    }
   }
+
+  return null;
 }
 
 // Cache control headers for different scenarios
@@ -127,6 +165,22 @@ interface CachedPreview {
   png: string;
   meta: Record<string, string>;
 }
+
+/** Sentinel stored in Redis when a render fails, to avoid re-rendering on every request */
+interface FailedRenderSentinel {
+  failed: true;
+  timestamp: number;
+}
+
+/** Type guard for the failure sentinel */
+function isFailedSentinel(
+  value: unknown,
+): value is FailedRenderSentinel {
+  return typeof value === "object" && value !== null &&
+    (value as FailedRenderSentinel).failed === true;
+}
+
+const FAILED_RENDER_TTL = 3600; // 1 hour — retry after this
 
 /** Encode Uint8Array to base64 string */
 function toBase64(data: Uint8Array): string {
@@ -515,6 +569,7 @@ async function renderHtmlPreview(
         url: contentUrl,
         viewport: { width: 1200, height: 1200 },
         delay,
+        timeout: 45000,
       });
     } else {
       // Simple static HTML: clean Rocket Loader artifacts, render inline
@@ -537,6 +592,7 @@ async function renderHtmlPreview(
         url: contentUrl,
         viewport: { width: 1200, height: 1200 },
         delay: 8000,
+        timeout: 45000,
       });
     }
 
@@ -868,15 +924,67 @@ async function handleRedisPreview(
     console.log(`[Preview] Force refresh for ${stamp}, cache cleared`);
   }
 
+  // Check cache first — may contain a CachedPreview, a FailedRenderSentinel, or nothing
   let wasRendered = false;
-  const cached = await dbManager.handleCache<CachedPreview | null>(
+  const cached = await dbManager.handleCache<
+    CachedPreview | FailedRenderSentinel | null
+  >(
     cacheKey,
     async () => {
       wasRendered = true;
-      return await renderPreview(stamp);
+      const result = await renderPreview(stamp);
+      if (result) return result;
+      // Store a sentinel so we don't re-render on every request
+      return { failed: true, timestamp: Date.now() } as FailedRenderSentinel;
     },
     604800,
   );
+
+  // Cache hit: check if it's a failure sentinel
+  if (isFailedSentinel(cached)) {
+    const age = Date.now() - cached.timestamp;
+    if (age < FAILED_RENDER_TTL * 1000) {
+      // Still within the failure TTL — return fallback without re-rendering
+      return WebResponseUtil.redirect(FALLBACK_LOGO, 302, {
+        headers: {
+          "X-Fallback": "cached-render-failure",
+          "X-Failure-Age": `${Math.round(age / 1000)}s`,
+          ...CACHE_HEADERS.redirect,
+        },
+      });
+    }
+    // Failure sentinel has expired — invalidate and re-render
+    await dbManager.invalidateCacheByPattern(cacheKey);
+    const freshResult = await renderPreview(stamp);
+    if (freshResult?.png) {
+      await dbManager.handleCache(
+        cacheKey,
+        () => Promise.resolve(freshResult),
+        604800,
+      );
+      const pngBytes = fromBase64(freshResult.png);
+      return WebResponseUtil.binaryResponse(pngBytes, "image/png", {
+        immutableBinary: true,
+        headers: {
+          ...freshResult.meta,
+          "X-Cache": "retry-after-failure",
+          ...CACHE_HEADERS.success,
+        },
+      });
+    }
+    // Still failing — cache a new sentinel
+    await dbManager.handleCache(
+      cacheKey,
+      () => Promise.resolve({ failed: true, timestamp: Date.now() }),
+      604800,
+    );
+    return WebResponseUtil.redirect(FALLBACK_LOGO, 302, {
+      headers: {
+        "X-Fallback": "render-failed-retry",
+        ...CACHE_HEADERS.redirect,
+      },
+    });
+  }
 
   if (cached?.png) {
     const pngBytes = fromBase64(cached.png);
