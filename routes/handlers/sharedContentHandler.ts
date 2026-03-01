@@ -89,6 +89,9 @@ export async function handleContentRequest(
                 // by default even with Cache-Control s-maxage.
                 "Cache-Control": "public, max-age=3600, no-transform",
                 "CDN-Cache-Control": "public, max-age=86400",
+                // Override Vary to only include CF-supported values.
+                // Default "X-API-Version" in Vary causes CF to skip caching.
+                "Vary": "Accept-Encoding",
                 "X-Frame-Options": "SAMEORIGIN",
                 "X-Content-Type-Options": "nosniff",
                 "X-Content-Transformed": "true",
@@ -119,6 +122,9 @@ export async function handleContentRequest(
       const headers = new Headers(response.headers);
       headers.set("Cache-Control", "public, max-age=3600, no-transform");
       headers.set("CDN-Cache-Control", "public, max-age=86400");
+      // Override Vary to only include CF-supported values.
+      // Default "X-API-Version" in Vary causes CF to skip caching.
+      headers.set("Vary", "Accept-Encoding");
       headers.set("X-Frame-Options", "SAMEORIGIN");
       headers.set("X-Content-Type-Options", "nosniff");
       return new Response(body, {
