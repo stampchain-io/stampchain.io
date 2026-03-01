@@ -85,8 +85,10 @@ export async function handleContentRequest(
                 // Edge caching is critical for recursive stamps where the CF
                 // Browser Rendering worker loads sub-resources via iframes;
                 // without it every sub-request round-trips to ECS origin.
-                "Cache-Control":
-                  "public, max-age=3600, s-maxage=86400, no-transform",
+                // CDN-Cache-Control is required because CF doesn't cache HTML
+                // by default even with Cache-Control s-maxage.
+                "Cache-Control": "public, max-age=3600, no-transform",
+                "CDN-Cache-Control": "public, max-age=86400",
                 "X-Frame-Options": "SAMEORIGIN",
                 "X-Content-Type-Options": "nosniff",
                 "X-Content-Transformed": "true",
