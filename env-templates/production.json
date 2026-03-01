@@ -1,10 +1,8 @@
 [
   {"name": "DB_PORT", "value": "3306"},
-  {"name": "DB_USER", "value": "admin"},
   {"name": "DB_NAME", "value": "btc_stamps"},
   {"name": "NODE_ENV", "value": "production"},
   {"name": "CACHE", "value": "true"},
-  {"name": "DB_HOST", "value": "stamps-4.cbdenncm0tno.us-east-1.rds.amazonaws.com"},
   {"name": "DENO_ENV", "value": "production"},
   {"name": "SKIP_REDIS_CONNECTION", "value": "false"},
   {"name": "ELASTICACHE_ENDPOINT", "value": "memory"},
