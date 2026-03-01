@@ -81,16 +81,17 @@ export default {
       });
 
       if (body.html) {
-        // HTML mode: set content directly (for HTML stamps with pre-cleaned content)
+        // HTML mode: set content directly (no network needed — keep tight timeout)
         await page.setContent(body.html, {
           waitUntil: "networkidle0",
           timeout: 25000,
         });
       } else if (body.url) {
-        // URL mode: navigate to URL (for SVG, WebP, BMP, AVIF on CDN)
+        // URL mode: navigate to URL — recursive stamps may load multiple resources,
+        // so allow a longer timeout than inline HTML mode
         await page.goto(body.url, {
           waitUntil: "networkidle2",
-          timeout: 25000,
+          timeout: 30000,
         });
       }
 
