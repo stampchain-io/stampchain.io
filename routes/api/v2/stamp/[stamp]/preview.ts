@@ -77,7 +77,10 @@ async function renderWithCloudflare(params: {
 }): Promise<Uint8Array | null> {
   if (!isCfWorkerConfigured) return null;
 
-  const fetchTimeout = params.timeout ?? 30000;
+  // Cap fetch timeout at 40s — must leave headroom for the 50s handler timeout.
+  // Even if caller passes 45000, we clamp to 40000 so a single attempt
+  // plus response handling fits within the handler-level Promise.race.
+  const fetchTimeout = Math.min(params.timeout ?? 30000, 40000);
   const maxRetries = 2;
   const retryDelays = [2000, 4000];
 
@@ -124,9 +127,13 @@ async function renderWithCloudflare(params: {
       return null;
     } catch (error) {
       const msg = error instanceof Error ? error.message : String(error);
-      // Don't retry abort errors — they mean the render genuinely timed out.
-      // Retrying a 45s timeout 3 times would hang the request for 141s.
-      const isRetryable = !msg.includes("abort") && (
+      const errName = error instanceof Error ? error.name : "";
+      // Don't retry abort/timeout errors — they mean the render genuinely
+      // timed out. Retrying a 45s timeout 3 times would hang for 141s.
+      const isAbort = msg.toLowerCase().includes("abort") ||
+        errName === "AbortError" ||
+        errName === "TimeoutError";
+      const isRetryable = !isAbort && (
         msg.includes("network") ||
         msg.includes("ECONNREFUSED") ||
         msg.includes("ETIMEDOUT")
@@ -142,7 +149,9 @@ async function renderWithCloudflare(params: {
         continue;
       }
 
-      console.error(`[Preview] CF Worker request failed: ${msg}`);
+      console.error(
+        `[Preview] CF Worker request failed (final): ${errName}: ${msg}`,
+      );
       return null;
     }
   }
