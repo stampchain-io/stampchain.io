@@ -105,6 +105,10 @@ DESIRED_COUNT="${AWS_DESIRED_COUNT:-2}"
 EXECUTION_ROLE="${AWS_ECS_EXECUTION_ROLE:-stamps-app-execution-role}"
 TASK_ROLE="${AWS_ECS_TASK_ROLE:-stamps-app-task-role}"
 PROD_URL="${APP_PROD_URL:-https://stampchain.io}"
+
+# Secrets Manager ARN for database credentials (DB_USER, DB_PASSWORD, DB_HOST)
+# These are injected via ECS secrets, not plaintext environment variables
+DB_SECRET_ARN="${AWS_DB_SECRET_ARN:-arn:aws:secretsmanager:${AWS_REGION}:${AWS_ACCOUNT_ID}:secret:stamps-app/database-nWZ49V}"
 PROD_DOMAIN="${APP_DOMAIN:-stampchain.io}"
 
 # Network
@@ -385,6 +389,11 @@ build_env_json() {
     [[ "$key" == PUPPETEER_* ]] && continue
     [[ "$key" == ANTHROPIC_API_KEY ]] && continue
 
+    # Filter out database credentials (injected via Secrets Manager, not plaintext)
+    [[ "$key" == DB_USER ]] && continue
+    [[ "$key" == DB_PASSWORD ]] && continue
+    [[ "$key" == DB_HOST ]] && continue
+
     # Strip quotes from value
     value="${value%\"}"
     value="${value#\"}"
@@ -461,6 +470,11 @@ deploy_ecs() {
         }
       ],
       "environment": ${env_json},
+      "secrets": [
+        {"name": "DB_USER", "valueFrom": "${DB_SECRET_ARN}:username::"},
+        {"name": "DB_PASSWORD", "valueFrom": "${DB_SECRET_ARN}:password::"},
+        {"name": "DB_HOST", "valueFrom": "${DB_SECRET_ARN}:host::"}
+      ],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
