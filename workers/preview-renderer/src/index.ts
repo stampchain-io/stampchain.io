@@ -88,10 +88,11 @@ export default {
         });
       } else if (body.url) {
         // URL mode: navigate to URL — recursive stamps may load multiple resources,
-        // so allow a longer timeout than inline HTML mode
+        // so allow a longer timeout than inline HTML mode.
+        // CF Browser Rendering allows up to 60s sessions.
         await page.goto(body.url, {
           waitUntil: "networkidle2",
-          timeout: 30000,
+          timeout: 45000,
         });
       }
 

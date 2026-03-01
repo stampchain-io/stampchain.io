@@ -68,133 +68,6 @@ For stampchain.io's complex blockchain data processing:
 - **"think harder"**: Complex blockchain data processing, transaction validation, or performance optimization
 - **"ultrathink"**: Security-critical changes, database schema impacts, or production deployment decisions
 
-### Custom Slash Commands
-
-**stampchain.io-specific commands** (use with `/command-name`):
-
-Create `.claude/commands/btc-dev-server.md`:
-```markdown
-Start stampchain.io development server with proper setup.
-
-Steps:
-1. Check Deno version with `deno --version` (must be 2.6.9+)
-2. Validate environment with `deno task check:ports` 
-3. Start development server: `deno task dev`
-4. Verify server is running on http://localhost:8000
-5. Check for any TypeScript errors or warnings
-```
-
-Create `.claude/commands/btc-test-api.md`:
-```markdown
-Run comprehensive API tests for stampchain.io: $ARGUMENTS
-
-Steps:
-1. Validate OpenAPI schema: `deno task test:api:schema`
-2. Run smoke tests: `npm run test:api:smoke`
-3. Run comprehensive Newman tests: `npm run test:api:comprehensive`
-4. If $ARGUMENTS contains "performance": `npm run test:api:performance`
-5. Generate test report summary
-```
-
-Create `.claude/commands/btc-validate-build.md`:
-```markdown
-Validate stampchain.io build and deployment readiness.
-
-Steps:
-1. Run full quality checks: `deno task check:all`
-2. Run unit tests with coverage: `deno task test:unit:coverage`
-3. Build production: `deno task build`
-4. Run deployment validation: `deno task deploy:validate`
-5. Check for any build warnings or errors
-```
-
-Create `.claude/commands/btc-debug-database.md`:
-```markdown
-Debug database connectivity and query performance.
-
-Steps:
-1. Check database connection in server logs
-2. Review Redis cache status and hit rates
-3. Analyze slow query logs if performance issues
-4. Check read-only permissions are properly configured
-5. Validate data integrity for recent blocks
-```
-
-### Hooks Configuration
-
-Configure in `.claude/settings.json`:
-
-```json
-{
-  "hooks": {
-    "PreToolUse": [
-      {
-        "command": "bash -c 'if [[ \"$CLAUDE_TOOL\" == \"Write\" && \"$CLAUDE_FILE_PATH\" =~ \\.(ts|tsx|js)$ ]]; then echo \"[DENO PRE-CHECK] Validating TypeScript syntax for $CLAUDE_FILE_PATH\"; deno check \"$CLAUDE_FILE_PATH\" 2>/dev/null || echo \"Warning: TypeScript check failed\"; fi'",
-        "description": "Pre-validate TypeScript files before writing"
-      }
-    ],
-    "PostToolUse": [
-      {
-        "command": "bash -c 'if [[ \"$CLAUDE_TOOL\" == \"Write\" && \"$CLAUDE_FILE_PATH\" =~ routes/.*\\.tsx?$ ]]; then echo \"[FRESH POST-CHECK] Route file modified: $CLAUDE_FILE_PATH\"; deno task check:ssr || echo \"Warning: SSR validation failed\"; fi'",
-        "description": "Validate Fresh routes after modification"
-      },
-      {
-        "command": "bash -c 'if [[ \"$CLAUDE_TOOL\" == \"Write\" && \"$CLAUDE_FILE_PATH\" == \"schema.yml\" ]]; then echo \"[OPENAPI POST-CHECK] Schema modified, validating...\"; npm run validate:schema || echo \"Error: OpenAPI schema validation failed\"; fi'",
-        "description": "Validate OpenAPI schema after changes"
-      }
-    ],
-    "SessionStart": [
-      {
-        "command": "echo \"🚀 stampchain.io Development Session Started\"",
-        "description": "Session startup message"
-      },
-      {
-        "command": "bash -c 'if [ -f .env ]; then echo \"✅ Environment configuration found\"; else echo \"⚠️  No .env file - copy from .env.sample if needed\"; fi'",
-        "description": "Check environment setup"
-      }
-    ]
-  }
-}
-```
-
-### Development Workflow Patterns
-
-**Daily Development Cycle**:
-```bash
-# 1. Start session with environment check
-claude  # Hooks will validate environment
-
-# 2. Get next task from Task Master
-task-master next
-
-# 3. Standard development cycle
-deno task dev                    # Start development server
-deno task check                  # Quality validation
-deno task test:unit             # Run unit tests
-npm run test:api:smoke          # API smoke tests
-
-# 4. Pre-commit validation
-deno task validate:quick        # Quick validation
-deno task build                 # Ensure build works
-```
-
-**Feature Development Pattern**:
-```bash
-# 1. Plan changes
-/btc-validate-build            # Ensure clean starting state
-
-# 2. Implement with validation
-# Edit files...
-deno task check:imports        # Validate import patterns
-deno task check:ssr           # Check SSR compatibility
-
-# 3. Test thoroughly
-npm run test:api:comprehensive # Full API test suite
-deno task test:unit:coverage  # Unit tests with coverage
-
-# 4. Deploy validation
-deno task deploy:pre-flight   # Production readiness check
-```
 
 ### stampchain.io Specific Guidelines
 
@@ -262,198 +135,40 @@ interface ApiResponse<T> {
 
 #### Testing Infrastructure
 
-**Overview**: stampchain.io has comprehensive testing at three levels:
-1. **Unit Tests**: Fast, isolated tests using MockDatabaseManager (154+ tests, 50+ with mocks)
-2. **Integration Tests**: Database connectivity and service integration tests
-3. **API Tests**: Newman/Postman tests covering all 46 API endpoints
+stampchain.io has comprehensive testing at three levels: unit tests (154+, 50+ with MockDatabaseManager), integration tests (database connectivity), and Newman API tests (46 endpoints).
 
-**Quick Reference**:
+**Quick Commands**:
 ```bash
-# Unit testing (fast, no database required)
-deno task test:unit              # 154+ tests, 50+ use MockDatabaseManager
-deno task test:unit:coverage     # With coverage reports
+# Unit tests (fast, no database)
+deno task test:unit
+deno task test:unit:coverage
 
-# Local development environment (MySQL + Redis + Deno app)
-deno task test:dev:start         # Start docker-compose.dev.yml services
-deno task test:dev:stop          # Stop dev services
-deno task test:dev:logs          # View logs
-deno task test:dev:restart       # Restart all services
+# Integration tests (MySQL + Redis required)
+deno task test:integration
 
-# Integration testing (requires MySQL + Redis)
-deno task test:integration       # Database integration tests
-deno task test:integration:ci    # CI-safe version with fallbacks
-
-# Newman API testing (requires running dev server)
-deno task test:ci:newman-local   # Run Newman against localhost:8000
-npm run test:api:smoke           # 3 endpoints, health checks
-npm run test:api:comprehensive   # 46 endpoints, full coverage
-npm run test:api:performance     # Load testing
+# API tests (requires dev server running)
+npm run test:api:smoke           # Quick health checks
+npm run test:api:comprehensive   # All 46 endpoints
 ```
 
-**MockDatabaseManager Usage Patterns**:
-
-The `tests/mocks/mockDatabaseManager.ts` provides a fixture-based mock for unit testing repository classes without a real database:
+**MockDatabaseManager**: Use `tests/mocks/mockDatabaseManager.ts` for unit testing repository classes without a real database. It provides fixture-based mock data from `tests/fixtures/` for predictable, fast tests.
 
 ```typescript
-// Example: Testing StampRepository with mock database
+// Example: Testing with MockDatabaseManager
 import { MockDatabaseManager } from "../mocks/mockDatabaseManager.ts";
 
 const mockDb = new MockDatabaseManager();
-const repository = new StampRepository(mockDb as unknown as DatabaseManager);
-
-// MockDatabaseManager returns fixture data from tests/fixtures/
-const stamp = await repository.getStampById("1");
-// Returns data from tests/fixtures/stampData.json
+const repo = new StampRepository(mockDb as unknown as DatabaseManager);
+const stamp = await repo.getStampById("1"); // Returns fixture data
 ```
 
-**When to use MockDatabaseManager**:
-- Unit tests for repository classes (StampRepository, MarketDataRepository, SRC20Repository)
-- Tests that need predictable, repeatable data
-- Fast test execution without database overhead
-- CI/CD environments where database setup is complex
+**When to use mocks**:
+- ✅ Unit tests for repositories (StampRepository, MarketDataRepository, SRC20Repository)
+- ✅ Tests needing predictable, repeatable data
+- ❌ Integration tests verifying actual database connectivity
+- ❌ Performance testing of database operations
 
-**When NOT to use MockDatabaseManager**:
-- Integration tests verifying actual database connectivity
-- Tests requiring complex SQL queries or joins
-- Performance testing of database operations
-- Tests verifying database transaction behavior
-
-**Local Development Testing Environment**:
-
-The `docker-compose.dev.yml` provides a complete local testing environment:
-
-```yaml
-# Services included:
-# - MySQL 8.0 (port 3306)
-# - Redis 7 (port 6379)
-# - Deno application (port 8000)
-```
-
-**Setup and Usage**:
-```bash
-# 1. Start all services
-deno task test:dev:start
-
-# 2. Wait for services to be healthy (30-60 seconds)
-# Check logs: deno task test:dev:logs
-
-# 3. Verify health
-curl http://localhost:8000/api/v2/health
-
-# 4. Run Newman tests against local dev
-deno task test:ci:newman-local
-
-# 5. Stop services when done
-deno task test:dev:stop
-```
-
-**CI Testing Approach**:
-
-GitHub Actions runs three test jobs on every push/PR:
-
-1. **Unit Tests** (`.github/workflows/unit-tests.yml`):
-   - Runs `deno task test:unit:coverage`
-   - Uses MockDatabaseManager and fixtures
-   - No external services required
-   - Uploads coverage to Codecov
-
-2. **Integration Tests** (`.github/workflows/integration-tests.yml`):
-   - Starts MySQL + Redis services
-   - Runs `deno task test:integration:ci`
-   - Tests DatabaseManager connectivity
-   - Validates fallback behavior
-
-3. **Newman Local Dev Tests** (`.github/workflows/newman-comprehensive-tests.yml`):
-   - Starts MySQL + Redis services
-   - Loads test schema (`scripts/test-schema.sql`)
-   - Seeds test data (`scripts/test-seed-data.sql`)
-   - Starts local Deno dev server
-   - Runs Newman tests against localhost:8000
-   - Tests all 46 endpoints with real data
-
-**Test Data Management**:
-
-Test fixtures are located in `tests/fixtures/`:
-- `stampData.json` - Sample stamp records
-- `marketData.json` - Market data samples
-- `src20Data.json` - SRC-20 token data
-- `collectionData.json` - Collection metadata
-
-Database test data:
-- `scripts/test-schema.sql` - Database schema for testing
-- `scripts/test-seed-data.sql` - Seed data for Newman tests
-
-**Updating Fixtures**:
-When schema changes, update fixtures to maintain test coverage:
-
-```bash
-# 1. Update schema
-vim scripts/test-schema.sql
-
-# 2. Update seed data if needed
-vim scripts/test-seed-data.sql
-
-# 3. Update JSON fixtures
-vim tests/fixtures/stampData.json
-
-# 4. Verify MockDatabaseManager still works
-deno task test:unit
-
-# 5. Verify integration tests pass
-deno task test:integration
-```
-
-**Adding New Query Pattern Support to MockDatabaseManager**:
-
-```typescript
-// In tests/mocks/mockDatabaseManager.ts
-
-// 1. Add new query pattern matcher
-if (query.includes("SELECT * FROM new_table")) {
-  return this.fixtures.newTableData || [];
-}
-
-// 2. Add fixture data to constructor
-this.fixtures = {
-  stamps: stampFixtures,
-  newTableData: newTableFixtures, // Add new fixture
-  // ...
-};
-
-// 3. Create fixture file
-// tests/fixtures/newTableData.json
-```
-
-**Writing Tests with Mocks**:
-
-```typescript
-// Good: Uses MockDatabaseManager for predictable data
-Deno.test("StampRepository.getStampById returns correct stamp", async () => {
-  const mockDb = new MockDatabaseManager();
-  const repo = new StampRepository(mockDb as unknown as DatabaseManager);
-
-  const stamp = await repo.getStampById("1");
-
-  assertEquals(stamp?.stamp_id, "1");
-  assertEquals(stamp?.creator, "test_creator");
-});
-
-// Bad: Uses real database in unit test (slow, fragile)
-Deno.test("StampRepository.getStampById returns correct stamp", async () => {
-  const db = await DatabaseManager.getInstance(); // DON'T DO THIS in unit tests
-  const repo = new StampRepository(db);
-
-  const stamp = await repo.getStampById("1"); // Requires database connection
-  // ...
-});
-```
-
-**Test Environment Requirements**:
-- Unit tests: `DENO_ENV=test` and `SKIP_REDIS_CONNECTION=true`
-- Integration tests: `DENO_ENV=test` with MySQL + Redis services
-- Newman tests: Local dev server running with test database
-
-**For complete testing guide, see [TESTING.md](mdc:TESTING.md)**
+**For complete testing guide including CI workflows, test data management, and MockDatabaseManager patterns, see [docs/TESTING.md](mdc:docs/TESTING.md)**
 
 #### Security and Production Considerations
 
@@ -618,64 +333,6 @@ deno task monitor:memory
 
 # Rollback if needed
 deno task deploy:rollback --check
-```
-
-## Advanced Claude Code Features
-
-### MCP Integration
-
-stampchain.io can integrate with MCP servers for enhanced development workflow:
-
-```json
-{
-  "mcpServers": {
-    "task-master-ai": {
-      "command": "npx",
-      "args": ["-y", "--package=task-master-ai", "task-master-ai"],
-      "env": {
-        "ANTHROPIC_API_KEY": "your_key_here"
-      }
-    }
-  }
-}
-```
-
-### Status Line Configuration
-
-Add to `.claude/settings.json` for enhanced development experience:
-
-```json
-{
-  "statusLine": {
-    "command": "bash -c 'echo \"🟢 Deno $(deno --version | head -1 | cut -d\" \" -f2) | Branch: $(git branch --show-current 2>/dev/null || echo \"none\") | Ports: $(lsof -ti:8000 >/dev/null && echo \"8000✓\" || echo \"8000✗\")\"'",
-    "refreshIntervalSeconds": 5
-  }
-}
-```
-
-### Tool Allowlist
-
-Configure safe tool usage in `.claude/settings.json`:
-
-```json
-{
-  "allowedTools": [
-    "Read",
-    "Write",
-    "Bash(deno task *)",
-    "Bash(npm run test:*)",
-    "Bash(task-master *)",
-    "Bash(git *)",
-    "Bash(curl -X GET *)",
-    "mcp__task_master_ai__*"
-  ],
-  "deniedTools": [
-    "Bash(rm -rf *)",
-    "Bash(sudo *)",
-    "Bash(DROP *)",
-    "Bash(*--force*)"
-  ]
-}
 ```
 
 ## Critical Production Notes
