@@ -77,10 +77,9 @@ async function renderWithCloudflare(params: {
 }): Promise<Uint8Array | null> {
   if (!isCfWorkerConfigured) return null;
 
-  // Cap fetch timeout at 40s — must leave headroom for the 50s handler timeout.
-  // Even if caller passes 45000, we clamp to 40000 so a single attempt
-  // plus response handling fits within the handler-level Promise.race.
-  const fetchTimeout = Math.min(params.timeout ?? 30000, 40000);
+  // Use caller's timeout (default 30s). The handler-level Promise.race at 55s
+  // is the safety net — if render exceeds that, the handler returns fallback.
+  const fetchTimeout = params.timeout ?? 30000;
   const maxRetries = 2;
   const retryDelays = [2000, 4000];
 
@@ -1057,7 +1056,7 @@ async function handleRedisPreview(
 
 // Handler-level timeout: prevent the request from hanging indefinitely
 // when rendering takes too long (e.g. complex recursive stamps).
-const HANDLER_TIMEOUT_MS = 50000; // 50s — must beat ALB 60s idle timeout
+const HANDLER_TIMEOUT_MS = 55000; // 55s — must beat ALB 60s idle timeout
 
 export const handler: Handlers = {
   async GET(req, ctx) {
