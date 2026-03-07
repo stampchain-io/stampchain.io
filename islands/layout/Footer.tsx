@@ -1,5 +1,4 @@
 /* ===== FOOTER COMPONENT ===== */
-import { STAMPCHAIN_LOGO_IMAGE } from "$constants";
 import { Icon } from "$icon";
 import { containerBackground } from "$layout";
 import {
@@ -118,21 +117,6 @@ export function Footer() {
       pt-10 pb-7.5 tablet:pt-15 tablet:pb-10
       gap-2 mobileMd:gap-3 tablet:gap-4
     ">
-      {/* ===== BACKGROUND LOGO ===== */}
-      <img
-        src={STAMPCHAIN_LOGO_IMAGE}
-        alt=""
-        class="
-          absolute z-[-999]
-          size-[270px] mobileMd:size-[250px]
-          -bottom-11 mobileMd:-bottom-10
-          left-[-135px] mobileMd:left-[-120px]
-          opacity-20 pointer-events-none
-          [mask-image:linear-gradient(90deg,rgba(0,0,0,0.8),rgba(0,0,0,1))]
-          [-webkit-mask-image:linear-gradient(90deg,rgba(0,0,0,0.8),rgba(0,0,0,1))]
-        "
-      />
-
       {/* ===== MOBILE SMALL CENTER SECTION - MOBILE MEDIUM+ LEFT SECTION ===== */}
       <div
         class={`${containerBackground} !py-3 tablet:flex-row justify-between`}

@@ -1,14 +1,11 @@
-import { STAMPCHAIN_LOGO_IMAGE } from "$constants";
 import { ComponentChildren } from "preact";
 
 function TitleText({
   children,
   class: className = "",
-  delay,
 }: {
   children: ComponentChildren;
   class?: string;
-  delay: string;
 }) {
   return (
     <span
@@ -16,16 +13,9 @@ function TitleText({
         font-work-sans
         bg-clip-text text-fill-transparent
         whitespace-normal mobileLg:whitespace-nowrap inline-block
-        opacity-0
         ${className}
       `}
-      style={`
-        animation-delay: ${delay}ms;
-        animation-duration: 300ms;
-        animation-fill-mode: both;
-        animation-timing-function: ease-out;
-        filter: drop-shadow(0.05em 0.05em 0.05em rgba(0, 0, 0, 0.75));
-      `}
+      style="filter: drop-shadow(0.05em 0.05em 0.05em rgba(0, 0, 0, 0.75));"
     >
       {children}
     </span>
@@ -39,29 +29,9 @@ export function HomeHeader() {
       gap-1.5 mobileMd:gap-3 mobileLg:gap-[18px]
       w-full
       h-[220px] tablet:h-[250px]
-      relative
-      overflow-visible
+      mt-0 mb-6
+      relative overflow-visible
     ">
-      <img
-        src={STAMPCHAIN_LOGO_IMAGE}
-        alt=""
-        class="
-          absolute
-          w-[200px] mobileMd:w-[220px] mobileLg:w-[250px]
-          h-[200px] mobileMd:h-[220px] mobileLg:h-[250px]
-          top-[10px] mobileMd:top-[0px] mobileLg:top-[-24px] tablet:top-[3px]
-          left-[calc(50%+39px)] min-[420px]:left-[calc(50%+73px)] mobileMd:left-[calc(50%+98px)] mobileLg:left-[calc(50%+153px)]
-          pointer-events-none
-          opacity-0
-          animate-slide-down
-          z-[-10]
-        "
-        style="
-          animation-duration: 400ms;
-          animation-fill-mode: both;
-          animation-timing-function: ease-out;
-        "
-      />
       <div class="
           w-[336px]
           min-[420px]:w-[376px]
@@ -72,9 +42,7 @@ export function HomeHeader() {
           relative
         ">
         <h1 class="text-center">
-          <TitleText
-            delay="50"
-            class="
+          <TitleText class="
               font-black
               color-grey-gradientLD
               text-2xl
@@ -83,18 +51,14 @@ export function HomeHeader() {
               mobileLg:text-5xl
               tablet:text-5xl
               desktop:text-5xl
-              animate-slide-down
-            "
-          >
+            ">
             UNPRUNABLE{" "}
             <span class="color-purple-gradientDL">
               UTXO ART
             </span>
           </TitleText>
           <br />
-          <TitleText
-            delay="150"
-            class="
+          <TitleText class="
               font-bold
               color-grey-gradientLD
               uppercase
@@ -105,40 +69,28 @@ export function HomeHeader() {
               tablet:text-4xl
               -mt-1
               tablet:mt-0
-              animate-slide-up
-            "
-          >
+            ">
             BECAUSE SATS DON'T EXIST
           </TitleText>
         </h1>
       </div>
 
-      <p
-        class="
+      <h3 class="
           mx-auto
           w-full
           max-w-[310px]
           text-center
-          font-medium
+          font-normal
           text-color-grey-light
           text-base
           mobileLg:text-xl
           mobileMd:max-w-[380px]
           mobileLg:max-w-[515px]
           tablet:max-w-[550px]
-          opacity-0
-          animate-fade-in
-        "
-        style={`
-          animation-delay: 250ms;
-          animation-duration: 400ms;
-          animation-fill-mode: both;
-          animation-timing-function: ease-out;
-        `}
-      >
+        ">
         Welcome to the forefront of digital collectibles, where each stamp is a
         unique piece of art intertwined with the immutability of the blockchain.
-      </p>
+      </h3>
     </header>
   );
 }
