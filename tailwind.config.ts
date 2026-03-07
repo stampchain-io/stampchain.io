@@ -64,7 +64,7 @@ export default {
             DEFAULT: "#0d0a0d",
           },
           border: {
-            DEFAULT: "#292626",
+            DEFAULT: "#332f32",
           },
         },
         // Backwards-compatible aliases for old stamp-* naming convention
@@ -327,7 +327,7 @@ export default {
           "--color-orange-light": "#ff7700",
           // Background and border color palette as CSS variables
           "--color-background": "#0d0a0d",
-          "--color-border": "#292626",
+          "--color-border": "#332f32",
           // Conic gradient variables
           "--conic-pattern":
             "repeating-conic-gradient(rgba(128, 128, 128, 0.2) 0% 25%, rgba(128, 128, 128, 0.1) 25% 50%)",

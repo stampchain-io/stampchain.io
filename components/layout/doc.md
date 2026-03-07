@@ -533,7 +533,7 @@ color-orange-light     // #ff7700
 
 // Background & Border
 color-background       // #0d0a0d
-color-border           // #292626
+color-border           // #332f32
 ```
 
 **Notes:**
