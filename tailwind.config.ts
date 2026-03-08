@@ -167,6 +167,7 @@ export default {
         // CUSTOM SPACING
         "3.5": "14px",
         "7.5": "30px",
+        "9.5": "38px",
 
         // PAGE GUTTERS (horizontal padding from screen edges to header, footer and body containers)
         "gutter-mobile": "20px", // updated breakpoint naming convention
