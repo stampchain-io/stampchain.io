@@ -102,7 +102,7 @@ jobs:
         continue-on-error: false
 
       - name: Upload Validation Results
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: import-validation-results
@@ -313,7 +313,7 @@ jobs:
           fi
 
       - name: Archive Compliance Report
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: compliance-monitoring-report
           path: compliance-report.json
