@@ -1,0 +1,51 @@
+{
+  "name": "Kevin #7516 - Night Mode",
+  "description": "Ready for the night with Blackhat and Cool Shades!",
+  "image": "7516.png",
+  "external_url": "https://kevin420.xyz/nft/7516",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 8
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:51.148Z",
+  "hash": "5f054ef2591073d1eb9d5590a69be9a2a198103fdee044480a3a476502a793ee",
+  "dna": "5f054ef2591073d1",
+  "edition": 7516,
+  "special": "Night Mode",
+  "rarity": "Rare"
+}

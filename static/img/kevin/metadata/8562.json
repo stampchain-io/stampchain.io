@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #8562 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "8562.png",
+  "external_url": "https://kevin420.xyz/nft/8562",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:53.704Z",
+  "hash": "7754d6d460c7bc48ce429e2a6d59e8e9830934f23940a4cbaded1c6749486bda",
+  "dna": "7754d6d460c7bc48",
+  "edition": 8562,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #9066 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "9066.png",
+  "external_url": "https://kevin420.xyz/nft/9066",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:55.069Z",
+  "hash": "d6f7523ef0e0ae9d5430c86c811fdeca847e1fc3d34619b220ecff0f3ac711c0",
+  "dna": "d6f7523ef0e0ae9d",
+  "edition": 9066,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

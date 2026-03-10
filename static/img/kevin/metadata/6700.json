@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #6700 - Witch Nose",
+  "description": "A mystical Kevin with the rare Witch Nose!",
+  "image": "6700.png",
+  "external_url": "https://kevin420.xyz/nft/6700",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:49.102Z",
+  "hash": "11fd9705db572f440d7464b9b84accb4dceba090de04e70bbce3620e8b23c2a9",
+  "dna": "11fd9705db572f44",
+  "edition": 6700,
+  "special": "Witch Nose",
+  "rarity": "Rare"
+}

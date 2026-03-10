@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #2002 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "2002.png",
+  "external_url": "https://kevin420.xyz/nft/2002",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.802Z",
+  "hash": "f5a91a859cb15aacf3f994809dff9eea6a5d04fb048e0b05444257ef39bc327a",
+  "dna": "f5a91a859cb15aac",
+  "edition": 2002,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #5887 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "5887.png",
+  "external_url": "https://kevin420.xyz/nft/5887",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:47.155Z",
+  "hash": "2f81bc42d72febc56d3e87b5a7239d7b927d94bcaff860a1b907853b7776c7a4",
+  "dna": "2f81bc42d72febc5",
+  "edition": 5887,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

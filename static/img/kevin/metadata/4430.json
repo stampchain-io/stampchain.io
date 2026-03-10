@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #4430 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "4430.png",
+  "external_url": "https://kevin420.xyz/nft/4430",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:43.575Z",
+  "hash": "f94ae5d584b9271866862d7ffd22f705c53a556522eed75a3a1352a1fe9896c3",
+  "dna": "f94ae5d584b92718",
+  "edition": 4430,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

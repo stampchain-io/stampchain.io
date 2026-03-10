@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #5277 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "5277.png",
+  "external_url": "https://kevin420.xyz/nft/5277",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:45.641Z",
+  "hash": "73f42ab4e6b607b7b7cf5df0c10eb44c2ea46d786eaf8ec6d2bbbdaf892135d8",
+  "dna": "73f42ab4e6b607b7",
+  "edition": 5277,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

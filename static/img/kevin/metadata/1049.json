@@ -1,0 +1,27 @@
+{
+  "name": "Kevin #1049 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "1049.png",
+  "external_url": "https://kevin420.xyz/nft/1049",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 2
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:35.525Z",
+  "hash": "a02bb7b99121a6ff89462fafa4cad5f4fa707c5f86c4f577d868a323691d88a8",
+  "dna": "a02bb7b99121a6ff",
+  "edition": 1049,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

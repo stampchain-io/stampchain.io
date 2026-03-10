@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #5264 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "5264.png",
+  "external_url": "https://kevin420.xyz/nft/5264",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:45.612Z",
+  "hash": "132ded9d5b3618862911ddae2f6c06e9f3556e225512971eecf9ea7070bbfeba",
+  "dna": "132ded9d5b361886",
+  "edition": 5264,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

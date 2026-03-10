@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #8337 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "8337.png",
+  "external_url": "https://kevin420.xyz/nft/8337",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:53.148Z",
+  "hash": "de6f0cdc7308a15c9c86f898ea8fd6e39bb70b3b4b93fc0cc36078ae2b0c0d48",
+  "dna": "de6f0cdc7308a15c",
+  "edition": 8337,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

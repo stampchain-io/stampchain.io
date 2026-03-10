@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #2066 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "2066.png",
+  "external_url": "https://kevin420.xyz/nft/2066",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.950Z",
+  "hash": "341b8fbc1b087d3e284ef7fc964be93afdb2821645a0b4ce957db471113bbcc0",
+  "dna": "341b8fbc1b087d3e",
+  "edition": 2066,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #1130 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DITA!",
+  "image": "1130.png",
+  "external_url": "https://kevin420.xyz/nft/1130",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:35.710Z",
+  "hash": "804ee0d03963a21694b522ec3f3d1de00dce700e33673a7cf89aa8ac7870cd53",
+  "dna": "804ee0d03963a216",
+  "edition": 1130,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #5159 - Night Mode",
+  "description": "Ready for the night with Blackhat and Cool Shades!",
+  "image": "5159.png",
+  "external_url": "https://kevin420.xyz/nft/5159",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:45.340Z",
+  "hash": "3e8437df2caabfe17800e60d53791d28cb1e694a71e777e0829c770d9bdd78a6",
+  "dna": "3e8437df2caabfe1",
+  "edition": 5159,
+  "special": "Night Mode",
+  "rarity": "Rare"
+}

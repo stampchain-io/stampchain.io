@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #4734 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "4734.png",
+  "external_url": "https://kevin420.xyz/nft/4734",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:44.294Z",
+  "hash": "ff19d8f1a77969bd59b0a90038687b7e02a294132ca68941ad520dc80c6b900c",
+  "dna": "ff19d8f1a77969bd",
+  "edition": 4734,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

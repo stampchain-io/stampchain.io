@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #1482 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "1482.png",
+  "external_url": "https://kevin420.xyz/nft/1482",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:36.528Z",
+  "hash": "8b3aeac7d017ec4fa0d41e8cf0524eb9dc3c2344667024f82d66b2e7b4ab3c53",
+  "dna": "8b3aeac7d017ec4f",
+  "edition": 1482,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

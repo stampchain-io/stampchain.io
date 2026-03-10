@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #5232 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "5232.png",
+  "external_url": "https://kevin420.xyz/nft/5232",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:45.530Z",
+  "hash": "acc760ed95a9e8ff776c67a167326ffaf6feb9392950c3ce9d351b5b2f316aa5",
+  "dna": "acc760ed95a9e8ff",
+  "edition": 5232,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

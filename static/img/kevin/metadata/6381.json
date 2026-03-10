@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #6381 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "6381.png",
+  "external_url": "https://kevin420.xyz/nft/6381",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:48.344Z",
+  "hash": "72d1862964deed551d9f35fe36bab6d2cdb9c2b203facdadae56cdd47252dcd3",
+  "dna": "72d1862964deed55",
+  "edition": 6381,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

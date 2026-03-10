@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #4131 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "4131.png",
+  "external_url": "https://kevin420.xyz/nft/4131",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:42.856Z",
+  "hash": "cefa298a292fe0bbd840d0a3829a5abc59f8d3e37e8cc5ef19b90d5dc8ffb411",
+  "dna": "cefa298a292fe0bb",
+  "edition": 4131,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

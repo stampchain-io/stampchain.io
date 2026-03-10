@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #1800 - Minimal DEDKEV",
+  "description": "The minimalist DEDKEV - pure essence with minimal traits.",
+  "image": "1800.png",
+  "external_url": "https://kevin420.xyz/nft/1800",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.266Z",
+  "hash": "7e1b0377cf7b7db0b2315c50e623ddb2c381d4b48fb70595ff59ebda078b312a",
+  "dna": "7e1b0377cf7b7db0",
+  "edition": 1800,
+  "special": "Minimal DEDKEV",
+  "rarity": "Ultra Rare"
+}

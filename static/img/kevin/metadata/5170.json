@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #5170 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "5170.png",
+  "external_url": "https://kevin420.xyz/nft/5170",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:45.371Z",
+  "hash": "cbd8c40e87ea7e288b3cdc1b67f974c62fa1b99bfe59c332e4b6148752f52157",
+  "dna": "cbd8c40e87ea7e28",
+  "edition": 5170,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

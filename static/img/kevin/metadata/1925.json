@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #1925 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "1925.png",
+  "external_url": "https://kevin420.xyz/nft/1925",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Fez"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.599Z",
+  "hash": "2b0eeaa1c634050b4c7d315e1e1fd1a989598537bedc2c7e700280b2e2ebc635",
+  "dna": "2b0eeaa1c634050b",
+  "edition": 1925,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

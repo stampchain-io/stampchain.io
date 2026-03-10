@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #2629 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "2629.png",
+  "external_url": "https://kevin420.xyz/nft/2629",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:39.231Z",
+  "hash": "21f68a660d05306c2760787ece415a66a41d80fd9806819389a491fb8d47edc5",
+  "dna": "21f68a660d05306c",
+  "edition": 2629,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

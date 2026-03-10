@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #973 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "973.png",
+  "external_url": "https://kevin420.xyz/nft/973",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:35.348Z",
+  "hash": "04e5b50793c43eab57d76f665d7aa6d3f820942d06a2287825a79689e68341a1",
+  "dna": "04e5b50793c43eab",
+  "edition": 973,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

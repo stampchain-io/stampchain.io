@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #3296 - Viva Enthusiast",
+  "description": "A true Viva fan with 3 Viva traits!",
+  "image": "3296.png",
+  "external_url": "https://kevin420.xyz/nft/3296",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:40.831Z",
+  "hash": "e65e1adee0797356bc0f76ab5f5f8539b0c3e995729320494a7be50d939e131d",
+  "dna": "e65e1adee0797356",
+  "edition": 3296,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

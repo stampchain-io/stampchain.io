@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #1677 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "1677.png",
+  "external_url": "https://kevin420.xyz/nft/1677",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:36.985Z",
+  "hash": "4a4b7b1b318553a18eea5a3e2932376e969c6e7489a7649006f8c0d373573a0f",
+  "dna": "4a4b7b1b318553a1",
+  "edition": 1677,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #5914 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "5914.png",
+  "external_url": "https://kevin420.xyz/nft/5914",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:47.215Z",
+  "hash": "ed21b43102ef608df16f117b3288fccaaeea2923384bc5cc9dc9d84b8f985043",
+  "dna": "ed21b43102ef608d",
+  "edition": 5914,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

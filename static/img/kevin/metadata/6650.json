@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #6650 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "6650.png",
+  "external_url": "https://kevin420.xyz/nft/6650",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:48.985Z",
+  "hash": "48b74d9b94419c958497f3fb4acc2f6a0fc7ec0e0ed2934775dea8b18358033c",
+  "dna": "48b74d9b94419c95",
+  "edition": 6650,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

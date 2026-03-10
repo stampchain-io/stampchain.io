@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #3150 - Perfect Pepe",
+  "description": "The perfect alignment of Pepe face and Pepe Vision!",
+  "image": "3150.png",
+  "external_url": "https://kevin420.xyz/nft/3150",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:40.478Z",
+  "hash": "bc77f21f93b347b629b2d4417bbc6f80b7779a1d4046289c7ee251386845a9c7",
+  "dna": "bc77f21f93b347b6",
+  "edition": 3150,
+  "special": "Perfect Pepe",
+  "rarity": "Rare"
+}

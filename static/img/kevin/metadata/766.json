@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #766 - Witch Nose",
+  "description": "A mystical Kevin with the rare Witch Nose!",
+  "image": "766.png",
+  "external_url": "https://kevin420.xyz/nft/766",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.852Z",
+  "hash": "673217a4114746f1a1c3fa39e887ac082ba8315b37e0ff0257225412de108fcf",
+  "dna": "673217a4114746f1",
+  "edition": 766,
+  "special": "Witch Nose",
+  "rarity": "Rare"
+}

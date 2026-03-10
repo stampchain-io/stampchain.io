@@ -1,0 +1,55 @@
+{
+  "name": "Kevin #389 - Witch Nose",
+  "description": "A mystical Kevin with the rare Witch Nose!",
+  "image": "389.png",
+  "external_url": "https://kevin420.xyz/nft/389",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 9
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Fez"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:33.986Z",
+  "hash": "f425ba954bc3624d5ec8eaec802ea85d3ddf2f230d2c26d2b83442be71c6dd2a",
+  "dna": "f425ba954bc3624d",
+  "edition": 389,
+  "special": "Witch Nose",
+  "rarity": "Rare"
+}

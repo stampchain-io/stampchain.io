@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #9148 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "9148.png",
+  "external_url": "https://kevin420.xyz/nft/9148",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:55.265Z",
+  "hash": "105681040bb9b7adbd3efe09f00bce4c9aaef50717b56d6eeea19e6867523bf3",
+  "dna": "105681040bb9b7ad",
+  "edition": 9148,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

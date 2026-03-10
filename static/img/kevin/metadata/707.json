@@ -1,0 +1,51 @@
+{
+  "name": "Kevin #707 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "707.png",
+  "external_url": "https://kevin420.xyz/nft/707",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 8
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.716Z",
+  "hash": "281751e392acc1be116e5206194e8d6d19fafecb0597b1455b65504357b24ad1",
+  "dna": "281751e392acc1be",
+  "edition": 707,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

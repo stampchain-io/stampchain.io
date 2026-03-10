@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #380 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "380.png",
+  "external_url": "https://kevin420.xyz/nft/380",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:33.965Z",
+  "hash": "1f935d486f97f577fd58c6407b552c1031be5f72b206e24e19068a40ac6e2c1a",
+  "dna": "1f935d486f97f577",
+  "edition": 380,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

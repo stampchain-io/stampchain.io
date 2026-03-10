@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #2377 - Vision Master",
+  "description": "Enhanced vision with both glasses and special eyes!",
+  "image": "2377.png",
+  "external_url": "https://kevin420.xyz/nft/2377",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:38.638Z",
+  "hash": "2944f4007f863087c20c543edb1c5fb18f22f3fc51b03e0e6e2caee2711737fa",
+  "dna": "2944f4007f863087",
+  "edition": 2377,
+  "special": "Vision Master",
+  "rarity": "Rare"
+}

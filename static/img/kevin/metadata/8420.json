@@ -1,0 +1,27 @@
+{
+  "name": "Kevin #8420 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "8420.png",
+  "external_url": "https://kevin420.xyz/nft/8420",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 2
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:53.342Z",
+  "hash": "89f324da1c8153985446c39e99650f23feb28041d6b68b36e30e3725c06724f6",
+  "dna": "89f324da1c815398",
+  "edition": 8420,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

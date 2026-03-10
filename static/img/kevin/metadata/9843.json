@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #9843 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "9843.png",
+  "external_url": "https://kevin420.xyz/nft/9843",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:57.052Z",
+  "hash": "0a767e1b3ab117f27da995566b5cf1ea1062401a1aefed6c692611edefa4d47d",
+  "dna": "0a767e1b3ab117f2",
+  "edition": 9843,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

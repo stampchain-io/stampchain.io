@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #677 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "677.png",
+  "external_url": "https://kevin420.xyz/nft/677",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.643Z",
+  "hash": "8edcd889a0b757771e3d6c7ef33defeb18e16754e7fa15e4c7c037ca6ff01d57",
+  "dna": "8edcd889a0b75777",
+  "edition": 677,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

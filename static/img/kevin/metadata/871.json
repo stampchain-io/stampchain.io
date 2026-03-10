@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #871 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "871.png",
+  "external_url": "https://kevin420.xyz/nft/871",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:35.104Z",
+  "hash": "51cee2f7cc53aab7103bcf482e8f2ee026c54d8cc55dfe73a0c62ea9ab478028",
+  "dna": "51cee2f7cc53aab7",
+  "edition": 871,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

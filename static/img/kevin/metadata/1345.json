@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #1345 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "1345.png",
+  "external_url": "https://kevin420.xyz/nft/1345",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:36.202Z",
+  "hash": "195ff10e65d37555fee05abb4d1889cf2e77a6728376576ab167cf36d9665743",
+  "dna": "195ff10e65d37555",
+  "edition": 1345,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #2223 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "2223.png",
+  "external_url": "https://kevin420.xyz/nft/2223",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:38.299Z",
+  "hash": "5ee6edb441f5391fb272b8b94d37222c6f4468587fe7839b5b50b9ca7af32b23",
+  "dna": "5ee6edb441f5391f",
+  "edition": 2223,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

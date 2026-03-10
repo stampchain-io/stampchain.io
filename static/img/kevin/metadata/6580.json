@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #6580 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "6580.png",
+  "external_url": "https://kevin420.xyz/nft/6580",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:48.827Z",
+  "hash": "baf9c8286ce75371876e1eb54eb143a843d8b7f2c5f60f1cac6f00826166032c",
+  "dna": "baf9c8286ce75371",
+  "edition": 6580,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

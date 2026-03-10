@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #6614 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "6614.png",
+  "external_url": "https://kevin420.xyz/nft/6614",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Fez"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:48.905Z",
+  "hash": "922ca3defb59fa1796874a0b25ed0b4b7e4ebf7b3b9b662dbe2f65c3acaf2beb",
+  "dna": "922ca3defb59fa17",
+  "edition": 6614,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #1355 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "1355.png",
+  "external_url": "https://kevin420.xyz/nft/1355",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:36.229Z",
+  "hash": "ce72835067ab8a0c7ddf0e3339a927d5d5b830376c56852a610d046deb753f5d",
+  "dna": "ce72835067ab8a0c",
+  "edition": 1355,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

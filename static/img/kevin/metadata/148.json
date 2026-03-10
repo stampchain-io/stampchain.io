@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #148 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "148.png",
+  "external_url": "https://kevin420.xyz/nft/148",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:33.422Z",
+  "hash": "fa552710d642c6607e8a2673996a51de284d1a82f69dbf557c7b95b7d36c0e40",
+  "dna": "fa552710d642c660",
+  "edition": 148,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

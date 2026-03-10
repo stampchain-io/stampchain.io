@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #6940 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "6940.png",
+  "external_url": "https://kevin420.xyz/nft/6940",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:49.712Z",
+  "hash": "47bef1445284b3c3d3bd54d536375ef95d8820e57aff938a1cfb758fb1d8dca5",
+  "dna": "47bef1445284b3c3",
+  "edition": 6940,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

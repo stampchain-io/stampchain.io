@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #1877 - Night Mode",
+  "description": "Ready for the night with Blackhat and Cool Shades!",
+  "image": "1877.png",
+  "external_url": "https://kevin420.xyz/nft/1877",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.481Z",
+  "hash": "f0e33019a3c8b730edc1d70be626aed2d3fc4a8d5ee3febe7f4b26a5a08ae7b3",
+  "dna": "f0e33019a3c8b730",
+  "edition": 1877,
+  "special": "Night Mode",
+  "rarity": "Rare"
+}

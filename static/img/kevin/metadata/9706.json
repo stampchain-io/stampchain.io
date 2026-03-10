@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #9706 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "9706.png",
+  "external_url": "https://kevin420.xyz/nft/9706",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:56.721Z",
+  "hash": "b1cd99edc98fcd74440108860f720db5a084b4bb1accbd337392d7892af6170b",
+  "dna": "b1cd99edc98fcd74",
+  "edition": 9706,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

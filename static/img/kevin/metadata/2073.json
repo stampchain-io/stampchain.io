@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #2073 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "2073.png",
+  "external_url": "https://kevin420.xyz/nft/2073",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.964Z",
+  "hash": "b9f3eb32d221b232f69bd4cbf0fc2c5a884ae6937c3bf8dfafbc268a931ae43f",
+  "dna": "b9f3eb32d221b232",
+  "edition": 2073,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

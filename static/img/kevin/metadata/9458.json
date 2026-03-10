@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #9458 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "9458.png",
+  "external_url": "https://kevin420.xyz/nft/9458",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:56.072Z",
+  "hash": "38a012d34dc83d3803b62d9b29a433b78fb46b8d4dc9479d3e2a9fbcaab3b9a9",
+  "dna": "38a012d34dc83d38",
+  "edition": 9458,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

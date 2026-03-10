@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #8822 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "8822.png",
+  "external_url": "https://kevin420.xyz/nft/8822",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Fez"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:54.387Z",
+  "hash": "1587152d436030919969794952ecf8e3e6f01ce1c6b02b631dd77d07989dc88f",
+  "dna": "1587152d43603091",
+  "edition": 8822,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}
