@@ -1,5 +1,5 @@
 /* ===== HEADER COMPONENT ===== */
-import { CloseIcon, Icon } from "$icon";
+import { CloseIcon, LogoIcon } from "$icon";
 import { MenuButton } from "$islands/button/MenuButton.tsx";
 import { SearchButton } from "$islands/button/SearchButton.tsx";
 import { ToolsButton } from "$islands/button/ToolsButton.tsx";
@@ -568,12 +568,8 @@ export function Header() {
 
   /* ===== LOGO ICON ===== */
   const logoIcon = (
-    <Icon
-      type="iconButton"
-      name="stampchain"
-      size="lgR"
-      weight="normal"
-      color="purpleLight"
+    <LogoIcon
+      className="ml-1.5"
       href="/home"
       f-partial="/home"
       onClick={() => setCurrentPath("home")}
