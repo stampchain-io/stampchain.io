@@ -27,7 +27,7 @@ export const logoPurpleLDLink =
 /* ===== NAVIGATION STYLES ===== */
 // Header - Desktop
 export const navLinkPurple =
-  `font-semibold tablet:font-normal text-color-purple-semilight text-sm tablet:text-[13px] group-hover:text-color-purple-light tracking-wider ${transitionColors} cursor-pointer ${select}`;
+  `font-medium tablet:font-normal text-color-purple-semilight text-sm tablet:text-[13px] group-hover:text-color-purple-light tracking-wider ${transitionColors} cursor-pointer ${select}`;
 export const navLinkPurpleActive =
   `${navLinkPurple} !text-color-purple-light hover:!text-color-purple-semilight`;
 export const navSublinkPurple =

@@ -38,9 +38,9 @@ export function LogoIcon({
       {...(fPartial !== undefined ? { "f-partial": fPartial } : {})}
     >
       <img
-        src="/img/logo/logo-stampchain.svg"
+        src="/img/logo/stampchain-logo-outline.svg"
         alt=""
-        class="w-6 h-6"
+        class="w-9 h-9 tablet:w-8 tablet:h-8"
       />
     </a>
   );
