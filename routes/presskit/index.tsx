@@ -36,30 +36,47 @@ function DownloadButtons({ inline = false }: { inline?: boolean }) {
   );
 }
 
-/* ===== DUMMY IMAGE PLACEHOLDER ===== */
+/* ===== IMAGE PLACEHOLDER / LOGO DISPLAY ===== */
 function ImagePlaceholder(
   {
     width = "w-full",
-    height = "h-fit",
-    label = "",
+    height = "h-full",
+    title = "",
+    subtitle = "",
     showButtons = false,
-    icons,
+    icon,
+    src,
   }: {
     width?: string;
     height?: string;
-    label?: string;
+    title?: string;
+    subtitle?: string;
     showButtons?: boolean;
-    icons?: string[];
+    icon?: string[];
+    src?: string[];
   },
 ) {
   return (
     <div
       class={`${width} ${height} ${glassmorphismL2} flex flex-col items-center justify-center p-5 gap-2.5`}
     >
-      {icons
+      {src
+        ? (
+          <div class="flex flex-wrap items-center justify-center gap-3 max-w-[240px]">
+            {src.map((s) => (
+              <img
+                key={s}
+                src={s}
+                alt={title || "Logo"}
+                class="w-12 h-12"
+              />
+            ))}
+          </div>
+        )
+        : icon
         ? (
           <div class="flex items-center gap-5">
-            {icons.map((name) => (
+            {icon.map((name) => (
               <Icon
                 key={name}
                 type="icon"
@@ -67,14 +84,14 @@ function ImagePlaceholder(
                 weight="light"
                 size="custom"
                 color="grey"
-                className="w-7 h-7"
+                className="w-8 h-8"
               />
             ))}
           </div>
         )
         : (
           <svg
-            class="w-10 h-10 text-color-grey-semidark opacity-60"
+            class="w-16 h-16 text-color-grey-semidark opacity-60"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -86,7 +103,10 @@ function ImagePlaceholder(
             <polyline points="21 15 16 10 5 21" />
           </svg>
         )}
-      {label && <span class={value}>{label}</span>}
+      {title && <span class={`${value} text-center`}>{title}</span>}
+      {subtitle && (
+        <span class={`-mt-2 ${valueSm} text-center`}>{subtitle}</span>
+      )}
       {showButtons && <DownloadButtons inline />}
     </div>
   );
@@ -248,22 +268,22 @@ export default function PressKit() {
         >
           <ImagePlaceholder
             height="h-28 mobileMd:h-36"
-            label="Logo Light"
+            title="Logo Light"
             showButtons
           />
           <ImagePlaceholder
             height="h-28 mobileMd:h-36"
-            label="Logo Dark"
+            title="Logo Dark"
             showButtons
           />
           <ImagePlaceholder
             height="h-28 mobileMd:h-36"
-            label="Logo Horizontal"
+            title="Logo Horizontal"
             showButtons
           />
           <ImagePlaceholder
             height="h-28 mobileMd:h-36"
-            label="Logo Icon"
+            title="Logo Icon"
             showButtons
           />
         </div>
@@ -279,12 +299,8 @@ export default function PressKit() {
           {/* Description */}
           <div class="flex flex-col gap-3 mobileLg:w-1/2 tablet:w-2/3">
             <p class={text}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
-            <p class={text}>
-              Duis aute irure dolor in reprehenderit in voluptate velit esse
-              cillum dolore eu fugiat nulla pariatur.
+              24x24px SVG icons and 192x192px PNG icons available in dark and
+              light themes, along with duotone and gradient versions.
             </p>
           </div>
 
@@ -346,26 +362,29 @@ export default function PressKit() {
 
         {/* Stampchain Logo assets */}
         <div
-          class={`grid grid-cols-2 mobileLg:grid-cols-4 gap-5 mt-5`}
+          class={`grid grid-cols-1 mobileLg:grid-cols-2 gap-5 mt-5`}
         >
           <ImagePlaceholder
-            height="h-28 mobileMd:h-36"
-            label="Logo Light"
+            src={[
+              "/img/presskit/stampchain/stampchain-outline-monotone-dark.svg",
+              "/img/presskit/stampchain/stampchain-outline-monotone-light.svg",
+              "/img/presskit/stampchain/stampchain-fill-monotone-dark.svg",
+              "/img/presskit/stampchain/stampchain-fill-monotone-light.svg",
+              "/img/presskit/stampchain/stampchain-outline-duotone.svg",
+              "/img/presskit/stampchain/stampchain-fill-duotone.svg",
+              "/img/presskit/stampchain/stampchain-outline-gradient.svg",
+              "/img/presskit/stampchain/stampchain-fill-gradient.svg",
+            ]}
+            title="LOGO ICON"
+            subtitle="MONOTONE, DUOTONE, & GRADIENT"
             showButtons
           />
           <ImagePlaceholder
-            height="h-28 mobileMd:h-36"
-            label="Logo Dark"
-            showButtons
-          />
-          <ImagePlaceholder
-            height="h-28 mobileMd:h-36"
-            label="Logo Horizontal"
-            showButtons
-          />
-          <ImagePlaceholder
-            height="h-28 mobileMd:h-36"
-            label="Logo Icon"
+            src={[
+              "/img/presskit/stampchain/stampchain-outline-duotone.svg",
+              "/img/presskit/stampchain/stampchain-fill-duotone.svg",
+            ]}
+            title="LOGO ICON WITH TEXT"
             showButtons
           />
         </div>
@@ -403,13 +422,13 @@ export default function PressKit() {
           class={`grid grid-cols-2 gap-5 mt-5`}
         >
           <ImagePlaceholder
-            icons={["artStamp", "artStamps"]}
-            label="ART STAMPS"
+            icon={["artStamp", "artStamps"]}
+            title="ART STAMPS"
             showButtons
           />
           <ImagePlaceholder
-            icons={["src20Token", "src20Tokens"]}
-            label="SRC-20 TOKENS"
+            icon={["src20Token", "src20Tokens"]}
+            title="SRC-20 TOKENS"
             showButtons
           />
         </div>
@@ -437,7 +456,7 @@ export default function PressKit() {
               key={i}
               width="w-full"
               height="aspect-square"
-              label={`Stamp #${i + 1}`}
+              title={`Stamp #${i + 1}`}
             />
           ))}
         </div>
@@ -467,7 +486,7 @@ export default function PressKit() {
               key={i}
               width="w-full"
               height="h-36 mobileMd:h-44"
-              label={`Meme ${i + 1}`}
+              title={`Meme ${i + 1}`}
             />
           ))}
         </div>
