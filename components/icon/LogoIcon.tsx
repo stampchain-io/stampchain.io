@@ -1,0 +1,47 @@
+/* ===== STAMPCHAIN LOGO ICON COMPONENT ===== */
+/*
+ * Renders the Stampchain logo as an <img> tag loading the SVG from static assets.
+ *
+ * The logo SVG uses linearGradient paint servers with xlink:href stop inheritance.
+ * Inline SVG approaches (JSX, dangerouslySetInnerHTML) all fail in this context
+ * because the Header is a Fresh island: the SVG is server-rendered during SSR and
+ * then Preact re-hydrates the island client-side. During that hydration cycle,
+ * gradient url(#id) references silently break — paths with solid hex stroke colours
+ * survive but any path using stroke:url(#gradient) becomes invisible.
+ *
+ * Loading via <img src="...svg"> sidesteps this entirely: the browser fetches and
+ * parses the file as a standalone SVG document where xlink:href and all gradient
+ * references work as designed, with no Preact/hydration involvement.
+ */
+
+interface LogoIconProps {
+  href?: string;
+  onClick?: () => void;
+  className?: string;
+  ariaLabel?: string;
+  "f-partial"?: string;
+}
+
+export function LogoIcon({
+  href = "/home",
+  onClick,
+  className = "",
+  ariaLabel = "Stampchain home",
+  "f-partial": fPartial,
+}: LogoIconProps) {
+  return (
+    <a
+      href={href}
+      onClick={onClick}
+      aria-label={ariaLabel}
+      class={`inline-block ${className}`.trim()}
+      {...(fPartial !== undefined ? { "f-partial": fPartial } : {})}
+    >
+      <img
+        src="/img/logo/logo-stampchain.svg"
+        alt=""
+        class="w-6 h-6"
+      />
+    </a>
+  );
+}
