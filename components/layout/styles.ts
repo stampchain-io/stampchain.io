@@ -29,10 +29,10 @@ export const glassmorphismOverlay =
 // 1st layer styles
 export const glassmorphism = `border border-color-border/50 rounded-3xl
   bg-gradient-to-br from-[#191919]/40 via-color-background/50 to-black/60
-  backdrop-blur ${shadow}`;
+  backdrop-blur-sm ${shadow}`;
 // 2nd layer styles - register tool tld dropdown uses same hardcoded values
 export const glassmorphismL2 = `border border-color-border/75 rounded-2xl
-  bg-color-background/30 backdrop-blur-xs ${shadowL2}`;
+  bg-color-background/30 backdrop-blur-sm ${shadowL2}`;
 export const glassmorphismL2Hover =
   `hover:bg-color-background/60 hover:border-color-border`;
 

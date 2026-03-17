@@ -571,10 +571,9 @@ export function Header() {
     <Icon
       type="iconButton"
       name="stampchain"
-      size="lg"
-      weight="light"
+      size="lgR"
+      weight="normal"
       color="purpleLight"
-      className="ml-1.5"
       href="/home"
       f-partial="/home"
       onClick={() => setCurrentPath("home")}
@@ -587,37 +586,42 @@ export function Header() {
      px-gutter-mobile mobileLg:px-gutter-tablet tablet:px-gutter-desktop
      pt-6 pb-9 mobileLg:pt-9 tablet:pb-14">
       {/* ===== MOBILE NAVIGATION ===== */}
-      <div class="mobileLg:hidden flex justify-between items-center w-full relative z-header">
-        {/* Left: Logo Icon */}
-        {logoIcon}
-
-        {/* Right: Search, Tools, Wallet and Menu Buttons */}
+      <div class="mobileLg:hidden flex items-center w-full relative z-header">
         <div
-          class={`flex items-center gap-7 py-1.5 px-5 ${glassmorphism} !rounded-full`}
+          class={`flex items-center justify-between w-full gap-7 py-1.5 px-5 ${glassmorphism} !rounded-full`}
         >
-          <SearchButton />
-          {ToolsButton({ onOpenDrawer: openDrawer, data: toolsData }).icon}
-          {WalletButton({
-            onOpenDrawer: openDrawer,
-            onCloseDrawer: closeMenu,
-          }).icon}
-          {MenuButton({ onOpenDrawer: openDrawer }).icon}
+          {/* Left: Logo Icon */}
+          {logoIcon}
+
+          {/* Right: Search, Tools, Wallet and Menu Buttons */}
+          <div class="flex items-center gap-7">
+            <SearchButton />
+            {ToolsButton({ onOpenDrawer: openDrawer, data: toolsData }).icon}
+            {WalletButton({
+              onOpenDrawer: openDrawer,
+              onCloseDrawer: closeMenu,
+            }).icon}
+            {MenuButton({ onOpenDrawer: openDrawer }).icon}
+          </div>
         </div>
       </div>
 
       {/* ===== TABLET/DESKTOP NAVIGATION ===== */}
-      <div class="hidden mobileLg:flex justify-between items-center w-full relative z-header">
-        {/* Left: Logo Icon */}
-        {logoIcon}
-
-        {/* Right: Navigation Links and Icon Buttons */}
+      <div class="hidden mobileLg:flex items-center w-full relative z-header">
         <div
-          class={`flex items-center gap-7 tablet:gap-6 py-1.5 tablet:py-1 px-5 tablet:px-4 ${glassmorphism} !rounded-full`}
+          class={`relative flex items-center justify-between w-full
+             py-2.5 tablet:py-2.5 px-6 tablet:px-5
+             ${glassmorphism} !rounded-full`}
         >
-          {/* Navigation Links */}
-          {renderNavLinks()}
+          {/* Left: Logo Icon */}
+          {logoIcon}
 
-          {/* Icon Buttons */}
+          {/* Center: Navigation Links */}
+          <div class="absolute left-1/2 -translate-x-1/2 flex items-center gap-7 tablet:gap-8">
+            {renderNavLinks()}
+          </div>
+
+          {/* Right: Icon Buttons */}
           <div class="flex items-center gap-5">
             <div class="relative group">
               <SearchButton />

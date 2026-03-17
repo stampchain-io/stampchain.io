@@ -12,7 +12,6 @@ import {
   Micro5FontLoader,
 } from "$layout";
 import {
-  CarouselHome,
   GetStampingCta,
   PartnersBanner,
   SRC20Gallery,
@@ -293,7 +292,7 @@ export const handler: Handlers<HomePageData> = {
 export default function Home({ data }: PageProps<HomePageData>) {
   /* ===== DATA EXTRACTION ===== */
   const {
-    carouselStamps = [],
+    _carouselStamps = [],
     stamps_art = [],
     stamps_src721 = [],
     stamps_posh = [],
@@ -322,12 +321,14 @@ export default function Home({ data }: PageProps<HomePageData>) {
         {/* ===== CRITICAL ABOVE FOLD CONTENT ===== */}
         <HomeHeader />
 
-        {/* ===== DEFERRED IMPORTANT CONTENT ===== */}
+        {
+          /* ===== DEFERRED IMPORTANT CONTENT =====
         <div style="content-visibility:auto;">
           <CarouselHome carouselStamps={carouselStamps} />
         </div>
 
-        {/* ===== NON-CRITICAL CONTENT ===== */}
+        {/* ===== NON-CRITICAL CONTENT ===== */
+        }
         <div style="content-visibility: auto; contain-intrinsic-size: 0 500px;">
           <StampOverviewGallery
             stamps_art={stamps_art}

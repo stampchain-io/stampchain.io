@@ -45,7 +45,7 @@ export function Icon(props: IconVariants) {
   const getIconPath = () => {
     const iconNameMap = {
       // Social Media Icons
-      stampchain: "logoS",
+      stampchain: "stampchainDuotone2",
       twitter: "twitter",
       telegram: "telegram",
       github: "github",
@@ -75,6 +75,14 @@ export function Icon(props: IconVariants) {
       caretRight: "caretRight",
       caretDoubleLeft: "caretDoubleLeft",
       caretDoubleRight: "caretDoubleRight",
+
+      // Art Stamp & Collection Icons
+      artStamp: "artStamp",
+      artStamps: "artStamps",
+
+      // SRC-20 Token Icons
+      src20Token: "src20Token",
+      src20Tokens: "src20Tokens",
 
       // Stamp Specific
       // - Image Right Panel Icons

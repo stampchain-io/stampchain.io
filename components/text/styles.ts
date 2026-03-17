@@ -89,7 +89,7 @@ export const textLg = `${textFont} text-lg`;
 export const textXl = `${textFont} text-xl`;
 export const text2xl = `${textFont} text-2xl`;
 export const textLinkUnderline =
-  `font-bold text-base text-color-grey-light animated-underline ${transitionColors}`;
+  `font-semibold text-base text-color-grey-light animated-underline ${transitionColors}`;
 
 /* ===== LINK STYLES ===== */
 // Use the specific link styles created or just add "animated-underline" to the class name to apply an animated underline effect
@@ -133,7 +133,7 @@ export const labelLogicResponsive = ( // used for the filter labels
 export const valueXs = `${valueFont} text-xs ${select}`;
 export const valueSm = `${valueFont} text-sm ${select}`;
 export const valueSmLink =
-  `${valueFont} text-sm hover:text-color-purple-light ${transitionColors} cursor-pointer w-full ${select}`;
+  `${valueFont} text-sm hover:text-color-grey ${transitionColors} cursor-pointer w-full ${select}`;
 export const value = `${valueFont} text-base ${select}`;
 export const valueLg = `${valueFont} text-lg ${select}`;
 export const valueXl =
