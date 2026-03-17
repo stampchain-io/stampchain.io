@@ -12,6 +12,7 @@ import {
   labelXxs,
   subtitleGrey,
   text,
+  textLinkUnderline,
   titleGreyLD,
   value,
   valueSm,
@@ -66,7 +67,7 @@ function ImagePlaceholder(
                 weight="light"
                 size="custom"
                 color="grey"
-                className="w-12 h-12"
+                className="w-7 h-7"
               />
             ))}
           </div>
@@ -118,8 +119,8 @@ function ColorSwatch(
 
 /* ===== PAGE COMPONENT ===== */
 export default function PressKit() {
-  /* ===== COLOR DATA ===== */
-  const purpleColors = [
+  /* ===== COLOR PALETTE DATA ===== */
+  const stampchainPurplePalette = [
     { color: "purple-dark", hex: "#43005c", name: "Dark" },
     { color: "purple-semidark", hex: "#610085", name: "Semi Dark" },
     { color: "purple", hex: "#7f00ad", name: "Default" },
@@ -127,7 +128,7 @@ export default function PressKit() {
     { color: "purple-light", hex: "#BB00FF", name: "Light" },
   ];
 
-  const greyColors = [
+  const stampchainGreyPalette = [
     { color: "grey-dark", hex: "#585552", name: "Dark" },
     { color: "grey-semidark", hex: "#817e78", name: "Semi Dark" },
     { color: "grey", hex: "#a8a39d", name: "Default" },
@@ -135,11 +136,18 @@ export default function PressKit() {
     { color: "grey-light", hex: "#f9f2e9", name: "Light" },
   ];
 
-  const bitcoinColors = [
+  const bitcoinStampsOrangePalette = [
     { color: "black", hex: "#000000", name: "Black" },
     { color: "dark-grey", hex: "#4d4d4d", name: "Dark Grey" },
     { color: "btc-orange", hex: "#ff8800", name: "BTC Orange" },
     { color: "btc-gold", hex: "#F7931A", name: "BTC Gold" },
+  ];
+
+  const bitcoinStampsPurplePalette = [
+    { color: "black", hex: "#000000", name: "Black" },
+    { color: "dark-grey", hex: "#4d4d4d", name: "Dark Grey" },
+    { color: "purple", hex: "#7f00ad", name: "Default" },
+    { color: "purple-light", hex: "#BB00FF", name: "Light" },
   ];
 
   /* ===== RENDER ===== */
@@ -186,14 +194,14 @@ export default function PressKit() {
                   href="https://fonts.google.com/specimen/Open+Sans"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class={valueSmLink}
+                  class={`${valueSmLink} group-hover:text-color-grey`}
                 >
                   OPEN SANS
                 </a>
                 <Icon
                   type="iconButton"
                   name="share"
-                  weight="normal"
+                  weight="bold"
                   size="xxs"
                   color="custom"
                   className="mb-1 stroke-color-grey-light group-hover:stroke-color-grey transition-colors"
@@ -210,7 +218,7 @@ export default function PressKit() {
                 <div>
                   <p class={`${valueSm} mb-1`}>SATOSHI ORANGE</p>
                   <div class="flex justify-between">
-                    {bitcoinColors.map((c) => (
+                    {bitcoinStampsOrangePalette.map((c) => (
                       <ColorSwatch
                         key={c.hex}
                         {...c}
@@ -221,7 +229,7 @@ export default function PressKit() {
                 <div>
                   <p class={`${valueSm} mb-1`}>KEVIN PURPLE</p>
                   <div class="flex justify-between">
-                    {bitcoinColors.map((c) => (
+                    {bitcoinStampsPurplePalette.map((c) => (
                       <ColorSwatch
                         key={c.hex}
                         {...c}
@@ -291,14 +299,14 @@ export default function PressKit() {
                   href="https://fonts.google.com/specimen/Work+Sans"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class={valueSmLink}
+                  class={`${valueSmLink} group-hover:text-color-grey`}
                 >
                   WORK SANS
                 </a>
                 <Icon
                   type="iconButton"
                   name="share"
-                  weight="normal"
+                  weight="bold"
                   size="xxs"
                   color="custom"
                   className="mb-1 stroke-color-grey-light group-hover:stroke-color-grey transition-colors"
@@ -315,7 +323,7 @@ export default function PressKit() {
                 <div>
                   <p class={`${valueSm} mb-1`}>PURPLE</p>
                   <div class="flex justify-between">
-                    {purpleColors.map((c) => (
+                    {stampchainPurplePalette.map((c) => (
                       <ColorSwatch
                         key={c.hex}
                         {...c}
@@ -326,7 +334,9 @@ export default function PressKit() {
                 <div>
                   <p class={`${valueSm} mb-1`}>GREY</p>
                   <div class="flex justify-between">
-                    {greyColors.map((c) => <ColorSwatch key={c.hex} {...c} />)}
+                    {stampchainGreyPalette.map((c) => (
+                      <ColorSwatch key={c.hex} {...c} />
+                    ))}
                   </div>
                 </div>
               </div>
@@ -363,13 +373,29 @@ export default function PressKit() {
 
       {/* ===== SECTION 4: ART STAMPS & SRC20 TOKENS ===== */}
       <section class={containerBackground}>
-        <h1 class={titleGreyLD}>ART STAMPS & SRC20 TOKENS</h1>
-        <h2 class={subtitleGrey}>ICONS</h2>
+        <h1 class={titleGreyLD}>STAMPS & TOKENS</h1>
+        <h2 class={subtitleGrey}>ICON SET</h2>
         <p class={text}>
-          Iconset 24x24px - stroke width 1.0.
+          Art stamps icons for single and multiple stamps, and collections.
+          Standard or rounded versions available.
           <br />
-          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-          dolore eu fugiat nulla pariatur.
+          Token icon set for single and multiple SRC-20s, and single SRC-101
+          tokens.
+          <br />
+          Inspired by and play well with{" "}
+          <a
+            href="https://hugeicons.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class={textLinkUnderline}
+          >
+            Hugeicons
+          </a>.
+          <br /> <br />
+          SVG icons are 24x24px, with custom stroke width and color options.
+          <br />
+          PNG icons are 96x96px, with dark and light theme variants - stroke
+          width 1.
         </p>
 
         {/* Icon grid */}
@@ -377,7 +403,8 @@ export default function PressKit() {
           class={`grid grid-cols-2 gap-5 mt-5`}
         >
           <ImagePlaceholder
-            label="STAMP ART"
+            icons={["artStamp", "artStamps"]}
+            label="ART STAMPS"
             showButtons
           />
           <ImagePlaceholder
