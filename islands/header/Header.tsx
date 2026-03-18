@@ -312,7 +312,7 @@ export function Header() {
     if (toolsButtonRef.current) {
       const rect = toolsButtonRef.current.getBoundingClientRect();
       toolsPos = {
-        top: rect.bottom + 12,
+        top: rect.bottom + 20,
         left: rect.right - 550 + 61,
       };
     }
@@ -348,7 +348,7 @@ export function Header() {
     if (walletButtonRef.current) {
       const rect = walletButtonRef.current.getBoundingClientRect();
       walletPos = {
-        top: rect.bottom + 12,
+        top: rect.bottom + 20,
         left: rect.right - 150 - 15,
       };
     }
@@ -569,7 +569,6 @@ export function Header() {
   /* ===== LOGO ICON ===== */
   const logoIcon = (
     <LogoIcon
-      className="ml-1.5"
       href="/home"
       f-partial="/home"
       onClick={() => setCurrentPath("home")}
@@ -606,7 +605,7 @@ export function Header() {
       <div class="hidden mobileLg:flex items-center w-full relative z-header">
         <div
           class={`relative flex items-center justify-between w-full
-             py-2.5 tablet:py-2.5 px-6 tablet:px-5
+             py-1.5 px-6
              ${glassmorphism} !rounded-full`}
         >
           {/* Left: Logo Icon */}
@@ -618,7 +617,7 @@ export function Header() {
           </div>
 
           {/* Right: Icon Buttons */}
-          <div class="flex items-center gap-5">
+          <div class="flex items-center gap-4">
             <div class="relative group">
               <SearchButton />
             </div>

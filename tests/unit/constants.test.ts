@@ -22,9 +22,6 @@ import {
   SRC20_BALANCE_TABLE,
   SRC20_TABLE,
   STAMP_TABLE,
-  STAMPCHAIN_FAVICON_IMAGE,
-  STAMPCHAIN_LOGO_IMAGE,
-  STAMPCHAIN_OPENGRAPH_IMAGE,
   SUPPORTED_UNICODE_FROM_INDEXER_CODE,
   WALLET_PROVIDERS,
   type WalletProviderKey,
@@ -119,36 +116,6 @@ Deno.test("constants - API base URLs", () => {
     "Blockstream uses HTTPS",
   );
   assert(COINGECKO_API_BASE_URL.startsWith("https://"), "CoinGecko uses HTTPS");
-});
-
-Deno.test("constants - image paths", () => {
-  // Stampchain Logo Images
-  assertEquals(
-    STAMPCHAIN_LOGO_IMAGE,
-    "/img/logo/stampchain-logo-480.svg",
-    "Stampchain logo image",
-  );
-  assertEquals(
-    STAMPCHAIN_FAVICON_IMAGE,
-    "/img/logo/stampchain-logo-favicon.jpg",
-    "Stampchain favicon image",
-  );
-  assertEquals(
-    STAMPCHAIN_OPENGRAPH_IMAGE,
-    "https://stampchain.io/img/logo/stampchain-logo-opengraph.jpg",
-    "Stampchain OpenGraph image",
-  );
-
-  // Verify file extensions
-  assert(STAMPCHAIN_LOGO_IMAGE.endsWith(".svg"), "Stampchain logo is SVG");
-  assert(
-    STAMPCHAIN_FAVICON_IMAGE.endsWith(".jpg"),
-    "Stampchain favicon is JPG",
-  );
-  assert(
-    STAMPCHAIN_OPENGRAPH_IMAGE.endsWith(".jpg"),
-    "Stampchain OpenGraph is JPG",
-  );
 });
 
 Deno.test("constants - carousel stamp IDs", () => {
