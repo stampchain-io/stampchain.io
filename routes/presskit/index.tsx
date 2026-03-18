@@ -13,6 +13,7 @@ import {
   subtitleGrey,
   text,
   textLinkUnderline,
+  textSm,
   titleGreyLD,
   value,
   valueSm,
@@ -104,9 +105,8 @@ function ImagePlaceholder(
           </svg>
         )}
       {title && <span class={`${value} text-center`}>{title}</span>}
-      {subtitle && (
-        <span class={`-mt-2 ${valueSm} text-center`}>{subtitle}</span>
-      )}
+      {subtitle && <span class={`-mt-2 ${textSm} text-center`}>{subtitle}
+      </span>}
       {showButtons && <DownloadButtons inline />}
     </div>
   );
@@ -178,16 +178,16 @@ export default function PressKit() {
         <h1 class={titleGreyLD}>PRESS KIT</h1>
         <h2 class={subtitleGrey}>FOR THE BITCOIN STAMPS ECOSYSTEM</h2>
         <p class={text}>
-          Brand assets, guidelines, and marketing materials for the Bitcoin
-          Stamps protocol and Stampchain, including Stamps and SRC-20 token
-          icons.
+          Brand assets, guidelines, and marketing material for the Bitcoin
+          Stamps protocol and Stampchain website, including Stamps and SRC-20
+          token icons.
         </p>
       </section>
 
       {/* ===== SECTION 2: BITCOIN STAMPS BRANDING ===== */}
       <section class={containerBackground}>
-        <h1 class={titleGreyLD}>BITCOIN STAMPS</h1>
-        <h2 class={subtitleGrey}>PROTOCOL BRANDING</h2>
+        <h3 class={titleGreyLD}>BITCOIN STAMPS</h3>
+        <h4 class={subtitleGrey}>PROTOCOL BRANDING</h4>
 
         {/* Split row */}
         <div class="flex flex-col mobileLg:flex-row gap-5 mobileLg:gap-7.5 mt-2">
@@ -291,16 +291,25 @@ export default function PressKit() {
 
       {/* ===== SECTION 3: STAMPCHAIN WEBSITE LOGO ===== */}
       <section class={containerBackground}>
-        <h1 class={titleGreyLD}>STAMPCHAIN</h1>
-        <h2 class={subtitleGrey}>WEBSITE LOGO</h2>
+        <h3 class={titleGreyLD}>STAMPCHAIN</h3>
+        <h4 class={subtitleGrey}>WEBSITE BRANDING</h4>
 
         {/* Split row */}
         <div class="flex flex-col mobileLg:flex-row gap-5 mobileLg:gap-7.5 mt-2">
           {/* Description */}
           <div class="flex flex-col gap-3 mobileLg:w-1/2 tablet:w-2/3">
             <p class={text}>
-              24x24px SVG icons and 192x192px PNG icons available in dark and
-              light themes, along with duotone and gradient versions.
+              Stampchain assets utilize a purple and grey color palette, and
+              Work Sans typeface.
+              <br />
+              The logo is available in outline and fill versions, either as
+              monotone light or dark color themes, along with duotone and
+              gradient color tinted versions.
+              <br />
+              SVG versions are 24x24px and PNG versions are 192x192px.
+              <br />
+              <br />
+              The logo and text should not be modified or altered in any way.
             </p>
           </div>
 
@@ -368,15 +377,15 @@ export default function PressKit() {
             src={[
               "/img/presskit/stampchain/stampchain-outline-monotone-dark.svg",
               "/img/presskit/stampchain/stampchain-outline-monotone-light.svg",
+              "/img/presskit/stampchain/stampchain-outline-duotone.svg",
+              "/img/presskit/stampchain/stampchain-outline-gradient.svg",
               "/img/presskit/stampchain/stampchain-fill-monotone-dark.svg",
               "/img/presskit/stampchain/stampchain-fill-monotone-light.svg",
-              "/img/presskit/stampchain/stampchain-outline-duotone.svg",
               "/img/presskit/stampchain/stampchain-fill-duotone.svg",
-              "/img/presskit/stampchain/stampchain-outline-gradient.svg",
               "/img/presskit/stampchain/stampchain-fill-gradient.svg",
             ]}
             title="LOGO ICON"
-            subtitle="MONOTONE, DUOTONE, & GRADIENT"
+            subtitle="Monotone, duotone, and gradient versions."
             showButtons
           />
           <ImagePlaceholder
@@ -392,8 +401,8 @@ export default function PressKit() {
 
       {/* ===== SECTION 4: ART STAMPS & SRC20 TOKENS ===== */}
       <section class={containerBackground}>
-        <h1 class={titleGreyLD}>STAMPS & TOKENS</h1>
-        <h2 class={subtitleGrey}>ICON SET</h2>
+        <h3 class={titleGreyLD}>STAMPS & TOKENS</h3>
+        <h4 class={subtitleGrey}>ICON SET</h4>
         <p class={text}>
           Art stamps icons for single and multiple stamps, and collections.
           Standard or rounded versions available.
@@ -436,8 +445,8 @@ export default function PressKit() {
 
       {/* ===== SECTION 5: STAMP ART ===== */}
       <section class={containerBackground}>
-        <h1 class={titleGreyLD}>STAMP ART</h1>
-        <h2 class={subtitleGrey}>SELECTED SPECIALS</h2>
+        <h5 class={titleGreyLD}>STAMP ART</h5>
+        <h6 class={subtitleGrey}>SELECTED SPECIALS</h6>
         <p class={text}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua.
@@ -466,8 +475,8 @@ export default function PressKit() {
 
       {/* ===== SECTION 6: STAMP MEMES ===== */}
       <section class={containerBackground}>
-        <h1 class={titleGreyLD}>STAMP MEMES</h1>
-        <h2 class={subtitleGrey}>LOREM IPSUM</h2>
+        <h5 class={titleGreyLD}>STAMP MEMES</h5>
+        <h6 class={subtitleGrey}>LOREM IPSUM</h6>
         <p class={text}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua.
