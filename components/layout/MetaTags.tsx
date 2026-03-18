@@ -201,7 +201,8 @@ export function MetaTags({
             "@type": "Organization",
             "name": "Stampchain",
             "url": "https://stampchain.io",
-            "logo": "https://stampchain.io/img/logo/stampchain-logo-480.svg",
+            "logo":
+              "https://stampchain.io/img/logo/stampchain-logo-monotone-black.svg",
             "sameAs": [
               "https://x.com/ArmandDLV",
               "https://github.com/stampchain-io",

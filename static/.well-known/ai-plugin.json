@@ -11,7 +11,7 @@
     "type": "openapi",
     "url": "https://stampchain.io/api/v1/docs"
   },
-  "logo_url": "https://stampchain.io/img/logo/stampchain-logo-480.svg",
+  "logo_url": "https://stampchain.io/img/logo/stampchain-logo-monotone-black.svg",
   "contact_email": "support@stampchain.io",
   "legal_info_url": "https://stampchain.io/termsofservice"
 }
