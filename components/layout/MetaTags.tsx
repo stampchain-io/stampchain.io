@@ -1,7 +1,6 @@
 import type { MetaTagsProps } from "$types/ui.d.ts";
 
-const OPENGRAPH_IMAGE =
-  "https://stampchain.io/img/logo/stampchain-logo-opengraph.jpg";
+const OPENGRAPH_IMAGE = "https://stampchain.io/img/logo/opengraph-1200x630.png";
 
 export function MetaTags({
   title = "Bitcoin Stamps",
@@ -201,8 +200,7 @@ export function MetaTags({
             "@type": "Organization",
             "name": "Stampchain",
             "url": "https://stampchain.io",
-            "logo":
-              "https://stampchain.io/img/logo/stampchain-logo-monotone-black.svg",
+            "logo": "https://stampchain.io/img/logo/logo-monotone-black.svg",
             "sameAs": [
               "https://x.com/ArmandDLV",
               "https://github.com/stampchain-io",

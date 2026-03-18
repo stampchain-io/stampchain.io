@@ -292,8 +292,7 @@ const CACHE_HEADERS = {
   error: { "Cache-Control": "no-cache, no-store" },
 };
 
-const FALLBACK_LOGO =
-  "https://stampchain.io/img/logo/stampchain-logo-opengraph.jpg";
+const FALLBACK_LOGO = "https://stampchain.io/img/logo/opengraph-1200x630.png";
 
 /** Cached preview stored in Redis: base64 PNG + metadata headers */
 interface CachedPreview {

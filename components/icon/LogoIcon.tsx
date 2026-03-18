@@ -38,7 +38,7 @@ export function LogoIcon({
       {...(fPartial !== undefined ? { "f-partial": fPartial } : {})}
     >
       <img
-        src="/img/logo/stampchain-logo-gradient.svg"
+        src="/img/logo/logo-gradient.svg"
         alt=""
         class="w-9 h-9 tablet:w-8 tablet:h-8"
       />
