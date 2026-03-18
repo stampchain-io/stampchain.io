@@ -21,7 +21,6 @@ export default {
         sans: ['"Work Sans"', "sans-serif"],
         "work-sans": ['"Work Sans"', "sans-serif"],
         "courier-prime": ['"Courier Prime"', "sans-serif"],
-        "micro-5": ['"Micro 5"', "sans-serif"],
       },
       colors: { // color hue defs are calculated using HSL values - decreasing lightness by 8% for each step (grey hues are estimations)
         color: { // colors are also defined as CSS variables further down in the file - PieChart and ChartWidget use hardcoded color values

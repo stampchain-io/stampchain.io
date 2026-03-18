@@ -23,16 +23,3 @@ export function CourierFontLoader() {
     />
   );
 }
-
-export function Micro5FontLoader() {
-  return (
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Micro+5&display=swap"
-      media="all"
-      onLoad={(e) => {
-        (e.target as HTMLLinkElement).media = "all";
-      }}
-    />
-  );
-}

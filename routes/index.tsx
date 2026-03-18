@@ -5,12 +5,7 @@ import type { SRC20Row } from "$types/src20.d.ts";
 import type { StampRow, StampSaleRow } from "$types/stamp.d.ts";
 
 import { HomeHeader } from "$header";
-import {
-  body,
-  containerBackground,
-  containerGap,
-  Micro5FontLoader,
-} from "$layout";
+import { body, containerBackground, containerGap } from "$layout";
 import {
   GetStampingCta,
   PartnersBanner,
@@ -311,9 +306,6 @@ export default function Home({ data }: PageProps<HomePageData>) {
       {/* Homepage animation optimizations */}
       <link rel="preload" href="/homepage-animations.css" as="style" />
       <link rel="stylesheet" href="/homepage-animations.css" />
-      {/* Load Micro5 font only when needed */}
-      <Micro5FontLoader />
-
       {/* ===== MAIN CONTENT ===== */}
       <div
         class={`${body} ${containerGap}`}
