@@ -3,7 +3,7 @@
     path {
       stroke: #000000;
       fill: none;
-      stroke-width: 1;
+      stroke-width: 1.25;
       stroke-linecap: round;
       stroke-linejoin: round;
     }
