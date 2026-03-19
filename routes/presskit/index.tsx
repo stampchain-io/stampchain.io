@@ -1,4 +1,4 @@
-/* ===== PRESS KIT PAGE ===== */
+/* ===== MEDIA KIT PAGE ===== */
 import { Button } from "$button";
 import { Icon } from "$icon";
 import {
@@ -65,7 +65,7 @@ function ImagePlaceholder(
     >
       {img
         ? (
-          <div class="flex flex-wrap items-center justify-center gap-3 max-w-[280px]">
+          <div class="flex flex-wrap items-center justify-center gap-4 max-w-[280px]">
             {img.map((s) => (
               <img
                 key={s}
@@ -175,14 +175,17 @@ export default function PressKit() {
   /* ===== RENDER ===== */
   return (
     <div class={`${body} ${containerGap}`}>
-      {/* ===== SECTION 1: PRESS KIT INTRO ===== */}
+      {/* ===== SECTION 1: MEDIA KIT INTRO ===== */}
       <section class={containerBackground}>
-        <h1 class={titleGreyLD}>PRESS KIT</h1>
+        <h1 class={titleGreyLD}>MEDIA KIT</h1>
         <h2 class={subtitleGrey}>FOR THE BITCOIN STAMPS ECOSYSTEM</h2>
         <p class={text}>
           Brand assets, guidelines, and marketing material for the Bitcoin
           Stamps protocol and Stampchain website, including Stamps and SRC-20
           token icons.
+          <br />
+          All assets are available in SVG and PNG formats, with different sizes
+          and color variants.
         </p>
       </section>
 
@@ -301,17 +304,16 @@ export default function PressKit() {
           {/* Description */}
           <div class="flex flex-col gap-3 mobileLg:w-1/2 tablet:w-2/3">
             <p class={text}>
-              Stampchain assets utilize a purple and grey color palette, and
-              Work Sans typeface.
+              Stampchain uses a Work Sans typeface, with heavy italic uppercase
+              lettering, and a two-tone purple and grey color palette for logo
+              branding.
               <br />
-              The logo is available in outline and fill versions, either as
-              monotone light or dark color themes, along with duotone and
-              gradient color tinted versions.
-              <br />
-              SVG versions are 24x24px and PNG versions are 192x192px.
+              We offer monotone light and dark color variants, a purple tinted
+              gradient, as well as duotone solid or gradient color versions.
               <br />
               <br />
-              The logo and text should not be modified or altered in any way.
+              The logo is available in outline and fill versions either as a
+              standalone icon or with text.
             </p>
           </div>
 
@@ -377,25 +379,25 @@ export default function PressKit() {
         >
           <ImagePlaceholder
             img={[
-              "/img/presskit/stampchain/stampchain-outline-duotone.svg",
-              "/img/presskit/stampchain/stampchain-outline-duotone-gradient.svg",
-              "/img/presskit/stampchain/stampchain-outline-monotone-gradient.svg",
-              "/img/presskit/stampchain/stampchain-outline-monotone-dark.svg",
-              "/img/presskit/stampchain/stampchain-outline-monotone-light.svg",
-              "/img/presskit/stampchain/stampchain-fill-duotone.svg",
-              "/img/presskit/stampchain/stampchain-fill-duotone-gradient.svg",
-              "/img/presskit/stampchain/stampchain-fill-monotone-gradient.svg",
-              "/img/presskit/stampchain/stampchain-fill-monotone-dark.svg",
-              "/img/presskit/stampchain/stampchain-fill-monotone-light.svg",
+              "/img/mediakit/stampchain/stampchain-outline-duotone.svg",
+              "/img/mediakit/stampchain/stampchain-outline-duotone-gradient.svg",
+              "/img/mediakit/stampchain/stampchain-outline-monotone-gradient.svg",
+              "/img/mediakit/stampchain/stampchain-outline-monotone-dark.svg",
+              "/img/mediakit/stampchain/stampchain-outline-monotone-light.svg",
+              "/img/mediakit/stampchain/stampchain-fill-duotone.svg",
+              "/img/mediakit/stampchain/stampchain-fill-duotone-gradient.svg",
+              "/img/mediakit/stampchain/stampchain-fill-monotone-gradient.svg",
+              "/img/mediakit/stampchain/stampchain-fill-monotone-dark.svg",
+              "/img/mediakit/stampchain/stampchain-fill-monotone-light.svg",
             ]}
             title="LOGO ICON"
             showButtons
           />
           <ImagePlaceholder
             img={[
-              "/img/presskit/stampchain/stampchain-outline-monotone-dark-text.svg",
-              "/img/presskit/stampchain/stampchain-outline-monotone-light-text.svg",
-              "/img/presskit/stampchain/stampchain-outline-gradient-text.svg",
+              "/img/mediakit/stampchain/stampchain-outline-monotone-dark-text.svg",
+              "/img/mediakit/stampchain/stampchain-outline-monotone-light-text.svg",
+              "/img/mediakit/stampchain/stampchain-outline-gradient-text.svg",
             ]}
             imgSize="w-full h-6"
             title="LOGO ICON WITH TEXT"
