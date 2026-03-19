@@ -5,7 +5,7 @@
    height="24"
    fill="none"
    version="1.1"
-   id="stampchain-outline-gradient"
+   id="stampchain-outline-monotone-gradient"
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
@@ -13,11 +13,15 @@
     <linearGradient
        id="linearGradient6">
       <stop
-         style="stop-color:#a8a39d;stop-opacity:1;"
+         style="stop-color:#9d00d6;stop-opacity:1;"
          offset="0"
          id="stop7" />
       <stop
-         style="stop-color:#817e78;stop-opacity:1;"
+         style="stop-color:#7f00ad;stop-opacity:1;"
+         offset="0.5"
+         id="stop2" />
+      <stop
+         style="stop-color:#610085;stop-opacity:1;"
          offset="1"
          id="stop8" />
     </linearGradient>
@@ -80,19 +84,19 @@
     <linearGradient
        xlink:href="#linearGradient9"
        id="linearGradient10"
-       x1="17.90169"
-       y1="20.068874"
+       x1="16.441095"
+       y1="19.786179"
        x2="18.985657"
        y2="21.675922"
        gradientUnits="userSpaceOnUse" />
     <linearGradient
        id="linearGradient9">
       <stop
-         style="stop-color:#817e78;stop-opacity:1;"
+         style="stop-color:#610085;stop-opacity:1;"
          offset="0"
          id="stop9" />
       <stop
-         style="stop-color:#585552;stop-opacity:1;"
+         style="stop-color:#43005c;stop-opacity:1;"
          offset="1"
          id="stop10" />
     </linearGradient>
@@ -101,8 +105,8 @@
        id="linearGradient8"
        x1="4.895658"
        y1="18.714344"
-       x2="6.3958368"
-       y2="20.211859"
+       x2="8.0448942"
+       y2="20.77725"
        gradientUnits="userSpaceOnUse" />
   </defs>
   <path
@@ -127,7 +131,8 @@
      stroke="#817e78"
      stroke-width="1"
      stroke-linecap="round"
-     stroke-linejoin="round" />
+     stroke-linejoin="round"
+     style="stroke:#610085;stroke-opacity:1" />
   <path
      id="rubber"
      d="m 18.500043,14.754668 c 0,0.549706 -0.413866,0.995418 -0.924306,0.995418 H 6.4242816 c -0.5104858,0 -0.9243246,-0.445712 -0.9243246,-0.995418 V 14.550061 C 5.499957,13.003625 6.6640221,11.75 8.0999746,11.75 h 7.8000534 c 1.435951,0 2.600015,1.253625 2.600015,2.800061 z"

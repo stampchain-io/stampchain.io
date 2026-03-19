@@ -8,6 +8,7 @@ import {
   glassmorphismL2,
 } from "$layout";
 import {
+  label,
   labelSm,
   labelXxs,
   subtitleGrey,
@@ -15,7 +16,6 @@ import {
   textLinkUnderline,
   textSm,
   titleGreyLD,
-  value,
   valueSm,
   valueSmLink,
 } from "$text";
@@ -23,7 +23,7 @@ import {
 /* ===== DOWNLOAD BUTTONS (SVG + PNG) ===== */
 function DownloadButtons({ inline = false }: { inline?: boolean }) {
   const wrapperClass = inline
-    ? "mt-2.5 flex gap-5 justify-center"
+    ? "mt-1 flex gap-5 justify-center"
     : "mt-5 flex gap-5";
   return (
     <div class={wrapperClass}>
@@ -46,7 +46,8 @@ function ImagePlaceholder(
     subtitle = "",
     showButtons = false,
     icon,
-    src,
+    img,
+    imgSize = "w-10 h-10",
   }: {
     width?: string;
     height?: string;
@@ -54,22 +55,23 @@ function ImagePlaceholder(
     subtitle?: string;
     showButtons?: boolean;
     icon?: string[];
-    src?: string[];
+    img?: string[];
+    imgSize?: string;
   },
 ) {
   return (
     <div
       class={`${width} ${height} ${glassmorphismL2} flex flex-col items-center justify-center p-5 gap-2.5`}
     >
-      {src
+      {img
         ? (
-          <div class="flex flex-wrap items-center justify-center gap-3 max-w-[240px]">
-            {src.map((s) => (
+          <div class="flex flex-wrap items-center justify-center gap-3 max-w-[280px]">
+            {img.map((s) => (
               <img
                 key={s}
                 src={s}
                 alt={title || "Logo"}
-                class="w-12 h-12"
+                class={imgSize}
               />
             ))}
           </div>
@@ -104,7 +106,7 @@ function ImagePlaceholder(
             <polyline points="21 15 16 10 5 21" />
           </svg>
         )}
-      {title && <span class={`${value} text-center`}>{title}</span>}
+      {title && <span class={`mt-1 ${label} text-center`}>{title}</span>}
       {subtitle && <span class={`-mt-2 ${textSm} text-center`}>{subtitle}
       </span>}
       {showButtons && <DownloadButtons inline />}
@@ -374,25 +376,28 @@ export default function PressKit() {
           class={`grid grid-cols-1 mobileLg:grid-cols-2 gap-5 mt-5`}
         >
           <ImagePlaceholder
-            src={[
+            img={[
+              "/img/presskit/stampchain/stampchain-outline-duotone.svg",
+              "/img/presskit/stampchain/stampchain-outline-duotone-gradient.svg",
+              "/img/presskit/stampchain/stampchain-outline-monotone-gradient.svg",
               "/img/presskit/stampchain/stampchain-outline-monotone-dark.svg",
               "/img/presskit/stampchain/stampchain-outline-monotone-light.svg",
-              "/img/presskit/stampchain/stampchain-outline-duotone.svg",
-              "/img/presskit/stampchain/stampchain-outline-gradient.svg",
+              "/img/presskit/stampchain/stampchain-fill-duotone.svg",
+              "/img/presskit/stampchain/stampchain-fill-duotone-gradient.svg",
+              "/img/presskit/stampchain/stampchain-fill-monotone-gradient.svg",
               "/img/presskit/stampchain/stampchain-fill-monotone-dark.svg",
               "/img/presskit/stampchain/stampchain-fill-monotone-light.svg",
-              "/img/presskit/stampchain/stampchain-fill-duotone.svg",
-              "/img/presskit/stampchain/stampchain-fill-gradient.svg",
             ]}
             title="LOGO ICON"
-            subtitle="Monotone, duotone, and gradient versions."
             showButtons
           />
           <ImagePlaceholder
-            src={[
-              "/img/presskit/stampchain/stampchain-outline-duotone.svg",
-              "/img/presskit/stampchain/stampchain-fill-duotone.svg",
+            img={[
+              "/img/presskit/stampchain/stampchain-outline-monotone-dark-text.svg",
+              "/img/presskit/stampchain/stampchain-outline-monotone-light-text.svg",
+              "/img/presskit/stampchain/stampchain-outline-gradient-text.svg",
             ]}
+            imgSize="w-full h-6"
             title="LOGO ICON WITH TEXT"
             showButtons
           />
@@ -458,7 +463,7 @@ export default function PressKit() {
 
         {/* Art gallery grid */}
         <div
-          class={`grid grid-cols-2 mobileLg:grid-cols-3 desktop:grid-cols-4 gap-3 mobileMd:gap-5 mt-5`}
+          class={`grid grid-cols-4 mobileLg:grid-cols-6 desktop:grid-cols-8 gap-3 mobileMd:gap-5 mt-5`}
         >
           {Array.from({ length: 8 }, (_, i) => (
             <ImagePlaceholder
@@ -488,7 +493,7 @@ export default function PressKit() {
 
         {/* Meme grid */}
         <div
-          class={`grid grid-cols-2 mobileLg:grid-cols-3 desktop:grid-cols-4 gap-3 mobileMd:gap-5 mt-5`}
+          class={`grid grid-cols-4 mobileLg:grid-cols-6 desktop:grid-cols-8 gap-3 mobileMd:gap-5 mt-5`}
         >
           {Array.from({ length: 6 }, (_, i) => (
             <ImagePlaceholder
