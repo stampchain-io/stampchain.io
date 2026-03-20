@@ -48,6 +48,7 @@ function ImagePlaceholder(
     icon,
     img,
     imgSize = "w-10 h-10",
+    imgWrapper = "flex flex-wrap items-center justify-center gap-4",
   }: {
     width?: string;
     height?: string;
@@ -57,6 +58,7 @@ function ImagePlaceholder(
     icon?: string[];
     img?: string[];
     imgSize?: string;
+    imgWrapper?: string;
   },
 ) {
   return (
@@ -65,7 +67,7 @@ function ImagePlaceholder(
     >
       {img
         ? (
-          <div class="flex flex-wrap items-center justify-center gap-4 max-w-[280px]">
+          <div class={imgWrapper}>
             {img.map((s) => (
               <img
                 key={s}
@@ -178,11 +180,13 @@ export default function PressKit() {
       {/* ===== SECTION 1: MEDIA KIT INTRO ===== */}
       <section class={containerBackground}>
         <h1 class={titleGreyLD}>MEDIA KIT</h1>
-        <h2 class={subtitleGrey}>FOR THE BITCOIN STAMPS ECOSYSTEM</h2>
+        <h2 class={`${subtitleGrey} !whitespace-normal`}>
+          FOR THE BITCOIN STAMPS ECOSYSTEM
+        </h2>
         <p class={text}>
           Brand assets, guidelines, and marketing material for the Bitcoin
-          Stamps protocol and Stampchain website, including Stamps and SRC-20
-          token icons.
+          Stamps protocol and Stampchain website, including Art stamps and
+          SRC-20 token icons.
           <br />
           All assets are available in SVG and PNG formats, with different sizes
           and color variants.
@@ -308,12 +312,12 @@ export default function PressKit() {
               lettering, and a two-tone purple and grey color palette for logo
               branding.
               <br />
+              The logo icon is available in outline and fill variants, either as
+              a standalone icon or with text.
+              <br />
               We offer monotone light and dark color variants, a purple tinted
               gradient, as well as duotone solid or gradient color versions.
               <br />
-              <br />
-              The logo icon is available in outline and fill versions, either as
-              a standalone icon or with text.
             </p>
           </div>
 
@@ -390,17 +394,27 @@ export default function PressKit() {
               "/img/mediakit/stampchain/stampchain-fill-monotone-dark.svg",
               "/img/mediakit/stampchain/stampchain-fill-monotone-light.svg",
             ]}
+            imgWrapper="grid grid-cols-5 gap-2.5 mobileMd:gap-4 w-full place-items-center"
+            imgSize="w-10 h-10 mobileMd:w-12 mobileMd:h-12 mobileLg:w-10 mobileLg:h-10 tablet:w-12 tablet:h-12"
             title="LOGO ICON"
             showButtons
           />
           <ImagePlaceholder
             img={[
+              "/img/mediakit/stampchain/stampchain-outline-duotone-solid-text.svg",
+              "/img/mediakit/stampchain/stampchain-fill-duotone-solid-text.svg",
+              "/img/mediakit/stampchain/stampchain-outline-duotone-gradient-text.svg",
+              "/img/mediakit/stampchain/stampchain-fill-duotone-gradient-text.svg",
+              "/img/mediakit/stampchain/stampchain-outline-monotone-gradient-text.svg",
+              "/img/mediakit/stampchain/stampchain-fill-monotone-gradient-text.svg",
               "/img/mediakit/stampchain/stampchain-outline-monotone-dark-text.svg",
+              "/img/mediakit/stampchain/stampchain-fill-monotone-dark-text.svg",
               "/img/mediakit/stampchain/stampchain-outline-monotone-light-text.svg",
-              "/img/mediakit/stampchain/stampchain-outline-gradient-text.svg",
+              "/img/mediakit/stampchain/stampchain-fill-monotone-light-text.svg",
             ]}
-            imgSize="w-full h-6"
-            title="LOGO ICON WITH TEXT"
+            imgWrapper="grid grid-cols-2 tablet:px-2.5 gap-x-4 gap-y-5 w-full"
+            imgSize="w-full h-auto"
+            title="ICON WITH TEXT"
             showButtons
           />
         </div>
