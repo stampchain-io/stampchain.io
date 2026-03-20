@@ -312,8 +312,8 @@ export default function PressKit() {
               gradient, as well as duotone solid or gradient color versions.
               <br />
               <br />
-              The logo is available in outline and fill versions either as a
-              standalone icon or with text.
+              The logo icon is available in outline and fill versions, either as
+              a standalone icon or with text.
             </p>
           </div>
 
@@ -379,12 +379,12 @@ export default function PressKit() {
         >
           <ImagePlaceholder
             img={[
-              "/img/mediakit/stampchain/stampchain-outline-duotone.svg",
+              "/img/mediakit/stampchain/stampchain-outline-duotone-solid.svg",
               "/img/mediakit/stampchain/stampchain-outline-duotone-gradient.svg",
               "/img/mediakit/stampchain/stampchain-outline-monotone-gradient.svg",
               "/img/mediakit/stampchain/stampchain-outline-monotone-dark.svg",
               "/img/mediakit/stampchain/stampchain-outline-monotone-light.svg",
-              "/img/mediakit/stampchain/stampchain-fill-duotone.svg",
+              "/img/mediakit/stampchain/stampchain-fill-duotone-solid.svg",
               "/img/mediakit/stampchain/stampchain-fill-duotone-gradient.svg",
               "/img/mediakit/stampchain/stampchain-fill-monotone-gradient.svg",
               "/img/mediakit/stampchain/stampchain-fill-monotone-dark.svg",
@@ -450,65 +450,70 @@ export default function PressKit() {
         </div>
       </section>
 
-      {/* ===== SECTION 5: STAMP ART ===== */}
-      <section class={containerBackground}>
-        <h5 class={titleGreyLD}>STAMP ART</h5>
-        <h6 class={subtitleGrey}>SELECTED SPECIALS</h6>
-        <p class={text}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        </p>
-        <p class={text}>
-          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-          dolore eu fugiat nulla pariatur.
-        </p>
-
-        {/* Art gallery grid */}
-        <div
-          class={`grid grid-cols-4 mobileLg:grid-cols-6 desktop:grid-cols-8 gap-3 mobileMd:gap-5 mt-5`}
+      {/* ===== SECTIONS 5+6: STAMP ART & MEMES (tablet: half + half) ===== */}
+      <div class={`flex flex-col tablet:flex-row ${containerGap} w-full`}>
+        <section
+          class={`${containerBackground} tablet:w-1/2 tablet:min-w-0`}
         >
-          {Array.from({ length: 8 }, (_, i) => (
-            <ImagePlaceholder
-              key={i}
-              width="w-full"
-              height="aspect-square"
-              title={`Stamp #${i + 1}`}
-            />
-          ))}
-        </div>
+          <h5 class={titleGreyLD}>STAMP ART</h5>
+          <h6 class={subtitleGrey}>SELECTED SPECIALS</h6>
+          <p class={text}>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </p>
+          <p class={text}>
+            Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur.
+          </p>
 
-        <DownloadButtons />
-      </section>
+          {/* Art gallery grid */}
+          <div
+            class={`grid grid-cols-4 mobileLg:grid-cols-6 desktop:grid-cols-8 gap-3 mobileMd:gap-5 mt-5`}
+          >
+            {Array.from({ length: 8 }, (_, i) => (
+              <ImagePlaceholder
+                key={i}
+                width="w-full"
+                height="aspect-square"
+                title={`Stamp #${i + 1}`}
+              />
+            ))}
+          </div>
 
-      {/* ===== SECTION 6: STAMP MEMES ===== */}
-      <section class={containerBackground}>
-        <h5 class={titleGreyLD}>STAMP MEMES</h5>
-        <h6 class={subtitleGrey}>LOREM IPSUM</h6>
-        <p class={text}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        </p>
-        <p class={text}>
-          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-          dolore eu fugiat nulla pariatur.
-        </p>
+          <DownloadButtons />
+        </section>
 
-        {/* Meme grid */}
-        <div
-          class={`grid grid-cols-4 mobileLg:grid-cols-6 desktop:grid-cols-8 gap-3 mobileMd:gap-5 mt-5`}
+        <section
+          class={`${containerBackground} tablet:w-1/2 tablet:min-w-0`}
         >
-          {Array.from({ length: 6 }, (_, i) => (
-            <ImagePlaceholder
-              key={i}
-              width="w-full"
-              height="h-36 mobileMd:h-44"
-              title={`Meme ${i + 1}`}
-            />
-          ))}
-        </div>
+          <h5 class={titleGreyLD}>STAMP MEMES</h5>
+          <h6 class={subtitleGrey}>LOREM IPSUM</h6>
+          <p class={text}>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </p>
+          <p class={text}>
+            Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur.
+          </p>
 
-        <DownloadButtons />
-      </section>
+          {/* Meme grid */}
+          <div
+            class={`grid grid-cols-4 mobileLg:grid-cols-6 desktop:grid-cols-8 gap-3 mobileMd:gap-5 mt-5`}
+          >
+            {Array.from({ length: 6 }, (_, i) => (
+              <ImagePlaceholder
+                key={i}
+                width="w-full"
+                height="h-36 mobileMd:h-44"
+                title={`Meme ${i + 1}`}
+              />
+            ))}
+          </div>
+
+          <DownloadButtons />
+        </section>
+      </div>
     </div>
   );
 }
