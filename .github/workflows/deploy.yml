@@ -142,7 +142,7 @@ jobs:
       # Create a summary comment for PR
       - name: Create PR Comment with Quality Results
         if: github.event_name == 'pull_request'
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |

@@ -119,7 +119,7 @@ jobs:
 
       - name: Upload Schema Validation Results
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: schema-validation-results
           path: reports/schema-validation-results.json
@@ -127,7 +127,7 @@ jobs:
 
       - name: Comment PR with Schema Validation Results
         if: github.event_name == 'pull_request' && always()
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             const fs = require('fs');
