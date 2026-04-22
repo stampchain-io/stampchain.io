@@ -603,11 +603,11 @@ export function isValidStampNumber(num: unknown): num is number | null {
  */
 export function isStampNumber(value: unknown): boolean {
   if (typeof value === "number") {
-    return Number.isInteger(value) && value !== 0;
+    return Number.isInteger(value);
   }
   if (typeof value === "string") {
     const num = Number(value);
-    return !isNaN(num) && Number.isInteger(num) && num !== 0;
+    return !isNaN(num) && Number.isInteger(num);
   }
   return false;
 }
