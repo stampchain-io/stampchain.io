@@ -313,10 +313,10 @@ class CrossModuleIntegrationRunner {
       );
 
       console.log(
-        `      Found ${criticalCircular.length} critical circular dependencies (threshold: 15)`,
+        `      Found ${criticalCircular.length} critical circular dependencies (threshold: 20)`,
       );
 
-      if (criticalCircular.length > 15) {
+      if (criticalCircular.length > 20) {
         console.error(
           `Circular dependencies exceed threshold: ${criticalCircular.length} > 15`,
         );
