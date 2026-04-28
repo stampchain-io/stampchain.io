@@ -2,6 +2,7 @@ import type { SRC20TrxRequestParams } from "$types/api.d.ts";
 import { Handlers } from "$fresh/server.ts";
 import { ApiResponseUtil } from "$utils/api/responses/apiResponseUtil.ts";
 import { SRC20Service } from "$server/services/src20/index.ts";
+import { RouteType } from "$server/services/infrastructure/cacheService.ts";
 
 export const handler: Handlers = {
   async GET(_req, ctx) {
@@ -29,7 +30,9 @@ export const handler: Handlers = {
         );
       }
 
-      return ApiResponseUtil.success(result);
+      return ApiResponseUtil.success(result, {
+        routeType: RouteType.BLOCKCHAIN_DATA,
+      });
     } catch (error) {
       return ApiResponseUtil.internalError(error, "Error processing request");
     }

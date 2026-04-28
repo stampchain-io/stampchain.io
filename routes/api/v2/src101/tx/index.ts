@@ -2,6 +2,7 @@ import { Handlers } from "$fresh/server.ts";
 import { Src101Controller } from "$server/controller/src101Controller.ts";
 import { ResponseUtil } from "$lib/utils/api/responses/responseUtil.ts";
 import { getPaginationParams } from "$lib/utils/data/pagination/paginationUtils.ts";
+import { RouteType } from "$server/services/infrastructure/cacheService.ts";
 
 export interface SRC101TxParams {
   tick?: string;
@@ -45,7 +46,9 @@ export const handler: Handlers = {
         return ResponseUtil.notFound("No data found");
       }
 
-      return ResponseUtil.success(result);
+      return ResponseUtil.success(result, {
+        routeType: RouteType.BLOCKCHAIN_DATA,
+      });
     } catch (error) {
       console.error("Error in index handler:", error);
       return ResponseUtil.internalError(
