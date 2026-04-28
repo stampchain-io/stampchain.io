@@ -139,10 +139,6 @@ jobs:
     needs: production-gates
     continue-on-error: true
 
-    strategy:
-      matrix:
-        typescript-version: ["5.0", "5.1", "5.2", "5.3"]
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -156,8 +152,8 @@ jobs:
         uses: actions/cache@v5
         with:
           path: ~/.cache/deno
-          key: deno-${{ matrix.typescript-version }}-${{ hashFiles('deno.json', 'deno.lock') }}
-          restore-keys: deno-${{ matrix.typescript-version }}-
+          key: deno-cross-module-${{ hashFiles('deno.json', 'deno.lock') }}
+          restore-keys: deno-cross-module-
 
       - name: Run dependency graph analysis
         run: deno task validate:dependencies
@@ -174,7 +170,7 @@ jobs:
       - name: Upload integration test results
         uses: actions/upload-artifact@v6
         with:
-          name: cross-module-integration-ts${{ matrix.typescript-version }}
+          name: cross-module-integration
           path: |
             reports/cross-module-integration-*.json
             reports/dependency-analysis.json
