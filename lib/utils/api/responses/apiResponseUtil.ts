@@ -31,10 +31,19 @@ export const API_RESPONSE_VERSION = "v2.2.7";
 //  └── api.ts                // Type definitions (client-safe, no Deno dependencies)
 
 export class ApiResponseUtil {
+  /**
+   * Default cache duration (seconds) for API responses that don't specify
+   * a routeType. Conservative 5-minute TTL prevents stale data while still
+   * offloading repetitive identical requests from origin.
+   */
+  private static readonly DEFAULT_API_CACHE_SECONDS = 300;
+
   private static createHeaders(options: ApiResponseOptions = {}): Headers {
+    const shouldCache = !(options.forceNoCache ?? false);
+
     const headers: Record<string, string> = {
       ...getSecurityHeaders({
-        forceNoCache: options.forceNoCache ?? true,
+        forceNoCache: !shouldCache,
         context: "api",
       }),
       "Content-Type": "application/json",
@@ -45,27 +54,52 @@ export class ApiResponseUtil {
       ...(options.headers || {}),
     };
 
-    if (options.routeType && !options.forceNoCache) {
-      const { duration, staleWhileRevalidate, staleIfError } = getCacheConfig(
-        options.routeType,
+    // Skip cache header generation if caller supplied an explicit Cache-Control
+    const hasExplicitCacheControl = options.headers &&
+      Object.keys(options.headers).some((k) =>
+        k.toLowerCase() === "cache-control"
       );
 
-      if (duration > 0) {
-        const cacheControl = [
-          "public",
-          `max-age=${duration}`,
-          staleWhileRevalidate
-            ? `stale-while-revalidate=${staleWhileRevalidate}`
-            : "",
-          staleIfError ? `stale-if-error=${staleIfError}` : "",
-        ].filter(Boolean).join(", ");
+    if (shouldCache && !hasExplicitCacheControl) {
+      let cacheControl: string;
 
+      if (options.routeType) {
+        const { duration, staleWhileRevalidate, staleIfError } = getCacheConfig(
+          options.routeType,
+        );
+
+        if (duration > 0) {
+          cacheControl = [
+            "public",
+            `max-age=${duration}`,
+            staleWhileRevalidate
+              ? `stale-while-revalidate=${staleWhileRevalidate}`
+              : "",
+            staleIfError ? `stale-if-error=${staleIfError}` : "",
+          ].filter(Boolean).join(", ");
+        } else {
+          cacheControl = "";
+        }
+      } else {
+        // No routeType specified: apply conservative default (5 min)
+        // instead of the 1-year immutable from securityHeaders.
+        cacheControl =
+          `public, max-age=${this.DEFAULT_API_CACHE_SECONDS}, stale-while-revalidate=60`;
+      }
+
+      if (cacheControl) {
         Object.assign(headers, {
           "Cache-Control": cacheControl,
           "CDN-Cache-Control": cacheControl,
           "Cloudflare-CDN-Cache-Control": cacheControl,
-          "Surrogate-Control": `max-age=${duration}`,
-          "Edge-Control": `cache-maxage=${duration}`,
+          "Surrogate-Control": `max-age=${
+            cacheControl.match(/max-age=(\d+)/)?.[1] ||
+            this.DEFAULT_API_CACHE_SECONDS
+          }`,
+          "Edge-Control": `cache-maxage=${
+            cacheControl.match(/max-age=(\d+)/)?.[1] ||
+            this.DEFAULT_API_CACHE_SECONDS
+          }`,
         });
       }
     }

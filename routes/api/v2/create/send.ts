@@ -222,7 +222,7 @@ export const handler: Handlers<SendResponse | { error: string }> = {
         });
         return ApiResponseUtil.success({
           estimatedFee: feeFromCp ? Number(feeFromCp) : undefined,
-        });
+        }, { forceNoCache: true });
       }
 
       const finalPsbtHex = psbt.toHex();
@@ -243,7 +243,7 @@ export const handler: Handlers<SendResponse | { error: string }> = {
         estimatedFee: cpResponse.result.btc_fee
           ? Number(cpResponse.result.btc_fee)
           : undefined,
-      });
+      }, { forceNoCache: true });
     } catch (error: unknown) {
       const errorMessage = error instanceof Error
         ? error.message

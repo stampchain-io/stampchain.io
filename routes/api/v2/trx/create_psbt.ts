@@ -52,7 +52,7 @@ export const handler: Handlers = {
         estimatedSize: 250, // Placeholder - should be calculated from PSBT
       };
 
-      return ApiResponseUtil.success(response);
+      return ApiResponseUtil.success(response, { forceNoCache: true });
     } catch (error) {
       if (error instanceof SyntaxError) {
         logger.error("api", {
