@@ -27,41 +27,85 @@ interface RateLimitConfig {
  * Rate limit configurations by endpoint pattern
  * More specific patterns checked first
  *
- * Configuration based on research recommendations:
- * - SRC-20: 120 req/min (2/sec) - Known performance bottleneck
- * - Stamps: 180 req/min (3/sec) - Database-intensive queries
- * - Blocks: 240 req/min (4/sec) - Lighter queries
- * - General: 300 req/min (5/sec) - Standard API protection
+ * Anonymous (no API key) rate limits:
+ * - SRC-20: 60 req/min (1/sec) - Heaviest DB queries, known bottleneck
+ * - Stamps: 100 req/min (~2/sec) - Database-intensive metadata lookups
+ * - Blocks: 120 req/min (2/sec) - Block data queries
+ * - General: 150 req/min (~3/sec) - All other v2 endpoints
+ *
+ * Block durations are short (30s) to avoid frustrating legitimate users.
+ * API key holders get higher limits (see apiKeyRateLimitConfigs below).
  */
 const rateLimitConfigs: Record<string, RateLimitConfig> = {
-  // Tier 3: SRC-20 endpoints (strictest - known pain point)
+  // Tier 3: SRC-20 endpoints (strictest - heaviest DB queries)
   "/api/v2/src20": {
     windowMs: 60000, // 1 minute
-    max: 120, // 120 requests = 2 req/sec (updated from 60)
-    message: "SRC-20 API rate limit exceeded. Limit: 120 requests per minute.",
-    blockDuration: 300, // 5 minute block (updated from 10 minutes)
+    max: 60, // 60 requests = 1 req/sec
+    message:
+      "SRC-20 API rate limit exceeded. Limit: 60 requests per minute. Get higher limits with a free API key at stampchain.io/api",
+    blockDuration: 30, // 30 second block
   },
 
   // Tier 2: Expensive endpoints (database-intensive)
   "/api/v2/stamps": {
     windowMs: 60000,
-    max: 180, // 180 requests = 3 req/sec (updated from 120)
-    message: "Stamps API rate limit exceeded. Limit: 180 requests per minute.",
-    blockDuration: 300, // 5 minute block
+    max: 100, // 100 requests = ~2 req/sec
+    message:
+      "Stamps API rate limit exceeded. Limit: 100 requests per minute. Get higher limits with a free API key at stampchain.io/api",
+    blockDuration: 30, // 30 second block
   },
   "/api/v2/blocks": {
     windowMs: 60000,
-    max: 240, // 240 requests = 4 req/sec (updated from 120)
-    message: "Blocks API rate limit exceeded. Limit: 240 requests per minute.",
-    blockDuration: 180, // 3 minute block (updated from 5 minutes)
+    max: 120, // 120 requests = 2 req/sec
+    message:
+      "Blocks API rate limit exceeded. Limit: 120 requests per minute. Get higher limits with a free API key at stampchain.io/api",
+    blockDuration: 30, // 30 second block
   },
 
   // Tier 1: General API protection (default for all other endpoints)
   "/api/v2": {
     windowMs: 60000,
-    max: 300, // 300 requests = 5 req/sec
-    message: "API rate limit exceeded. Limit: 300 requests per minute.",
-    blockDuration: 60, // 1 minute block
+    max: 150, // 150 requests = ~3 req/sec
+    message:
+      "API rate limit exceeded. Limit: 150 requests per minute. Get higher limits with a free API key at stampchain.io/api",
+    blockDuration: 30, // 30 second block
+  },
+};
+
+/**
+ * Rate limits for authenticated API key holders (free tier).
+ * 3-5x higher than anonymous limits, no blocking on exceedance.
+ * These will be used when X-API-Key header matches a registered key.
+ *
+ * NOTE: Currently unused — API key tier detection not yet implemented.
+ * This config is defined now so the values are documented and ready
+ * for the next PR that adds key signup + tier-aware middleware.
+ */
+// @ts-ignore: Reserved for API key tier implementation (next PR)
+const _apiKeyRateLimitConfigs: Record<string, RateLimitConfig> = {
+  "/api/v2/src20": {
+    windowMs: 60000,
+    max: 300, // 5 req/sec (5x anonymous)
+    message: "SRC-20 API rate limit exceeded. Limit: 300 requests per minute.",
+    blockDuration: 0, // No block for key holders
+  },
+  "/api/v2/stamps": {
+    windowMs: 60000,
+    max: 480, // 8 req/sec
+    message: "Stamps API rate limit exceeded. Limit: 480 requests per minute.",
+    blockDuration: 0,
+  },
+  "/api/v2/blocks": {
+    windowMs: 60000,
+    max: 600, // 10 req/sec
+    message: "Blocks API rate limit exceeded. Limit: 600 requests per minute.",
+    blockDuration: 0,
+  },
+  "/api/v2": {
+    windowMs: 60000,
+    max: 600, // 10 req/sec
+    message: "API rate limit exceeded. Limit: 600 requests per minute.",
+    blockDuration: 0,
   },
 };
 
@@ -177,6 +221,10 @@ export async function rateLimitMiddleware(
           retryAfter,
           limit: config.max,
           window: config.windowMs / 1000,
+          upgrade: {
+            message: "Get 3-5x higher limits with a free API key",
+            url: "https://stampchain.io/api",
+          },
         }),
         {
           status: 429,
@@ -220,6 +268,10 @@ export async function rateLimitMiddleware(
           window: config.windowMs / 1000,
           blocked: config.blockDuration ? true : false,
           blockDuration: config.blockDuration || 0,
+          upgrade: {
+            message: "Get 3-5x higher limits with a free API key",
+            url: "https://stampchain.io/api",
+          },
         }),
         {
           status: 429,
