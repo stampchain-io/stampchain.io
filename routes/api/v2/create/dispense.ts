@@ -62,7 +62,7 @@ export const handler: Handlers = {
           },
           is_estimate: true,
           estimation_method: "dryRun_calculation",
-        });
+        }, { forceNoCache: true });
       }
 
       let normalizedFees;
@@ -226,7 +226,7 @@ export const handler: Handlers = {
           estimatedFee: builtPsbtData.estimatedFee,
           estimatedVsize: builtPsbtData.estimatedVsize,
           finalBuyerChange: builtPsbtData.finalBuyerChange,
-        });
+        }, { forceNoCache: true });
       } catch (error: unknown) {
         const errorMessage = error instanceof Error
           ? error.message

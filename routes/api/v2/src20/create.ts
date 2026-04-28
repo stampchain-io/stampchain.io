@@ -230,7 +230,7 @@ export const handler: Handlers<SRC20CreateResponse | TXError> = {
         delete responsePayload.hex;
         delete responsePayload.inputsToSign;
       }
-      return ApiResponseUtil.success(responsePayload);
+      return ApiResponseUtil.success(responsePayload, { forceNoCache: true });
     } catch (error) {
       const errorMessage = error instanceof Error
         ? error.message
