@@ -359,7 +359,7 @@ Deno.test("Stamp Protocol Type Guards", async (t) => {
   await t.step("isStampNumber - enhanced version", () => {
     assertEquals(isStampNumber(1), true);
     assertEquals(isStampNumber(-1), true); // cursed stamps
-    assertEquals(isStampNumber(0), false);
+    assertEquals(isStampNumber(0), true); // stamp 0 exists
   });
 
   await t.step("isStampHash", () => {
