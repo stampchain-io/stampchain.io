@@ -159,7 +159,7 @@ jobs:
         run: deno task validate:dependencies
 
       - name: Run cross-module type compatibility tests
-        run: deno test --allow-all tests/integration/cross-module/ --no-check
+        run: cd tests && deno test --allow-all integration/cross-module/ --no-check
         env:
           DENO_ENV: test
           SKIP_REDIS_CONNECTION: "true"
