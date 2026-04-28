@@ -1,6 +1,7 @@
 import { Handlers } from "$fresh/server.ts";
 import { ApiResponseUtil } from "$lib/utils/api/responses/apiResponseUtil.ts";
 import { VERSION_CONFIG } from "$server/middleware/apiVersionMiddleware.ts";
+import { RouteType } from "$server/services/infrastructure/cacheService.ts";
 
 /**
  * API Version Changelog Endpoint
@@ -162,6 +163,6 @@ export const handler: Handlers = {
         notice: "6 months",
         support: "12 months after deprecation",
       },
-    });
+    }, { routeType: RouteType.STATIC });
   },
 };

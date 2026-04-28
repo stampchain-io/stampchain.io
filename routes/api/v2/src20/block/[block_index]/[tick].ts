@@ -4,6 +4,7 @@ import { Handlers } from "$fresh/server.ts";
 import { ApiResponseUtil } from "$lib/utils/api/responses/apiResponseUtil.ts";
 import { getPaginationParams } from "$lib/utils/data/pagination/paginationUtils.ts";
 import { SRC20Service } from "$server/services/src20/index.ts";
+import { RouteType } from "$server/services/infrastructure/cacheService.ts";
 
 export const handler: Handlers<BlockHandlerContext> = {
   async GET(req, ctx) {
@@ -30,7 +31,9 @@ export const handler: Handlers<BlockHandlerContext> = {
         ...(sort && { sort }),
         ...(op && { op }),
       });
-      return ApiResponseUtil.success(result);
+      return ApiResponseUtil.success(result, {
+        routeType: RouteType.BLOCKCHAIN_DATA,
+      });
     } catch (error) {
       return ApiResponseUtil.internalError(error, "Error processing request");
     }

@@ -13,6 +13,7 @@ import {
   validateRequiredParams,
   validateSortParam,
 } from "$server/services/validation/routeValidationService.ts";
+import { RouteType } from "$server/services/infrastructure/cacheService.ts";
 export const handler: Handlers<IdentHandlerContext> = {
   async GET(req, ctx) {
     const { ident } = ctx.params;
@@ -71,7 +72,7 @@ export const handler: Handlers<IdentHandlerContext> = {
         data: (result as any).stamps,
       };
 
-      return ApiResponseUtil.success(body);
+      return ApiResponseUtil.success(body, { routeType: RouteType.STAMP_LIST });
     } catch (error) {
       console.error(`Error in stamps/ident handler:`, error);
       return ApiResponseUtil.internalError(

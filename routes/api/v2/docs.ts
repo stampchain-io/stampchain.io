@@ -2,6 +2,7 @@ import { Handlers } from "$fresh/server.ts";
 import { ResponseUtil } from "$lib/utils/api/responses/responseUtil.ts";
 import { parse as parseYaml } from "@std/yaml";
 import { fromFileUrl, join } from "@std/path";
+import { RouteType } from "$server/services/infrastructure/cacheService.ts";
 
 const __dirname = fromFileUrl(new URL(".", import.meta.url));
 const schemaPath = join(__dirname, "../../../schema.yml");
@@ -110,7 +111,7 @@ export const handler: Handlers = {
         paths: openApiSchema.paths,
         tags: openApiSchema.tags,
         servers: openApiSchema.servers,
-      });
+      }, { routeType: RouteType.STATIC });
     }
 
     // For filtered responses (by path or tag)
@@ -154,6 +155,6 @@ export const handler: Handlers = {
           content: response.content,
         })),
       })),
-    });
+    }, { routeType: RouteType.STATIC });
   },
 };
