@@ -12,6 +12,7 @@ import {
 } from "$server/services/validation/routeValidationService.ts";
 import { BigFloat } from "bigfloat/mod.ts";
 import { MarketDataRepository } from "$server/database/marketDataRepository.ts";
+import { RouteType } from "$server/services/infrastructure/cacheService.ts";
 
 export const handler: Handlers = {
   async GET(req, ctx) {
@@ -123,7 +124,9 @@ export const handler: Handlers = {
         market_data, // Add market data field (null if not found)
       };
 
-      return ApiResponseUtil.success(body);
+      return ApiResponseUtil.success(body, {
+        routeType: RouteType.BLOCKCHAIN_DATA,
+      });
     } catch (error) {
       console.error(error);
       return ApiResponseUtil.internalError(error, "Error processing request");

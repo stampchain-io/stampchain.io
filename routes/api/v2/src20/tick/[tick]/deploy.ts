@@ -3,6 +3,7 @@ import { Src20Controller } from "$server/controller/src20Controller.ts";
 //  // Temporarily replaced
 import { ApiResponseUtil } from "$lib/utils/api/responses/apiResponseUtil.ts";
 import { FreshContext } from "$fresh/server.ts";
+import { RouteType } from "$server/services/infrastructure/cacheService.ts";
 
 // Define params shape explicitly for this route
 interface DeployRouteParams {
@@ -20,7 +21,9 @@ export const handler = async (
     // If 'op' was needed from query params: const op = ctx.url.searchParams.get("op");
 
     const body = await Src20Controller.handleDeploymentRequest(tick, req);
-    return ApiResponseUtil.success(body);
+    return ApiResponseUtil.success(body, {
+      routeType: RouteType.BLOCKCHAIN_DATA,
+    });
   } catch (error) {
     console.error("Error in deploy handler:", error);
     return ApiResponseUtil.internalError(error, "Internal server error");

@@ -1,6 +1,7 @@
 import { Handlers } from "$fresh/server.ts";
 import { BlockController } from "$server/controller/blockController.ts";
 import { ResponseUtil } from "$lib/utils/api/responses/responseUtil.ts";
+import { RouteType } from "$server/services/infrastructure/cacheService.ts";
 
 export const handler: Handlers = {
   async GET(_req, ctx) {
@@ -17,7 +18,9 @@ export const handler: Handlers = {
       }
 
       const lastBlocks = await BlockController.getLastXBlocks(parsedNumber);
-      return ResponseUtil.success(lastBlocks);
+      return ResponseUtil.success(lastBlocks, {
+        routeType: RouteType.BLOCKCHAIN_DATA,
+      });
     } catch (error) {
       console.error("Failed to get last blocks:", error);
       return ResponseUtil.internalError(

@@ -1,6 +1,7 @@
 import { Handlers } from "$fresh/server.ts";
 import { ApiResponseUtil } from "$lib/utils/api/responses/apiResponseUtil.ts";
 import { VERSION_CONFIG } from "$server/middleware/apiVersionMiddleware.ts";
+import { RouteType } from "$server/services/infrastructure/cacheService.ts";
 
 /**
  * Simple API Version Endpoint
@@ -26,6 +27,6 @@ export const handler: Handlers = {
       version: currentVersion,
     };
 
-    return ApiResponseUtil.success(response);
+    return ApiResponseUtil.success(response, { routeType: RouteType.STATIC });
   },
 };

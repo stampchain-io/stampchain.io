@@ -4,6 +4,7 @@ import {
   classifySearchInput,
 } from "$lib/utils/data/search/searchInputClassifier.ts";
 import { StampService } from "$server/services/stampService.ts";
+import { RouteType } from "$server/services/infrastructure/cacheService.ts";
 
 export const handler: Handlers = {
   async GET(req) {
@@ -12,7 +13,9 @@ export const handler: Handlers = {
       const query = url.searchParams.get("q") || "";
 
       if (!query.trim()) {
-        return ApiResponseUtil.success({ data: [] });
+        return ApiResponseUtil.success({ data: [] }, {
+          routeType: RouteType.STAMP_LIST,
+        });
       }
 
       const { type, sanitized } = classifySearchInput(query);
@@ -65,7 +68,9 @@ export const handler: Handlers = {
         results = await StampService.getStamps(queryOptions);
       } catch (_err) {
         // Service throws "NO STAMPS FOUND" when result is null
-        return ApiResponseUtil.success({ data: [] });
+        return ApiResponseUtil.success({ data: [] }, {
+          routeType: RouteType.STAMP_LIST,
+        });
       }
 
       // StampService.getStamps returns { stamps: [...], last_block }
@@ -82,7 +87,9 @@ export const handler: Handlers = {
         tx_hash: stamp.tx_hash,
       }));
 
-      return ApiResponseUtil.success({ data: formattedResults });
+      return ApiResponseUtil.success({ data: formattedResults }, {
+        routeType: RouteType.STAMP_LIST,
+      });
     } catch (error) {
       console.error("Error in stamp search handler:", error);
       return ApiResponseUtil.internalError(

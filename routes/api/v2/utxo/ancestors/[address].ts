@@ -2,6 +2,7 @@ import { Handlers } from "$fresh/server.ts";
 import { logger } from "$lib/utils/logger.ts";
 import { ResponseUtil } from "$lib/utils/api/responses/responseUtil.ts";
 import { BitcoinUtxoManager } from "$server/services/transaction/bitcoinUtxoManager.ts";
+import { RouteType } from "$server/services/infrastructure/cacheService.ts";
 
 interface UTXOWithAncestors {
   ancestorCount?: number;
@@ -46,7 +47,9 @@ export const handler: Handlers = {
         ancestorCount: ancestors.length,
       });
 
-      return ResponseUtil.success({ ancestors });
+      return ResponseUtil.success({ ancestors }, {
+        routeType: RouteType.DYNAMIC,
+      });
     } catch (error) {
       logger.error("stamps", {
         message: "Error fetching UTXO ancestors",
