@@ -405,7 +405,7 @@ export const handler: Handlers = {
               : BigInt(0)),
         ),
         estimatedVsize: Number(estimatedVsize),
-      });
+      }, { forceNoCache: true });
     } catch (error: unknown) {
       const errorMessage = error instanceof Error
         ? error.message

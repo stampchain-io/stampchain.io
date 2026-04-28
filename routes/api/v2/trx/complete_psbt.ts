@@ -27,7 +27,9 @@ export const handler: Handlers = {
           feeRate,
         );
 
-      return ApiResponseUtil.success({ completedPsbt: completedPsbtHex });
+      return ApiResponseUtil.success({ completedPsbt: completedPsbtHex }, {
+        forceNoCache: true,
+      });
     } catch (error) {
       logger.error("api", {
         message: "Error completing PSBT",

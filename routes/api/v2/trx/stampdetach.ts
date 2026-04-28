@@ -132,7 +132,7 @@ export const handler: Handlers = {
           finalUserChange: BigInt(psbtResult.totalChangeOutput),
         };
 
-        return ApiResponseUtil.success(processedPSBT);
+        return ApiResponseUtil.success(processedPSBT, { forceNoCache: true });
       } catch (error) {
         if (error instanceof Error) {
           const errorMessage = error.message.toLowerCase();
