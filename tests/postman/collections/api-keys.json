@@ -1,0 +1,255 @@
+{
+  "info": {
+    "name": "Stampchain API Keys",
+    "description": "Newman tests for the /api/v2/keys signup and usage endpoints",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "dev_base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "created_api_key",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "POST /api/v2/keys - valid email creates key",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 201', function () {",
+              "  pm.response.to.have.status(201);",
+              "});",
+              "pm.test('Response has api_key', function () {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json).to.have.property('api_key');",
+              "  pm.expect(json.api_key).to.have.lengthOf(64);",
+              "  pm.expect(json.api_key).to.match(/^[0-9a-f]{64}$/);",
+              "  pm.collectionVariables.set('created_api_key', json.api_key);",
+              "});",
+              "pm.test('Response has tier free', function () {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json.tier).to.eql('free');",
+              "});",
+              "pm.test('Response has daily_limit 50000', function () {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json.daily_limit).to.eql(50000);",
+              "});",
+              "pm.test('Response has no-cache headers', function () {",
+              "  pm.expect(pm.response.headers.get('Cache-Control')).to.include('no');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"email\": \"newman-test-{{$timestamp}}@example.com\"}"
+        },
+        "url": {
+          "raw": "{{dev_base_url}}/api/v2/keys",
+          "host": ["{{dev_base_url}}"],
+          "path": ["api", "v2", "keys"]
+        }
+      }
+    },
+    {
+      "name": "POST /api/v2/keys - missing email returns 400",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 400', function () {",
+              "  pm.response.to.have.status(400);",
+              "});",
+              "pm.test('Response has error message', function () {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json).to.have.property('error');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}"
+        },
+        "url": {
+          "raw": "{{dev_base_url}}/api/v2/keys",
+          "host": ["{{dev_base_url}}"],
+          "path": ["api", "v2", "keys"]
+        }
+      }
+    },
+    {
+      "name": "POST /api/v2/keys - invalid email format returns 400",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 400', function () {",
+              "  pm.response.to.have.status(400);",
+              "});",
+              "pm.test('Error describes invalid email', function () {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json.error).to.match(/email/i);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"email\": \"notanemail\"}"
+        },
+        "url": {
+          "raw": "{{dev_base_url}}/api/v2/keys",
+          "host": ["{{dev_base_url}}"],
+          "path": ["api", "v2", "keys"]
+        }
+      }
+    },
+    {
+      "name": "GET /api/v2/keys/usage - valid key returns usage stats",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "pm.test('Response has tier', function () {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json).to.have.property('tier');",
+              "  pm.expect(['free', 'partner']).to.include(json.tier);",
+              "});",
+              "pm.test('Response has daily_limit', function () {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json).to.have.property('daily_limit');",
+              "  pm.expect(json.daily_limit).to.be.a('number');",
+              "});",
+              "pm.test('Response has used_today and remaining', function () {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json).to.have.property('used_today');",
+              "  pm.expect(json).to.have.property('remaining');",
+              "});",
+              "pm.test('Response has rate_limits object', function () {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json).to.have.property('rate_limits');",
+              "  pm.expect(json.rate_limits).to.have.property('src20');",
+              "  pm.expect(json.rate_limits).to.have.property('stamps');",
+              "});",
+              "pm.test('Authenticated request reflects higher limit in X-RateLimit-Limit', function () {",
+              "  const rlHeader = pm.response.headers.get('X-RateLimit-Limit');",
+              "  if (rlHeader) {",
+              "    pm.expect(parseInt(rlHeader)).to.be.greaterThan(100);",
+              "  }",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "X-API-Key", "value": "{{created_api_key}}" }
+        ],
+        "url": {
+          "raw": "{{dev_base_url}}/api/v2/keys/usage",
+          "host": ["{{dev_base_url}}"],
+          "path": ["api", "v2", "keys", "usage"]
+        }
+      }
+    },
+    {
+      "name": "GET /api/v2/keys/usage - missing key returns 401",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 401', function () {",
+              "  pm.response.to.have.status(401);",
+              "});",
+              "pm.test('Response has error message', function () {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json).to.have.property('error');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{dev_base_url}}/api/v2/keys/usage",
+          "host": ["{{dev_base_url}}"],
+          "path": ["api", "v2", "keys", "usage"]
+        }
+      }
+    },
+    {
+      "name": "GET /api/v2/keys/usage - invalid key returns 401",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 401', function () {",
+              "  pm.response.to.have.status(401);",
+              "});",
+              "pm.test('Response has error message', function () {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json).to.have.property('error');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "X-API-Key", "value": "0000000000000000000000000000000000000000000000000000000000000000" }
+        ],
+        "url": {
+          "raw": "{{dev_base_url}}/api/v2/keys/usage",
+          "host": ["{{dev_base_url}}"],
+          "path": ["api", "v2", "keys", "usage"]
+        }
+      }
+    }
+  ]
+}
