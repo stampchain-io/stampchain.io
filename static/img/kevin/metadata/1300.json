@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #1300 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "1300.png",
+  "external_url": "https://kevin420.xyz/nft/1300",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:36.095Z",
+  "hash": "31e2b9d67c844d71788b234fda92717d288f82a45dd7f04d91d9837d463732bb",
+  "dna": "31e2b9d67c844d71",
+  "edition": 1300,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

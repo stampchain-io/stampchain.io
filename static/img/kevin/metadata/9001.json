@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #9001 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "9001.png",
+  "external_url": "https://kevin420.xyz/nft/9001",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:54.889Z",
+  "hash": "fc524a93d8d251e8563358ae7b4bba98c58fe971dbe8dee42027838d06dd635a",
+  "dna": "fc524a93d8d251e8",
+  "edition": 9001,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

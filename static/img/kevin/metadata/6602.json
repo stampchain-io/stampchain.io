@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #6602 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "6602.png",
+  "external_url": "https://kevin420.xyz/nft/6602",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:48.877Z",
+  "hash": "85133af8b1961de0422717fa7cdc072e848bb68589773d1965ed7aec51c26656",
+  "dna": "85133af8b1961de0",
+  "edition": 6602,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

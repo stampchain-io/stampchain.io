@@ -1,0 +1,55 @@
+{
+  "name": "Kevin #360 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "360.png",
+  "external_url": "https://kevin420.xyz/nft/360",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 9
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:33.917Z",
+  "hash": "12cde38473aab69eeb5282f5f7b6df3fc298d3c289bbbf2a67c566a576912401",
+  "dna": "12cde38473aab69e",
+  "edition": 360,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

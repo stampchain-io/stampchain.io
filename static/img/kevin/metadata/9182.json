@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #9182 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "9182.png",
+  "external_url": "https://kevin420.xyz/nft/9182",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:55.345Z",
+  "hash": "27224f9134dedc76406e12ee1dddd9669e454fcf11153d854900d45e535135c4",
+  "dna": "27224f9134dedc76",
+  "edition": 9182,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

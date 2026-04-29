@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #1661 - Viva Mexico",
+  "description": "Celebrating Mexico with Viva style!",
+  "image": "1661.png",
+  "external_url": "https://kevin420.xyz/nft/1661",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:36.950Z",
+  "hash": "ec8339f80af4ca4f601c2d8f46c75c14bd57bdc80cb9ccdb028944517fc0f046",
+  "dna": "ec8339f80af4ca4f",
+  "edition": 1661,
+  "special": "Viva Mexico",
+  "rarity": "Uncommon"
+}

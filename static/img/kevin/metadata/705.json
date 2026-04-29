@@ -1,0 +1,27 @@
+{
+  "name": "Kevin #705 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "705.png",
+  "external_url": "https://kevin420.xyz/nft/705",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 2
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.711Z",
+  "hash": "8462baa4ebb25b40a3665d0c616791023c5b25c623fbc88e85f342a47afdac24",
+  "dna": "8462baa4ebb25b40",
+  "edition": 705,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

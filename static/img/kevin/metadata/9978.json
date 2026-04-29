@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #9978 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "9978.png",
+  "external_url": "https://kevin420.xyz/nft/9978",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:57.383Z",
+  "hash": "f5ebcc25756821713475e4aae804200e0837562c825e581e90e6702b955eb6d6",
+  "dna": "f5ebcc2575682171",
+  "edition": 9978,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #9526 - Perfect Pepe",
+  "description": "The perfect alignment of Pepe face and Pepe Vision!",
+  "image": "9526.png",
+  "external_url": "https://kevin420.xyz/nft/9526",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:56.238Z",
+  "hash": "2d6d2702625a2cd6ccc89a0af42b6dc18715529bb110c42f3746da6815a79a9b",
+  "dna": "2d6d2702625a2cd6",
+  "edition": 9526,
+  "special": "Perfect Pepe",
+  "rarity": "Rare"
+}

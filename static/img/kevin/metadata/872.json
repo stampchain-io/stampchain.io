@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #872 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "872.png",
+  "external_url": "https://kevin420.xyz/nft/872",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:35.106Z",
+  "hash": "cf9830887c697b13e7eb5d994f7113883a3d0cdf34f59916aa0aec15f7286e7c",
+  "dna": "cf9830887c697b13",
+  "edition": 872,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

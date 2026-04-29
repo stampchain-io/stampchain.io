@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #2346 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "2346.png",
+  "external_url": "https://kevin420.xyz/nft/2346",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:38.571Z",
+  "hash": "498bdde135ef5f716b059fb916616ce515449ab70c3e13d9bc163539b13fca60",
+  "dna": "498bdde135ef5f71",
+  "edition": 2346,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

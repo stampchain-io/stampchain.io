@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #3019 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DITA!",
+  "image": "3019.png",
+  "external_url": "https://kevin420.xyz/nft/3019",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:40.184Z",
+  "hash": "ec57f07779559d7774ce1c3db60ff5ac427855d77e46cb867d87943a80f8e32c",
+  "dna": "ec57f07779559d77",
+  "edition": 3019,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

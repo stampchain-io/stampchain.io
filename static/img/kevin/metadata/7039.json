@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #7039 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "7039.png",
+  "external_url": "https://kevin420.xyz/nft/7039",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:49.938Z",
+  "hash": "ecceb516a0ada91235ec648e2c733fc6d15f459a7d57bd171e2a3217683b22a6",
+  "dna": "ecceb516a0ada912",
+  "edition": 7039,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #9807 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "9807.png",
+  "external_url": "https://kevin420.xyz/nft/9807",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:56.969Z",
+  "hash": "eef4f86ac8a6089be145d96b10d78392c92b271f0591c636c186be03df4313bc",
+  "dna": "eef4f86ac8a6089b",
+  "edition": 9807,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #2237 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "2237.png",
+  "external_url": "https://kevin420.xyz/nft/2237",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:38.327Z",
+  "hash": "b020d82d92904e58185c51cb04abac11950adbbcd762676b842b427589fbf752",
+  "dna": "b020d82d92904e58",
+  "edition": 2237,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

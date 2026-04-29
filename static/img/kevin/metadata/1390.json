@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #1390 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "1390.png",
+  "external_url": "https://kevin420.xyz/nft/1390",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:36.314Z",
+  "hash": "21066accd6cfe4b571ae30fa2b47a43e8c2376010ede97fc21de56d9f92f8064",
+  "dna": "21066accd6cfe4b5",
+  "edition": 1390,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

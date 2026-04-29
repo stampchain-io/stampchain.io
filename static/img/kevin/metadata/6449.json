@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #6449 - Viva Mexico",
+  "description": "Celebrating Mexico with Viva style!",
+  "image": "6449.png",
+  "external_url": "https://kevin420.xyz/nft/6449",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:48.514Z",
+  "hash": "1a828ca895dc8858bde062542415bc75e2a9f123be015fec0cacbccf0717335c",
+  "dna": "1a828ca895dc8858",
+  "edition": 6449,
+  "special": "Viva Mexico",
+  "rarity": "Uncommon"
+}

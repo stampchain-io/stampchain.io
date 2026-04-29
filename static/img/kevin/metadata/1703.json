@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #1703 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "1703.png",
+  "external_url": "https://kevin420.xyz/nft/1703",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.042Z",
+  "hash": "382b62571120947929d58746730554385633b5b82c91f961084663543398c6b2",
+  "dna": "382b625711209479",
+  "edition": 1703,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #6335 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "6335.png",
+  "external_url": "https://kevin420.xyz/nft/6335",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:48.216Z",
+  "hash": "12c66e510dc9cec2c932f518407f114737dec7980c67bf7ae6cb32ad70cb1ecf",
+  "dna": "12c66e510dc9cec2",
+  "edition": 6335,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

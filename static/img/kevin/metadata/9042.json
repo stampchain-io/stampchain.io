@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #9042 - Viva Enthusiast",
+  "description": "A true Viva fan with 3 Viva traits!",
+  "image": "9042.png",
+  "external_url": "https://kevin420.xyz/nft/9042",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:55.005Z",
+  "hash": "0bfada97071216f550ee803fc1852665da5cb8066905191b6419f691ee050543",
+  "dna": "0bfada97071216f5",
+  "edition": 9042,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #188 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "188.png",
+  "external_url": "https://kevin420.xyz/nft/188",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:33.506Z",
+  "hash": "b48ff8cced9ffa879485f6a548a6baf1fa58b633cfcc01a6321f95b4db023207",
+  "dna": "b48ff8cced9ffa87",
+  "edition": 188,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

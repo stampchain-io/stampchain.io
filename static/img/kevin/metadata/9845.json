@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #9845 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "9845.png",
+  "external_url": "https://kevin420.xyz/nft/9845",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:57.057Z",
+  "hash": "eeed697bee531cb003b6deb5f0ca9418474301f4fdf94027a63e307be0e341f9",
+  "dna": "eeed697bee531cb0",
+  "edition": 9845,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

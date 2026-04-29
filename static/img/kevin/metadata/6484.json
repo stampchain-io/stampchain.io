@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #6484 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "6484.png",
+  "external_url": "https://kevin420.xyz/nft/6484",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:48.603Z",
+  "hash": "ab61f2e0e3d77a75445c00e898ce8bad57f4d479b005d00a96f54136e6993983",
+  "dna": "ab61f2e0e3d77a75",
+  "edition": 6484,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

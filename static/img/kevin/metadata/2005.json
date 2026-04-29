@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #2005 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "2005.png",
+  "external_url": "https://kevin420.xyz/nft/2005",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.807Z",
+  "hash": "c91bee130d3594ed483384caedf6a8978392105a85de3635c6739d2aca2fa066",
+  "dna": "c91bee130d3594ed",
+  "edition": 2005,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

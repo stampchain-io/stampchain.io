@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #2030 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "2030.png",
+  "external_url": "https://kevin420.xyz/nft/2030",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.866Z",
+  "hash": "ec6f35fb568ffa3875f276d25a773eb13954938a4b9f864579455f7cf72a5c94",
+  "dna": "ec6f35fb568ffa38",
+  "edition": 2030,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

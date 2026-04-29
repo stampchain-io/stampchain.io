@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #1840 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "1840.png",
+  "external_url": "https://kevin420.xyz/nft/1840",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.394Z",
+  "hash": "c1b984e225683b2049bd95206371cc1b1d8ff398620ccb12556f1eca06cca50d",
+  "dna": "c1b984e225683b20",
+  "edition": 1840,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

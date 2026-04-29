@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #2010 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "2010.png",
+  "external_url": "https://kevin420.xyz/nft/2010",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.820Z",
+  "hash": "cafc90af26dca338ae7148ba1b5e63eb27917402b5b35cdee1b67333b6b34f2f",
+  "dna": "cafc90af26dca338",
+  "edition": 2010,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

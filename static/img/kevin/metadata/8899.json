@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #8899 - Viva Enthusiast",
+  "description": "A true Viva fan with 3 Viva traits!",
+  "image": "8899.png",
+  "external_url": "https://kevin420.xyz/nft/8899",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:54.621Z",
+  "hash": "c3d3f94946e2df3dd16bb329a71fb183d3ce7770a2a26a41ae776c683dc8e241",
+  "dna": "c3d3f94946e2df3d",
+  "edition": 8899,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

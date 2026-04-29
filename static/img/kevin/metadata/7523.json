@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #7523 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "7523.png",
+  "external_url": "https://kevin420.xyz/nft/7523",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:51.164Z",
+  "hash": "a29e516c1a490729559efe1d8f53f1f0a218bd555c3dbd671d1bd6cafdb0f870",
+  "dna": "a29e516c1a490729",
+  "edition": 7523,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

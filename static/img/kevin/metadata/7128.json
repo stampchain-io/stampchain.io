@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #7128 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "7128.png",
+  "external_url": "https://kevin420.xyz/nft/7128",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:50.145Z",
+  "hash": "23466bc8733fa349f2e695f642d1393822a742bbe2ed79c43525891393396449",
+  "dna": "23466bc8733fa349",
+  "edition": 7128,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

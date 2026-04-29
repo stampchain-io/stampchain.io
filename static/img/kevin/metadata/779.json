@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #779 - Witch Nose",
+  "description": "A mystical Kevin with the rare Witch Nose!",
+  "image": "779.png",
+  "external_url": "https://kevin420.xyz/nft/779",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.883Z",
+  "hash": "9a05bea6dc0c1d17e3b4298f597f576e3eba5abbe4cbddc7c7c74c5e9bba19db",
+  "dna": "9a05bea6dc0c1d17",
+  "edition": 779,
+  "special": "Witch Nose",
+  "rarity": "Rare"
+}

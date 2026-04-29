@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #646 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "646.png",
+  "external_url": "https://kevin420.xyz/nft/646",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.574Z",
+  "hash": "6a22d21104e9b9505cbb5f0a86fda8bde4acab17b49caaa34bb87cc0af422ee1",
+  "dna": "6a22d21104e9b950",
+  "edition": 646,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

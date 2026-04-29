@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #4179 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "4179.png",
+  "external_url": "https://kevin420.xyz/nft/4179",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:42.970Z",
+  "hash": "7200fb9757992d5cf0aec42d7909093ab94573ee7ca1ed7685e661f85c761f2a",
+  "dna": "7200fb9757992d5c",
+  "edition": 4179,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #959 - Vision Master",
+  "description": "Enhanced vision with both glasses and special eyes!",
+  "image": "959.png",
+  "external_url": "https://kevin420.xyz/nft/959",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:35.314Z",
+  "hash": "fc82f0b47339165726354a3bdca5f1d2503e2bc8424e329ce1a0622133d336de",
+  "dna": "fc82f0b473391657",
+  "edition": 959,
+  "special": "Vision Master",
+  "rarity": "Rare"
+}

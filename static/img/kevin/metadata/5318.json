@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #5318 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "5318.png",
+  "external_url": "https://kevin420.xyz/nft/5318",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:45.740Z",
+  "hash": "2a21728f3f67018edfaa7bfc2e023bb51afcc0bdc709ec0e632d39c6dac9f104",
+  "dna": "2a21728f3f67018e",
+  "edition": 5318,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

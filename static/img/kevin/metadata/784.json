@@ -1,0 +1,51 @@
+{
+  "name": "Kevin #784 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "784.png",
+  "external_url": "https://kevin420.xyz/nft/784",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 8
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Fez"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.896Z",
+  "hash": "0bdc59b0cfb7a3c1518a52aaa6a4ab5626717124f96a129d892b2a6e5aae6059",
+  "dna": "0bdc59b0cfb7a3c1",
+  "edition": 784,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

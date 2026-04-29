@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #4416 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "4416.png",
+  "external_url": "https://kevin420.xyz/nft/4416",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Fez"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:43.545Z",
+  "hash": "0d17af80c96d1f76de1c07439b563f935650cc1b34640002af6cfb38e1400e00",
+  "dna": "0d17af80c96d1f76",
+  "edition": 4416,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

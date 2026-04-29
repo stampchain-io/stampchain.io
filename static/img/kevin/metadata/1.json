@@ -1,0 +1,51 @@
+{
+  "name": "Kevin #1 - The Complete Viva",
+  "description": "The one true Viva Kevin - all 5 Viva traits united in perfect harmony!",
+  "image": "1.png",
+  "external_url": "https://kevin420.xyz/nft/1",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 8
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:33.073Z",
+  "hash": "7974549e05aa3fc2395af9d3c5cb97dacf7a067606340c9e450ea9e1ebc0e777",
+  "dna": "7974549e05aa3fc2",
+  "edition": 1,
+  "special": "Complete Viva",
+  "rarity": "Legendary"
+}

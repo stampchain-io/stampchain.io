@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #885 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "885.png",
+  "external_url": "https://kevin420.xyz/nft/885",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Fez"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:35.134Z",
+  "hash": "74c1247eb37f72ced6697e9426dc2893303262583b26831d6a5dd148e7b82059",
+  "dna": "74c1247eb37f72ce",
+  "edition": 885,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

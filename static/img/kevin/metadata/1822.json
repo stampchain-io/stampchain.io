@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #1822 - Witch Nose",
+  "description": "A mystical Kevin with the rare Witch Nose!",
+  "image": "1822.png",
+  "external_url": "https://kevin420.xyz/nft/1822",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.349Z",
+  "hash": "47e4159d8a96b28ef44e71d5d8ab81f83daaddcd07ad5bcd1de92ae4eca07fcb",
+  "dna": "47e4159d8a96b28e",
+  "edition": 1822,
+  "special": "Witch Nose",
+  "rarity": "Rare"
+}

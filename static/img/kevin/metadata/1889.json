@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #1889 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "1889.png",
+  "external_url": "https://kevin420.xyz/nft/1889",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.508Z",
+  "hash": "5e9f5348fe8c4ede7a38c4e062d42219d296c0210307679cceda575a9fb1f60a",
+  "dna": "5e9f5348fe8c4ede",
+  "edition": 1889,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

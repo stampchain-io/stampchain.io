@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #1666 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DITA!",
+  "image": "1666.png",
+  "external_url": "https://kevin420.xyz/nft/1666",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:36.961Z",
+  "hash": "cffce35c3212a81ba4910f26c7ff97c56a4256205dc16daf457301e8d756f086",
+  "dna": "cffce35c3212a81b",
+  "edition": 1666,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

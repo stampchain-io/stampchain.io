@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #306 - Viva Mexico",
+  "description": "Celebrating Mexico with Viva style!",
+  "image": "306.png",
+  "external_url": "https://kevin420.xyz/nft/306",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:33.793Z",
+  "hash": "835596beb127d7bbb015c0b13e06253951d869eb693262e6f2c65ae055b079e4",
+  "dna": "835596beb127d7bb",
+  "edition": 306,
+  "special": "Viva Mexico",
+  "rarity": "Uncommon"
+}

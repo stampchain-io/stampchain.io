@@ -1,0 +1,51 @@
+{
+  "name": "Kevin #5908 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "5908.png",
+  "external_url": "https://kevin420.xyz/nft/5908",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 8
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:47.202Z",
+  "hash": "5c3aca53757ee51c2b96e9a777ad11f8af24748b6e19a8616c6c7c88539c518e",
+  "dna": "5c3aca53757ee51c",
+  "edition": 5908,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #8199 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "8199.png",
+  "external_url": "https://kevin420.xyz/nft/8199",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:52.833Z",
+  "hash": "51be0be004fe0c406ef86ae3e2a619d773748a765670c67d9a0204593a2bdefa",
+  "dna": "51be0be004fe0c40",
+  "edition": 8199,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

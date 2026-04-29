@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #7205 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "7205.png",
+  "external_url": "https://kevin420.xyz/nft/7205",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:50.377Z",
+  "hash": "4b665c9da890356aa52e4924ca76b0d03ddcd865a4cd1c2686c077a48062cbe4",
+  "dna": "4b665c9da890356a",
+  "edition": 7205,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

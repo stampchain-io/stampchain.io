@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #1520 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "1520.png",
+  "external_url": "https://kevin420.xyz/nft/1520",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:36.611Z",
+  "hash": "923600b58b0ba448f30d4d0b125bc8fabdefc943fdce469b5cb70d2783d4ba80",
+  "dna": "923600b58b0ba448",
+  "edition": 1520,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

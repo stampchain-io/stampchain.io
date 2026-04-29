@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #400 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "400.png",
+  "external_url": "https://kevin420.xyz/nft/400",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.012Z",
+  "hash": "d649dd0921f76b79ce9896a6336fecdecda1ce2d34df81d6c9bba5cad2ea89de",
+  "dna": "d649dd0921f76b79",
+  "edition": 400,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

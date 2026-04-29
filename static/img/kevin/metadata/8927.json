@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #8927 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "8927.png",
+  "external_url": "https://kevin420.xyz/nft/8927",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:54.692Z",
+  "hash": "4c42b1117c6f094b0f48fc146742b6d8f7b5b7b187919364e2c06719a1dc35cc",
+  "dna": "4c42b1117c6f094b",
+  "edition": 8927,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

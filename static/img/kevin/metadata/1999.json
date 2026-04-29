@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #1999 - Witch Nose",
+  "description": "A mystical Kevin with the rare Witch Nose!",
+  "image": "1999.png",
+  "external_url": "https://kevin420.xyz/nft/1999",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.794Z",
+  "hash": "646a38f5ec1d8b19081102b094569d552b716b60dd9f8d7547d96cb24f4252eb",
+  "dna": "646a38f5ec1d8b19",
+  "edition": 1999,
+  "special": "Witch Nose",
+  "rarity": "Rare"
+}

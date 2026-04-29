@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #3561 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "3561.png",
+  "external_url": "https://kevin420.xyz/nft/3561",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:41.475Z",
+  "hash": "8203bfcf12849cdd96d46830c5dd14d2eb0d4c04cd8aa845e644f45eed3823ed",
+  "dna": "8203bfcf12849cdd",
+  "edition": 3561,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

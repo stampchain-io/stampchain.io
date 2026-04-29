@@ -1,0 +1,51 @@
+{
+  "name": "Kevin #7331 - Witch Nose",
+  "description": "A mystical Kevin with the rare Witch Nose!",
+  "image": "7331.png",
+  "external_url": "https://kevin420.xyz/nft/7331",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 8
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:50.711Z",
+  "hash": "1121a1cadc19426a58154f71f55752130b99048a6d040db6c3db2d161cb0f67b",
+  "dna": "1121a1cadc19426a",
+  "edition": 7331,
+  "special": "Witch Nose",
+  "rarity": "Rare"
+}

@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #4241 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DITA!",
+  "image": "4241.png",
+  "external_url": "https://kevin420.xyz/nft/4241",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:43.121Z",
+  "hash": "3a84d7c26a6f43b8d0ce19bbada90c450072f2a56dee9646c6ead917e2dccea6",
+  "dna": "3a84d7c26a6f43b8",
+  "edition": 4241,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

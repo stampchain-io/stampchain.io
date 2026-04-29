@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #6914 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "6914.png",
+  "external_url": "https://kevin420.xyz/nft/6914",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:49.654Z",
+  "hash": "cddec7f7ea4f521377928f84b8397c6bcb97c33819c39ef11015fb8ae4a45aee",
+  "dna": "cddec7f7ea4f5213",
+  "edition": 6914,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

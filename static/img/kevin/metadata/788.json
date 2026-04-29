@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #788 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "788.png",
+  "external_url": "https://kevin420.xyz/nft/788",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.905Z",
+  "hash": "d86bfb41cb3e404a8328bdc20170b1e34a9ee2fe86902a67a5d82cb747e67716",
+  "dna": "d86bfb41cb3e404a",
+  "edition": 788,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #1620 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "1620.png",
+  "external_url": "https://kevin420.xyz/nft/1620",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:36.856Z",
+  "hash": "5b0ec5b9058d517161c7d59610e4b9648d4a5b23b70399e42e1c848779299929",
+  "dna": "5b0ec5b9058d5171",
+  "edition": 1620,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #8350 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DITA!",
+  "image": "8350.png",
+  "external_url": "https://kevin420.xyz/nft/8350",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:53.179Z",
+  "hash": "7546e6520beaf8d0409eb1efb9ea3442d4f74eb196581e6646dd784d1a2d7946",
+  "dna": "7546e6520beaf8d0",
+  "edition": 8350,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

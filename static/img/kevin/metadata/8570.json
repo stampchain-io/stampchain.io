@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #8570 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "8570.png",
+  "external_url": "https://kevin420.xyz/nft/8570",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:53.723Z",
+  "hash": "fca8ad60f03046dbf9766ff23e4e2206934d81e980e20c0774e9d07f54679cb6",
+  "dna": "fca8ad60f03046db",
+  "edition": 8570,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

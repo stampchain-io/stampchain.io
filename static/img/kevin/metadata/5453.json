@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #5453 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "5453.png",
+  "external_url": "https://kevin420.xyz/nft/5453",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:46.077Z",
+  "hash": "3362c587c2df339fadf95730e7fe9da29803b3482b50391758c79304cc6130a5",
+  "dna": "3362c587c2df339f",
+  "edition": 5453,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

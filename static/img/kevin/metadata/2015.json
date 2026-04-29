@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #2015 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "2015.png",
+  "external_url": "https://kevin420.xyz/nft/2015",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.830Z",
+  "hash": "b9cf8091b6b51bad1f20ac9d726e23975859e6662889c3acbc7b5f5ff19cae35",
+  "dna": "b9cf8091b6b51bad",
+  "edition": 2015,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

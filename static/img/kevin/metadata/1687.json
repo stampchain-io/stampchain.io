@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #1687 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "1687.png",
+  "external_url": "https://kevin420.xyz/nft/1687",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.007Z",
+  "hash": "0f75c1ec2ba4497035e1966ed32d62777cee6b4f893f9126b897fb294168d437",
+  "dna": "0f75c1ec2ba44970",
+  "edition": 1687,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #9398 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "9398.png",
+  "external_url": "https://kevin420.xyz/nft/9398",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:55.901Z",
+  "hash": "3d4b1fd3f2c7cf661a09ba3ab4878e611488eecfaf94e35bb458ec3db783f209",
+  "dna": "3d4b1fd3f2c7cf66",
+  "edition": 9398,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}
