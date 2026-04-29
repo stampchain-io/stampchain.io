@@ -11,6 +11,7 @@
 import { FreshContext } from "$fresh/server.ts";
 import { getRedisConnection } from "$server/cache/redisClient.ts";
 import { serverConfig } from "$server/config/config.ts";
+import { ApiKeyService } from "$server/services/apiKey/apiKeyService.ts";
 
 interface RateLimitConfig {
   /** Time window in milliseconds */
@@ -81,8 +82,7 @@ const rateLimitConfigs: Record<string, RateLimitConfig> = {
  * This config is defined now so the values are documented and ready
  * for the next PR that adds key signup + tier-aware middleware.
  */
-// @ts-ignore: Reserved for API key tier implementation (next PR)
-const _apiKeyRateLimitConfigs: Record<string, RateLimitConfig> = {
+const apiKeyRateLimitConfigs: Record<string, RateLimitConfig> = {
   "/api/v2/src20": {
     windowMs: 60000,
     max: 300, // 5 req/sec (5x anonymous)
@@ -152,16 +152,34 @@ function getRateLimitConfig(pathname: string): RateLimitConfig | null {
 }
 
 /**
+ * Find the most specific API key rate limit config for a given path.
+ * Same matching logic as getRateLimitConfig but uses apiKeyRateLimitConfigs.
+ */
+function getApiKeyRateLimitConfig(pathname: string): RateLimitConfig | null {
+  const sortedConfigs = Object.entries(apiKeyRateLimitConfigs)
+    .sort(([a], [b]) => b.length - a.length);
+
+  for (const [path, config] of sortedConfigs) {
+    if (pathname.startsWith(path)) {
+      return config;
+    }
+  }
+
+  return null;
+}
+
+/**
  * Rate Limiting Middleware
  *
  * Flow:
  * 1. Skip internal APIs (protected by API key)
  * 2. Skip health checks (monitoring needs high frequency)
- * 3. Check for API key bypass
- * 4. Check if IP is blocked
- * 5. Increment request counter in Redis
- * 6. Return 429 if limit exceeded
- * 7. Add rate limit headers to response
+ * 3. Check for legacy PUBLIC_API_KEY bypass (backward compat)
+ * 4. Check for registered API key (tier-aware limits)
+ * 5. Check if IP is blocked
+ * 6. Increment request counter in Redis
+ * 7. Return 429 if limit exceeded
+ * 8. Add rate limit headers to response
  */
 export async function rateLimitMiddleware(
   req: Request,
@@ -180,16 +198,127 @@ export async function rateLimitMiddleware(
     return ctx.next();
   }
 
-  // Check for API key bypass
-  const apiKey = req.headers.get("X-API-Key");
-  const validApiKey = serverConfig.PUBLIC_API_KEY;
+  // Get client IP (used for anon rate limiting and as fallback identifier)
+  const clientIp = getClientIp(req);
 
-  if (apiKey && validApiKey && apiKey === validApiKey) {
-    console.log("[RATE LIMITER] API key bypass granted");
-    return ctx.next();
+  // Default rate limit identifier: IP-based (overridden to key-based for authenticated requests)
+  let rateLimitIdentifier = clientIp;
+
+  // Check for API key (registered or legacy)
+  const apiKey = req.headers.get("X-API-Key");
+  if (apiKey) {
+    // Legacy PUBLIC_API_KEY check (backward compat for existing partners)
+    const legacyKey = serverConfig.PUBLIC_API_KEY;
+    if (legacyKey && apiKey === legacyKey) {
+      console.log("[RATE LIMITER] Legacy API key bypass granted");
+      return ctx.next();
+    }
+
+    // Registered API key — tier-aware handling
+    try {
+      const keyInfo = await ApiKeyService.validateKey(apiKey);
+      if (keyInfo && keyInfo.is_active) {
+        if (keyInfo.tier === "partner") {
+          // Partners get full bypass
+          ApiKeyService.touchLastUsed(apiKey).catch(() => {});
+          return ctx.next();
+        }
+
+        // Free tier: check daily quota, then apply higher per-minute limits
+        const keyConfig = getApiKeyRateLimitConfig(pathname);
+        if (keyConfig) {
+          const dailyUsed = await ApiKeyService.incrementDailyUsage(apiKey);
+          if (dailyUsed > keyInfo.daily_limit) {
+            return new Response(
+              JSON.stringify({
+                error: "Daily API quota exceeded",
+                daily_limit: keyInfo.daily_limit,
+                used_today: dailyUsed,
+                upgrade: {
+                  message: "Contact us for higher limits",
+                  url: "https://stampchain.io/api",
+                },
+              }),
+              {
+                status: 429,
+                headers: {
+                  "Content-Type": "application/json",
+                  "Retry-After": "3600",
+                },
+              },
+            );
+          }
+
+          // Use key-based identifier and higher limits for free tier
+          rateLimitIdentifier = `key:${apiKey}`;
+          ApiKeyService.touchLastUsed(apiKey).catch(() => {});
+
+          // Find matching config
+          const config = keyConfig;
+
+          // Redis keys (per-API-key, not per-IP)
+          const rateLimitKey = `ratelimit:${pathname}:${rateLimitIdentifier}`;
+
+          try {
+            const redis = await getRedisConnection();
+
+            // Increment request counter
+            const current = await redis.incr(rateLimitKey);
+            if (current === 1) {
+              await redis.pexpire(rateLimitKey, config.windowMs);
+            }
+
+            const remaining = Math.max(0, config.max - current);
+
+            if (current > config.max) {
+              const ttl = await redis.pttl(rateLimitKey);
+              const retryAfter = Math.ceil(ttl / 1000);
+
+              return new Response(
+                JSON.stringify({
+                  error: config.message || "Rate limit exceeded",
+                  retryAfter,
+                  limit: config.max,
+                  window: config.windowMs / 1000,
+                }),
+                {
+                  status: 429,
+                  headers: {
+                    "Content-Type": "application/json",
+                    "Retry-After": String(retryAfter),
+                    "X-RateLimit-Limit": String(config.max),
+                    "X-RateLimit-Remaining": "0",
+                    "X-RateLimit-Reset": String(Date.now() + ttl),
+                  },
+                },
+              );
+            }
+
+            const response = await ctx.next();
+            response.headers.set("X-RateLimit-Limit", String(config.max));
+            response.headers.set("X-RateLimit-Remaining", String(remaining));
+            response.headers.set(
+              "X-RateLimit-Reset",
+              String(Date.now() + config.windowMs),
+            );
+            return response;
+          } catch (error) {
+            console.error("[RATE LIMITER ERROR] key-tier Redis:", error);
+            return ctx.next(); // Fail open
+          }
+        }
+
+        // No key-tier config for this path — fall through to anonymous limits
+        ApiKeyService.touchLastUsed(apiKey).catch(() => {});
+      }
+      // Invalid/inactive key falls through to anonymous IP-based limits
+    } catch (error) {
+      console.error("[RATE LIMITER] ApiKeyService error:", error);
+      // Fail open: proceed with anonymous limits
+    }
   }
 
-  // Find matching config
+  // Find matching anonymous config
   const config = getRateLimitConfig(pathname);
 
   if (!config) {
@@ -197,12 +326,9 @@ export async function rateLimitMiddleware(
     return ctx.next();
   }
 
-  // Get client IP
-  const clientIp = getClientIp(req);
-
-  // Redis keys
-  const rateLimitKey = `ratelimit:${pathname}:${clientIp}`;
-  const blockKey = `ratelimit:block:${pathname}:${clientIp}`;
+  // Redis keys (IP-based for anonymous requests)
+  const rateLimitKey = `ratelimit:${pathname}:${rateLimitIdentifier}`;
+  const blockKey = `ratelimit:block:${pathname}:${rateLimitIdentifier}`;
 
   try {
     const redis = await getRedisConnection();
