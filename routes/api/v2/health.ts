@@ -15,10 +15,30 @@ export const handler: Handlers = {
    * Returns 200 without checking any services
    */
   async GET(_req, ctx) {
-    // Extract path to check if this is a simple health check
+    // Simple health check for ALB — verifies API + DB connectivity
+    // without the expensive full health scan (XCP, mempool, node versions).
+    // Returns 503 if DB is unreachable so ALB stops routing to this task.
     const url = new URL(ctx.url);
     if (url.searchParams.has("simple")) {
-      return ApiResponseUtil.success({ status: "OK" }, { forceNoCache: true });
+      try {
+        const dbCheck = await SRC20Repository.checkSrc20Deployments();
+        if (dbCheck.isValid) {
+          return ApiResponseUtil.success({ status: "OK", database: true }, {
+            forceNoCache: true,
+          });
+        }
+        return ApiResponseUtil.serviceUnavailable(
+          "Database connection failed",
+          undefined,
+          { forceNoCache: true },
+        );
+      } catch {
+        return ApiResponseUtil.serviceUnavailable(
+          "Database connection failed",
+          undefined,
+          { forceNoCache: true },
+        );
+      }
     }
 
     // Continue with full health check if not simple
