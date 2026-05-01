@@ -1,4 +1,5 @@
 import { dbManager } from "$server/database/databaseManager.ts";
+import { serverConfig } from "$server/config/config.ts";
 
 interface BlockNotification {
   type: "new_block";
@@ -80,6 +81,57 @@ export class BitcoinNotificationService {
     await dbManager.invalidateCacheByCategory('block_transactions');
 
     console.log(`Cache invalidated for new block ${data.blockHeight} (using comprehensive category-based invalidation)`);
+
+    // Purge Cloudflare CDN edge cache for data that changed with new block.
+    // Redis cache (above) handles server-side; this handles CF edge.
+    await this.purgeCloudflareCache();
+  }
+
+  /**
+   * Purge Cloudflare CDN cache for API endpoints with block-dependent data.
+   * Uses the CF API prefix-purge to clear cached responses at the edge.
+   * Runs fire-and-forget — CF purge failure shouldn't block notification processing.
+   */
+  private static async purgeCloudflareCache(): Promise<void> {
+    const zoneId = serverConfig.CLOUDFLARE_ZONE_ID;
+    const apiToken = serverConfig.CLOUDFLARE_API_TOKEN;
+
+    if (!zoneId || !apiToken) {
+      console.log("[CF PURGE] Skipping — CLOUDFLARE_ZONE_ID or CLOUDFLARE_API_TOKEN not configured");
+      return;
+    }
+
+    const prefixes = [
+      "https://stampchain.io/api/v2/src20/",
+      "https://stampchain.io/api/v2/balance/",
+      "https://stampchain.io/api/v2/stamps/",
+      "https://stampchain.io/api/v2/block/",
+      "https://stampchain.io/api/v2/src101/",
+      "https://stampchain.io/api/v2/cursed/",
+    ];
+
+    try {
+      const response = await fetch(
+        `https://api.cloudflare.com/client/v4/zones/${zoneId}/purge_cache`,
+        {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${apiToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ prefixes }),
+        },
+      );
+
+      if (response.ok) {
+        console.log(`[CF PURGE] Purged ${prefixes.length} URL prefixes`);
+      } else {
+        const body = await response.text();
+        console.warn(`[CF PURGE] Failed (${response.status}): ${body}`);
+      }
+    } catch (error) {
+      console.warn(`[CF PURGE] Error: ${error instanceof Error ? error.message : String(error)}`);
+    }
   }
 
   private static async handlePriceUpdate(data: PriceNotification) {

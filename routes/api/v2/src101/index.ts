@@ -6,6 +6,7 @@ import {
   checkEmptyResult,
   DEFAULT_PAGINATION,
 } from "$server/services/validation/routeValidationService.ts";
+import { RouteType } from "$server/services/infrastructure/cacheService.ts";
 
 export const handler: Handlers = {
   async GET(req) {
@@ -35,7 +36,9 @@ export const handler: Handlers = {
         return emptyCheck;
       }
 
-      return ApiResponseUtil.success(result);
+      return ApiResponseUtil.success(result, {
+        routeType: RouteType.BLOCKCHAIN_DATA,
+      });
     } catch (error) {
       console.error("Error in index handler:", error);
       return ApiResponseUtil.internalError(

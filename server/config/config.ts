@@ -32,6 +32,8 @@ type ServerConfig = {
   readonly INTERNAL_API_SECRET?: string;
   readonly CF_ACCESS_CLIENT_ID?: string;
   readonly CF_ACCESS_CLIENT_SECRET?: string;
+  readonly CLOUDFLARE_ZONE_ID?: string;
+  readonly CLOUDFLARE_API_TOKEN?: string;
   // Development & debugging
   readonly DEV_BASE_URL: string;
   readonly PROD_BASE_URL: string | undefined;
@@ -143,6 +145,12 @@ const serverConfig: ServerConfig = {
   },
   get CF_ACCESS_CLIENT_SECRET() {
     return Deno.env.get("CF_ACCESS_CLIENT_SECRET") || "";
+  },
+  get CLOUDFLARE_ZONE_ID() {
+    return Deno.env.get("CLOUDFLARE_ZONE_ID") || "";
+  },
+  get CLOUDFLARE_API_TOKEN() {
+    return Deno.env.get("CLOUDFLARE_API_TOKEN") || "";
   },
   // Development & debugging
   get DEV_BASE_URL() {

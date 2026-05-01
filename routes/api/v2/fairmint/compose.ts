@@ -101,7 +101,7 @@ export const handler: Handlers = {
             },
             is_estimate: true,
             estimation_method: "dryRun_calculation",
-          });
+          }, { forceNoCache: true });
         }
 
         const psbtResult = await GeneralBitcoinTransactionBuilder.generatePSBT(
@@ -133,7 +133,7 @@ export const handler: Handlers = {
           finalUserChange: BigInt(psbtResult.totalChangeOutput),
         };
 
-        return ResponseUtil.success(processedPSBT);
+        return ResponseUtil.success(processedPSBT, { forceNoCache: true });
       } catch (error) {
         if (
           error instanceof Error && error.message.includes("Insufficient BTC")

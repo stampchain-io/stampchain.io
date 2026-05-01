@@ -224,7 +224,7 @@ jobs:
 
       - name: Upload test reports
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: newman-comprehensive-reports-${{ github.run_number }}
           path: reports/newman-comprehensive/
@@ -232,7 +232,7 @@ jobs:
 
       - name: Create PR comment with results
         if: github.event_name == 'pull_request' && always()
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -345,7 +345,7 @@ jobs:
 
       - name: Create regression issue (scheduled runs only)
         if: github.event_name == 'schedule' && steps.newman-test.outcome == 'failure'
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -501,7 +501,7 @@ jobs:
 
       - name: Upload pagination test reports
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: pagination-validation-reports-${{ github.run_number }}
           path: reports/newman-pagination-validation/
@@ -544,7 +544,7 @@ jobs:
 
       - name: Store performance results
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: performance-benchmark-${{ github.run_number }}
           path: reports/newman-comprehensive/
@@ -903,7 +903,7 @@ jobs:
 
       - name: Upload test reports
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: newman-local-dev-reports-${{ github.run_number }}
           path: reports/newman-local-dev/
@@ -911,7 +911,7 @@ jobs:
 
       - name: Upload dev server logs
         if: failure()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: dev-server-logs-${{ github.run_number }}
           path: dev-server.log
@@ -919,7 +919,7 @@ jobs:
 
       - name: Create PR comment with results
         if: github.event_name == 'pull_request' && always()
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -1086,7 +1086,7 @@ jobs:
 
       - name: Upload test results artifact
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: schema-contract-test-results-${{ github.run_number }}
           path: reports/newman/
@@ -1094,7 +1094,7 @@ jobs:
 
       - name: Comment on PR with results
         if: always() && github.event_name == 'pull_request'
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             const total = '${{ steps.parse-results.outputs.total_tests }}';

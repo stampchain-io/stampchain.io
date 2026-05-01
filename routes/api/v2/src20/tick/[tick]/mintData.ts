@@ -4,6 +4,7 @@ import { logger } from "$lib/utils/logger.ts";
 import { ApiResponseUtil } from "$lib/utils/api/responses/apiResponseUtil.ts";
 import type { SRC20MintDataResponse } from "$lib/types/src20.d.ts";
 import { SRC20Service } from "$server/services/src20/index.ts";
+import { RouteType } from "$server/services/infrastructure/cacheService.ts";
 
 export const handler: Handlers = {
   async GET(_req, ctx) {
@@ -30,7 +31,9 @@ export const handler: Handlers = {
         holders: balanceData.total || 0,
       };
 
-      return ApiResponseUtil.success(response);
+      return ApiResponseUtil.success(response, {
+        routeType: RouteType.BLOCKCHAIN_DATA,
+      });
     } catch (error) {
       logger.error("stamps", {
         message: "Error in /api/v2/src20/tick/[tick]/mintData",

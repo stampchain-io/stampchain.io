@@ -1,6 +1,7 @@
 import { Handlers } from "$fresh/server.ts";
 import { ApiResponseUtil } from "$lib/utils/api/responses/apiResponseUtil.ts";
 import { SRC20Service } from "$server/services/src20/index.ts";
+import { RouteType } from "$server/services/infrastructure/cacheService.ts";
 
 export const handler: Handlers = {
   async GET(req) {
@@ -14,7 +15,9 @@ export const handler: Handlers = {
         mintableOnly,
       );
 
-      return ApiResponseUtil.success({ data: results });
+      return ApiResponseUtil.success({ data: results }, {
+        routeType: RouteType.DYNAMIC,
+      });
     } catch (error) {
       console.error("Error in search handler:", error);
       return ApiResponseUtil.internalError(

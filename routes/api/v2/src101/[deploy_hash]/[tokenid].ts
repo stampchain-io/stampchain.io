@@ -8,6 +8,7 @@ import {
   validateRequiredParams,
   validateSortParam,
 } from "$server/services/validation/routeValidationService.ts";
+import { RouteType } from "$server/services/infrastructure/cacheService.ts";
 
 export const handler: Handlers = {
   async GET(req, ctx) {
@@ -74,7 +75,9 @@ export const handler: Handlers = {
         return emptyCheck;
       }
 
-      return ResponseUtil.success(result);
+      return ResponseUtil.success(result, {
+        routeType: RouteType.BLOCKCHAIN_DATA,
+      });
     } catch (error) {
       console.error("Error in [deploy_hash]/[tokenid] handler:", error);
       return ResponseUtil.internalError(

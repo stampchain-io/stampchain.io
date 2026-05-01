@@ -2,6 +2,7 @@ import { Handlers } from "$fresh/server.ts";
 import { Src101Controller } from "$server/controller/src101Controller.ts";
 import { ResponseUtil } from "$lib/utils/api/responses/responseUtil.ts";
 import type { AddressHandlerContext } from "$types/base.d.ts";
+import { RouteType } from "$server/services/infrastructure/cacheService.ts";
 
 export const handler: Handlers<AddressHandlerContext> = {
   async GET(req, ctx) {
@@ -34,7 +35,9 @@ export const handler: Handlers<AddressHandlerContext> = {
         return ResponseUtil.notFound("No data found");
       }
 
-      return ResponseUtil.success(result);
+      return ResponseUtil.success(result, {
+        routeType: RouteType.BLOCKCHAIN_DATA,
+      });
     } catch (error) {
       console.error(
         "Error in [deploy_hash]/address/[address_btc] handler:",

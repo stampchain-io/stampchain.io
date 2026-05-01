@@ -6,6 +6,7 @@ import {
   validateSortParam,
 } from "$server/services/validation/routeValidationService.ts";
 import { SRC20Service } from "$server/services/src20/index.ts";
+import { RouteType } from "$server/services/infrastructure/cacheService.ts";
 
 export const handler: Handlers = {
   async GET(req, ctx) {
@@ -33,7 +34,9 @@ export const handler: Handlers = {
         page: page || DEFAULT_PAGINATION.page,
         limit: limit || DEFAULT_PAGINATION.limit,
       });
-      return ApiResponseUtil.success(result);
+      return ApiResponseUtil.success(result, {
+        routeType: RouteType.BLOCKCHAIN_DATA,
+      });
     } catch (error) {
       return ApiResponseUtil.internalError(error, "Error processing request");
     }

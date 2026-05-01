@@ -102,7 +102,7 @@ jobs:
         continue-on-error: false
 
       - name: Upload Validation Results
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: import-validation-results
@@ -135,7 +135,7 @@ jobs:
 
       - name: Comment on PR
         if: github.event_name == 'pull_request' && always()
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             const fs = require('fs');
@@ -313,7 +313,7 @@ jobs:
           fi
 
       - name: Archive Compliance Report
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: compliance-monitoring-report
           path: compliance-report.json

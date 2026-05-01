@@ -9,6 +9,7 @@ import {
   validateRequiredParams,
   validateSortParam,
 } from "$server/services/validation/routeValidationService.ts";
+import { RouteType } from "$server/services/infrastructure/cacheService.ts";
 
 export const handler: Handlers<AddressHandlerContext> = {
   async GET(req, ctx) {
@@ -59,7 +60,9 @@ export const handler: Handlers<AddressHandlerContext> = {
         return emptyCheck;
       }
 
-      return ResponseUtil.success(result);
+      return ResponseUtil.success(result, {
+        routeType: RouteType.BLOCKCHAIN_DATA,
+      });
     } catch (error) {
       console.error(
         "Error in [deploy_hash]/address/[address_btc] handler:",

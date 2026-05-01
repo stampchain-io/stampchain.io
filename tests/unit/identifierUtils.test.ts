@@ -19,6 +19,11 @@ Deno.test("identifierUtils - isStampNumber", async (t) => {
     assert(isStampNumber("100"));
   });
 
+  await t.step("should validate zero (stamp 0 - genesis stamp)", () => {
+    assert(isStampNumber(0));
+    assert(isStampNumber("0"));
+  });
+
   await t.step("should validate negative integers (cursed stamps)", () => {
     assert(isStampNumber(-1));
     assert(isStampNumber(-100));
@@ -114,6 +119,8 @@ Deno.test("identifierUtils - getIdentifierType", async (t) => {
     assertEquals(getIdentifierType(123), "stamp_number");
     assertEquals(getIdentifierType("456"), "stamp_number");
     assertEquals(getIdentifierType(-789), "stamp_number");
+    assertEquals(getIdentifierType(0), "stamp_number");
+    assertEquals(getIdentifierType("0"), "stamp_number");
   });
 
   await t.step("should identify transaction hashes", () => {
