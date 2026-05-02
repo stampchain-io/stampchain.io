@@ -1,7 +1,8 @@
 services:
   # MySQL 8.4 database service (upgrade prep — backwards compatible with 8.0)
   mysql:
-    image: mysql:8.4
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
     container_name: btcstamps-mysql-dev
     environment:
       MYSQL_ROOT_PASSWORD: btcstamps_dev_root
@@ -16,7 +17,17 @@ services:
       # Persist database data
       - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pbtcstamps_dev_root"]
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-pbtcstamps_dev_root",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5

@@ -590,7 +590,7 @@ class DatabaseManager {
       try {
         const caCert = await Deno.readTextFile(caCertPath);
         connectionOptions.tls = {
-          mode: "verify_identity",
+          // mode: "verify_identity",
           caCerts: [caCert],
         };
       } catch {

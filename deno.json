@@ -132,6 +132,7 @@
   ],
   "nodeModulesDir": "auto",
   "imports": {
+    "@std/http": "jsr:@std/http@^1.0.25",
     "web-vitals": "https://esm.sh/web-vitals@4.2.4",
     "stream": "node:stream",
     "stream/promises": "node:stream/promises",

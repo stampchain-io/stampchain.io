@@ -32,6 +32,10 @@ export const SRC101_RECIPIENTS_TABLE = "recipients";
 /** SRC101 price tracking table */
 export const SRC101_PRICE_TABLE = "src101price";
 
+/* ===== SNN TABLES ===== */
+/** SNN Counterparty broadcasts table */
+export const SNN_BROADCASTS_TABLE = "snn_broadcasts";
+
 /* ===== CACHE AND PERFORMANCE CONSTANTS ===== */
 /** Default cache duration in seconds (12 hours) */
 export const DEFAULT_CACHE_DURATION = 60 * 60 * 12;
