@@ -224,10 +224,10 @@ function SearchContent({
                         />
                       </div>
                       <div class="flex flex-col flex-1 min-w-0">
-                        <span class="text-sm font-medium text-stamp-grey-light">
+                        <span class="text-sm font-medium text-color-grey-light">
                           VIEW WALLET
                         </span>
-                        <span class="text-xs text-stamp-grey truncate">
+                        <span class="text-xs text-color-grey truncate">
                           {result.address?.startsWith("bc1p")
                             ? abbreviateAddress(result.address, 20)
                             : result.address}

@@ -18,8 +18,8 @@ export default {
         "desktop": "1440px", // Same as Tailwind's 'xl' (1440px)
       },
       fontFamily: {
-        sans: ['"Work Sans"', "sans-serif"],
-        "work-sans": ['"Work Sans"', "sans-serif"],
+        sans: ['"Montserrat"', "sans-serif"],
+        montserrat: ['"Montserrat"', "sans-serif"],
         "courier-prime": ['"Courier Prime"', "sans-serif"],
       },
       colors: { // color hue defs are calculated using HSL values - decreasing lightness by 8% for each step (grey hues are estimations)
@@ -64,59 +64,6 @@ export default {
           },
           border: {
             DEFAULT: "#332f32",
-          },
-        },
-        // Backwards-compatible aliases for old stamp-* naming convention
-        stamp: {
-          // Purple aliases (stamp-primary-* and stamp-purple-* → color-purple-*)
-          primary: {
-            dark: "#43005c",
-            semidark: "#610085",
-            DEFAULT: "#7f00ad",
-            semilight: "#9d00d6",
-            light: "#BB00FF",
-          },
-          purple: {
-            dark: "#43005c",
-            darker: "#610085", // Alias for semidark
-            semidark: "#610085",
-            DEFAULT: "#7f00ad",
-            bright: "#9d00d6", // Alias for semilight
-            semilight: "#9d00d6",
-            light: "#BB00FF",
-          },
-          // Grey aliases (stamp-grey-* → color-grey-*)
-          grey: {
-            dark: "#585552",
-            darker: "#817e78", // Alias for semidark
-            semidark: "#817e78",
-            DEFAULT: "#a8a39d",
-            semilight: "#d1cbc3",
-            light: "#f9f2e9",
-          },
-          // Red aliases
-          red: {
-            dark: "#5c0000",
-            semidark: "#850000",
-            DEFAULT: "#ad0000",
-            semilight: "#d60000",
-            light: "#ff0000",
-          },
-          // Green aliases
-          green: {
-            dark: "#005c00",
-            semidark: "#008500",
-            DEFAULT: "#00ad00",
-            semilight: "#00d600",
-            light: "#00ff00",
-          },
-          // Orange aliases
-          orange: {
-            dark: "#5c2b00",
-            semidark: "#853e00",
-            DEFAULT: "#ad5100",
-            semilight: "#d66400",
-            light: "#ff7700",
           },
         },
       },

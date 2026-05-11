@@ -839,7 +839,7 @@ function WalletProfileContentInner({
               Persistence: {sortingConfig.enablePersistence ? "✅" : "❌"}
             </div>
             <div>Metrics: {sortingConfig.enableMetrics ? "✅" : "❌"}</div>
-            <div class="mt-2 text-stamp-warning">
+            <div class="mt-2 text-color-orange">
               Note: Advanced sorting UI will be available in Phase 2
             </div>
           </div>
