@@ -6,36 +6,60 @@ import { glassmorphismL2Hover, transitionColors } from "$layout";
 const inputFieldHeight = "h-10";
 const inputFieldWidth = "!w-10";
 
-// Input field styles - focus values must be same as glassmorphismL2Hover
-const inputFieldStyle = `px-5 w-full
-  ${glassmorphismL2Hover}
-  focus:bg-color-neutral-1000 focus:border-color-hover focus:outline-none focus-visible:outline-none no-outline ${transitionColors}
-  font-normal text-sm text-color-neutral-200
-  placeholder:font-light placeholder:text-color-neutral-500 placeholder:uppercase`;
-
-/* ===== INPUT STYLES ===== */
-// Base input
-export const inputField = `
-  ${inputFieldHeight}
-  ${inputFieldStyle}
+// Inner element style — applied to the actual <input>/<select>/<textarea>.
+// Transparent and borderless because <input> does not support ::before pseudo-elements,
+// so the gradient border must live on a wrapping <div> (see wrapper exports below).
+const inputInner = `
+  px-5 w-full h-full bg-transparent border-none
+  focus:outline-none focus-visible:outline-none no-outline
+  font-normal text-xs text-color-neutral-200
+  placeholder:font-light placeholder:text-color-neutral-500 placeholder:uppercase
 `;
 
-// Square input field - used for quantity input
+/* ===== WRAPPER STYLES ===== */
+// Applied to the <div> that wraps an <input>/<select>/<textarea>.
+// The gradient border (::before pseudo-element in bg-border-container-2)
+// only works on regular elements, not replaced/void elements like <input>.
+
+export const inputFieldWrapper = `
+  ${inputFieldHeight} w-full
+  ${glassmorphismL2Hover} ${transitionColors}
+  flex items-center
+  focus-within:bg-color-neutral-1000
+`;
+
+export const inputFieldSquareWrapper = `
+  ${inputFieldHeight} ${inputFieldWidth}
+  ${glassmorphismL2Hover} ${transitionColors}
+  flex items-center justify-center
+  focus-within:bg-color-neutral-1000
+`;
+
+export const inputTextareaWrapper = `
+  w-full pt-3
+  ${glassmorphismL2Hover} ${transitionColors}
+  focus-within:bg-color-neutral-1000
+`;
+
+/* ===== INNER INPUT STYLES ===== */
+// Applied to the actual form element inside the wrapper.
+
+export const inputField = inputInner;
+
 export const inputFieldSquare = `
-  ${inputField}
-  ${inputFieldWidth}
-  !px-0.5 text-center
+  ${inputInner}
+  !w-full !px-0.5 text-center
 `;
 
-// Outline input - most styling of this input field is done in the outlineGradient constant
+// Outline input - for custom wrapper implementations
 export const inputFieldOutline = `
   ${inputFieldHeight} w-full
 `;
 
-// Textarea
+// Textarea inner
 export const inputTextarea = `
   h-[100px] resize-none
-  ${inputFieldStyle}
+  ${inputInner}
 `;
 
 // Input field dropdown - define height in the component
@@ -123,6 +147,11 @@ export const messageHelp = "text-xs text-color-grey-dark mt-1";
 
 /* ===== TYPE DEFINITIONS ===== */
 export type FormStyles = {
+  // Wrappers (for <div> enclosing the actual input element)
+  inputFieldWrapper: string;
+  inputFieldSquareWrapper: string;
+  inputTextareaWrapper: string;
+
   // Inputs
   inputField: string;
   inputFieldOutline: string;

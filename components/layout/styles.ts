@@ -30,10 +30,8 @@ export const glassmorphismOverlay =
 export const glassmorphism =
   `bg-border-container-1 rounded-3xl backdrop-blur-sm ${shadow}`;
 // 2nd layer styles - register tool tld dropdown uses same hardcoded values - rename to containerL2
-export const glassmorphismL2 = `border border-color-border rounded-2xl
-  bg-gradient-to-b from-color-neutral-900 via-color-neutral-950 to-color-neutral-1000`;
-export const glassmorphismL2Hover =
-  `${glassmorphismL2} hover:from-color-neutral-950 hover:via-color-neutral-950 hover:to-color-neutral-1000 hover:border-color-hover`;
+export const glassmorphismL2 = `bg-border-container-2 rounded-2xl`;
+export const glassmorphismL2Hover = `bg-border-container-2-hover rounded-2xl`;
 
 /* ===== BODY STYLES ===== */
 // Main body styles

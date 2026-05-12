@@ -3,7 +3,7 @@ import { useTransactionForm } from "$client/hooks/useTransactionForm.ts";
 import { walletContext } from "$client/wallet/wallet.ts";
 import { handleModalClose } from "$components/layout/ModalBase.tsx";
 import { StampImage } from "$content";
-import { inputFieldSquare } from "$form";
+import { inputFieldSquare, inputFieldSquareWrapper } from "$form";
 import { stackConnectWalletModal } from "$islands/layout/ModalStack.tsx";
 import { closeModal, openModal } from "$islands/modal/states.ts";
 import { ModalBase } from "$layout";
@@ -384,14 +384,16 @@ const BuyStampModal = ({
                 </h6>
               </div>
               <div className="flex flex-col items-end">
-                <input
-                  type="number"
-                  min="1"
-                  max={maxQuantity}
-                  value={quantity}
-                  onChange={handleQuantityChange}
-                  className={inputFieldSquare}
-                />
+                <div className={inputFieldSquareWrapper}>
+                  <input
+                    type="number"
+                    min="1"
+                    max={maxQuantity}
+                    value={quantity}
+                    onChange={handleQuantityChange}
+                    className={inputFieldSquare}
+                  />
+                </div>
               </div>
             </div>
           </div>

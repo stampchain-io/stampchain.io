@@ -2,7 +2,13 @@
 import { useTransactionForm } from "$client/hooks/useTransactionForm.ts";
 import { walletContext } from "$client/wallet/wallet.ts";
 import { ProgressiveEstimationIndicator } from "$components/indicators/ProgressiveEstimationIndicator.tsx";
-import { inputField, inputFieldDropdown, inputFieldSquare } from "$form";
+import {
+  inputField,
+  inputFieldDropdown,
+  inputFieldSquare,
+  inputFieldSquareWrapper,
+  inputFieldWrapper,
+} from "$form";
 import { Icon, PlaceholderImage } from "$icon";
 import { SendToolSkeleton } from "$indicators";
 import {
@@ -583,7 +589,7 @@ export function StampSendTool() {
             >
               {/* Trigger */}
               <div
-                class={`${inputField} flex items-center gap-3 select-none ${
+                class={`${inputFieldWrapper} gap-3 select-none ${
                   !wallet?.address || stamps.data.length === 0
                     ? "cursor-default"
                     : "cursor-pointer"
@@ -672,36 +678,40 @@ export function StampSendTool() {
                   MAX {maxQuantity}
                 </h6>
               </div>
-              <input
-                type="number"
-                min="1"
-                max={maxQuantity}
-                value={quantity}
-                onChange={handleQuantityChange}
-                class={inputFieldSquare}
-                aria-label="Number of editions to send"
-              />
+              <div class={inputFieldSquareWrapper}>
+                <input
+                  type="number"
+                  min="1"
+                  max={maxQuantity}
+                  value={quantity}
+                  onChange={handleQuantityChange}
+                  class={inputFieldSquare}
+                  aria-label="Number of editions to send"
+                />
+              </div>
             </div>
           </div>
         </div>
         <div class={rowForm}>
-          <input
-            value={formState.recipientAddress}
-            onInput={(e: JSX.TargetedEvent<HTMLInputElement>) => {
-              const newValue = e.currentTarget.value;
-              console.log(
-                "SENDTOOL: Recipient Address Input onInput. New value:",
-                newValue,
-              );
-              setFormState((prev) => ({
-                ...prev,
-                recipientAddress: newValue,
-              }));
-            }}
-            placeholder="Recipient address"
-            class={inputField}
-            aria-label="Recipient address"
-          />
+          <div class={inputFieldWrapper}>
+            <input
+              value={formState.recipientAddress}
+              onInput={(e: JSX.TargetedEvent<HTMLInputElement>) => {
+                const newValue = e.currentTarget.value;
+                console.log(
+                  "SENDTOOL: Recipient Address Input onInput. New value:",
+                  newValue,
+                );
+                setFormState((prev) => ({
+                  ...prev,
+                  recipientAddress: newValue,
+                }));
+              }}
+              placeholder="Recipient address"
+              class={inputField}
+              aria-label="Recipient address"
+            />
+          </div>
         </div>
       </form>
 

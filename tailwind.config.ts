@@ -109,7 +109,7 @@ export default {
             /* container-2 gradient background in layout/styles.ts */
           },
           border: {
-            DEFAULT: "#262626", /* neutral-800 */
+            DEFAULT: "#404040", /* neutral-700 */
             /* container-1 border defined below */
             /* container-2 border hover uses "color-hover" */
           },
@@ -511,6 +511,7 @@ export default {
         // Container layer 1 - gradient border via ::before mask-composite technique.
         // isolation: isolate keeps the ::before z-index: -1 scoped to this element,
         // preventing it from slipping behind ancestor backgrounds.
+        // Portal containers need to apply "!fixed" positioning
         ".bg-border-container-1": {
           "position": "relative",
           "isolation": "isolate",
@@ -530,6 +531,103 @@ export default {
             "padding": "1px",
             "background":
               "linear-gradient(to bottom, var(--color-neutral-800), var(--color-neutral-900))",
+            "-webkit-mask":
+              "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+            "mask":
+              "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+            "-webkit-mask-composite": "xor",
+            "mask-composite": "exclude",
+            "pointer-events": "none",
+          },
+        },
+
+        ".bg-border-container-2,.bg-border-container-2-hover": {
+          "position": "relative",
+          "isolation": "isolate",
+          "background": [
+            "linear-gradient(to bottom,",
+            "color-mix(in srgb, var(--color-neutral-900) 40%, transparent),",
+            "color-mix(in srgb, var(--color-neutral-900) 60%, transparent),",
+            "color-mix(in srgb, var(--color-neutral-950) 80%, transparent)",
+            ")",
+          ].join(" "),
+          "&::before": {
+            "content": '""',
+            "position": "absolute",
+            "z-index": "-1",
+            "inset": "0",
+            "border-radius": "inherit",
+            "padding": "1px",
+            "background":
+              "linear-gradient(to bottom, var(--color-neutral-700), var(--color-neutral-800))",
+            "-webkit-mask":
+              "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+            "mask":
+              "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+            "-webkit-mask-composite": "xor",
+            "mask-composite": "exclude",
+            "pointer-events": "none",
+          },
+        },
+
+        ".bg-border-container-2-hover:hover": {
+          "&::before": {
+            "content": '""',
+            "position": "absolute",
+            "z-index": "-1",
+            "inset": "0",
+            "border-radius": "inherit",
+            "padding": "1px",
+            "background":
+              "linear-gradient(to bottom, var(--color-primary-300), var(--color-primary-400))",
+            "-webkit-mask":
+              "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+            "mask":
+              "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+            "-webkit-mask-composite": "xor",
+            "mask-composite": "exclude",
+            "pointer-events": "none",
+          },
+        },
+
+        ".bg-border-container-2-hover:focus-within": {
+          "&::before": {
+            "content": '""',
+            "position": "absolute",
+            "z-index": "-1",
+            "inset": "0",
+            "border-radius": "inherit",
+            "padding": "1px",
+            "background":
+              "linear-gradient(to bottom, var(--color-primary-400), var(--color-primary-400))",
+            "-webkit-mask":
+              "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+            "mask":
+              "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+            "-webkit-mask-composite": "xor",
+            "mask-composite": "exclude",
+            "pointer-events": "none",
+          },
+        },
+        ".bg-border-container-2-secondary": {
+          "position": "relative",
+          "isolation": "isolate",
+          "background": [
+            "linear-gradient(to bottom,",
+            "color-mix(in srgb, var(--color-neutral-900) 40%, transparent),",
+            "color-mix(in srgb, var(--color-neutral-900) 60%, transparent),",
+            "color-mix(in srgb, var(--color-neutral-950) 80%, transparent)",
+            ")",
+          ].join(" "),
+          "&::before": {
+            "content": '""',
+            "position": "absolute",
+            "z-index": "-1",
+            "inset": "0",
+            "border-radius": "inherit",
+            "padding": "1px",
+            "background":
+              "linear-gradient(to bottom, var(--color-neutral-700), var(--color-neutral-800), var(--color-secondary-400))",
             "-webkit-mask":
               "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
             "mask":

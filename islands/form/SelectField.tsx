@@ -1,5 +1,5 @@
+import { inputField, inputFieldWrapper } from "$form";
 import type { SelectFieldProps } from "$types/ui.d.ts";
-import { inputField } from "$form";
 
 export function SelectField({
   onChange,
@@ -18,29 +18,33 @@ export function SelectField({
 
   return (
     <div class={`w-full ${className || ""}`}>
-      <select
-        onChange={handleChange}
-        onClick={onClick}
-        disabled={disabled}
-        class={inputField}
-        value={value?.toString() ?? ""}
-      >
-        {placeholder && (
-          <option value="" disabled={options.length > 0}>{placeholder}</option>
-        )}
-
-        {options.length > 0
-          ? options.map((item) => (
-            <option
-              key={item.value}
-              value={item.value}
-              class="font-light uppercase"
-            >
-              {item.label}
+      <div class={inputFieldWrapper}>
+        <select
+          onChange={handleChange}
+          onClick={onClick}
+          disabled={disabled}
+          class={`${inputField} appearance-none cursor-pointer`}
+          value={value?.toString() ?? ""}
+        >
+          {placeholder && (
+            <option value="" disabled={options.length > 0}>
+              {placeholder}
             </option>
-          ))
-          : !placeholder && <option value="" disabled>NO STAMPS</option>}
-      </select>
+          )}
+
+          {options.length > 0
+            ? options.map((item) => (
+              <option
+                key={item.value}
+                value={item.value}
+                class="font-light uppercase"
+              >
+                {item.label}
+              </option>
+            ))
+            : !placeholder && <option value="" disabled>NO STAMPS</option>}
+        </select>
+      </div>
       {error && <p class="text-red-500 mt-2 text-xs">{error}</p>}
     </div>
   );

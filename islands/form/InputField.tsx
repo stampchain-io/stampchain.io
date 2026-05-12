@@ -1,4 +1,4 @@
-import { inputField } from "$form";
+import { inputField, inputFieldWrapper } from "$form";
 import type { InputFieldProps } from "$types/ui.d.ts";
 
 export function InputField({
@@ -21,24 +21,26 @@ export function InputField({
 }: InputFieldProps) {
   return (
     <div class="w-full">
-      <input
-        type={type}
-        class={`${inputField} ${textAlign === "center" ? "text-center" : ""} ${
-          isUppercase ? "uppercase" : ""
-        } ${extraClass}`}
-        placeholder={placeholder}
-        value={isUppercase ? value?.toUpperCase() : value}
-        onChange={onChange}
-        onInput={onInput}
-        inputMode={inputMode}
-        pattern={pattern}
-        maxLength={maxLength}
-        minLength={minLength}
-        min={min}
-        step={step}
-        disabled={disabled}
-        style={{ textAlign }}
-      />
+      <div class={inputFieldWrapper}>
+        <input
+          type={type}
+          class={`${inputField} ${
+            textAlign === "center" ? "text-center" : ""
+          } ${isUppercase ? "uppercase" : ""} ${extraClass}`}
+          placeholder={placeholder}
+          value={isUppercase ? value?.toUpperCase() : value}
+          onChange={onChange}
+          onInput={onInput}
+          inputMode={inputMode}
+          pattern={pattern}
+          maxLength={maxLength}
+          minLength={minLength}
+          min={min}
+          step={step}
+          disabled={disabled}
+          style={{ textAlign }}
+        />
+      </div>
       {error && <p class="text-red-500 mt-2 text-xs">{error}</p>}
     </div>
   );

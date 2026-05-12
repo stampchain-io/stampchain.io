@@ -1,7 +1,7 @@
 /* ===== SEND BTC MODAL COMPONENT ===== */
 import { useTransactionForm } from "$client/hooks/useTransactionForm.ts";
 import { walletContext } from "$client/wallet/wallet.ts";
-import { inputField } from "$form";
+import { inputField, inputFieldWrapper } from "$form";
 import { closeModal } from "$islands/modal/states.ts";
 import { ModalBase } from "$layout";
 import { useTransactionConstructionService } from "$lib/hooks/useTransactionConstructionService.ts";
@@ -490,16 +490,18 @@ function SendBTCModal({
         </div>
 
         {/* ===== RECIPIENT ADDRESS INPUT ===== */}
-        <input
-          value={formState.recipientAddress}
-          onInput={(e) =>
-            setFormState({
-              ...formState,
-              recipientAddress: (e.target as HTMLInputElement).value,
-            })}
-          placeholder="Recipient address"
-          class={inputField}
-        />
+        <div class={inputFieldWrapper}>
+          <input
+            value={formState.recipientAddress}
+            onInput={(e) =>
+              setFormState({
+                ...formState,
+                recipientAddress: (e.target as HTMLInputElement).value,
+              })}
+            placeholder="Recipient address"
+            class={inputField}
+          />
+        </div>
       </div>
 
       {/* ===== FEE CALCULATOR ===== */}
