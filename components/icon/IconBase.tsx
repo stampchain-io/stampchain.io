@@ -122,6 +122,7 @@ export function Icon(props: IconVariants) {
       history: "bitcoinHistory",
       wallet: "bitcoinWallet",
       donate: "bitcoinHand",
+      explorer: "bitcoinMagnifyingGlass",
 
       // Misc Icons
       // - Tools, loader placeholder and donate CTA icons

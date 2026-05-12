@@ -357,11 +357,11 @@ b, strong {
 .animated-underline {
   font-weight: 700;
   text-decoration: none;
-  background-image: linear-gradient(var(--color-grey-semilight), var(--color-grey-semilight));
+  background-image: linear-gradient(var(--color-primary-400), var(--color-primary-400));
   background-position: 0% 100%;
   background-repeat: no-repeat;
   background-size: 100% 2px;
-  transition: background-size .3s, color .6s;
+  transition: background-size .2s, color .4s;
   padding-bottom: 3px;
   text-shadow:
     -3px 0 #000,
@@ -377,7 +377,7 @@ b, strong {
 .animated-underline:hover,
 .animated-underline:focus {
   background-size: 0% 2px;
-  color: var(--color-grey);
+  color: var(--color-primary-300);
 }
 
 /* Animate left to right */
@@ -388,7 +388,7 @@ b, strong {
   background-position: 100% 100%;
   background-repeat: no-repeat;
   background-size: 100% 1px;
-  transition: background-size .3s, color .6s;
+  transition: background-size .2s, color .4s;
   padding-bottom: 2px;
   text-shadow:
     -2px 0 #000,
@@ -404,7 +404,7 @@ b, strong {
 .animated-underline-thin:hover,
 .animated-underline-thin:focus {
   background-size: 0% 1px;
-  color: var(--color-grey);
+  color: var(--color-purple-light);
 }
 
 /* ========================================================================== */
