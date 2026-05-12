@@ -1,5 +1,5 @@
 /* ===== HEADER COMPONENT ===== */
-import { CloseIcon, LogoIcon } from "$icon";
+import { CloseIcon, Icon, LogoIcon } from "$icon";
 import { MenuButton } from "$islands/button/MenuButton.tsx";
 import { SearchButton } from "$islands/button/SearchButton.tsx";
 import { ToolsButton } from "$islands/button/ToolsButton.tsx";
@@ -11,22 +11,15 @@ import {
 } from "$layout";
 import { useFees } from "$lib/hooks/useFees.ts";
 import { tooltipIcon } from "$notification";
-import {
-  navLinkGreyLD,
-  navLinkGreyLDActive,
-  navLinkPurple,
-  navLinkPurpleActive,
-} from "$text";
+import { navLinkDesktop, navLinkDesktopActive } from "$text";
 import { createPortal } from "preact/compat";
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 
 /* ===== NAVIGATION LINK INTERFACE ===== */
 interface NavLink {
-  title: string | {
-    default: string;
-    tablet: string;
-  };
+  title: string;
   href?: string;
+  icon?: string;
 }
 
 /* ===== TOOLS CONFIGURATION ===== */
@@ -34,54 +27,36 @@ interface NavLink {
 /* ===== DESKTOP NAVIGATION CONFIGURATION ===== */
 const desktopNavLinks: NavLink[] = [
   {
-    title: {
-      default: "ART STAMPS",
-      tablet: "STAMPS",
-    },
+    title: "Stamps",
     href: "/stamp?type=classic",
+    icon: "artStamp",
   },
   {
-    title: {
-      default: "COLLECTIONS",
-      tablet: "COLLECTIONS",
-    },
-    href: "/collection",
-  },
-  {
-    title: {
-      default: "SRC-20 TOKENS",
-      tablet: "TOKENS",
-    },
+    title: "Tokens",
     href: "/src20",
+    icon: "src20Token",
   },
   {
-    title: {
-      default: "EXPLORER",
-      tablet: "EXPLORER",
-    },
+    title: "Collections",
+    href: "/collection",
+    icon: "artStamps",
+  },
+  {
+    title: "Explorer",
     href: "/explorer",
+    icon: "explorer",
   },
 ];
 
 /* ===== MOBILE NAVIGATION CONFIGURATION ===== */
-const mobileNavLinks: NavLink[] = [
-  {
-    title: "ART STAMPS",
-    href: "/stamp?type=classic",
-  },
-  {
-    title: "COLLECTIONS",
-    href: "/collection",
-  },
-  {
-    title: "SRC-20 TOKENS",
-    href: "/src20",
-  },
-  {
-    title: "EXPLORER",
-    href: "/explorer",
-  },
-];
+// Mobile/tablet drawer nav links live in islands/button/MenuButton.tsx — not here.
+// This file only drives the desktop (mobileLg+) pill nav via renderNavLinks().
+
+// Toggle nav link icons on/off for the desktop pill (default: disabled)
+const NAV_ICONS = false;
+
+// Desktop pill nav link position: "center" (absolute centred) | "right" (beside icon buttons)
+const NAV_POSITION: "center" | "right" = "center";
 
 /* ===== MAIN HEADER COMPONENT ===== */
 export function Header() {
@@ -497,68 +472,47 @@ export function Header() {
   };
 
   /* ===== NAVIGATION LINKS RENDERER ===== */
-  const renderNavLinks = (isMobile = false) => {
+  // Desktop (mobileLg+) pill nav only. Mobile/tablet drawer nav is in MenuButton.tsx.
+  const renderNavLinks = () => {
     const isActive = (href?: string) => {
       if (!href || !currentPath) return false;
       const hrefPath = href.split("?")[0];
       return currentPath === hrefPath || currentPath.startsWith(`${hrefPath}/`);
     };
 
-    // Choose which navigation links to use based on mobile/desktop view
-    const filteredNavLinks = isMobile ? mobileNavLinks : desktopNavLinks;
-
     return (
       <>
-        {/* Map through each navigation link */}
-        {filteredNavLinks.map((link) => (
-          // Main container for each nav item
+        {desktopNavLinks.map((link) => (
           <div
-            // Generate unique key based on title type
-            key={typeof link.title === "string"
-              ? link.title
-              : link.title.default}
-            // Base styles for nav container with conditional mobile styling
-            class={`relative group ${isMobile ? "" : "mb-[2px]"}`}
+            key={link.title}
+            class="relative group mb-[2px]"
           >
-            {/* Main navigation link */}
             <a
               href={link.href}
-              // Click handler for navigation
               onClick={() => {
-                if (!link?.href) return; // Don't navigate if no href
+                if (!link?.href) return;
                 if (open) {
-                  closeMenu(); // Never open; only close if already open
+                  closeMenu();
                 }
-                setCurrentPath(link?.href ? link?.href : null); // Update current path
+                setCurrentPath(link?.href ? link?.href : null);
               }}
-              // Complex conditional styling for mobile/desktop
-              class={`inline-block w-full ${
-                isMobile
-                  ? isActive(link.href) ? navLinkGreyLDActive : navLinkGreyLD
-                  : isActive(link.href)
-                  ? navLinkPurpleActive
-                  : navLinkPurple
+              class={`flex items-center gap-2 ${
+                isActive(link.href) ? navLinkDesktopActive : navLinkDesktop
               }`}
             >
-              {/* Responsive text label */}
-              {typeof link.title === "string" ? link.title : (
-                isMobile
-                  ? (
-                    // On mobile drawer, always show default label
-                    <span>{link.title.default}</span>
-                  )
-                  : (
-                    // Show abbreviated label initially and default label at tablet - 1024px
-                    <>
-                      <span class="hidden tablet:inline">
-                        {link.title.default}
-                      </span>
-                      <span class="inline tablet:hidden">
-                        {link.title.tablet}
-                      </span>
-                    </>
-                  )
+              {/* Left icon */}
+              {NAV_ICONS && link.icon && (
+                <Icon
+                  type="icon"
+                  name={link.icon}
+                  weight="normal"
+                  size="xxs"
+                  color="greyLight"
+                  className="group-hover:stroke-color-purple-light"
+                />
               )}
+              {/* Text label */}
+              <span>{link.title}</span>
             </a>
           </div>
         ))}
@@ -611,13 +565,20 @@ export function Header() {
           {/* Left: Logo Icon */}
           {logoIcon}
 
-          {/* Center: Navigation Links */}
-          <div class="absolute left-1/2 -translate-x-1/2 flex items-center gap-7 tablet:gap-8">
-            {renderNavLinks()}
-          </div>
+          {/* Center: Navigation Links (only when NAV_POSITION === "center") */}
+          {NAV_POSITION === "center" && (
+            <div class="absolute left-1/2 -translate-x-1/2 flex items-center gap-7 tablet:gap-8">
+              {renderNavLinks()}
+            </div>
+          )}
 
-          {/* Right: Icon Buttons */}
+          {/* Right: Icon Buttons (nav links prepended when NAV_POSITION === "right") */}
           <div class="flex items-center gap-4">
+            {NAV_POSITION === "right" && (
+              <div class="flex items-center gap-7 tablet:gap-8 mr-2">
+                {renderNavLinks()}
+              </div>
+            )}
             <div class="relative group">
               <SearchButton />
             </div>

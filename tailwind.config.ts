@@ -24,19 +24,47 @@ export default {
       },
       colors: { // color hue defs are calculated using HSL values - decreasing lightness by 8% for each step (grey hues are estimations)
         color: { // colors are also defined as CSS variables further down in the file - PieChart and ChartWidget use hardcoded color values
+          primary: {
+            50: "#FDF4FF",
+            100: "#FAE8FF",
+            200: "#F5D0FE",
+            300: "#F0ABFC",
+            400: "#E879F9",
+            500: "#D946EF",
+            600: "#C026D3",
+            700: "#A21CAF",
+            800: "#86198F",
+            900: "#701A75",
+            950: "#4A044E",
+          },
+          neutral: {
+            0: "#FFFFFF",
+            50: "#FAFAFA",
+            100: "#F5F5F5",
+            200: "#E5E5E5",
+            300: "#D4D4D4",
+            400: "#A3A3A3",
+            500: "#737373",
+            600: "#525252",
+            700: "#404040",
+            800: "#262626",
+            900: "#171717",
+            950: "#0A0A0A",
+            1000: "#000000",
+          },
           purple: {
-            dark: "#43005c",
-            semidark: "#610085",
-            DEFAULT: "#7f00ad",
-            semilight: "#9d00d6",
-            light: "#BB00FF",
+            dark: "#A21CAF", /* "#43005c", 700 */
+            semidark: "#C026D3", /* "#610085", 600 */
+            DEFAULT: "#D946EF", /* "#7f00ad", 500 */
+            semilight: "#E879F9;", /* "#9d00d6", 400 */
+            light: "#F0ABFC", /* "#BB00FF", 300*/
           },
           grey: {
-            dark: "#585552",
-            semidark: "#817e78",
-            DEFAULT: "#a8a39d",
-            semilight: "#d1cbc3",
-            light: "#f9f2e9",
+            dark: "#404040", /* "#585552", */
+            semidark: "#525252", /* "#817e78", */
+            DEFAULT: "#737373", /* "#a8a39d", */
+            semilight: "#A3A3A3", /* "#d1cbc3", */
+            light: "#D4D4D4", /* "#f9f2e9", */
           },
           red: {
             dark: "#5c0000",
@@ -63,7 +91,7 @@ export default {
             DEFAULT: "#0d0a0d",
           },
           border: {
-            DEFAULT: "#332f32",
+            DEFAULT: "#404040", /* neutral-700 */
           },
         },
       },

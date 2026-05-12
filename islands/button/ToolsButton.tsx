@@ -7,8 +7,8 @@ import {
   labelXxs,
   navLinkGrey,
   navLinkGreyActive,
-  navSublinkPurple,
-  navSublinkPurpleActive,
+  navSublinkDesktop,
+  navSublinkDesktopActive,
 } from "$text";
 import { useEffect, useState } from "preact/hooks";
 
@@ -35,12 +35,12 @@ interface ToolsButtonProps {
 
 /* ===== TOOLS CONFIGURATION ===== */
 const toolLinks: ToolLink[] = [
-  { title: "CREATE", href: "/tool/stamp/create" },
-  { title: "SEND", href: "/tool/stamp/send" },
-  { title: "DEPLOY", href: "/tool/src20/deploy" },
-  { title: "MINT", href: "/tool/src20/mint" },
-  { title: "TRANSFER", href: "/tool/src20/transfer" },
-  { title: "REGISTER", href: "/tool/src101/mint" },
+  { title: "Create", href: "/tool/stamp/create" },
+  { title: "Send", href: "/tool/stamp/send" },
+  { title: "Deploy", href: "/tool/src20/deploy" },
+  { title: "Mint", href: "/tool/src20/mint" },
+  { title: "Transfer", href: "/tool/src20/transfer" },
+  { title: "Register", href: "/tool/src101/mint" },
 ];
 
 export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
@@ -263,18 +263,18 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
 
   return {
     // The tools icon component with desktop dropdown
+    // colorAccent="var(--color-grey)"
+    // colorAccentHover="var(--color-purple-light)"
     icon: (
       <div class="relative">
         <Icon
           type="iconButton"
           name="tools"
           weight="normal"
-          size="mdR"
-          color="purpleLight"
-          className="mb-[1px]"
+          size="smR"
+          color="custom"
+          className="mb-[1px] stroke-color-grey-semilight hover:stroke-color-purple-light"
           onClick={handleToolsClick}
-          colorAccent="color-mix(in srgb, var(--color-grey-semidark) 75%, transparent)"
-          colorAccentHover="var(--color-grey-semidark)"
         />
         {/* Dropdown content is rendered by Header.tsx */}
       </div>
@@ -306,8 +306,8 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
                 setCurrentPath(link.href);
               }}
               class={isActive(link.href)
-                ? navSublinkPurpleActive
-                : navSublinkPurple}
+                ? navSublinkDesktopActive
+                : navSublinkDesktop}
             >
               {link.title}
             </a>
@@ -331,8 +331,8 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
                 setCurrentPath(link.href);
               }}
               class={isActive(link.href)
-                ? navSublinkPurpleActive
-                : navSublinkPurple}
+                ? navSublinkDesktopActive
+                : navSublinkDesktop}
             >
               {link.title}
             </a>
@@ -353,8 +353,8 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
                   setCurrentPath(link.href);
                 }}
                 class={isActive(link.href)
-                  ? navSublinkPurpleActive
-                  : navSublinkPurple}
+                  ? navSublinkDesktopActive
+                  : navSublinkDesktop}
               >
                 {link.title}
               </a>

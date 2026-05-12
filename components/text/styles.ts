@@ -2,18 +2,19 @@
 
 /* ===== BASE STYLES ===== */
 const logoFont = "font-black italic text-3xl tracking-wide inline-block w-fit";
-const titleFont = "font-black text-3xl tracking-wide inline-block w-fit";
-const subtitleFont = "font-extralight text-2xl mb-2";
-const textFont = "font-normal text-color-grey-light";
-const labelFont = "font-light text-color-grey-semidark tracking-wide";
-const valueFont = "font-medium text-color-grey-light";
+const titleFont =
+  "font-black text-3xl uppercase tracking-tight inline-block w-fit";
+const subtitleFont = "font-extralight text-2xl uppercase mb-2";
+const textFont = "font-normal text-color-neutral-200";
+const labelFont = "font-extrabold text-color-primary-700 tracking-wide";
+const valueFont = "font-medium text-color-neutral-200";
 const select = "select-none whitespace-nowrap";
 const transitionColors = "transition-colors duration-200";
 
 /* ===== OVERLAY STYLES ===== */
 // Overlays - used for text overlay effects of whole divs - text must be transparent or not declared with tailwind css
 export const overlayPurple =
-  `bg-gradient-to-l from-color-purple-semilight/80 via-color-purple-semilight/90 to-color-purple-semilight
+  `bg-gradient-to-l from-color-primary-300/80 via-color-primary-400/90 to-color-primary-400/90
   tablet:bg-gradient-to-r text-transparent bg-clip-text`;
 
 /* ===== LOGO STYLES ===== */
@@ -25,15 +26,16 @@ export const logoPurpleLDLink =
   `${logoFont} color-purple-gradientLD-hover ${transitionColors} cursor-pointer ${select}`;
 
 /* ===== NAVIGATION STYLES ===== */
-// Header - Desktop
-export const navLinkPurple =
-  `font-medium tablet:font-normal text-color-purple-semilight text-sm tablet:text-[13px] group-hover:text-color-purple-light tracking-wider ${transitionColors} cursor-pointer ${select}`;
-export const navLinkPurpleActive =
-  `${navLinkPurple} !text-color-purple-light hover:!text-color-purple-semilight`;
-export const navSublinkPurple =
-  `font-light text-color-purple-semilight text-[13px] hover:text-color-purple-light tracking-wider ${transitionColors} cursor-pointer ${select}`; // used in WalletButton and ToolsButton for submenu links
-export const navSublinkPurpleActive =
-  `${navSublinkPurple} !text-color-purple-light hover:!text-color-purple-semilight`;
+// Header Navigation - Desktop
+export const navLinkDesktop =
+  `mt-0.5 font-normal tablet:font-extralight text-color-neutral-400 text-base tablet:text-sm group-hover:text-color-primary-400 tracking-wider ${transitionColors} cursor-pointer ${select}`;
+export const navLinkDesktopActive =
+  `${navLinkDesktop} !text-color-primary-500 hover:!text-color-primary-400`;
+export const navSublinkDesktop =
+  `font-light text-color-neutral-400 text-[13px] hover:text-color-primary-400 tracking-wider ${transitionColors} cursor-pointer ${select}`; // used in WalletButton and ToolsButton for submenu links
+export const navSublinkDesktopActive =
+  `${navSublinkDesktop} !text-color-primary-500 hover:!text-color-primary-400`;
+
 // Header - Mobile/tablet
 export const navLinkGrey =
   `font-semibold text-sm tablet:text-xs text-color-grey hover:text-color-grey-light
@@ -46,7 +48,7 @@ export const navLinkGreyLDActive =
   `${navLinkGreyLD} text-color-grey-light [background:none_!important] [-webkit-text-fill-color:var(--color-grey-semilight)_!important] [text-fill-color:var(--color-grey-semilight)_!important] hover:[-webkit-text-fill-color:var(--color-grey)!important] hover:[text-fill-color:var(--color-grey)!important]`;
 // Footer - transparent text - ued with the overlayPurple class
 export const navLinkTransparentPurple =
-  `font-light text-[13px] hover:text-color-purple-light tracking-wider ${transitionColors} cursor-pointer ${select}`;
+  `font-normal text-[13px] hover:text-color-purple-light tracking-wider ${transitionColors} cursor-pointer ${select}`;
 
 /* ===== TITLE STYLES ===== */
 export const titleGreyLD =
@@ -89,7 +91,7 @@ export const textLg = `${textFont} text-lg`;
 export const textXl = `${textFont} text-xl`;
 export const text2xl = `${textFont} text-2xl`;
 export const textLinkUnderline =
-  `font-semibold text-base text-color-grey-light animated-underline ${transitionColors}`;
+  `font-medium text-base text-color-grey-light animated-underline ${transitionColors}`;
 
 /* ===== LINK STYLES ===== */
 // Use the specific link styles created or just add "animated-underline" to the class name to apply an animated underline effect
@@ -234,10 +236,10 @@ export type TextStyles = {
   logoPurpleLD: string;
   logoPurpleLDLink: string;
   // Navigation styles
-  navLinkPurple: string;
-  navLinkPurpleActive: string;
-  navSublinkPurple: string;
-  navSublinkPurpleActive: string;
+  navLinkDesktop: string;
+  navLinkDesktopActive: string;
+  navSublinkDesktop: string;
+  navSublinkDesktopActive: string;
   navLinkGrey: string;
   navLinkGreyLD: string;
   navLinkGreyLDActive: string;

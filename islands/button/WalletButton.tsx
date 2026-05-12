@@ -18,8 +18,8 @@ import {
   labelXs,
   navLinkGreyLD,
   navLinkGreyLDActive,
-  navSublinkPurple,
-  navSublinkPurpleActive,
+  navSublinkDesktop,
+  navSublinkDesktopActive,
   valueDarkSm,
   valueDarkXs,
   valueLg,
@@ -200,10 +200,9 @@ export const WalletButton = (
             type="iconButton"
             name="wallet"
             weight="normal"
-            size="mdR"
-            color="purpleLight"
-            colorAccent="color-mix(in srgb, var(--color-grey-semidark) 75%, transparent)"
-            colorAccentHover="var(--color-grey-semidark)"
+            size="smR"
+            color="custom"
+            className="stroke-color-grey-semilight hover:stroke-color-purple-light"
             onClick={handleWalletIconClick}
           />
         )}
@@ -217,10 +216,11 @@ export const WalletButton = (
                 type="iconButton"
                 name="wallet"
                 weight="normal"
-                size="mdR"
-                color="purpleLight"
-                colorAccent="color-mix(in srgb, var(--color-grey) 75%, transparent)"
-                colorAccentHover="var(--color-grey)"
+                size="smR"
+                color="custom"
+                className="stroke-color-grey-semilight hover:stroke-color-purple-light"
+                colorAccent="var(--color-purple-light)"
+                colorAccentHover="var(--color-purple-light)"
                 onClick={handleWalletIconClick}
               />
             </div>
@@ -288,14 +288,14 @@ export const WalletButton = (
           <a
             href={`/wallet/${address}`}
             class={isActive(`/wallet/${address}`)
-              ? `${navSublinkPurpleActive}`
-              : `${navSublinkPurple}`}
+              ? `${navSublinkDesktopActive}`
+              : `${navSublinkDesktop}`}
           >
             DASHBOARD
           </a>
           <a
             onClick={() => walletSignOut()}
-            class={`${navSublinkPurple}`}
+            class={`${navSublinkDesktop}`}
           >
             DISCONNECT
           </a>
