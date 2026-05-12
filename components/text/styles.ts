@@ -13,8 +13,8 @@ const transitionColors = "transition-colors duration-200";
 
 /* ===== OVERLAY STYLES ===== */
 // Overlays - used for text overlay effects of whole divs - text must be transparent or not declared with tailwind css
-export const overlayPurple =
-  `bg-gradient-to-l from-color-primary-300/80 via-color-primary-400/90 to-color-primary-400/90
+export const overlayPrimary =
+  `bg-gradient-to-l from-color-primary-400 via-color-primary-500 to-color-primary-600
   tablet:bg-gradient-to-r text-transparent bg-clip-text`;
 
 /* ===== LOGO STYLES ===== */
@@ -28,26 +28,28 @@ export const logoPurpleLDLink =
 /* ===== NAVIGATION STYLES ===== */
 // Header Navigation - Desktop
 export const navLinkDesktop =
-  `mt-0.5 font-normal tablet:font-extralight text-color-neutral-400 text-base tablet:text-sm group-hover:text-color-primary-400 tracking-wider ${transitionColors} cursor-pointer ${select}`;
-export const navLinkDesktopActive =
-  `${navLinkDesktop} !text-color-primary-500 hover:!text-color-primary-400`;
+  `mt-0.5 font-normal tablet:font-extralight text-color-neutral-400 text-base tablet:text-sm group-hover:text-color-hover tracking-wider ${transitionColors} cursor-pointer ${select}`;
+export const navLinkActiveDesktop =
+  `${navLinkDesktop} !text-color-hover !cursor-default`;
 export const navSublinkDesktop =
-  `font-light text-color-neutral-400 text-[13px] hover:text-color-primary-400 tracking-wider ${transitionColors} cursor-pointer ${select}`; // used in WalletButton and ToolsButton for submenu links
-export const navSublinkDesktopActive =
-  `${navSublinkDesktop} !text-color-primary-500 hover:!text-color-primary-400`;
+  `font-light text-color-neutral-400 text-[13px] hover:text-color-hover tracking-wider ${transitionColors} cursor-pointer ${select}`; // used in WalletButton and ToolsButton for submenu links
+export const navSublinkActiveDesktop =
+  `${navSublinkDesktop} !text-color-hover !cursor-default`;
 
 // Header - Mobile/tablet
 export const navLinkGrey =
-  `font-semibold text-sm tablet:text-xs text-color-grey hover:text-color-grey-light
+  `font-semibold text-base tablet:text-sm text-color-neutral-400 hover:text-color-primary-500
   tracking-wide ${transitionColors} cursor-pointer ${select}`;
 export const navLinkGreyActive =
-  `${navLinkGrey} !text-color-grey-light hover:!text-color-grey`;
+  `${navLinkGrey} !text-color-primary-400 !cursor-default ${select}`;
+
 export const navLinkGreyLD =
-  `font-light text-xl tablet:text-lg color-grey-gradientLD-hover tracking-wider inline-block w-fit ${transitionColors} cursor-pointer ${select}`;
+  `font-extralight text-2xl tablet:text-lg color-grey-gradientLD-hover tracking-wider inline-block w-fit cursor-pointer ${select}`;
 export const navLinkGreyLDActive =
   `${navLinkGreyLD} text-color-grey-light [background:none_!important] [-webkit-text-fill-color:var(--color-grey-semilight)_!important] [text-fill-color:var(--color-grey-semilight)_!important] hover:[-webkit-text-fill-color:var(--color-grey)!important] hover:[text-fill-color:var(--color-grey)!important]`;
-// Footer - transparent text - ued with the overlayPurple class
-export const navLinkTransparentPurple =
+
+// Footer - transparent text - ued with the overlayPrimary class
+export const navLinkFooter =
   `font-normal text-[13px] hover:text-color-purple-light tracking-wider ${transitionColors} cursor-pointer ${select}`;
 
 /* ===== TITLE STYLES ===== */
@@ -76,7 +78,7 @@ export const headingGreyLDLink =
 export const headingGreyDLLink =
   `font-bold text-lg color-grey-gradientDL-hover tracking-wide inline-block w-fit relative -mt-1 ${transitionColors} cursor-pointer ${select}`; // used in collection and stamp detail pages
 export const headingGrey =
-  `font-bold text-2xl text-color-grey cursor-default ${select}`; // used in howto overview and detail pages / donate CTA
+  `font-bold text-2xl text-color-primary-400 cursor-default ${select}`; // used in howto overview and detail pages / donate CTA
 export const headingPurpleLD =
   "font-black text-sm mobileMd:text-lg color-purple-gradientLD tracking-wide inline-block w-fit text-center mt-3 mobileMd:mt-4 mobileLg:mt-5 mb-1 mobileMd:mb-0"; // used specifically in team banner gallery
 
@@ -91,7 +93,7 @@ export const textLg = `${textFont} text-lg`;
 export const textXl = `${textFont} text-xl`;
 export const text2xl = `${textFont} text-2xl`;
 export const textLinkUnderline =
-  `font-medium text-base text-color-grey-light animated-underline ${transitionColors}`;
+  `font-medium text-base text-color-primary-400 animated-underline ${transitionColors}`;
 
 /* ===== LINK STYLES ===== */
 // Use the specific link styles created or just add "animated-underline" to the class name to apply an animated underline effect
@@ -229,7 +231,7 @@ export const ABBREVIATION_LENGTHS = {
 /* ===== TYPE DEFINITIONS ===== */
 export type TextStyles = {
   // Overlay styles
-  overlayPurple: string;
+  overlayPrimary: string;
   // Logo styles
   logoPurpleDL: string;
   logoPurpleDLLink: string;
@@ -237,13 +239,13 @@ export type TextStyles = {
   logoPurpleLDLink: string;
   // Navigation styles
   navLinkDesktop: string;
-  navLinkDesktopActive: string;
+  navLinkActiveDesktop: string;
   navSublinkDesktop: string;
-  navSublinkDesktopActive: string;
+  navSublinkActiveDesktop: string;
   navLinkGrey: string;
   navLinkGreyLD: string;
   navLinkGreyLDActive: string;
-  navLinkTransparentPurple: string;
+  navLinkFooter: string;
   // Title styles
   titleGreyLD: string;
   titleGreyDL: string;

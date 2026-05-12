@@ -1,9 +1,5 @@
 /* ===== FORM STYLES MODULE ===== */
-import {
-  glassmorphismL2,
-  glassmorphismL2Hover,
-  transitionColors,
-} from "$layout";
+import { glassmorphismL2Hover, transitionColors } from "$layout";
 
 /* ===== BASE STYLES ===== */
 // Global sizes
@@ -12,10 +8,10 @@ const inputFieldWidth = "!w-10";
 
 // Input field styles - focus values must be same as glassmorphismL2Hover
 const inputFieldStyle = `px-5 w-full
-  ${glassmorphismL2} ${glassmorphismL2Hover}
-  focus:bg-color-background/60 focus:border-color-border focus:outline-none focus-visible:outline-none no-outline ${transitionColors}
-  font-medium text-sm text-color-grey-light
-  placeholder:font-light placeholder:text-color-grey-semidark placeholder:uppercase`;
+  ${glassmorphismL2Hover}
+  focus:bg-color-neutral-1000 focus:border-color-hover focus:outline-none focus-visible:outline-none no-outline ${transitionColors}
+  font-normal text-sm text-color-neutral-200
+  placeholder:font-light placeholder:text-color-neutral-500 placeholder:uppercase`;
 
 /* ===== INPUT STYLES ===== */
 // Base input
@@ -47,7 +43,7 @@ export const inputFieldDropdown = `
 absolute top-[100%] left-0 w-full z-dropdown
 bg-gradient-to-b from-color-background/30 to-color-background backdrop-blur-sm
 border border-t-0 border-color-border/75 rounded-b-2xl
-text-color-grey-light text-sm font-medium uppercase leading-none
+text-color-neutral-200 text-sm font-medium uppercase leading-none
 overflow-y-auto scrollbar-background-layer2 shadow-lg cursor-pointer`;
 
 export const inputFieldDropdownHover = `
@@ -109,9 +105,9 @@ export const inputSelect = `
 /* ===== NOT IN USE NOR UPDATED ===== */
 /* ===== LABEL STYLES ===== */
 export const labelBase =
-  "font-medium text-base text-color-grey-light cursor-default select-none whitespace-nowrap";
+  "font-medium text-base text-color-neutral-200 cursor-default select-none whitespace-nowrap";
 export const labelLarge =
-  "font-medium text-lg text-color-grey-light cursor-default select-none whitespace-nowrap";
+  "font-medium text-lg text-color-neutral-200 cursor-default select-none whitespace-nowrap";
 
 /* ===== STATE STYLES ===== */
 export const stateDisabled = "opacity-50 cursor-not-allowed";

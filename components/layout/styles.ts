@@ -23,18 +23,17 @@ export const shadowGlowGrey =
   `group hover:shadow-[0px_0px_16px_color-mix(in_srgb,var(--color-grey-light)_75%,transparent)] ${transitionColors} cursor-pointer`;
 
 // Glassmorphism styles
-// Overlay layer styles - used for drawer and modal containers
+// Overlay layer styles - used for drawer and modal containers - rename to containerOverlay
 export const glassmorphismOverlay =
   `bg-gradient-to-b from-color-background/95 via-color-background/70 to-black/90 backdrop-blur-lg`;
-// 1st layer styles
-export const glassmorphism = `border border-color-border/50 rounded-3xl
-  bg-gradient-to-br from-[#191919]/40 via-color-background/50 to-black/60
-  backdrop-blur-sm ${shadow}`;
-// 2nd layer styles - register tool tld dropdown uses same hardcoded values
-export const glassmorphismL2 = `border border-color-border/75 rounded-2xl
-  bg-color-background/30 backdrop-blur-sm ${shadowL2}`;
+// 1st layer styles - rename to containerL1
+export const glassmorphism =
+  `bg-border-container-1 rounded-3xl backdrop-blur-sm ${shadow}`;
+// 2nd layer styles - register tool tld dropdown uses same hardcoded values - rename to containerL2
+export const glassmorphismL2 = `border border-color-border rounded-2xl
+  bg-gradient-to-b from-color-neutral-900 via-color-neutral-950 to-color-neutral-1000`;
 export const glassmorphismL2Hover =
-  `hover:bg-color-background/60 hover:border-color-border`;
+  `${glassmorphismL2} hover:from-color-neutral-950 hover:via-color-neutral-950 hover:to-color-neutral-1000 hover:border-color-hover`;
 
 /* ===== BODY STYLES ===== */
 // Main body styles

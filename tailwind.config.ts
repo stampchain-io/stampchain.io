@@ -24,19 +24,6 @@ export default {
       },
       colors: { // color hue defs are calculated using HSL values - decreasing lightness by 8% for each step (grey hues are estimations)
         color: { // colors are also defined as CSS variables further down in the file - PieChart and ChartWidget use hardcoded color values
-          primary: {
-            50: "#FDF4FF",
-            100: "#FAE8FF",
-            200: "#F5D0FE",
-            300: "#F0ABFC",
-            400: "#E879F9",
-            500: "#D946EF",
-            600: "#C026D3",
-            700: "#A21CAF",
-            800: "#86198F",
-            900: "#701A75",
-            950: "#4A044E",
-          },
           neutral: {
             0: "#FFFFFF",
             50: "#FAFAFA",
@@ -51,6 +38,35 @@ export default {
             900: "#171717",
             950: "#0A0A0A",
             1000: "#000000",
+          },
+          primary: { // Fuchsia
+            50: "#FDF4FF",
+            100: "#FAE8FF",
+            200: "#F5D0FE",
+            300: "#F0ABFC",
+            400: "#E879F9",
+            500: "#D946EF",
+            600: "#C026D3",
+            700: "#A21CAF",
+            800: "#86198F",
+            900: "#701A75",
+            950: "#4A044E",
+          },
+          secondary: { // Orange
+            50: "#FFF7ED",
+            100: "#FFEDD5",
+            200: "#FED7AA",
+            300: "#FDBA74",
+            400: "#FB923C",
+            500: "#F97316",
+            600: "#EA580C",
+            700: "#C2410C",
+            800: "#9A3412",
+            900: "#7C2D12",
+            950: "#431407",
+          },
+          hover: {
+            DEFAULT: "#E879F9", /* primary-400 */
           },
           purple: {
             dark: "#A21CAF", /* "#43005c", 700 */
@@ -88,10 +104,14 @@ export default {
             light: "#ff7700",
           },
           background: {
-            DEFAULT: "#0d0a0d",
+            DEFAULT: "#0A0A0A", /* neutral-950 */
+            /* container-1 gradientbackground defined below */
+            /* container-2 gradient background in layout/styles.ts */
           },
           border: {
-            DEFAULT: "#404040", /* neutral-700 */
+            DEFAULT: "#262626", /* neutral-800 */
+            /* container-1 border defined below */
+            /* container-2 border hover uses "color-hover" */
           },
         },
       },
@@ -300,9 +320,46 @@ export default {
           "--color-orange": "#ad5100",
           "--color-orange-semilight": "#d66400",
           "--color-orange-light": "#ff7700",
-          // Background and border color palette as CSS variables
-          "--color-background": "#0d0a0d",
-          "--color-border": "#332f32",
+
+          // Neutral color palette as CSS variables
+          "--color-neutral-0": "#FFFFFF",
+          "--color-neutral-50": "#FAFAFA",
+          "--color-neutral-100": "#F5F5F5",
+          "--color-neutral-200": "#E5E5E5",
+          "--color-neutral-300": "#D4D4D4",
+          "--color-neutral-400": "#A3A3A3",
+          "--color-neutral-500": "#737373",
+          "--color-neutral-600": "#525252",
+          "--color-neutral-700": "#404040",
+          "--color-neutral-800": "#262626",
+          "--color-neutral-900": "#171717",
+          "--color-neutral-950": "#0A0A0A",
+          "--color-neutral-1000": "#000000",
+          // Primary (fuchsia) color palette as CSS variables
+          "--color-primary-50": "#FDF4FF",
+          "--color-primary-100": "#FAE8FF",
+          "--color-primary-200": "#F5D0FE",
+          "--color-primary-300": "#F0ABFC",
+          "--color-primary-400": "#E879F9",
+          "--color-primary-500": "#D946EF",
+          "--color-primary-600": "#C026D3",
+          "--color-primary-700": "#A21CAF",
+          "--color-primary-800": "#86198F",
+          "--color-primary-900": "#701A75",
+          "--color-primary-950": "#4A044E",
+          // Secondary (orange) color palette as CSS variables
+          "--color-secondary-50": "#FFF7ED",
+          "--color-secondary-100": "#FFEDD5",
+          "--color-secondary-200": "#FED7AA",
+          "--color-secondary-300": "#FDBA74",
+          "--color-secondary-400": "#FB923C",
+          "--color-secondary-500": "#F97316",
+          "--color-secondary-600": "#EA580C",
+          "--color-secondary-700": "#C2410C",
+          "--color-secondary-800": "#9A3412",
+          "--color-secondary-900": "#7C2D12",
+          "--color-secondary-950": "#431407",
+
           // Conic gradient variables
           "--conic-pattern":
             "repeating-conic-gradient(rgba(128, 128, 128, 0.2) 0% 25%, rgba(128, 128, 128, 0.1) 25% 50%)",
@@ -368,7 +425,7 @@ export default {
         // Gradient Classes - Grey variants
         ".color-grey-gradientLD": {
           "background":
-            "linear-gradient(to right, var(--color-grey-light), var(--color-grey-semilight), var(--color-grey), var(--color-grey-semidark), var(--color-grey-dark))",
+            "linear-gradient(to right, var(--color-neutral-200), var(--color-neutral-300), var(--color-neutral-400), var(--color-neutral-500), var(--color-neutral-600))",
           "-webkit-background-clip": "text",
           "-webkit-text-fill-color": "transparent",
           "background-clip": "text",
@@ -376,7 +433,7 @@ export default {
         },
         ".color-grey-gradientLD-hover": {
           "background":
-            "linear-gradient(to right, var(--color-grey-light), var(--color-grey-semilight), var(--color-grey), var(--color-grey-semidark), var(--color-grey-dark))",
+            "linear-gradient(to right, var(--color-neutral-200), var(--color-neutral-300), var(--color-neutral-400), var(--color-neutral-500), var(--color-neutral-600))",
           "-webkit-background-clip": "text",
           "-webkit-text-fill-color": "transparent",
           "background-clip": "text",
@@ -385,8 +442,8 @@ export default {
             "background 0.2s ease-in-out, -webkit-text-fill-color 0.2s ease-in-out, text-fill-color 0.2s ease-in-out",
           "&:hover": {
             "background": "none",
-            "-webkit-text-fill-color": "var(--color-grey-light)",
-            "text-fill-color": "var(--color-grey-light)",
+            "-webkit-text-fill-color": "var(--color-primary-500)",
+            "text-fill-color": "var(--color-primary-500)",
           },
         },
         ".color-grey-gradientDL": {
@@ -450,6 +507,37 @@ export default {
         ".backdrop-blur-3xl": {
           "-webkit-backdrop-filter": "blur(64px)",
           "backdrop-filter": "blur(64px)",
+        },
+        // Container layer 1 - gradient border via ::before mask-composite technique.
+        // isolation: isolate keeps the ::before z-index: -1 scoped to this element,
+        // preventing it from slipping behind ancestor backgrounds.
+        ".bg-border-container-1": {
+          "position": "relative",
+          "isolation": "isolate",
+          "background": [
+            "linear-gradient(to bottom,",
+            "color-mix(in srgb, var(--color-neutral-800) 40%, transparent),",
+            "color-mix(in srgb, var(--color-neutral-900) 60%, transparent),",
+            "color-mix(in srgb, var(--color-neutral-950) 80%, transparent)",
+            ")",
+          ].join(" "),
+          "&::before": {
+            "content": '""',
+            "position": "absolute",
+            "z-index": "-1",
+            "inset": "0",
+            "border-radius": "inherit",
+            "padding": "1px",
+            "background":
+              "linear-gradient(to bottom, var(--color-neutral-800), var(--color-neutral-900))",
+            "-webkit-mask":
+              "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+            "mask":
+              "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+            "-webkit-mask-composite": "xor",
+            "mask-composite": "exclude",
+            "pointer-events": "none",
+          },
         },
       });
     }),
