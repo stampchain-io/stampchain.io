@@ -47,7 +47,7 @@ b, strong {
 /* Horizontal ruler styling */
 @layer base {
   hr {
-    @apply w-full border-0 border-t border-color-border/75;
+    @apply w-full border-0 border-t border-color-border;
   }
 }
 

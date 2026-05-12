@@ -16,8 +16,8 @@ import {
   labelLg,
   labelSm,
   labelXs,
-  navLinkGreyLD,
-  navLinkGreyLDActive,
+  navLinkActiveMobile,
+  navLinkMobile,
   navSublinkActiveDesktop,
   navSublinkDesktop,
   valueDarkSm,
@@ -291,13 +291,13 @@ export const WalletButton = (
               ? `${navSublinkActiveDesktop}`
               : `${navSublinkDesktop}`}
           >
-            DASHBOARD
+            Dashboard
           </a>
           <a
             onClick={() => walletSignOut()}
             class={`${navSublinkDesktop}`}
           >
-            DISCONNECT
+            Disconnect
           </a>
         </div>
       )
@@ -378,8 +378,8 @@ export const WalletButton = (
               }}
               class={`inline-block w-full ${
                 link.href && link.title === "DASHBOARD" && isActive(link.href)
-                  ? navLinkGreyLDActive
-                  : navLinkGreyLD
+                  ? navLinkActiveMobile
+                  : navLinkMobile
               }`}
             >
               {link.title}

@@ -2,13 +2,13 @@ import { Icon } from "$icon";
 import { containerStickyBottom, glassmorphismL2 } from "$layout";
 import { formatUSDValue } from "$lib/utils/ui/formatting/formatUtils.ts";
 import {
-  labelLightSm,
+  eybrowNeutral,
+  eybrowPrimary,
   labelXs,
-  labelXxs,
-  navLinkGrey,
-  navLinkGreyActive,
   navSublinkActiveDesktop,
+  navSublinkActiveMobile,
   navSublinkDesktop,
+  navSublinkMobile,
 } from "$text";
 import { useEffect, useState } from "preact/hooks";
 
@@ -98,7 +98,7 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
       <div class="flex flex-col space-y-0 w-full">
         {/* STAMPS Section */}
         <div class="flex flex-col space-y-4">
-          <h6 class={`${labelXs} -mb-7 text-right`}>
+          <h6 class={`${eybrowPrimary} -mb-7 text-right`}>
             STAMPS
           </h6>
           {toolLinks.filter((link) =>
@@ -112,7 +112,7 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
                 setCurrentPath(link.href);
               }}
               class={`inline-block w-full ${
-                isActive(link.href) ? navLinkGreyActive : navLinkGrey
+                isActive(link.href) ? navSublinkActiveMobile : navSublinkMobile
               }`}
             >
               {link.title}
@@ -122,7 +122,7 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
 
         {/* TOKENS Section */}
         <div class="flex flex-col space-y-4">
-          <h6 class={`${labelXs} mt-3 -mb-7 text-right`}>
+          <h6 class={`${eybrowPrimary} mt-3 -mb-7 text-right`}>
             TOKENS
           </h6>
           {toolLinks.filter((link) =>
@@ -137,7 +137,7 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
                 setCurrentPath(link.href);
               }}
               class={`inline-block w-full ${
-                isActive(link.href) ? navLinkGreyActive : navLinkGrey
+                isActive(link.href) ? navSublinkActiveMobile : navSublinkMobile
               }`}
             >
               {link.title}
@@ -147,7 +147,7 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
 
         {/* BITNAME Section */}
         <div class="flex flex-col space-y-4">
-          <h6 class={`${labelXs} mt-3 -mb-7 text-right`}>
+          <h6 class={`${eybrowPrimary} mt-3 -mb-7 text-right`}>
             BITNAME
           </h6>
           {toolLinks.filter((link) => link.href === "/tool/src101/mint")
@@ -159,7 +159,9 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
                   setCurrentPath(link.href);
                 }}
                 class={`inline-block w-full ${
-                  isActive(link.href) ? navLinkGreyActive : navLinkGrey
+                  isActive(link.href)
+                    ? navSublinkActiveMobile
+                    : navSublinkMobile
                 }`}
               >
                 {link.title}
@@ -175,44 +177,52 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
       class={`${containerClass} backdrop-blur-xl tablet:backdrop-blur-xs`}
     >
       {/* Latest Block */}
-      <div class="flex items-center">
+      <div class="flex items-center font-medium text-color-secondary-400">
         <Icon
           type="icon"
           name="bitcoinBlock"
           weight="normal"
           size="xs"
-          color="greyDark"
+          color="grey"
           className="mr-3"
         />
         {isLoading
           ? <span class="animate-pulse">XXX,XXX</span>
           : latestBlock === -1
-          ? <span class="font-medium">N/A</span>
-          : (
-            <span class="font-medium">
-              {latestBlock.toLocaleString()}
-            </span>
-          )}
+          ? <span>N/A</span>
+          : <span>{latestBlock.toLocaleString()}</span>}
       </div>
       {/* Price */}
-      <div class="flex items-center">
+      <div class="flex items-center font-medium text-color-secondary-400">
         <Icon
           type="icon"
           name="bitcoin"
           weight="normal"
           size="xs"
-          color="greyDark"
+          color="grey"
           className="mr-3"
         />
         {isLoading
-          ? <span class="animate-pulse">XXX,XXX</span>
-          : <span class="font-medium">{displayPrice}</span>}&nbsp;USD
+          ? (
+            <>
+              <span class="animate-pulse">XXX,XXX</span>
+              <span class=" font-light text-color-neutral-500">&nbsp;USD</span>
+            </>
+          )
+          : (
+            <>
+              <span>{displayPrice}</span>
+              <span class=" font-light text-color-neutral-500">&nbsp;USD</span>
+            </>
+          )}
       </div>
       <hr class="!mt-[14px] !mb-3" />
       {/* Priority Fees - 3 column layout */}
       <div class="flex flex-col space-y-1 w-full">
         {/* Header row */}
-        <h6 class={`pb-1 ${labelXs} text-center`}>
+        <h6
+          class={`pb-1 ${eybrowNeutral} !text-sm tablet:!text-[0.625rem] text-center`}
+        >
           TRANSACTION FEES
         </h6>
         {/* Icons row */}
@@ -222,25 +232,25 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
             name="speedSlow"
             weight="normal"
             size="xs"
-            color="greyDark"
+            color="grey"
           />
           <Icon
             type="icon"
             name="speedMedium"
             weight="normal"
             size="xs"
-            color="greyDark"
+            color="grey"
           />
           <Icon
             type="icon"
             name="speedFast"
             weight="normal"
             size="xs"
-            color="greyDark"
+            color="grey"
           />
         </div>
         {/* Data row */}
-        <div class="flex justify-between">
+        <div class="flex justify-between font-medium text-color-secondary-400">
           {isLoading
             ? (
               <>
@@ -251,9 +261,9 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
             )
             : (
               <>
-                <span class="font-medium pl-0.5">{lowFee || "N/A"}</span>
-                <span class="font-medium">{mediumFee || "N/A"}</span>
-                <span class="font-medium pr-0.5">{highFee || "N/A"}</span>
+                <span class="pl-0.5">{lowFee || "N/A"}</span>
+                <span>{mediumFee || "N/A"}</span>
+                <span class="pr-0.5">{highFee || "N/A"}</span>
               </>
             )}
         </div>
@@ -284,7 +294,7 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
       <>
         {/* Column 1: Left aligned - Stats */}
         {bitcoinStats(
-          `flex-col ${glassmorphismL2} -ml-1 w-[168px] px-3 py-2 space-y-1 ${labelLightSm}`,
+          `flex-col ${glassmorphismL2} !bg-border-container-2-secondary -ml-1 w-[168px] px-3 py-2 space-y-1 ${labelXs}`,
         )}
 
         {/* Spacer column */}
@@ -292,7 +302,7 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
 
         {/* Column 2: Left aligned - Stamp tools */}
         <div class="flex flex-col -ml-3 space-y-1 text-left">
-          <h6 class={labelXxs}>
+          <h6 class={eybrowPrimary}>
             STAMPS
           </h6>
           {toolLinks.filter((link) =>
@@ -316,7 +326,7 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
 
         {/* Column 3: Center aligned - Token tools */}
         <div class="flex flex-col -ml-6 space-y-1 text-center">
-          <h6 class={labelXxs}>
+          <h6 class={eybrowPrimary}>
             TOKENS
           </h6>
           {toolLinks.filter((link) =>
@@ -341,7 +351,7 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
 
         {/* Column 4: Right aligned - Register */}
         <div class="flex flex-col space-y-1 text-right">
-          <h6 class={labelXxs}>
+          <h6 class={eybrowPrimary}>
             BITNAME
           </h6>
           {toolLinks.filter((link) => link.href === "/tool/src101/mint")
@@ -374,7 +384,7 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
         <div class={containerStickyBottom}>
           {/* ===== PRICE/FEE/BLOCK INFO ===== */}
           {bitcoinStats(
-            `flex-col ${glassmorphismL2} items-end px-5 py-4 space-y-1 ${labelLightSm}`,
+            `flex-col ${glassmorphismL2} items-end px-5 py-4 space-y-1 ${labelXs}`,
           )}
         </div>
       </div>

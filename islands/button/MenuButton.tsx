@@ -1,10 +1,10 @@
 import { Icon } from "$icon";
 import { containerStickyBottom } from "$layout";
 import {
-  navLinkGrey,
-  navLinkGreyActive,
-  navLinkGreyLD,
-  navLinkGreyLDActive,
+  navLinkActiveMobile,
+  navLinkMobile,
+  navSublinkActiveMobile,
+  navSublinkMobile,
 } from "$text";
 import { useEffect, useState } from "preact/hooks";
 
@@ -101,10 +101,10 @@ export function MenuButton({ onOpenDrawer }: MenuButtonProps) {
               }}
               class={`flex items-center gap-3 ${
                 link.subLinks
-                  ? navLinkGrey
+                  ? navSublinkMobile
                   : isActive(link.href)
-                  ? navLinkGreyLDActive
-                  : navLinkGreyLD
+                  ? navLinkActiveMobile
+                  : navLinkMobile
               }`}
             >
               {NAV_ICONS && link.icon && (
@@ -137,7 +137,9 @@ export function MenuButton({ onOpenDrawer }: MenuButtonProps) {
                 setCurrentPath(link.href);
               }
             }}
-            class={`${isActive(link.href) ? navLinkGreyActive : navLinkGrey}`}
+            class={`${
+              isActive(link.href) ? navSublinkActiveMobile : navSublinkMobile
+            }`}
           >
             {link.title}
           </a>
