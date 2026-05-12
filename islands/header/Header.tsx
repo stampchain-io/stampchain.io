@@ -11,7 +11,7 @@ import {
 } from "$layout";
 import { useFees } from "$lib/hooks/useFees.ts";
 import { tooltipIcon } from "$notification";
-import { navLinkDesktop, navLinkDesktopActive } from "$text";
+import { navLinkActiveDesktop, navLinkDesktop } from "$text";
 import { createPortal } from "preact/compat";
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 
@@ -497,7 +497,7 @@ export function Header() {
                 setCurrentPath(link?.href ? link?.href : null);
               }}
               class={`flex items-center gap-2 ${
-                isActive(link.href) ? navLinkDesktopActive : navLinkDesktop
+                isActive(link.href) ? navLinkActiveDesktop : navLinkDesktop
               }`}
             >
               {/* Left icon */}
@@ -543,7 +543,7 @@ export function Header() {
           {logoIcon}
 
           {/* Right: Search, Tools, Wallet and Menu Buttons */}
-          <div class="flex items-center gap-7">
+          <div class="flex items-center gap-6">
             <SearchButton />
             {ToolsButton({ onOpenDrawer: openDrawer, data: toolsData }).icon}
             {WalletButton({
@@ -567,7 +567,7 @@ export function Header() {
 
           {/* Center: Navigation Links (only when NAV_POSITION === "center") */}
           {NAV_POSITION === "center" && (
-            <div class="absolute left-1/2 -translate-x-1/2 flex items-center gap-7 tablet:gap-8">
+            <div class="absolute left-1/2 -translate-x-1/2 flex items-center gap-6 tablet:gap-6">
               {renderNavLinks()}
             </div>
           )}
@@ -575,7 +575,7 @@ export function Header() {
           {/* Right: Icon Buttons (nav links prepended when NAV_POSITION === "right") */}
           <div class="flex items-center gap-4">
             {NAV_POSITION === "right" && (
-              <div class="flex items-center gap-7 tablet:gap-8 mr-2">
+              <div class="flex items-center gap-10 tablet:gap-10 mr-2">
                 {renderNavLinks()}
               </div>
             )}

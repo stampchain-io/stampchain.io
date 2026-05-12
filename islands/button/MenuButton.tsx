@@ -11,6 +11,7 @@ import { useEffect, useState } from "preact/hooks";
 interface NavLink {
   title: string;
   href?: string;
+  icon?: string;
   subLinks?: NavLink[];
 }
 
@@ -18,30 +19,37 @@ interface MenuButtonProps {
   onOpenDrawer: (content: "menu") => void;
 }
 
+// Toggle nav link icons on/off for the mobile/tablet drawer (default: disabled)
+const NAV_ICONS = false;
+
 /* ===== MOBILE NAVIGATION CONFIGURATION ===== */
 const navLinks: NavLink[] = [
   {
-    title: "ART STAMPS",
+    title: "Stamps",
     href: "/stamp?type=classic",
+    icon: "artStamp",
   },
   {
-    title: "COLLECTIONS",
+    title: "Collections",
     href: "/collection",
+    icon: "artStamps",
   },
   {
-    title: "SRC-20 TOKENS",
+    title: "Tokens",
     href: "/src20",
+    icon: "src20Token",
   },
   {
-    title: "EXPLORER",
+    title: "Explorer",
     href: "/explorer",
+    icon: "explorer",
   },
 ];
 
 const subNavLinks: NavLink[] = [
-  { title: "HOW-TO", href: "/howto" },
+  { title: "How-To", href: "/howto" },
   { title: "FAQ", href: "/faq" },
-  { title: "MEDIA", href: "/media" },
+  { title: "Media", href: "/media" },
 ];
 
 export function MenuButton({ onOpenDrawer }: MenuButtonProps) {
@@ -91,7 +99,7 @@ export function MenuButton({ onOpenDrawer }: MenuButtonProps) {
                 }
                 setCurrentPath(link.href);
               }}
-              class={`inline-block w-full ${
+              class={`flex items-center gap-3 ${
                 link.subLinks
                   ? navLinkGrey
                   : isActive(link.href)
@@ -99,7 +107,17 @@ export function MenuButton({ onOpenDrawer }: MenuButtonProps) {
                   : navLinkGreyLD
               }`}
             >
-              {link.title}
+              {NAV_ICONS && link.icon && (
+                <Icon
+                  type="icon"
+                  name={link.icon}
+                  weight="normal"
+                  size="xs"
+                  color="custom"
+                  className="stroke-color-neutral-400 !hover:stroke-color-hover"
+                />
+              )}
+              <span>{link.title}</span>
             </a>
           </div>
         ))}
@@ -135,8 +153,9 @@ export function MenuButton({ onOpenDrawer }: MenuButtonProps) {
         type="iconButton"
         name="menu"
         weight="normal"
-        size="md"
-        color="purpleLight"
+        size="sm"
+        color="custom"
+        className="stroke-color-neutral-400 hover:stroke-color-hover"
         isOpen={false}
         onClick={handleMenuClick}
       />

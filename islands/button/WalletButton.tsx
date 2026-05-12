@@ -18,8 +18,8 @@ import {
   labelXs,
   navLinkGreyLD,
   navLinkGreyLDActive,
+  navSublinkActiveDesktop,
   navSublinkDesktop,
-  navSublinkDesktopActive,
   valueDarkSm,
   valueDarkXs,
   valueLg,
@@ -202,7 +202,7 @@ export const WalletButton = (
             weight="normal"
             size="smR"
             color="custom"
-            className="stroke-color-grey-semilight hover:stroke-color-purple-light"
+            className="stroke-color-neutral-400 hover:stroke-color-hover"
             onClick={handleWalletIconClick}
           />
         )}
@@ -218,9 +218,9 @@ export const WalletButton = (
                 weight="normal"
                 size="smR"
                 color="custom"
-                className="stroke-color-grey-semilight hover:stroke-color-purple-light"
-                colorAccent="var(--color-purple-light)"
-                colorAccentHover="var(--color-purple-light)"
+                className="stroke-color-neutral-400 hover:stroke-color-hover"
+                colorAccent="var(--color-secondary-400)"
+                colorAccentHover="var(--color-hover)"
                 onClick={handleWalletIconClick}
               />
             </div>
@@ -288,7 +288,7 @@ export const WalletButton = (
           <a
             href={`/wallet/${address}`}
             class={isActive(`/wallet/${address}`)
-              ? `${navSublinkDesktopActive}`
+              ? `${navSublinkActiveDesktop}`
               : `${navSublinkDesktop}`}
           >
             DASHBOARD

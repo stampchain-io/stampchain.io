@@ -7,8 +7,8 @@ import {
   labelXxs,
   navLinkGrey,
   navLinkGreyActive,
+  navSublinkActiveDesktop,
   navSublinkDesktop,
-  navSublinkDesktopActive,
 } from "$text";
 import { useEffect, useState } from "preact/hooks";
 
@@ -263,8 +263,8 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
 
   return {
     // The tools icon component with desktop dropdown
-    // colorAccent="var(--color-grey)"
-    // colorAccentHover="var(--color-purple-light)"
+    // colorAccent="var(--color-secondary-400)"
+    // colorAccentHover="var(--color-hover)"
     icon: (
       <div class="relative">
         <Icon
@@ -273,7 +273,7 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
           weight="normal"
           size="smR"
           color="custom"
-          className="mb-[1px] stroke-color-grey-semilight hover:stroke-color-purple-light"
+          className="mb-[1px] stroke-color-neutral-400 hover:stroke-color-hover"
           onClick={handleToolsClick}
         />
         {/* Dropdown content is rendered by Header.tsx */}
@@ -306,7 +306,7 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
                 setCurrentPath(link.href);
               }}
               class={isActive(link.href)
-                ? navSublinkDesktopActive
+                ? navSublinkActiveDesktop
                 : navSublinkDesktop}
             >
               {link.title}
@@ -331,7 +331,7 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
                 setCurrentPath(link.href);
               }}
               class={isActive(link.href)
-                ? navSublinkDesktopActive
+                ? navSublinkActiveDesktop
                 : navSublinkDesktop}
             >
               {link.title}
@@ -353,7 +353,7 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
                   setCurrentPath(link.href);
                 }}
                 class={isActive(link.href)
-                  ? navSublinkDesktopActive
+                  ? navSublinkActiveDesktop
                   : navSublinkDesktop}
               >
                 {link.title}
