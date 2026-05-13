@@ -20,7 +20,7 @@ export function ToggleSwitchButton({
   activeKnobClassName =
     "bg-gradient-to-r from-color-primary-300 to-color-primary-400",
   inactiveKnobClassName =
-    "bg-gradient-to-r from-color-primary-500 to-color-primary-400",
+    "bg-gradient-to-r from-color-neutral-500 to-color-neutral-400",
 }: ToggleSwitchButtonProps): JSX.Element {
   /* ===== REFS ===== */
   const handleRef = useRef<HTMLDivElement>(null);

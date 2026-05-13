@@ -8,12 +8,12 @@ import { Icon } from "$icon";
 import { DeployToolSkeleton } from "$indicators";
 import {
   bodyTool,
+  container2,
+  container2Hover,
   containerBackground,
   containerColForm,
   containerGap,
   containerRowForm,
-  container2,
-  container2Hover,
   transitionAll,
   transitionColors,
 } from "$layout";
@@ -409,7 +409,7 @@ export function SRC20DeployTool(
                     size="xl"
                     color="custom"
                     className="stroke-color-neutral-600 group-hover:stroke-color-hover"
-                    colorAccent="var(--color-primary-400)"
+                    colorAccent="var(--color-neutral-500)"
                     colorAccentHover="var(--color-primary-300)"
                   />
                 </label>
