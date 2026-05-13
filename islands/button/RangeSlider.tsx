@@ -1,5 +1,4 @@
-import { sliderKnob, trackFill } from "$button";
-import { glassmorphismL2 } from "$layout";
+import { sliderBar, sliderKnob, trackFill } from "$button";
 import { useEffect, useRef, useState } from "preact/hooks";
 
 // Single Range Slider Component
@@ -111,20 +110,20 @@ export const RangeSlider = ({
 
     if (hovered) {
       return {
-        left: "2px",
+        left: "0px",
         right: `${Math.max(0, rightPosition)}%`,
         width: "auto",
         background:
-          "linear-gradient(90deg, var(--color-grey-semidark), var(--color-grey-semilight) 95%)",
+          "linear-gradient(90deg, var(--color-primary-400), var(--color-primary-400) 95%)",
       };
     }
 
     return {
-      left: "2px",
+      left: "0px",
       right: `${Math.max(0, rightPosition)}%`,
       width: "auto",
       background:
-        "linear-gradient(90deg, var(--color-grey-semidark), var(--color-grey) 95%)",
+        "linear-gradient(90deg, var(--color-neutral-900), var(--color-neutral-400) 95%)",
     };
   };
 
@@ -139,7 +138,7 @@ export const RangeSlider = ({
       {formatValue && (
         <div class="flex w-full justify-center pb-1.5 tablet:pb-1">
           <div class="flex items-center text-sm tablet:text-xs font-regular">
-            <div class="text-center text-color-grey select-none">
+            <div class="text-center text-color-red-800 select-none">
               {displayValue}
             </div>
           </div>
@@ -147,35 +146,40 @@ export const RangeSlider = ({
       )}
 
       <div
-        class={`relative h-5 tablet:h-4 !rounded-full ${glassmorphismL2} cursor-pointer`}
-        ref={sliderRef}
+        class={sliderBar}
         onClick={handleTrackClick}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
+        onMouseEnter={() => {
+          setHovered(true);
+          onMouseEnter?.();
+        }}
+        onMouseLeave={() => {
+          setHovered(false);
+          onMouseLeave?.();
+        }}
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
       >
-        {/* Track fill with dynamic gradient */}
-        <div
-          class={trackFill}
-          style={trackGradientFill()}
-        />
+        <div class="absolute inset-y-0 left-[3px] right-[3px]" ref={sliderRef}>
+          {/* Track fill with dynamic gradient */}
+          <div
+            class={trackFill}
+            style={trackGradientFill()}
+          />
 
-        {/* Slider input */}
-        <input
-          ref={inputRef}
-          type="range"
-          min="0"
-          max="100"
-          step="0.25"
-          value={convertValueToPosition(value)}
-          onChange={handleInput}
-          onInput={handleInput}
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
-          class={`${sliderKnob} z-10 px-0.5`}
-          disabled={disabled}
-        />
+          {/* Slider input */}
+          <input
+            ref={inputRef}
+            type="range"
+            min="0"
+            max="100"
+            step="0.25"
+            value={convertValueToPosition(value)}
+            onChange={handleInput}
+            onInput={handleInput}
+            class={`${sliderKnob} z-10`}
+            disabled={disabled}
+          />
+        </div>
       </div>
     </div>
   );

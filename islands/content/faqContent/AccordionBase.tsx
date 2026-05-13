@@ -28,9 +28,9 @@ export const Accordion = (
         class="flex justify-between items-center cursor-pointer group"
         onClick={toggleAccordion}
       >
-        {/* Title with Gradient Styling - cant use headingGreyLDLink styling (color-grey-gradientDL-hover) because of the group hover effect */}
+        {/* Title with Gradient Styling - uses bg-gradient-to-r color-neutral-gradient color-gradient-hover instead of headingGreyLDLink because group-hover overrides the hover state */}
         <h2
-          class={`font-bold text-xl tracking-wide color-grey-gradientLD-hover group-hover:[background:none_!important] group-hover:[-webkit-text-fill-color:var(--color-grey-semilight)_!important] group-hover:[text-fill-color:var(--color-grey-semilight)_!important] transition-colors duration-200
+          class={`font-bold text-xl tracking-wide bg-gradient-to-r color-neutral-gradient color-gradient-hover group-hover:[background:none_!important] group-hover:[-webkit-text-fill-color:var(--color-grey-semilight)_!important] group-hover:[text-fill-color:var(--color-grey-semilight)_!important] transition-colors duration-200
             ${
             isOpen
               ? "[background:none_!important] [-webkit-text-fill-color:var(--color-grey-semilight)_!important] [text-fill-color:var(--color-grey-semilight)_!important] "

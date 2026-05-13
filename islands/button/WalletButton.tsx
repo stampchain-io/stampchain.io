@@ -6,15 +6,13 @@ import { Icon } from "$icon";
 import { WalletProvider } from "$islands/layout/WalletProvider.tsx";
 import { ConnectWalletModal } from "$islands/modal/ConnectWalletModal.tsx";
 import { closeModal, openModal } from "$islands/modal/states.ts";
-import { containerStickyBottom, glassmorphismL2 } from "$layout";
+import { containerStickyBottom } from "$layout";
 import {
   abbreviateAddress,
   formatSatoshisToBTC,
 } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { tooltipIcon } from "$notification";
 import {
-  labelLg,
-  labelSm,
   labelXs,
   navLinkActiveMobile,
   navLinkMobile,
@@ -22,8 +20,6 @@ import {
   navSublinkDesktop,
   valueDarkSm,
   valueDarkXs,
-  valueLg,
-  valueSm,
 } from "$text";
 import { useEffect, useRef, useState } from "preact/hooks";
 
@@ -219,7 +215,7 @@ export const WalletButton = (
                 size="smR"
                 color="custom"
                 className="stroke-color-neutral-400 hover:stroke-color-hover"
-                colorAccent="var(--color-secondary-400)"
+                colorAccent="var(--color-orange-400)"
                 colorAccentHover="var(--color-hover)"
                 onClick={handleWalletIconClick}
               />
@@ -264,7 +260,7 @@ export const WalletButton = (
               </div>
             </div>
             <h6
-              class={`${valueDarkXs} transition-colors duration-200 peer-hover:text-color-grey-light`}
+              class={`${valueDarkXs} transition-colors duration-200 peer-hover:text-color-hover`}
             >
               {abbreviateAddress(address, 7)}
             </h6>
@@ -275,13 +271,13 @@ export const WalletButton = (
               name="bitcoins"
               weight="normal"
               size="xs"
-              color="greyDark"
+              color="grey"
             />
-            <h6 class={valueSm}>
+            <h6 class="font-semibold text-sm text-color-orange-400">
               {formatSatoshisToBTC(btcBalance.total, {
                 includeSymbol: false,
                 stripZeros: true,
-              })} <span class={labelSm}>BTC</span>
+              })} <span class="font-light">BTC</span>
             </h6>
           </div>
           <hr class="!mt-2 !mb-2" />
@@ -308,7 +304,7 @@ export const WalletButton = (
         {/* Top - Main navigation content */}
         <div class="flex flex-col flex-1 items-start pt-9 tablet:pt-6 gap-5">
           <div
-            class={`flex-col ${glassmorphismL2} w-full -mt-1.5 mb-3 px-3 py-2 space-y-1`}
+            class={`flex-col bg-border-container-2-secondary rounded-2xl w-full -mt-1.5 mb-3 px-4 py-3 space-y-1`}
           >
             <div class="flex flex-row-reverse justify-start items-center gap-3">
               <div
@@ -342,7 +338,7 @@ export const WalletButton = (
                 </div>
               </div>
               <h6
-                class={`${valueDarkSm} transition-colors duration-200 peer-hover:text-color-grey-light`}
+                class={`${valueDarkSm} transition-colors duration-200 peer-hover:text-color-hover`}
               >
                 {abbreviateAddress(address, 12)}
               </h6>
@@ -353,13 +349,13 @@ export const WalletButton = (
                 name="bitcoins"
                 weight="normal"
                 size="xs"
-                color="greyDark"
+                color="grey"
               />
-              <h6 class={valueLg}>
+              <h6 class="font-semibold text-lg text-color-orange-400">
                 {formatSatoshisToBTC(btcBalance.total, {
                   includeSymbol: false,
                   stripZeros: true,
-                })} <span class={labelLg}>BTC</span>
+                })} <span class="font-light">BTC</span>
               </h6>
             </div>
           </div>
@@ -376,7 +372,7 @@ export const WalletButton = (
                   setCurrentPath(link.href);
                 }
               }}
-              class={`inline-block w-full ${
+              class={`${
                 link.href && link.title === "DASHBOARD" && isActive(link.href)
                   ? navLinkActiveMobile
                   : navLinkMobile
@@ -439,8 +435,8 @@ function CounterpartyVersion() {
         name="version"
         weight="normal"
         size="xs"
-        color="custom"
-        className="mr-3 stroke-color-grey-dark"
+        color="greyDark"
+        className="mr-3"
       />
       <span class={labelXs}>
         COUNTERPARTY {loading

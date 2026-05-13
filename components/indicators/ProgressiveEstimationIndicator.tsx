@@ -57,7 +57,7 @@ export function ProgressiveEstimationIndicator({
       {!isSubmitting && !feeEstimationError && (
         <div className="relative">
           <div
-            className={`flex items-center py-0.5 min-[420px]:py-2 min-[460px]:py-0.5 px-2 ${glassmorphismL2} !rounded-full cursor-default select-none`}
+            className={`flex items-center py-1 px-3 min-[420px]:py-2 min-[460px]:py-1 bg-gradient-to-b from-color-neutral-800 to-color-neutral-900 rounded-full cursor-default select-none`}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
           >
@@ -66,29 +66,29 @@ export function ProgressiveEstimationIndicator({
               {/* Phase 1: Instant */}
               <div
                 className={`size-1.5 rounded-full tracking-wide ${
-                  phase1 ? "bg-color-grey-light" : "bg-color-grey/40"
+                  phase1 ? "bg-color-primary-400" : "bg-color-neutral-700"
                 }`}
               />
               {/* Phase 2: Smart */}
               <div
                 className={`size-1.5 rounded-full tracking-wide ${
                   phase2
-                    ? "bg-color-grey-light"
+                    ? "bg-color-primary-500"
                     : currentPhase === "smart" || isPreFetching
-                    ? "bg-color-grey-light animate-pulse"
-                    : "bg-color-grey/40"
+                    ? "bg-color-primary-500 animate-pulse"
+                    : "bg-color-neutral-700"
                 }`}
               />
               {/* Phase 3: Exact */}
               <div
                 className={`size-1.5 rounded-full tracking-wide ${
-                  phase3 ? "bg-color-grey-light" : "bg-color-grey/40"
+                  phase3 ? "bg-color-primary-600" : "bg-color-neutral-700"
                 }`}
               />
             </div>
 
             {/* Current phase text */}
-            <span className="inline min-[420px]:hidden min-[460px]:inline ml-1.5 text-[10px] text-color-grey font-normal">
+            <span className="inline min-[420px]:hidden min-[460px]:inline ml-1.5 font-norma text-[10px] text-color-primary-500 tracking-wider">
               {currentPhase === "instant" && "ROUGH"}
               {currentPhase === "smart" && "SMART"}
               {currentPhase === "exact" && "EXACT"}
@@ -122,7 +122,7 @@ export function ProgressiveEstimationIndicator({
             <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse" />
             <div className="absolute inset-0 w-1.5 h-1.5 bg-blue-400 rounded-full animate-ping opacity-20" />
           </div>
-          <span className="hidden sm:inline text-xs text-color-grey-light font-normal opacity-80">
+          <span className="hidden sm:inline text-xs text-color-neutral-400 font-normal opacity-80">
             Smart UTXO analysis
           </span>
           <span className="inline sm:hidden text-blue-400 text-xs opacity-80">

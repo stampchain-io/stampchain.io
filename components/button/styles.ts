@@ -1,10 +1,5 @@
 /* ===== BUTTON STYLES MODULE ===== */
-import {
-  glassmorphismL2,
-  glassmorphismL2Hover,
-  shadowL2,
-  transitionColors,
-} from "$layout";
+import { glassmorphismL2Hover, shadowL2, transitionColors } from "$layout";
 import { JSX } from "preact";
 
 /* ===== TYPE DEFINITIONS ===== */
@@ -203,29 +198,29 @@ export const buttonStyles: ButtonVariants = {
 
 /* ===== ADDITIONAL STYLES ===== */
 /* ===== TOGGLE SWITCH BUTTON STYLES ===== */
-export const toggleButton =
-  `flex items-center relative w-10 h-5 !rounded-full ${glassmorphismL2}
-  ${glassmorphismL2Hover} focus:outline-none transition duration-50`;
+export const toggleButton = `flex items-center relative w-10 h-5 !rounded-full
+  ${glassmorphismL2Hover} group focus:outline-none focus-visible:outline-none transition duration-50`;
 export const toggleKnobBackground =
-  "flex justify-center items-center relative w-5 h-5 bg-transparent rounded-full transition ease-in-out transform duration-400";
-export const toggleKnob = "w-[14px] h-[14px] rounded-full";
+  "flex justify-center items-center relative w-5 h-5 bg-transparent rounded-full cursor-pointer transition ease-in-out transform duration-400";
+export const toggleKnob =
+  "w-[14px] h-[14px] rounded-full cursor-pointer group-hover:from-color-primary-400 group-hover:to-color-primary-400";
 /* ===== SLIDER BUTTON STYLES ===== */
 export const sliderBar =
-  `w-full h-5 tablet:h-4 !rounded-full ${glassmorphismL2} ${glassmorphismL2Hover} cursor-pointer`;
+  `relative w-full h-5 tablet:h-4 !rounded-full ${glassmorphismL2Hover} group cursor-pointer`;
 export const trackFill = `
-  absolute top-0.5 bottom-0.5 h-[14px] tablet:h-[10px] rounded-full transition-colors duration-200 pointer-events-none
+  absolute top-[3px] bottom-[3px] h-[14px] tablet:h-[10px] rounded-full transition-colors duration-200 pointer-events-none
   `;
 export const sliderKnob = `
-  absolute top-0.5 bottom-0.5 w-full h-[14px] tablet:h-[10px] rounded-full appearance-none bg-transparent pointer-events-none
+  absolute top-[3px] bottom-[3px] w-full h-[14px] tablet:h-[10px] rounded-full appearance-none bg-transparent pointer-events-none
   [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:pointer-events-auto
   [&::-webkit-slider-thumb]:size-[14px] [&::-webkit-slider-thumb]:tablet:size-[10px]
-  [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-color-grey
-  [&::-webkit-slider-thumb]:hover:bg-color-grey-light [&::-webkit-slider-thumb]:cursor-grab
+  [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-color-neutral-400
+  group-hover:[&::-webkit-slider-thumb]:bg-color-primary-400 [&::-webkit-slider-thumb]:cursor-grab
   [&::-webkit-slider-thumb]:active:cursor-grabbing
   [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:pointer-events-auto
   [&::-moz-range-thumb]:size-[14px][&::-moz-range-thumb]:tablet:size-[10px]
-  [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-color-grey
-  [&::-moz-range-thumb]:hover:bg-color-grey-light [&::-moz-range-thumb]:cursor-grab
+  [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-color-neutral-400
+  group-hover:[&::-moz-range-thumb]:bg-color-primary-400 [&::-moz-range-thumb]:cursor-grab
   [&::-moz-range-thumb]:active:cursor-grabbing [&::-moz-range-thumb]:border-0
   `;
 
