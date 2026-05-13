@@ -72,7 +72,7 @@ export function SRC20CardBase({
                       <span
                         class={isHovered
                           ? "text-color-purple-light"
-                          : "color-grey-gradientDL"}
+                          : "bg-gradient-to-l color-neutral-gradient"}
                       >
                         {text.toUpperCase()}
                       </span>

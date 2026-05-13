@@ -95,7 +95,7 @@ function DispenserItem({
   /* ===== EMPTY STATE HANDLING ===== */
   if (!dispensers?.length) {
     return (
-      <div class="inline-block text-xl mobileMd:text-2xl mobileLg:text-3xl desktop:text-4xl font-black color-purple-gradientLD">
+      <div class="inline-block text-xl mobileMd:text-2xl mobileLg:text-3xl desktop:text-4xl font-black bg-gradient-to-r color-primary-gradient">
         NO LISTINGS FOUND
       </div>
     );
@@ -113,7 +113,7 @@ function DispenserItem({
   if (!openDispensers.length && !closedDispensers.length) {
     return (
       <div>
-        <h3 class="inline-block text-xl mobileMd:text-2xl mobileLg:text-3xl desktop:text-4xl font-black color-purple-gradientLD">
+        <h3 class="inline-block text-xl mobileMd:text-2xl mobileLg:text-3xl desktop:text-4xl font-black bg-gradient-to-r color-primary-gradient">
           NO LISTINGS FOUND
         </h3>
       </div>
@@ -127,7 +127,7 @@ function DispenserItem({
         {/* Open Dispensers Section */}
         {openDispensers.length > 0 && (
           <div id="open-listings-section">
-            <h3 class="inline-block text-xl mobileMd:text-2xl mobileLg:text-3xl desktop:text-4xl font-black color-purple-gradientLD mb-6">
+            <h3 class="inline-block text-xl mobileMd:text-2xl mobileLg:text-3xl desktop:text-4xl font-black bg-gradient-to-r color-primary-gradient mb-6">
               OPEN LISTINGS
             </h3>
             <div class="flex flex-col gap-6">
@@ -141,7 +141,7 @@ function DispenserItem({
         {/* Closed Dispensers Section */}
         {closedDispensers.length > 0 && (
           <div id="closed-listings-section">
-            <h3 class="inline-block text-xl mobileMd:text-2xl mobileLg:text-3xl desktop:text-4xl font-black color-purple-gradientLD mb-6">
+            <h3 class="inline-block text-xl mobileMd:text-2xl mobileLg:text-3xl desktop:text-4xl font-black bg-gradient-to-r color-primary-gradient mb-6">
               CLOSED LISTINGS
             </h3>
             <div class="flex flex-col gap-6">
@@ -158,7 +158,7 @@ function DispenserItem({
         {/* Open Dispensers Section */}
         {openDispensers.length > 0 && (
           <div class="mb-8" id="open-listings-section">
-            <h3 class="inline-block text-xl mobileMd:text-2xl mobileLg:text-3xl desktop:text-4xl font-black color-purple-gradientLD mb-6">
+            <h3 class="inline-block text-xl mobileMd:text-2xl mobileLg:text-3xl desktop:text-4xl font-black bg-gradient-to-r color-primary-gradient mb-6">
               OPEN LISTINGS
             </h3>
             <div class="flex flex-col gap-6">
@@ -172,7 +172,7 @@ function DispenserItem({
         {/* Closed Dispensers Section */}
         {closedDispensers.length > 0 && (
           <div id="closed-listings-section">
-            <h3 class="inline-block text-xl mobileMd:text-2xl mobileLg:text-3xl desktop:text-4xl font-black color-purple-gradientLD mb-6">
+            <h3 class="inline-block text-xl mobileMd:text-2xl mobileLg:text-3xl desktop:text-4xl font-black bg-gradient-to-r color-primary-gradient mb-6">
               CLOSED LISTINGS
             </h3>
             <div class="flex flex-col gap-6">
@@ -269,7 +269,7 @@ function DispenserRow(
             <div class="relative">
               <a
                 href={`/stamp/${dispenser.stamp.stamp}`}
-                class="!inline-block text-2xl mobileLg:text-4xl font-black color-purple-gradientLD group-hover:[-webkit-text-fill-color:var(--color-purple-light)]"
+                class="!inline-block text-2xl mobileLg:text-4xl font-black bg-gradient-to-r color-primary-gradient color-gradient-hover"
               >
                 {`#${dispenser.stamp.stamp}`}
               </a>

@@ -249,7 +249,7 @@ export function SRC20CardSm({
                               return (
                                 <>
                                   {text && (
-                                    <span class="color-grey-gradientDL group-hover:[-webkit-text-fill-color:var(--color-purple-light)] inline-block transition-colors duration-200">
+                                    <span class="bg-gradient-to-l color-neutral-gradient color-gradient-hover inline-block transition-colors duration-200">
                                       {text.toUpperCase()}
                                     </span>
                                   )}

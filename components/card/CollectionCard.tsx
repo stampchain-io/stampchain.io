@@ -48,7 +48,7 @@ export function CollectionCard(
         <div class="w-full">
           <div class="flex flex-col justify-between w-full">
             {/* check code */}
-            <h2 class="font-black text-2xl color-grey-gradientDL group-hover:[-webkit-text-fill-color:var(--color-purple-light)] tracking-wide inline-block w-fit">
+            <h2 class="font-black text-2xl bg-gradient-to-l color-neutral-gradient color-gradient-hover tracking-wide inline-block w-fit">
               <span class="min-[420px]:hidden">
                 {abbreviateCollectionName(collectionName)
                   .toUpperCase()}

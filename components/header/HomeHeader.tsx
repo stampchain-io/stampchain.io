@@ -10,8 +10,8 @@ function TitleText({
   return (
     <span
       class={`
-        font-work-sans
-        bg-clip-text text-fill-transparent
+        font-montserrat
+        bg-clip-text text-transparent
         whitespace-normal mobileLg:whitespace-nowrap inline-block
         ${className}
       `}
@@ -44,7 +44,7 @@ export function HomeHeader() {
         <h1 class="text-center">
           <TitleText class="
               font-black
-              color-grey-gradientLD
+              bg-gradient-to-r color-neutral-gradient
               text-2xl
               min-[420px]:text-3xl
               mobileMd:text-4xl
@@ -53,14 +53,14 @@ export function HomeHeader() {
               desktop:text-5xl
             ">
             UNPRUNABLE{" "}
-            <span class="color-purple-gradientDL">
+            <span class="bg-gradient-to-l color-primary-gradient">
               UTXO ART
             </span>
           </TitleText>
           <br />
           <TitleText class="
               font-bold
-              color-grey-gradientLD
+              bg-gradient-to-r color-neutral-gradient
               uppercase
               text-xl
               min-[420px]:text-2xl
