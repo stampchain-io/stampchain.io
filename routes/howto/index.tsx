@@ -8,8 +8,8 @@ export default function HowToPage() {
     <div class={`${body} ${containerGap}`}>
       {/* ===== INTRODUCTION SECTION ===== */}
       <section class={containerBackground}>
-        <h1 class={titleGreyLD}>HOW-TO</h1>
-        <h2 class={subtitleGrey}>OUR STEP-BY-STEP GUIDES</h2>
+        <h1 class={titleGreyLD}>How-To</h1>
+        <h2 class={subtitleGrey}>Our step-by-step guides</h2>
         <p class={textLg}>
           <b>
             Explore our comprehensive How-To section, where you'll find
@@ -39,7 +39,7 @@ export default function HowToPage() {
             class="rounded-2xl"
           />
           <div class="flex flex-col desktop:col-span-2 gap-2">
-            <h2 class={`${headingGrey} mb-2`}>CREATE A LEATHER WALLET</h2>
+            <h2 class={`${headingGrey} mb-2`}>Create a Leather wallet</h2>
             <p class={text}>
               New to Bitcoin, Stamps, wallets and all the other fancy
               lingo?<br />
@@ -70,7 +70,7 @@ export default function HowToPage() {
             class="block tablet:order-last rounded-2xl"
           />
           <div class="flex flex-col desktop:col-span-2 gap-2">
-            <h2 class={`${headingGrey} mb-2`}>CONNECT YOUR LEATHER WALLET</h2>
+            <h2 class={`${headingGrey} mb-2`}>Connect your Leather wallet</h2>
             <p class={text}>
               To create and buy stamps, deploy, mint and transfer tokens or
               interact with the Stamps protocol, you need to connect and verify
@@ -101,7 +101,7 @@ export default function HowToPage() {
             class="rounded-2xl"
           />
           <div class="flex flex-col desktop:col-span-2 gap-2">
-            <h2 class={`${headingGrey} mb-2`}>DEPLOY YOUR OWN TOKEN</h2>
+            <h2 class={`${headingGrey} mb-2`}>Deploy your own token</h2>
             <p class={text}>
               To deploy a SRC-20 token, you need to stamp the transaction on
               Bitcoin with the token's supply and metadata. This makes the token
@@ -132,7 +132,7 @@ export default function HowToPage() {
             class="block tablet:order-last rounded-2xl"
           />
           <div class="flex flex-col desktop:col-span-2 gap-2">
-            <h2 class={`${headingGrey} mb-2`}>MINT YOUR TOKEN</h2>
+            <h2 class={`${headingGrey} mb-2`}>Mint your token</h2>
             <p class={text}>
               After deploying a token, anyone can mint SRC-20 tokens based on
               the initial supply set in the contract.
@@ -162,7 +162,7 @@ export default function HowToPage() {
             class="rounded-2xl"
           />
           <div class="flex flex-col desktop:col-span-2 gap-2">
-            <h2 class={`${headingGrey} mb-2`}>CREATE A STAMP</h2>
+            <h2 class={`${headingGrey} mb-2`}>Create a stamp</h2>
             <p class={text}>
               Store your art permanently on Bitcoin - the most resilient
               blockchain in the world.<br />

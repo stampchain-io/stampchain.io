@@ -308,7 +308,7 @@ export default function PressKit() {
           {/* Description */}
           <div class="flex flex-col gap-3 mobileLg:w-1/2 tablet:w-2/3">
             <p class={text}>
-              Stampchain uses a Work Sans typeface, with heavy italic uppercase
+              Stampchain uses a Montserrat typeface, with heavy italic uppercase
               lettering, and a two-tone purple and grey color palette for logo
               branding.
               <br />
@@ -329,12 +329,12 @@ export default function PressKit() {
               <h3 class={labelSm}>TYPEFACE</h3>
               <div class="group flex items-center w-fit gap-2.5">
                 <a
-                  href="https://fonts.google.com/specimen/Work+Sans"
+                  href="https://fonts.google.com/specimen/Montserrat"
                   target="_blank"
                   rel="noopener noreferrer"
                   class={`${valueSmLink} group-hover:text-color-grey`}
                 >
-                  WORK SANS
+                  MONTSERRAT
                 </a>
                 <Icon
                   type="iconButton"
@@ -343,10 +343,10 @@ export default function PressKit() {
                   size="xxs"
                   color="custom"
                   className="mb-1 stroke-color-grey-light group-hover:stroke-color-grey transition-colors"
-                  href="https://fonts.google.com/specimen/Work+Sans"
+                  href="https://fonts.google.com/specimen/Montserrat"
                   target="_blank"
                   rel="noopener noreferrer"
-                  ariaLabel="Open Work Sans on Google Fonts"
+                  ariaLabel="Open Montserrat on Google Fonts"
                 />
               </div>
             </div>

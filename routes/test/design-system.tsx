@@ -108,20 +108,20 @@ export default function DesignSystem() {
                 Text Gradients
               </h3>
               <div class="space-y-6 bg-color-purple-semidark p-8 rounded-2xl">
-                {/* Purple Gradients */}
-                <p class="color-purple-gradientDL text-4xl font-bold">
-                  Purple Gradient Text 1
+                {/* Primary Gradients */}
+                <p class="bg-gradient-to-l color-primary-gradient text-4xl font-bold">
+                  Primary Gradient Text DL
                 </p>
-                <p class="color-purple-gradientLD text-4xl font-bold">
-                  Purple Gradient Text 3
+                <p class="bg-gradient-to-r color-primary-gradient text-4xl font-bold">
+                  Primary Gradient Text LD
                 </p>
 
-                {/* Gray Gradients */}
-                <p class="color-grey-gradientDL text-4xl font-bold">
-                  Gray Gradient Text 1
+                {/* Neutral Gradients */}
+                <p class="bg-gradient-to-l color-neutral-gradient text-4xl font-bold">
+                  Neutral Gradient Text DL
                 </p>
-                <p class="color-grey-gradientLD text-4xl font-bold">
-                  Gray Gradient Text 3
+                <p class="bg-gradient-to-r color-neutral-gradient text-4xl font-bold">
+                  Neutral Gradient Text LD
                 </p>
               </div>
             </div>

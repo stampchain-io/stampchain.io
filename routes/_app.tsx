@@ -133,10 +133,6 @@ export default function App({ Component, state, url }: PageProps<unknown>) {
         {/* ===== CRITICAL STYLES ===== */}
         <style>
           {`
-            .text-fill-transparent {
-              -webkit-text-fill-color: transparent;
-            }
-
             /* Critical text styles */
             .home-header-text {
               text-rendering: optimizeLegibility;
@@ -145,24 +141,6 @@ export default function App({ Component, state, url }: PageProps<unknown>) {
             }
 
             /* Mobile menu is handled with CSS classes in the component */
-          `}
-        </style>
-
-        {/* ===== FONT FACE DEFINITIONS ===== */}
-        <style>
-          {`
-            @font-face {
-              font-family: 'Work Sans';
-              font-style: normal;
-              font-weight: 700;
-              font-display: swap;
-            }
-            @font-face {
-              font-family: 'Work Sans';
-              font-style: normal;
-              font-weight: 900;
-              font-display: swap;
-            }
           `}
         </style>
 
@@ -298,7 +276,7 @@ export default function App({ Component, state, url }: PageProps<unknown>) {
         <BackgroundTopology />
 
         {/* ===== MAIN CONTENT WRAPPER ===== */}
-        <div class="flex flex-col min-h-screen font-work-sans relative z-[2]">
+        <div class="flex flex-col min-h-screen font-montserrat relative z-[2]">
           {/* ===== PROVIDERS ===== */}
           <ToastProvider>
             <NotificationUpdate />
