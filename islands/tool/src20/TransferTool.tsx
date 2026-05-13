@@ -21,7 +21,7 @@ import { mapProgressiveFeeDetails } from "$lib/utils/performance/fees/fee-estima
 import { stripTrailingZeros } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { StatusMessages } from "$notification";
 import { FeeCalculatorBase } from "$section";
-import { titleGreyLD } from "$text";
+import { titleNeutralLD } from "$text";
 import { useEffect, useRef, useState } from "preact/hooks";
 
 /* ===== INTERFACE DEFINITIONS ===== */
@@ -304,7 +304,7 @@ export function SRC20TransferTool(
   if (!config) {
     return (
       <div class={`${bodyTool} ${containerGap}`}>
-        <h1 class={`${titleGreyLD} mx-auto -mb-2 mobileLg:-mb-4`}>
+        <h1 class={`${titleNeutralLD} mx-auto -mb-2 mobileLg:-mb-4`}>
           TRANSFER
         </h1>
         <TransferToolSkeleton />
@@ -314,7 +314,7 @@ export function SRC20TransferTool(
 
   return (
     <div class={`${bodyTool} ${containerGap}`}>
-      <h1 class={`${titleGreyLD} mx-auto -mb-2 mobileLg:-mb-4`}>
+      <h1 class={`${titleNeutralLD} mx-auto -mb-2 mobileLg:-mb-4`}>
         TRANSFER
       </h1>
 

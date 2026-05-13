@@ -1,9 +1,9 @@
-import { titleGreyLD } from "$text";
+import { titleNeutralLD } from "$text";
 
 const WalletDashboardHeader = () => {
   return (
     <div class="flex justify-between items-center gap-3 w-full relative">
-      <h1 class={titleGreyLD}>DASHBOARD</h1>
+      <h1 class={titleNeutralLD}>DASHBOARD</h1>
       {
         /*
         import { SearchStampModal } from "$islands/modal/SearchStampModal.tsx";

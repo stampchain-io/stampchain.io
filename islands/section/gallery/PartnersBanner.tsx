@@ -1,6 +1,6 @@
 /* ===== PARTNERS GALLERY COMPONENT ===== */
 import { containerBackground, shadowGlowGrey } from "$layout";
-import { subtitleGrey } from "$text";
+import { subtitleNeutral } from "$text";
 import { useState } from "preact/hooks";
 
 /* ===== TYPES ===== */
@@ -104,7 +104,7 @@ export function PartnersBanner() {
     <section class={containerBackground}>
       <div class="flex flex-col max-w-desktop w-full mx-auto">
         {/* ===== TITLE SECTION ===== */}
-        <h2 class={`${subtitleGrey} !mb-2`}>PARTNERS</h2>
+        <h2 class={`${subtitleNeutral} !mb-2`}>PARTNERS</h2>
         {/* ===== BANNER CARDS SECTION ===== */}
         <div class={`grid grid-cols-3 gap-5`}>
           {partners.map((partner) => (

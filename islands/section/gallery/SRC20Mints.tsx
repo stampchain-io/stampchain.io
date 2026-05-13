@@ -7,7 +7,7 @@ import {
   notificationHeading,
   notificationTextError,
 } from "$notification";
-import { subtitleGrey, titleGreyDL, titleGreyLD } from "$text";
+import { subtitleNeutral, titleNeutralDL, titleNeutralLD } from "$text";
 import type { SRC20Row } from "$types/src20.d.ts";
 import { useEffect, useState } from "preact/hooks";
 
@@ -57,16 +57,16 @@ export default function SRC20MintsGallery() {
     <div class={`${containerBackground} items-start tablet:items-end`}>
       {/* ===== TITLE SECTION ===== */}
       <div>
-        <h4 class={`${titleGreyLD} tablet:hidden`}>
+        <h4 class={`${titleNeutralLD} tablet:hidden`}>
           TRENDING
         </h4>
         <h4
-          class={`hidden tablet:block w-full tablet:text-right ${titleGreyDL}`}
+          class={`hidden tablet:block w-full tablet:text-right ${titleNeutralDL}`}
         >
           TRENDING
         </h4>
       </div>
-      <h3 class={`${subtitleGrey} tablet:text-right mb-2`}>
+      <h3 class={`${subtitleNeutral} tablet:text-right mb-2`}>
         {isLoading ? <span class="animate-pulse">POPULAR TOKENS</span> : (
           "POPULAR TOKENS"
         )}

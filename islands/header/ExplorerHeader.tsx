@@ -1,7 +1,7 @@
 /* ===== EXPLORER HEADER COMPONENT ===== */
 import { SortButton } from "$islands/button/SortButton.tsx";
 import { container1 } from "$layout";
-import { titleGreyLD } from "$text";
+import { titleNeutralLD } from "$text";
 
 /* ===== COMPONENT ===== */
 export const ExplorerHeader = () => {
@@ -9,7 +9,7 @@ export const ExplorerHeader = () => {
   return (
     <div class="flex flex-row justify-between items-start w-full">
       {/* Title Section */}
-      <h1 class={`${titleGreyLD} ml-1.5`}>EXPLORER</h1>
+      <h1 class={`${titleNeutralLD} ml-1.5`}>EXPLORER</h1>
 
       {/* Controls Section */}
       <div class="flex flex-col">

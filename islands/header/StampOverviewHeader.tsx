@@ -15,7 +15,7 @@ import {
   getCurrentPathname,
   safeNavigate,
 } from "$lib/utils/navigation/freshNavigationUtils.ts";
-import { titleGreyLD } from "$text";
+import { titleNeutralLD } from "$text";
 import type { StampOverviewHeaderProps } from "$types/ui.d.ts";
 import { useCallback, useState } from "preact/hooks";
 
@@ -93,7 +93,7 @@ export const StampOverviewHeader = (
     <div class="relative flex flex-col w-full gap-1.5">
       <div class="flex flex-row justify-between items-start w-full">
         {/* ===== TITLE ===== */}
-        <h1 class={`${titleGreyLD} ml-1.5`}>ART STAMPS</h1>
+        <h1 class={`${titleNeutralLD} ml-1.5`}>ART STAMPS</h1>
       </div>
 
       {/* ===== STAMP TYPE SELECTOR AND CONTROLS ===== */}

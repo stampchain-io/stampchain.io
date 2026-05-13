@@ -58,7 +58,7 @@ The Text system provides a comprehensive typography solution with consistent sty
 - **Modifier**: Link, Active, Responsive (R), Minimal, Glow, Position
 
 **Examples**:
-- `titleGreyLD` = Title style with grey gradient from light to dark
+- `titleNeutralLD` = Title style with grey gradient from light to dark
 - `navLinkPurpleActive` = Purple navigation link in active state
 - `valueSmLink` = Small value with link hover effect
 - `cardStampNumberMinimal` = Minimal card variant for stamp numbers
@@ -249,27 +249,27 @@ navLinkTransparentPurple: "font-light text-[13px] hover:text-color-purple-light"
 
 ```typescript
 // Grey Light to Dark (primary)
-titleGreyLD: "font-black text-3xl color-grey-gradientDL cursor-default"
+titleNeutralLD: "font-black text-3xl color-grey-gradientDL cursor-default"
 
 // Grey Dark to Light (alternative)
-titleGreyDL: "font-black text-3xl color-grey-gradientLD cursor-default"
+titleNeutralDL: "font-black text-3xl color-grey-gradientLD cursor-default"
 
 // Purple Light to Dark
-titlePurpleLD: "font-black text-3xl color-purple-gradientLD cursor-default"
+titlePrimaryLD: "font-black text-3xl color-purple-gradientLD cursor-default"
 
 // Purple Dark to Light
-titlePurpleDL: "font-black text-3xl color-purple-gradientDL cursor-default"
+titlePrimaryDL: "font-black text-3xl color-purple-gradientDL cursor-default"
 ```
 
 ### Subtitle Styles (2 variants)
 
 ```typescript
 // Grey subtitle
-subtitleGrey: "font-extralight text-2xl text-color-grey-light mb-2"
+subtitleNeutral: "font-extralight text-2xl text-color-grey-light mb-2"
 // Color: #f9f2e9
 
 // Purple subtitle
-subtitlePurple: "font-extralight text-2xl text-color-purple-light mb-2"
+subtitlePrimary: "font-extralight text-2xl text-color-purple-light mb-2"
 // Color: #BB00FF
 ```
 
@@ -507,14 +507,14 @@ export type TextStyles = {
   navLinkTransparentPurple: string;
 
   // Title styles (4)
-  titleGreyLD: string;
-  titleGreyDL: string;
-  titlePurpleLD: string;
-  titlePurpleDL: string;
+  titleNeutralLD: string;
+  titleNeutralDL: string;
+  titlePrimaryLD: string;
+  titlePrimaryDL: string;
 
   // Subtitle styles (2)
-  subtitleGrey: string;
-  subtitlePurple: string;
+  subtitleNeutral: string;
+  subtitlePrimary: string;
 
   // Heading styles (6)
   headingGrey2: string;
@@ -594,13 +594,13 @@ export type TextStyles = {
 
 ### Page Layout
 ```tsx
-import { titleGreyLD, subtitleGrey, text } from "$text";
+import { titleNeutralLD, subtitleNeutral, text } from "$text";
 
 export function PageHeader() {
   return (
     <div class="flex flex-col gap-4">
-      <h1 class={titleGreyLD}>Explore Bitcoin Stamps</h1>
-      <h2 class={subtitleGrey}>Digital Artifacts on Bitcoin</h2>
+      <h1 class={titleNeutralLD}>Explore Bitcoin Stamps</h1>
+      <h2 class={subtitleNeutral}>Digital Artifacts on Bitcoin</h2>
       <p class={text}>
         Discover unique digital stamps permanently embedded on the Bitcoin blockchain
       </p>
@@ -847,8 +847,8 @@ The text system follows SEO best practices with proper heading structure:
 
 | Tag | Text Style | Purpose | SEO Impact |
 |-----|-----------|---------|------------|
-| **H1** | titleGreyLD, titlePurpleLD | Page title | High - One per page, primary keyword |
-| **H2** | subtitleGrey, subtitlePurple | Major sections | High - Main subtopics, secondary keywords |
+| **H1** | titleNeutralLD, titlePrimaryLD | Page title | High - One per page, primary keyword |
+| **H2** | subtitleNeutral, subtitlePrimary | Major sections | High - Main subtopics, secondary keywords |
 | **H3** | headingGreyLD, headingGrey | Subsections | Medium - Supporting points, related keywords |
 | **H4** | headingGreyLDLink, headingGreyDLLink | Minor sections | Medium - Feature titles, UI sections |
 | **H5** | labelSm, labelLg, valueLg | Data labels | Low - Data displays, component headers |
@@ -904,19 +904,19 @@ The text system follows SEO best practices with proper heading structure:
 ### Import Strategy
 ```tsx
 // For component usage - import specific styles
-import { titleGreyLD, text, labelSm } from "$text";
+import { titleNeutralLD, text, labelSm } from "$text";
 
 // For type work - import the type
 import type { TextStyles } from "$text";
 
 // Type-safe style references
-const myStyle: keyof TextStyles = "titleGreyLD";
+const myStyle: keyof TextStyles = "titleNeutralLD";
 ```
 
 ### Composition Patterns
 ```tsx
 // Combining with Tailwind utilities
-<h1 class={`${titleGreyLD} mb-4 tablet:mb-6`}>Title</h1>
+<h1 class={`${titleNeutralLD} mb-4 tablet:mb-6`}>Title</h1>
 
 // Dynamic style selection
 const headingClass = isActive ? navLinkPurpleActive : navLinkPurple;
@@ -936,8 +936,8 @@ const headingClass = isActive ? navLinkPurpleActive : navLinkPurple;
 ### Page Title Section
 ```tsx
 <div class="flex flex-col gap-3">
-  <h1 class={titleGreyLD}>Page Title</h1>
-  <h2 class={subtitleGrey}>Subtitle</h2>
+  <h1 class={titleNeutralLD}>Page Title</h1>
+  <h2 class={subtitleNeutral}>Subtitle</h2>
 </div>
 ```
 

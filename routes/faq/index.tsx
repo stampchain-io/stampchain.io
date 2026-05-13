@@ -2,7 +2,7 @@
 import { FaqAccordion } from "$content";
 import { FaqHeader } from "$header";
 import { body, containerBackground, containerGap, FAQ_CONTENT } from "$layout";
-import { subtitleGrey, text, titleGreyLD } from "$text";
+import { subtitleNeutral, text, titleNeutralLD } from "$text";
 
 /* ===== PAGE COMPONENT ===== */
 export default function FaqPage() {
@@ -19,8 +19,8 @@ export default function FaqPage() {
         >
           {/* ===== ACCORDION HEADER SECTION ===== */}
           <div>
-            <h3 class={titleGreyLD}>{section.title}</h3>
-            <h4 class={subtitleGrey}>{section.subtitle}</h4>
+            <h3 class={titleNeutralLD}>{section.title}</h3>
+            <h4 class={subtitleNeutral}>{section.subtitle}</h4>
             <p class={text}>
               {section.description.split("\n").map((line, lineIndex, array) => (
                 <span key={lineIndex}>

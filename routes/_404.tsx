@@ -2,7 +2,7 @@
 import { Button } from "$button";
 import { Head } from "$fresh/runtime.ts";
 import { containerBackground } from "$layout";
-import { subtitleGrey, titleGreyLD } from "$text";
+import { subtitleNeutral, titleNeutralLD } from "$text";
 
 /* ===== PAGE COMPONENT ===== */
 export default function Error404Page() {
@@ -17,15 +17,15 @@ export default function Error404Page() {
         class={`${containerBackground} mobileMd:max-w-[420px] mobileMd:mx-auto justify-center items-center`}
       >
         <div class="flex flex-col justify-center items-center">
-          <div class={titleGreyLD}>WHOOPS</div>
-          <div class={subtitleGrey}>SOMETHING WENT WRONG</div>
+          <div class={titleNeutralLD}>WHOOPS</div>
+          <div class={subtitleNeutral}>SOMETHING WENT WRONG</div>
         </div>
         <img
           class="w-[240px] mobileMd:w-[300px] mobileLg:w-[280px] tablet:w-[260px] mt-3 mb-5"
           src="/img/placeholder/broken.png"
           alt="Bitcoin Stamps"
         />
-        <div class={subtitleGrey}>SORRY ABOUT THAT</div>
+        <div class={subtitleNeutral}>SORRY ABOUT THAT</div>
         <div class="flex gap-6 mt-3">
           <Button
             variant="outline"

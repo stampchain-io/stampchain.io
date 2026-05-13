@@ -1,6 +1,6 @@
 /* ===== TERMS OF SERVICE PAGE ===== */
 import { containerBackground, containerGap, CourierFontLoader } from "$layout";
-import { subtitleGrey, text, textLg, textSm, titleGreyLD } from "$text";
+import { subtitleNeutral, text, textLg, textSm, titleNeutralLD } from "$text";
 
 /* ===== PAGE COMPONENT ===== */
 export default function TermsOfServicePage() {
@@ -10,9 +10,9 @@ export default function TermsOfServicePage() {
       <div class={`${containerBackground} ${containerGap}`}>
         {/* ===== HEADER SECTION ===== */}
         <section>
-          <h1 class={titleGreyLD}>TERMS OF SERVICE</h1>
+          <h1 class={titleNeutralLD}>TERMS OF SERVICE</h1>
           <div class="flex flex-col tablet:flex-row tablet:justify-between tablet:items-end">
-            <h2 class={subtitleGrey}>
+            <h2 class={subtitleNeutral}>
               AGREEMENT TO OUR LEGAL TERMS
             </h2>
             <h5 class="text-lg mobileLg:text-xl font-light text-color-grey pb-4 mobileLg:pb-2">

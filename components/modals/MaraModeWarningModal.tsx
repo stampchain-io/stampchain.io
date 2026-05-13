@@ -2,7 +2,7 @@ import { ModalBase } from "$components/layout/ModalBase.tsx";
 import { CloseIcon } from "$icon";
 import { container1 } from "$layout";
 import { tooltipIcon } from "$notification";
-import { titlePurpleLD } from "$text";
+import { titlePrimaryLD } from "$text";
 import type { MaraModeWarningModalProps } from "$types/ui.d.ts";
 import { useEffect, useRef, useState } from "preact/hooks";
 
@@ -84,7 +84,7 @@ export function MaraModeWarningModal({
         </div>
 
         <div class="w-full text-center">
-          <h2 class={`${titlePurpleLD} pt-6 pb-9 leading-tight`}>
+          <h2 class={`${titlePrimaryLD} pt-6 pb-9 leading-tight`}>
             MARA Mode<br />Transaction Warning
           </h2>
         </div>

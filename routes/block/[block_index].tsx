@@ -16,7 +16,7 @@ interface BlockPageData {
 }
 
 import { body } from "$layout";
-import { subtitleGrey, textLg } from "$text";
+import { subtitleNeutral, textLg } from "$text";
 
 /* ===== SERVER HANDLER ===== */
 export const handler: Handlers<BlockPageData> = {
@@ -75,7 +75,7 @@ export default function BlockPage({ data }: PageProps<BlockPageData>) {
 
       {/* ===== PAGE TITLE ===== */}
       <div class="mb-6">
-        <h2 class={subtitleGrey}>
+        <h2 class={subtitleNeutral}>
           BLOCK{" "}
           {data.currentBlock?.block_index?.toLocaleString() || "Not Found"}
         </h2>
@@ -87,7 +87,7 @@ export default function BlockPage({ data }: PageProps<BlockPageData>) {
       {/* ===== MAIN CONTENT ===== */}
       <div class="flex flex-col gap-6">
         <div class="flex flex-col gap-4">
-          <h3 class={subtitleGrey}>RELATED BLOCKS</h3>
+          <h3 class={subtitleNeutral}>RELATED BLOCKS</h3>
           {Array.isArray(data.relatedBlocks) && data.relatedBlocks.length > 0
             ? (
               data.relatedBlocks.map((block) => (

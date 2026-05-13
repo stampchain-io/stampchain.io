@@ -11,11 +11,11 @@ import {
   label,
   labelSm,
   labelXxs,
-  subtitleGrey,
+  subtitleNeutral,
   text,
   textLinkUnderline,
   textSm,
-  titleGreyLD,
+  titleNeutralLD,
   valueSm,
   valueSmLink,
 } from "$text";
@@ -179,8 +179,8 @@ export default function PressKit() {
     <div class={`${body} ${containerGap}`}>
       {/* ===== SECTION 1: MEDIA KIT INTRO ===== */}
       <section class={containerBackground}>
-        <h1 class={titleGreyLD}>MEDIA KIT</h1>
-        <h2 class={`${subtitleGrey} !whitespace-normal`}>
+        <h1 class={titleNeutralLD}>MEDIA KIT</h1>
+        <h2 class={`${subtitleNeutral} !whitespace-normal`}>
           FOR THE BITCOIN STAMPS ECOSYSTEM
         </h2>
         <p class={text}>
@@ -195,8 +195,8 @@ export default function PressKit() {
 
       {/* ===== SECTION 2: BITCOIN STAMPS BRANDING ===== */}
       <section class={containerBackground}>
-        <h3 class={titleGreyLD}>BITCOIN STAMPS</h3>
-        <h4 class={subtitleGrey}>PROTOCOL BRANDING</h4>
+        <h3 class={titleNeutralLD}>BITCOIN STAMPS</h3>
+        <h4 class={subtitleNeutral}>PROTOCOL BRANDING</h4>
 
         {/* Split row */}
         <div class="flex flex-col mobileLg:flex-row gap-5 mobileLg:gap-7.5 mt-2">
@@ -300,8 +300,8 @@ export default function PressKit() {
 
       {/* ===== SECTION 3: STAMPCHAIN WEBSITE LOGO ===== */}
       <section class={containerBackground}>
-        <h3 class={titleGreyLD}>STAMPCHAIN</h3>
-        <h4 class={subtitleGrey}>WEBSITE BRANDING</h4>
+        <h3 class={titleNeutralLD}>STAMPCHAIN</h3>
+        <h4 class={subtitleNeutral}>WEBSITE BRANDING</h4>
 
         {/* Split row */}
         <div class="flex flex-col mobileLg:flex-row gap-5 mobileLg:gap-7.5 mt-2">
@@ -422,8 +422,8 @@ export default function PressKit() {
 
       {/* ===== SECTION 4: ART STAMPS & SRC20 TOKENS ===== */}
       <section class={containerBackground}>
-        <h3 class={titleGreyLD}>STAMPS & TOKENS</h3>
-        <h4 class={subtitleGrey}>ICON SET</h4>
+        <h3 class={titleNeutralLD}>STAMPS & TOKENS</h3>
+        <h4 class={subtitleNeutral}>ICON SET</h4>
         <p class={text}>
           Art stamps icons for single and multiple stamps, and collections.
           Standard or rounded versions available.
@@ -469,8 +469,8 @@ export default function PressKit() {
         <section
           class={`${containerBackground} tablet:w-1/2 tablet:min-w-0`}
         >
-          <h5 class={titleGreyLD}>STAMP ART</h5>
-          <h6 class={subtitleGrey}>SELECTED SPECIALS</h6>
+          <h5 class={titleNeutralLD}>STAMP ART</h5>
+          <h6 class={subtitleNeutral}>SELECTED SPECIALS</h6>
           <p class={text}>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua.
@@ -500,8 +500,8 @@ export default function PressKit() {
         <section
           class={`${containerBackground} tablet:w-1/2 tablet:min-w-0`}
         >
-          <h5 class={titleGreyLD}>STAMP MEMES</h5>
-          <h6 class={subtitleGrey}>LOREM IPSUM</h6>
+          <h5 class={titleNeutralLD}>STAMP MEMES</h5>
+          <h6 class={subtitleNeutral}>LOREM IPSUM</h6>
           <p class={text}>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua.

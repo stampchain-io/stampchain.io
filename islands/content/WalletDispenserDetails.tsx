@@ -12,7 +12,7 @@ import {
   formatBTCAmount,
 } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { tooltipIcon } from "$notification";
-import { headingGreyLD, textXs, titleGreyLD } from "$text";
+import { headingGreyLD, textXs, titleNeutralLD } from "$text";
 import type { StampRow } from "$types/stamp.d.ts";
 import type { WalletDispenserDetailsProps } from "$types/ui.d.ts";
 import { useEffect, useRef, useState } from "preact/hooks";
@@ -460,7 +460,7 @@ function WalletOverview({ walletData }: { walletData: WalletOverviewInfo }) {
   return (
     <div class="flex flex-col">
       <div class="flex pb-1.5 mobileLg:pb-3">
-        <p class={titleGreyLD}>DISPENSER</p>
+        <p class={titleNeutralLD}>DISPENSER</p>
       </div>
       <div class="flex gap-6">
         <div class="flex">

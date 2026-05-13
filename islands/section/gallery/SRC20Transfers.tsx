@@ -9,7 +9,7 @@ import {
   notificationHeading,
   notificationTextError,
 } from "$notification";
-import { subtitleGrey, titleGreyDL, titleGreyLD } from "$text";
+import { subtitleNeutral, titleNeutralDL, titleNeutralLD } from "$text";
 import type { JSX } from "preact";
 import { useEffect, useState } from "preact/hooks";
 
@@ -57,18 +57,18 @@ export default function SRC20TransfersGallery(): JSX.Element {
     <div class={`${containerBackground} items-start tablet:items-end`}>
       {/* ===== TITLE SECTION ===== */}
       <div>
-        <h4 class={`${titleGreyLD} tablet:hidden`}>
+        <h4 class={`${titleNeutralLD} tablet:hidden`}>
           RECENT TRANSFERS
         </h4>
         <h4
-          class={`hidden tablet:block w-full tablet:text-right ${titleGreyDL}`}
+          class={`hidden tablet:block w-full tablet:text-right ${titleNeutralDL}`}
         >
           RECENT TRANSFERS
         </h4>
       </div>
 
       {/* Show block title with loading state */}
-      <h3 class={`tablet:text-right ${subtitleGrey}`}>
+      <h3 class={`tablet:text-right ${subtitleNeutral}`}>
         {isLoading ? <span class="animate-pulse">BLOCK #XXXXXX</span> : (
           transactions.length > 0 && `BLOCK #${transactions[0].block_index}`
         )}

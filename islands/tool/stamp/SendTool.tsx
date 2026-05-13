@@ -28,7 +28,7 @@ import {
   processSVG,
 } from "$lib/utils/ui/media/imageUtils.ts";
 import { FeeCalculatorBase } from "$section";
-import { labelLg, labelSm, titleGreyLD } from "$text";
+import { labelLg, labelSm, titleNeutralLD } from "$text";
 import type { StampRow } from "$types/stamp.d.ts";
 import { JSX } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
@@ -550,7 +550,7 @@ export function StampSendTool() {
   if (isLoadingStamps) {
     return (
       <div class={`${bodyTool} ${containerGap}`}>
-        <h1 class={`${titleGreyLD} mx-auto -mb-2 mobileLg:-mb-4`}>
+        <h1 class={`${titleNeutralLD} mx-auto -mb-2 mobileLg:-mb-4`}>
           SEND
         </h1>
         <SendToolSkeleton />
@@ -561,7 +561,7 @@ export function StampSendTool() {
   /* ===== RENDER ===== */
   return (
     <div class={`${bodyTool} ${containerGap}`}>
-      <h1 class={`${titleGreyLD} mx-auto -mb-2 mobileLg:-mb-4`}>
+      <h1 class={`${titleNeutralLD} mx-auto -mb-2 mobileLg:-mb-4`}>
         SEND
       </h1>
 

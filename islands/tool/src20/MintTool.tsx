@@ -26,7 +26,7 @@ import { mapProgressiveFeeDetails } from "$lib/utils/performance/fees/fee-estima
 import { getSRC20ImageSrc } from "$lib/utils/ui/media/imageUtils.ts";
 import { StatusMessages } from "$notification";
 import { FeeCalculatorBase } from "$section";
-import { labelLg, labelSm, titleGreyLD, valueLg, valueSm } from "$text";
+import { labelLg, labelSm, titleNeutralLD, valueLg, valueSm } from "$text";
 import type { MintProgressProps } from "$types/ui.d.ts";
 import axiod from "axiod";
 import { useEffect, useRef, useState } from "preact/hooks";
@@ -432,7 +432,7 @@ export function SRC20MintTool({
   if (!config) {
     return (
       <div class={`${bodyTool} ${containerGap}`}>
-        <h1 class={`${titleGreyLD} mx-auto -mb-2 mobileLg:-mb-4`}>
+        <h1 class={`${titleNeutralLD} mx-auto -mb-2 mobileLg:-mb-4`}>
           MINT
         </h1>
         <MintToolSkeleton />
@@ -443,7 +443,7 @@ export function SRC20MintTool({
   /* ===== COMPONENT RENDER ===== */
   return (
     <div class={`${bodyTool} ${containerGap}`}>
-      <h1 class={`${titleGreyLD} mx-auto -mb-2 mobileLg:-mb-4`}>
+      <h1 class={`${titleNeutralLD} mx-auto -mb-2 mobileLg:-mb-4`}>
         MINT
       </h1>
 

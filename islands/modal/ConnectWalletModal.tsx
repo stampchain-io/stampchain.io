@@ -2,7 +2,7 @@
 import { showConnectWalletModal } from "$client/wallet/wallet.ts";
 import { ModalBase } from "$layout";
 import { logger } from "$lib/utils/logger.ts";
-import { subtitleGrey } from "$text";
+import { subtitleNeutral } from "$text";
 import type { ConnectWalletModalProps } from "$types/ui.d.ts";
 
 /* ===== TYPES ===== */
@@ -39,7 +39,7 @@ export const ConnectWalletModal = ({
       onClose={handleModalClose}
       className="w-[340px] min-[420px]:w-[360px] mobileMd:w-[380px] mobileLg:w-[640px]"
     >
-      <h4 class={`${subtitleGrey} text-center -mt-6 pb-3`}>
+      <h4 class={`${subtitleNeutral} text-center -mt-6 pb-3`}>
         YOUR WALLET
       </h4>
 

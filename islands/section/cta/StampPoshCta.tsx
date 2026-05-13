@@ -1,7 +1,7 @@
 /* ===== STAMP POSH CTA COMPONENT ===== */
 import { Button } from "$button";
 import { containerBackground } from "$layout";
-import { subtitleGrey, text } from "$text";
+import { subtitleNeutral, text } from "$text";
 
 /* ===== COMPONENT ===== */
 export const StampPoshCta = () => {
@@ -9,7 +9,7 @@ export const StampPoshCta = () => {
     <>
       {/* ===== CONTENT SECTION ===== */}
       <div class={`${containerBackground} mt-6 mobileLg:mt-12`}>
-        <h4 class={subtitleGrey}>
+        <h4 class={subtitleNeutral}>
           NAMED ASSETS
         </h4>
         <div

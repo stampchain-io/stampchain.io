@@ -1,6 +1,6 @@
 /* ===== TEAM GALLERY COMPONENT ===== */
 import { containerBackground, containerGap } from "$layout";
-import { headingGreyLD, subtitleGrey, valueSm } from "$text";
+import { headingGreyLD, subtitleNeutral, valueSm } from "$text";
 
 /* ===== COMPONENT ===== */
 export default function TeamBanner() {
@@ -12,7 +12,7 @@ export default function TeamBanner() {
         <div class="w-full flex justify-start items-start">
           <div class="w-full">
             {/* ===== SECTION TITLE ===== */}
-            <h2 class={subtitleGrey}>THE TEAM</h2>
+            <h2 class={subtitleNeutral}>THE TEAM</h2>
 
             {/* ===== TEAM MEMBERS GRID ===== */}
             <div

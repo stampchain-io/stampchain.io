@@ -5,7 +5,7 @@ import {
   abbreviateAddress,
   formatBTCAmount,
 } from "$lib/utils/ui/formatting/formatUtils.ts";
-import { subtitleGrey, titleGreyDL } from "$text";
+import { subtitleNeutral, titleNeutralDL } from "$text";
 import type { StampWithEnhancedSaleData } from "$types/marketData.d.ts";
 import type { SalesActivityFeedProps } from "$types/ui.d.ts";
 import { useEffect, useState } from "preact/hooks";
@@ -231,12 +231,12 @@ export default function SalesActivityFeed({
       <div class="flex justify-between items-center mb-6">
         <div class="flex flex-col">
           {title && (
-            <h2 class={`${titleGreyDL} text-lg`}>
+            <h2 class={`${titleNeutralDL} text-lg`}>
               {title}
             </h2>
           )}
           {subTitle && (
-            <p class={`${subtitleGrey} text-sm`}>
+            <p class={`${subtitleNeutral} text-sm`}>
               {subTitle}
             </p>
           )}

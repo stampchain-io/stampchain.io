@@ -2,7 +2,7 @@ import { ModalBase } from "$components/layout/ModalBase.tsx";
 import { CloseIcon } from "$icon";
 import { container1 } from "$layout";
 import { tooltipIcon } from "$notification";
-import { titlePurpleLD } from "$text";
+import { titlePrimaryLD } from "$text";
 import type { MaraServiceUnavailableModalProps } from "$types/ui.d.ts";
 import { useEffect, useRef, useState } from "preact/hooks";
 
@@ -80,7 +80,7 @@ export function MaraServiceUnavailableModal({
         </div>
 
         <div class="w-full text-center">
-          <h2 class={`${titlePurpleLD} pt-6 pb-9 leading-tight`}>
+          <h2 class={`${titlePrimaryLD} pt-6 pb-9 leading-tight`}>
             MARA Service<br />Temporarily Unavailable
           </h2>
         </div>

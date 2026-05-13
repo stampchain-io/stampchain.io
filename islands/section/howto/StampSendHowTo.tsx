@@ -1,15 +1,15 @@
 /* ===== HOW TO SEND STAMP COMPONENT ===== */
 import { ReadAllButton } from "$button";
 import { containerBackground } from "$layout";
-import { subtitleGrey, text, titleGreyLD } from "$text";
+import { subtitleNeutral, text, titleNeutralLD } from "$text";
 
 /* ===== COMPONENT ===== */
 export const StampSendHowTo = () => {
   return (
     <div class={`${containerBackground} gap-5`}>
       <div class="flex flex-col">
-        <h3 class={titleGreyLD}>HOW-TO</h3>
-        <h2 class={subtitleGrey}>SEND A STAMP</h2>
+        <h3 class={titleNeutralLD}>HOW-TO</h3>
+        <h2 class={subtitleNeutral}>SEND A STAMP</h2>
         <p class={text}>
           <ul class="list-disc pl-5 space-y-2">
             <li>

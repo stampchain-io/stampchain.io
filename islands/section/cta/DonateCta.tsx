@@ -16,10 +16,10 @@ import { tooltipIcon } from "$notification";
 import {
   headingGrey,
   labelSm,
-  subtitlePurple,
+  subtitlePrimary,
   text,
   textLg,
-  titlePurpleLD,
+  titlePrimaryLD,
 } from "$text";
 import type { StampRow } from "$types/stamp.d.ts";
 import { useEffect, useRef, useState } from "preact/hooks";
@@ -322,8 +322,8 @@ export default function DonateCta() {
       <section class={containerBackground}>
         {/* ===== HEADER SECTION ===== */}
         <div class="w-full flex flex-col justify-center items-start">
-          <h3 class={titlePurpleLD}>DONATE</h3>
-          <h4 class={subtitlePurple}>TO THE DEV FUND</h4>
+          <h3 class={titlePrimaryLD}>DONATE</h3>
+          <h4 class={subtitlePrimary}>TO THE DEV FUND</h4>
         </div>
         {/* ===== MAIN CONTENT SECTION ===== */}
         <p class={`${textLg} tablet:hidden block mb-0`}>

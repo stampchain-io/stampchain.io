@@ -22,7 +22,7 @@ export const shadowGlowPurple =
 export const shadowGlowGrey =
   `group hover:shadow-[0px_0px_16px_color-mix(in_srgb,var(--color-grey-light)_75%,transparent)] ${transitionColors} cursor-pointer`;
 
-// Container styles
+/* ===== CONTAINER LAYER STYLES ===== */
 // Overlay layer styles - used for drawer and modal containers
 export const container0 =
   `bg-gradient-to-b from-color-neutral-950/95 via-color-neutral-900/70 to-neutral-1000/90 backdrop-blur-lg`;

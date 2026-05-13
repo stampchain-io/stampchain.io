@@ -1,16 +1,16 @@
 /* ===== FAQ HEADER COMPONENT ===== */
 import { containerBackground } from "$layout";
-import { subtitleGrey, text, textLg, titleGreyLD } from "$text";
+import { subtitleNeutral, text, textLg, titleNeutralLD } from "$text";
 /* ===== COMPONENT ===== */
 export function FaqHeader() {
   return (
     <section class={containerBackground}>
       <div class="flex flex-col ">
         {/* ===== TITLE SECTION ===== */}
-        <h1 class={titleGreyLD}>
+        <h1 class={titleNeutralLD}>
           YOU'VE GOT QUESTIONS
         </h1>
-        <h2 class={subtitleGrey}>
+        <h2 class={subtitleNeutral}>
           WE'VE GOT ANSWERS
         </h2>
 

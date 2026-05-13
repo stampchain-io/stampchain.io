@@ -57,19 +57,19 @@ export const navLinkFooterOverlay =
 
 /* =================================================================== */
 /* ===== TITLE STYLES ===== */
-export const titleGreyLD =
+export const titleNeutralLD =
   `${titleFont} bg-gradient-to-r color-neutral-gradient cursor-default ${select}`;
-export const titleGreyDL =
+export const titleNeutralDL =
   `${titleFont} bg-gradient-to-l color-neutral-gradient cursor-default ${select}`;
-export const titlePurpleLD =
+export const titlePrimaryLD =
   `${titleFont} bg-gradient-to-r color-primary-gradient cursor-default ${select}`;
-export const titlePurpleDL =
+export const titlePrimaryDL =
   `${titleFont} bg-gradient-to-l color-primary-gradient cursor-default ${select}`;
 
 /* ===== SUBTITLE STYLES ===== */
-export const subtitleGrey =
+export const subtitleNeutral =
   `${subtitleFont} text-color-neutral-100 cursor-default ${select}`;
-export const subtitlePurple =
+export const subtitlePrimary =
   `${subtitleFont} text-color-primary-400 cursor-default ${select}`;
 
 /* ===== HEADING STYLES ===== */
@@ -265,13 +265,13 @@ export type TextStyles = {
   navLinkFooter: string;
   navLinkFooterOverlay: string;
   // Title styles
-  titleGreyLD: string;
-  titleGreyDL: string;
-  titlePurpleLD: string;
-  titlePurpleDL: string;
+  titleNeutralLD: string;
+  titleNeutralDL: string;
+  titlePrimaryLD: string;
+  titlePrimaryDL: string;
   // Subtitle styles
-  subtitleGrey: string;
-  subtitlePurple: string;
+  subtitleNeutral: string;
+  subtitlePrimary: string;
   // Heading styles
   headingGrey2: string;
   headingGreyLD: string;

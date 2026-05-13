@@ -1,15 +1,15 @@
 /* ===== HOW TO DEPLOY TOKEN COMPONENT ===== */
 import { ReadAllButton } from "$button";
 import { containerBackground } from "$layout";
-import { subtitleGrey, text, titleGreyLD } from "$text";
+import { subtitleNeutral, text, titleNeutralLD } from "$text";
 
 /* ===== COMPONENT ===== */
 export const SRC20DeployHowto = () => {
   return (
     <div class={`${containerBackground} gap-5`}>
       <div class="flex flex-col">
-        <h3 class={titleGreyLD}>HOW-TO</h3>
-        <h2 class={subtitleGrey}>DEPLOY A TOKEN</h2>
+        <h3 class={titleNeutralLD}>HOW-TO</h3>
+        <h2 class={subtitleNeutral}>DEPLOY A TOKEN</h2>
         <p class={text}>
           <ul class="list-disc pl-5 space-y-2">
             <li>

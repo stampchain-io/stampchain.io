@@ -10,8 +10,8 @@ import { tooltipIcon } from "$notification";
 import {
   label,
   labelSm,
-  subtitleGrey,
-  titleGreyLD,
+  subtitleNeutral,
+  titleNeutralLD,
   valueDarkSm,
   valueSm,
 } from "$text";
@@ -131,7 +131,7 @@ function SectionHeader({
       f-partial={`/${config.paramName}`}
     >
       <div class="flex items-center gap-4">
-        <h2 class={titleGreyLD}>
+        <h2 class={titleNeutralLD}>
           {title}
         </h2>
         {sortMetrics && (
@@ -444,7 +444,7 @@ function DispenserRow(
               <div class="relative">
                 <a
                   href={`/stamp/${dispenser.stamp.stamp}`}
-                  class={subtitleGrey}
+                  class={subtitleNeutral}
                 >
                   {`#${dispenser.stamp.stamp}`}
                 </a>
@@ -799,7 +799,7 @@ function WalletProfileContentInner({
           {/* Open Dispensers */}
           {openDispensersCount > 0 && (
             <div id="open-listings-section" class="mb-10">
-              <h3 class={subtitleGrey}>
+              <h3 class={subtitleNeutral}>
                 OPEN DISPENSERS - {openDispensersCount}
               </h3>
               <DispenserItem
@@ -813,7 +813,7 @@ function WalletProfileContentInner({
           {/* Closed Dispensers */}
           {closedDispensersCount > 0 && (
             <div id="closed-listings-section">
-              <h3 class={subtitleGrey}>
+              <h3 class={subtitleNeutral}>
                 CLOSED DISPENSERS - {closedDispensersCount}
               </h3>
               <DispenserItem
