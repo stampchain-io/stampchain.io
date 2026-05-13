@@ -3,61 +3,50 @@
 
 /* ===== BASE STYLES ===== */
 const logoFont = "font-black italic text-3xl tracking-wide inline-block w-fit";
-const titleFont = "font-black text-3xl tracking-tight inline-block w-fit ";
-const subtitleFont = "font-bold text-2xl mb-2";
+const titleFont =
+  "font-black text-3xl uppercase tracking-tight inline-block w-fit ";
+const subtitleFont = "font-light text-2xl uppercase mb-2";
 const textFont = "font-normal text-color-neutral-200";
-const labelFont = "font-extrabold text-color-neutral-600 tracking-wide";
-const valueFont = "font-medium text-color-neutral-200";
+const labelFont = "font-light text-color-neutral-500 tracking-wide";
+const valueFont = "font-medium text-color-neutral-300";
 const select = "select-none whitespace-nowrap";
 const transitionColors = "transition-colors duration-200";
-const neutralGradient =
-  "from-color-neutral-200 via-color-neutral-400 to-color-neutral-600 bg-clip-text text-transparent";
-const neutralGradientHover =
-  "hover:from-color-primary-400 hover:via-color-primary-400 hover:to-color-primary-400";
-const primaryGradient =
-  "from-color-primary-300 via-color-primary-500 to-color-primary-700 bg-clip-text text-transparent";
-const primaryGradientHover =
-  "hover:from-color-primary-400 hover:via-color-primary-400 hover:to-color-primary-400";
 
 /* =================================================================== */
 
 /* =================================================================== */
 
 /* ===== LOGO STYLES ===== */
-export const logoPurpleLD = // used in footer
-  `${logoFont} bg-gradient-to-r ${primaryGradient} ${select}`;
-export const logoPurpleLDLink =
-  `${logoFont} bg-gradient-to-r ${primaryGradient} ${primaryGradientHover} ${transitionColors} cursor-pointer ${select}`;
-
-export const logoPurpleDL =
-  `${logoFont} bg-gradient-to-l ${primaryGradient} ${select}`;
-export const logoPurpleDLLink =
-  `${logoFont} bg-gradient-to-l ${primaryGradient} ${primaryGradientHover} ${transitionColors} cursor-pointer ${select}`;
+export const logoPrimary = // used in footer
+  `${logoFont} bg-gradient-to-r color-primary-gradient ${select}`;
+export const logoPrimaryHover =
+  `${logoFont} bg-gradient-to-r color-primary-gradient color-gradient-hover ${transitionColors} cursor-pointer ${select}`;
 
 /* =================================================================== */
 
 /* ===== NAVIGATION STYLES ===== */
 // Header Navigation - Desktop
 export const navLinkDesktop =
-  `mt-0.5 font-normal tablet:font-extralight text-base tablet:text-sm
-  bg-gradient-to-b from-color-neutral-200 via-color-neutral-300 to-color-neutral-400 bg-clip-text text-transparent group-hover:from-color-primary-300 group-hover:via-color-primary-400 group-hover:to-color-primary-400 tracking-[0.01rem] ${transitionColors} cursor-pointer ${select}`;
+  `mt-0.5 font-normal tablet:font-normal text-sm tablet:text-xs uppercase
+  bg-gradient-to-b from-color-neutral-300 via-color-neutral-400 to-color-neutral-500 bg-clip-text text-transparent group-hover:from-color-primary-300 group-hover:via-color-primary-400 group-hover:to-color-primary-400 tracking-[0.01rem] ${transitionColors} cursor-pointer ${select}`;
 export const navLinkActiveDesktop =
   `${navLinkDesktop} !text-color-hover !cursor-default`;
 export const navSublinkDesktop =
-  `font-light text-sm text-color-neutral-400 hover:text-color-hover tracking-tight ${transitionColors} cursor-pointer ${select}`; // used in WalletButton and ToolsButton for submenu links
+  `font-normal text-xs uppercase text-color-neutral-400 hover:text-color-hover tracking-tight ${transitionColors} cursor-pointer ${select}`; // used in WalletButton and ToolsButton for submenu links
 export const navSublinkActiveDesktop =
   `${navSublinkDesktop} !text-color-hover !cursor-default`;
 
 // Drawer Navigation - Mobile/tablet
-export const navLinkMobile =
-  `font-extralight text-2xl tablet:text-lg bg-gradient-to-r ${neutralGradient} ${neutralGradientHover} tracking-wider inline-block w-fit cursor-pointer ${select}`;
+export const navLinkMobile = `font-extrabold text-xl uppercase
+  bg-gradient-to-r color-neutral-gradient color-gradient-hover
+  tracking-wider inline-block w-fit cursor-pointer ${select}`;
 export const navLinkActiveMobile =
-  `${navLinkMobile} text-color-grey-light [background:none_!important] [-webkit-text-fill-color:var(--color-grey-semilight)_!important] [text-fill-color:var(--color-grey-semilight)_!important] hover:[-webkit-text-fill-color:var(--color-grey)!important] hover:[text-fill-color:var(--color-grey)!important]`;
-export const navSublinkMobile =
-  `font-semibold text-base tablet:text-sm text-color-neutral-400 hover:text-color-primary-500
+  `${navLinkMobile} [background:none_!important] [-webkit-text-fill-color:var(--color-primary-400)_!important] [text-fill-color:var(--color-primary-400)_!important] !cursor-default`;
+export const navSublinkMobile = `font-semibold text-sm tablet:text-xs uppercase
+  text-color-neutral-400 hover:text-color-hover
   tracking-wide ${transitionColors} cursor-pointer ${select}`;
 export const navSublinkActiveMobile =
-  `${navSublinkMobile} !text-color-primary-400 !cursor-default ${select}`;
+  `${navSublinkMobile} !text-color-hover !cursor-default ${select}`;
 
 // Footer - transparent text - used with the navLinkFooterOverlay class
 export const navLinkFooter =
@@ -69,13 +58,13 @@ export const navLinkFooterOverlay =
 /* =================================================================== */
 /* ===== TITLE STYLES ===== */
 export const titleGreyLD =
-  `${titleFont} bg-gradient-to-r ${neutralGradient} cursor-default ${select}`;
+  `${titleFont} bg-gradient-to-r color-neutral-gradient cursor-default ${select}`;
 export const titleGreyDL =
-  `${titleFont} bg-gradient-to-l ${neutralGradient} cursor-default ${select}`;
+  `${titleFont} bg-gradient-to-l color-neutral-gradient cursor-default ${select}`;
 export const titlePurpleLD =
-  `${titleFont} bg-gradient-to-r ${primaryGradient} cursor-default ${select}`;
+  `${titleFont} bg-gradient-to-r color-primary-gradient cursor-default ${select}`;
 export const titlePurpleDL =
-  `${titleFont} bg-gradient-to-l ${primaryGradient} cursor-default ${select}`;
+  `${titleFont} bg-gradient-to-l color-primary-gradient cursor-default ${select}`;
 
 /* ===== SUBTITLE STYLES ===== */
 export const subtitleGrey =
@@ -87,15 +76,15 @@ export const subtitlePurple =
 export const headingGrey2 =
   `font-black text-3xl mobileLg:text-4xl text-color-grey-light tracking-wide ${select}`; // was used in about donate section - rename
 export const headingGreyLD =
-  `font-bold text-xl bg-gradient-to-r ${neutralGradient} tracking-wide inline-block w-fit relative ${select}`;
+  `font-bold text-xl bg-gradient-to-r color-neutral-gradient tracking-wide inline-block w-fit relative ${select}`;
 export const headingGreyLDLink =
-  `font-bold text-lg bg-gradient-to-r ${neutralGradient} ${neutralGradientHover} tracking-wide inline-block w-fit relative ${transitionColors} cursor-pointer ${select}`; // used in media page / keep reading in howto pages / accordion titles (custom code)
+  `font-bold text-lg bg-gradient-to-r color-neutral-gradient color-gradient-hover tracking-wide inline-block w-fit relative ${transitionColors} cursor-pointer ${select}`; // used in media page / keep reading in howto pages / accordion titles (custom code)
 export const headingGreyDLLink =
-  `font-bold text-lg bg-gradient-to-l ${neutralGradient} ${neutralGradientHover} tracking-wide inline-block w-fit relative -mt-1 ${transitionColors} cursor-pointer ${select}`; // used in collection and stamp detail pages
+  `font-bold text-lg bg-gradient-to-l color-neutral-gradient color-gradient-hover tracking-wide inline-block w-fit relative -mt-1 ${transitionColors} cursor-pointer ${select}`; // used in collection and stamp detail pages
 export const headingGrey =
   `font-bold text-2xl text-color-neutral-300 cursor-default ${select}`; // used in howto overview and detail pages / donate CTA
 export const headingPurpleLD =
-  `font-black text-sm mobileMd:text-lg bg-gradient-to-r ${primaryGradient} tracking-wide inline-block w-fit text-center mt-3 mobileMd:mt-4 mobileLg:mt-5 mb-1 mobileMd:mb-0 ${select}`; // used specifically in team banner gallery
+  `font-black text-sm mobileMd:text-lg bg-gradient-to-r color-primary-gradient tracking-wide inline-block w-fit text-center mt-3 mobileMd:mt-4 mobileLg:mt-5 mb-1 mobileMd:mb-0 ${select}`; // used specifically in team banner gallery
 
 /* =================================================================== */
 /* ===== BODY TEXT STYLES ===== */
@@ -103,7 +92,7 @@ export const textXxs = `${textFont} text-[10px]`;
 export const textXs = `${textFont} text-xs`;
 export const textSm = `${textFont} text-sm`;
 export const textSmLink =
-  `${textFont} text-sm hover:text-color-purple-light ${transitionColors} cursor-pointer ${select}`;
+  `${textFont} text-sm hover:text-color-hover ${transitionColors} cursor-pointer ${select}`;
 export const text = `${textFont} text-base`;
 export const textLg = `${textFont} text-lg`;
 export const textXl = `${textFont} text-xl`;
@@ -141,10 +130,10 @@ export const labelLogicResponsive = ( // used for the filter labels
   ${
   checked
     ? canHoverSelected
-      ? "text-color-grey-light group-hover:text-color-grey"
+      ? "text-color-grey-light group-hover:text-color-hover"
       : "text-color-grey-light"
     : canHoverSelected
-    ? "text-color-grey group-hover:text-color-grey-light"
+    ? "text-color-grey group-hover:text-color-hover"
     : "text-color-grey"
 }
 `;
@@ -155,7 +144,7 @@ export const labelLogicResponsive = ( // used for the filter labels
 export const valueXs = `${valueFont} text-xs ${select}`;
 export const valueSm = `${valueFont} text-sm ${select}`;
 export const valueSmLink =
-  `${valueFont} text-sm hover:text-color-grey ${transitionColors} cursor-pointer w-full ${select}`;
+  `${valueFont} text-sm hover:text-color-hover ${transitionColors} cursor-pointer w-full ${select}`;
 export const value = `${valueFont} text-base ${select}`;
 export const valueLg = `${valueFont} text-lg ${select}`;
 export const valueXl =
@@ -197,14 +186,14 @@ export const valueNeutral = `text-color-grey-semidark`;
 
 /* =================================================================== */
 /* ===== SPECIAL TEXT STYLES ===== */
-export const eybrowNeutral =
-  `font-bold text-[0.625rem] text-color-neutral-500 tracking-wider cursor-default ${select}`; // descriptive text above icons, links, etc.
-export const eybrowPrimary =
-  `font-bold text-[0.625rem] text-color-primary-400 tracking-wider cursor-default ${select}`;
-export const eybrowSecondary =
-  `font-bold text-[0.625rem] text-color-secondary-400 tracking-wider cursor-default ${select}`;
+export const eyebrowNeutral =
+  `font-extrabold text-[0.625rem] text-color-neutral-500 tracking-wider cursor-default ${select}`; // descriptive text above icons, links, etc.
+export const eyebrowPrimary =
+  `font-extrabold text-[0.625rem] text-color-primary-500 tracking-wider cursor-default ${select}`;
+export const eyebrowSecondary =
+  `font-extrabold text-[0.625rem] text-color-secondary-500 tracking-wider cursor-default ${select}`;
 export const tagline =
-  `font-regular text-xs bg-gradient-to-r ${primaryGradient} ${select}`; // used in footer
+  `font-regular text-xs bg-gradient-to-r color-primary-gradient ${select}`; // used in footer
 export const copyright =
   `font-normal text-xs mobileMd:text-sm tablet:text-xs text-color-grey-dark cursor-default ${select}`; // used in the footer for copyright and counterparty version text
 export const toggleSymbol =
@@ -230,17 +219,17 @@ export const cardSupply =
 
 // Minimal card variant styles
 export const cardHashSymbolMinimal =
-  `font-light text-color-grey-light group-hover:text-color-purple-light text-xs mobileSm:text-base mobileLg:text-xl tablet:text-xl desktop:text-xl ${transitionColors} ${select}`;
+  `font-light text-color-grey-light group-hover:text-color-hover text-xs mobileSm:text-base mobileLg:text-xl tablet:text-xl desktop:text-xl ${transitionColors} ${select}`;
 export const cardStampNumberMinimal =
-  `font-black bg-gradient-to-r ${neutralGradient} group-hover:[-webkit-text-fill-color:var(--color-purple-light)] truncate text-sm mobileSm:text-base mobileLg:text-xl tablet:text-xl desktop:text-xl ${transitionColors} ${select}`;
+  `font-black bg-gradient-to-r color-neutral-gradient color-gradient-hover truncate text-sm mobileSm:text-base mobileLg:text-xl tablet:text-xl desktop:text-xl ${transitionColors} ${select}`;
 export const cardPriceMinimal =
   `font-normal text-color-grey truncate text-nowrap text-[10px] mobileMd:text-xs mobileLg:text-sm ${select}`;
 
 // Grey gradient card variant styles
 export const cardHashSymbolGrey =
-  `font-light text-color-grey group-hover:text-color-purple-light text-lg min-[420px]:text-xl ${transitionColors} ${select}`;
+  `font-light text-color-grey group-hover:text-color-hover text-lg min-[420px]:text-xl ${transitionColors} ${select}`;
 export const cardStampNumberGrey =
-  `font-black bg-gradient-to-r ${neutralGradient} group-hover:[-webkit-text-fill-color:var(--color-purple-light)] truncate max-w-full text-lg min-[420px]:text-xl ${transitionColors} ${select}`;
+  `font-black bg-gradient-to-r color-neutral-gradient color-gradient-hover truncate max-w-full text-lg min-[420px]:text-xl ${transitionColors} ${select}`;
 
 /* =================================================================== */
 /* ===== CARD CONFIGURATION - check if used ===== */
@@ -262,8 +251,8 @@ export type TextStyles = {
   // Logo styles
   logoPurpleDL: string;
   logoPurpleDLLink: string;
-  logoPurpleLD: string;
-  logoPurpleLDLink: string;
+  logoPrimary: string;
+  logoPrimaryHover: string;
   // Navigation styles
   navLinkDesktop: string;
   navLinkActiveDesktop: string;
@@ -336,8 +325,9 @@ export type TextStyles = {
   valueGain: string;
   valueLoss: string;
   // Special text styles
-  eybrowNeutral: string;
-  eybrowPrimary: string;
+  eyebrowNeutral: string;
+  eyebrowPrimary: string;
+  eyebrowSecondary: string;
   tagline: string;
   copyright: string;
   toggleSymbol: string;

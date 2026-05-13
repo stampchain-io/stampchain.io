@@ -78,11 +78,11 @@ b, strong {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-purple);
+  background: var(--color-primary-500);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-purple-dark);
+  background: var(--color-primary-950);
   border-radius: 3px;
 }
 
@@ -93,15 +93,15 @@ b, strong {
 
 /* Custom scrollbar colors */
 .scrollbar-background-overlay {
-  @apply [&::-webkit-scrollbar-track]:bg-[var(--color-background)] [&::-webkit-scrollbar-thumb]:bg-[var(--color-grey-dark)] [&::-webkit-scrollbar-thumb]:opacity-50 [&::-webkit-scrollbar-thumb:hover]:bg-[var(--color-grey-semidark)];
+  @apply [&::-webkit-scrollbar-track]:bg-[var(--color-background)] [&::-webkit-scrollbar-thumb]:bg-[var(--color-neutral-700)] [&::-webkit-scrollbar-thumb]:opacity-50 [&::-webkit-scrollbar-thumb:hover]:bg-[var(--color-grey-semidark)];
 }
 
 .scrollbar-background-layer1 {
-  @apply [&::-webkit-scrollbar-track]:bg-[var(--color-background)] [&::-webkit-scrollbar-thumb]:bg-[var(--color-grey-dark)] [&::-webkit-scrollbar-thumb]:opacity-50 [&::-webkit-scrollbar-thumb:hover]:bg-[var(--color-grey-semidark)];
+  @apply [&::-webkit-scrollbar-track]:bg-[var(--color-background)] [&::-webkit-scrollbar-thumb]:bg-[var(--color-neutral-700)] [&::-webkit-scrollbar-thumb]:opacity-50 [&::-webkit-scrollbar-thumb:hover]:bg-[var(--color-grey-semidark)];
 }
 
 .scrollbar-background-layer2 {
-  @apply [&::-webkit-scrollbar]:w-[2px] [&::-webkit-scrollbar-track]:bg-[var(--color-background)] [&::-webkit-scrollbar-thumb]:bg-[var(--color-grey-dark)] [&::-webkit-scrollbar-thumb]:opacity-50 [&::-webkit-scrollbar-thumb:hover]:bg-[var(--color-grey-semidark)];
+  @apply [&::-webkit-scrollbar]:w-[2px] [&::-webkit-scrollbar-track]:bg-[var(--color-background)] [&::-webkit-scrollbar-thumb]:bg-[var(--color-neutral-700)] [&::-webkit-scrollbar-thumb]:opacity-50 [&::-webkit-scrollbar-thumb:hover]:bg-[var(--color-grey-semidark)];
 }
 
 /* ========================================================================== */
@@ -216,13 +216,6 @@ b, strong {
     -webkit-appearance: none;
     margin: 0;
   }
-}
-
-/* Remove outline from input fields */
-.no-outline:focus-visible {
-  outline: 0px solid transparent !important;
-  outline-offset: 0 !important;
-  outline-style: none !important;
 }
 
 /* Remove border radius for input field when dropdown is open */

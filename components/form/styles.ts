@@ -11,7 +11,7 @@ const inputFieldWidth = "!w-10";
 // so the gradient border must live on a wrapping <div> (see wrapper exports below).
 const inputInner = `
   px-5 w-full h-full bg-transparent border-none
-  focus:outline-none focus-visible:outline-none no-outline
+  focus:outline-none focus-visible:outline-none
   font-normal text-xs text-color-neutral-200
   placeholder:font-light placeholder:text-color-neutral-500 placeholder:uppercase
 `;
@@ -36,7 +36,7 @@ export const inputFieldSquareWrapper = `
 `;
 
 export const inputTextareaWrapper = `
-  w-full pt-3
+  w-full pt-3 h-auto
   ${glassmorphismL2Hover} ${transitionColors}
   focus-within:bg-color-neutral-1000
 `;
@@ -56,10 +56,12 @@ export const inputFieldOutline = `
   ${inputFieldHeight} w-full
 `;
 
-// Textarea inner
+// Textarea inner — no h-full (wrapper is auto-height, not fixed).
 export const inputTextarea = `
-  h-[100px] resize-none
-  ${inputInner}
+  px-5 w-full h-[100px] min-h-[100px] resize-none bg-transparent border-none
+  focus:outline-none focus-visible:outline-none
+  font-normal text-xs text-color-neutral-200
+  placeholder:font-light placeholder:text-color-neutral-500 placeholder:uppercase
 `;
 
 // Input field dropdown - define height in the component

@@ -72,7 +72,7 @@ export default {
             dark: "#A21CAF", /* "#43005c", 700 */
             semidark: "#C026D3", /* "#610085", 600 */
             DEFAULT: "#D946EF", /* "#7f00ad", 500 */
-            semilight: "#E879F9;", /* "#9d00d6", 400 */
+            semilight: "#E879F9", /* "#9d00d6", 400 */
             light: "#F0ABFC", /* "#BB00FF", 300*/
           },
           grey: {
@@ -83,6 +83,17 @@ export default {
             light: "#D4D4D4", /* "#f9f2e9", */
           },
           red: {
+            50: "#FEF2F2",
+            100: "#FEE2E2",
+            200: "#FECACA",
+            300: "#FCA5A5",
+            400: "#F87171",
+            500: "#EF4444",
+            600: "#DC2626",
+            700: "#B91C1C",
+            800: "#991B1B",
+            900: "#7F1D1D",
+            950: "#450A0A",
             dark: "#5c0000",
             semidark: "#850000",
             DEFAULT: "#ad0000",
@@ -90,6 +101,17 @@ export default {
             light: "#ff0000",
           },
           green: {
+            50: "#F0FDF4",
+            100: "#DCFCE7",
+            200: "#BBF7D0",
+            300: "#86EFAC",
+            400: "#4ADE80",
+            500: "#22C55E",
+            600: "#16A34A",
+            700: "#15803D",
+            800: "#166534",
+            900: "#14532D",
+            950: "#052E16",
             dark: "#005c00",
             semidark: "#008500",
             DEFAULT: "#00ad00",
@@ -97,6 +119,17 @@ export default {
             light: "#00ff00",
           },
           orange: {
+            50: "#FFF7ED",
+            100: "#FFEDD5",
+            200: "#FED7AA",
+            300: "#FDBA74",
+            400: "#FB923C",
+            500: "#F97316",
+            600: "#EA580C",
+            700: "#C2410C",
+            800: "#9A3412",
+            900: "#7C2D12",
+            950: "#431407",
             dark: "#5c2b00",
             semidark: "#853e00",
             DEFAULT: "#ad5100",
@@ -221,11 +254,147 @@ export default {
   plugins: [
     plugin(function ({ addUtilities }: any) {
       addUtilities({
+        /* ===== CSS VARIABLES ===== */
+        /* Duplicates of the color scheme defined above, but in CSS variables format */
+        ":root": {
+          /* Purple: refactor and delete. */
+          // Purple color palette
+          "--color-purple-dark": "#A21CAF", // was #43005c
+          "--color-purple-semidark": "#C026D3", // was #610085
+          "--color-purple": "#D946EF", // was #7f00ad
+          "--color-purple-semilight": "#E879F9", // was #9d00d6
+          "--color-purple-light": "#F0ABFC", // was #BB00FF
+          /* Grey: Refactor and delete. */
+          // Grey color palette
+          "--color-grey-dark": "#404040", // was #585552
+          "--color-grey-semidark": "#525252", // was #817e78
+          "--color-grey": "#737373", // was #a8a39d
+          "--color-grey-semilight": "#A3A3A3", // was #d1cbc3
+          "--color-grey-light": "#D4D4D4", // was #f9f2e9
+          // Red color palette
+          "--color-red-50": "#FEF2F2",
+          "--color-red-100": "#FEE2E2",
+          "--color-red-200": "#FECACA",
+          "--color-red-300": "#FCA5A5",
+          "--color-red-400": "#F87171",
+          "--color-red-500": "#EF4444",
+          "--color-red-600": "#DC2626",
+          "--color-red-700": "#B91C1C",
+          "--color-red-800": "#991B1B",
+          "--color-red-900": "#7F1D1D",
+          "--color-red-950": "#450A0A",
+          "--color-red-dark": "#5c0000",
+          "--color-red-semidark": "#850000",
+          "--color-red": "#ad0000",
+          "--color-red-semilight": "#d60000",
+          "--color-red-light": "#ff0000",
+          // Green color palette
+          "--color-green-50": "#F0FDF4",
+          "--color-green-100": "#DCFCE7",
+          "--color-green-200": "#BBF7D0",
+          "--color-green-300": "#86EFAC",
+          "--color-green-400": "#4ADE80",
+          "--color-green-500": "#22C55E",
+          "--color-green-600": "#16A34A",
+          "--color-green-700": "#15803D",
+          "--color-green-800": "#166534",
+          "--color-green-900": "#14532D",
+          "--color-green-950": "#052E16",
+          "--color-green-dark": "#005c00",
+          "--color-green-semidark": "#008500",
+          "--color-green": "#00ad00",
+          "--color-green-semilight": "#00d600",
+          "--color-green-light": "#00ff00",
+          // Orange color palette
+          "--color-orange-50": "#FFF7ED",
+          "--color-orange-100": "#FFEDD5",
+          "--color-orange-200": "#FED7AA",
+          "--color-orange-300": "#FDBA74",
+          "--color-orange-400": "#FB923C",
+          "--color-orange-500": "#F97316",
+          "--color-orange-600": "#EA580C",
+          "--color-orange-700": "#C2410C",
+          "--color-orange-800": "#9A3412",
+          "--color-orange-900": "#7C2D12",
+          "--color-orange-950": "#431407",
+          "--color-orange-dark": "#5c2b00",
+          "--color-orange-semidark": "#853e00",
+          "--color-orange": "#ad5100",
+          "--color-orange-semilight": "#d66400",
+          "--color-orange-light": "#ff7700",
+
+          // Neutral color palette
+          "--color-neutral-0": "#FFFFFF",
+          "--color-neutral-50": "#FAFAFA",
+          "--color-neutral-100": "#F5F5F5",
+          "--color-neutral-200": "#E5E5E5",
+          "--color-neutral-300": "#D4D4D4",
+          "--color-neutral-400": "#A3A3A3",
+          "--color-neutral-500": "#737373",
+          "--color-neutral-600": "#525252",
+          "--color-neutral-700": "#404040",
+          "--color-neutral-800": "#262626",
+          "--color-neutral-900": "#171717",
+          "--color-neutral-950": "#0A0A0A",
+          "--color-neutral-1000": "#000000",
+          // Primary (fuchsia) color palette
+          "--color-primary-50": "#FDF4FF",
+          "--color-primary-100": "#FAE8FF",
+          "--color-primary-200": "#F5D0FE",
+          "--color-primary-300": "#F0ABFC",
+          "--color-primary-400": "#E879F9",
+          "--color-primary-500": "#D946EF",
+          "--color-primary-600": "#C026D3",
+          "--color-primary-700": "#A21CAF",
+          "--color-primary-800": "#86198F",
+          "--color-primary-900": "#701A75",
+          "--color-primary-950": "#4A044E",
+          // Secondary (orange) color palette
+          "--color-secondary-50": "#FFF7ED",
+          "--color-secondary-100": "#FFEDD5",
+          "--color-secondary-200": "#FED7AA",
+          "--color-secondary-300": "#FDBA74",
+          "--color-secondary-400": "#FB923C",
+          "--color-secondary-500": "#F97316",
+          "--color-secondary-600": "#EA580C",
+          "--color-secondary-700": "#C2410C",
+          "--color-secondary-800": "#9A3412",
+          "--color-secondary-900": "#7C2D12",
+          "--color-secondary-950": "#431407",
+
+          // Conic gradient
+          "--conic-pattern":
+            "repeating-conic-gradient(rgba(128, 128, 128, 0.2) 0% 25%, rgba(128, 128, 128, 0.1) 25% 50%)",
+        },
+
+        "*::-webkit-scrollbar-corner": {
+          "background-color": "transparent !important",
+        },
+
+        "html *:focus-visible": {
+          "outline": "1px solid var(--color-primary-600) !important",
+          "outline-offset": "4px !important",
+          "outline-style": "solid !important",
+          "border-radius": "12px !important",
+        },
+
+        ".scrollbar-hide": {
+          /* Hide scrollbar for IE, Edge and Firefox */
+          "-ms-overflow-style": "none",
+          "scrollbar-width": "none",
+          /* Hide scrollbar for Chrome, Safari and Opera */
+          "&::-webkit-scrollbar": {
+            "display": "none",
+          },
+        },
+
         ".optimize-text": {
           "will-change": "transform",
           "transform": "translateZ(0)",
           "backface-visibility": "hidden",
         },
+
+        /* ===== TEXT STROKE GLOW - USED IN ABOUT STATS ===== */
         ".text-stroke-glow-large": {
           "text-shadow": `
             /* Glow effect */
@@ -272,202 +441,54 @@ export default {
             0 2px 0 #A0F
           `,
         },
-        ".bg-clip-text": { // @baba - prune and refactor
-          "-webkit-background-clip": "text",
-          "background-clip": "text",
-        },
-        ".text-fill-transparent": { // prune and refactor
-          "-webkit-text-fill-color": "transparent",
-          "text-fill-color": "transparent",
-        },
-        ".scrollbar-hide": {
-          /* Hide scrollbar for IE, Edge and Firefox */
-          "-ms-overflow-style": "none",
-          "scrollbar-width": "none",
-          /* Hide scrollbar for Chrome, Safari and Opera */
-          "&::-webkit-scrollbar": {
-            "display": "none",
-          },
-        },
-        ":root": {
-          // Purple color palette as CSS variables
-          "--color-purple-dark": "#43005c",
-          "--color-purple-semidark": "#610085",
-          "--color-purple": "#7f00ad",
-          "--color-purple-semilight": "#9d00d6",
-          "--color-purple-light": "#BB00FF",
-          // Grey color palette as CSS variables
-          "--color-grey-dark": "#585552",
-          "--color-grey-semidark": "#817e78",
-          "--color-grey": "#a8a39d",
-          "--color-grey-semilight": "#d1cbc3",
-          "--color-grey-light": "#f9f2e9",
-          // Red color palette as CSS variables
-          "--color-red-dark": "#5c0000",
-          "--color-red-semidark": "#850000",
-          "--color-red": "#ad0000",
-          "--color-red-semilight": "#d60000",
-          "--color-red-light": "#ff0000",
-          // Green color palette as CSS variables
-          "--color-green-dark": "#005c00",
-          "--color-green-semidark": "#008500",
-          "--color-green": "#00ad00",
-          "--color-green-semilight": "#00d600",
-          "--color-green-light": "#00ff00",
-          // Orange color palette as CSS variables
-          "--color-orange-dark": "#5c2b00",
-          "--color-orange-semidark": "#853e00",
-          "--color-orange": "#ad5100",
-          "--color-orange-semilight": "#d66400",
-          "--color-orange-light": "#ff7700",
 
-          // Neutral color palette as CSS variables
-          "--color-neutral-0": "#FFFFFF",
-          "--color-neutral-50": "#FAFAFA",
-          "--color-neutral-100": "#F5F5F5",
-          "--color-neutral-200": "#E5E5E5",
-          "--color-neutral-300": "#D4D4D4",
-          "--color-neutral-400": "#A3A3A3",
-          "--color-neutral-500": "#737373",
-          "--color-neutral-600": "#525252",
-          "--color-neutral-700": "#404040",
-          "--color-neutral-800": "#262626",
-          "--color-neutral-900": "#171717",
-          "--color-neutral-950": "#0A0A0A",
-          "--color-neutral-1000": "#000000",
-          // Primary (fuchsia) color palette as CSS variables
-          "--color-primary-50": "#FDF4FF",
-          "--color-primary-100": "#FAE8FF",
-          "--color-primary-200": "#F5D0FE",
-          "--color-primary-300": "#F0ABFC",
-          "--color-primary-400": "#E879F9",
-          "--color-primary-500": "#D946EF",
-          "--color-primary-600": "#C026D3",
-          "--color-primary-700": "#A21CAF",
-          "--color-primary-800": "#86198F",
-          "--color-primary-900": "#701A75",
-          "--color-primary-950": "#4A044E",
-          // Secondary (orange) color palette as CSS variables
-          "--color-secondary-50": "#FFF7ED",
-          "--color-secondary-100": "#FFEDD5",
-          "--color-secondary-200": "#FED7AA",
-          "--color-secondary-300": "#FDBA74",
-          "--color-secondary-400": "#FB923C",
-          "--color-secondary-500": "#F97316",
-          "--color-secondary-600": "#EA580C",
-          "--color-secondary-700": "#C2410C",
-          "--color-secondary-800": "#9A3412",
-          "--color-secondary-900": "#7C2D12",
-          "--color-secondary-950": "#431407",
-
-          // Conic gradient variables
-          "--conic-pattern":
-            "repeating-conic-gradient(rgba(128, 128, 128, 0.2) 0% 25%, rgba(128, 128, 128, 0.1) 25% 50%)",
-        },
-        "*::-webkit-scrollbar-corner": {
-          "background-color": "transparent !important",
-        },
-        ".gradient-text": {
-          "@apply bg-clip-text text-fill-transparent": {},
-        },
-        "html *:focus-visible": {
-          "outline": "2px solid #CCCCCCBF !important",
-          "outline-offset": "-2px !important",
-          "outline-style": "solid !important",
-        },
-        // Gradient Classes - Purple variants
-        ".color-purple-gradientDL": {
-          "background":
-            "linear-gradient(to right, var(--color-purple-dark), var(--color-purple-semidark), var(--color-purple), var(--color-purple-semilight), var(--color-purple-light))",
-          "-webkit-background-clip": "text",
-          "-webkit-text-fill-color": "transparent",
-          "background-clip": "text",
-        },
-        ".color-purple-gradientDL-hover": {
-          "background":
-            "linear-gradient(to right, var(--color-purple-dark), var(--color-purple-semidark), var(--color-purple), var(--color-purple-semilight), var(--color-purple-light))",
+        // Canonical gradient classes
+        // Pair with bg-gradient-to-r (LD) or bg-gradient-to-l (DL) at the usage site
+        ".color-neutral-gradient": {
+          "--tw-gradient-from":
+            "var(--color-neutral-200) var(--tw-gradient-from-position)",
+          "--tw-gradient-via":
+            "var(--color-neutral-300) var(--tw-gradient-via-position)",
+          "--tw-gradient-to":
+            "var(--color-neutral-500) var(--tw-gradient-to-position)",
+          "--tw-gradient-stops":
+            "var(--tw-gradient-from), var(--tw-gradient-via), var(--tw-gradient-to)",
           "-webkit-background-clip": "text",
           "-webkit-text-fill-color": "transparent",
           "background-clip": "text",
           "text-fill-color": "transparent",
+        },
+        ".color-primary-gradient": {
+          "--tw-gradient-from":
+            "var(--color-primary-300) var(--tw-gradient-from-position)",
+          "--tw-gradient-via":
+            "var(--color-primary-400) var(--tw-gradient-via-position)",
+          "--tw-gradient-to":
+            "var(--color-primary-600) var(--tw-gradient-to-position)",
+          "--tw-gradient-stops":
+            "var(--tw-gradient-from), var(--tw-gradient-via), var(--tw-gradient-to)",
+          "-webkit-background-clip": "text",
+          "-webkit-text-fill-color": "transparent",
+          "background-clip": "text",
+          "text-fill-color": "transparent",
+        },
+        // Add to an element alongside color-neutral-gradient or color-primary-gradient
+        // to enable a smooth hover transition to solid primary-400 text
+        ".color-gradient-hover": {
           "transition":
             "background 0.2s ease-in-out, -webkit-text-fill-color 0.2s ease-in-out, text-fill-color 0.2s ease-in-out",
           "&:hover": {
             "background": "none",
-            "-webkit-text-fill-color": "var(--color-purple-light)",
-            "text-fill-color": "var(--color-purple-light)",
+            "-webkit-text-fill-color": "var(--color-primary-400)",
+            "text-fill-color": "var(--color-primary-400)",
           },
-        },
-        ".color-purple-gradientLD": {
-          "background":
-            "linear-gradient(to right, var(--color-purple-light), var(--color-purple-semilight), var(--color-purple), var(--color-purple-semidark), var(--color-purple-dark))",
-          "-webkit-background-clip": "text",
-          "-webkit-text-fill-color": "transparent",
-          "background-clip": "text",
-          "text-fill-color": "transparent",
-        },
-        ".color-purple-gradientLD-hover": {
-          "background":
-            "linear-gradient(to right, var(--color-purple-light), var(--color-purple-semilight), var(--color-purple), var(--color-purple-semidark), var(--color-purple-dark))",
-          "-webkit-background-clip": "text",
-          "-webkit-text-fill-color": "transparent",
-          "background-clip": "text",
-          "text-fill-color": "transparent",
-          "transition":
-            "background 0.2s ease-in-out, -webkit-text-fill-color 0.2s ease-in-out, text-fill-color 0.2s ease-in-out",
-          "&:hover": {
+          ".group:hover &": {
             "background": "none",
-            "-webkit-text-fill-color": "var(--color-purple-light)",
-            "text-fill-color": "var(--color-purple-light)",
+            "-webkit-text-fill-color": "var(--color-primary-400)",
+            "text-fill-color": "var(--color-primary-400)",
           },
         },
 
-        // Gradient Classes - Grey variants
-        ".color-grey-gradientLD": {
-          "background":
-            "linear-gradient(to right, var(--color-neutral-200), var(--color-neutral-300), var(--color-neutral-400), var(--color-neutral-500), var(--color-neutral-600))",
-          "-webkit-background-clip": "text",
-          "-webkit-text-fill-color": "transparent",
-          "background-clip": "text",
-          "text-fill-color": "transparent",
-        },
-        ".color-grey-gradientLD-hover": {
-          "background":
-            "linear-gradient(to right, var(--color-neutral-200), var(--color-neutral-300), var(--color-neutral-400), var(--color-neutral-500), var(--color-neutral-600))",
-          "-webkit-background-clip": "text",
-          "-webkit-text-fill-color": "transparent",
-          "background-clip": "text",
-          "text-fill-color": "transparent",
-          "transition":
-            "background 0.2s ease-in-out, -webkit-text-fill-color 0.2s ease-in-out, text-fill-color 0.2s ease-in-out",
-          "&:hover": {
-            "background": "none",
-            "-webkit-text-fill-color": "var(--color-primary-500)",
-            "text-fill-color": "var(--color-primary-500)",
-          },
-        },
-        ".color-grey-gradientDL": {
-          "background":
-            "linear-gradient(to right, var(--color-grey-dark), var(--color-grey-semidark), var(--color-grey), var(--color-grey-semilight), var(--color-grey-light))",
-          "-webkit-background-clip": "text",
-          "-webkit-text-fill-color": "transparent",
-          "background-clip": "text",
-        },
-        ".color-grey-gradientDL-hover": {
-          "background":
-            "linear-gradient(to right, var(--color-grey-dark), var(--color-grey-semidark), var(--color-grey), var(--color-grey-semilight), var(--color-grey-light))",
-          "-webkit-background-clip": "text",
-          "-webkit-text-fill-color": "transparent",
-          "background-clip": "text",
-          "text-fill-color": "transparent",
-          "transition":
-            "background 0.2s ease-in-out, -webkit-text-fill-color 0.2s ease-in-out, text-fill-color 0.2s ease-in-out",
-          "&:hover": {
-            "background": "none",
-            "-webkit-text-fill-color": "var(--color-grey-light)",
-            "text-fill-color": "var(--color-grey-light)",
-          },
-        },
         // Fix for iOS/Safari backdrop-blur issue
         // Overrides Tailwind's default backdrop-blur utilities that use CSS variables
         // which webkit browsers fail to parse correctly
@@ -600,6 +621,34 @@ export default {
             "padding": "1px",
             "background":
               "linear-gradient(to bottom, var(--color-primary-400), var(--color-primary-400))",
+            "-webkit-mask":
+              "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+            "mask":
+              "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+            "-webkit-mask-composite": "xor",
+            "mask-composite": "exclude",
+            "pointer-events": "none",
+          },
+        },
+        ".bg-border-container-2-primary": {
+          "position": "relative",
+          "isolation": "isolate",
+          "background": [
+            "linear-gradient(to bottom,",
+            "color-mix(in srgb, var(--color-neutral-900) 40%, transparent),",
+            "color-mix(in srgb, var(--color-neutral-900) 60%, transparent),",
+            "color-mix(in srgb, var(--color-neutral-950) 80%, transparent)",
+            ")",
+          ].join(" "),
+          "&::before": {
+            "content": '""',
+            "position": "absolute",
+            "z-index": "-1",
+            "inset": "0",
+            "border-radius": "inherit",
+            "padding": "1px",
+            "background":
+              "linear-gradient(to bottom, var(--color-neutral-700), var(--color-neutral-800), var(--color-primary-400))",
             "-webkit-mask":
               "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
             "mask":

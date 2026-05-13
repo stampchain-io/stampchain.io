@@ -106,11 +106,11 @@ export const iconStyles = {
 
   icon: {
     greyDark:
-      "stroke-color-grey-semidark fill-none [&_path[class*='fill-stroke']]:fill-color-grey-semidark",
+      "stroke-color-neutral-600 fill-none [&_path[class*='fill-stroke']]:fill-color-neutral-600",
     grey:
-      "stroke-color-grey fill-none [&_path[class*='fill-stroke']]:fill-color-grey",
+      "stroke-color-neutral-500 fill-none [&_path[class*='fill-stroke']]:fill-color-neutral-500",
     greyLight:
-      "stroke-color-grey-semilight fill-none [&_path[class*='fill-stroke']]:fill-color-grey-semilight",
+      "stroke-color-neutral-400 fill-none [&_path[class*='fill-stroke']]:fill-color-neutral-400",
 
     purpleDark:
       "stroke-color-purple-semidark fill-none [&_path[class*='fill-stroke']]:fill-color-purple-semidark",
