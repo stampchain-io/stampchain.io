@@ -211,7 +211,7 @@ export const trackFill = `
   absolute top-[3px] bottom-[3px] h-[14px] tablet:h-[10px] rounded-full transition-colors duration-200 pointer-events-none
   `;
 export const sliderKnob = `
-  absolute top-[3px] bottom-[3px] w-full h-[14px] tablet:h-[10px] rounded-full appearance-none bg-transparent pointer-events-none
+  absolute top-[3px] bottom-[3px] w-full h-[14px] tablet:h-[10px] rounded-full appearance-none bg-transparent pointer-events-none focus:outline-none focus-visible:outline-none
   [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:pointer-events-auto
   [&::-webkit-slider-thumb]:size-[14px] [&::-webkit-slider-thumb]:tablet:size-[10px]
   [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-color-neutral-400

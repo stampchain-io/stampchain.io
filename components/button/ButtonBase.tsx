@@ -83,7 +83,7 @@ export function Button({
     active: isActive || undefined,
   });
 
-  const combinedClass = `${buttonClass} ${className ?? ""} group`;
+  const combinedClass = `${buttonClass} ${className ?? ""} group button-focus`;
 
   const commonProps = getCommonButtonProps({
     type,
@@ -153,7 +153,9 @@ export function ButtonIcon({
     role,
     ariaLabel,
     dataType,
-    className: `${buttonClass} ${className ?? ""} p-0 aspect-square`,
+    className: `${buttonClass} ${
+      className ?? ""
+    } p-0 aspect-square button-focus`,
     ref,
     ...props,
   });
@@ -214,7 +216,7 @@ export function ButtonProcessing({
     role,
     ariaLabel,
     dataType,
-    className: `${buttonClass} ${className ?? ""}`,
+    className: `${buttonClass} ${className ?? ""} button-focus`,
     ref,
     ...props,
   });

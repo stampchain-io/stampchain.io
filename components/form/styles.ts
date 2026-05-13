@@ -25,6 +25,7 @@ export const inputFieldWrapper = `
   ${inputFieldHeight} w-full
   ${glassmorphismL2Hover} ${transitionColors}
   flex items-center
+  focus:outline-none focus-visible:outline-none
   focus-within:bg-color-neutral-1000
 `;
 

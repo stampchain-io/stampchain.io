@@ -367,15 +367,15 @@ export default {
             "repeating-conic-gradient(rgba(128, 128, 128, 0.2) 0% 25%, rgba(128, 128, 128, 0.1) 25% 50%)",
         },
 
-        "*::-webkit-scrollbar-corner": {
-          "background-color": "transparent !important",
-        },
-
+        /* Focus visible styles */
         "html *:focus-visible": {
-          "outline": "1px solid var(--color-primary-600) !important",
-          "outline-offset": "4px !important",
-          "outline-style": "solid !important",
-          "border-radius": "12px !important",
+          "outline": "1px solid var(--color-primary-400)",
+          "outline-offset": "4px",
+          "outline-style": "solid",
+          "border-radius": "16px",
+        },
+        "html button:focus-visible, html a.button-focus:focus-visible": {
+          "outline-offset": "-1px",
         },
 
         ".scrollbar-hide": {
