@@ -12,8 +12,8 @@ import {
   containerColForm,
   containerGap,
   containerRowForm,
-  glassmorphismL2,
-  glassmorphismL2Hover,
+  container2,
+  container2Hover,
   transitionAll,
   transitionColors,
 } from "$layout";
@@ -367,7 +367,7 @@ export function SRC20DeployTool(
             <div
               id="image-preview"
               class={`relative flex flex-col items-center justify-center content-center mx-auto min-h-[100px] min-w-[100px]
-              ${glassmorphismL2} ${glassmorphismL2Hover}
+              ${container2} ${container2Hover}
               ${transitionColors} cursor-pointer group`}
               onMouseMove={handleMouseMove}
               onMouseEnter={handleUploadMouseEnter}

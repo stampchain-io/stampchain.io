@@ -96,14 +96,14 @@ const ChartWidget = (
               r: 12, // Border radius (rounded-xl = 12px)
               stroke: "rgba(102, 102, 102, 0.4)", // Border color with transparency
               "stroke-width": 1, // Use quoted property name for SVG
-              fill: "rgba(33, 28, 33, 0.1)", // Glassmorphism button background
+              fill: "rgba(33, 28, 33, 0.1)", // Button background
               style: {
                 fontSize: "10px", // Text size
                 color: "#d8d2ca", // Text color
               },
               states: {
                 hover: {
-                  fill: "rgba(33, 28, 33, 0.4)", // Glassmorphism button hover
+                  fill: "rgba(33, 28, 33, 0.4)", // Button hover
                   stroke: "rgba(102, 102, 102, 0.6)", // Hover border color
                   style: {
                     color: "#fff8f0", // Hover text color

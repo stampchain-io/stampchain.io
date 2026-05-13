@@ -3,7 +3,7 @@ import { PaginationButtons } from "$button";
 import { BREAKPOINTS } from "$constants";
 import { LoadingIcon } from "$icon";
 import { RecentSaleCard } from "$islands/card/RecentSaleCard.tsx";
-import { glassmorphismL2 } from "$layout";
+import { container2 } from "$layout";
 import { useLoadingSkeleton } from "$lib/hooks/useLoadingSkeleton.ts";
 import { AccessibilityUtils } from "$lib/utils/ui/accessibility/accessibilityUtils.ts";
 import { subtitleGrey, titleGreyDL } from "$text";
@@ -244,7 +244,7 @@ export default function RecentSalesGallery({
       {/* ===== LOADING OVERLAY FOR REFRESH ===== */}
       {refreshLoading && (
         <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div class={`${glassmorphismL2} p-5 flex items-center gap-3`}>
+          <div class={`${container2} p-5 flex items-center gap-3`}>
             <LoadingIcon />
             <span class="text-white">Refreshing sales data...</span>
           </div>

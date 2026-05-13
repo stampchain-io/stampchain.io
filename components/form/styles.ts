@@ -1,5 +1,5 @@
 /* ===== FORM STYLES MODULE ===== */
-import { glassmorphismL2Hover, transitionColors } from "$layout";
+import { container2Hover, transitionColors } from "$layout";
 
 /* ===== BASE STYLES ===== */
 // Global sizes
@@ -23,7 +23,7 @@ const inputInner = `
 
 export const inputFieldWrapper = `
   ${inputFieldHeight} w-full
-  ${glassmorphismL2Hover} ${transitionColors}
+  ${container2Hover} ${transitionColors}
   flex items-center
   focus:outline-none focus-visible:outline-none
   focus-within:bg-color-neutral-1000
@@ -31,14 +31,14 @@ export const inputFieldWrapper = `
 
 export const inputFieldSquareWrapper = `
   ${inputFieldHeight} ${inputFieldWidth}
-  ${glassmorphismL2Hover} ${transitionColors}
+  ${container2Hover} ${transitionColors}
   flex items-center justify-center
   focus-within:bg-color-neutral-1000
 `;
 
 export const inputTextareaWrapper = `
   w-full pt-3 h-auto
-  ${glassmorphismL2Hover} ${transitionColors}
+  ${container2Hover} ${transitionColors}
   focus-within:bg-color-neutral-1000
 `;
 
@@ -76,7 +76,7 @@ overflow-y-auto scrollbar-background-layer2 shadow-lg cursor-pointer`;
 export const inputFieldDropdownHover = `
 flex justify-between py-2.5 px-3
 border-b-[1px] border-color-border last:border-b-0
-${glassmorphismL2Hover} ${transitionColors} uppercase cursor-pointer`;
+${container2Hover} ${transitionColors} uppercase cursor-pointer`;
 
 // Checkbox - used for both checkboxes and radiobuttons
 export const inputCheckbox = (

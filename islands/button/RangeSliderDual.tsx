@@ -1,5 +1,5 @@
 import { sliderKnob, trackFill } from "$button";
-import { glassmorphismL2 } from "$layout";
+import { container2 } from "$layout";
 import { formatNumberWithCommas } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 
@@ -886,7 +886,7 @@ export const RangeSliderDual = ({
       </div>
 
       <div
-        class={`relative h-5 tablet:h-4 !rounded-full ${glassmorphismL2}`}
+        class={`relative h-5 tablet:h-4 !rounded-full ${container2}`}
         ref={sliderRef}
         onClick={handleTrackClick}
       >

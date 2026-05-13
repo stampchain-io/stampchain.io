@@ -1,6 +1,6 @@
 import { ModalBase } from "$components/layout/ModalBase.tsx";
 import { CloseIcon } from "$icon";
-import { glassmorphism } from "$layout";
+import { container1 } from "$layout";
 import { tooltipIcon } from "$notification";
 import { titlePurpleLD } from "$text";
 import type { MaraServiceUnavailableModalProps } from "$types/ui.d.ts";
@@ -53,7 +53,7 @@ export function MaraServiceUnavailableModal({
     <ModalBase
       title="MARA Service Unavailable"
       onClose={onClose}
-      className={`!w-[400px] mobileLg:!w-[450px] ${glassmorphism} !bg-gradient-to-br !from-color-grey-dark/70 !to-color-grey-dark/80`}
+      className={`!w-[400px] mobileLg:!w-[450px] ${container1} !bg-gradient-to-br !from-color-grey-dark/70 !to-color-grey-dark/80`}
       contentClassName="space-y-4"
       hideHeader
     >
@@ -88,7 +88,7 @@ export function MaraServiceUnavailableModal({
 
       <div class="space-y-5 text-color-grey-light">
         <div
-          class={`${glassmorphism} bg-gradient-to-br from-red-900/15 to-red-800/25 border-red-500/20 p-5`}
+          class={`${container1} bg-gradient-to-br from-red-900/15 to-red-800/25 border-red-500/20 p-5`}
         >
           <div class="flex items-start gap-4">
             <div class="text-red-400 text-2xl mt-0.5 drop-shadow-sm">🚫</div>
@@ -110,7 +110,7 @@ export function MaraServiceUnavailableModal({
 
         <div class="space-y-4">
           <div
-            class={`${glassmorphism} bg-gradient-to-br from-blue-900/10 to-blue-800/15 border-blue-500/15 p-4`}
+            class={`${container1} bg-gradient-to-br from-blue-900/10 to-blue-800/15 border-blue-500/15 p-4`}
           >
             <div class="flex items-start gap-4">
               <div class="text-blue-400 text-xl mt-0.5 drop-shadow-sm">💡</div>
@@ -132,7 +132,7 @@ export function MaraServiceUnavailableModal({
           </div>
 
           <div
-            class={`${glassmorphism} bg-gradient-to-br from-yellow-900/10 to-yellow-800/15 border-yellow-500/15 p-4`}
+            class={`${container1} bg-gradient-to-br from-yellow-900/10 to-yellow-800/15 border-yellow-500/15 p-4`}
           >
             <div class="flex items-start gap-4">
               <div class="text-yellow-400 text-xl mt-0.5 drop-shadow-sm">
@@ -156,14 +156,14 @@ export function MaraServiceUnavailableModal({
         <button
           type="button"
           onClick={onRetry}
-          class={`flex-1 px-4 py-2 rounded-2xl transition-colors ${glassmorphism} bg-gradient-to-br from-color-grey-dark/20 to-color-grey-dark/40 text-color-grey-light hover:from-color-grey-dark/30 hover:to-color-grey-dark/50`}
+          class={`flex-1 px-4 py-2 rounded-2xl transition-colors ${container1} bg-gradient-to-br from-color-grey-dark/20 to-color-grey-dark/40 text-color-grey-light hover:from-color-grey-dark/30 hover:to-color-grey-dark/50`}
         >
           Retry MARA
         </button>
         <button
           type="button"
           onClick={onSwitchToStandard}
-          class={`flex-1 px-4 py-2 rounded-2xl transition-colors font-semibold ${glassmorphism} bg-gradient-to-br from-purple-600/80 to-purple-700/80 text-white hover:from-purple-600 hover:to-purple-700`}
+          class={`flex-1 px-4 py-2 rounded-2xl transition-colors font-semibold ${container1} bg-gradient-to-br from-purple-600/80 to-purple-700/80 text-white hover:from-purple-600 hover:to-purple-700`}
         >
           Switch to Standard
         </button>

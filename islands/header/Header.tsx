@@ -5,8 +5,8 @@ import { SearchButton } from "$islands/button/SearchButton.tsx";
 import { ToolsButton } from "$islands/button/ToolsButton.tsx";
 import { WalletButton } from "$islands/button/WalletButton.tsx";
 import {
-  glassmorphism,
-  glassmorphismOverlay,
+  container1,
+  container0,
   transitionTransform,
 } from "$layout";
 import { useFees } from "$lib/hooks/useFees.ts";
@@ -425,7 +425,7 @@ export function Header() {
           fixed top-0 right-0 left-auto w-full min-[420px]:w-[340px] h-[100dvh] z-30
           min-[420px]:rounded-l-3xl min-[420px]:border-l-[1px]
           min-[420px]:border-l-color-border/75 min-[420px]:shadow-[-12px_0_12px_-6px_rgba(8,7,8,0.75)]
-          ${glassmorphismOverlay} ${transitionTransform} transition-transform will-change-transform
+          ${container0} ${transitionTransform} transition-transform will-change-transform
           overflow-y-auto overflow-x-hidden scrollbar-background-overlay
           ${isActive ? "translate-x-0" : "translate-x-full"}`}
         style="transition-timing-function: cubic-bezier(0.46,0.03,0.52,0.96);"
@@ -537,7 +537,7 @@ export function Header() {
       {/* ===== MOBILE NAVIGATION ===== */}
       <div class="mobileLg:hidden flex items-center w-full relative z-header">
         <div
-          class={`flex items-center justify-between w-full gap-7 py-1.5 px-5 ${glassmorphism} !rounded-full`}
+          class={`flex items-center justify-between w-full gap-7 py-1.5 px-5 ${container1} !rounded-full`}
         >
           {/* Left: Logo Icon */}
           {logoIcon}
@@ -560,7 +560,7 @@ export function Header() {
         <div
           class={`relative flex items-center justify-between w-full
              py-1.5 px-6
-             ${glassmorphism} !rounded-full`}
+             ${container1} !rounded-full`}
         >
           {/* Left: Logo Icon */}
           {logoIcon}
@@ -624,7 +624,7 @@ export function Header() {
 
         return shouldRenderTools && createPortal(
           <div
-            class={`hidden tablet:block !fixed z-dropdown w-[550px] py-3.5 px-5 whitespace-nowrap ${glassmorphism} ${animationClass}`}
+            class={`hidden tablet:block !fixed z-dropdown w-[550px] py-3.5 px-5 whitespace-nowrap ${container1} ${animationClass}`}
             style={{
               top: `${dropdownState.toolsPos!.top}px`,
               left: `${dropdownState.toolsPos!.left}px`,
@@ -669,7 +669,7 @@ export function Header() {
 
         return shouldRenderWallet && createPortal(
           <div
-            class={`hidden tablet:block !fixed z-dropdown min-w-[150px] py-3.5 px-5 justify-end whitespace-nowrap ${glassmorphism} ${animationClass}`}
+            class={`hidden tablet:block !fixed z-dropdown min-w-[150px] py-3.5 px-5 justify-end whitespace-nowrap ${container1} ${animationClass}`}
             style={{
               top: `${dropdownState.walletPos!.top}px`,
               left: `${dropdownState.walletPos!.left}px`,

@@ -4,8 +4,8 @@
 import { Icon, LoadingIcon, PlaceholderImage } from "$icon";
 import StampTextContent from "$islands/content/stampDetailContent/StampTextContent.tsx";
 import {
-  glassmorphism,
-  glassmorphismL2,
+  container1,
+  container2,
   shadowGlowPurple,
   transitionColors,
 } from "$layout";
@@ -422,7 +422,7 @@ export function StampCard({
           p-stamp-card mobileLg:p-3
           w-full h-full
           hover:border-color-purple-light ${shadowGlowPurple}
-          ${glassmorphism} ${transitionColors}
+          ${container1} ${transitionColors}
         `}
       >
         {/* ===== ATOM ICON ===== */}
@@ -465,7 +465,7 @@ export function StampCard({
             {/* Price and Supply */}
             <div class="flex justify-between items-center mt-4 w-full">
               {/* Price on the Left */}
-              <div class={`text-left ${glassmorphismL2} px-3 py-1`}>
+              <div class={`text-left ${container2} px-3 py-1`}>
                 <span
                   class={renderPrice().style}
                 >
@@ -474,7 +474,7 @@ export function StampCard({
               </div>
               {/* Supply/Editions on the Right */}
               <div
-                class={`${TEXT_STYLES.supply.base} ${TEXT_STYLES.supply.sizes} text-right ${glassmorphismL2} px-3 py-1`}
+                class={`${TEXT_STYLES.supply.base} ${TEXT_STYLES.supply.sizes} text-right ${container2} px-3 py-1`}
               >
                 {supplyDisplay}
               </div>

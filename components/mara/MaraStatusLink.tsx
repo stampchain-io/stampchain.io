@@ -1,5 +1,5 @@
 import { Icon } from "$icon";
-import { glassmorphism } from "$layout";
+import { container1 } from "$layout";
 import type { MaraStatusLinkProps } from "$types/ui.d.ts";
 
 export function MaraStatusLink(
@@ -9,7 +9,7 @@ export function MaraStatusLink(
 
   return (
     <div
-      class={`${glassmorphism} bg-gradient-to-br from-purple-900/20 to-purple-800/30 border-purple-500/30 p-4 ${className}`}
+      class={`${container1} bg-gradient-to-br from-purple-900/20 to-purple-800/30 border-purple-500/30 p-4 ${className}`}
     >
       <div class="flex items-center justify-between gap-4">
         <div class="flex items-center gap-3">

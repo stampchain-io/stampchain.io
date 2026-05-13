@@ -10,7 +10,7 @@ import {
   body,
   containerDetailImage,
   containerGap,
-  glassmorphism,
+  container1,
 } from "$layout";
 import {
   getStampImageSrc,
@@ -723,7 +723,7 @@ export function StampImage(
   return (
     <>
       {(!src || isUnrenderable) && (
-        <div className={`${glassmorphism} p-5`}>
+        <div className={`${container1} p-5`}>
           <PlaceholderImage variant={isUnrenderable ? "error" : "no-image"} />
         </div>
       )}

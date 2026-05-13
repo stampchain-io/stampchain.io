@@ -1,7 +1,7 @@
 /* ===== SRC20 CARD BASE COMPONENT ===== */
 /*@baba-check styles*/
 import { cellAlign } from "$components/layout/types.ts";
-import { glassmorphism, shadowGlowPurple } from "$layout";
+import { container1, shadowGlowPurple } from "$layout";
 import { unicodeEscapeToEmoji } from "$lib/utils/ui/formatting/emojiUtils.ts";
 import { getSRC20ImageSrc } from "$lib/utils/ui/media/imageUtils.ts";
 import type { SRC20CardBaseProps } from "$types/ui.d.ts";
@@ -45,7 +45,7 @@ export function SRC20CardBase({
 
   return (
     <tr
-      class={`${glassmorphism} !rounded-2xl border-2 border-transparent hover:border-color-purple-light ${shadowGlowPurple} p-12`}
+      class={`${container1} !rounded-2xl border-2 border-transparent hover:border-color-purple-light ${shadowGlowPurple} p-12`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

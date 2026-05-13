@@ -1,7 +1,7 @@
 /* @baba - before:blur-sm is causing a flash of the pill before it is mounted */
 
 import { buttonStyles, color, state } from "$button";
-import { glassmorphism, transitionColors } from "$layout";
+import { container1, transitionColors } from "$layout";
 import type { SelectorButtonsProps } from "$types/ui.d.ts";
 import { useCallback, useEffect, useRef, useState } from "preact/hooks";
 
@@ -117,7 +117,7 @@ export const SelectorButtons = ({
     <div
       ref={containerRef}
       class={`relative grid p-0.5 select-none
-        ${glassmorphism} !rounded-full
+        ${container1} !rounded-full
         ${
         (colorProp === "purple" || colorProp === "grey")
           ? colorVariants[colorProp]

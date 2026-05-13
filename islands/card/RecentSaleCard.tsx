@@ -2,7 +2,7 @@
 import { Icon } from "$icon";
 import { ActivityBadge } from "$islands/badge/index.ts";
 import { StampCard } from "$islands/card/StampCard.tsx";
-import { glassmorphismL2, shadowGlowPurple } from "$layout";
+import { container2, shadowGlowPurple } from "$layout";
 import { AccessibilityUtils } from "$lib/utils/ui/accessibility/accessibilityUtils.ts";
 import {
   abbreviateAddress,
@@ -30,7 +30,7 @@ export function RecentSaleCard({
 
   return (
     <div
-      class={`${glassmorphismL2} border-2 border-transparent hover:border-color-purple-light ${shadowGlowPurple} transition-all duration-200 overflow-hidden`}
+      class={`${container2} border-2 border-transparent hover:border-color-purple-light ${shadowGlowPurple} transition-all duration-200 overflow-hidden`}
       role="article"
       aria-label={cardLabel}
       aria-describedby={showFullDetails

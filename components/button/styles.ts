@@ -1,5 +1,5 @@
 /* ===== BUTTON STYLES MODULE ===== */
-import { glassmorphismL2Hover, shadowL2, transitionColors } from "$layout";
+import { container2Hover, shadowL2, transitionColors } from "$layout";
 import { JSX } from "preact";
 
 /* ===== TYPE DEFINITIONS ===== */
@@ -199,14 +199,14 @@ export const buttonStyles: ButtonVariants = {
 /* ===== ADDITIONAL STYLES ===== */
 /* ===== TOGGLE SWITCH BUTTON STYLES ===== */
 export const toggleButton = `flex items-center relative w-10 h-5 !rounded-full
-  ${glassmorphismL2Hover} group focus:outline-none focus-visible:outline-none transition duration-50`;
+  ${container2Hover} group focus:outline-none focus-visible:outline-none transition duration-50`;
 export const toggleKnobBackground =
   "flex justify-center items-center relative w-5 h-5 bg-transparent rounded-full cursor-pointer transition ease-in-out transform duration-400";
 export const toggleKnob =
   "w-[14px] h-[14px] rounded-full cursor-pointer group-hover:from-color-primary-400 group-hover:to-color-primary-400";
 /* ===== SLIDER BUTTON STYLES ===== */
 export const sliderBar =
-  `relative w-full h-5 tablet:h-4 !rounded-full ${glassmorphismL2Hover} group cursor-pointer`;
+  `relative w-full h-5 tablet:h-4 !rounded-full ${container2Hover} group cursor-pointer`;
 export const trackFill = `
   absolute top-[3px] bottom-[3px] h-[14px] tablet:h-[10px] rounded-full transition-colors duration-200 pointer-events-none
   `;

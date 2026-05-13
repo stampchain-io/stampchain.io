@@ -4,7 +4,7 @@ import {
   cellCenterL2Detail,
   cellLeftL2Detail,
   cellRightL2Detail,
-  glassmorphismL2,
+  container2,
   ScrollContainer,
 } from "$layout";
 import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
@@ -113,7 +113,7 @@ const HoldersTableBase = (
             {/* ===== TABLE HEADER ===== */}
             <thead class="sticky top-0 z-10">
               {/* Only sticky on desktop */}
-              <tr class={`${glassmorphismL2}`}>
+              <tr class={`${container2}`}>
                 {headers.map((header, i) => {
                   const isFirst = i === 0;
                   const isLast = i === (headers?.length ?? 0) - 1;
@@ -147,7 +147,7 @@ const HoldersTableBase = (
                   return (
                     <tr
                       key={`unknown-${index}`}
-                      class={`${glassmorphismL2} group`}
+                      class={`${container2} group`}
                     >
                       {/* ADDRESS */}
                       <td
@@ -180,7 +180,7 @@ const HoldersTableBase = (
                 return (
                   <tr
                     key={index}
-                    class={`${glassmorphismL2} group`}
+                    class={`${container2} group`}
                   >
                     {/* ADDRESS */}
                     <td

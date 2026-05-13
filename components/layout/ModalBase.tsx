@@ -1,6 +1,6 @@
 import { CloseIcon } from "$icon";
 import { closeModal } from "$islands/modal/states.ts";
-import { glassmorphismOverlay, shadow } from "$layout";
+import { container0, shadow } from "$layout";
 import { logger } from "$lib/utils/logger.ts";
 import { tooltipIcon } from "$notification";
 import { titleGreyLD } from "$text";
@@ -82,10 +82,10 @@ export function ModalBase({
   }, []);
 
   return (
-    <div /* similar to glassmorphism design on the drawers - importing the class consts doesn't display properly */
+    <div /* similar to container1 design on the drawers - importing the class consts doesn't display properly */
       className={`
         relative w-[340px] min-[420px]:w-[360px] mobileMd:w-[380px] p-5
-        ${glassmorphismOverlay} rounded-3xl
+        ${container0} rounded-3xl
         border border-color-border/50
         ${shadow} ${className}
       `}

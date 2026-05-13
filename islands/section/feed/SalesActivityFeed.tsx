@@ -1,6 +1,6 @@
 /* ===== SALES ACTIVITY FEED COMPONENT ===== */
 import { Icon, LoadingIcon } from "$icon";
-import { glassmorphismL2 } from "$layout";
+import { container2 } from "$layout";
 import {
   abbreviateAddress,
   formatBTCAmount,
@@ -314,7 +314,7 @@ export default function SalesActivityFeed({
       {/* ===== LOADING OVERLAY FOR REFRESH ===== */}
       {refreshLoading && !isLoading && (
         <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center rounded-2xl">
-          <div class={`${glassmorphismL2} p-4 flex items-center gap-2`}>
+          <div class={`${container2} p-4 flex items-center gap-2`}>
             <LoadingIcon />
             <span class="text-white text-sm">Refreshing...</span>
           </div>

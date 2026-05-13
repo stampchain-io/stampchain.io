@@ -4,7 +4,7 @@
  */
 
 import { Icon } from "$icon";
-import { glassmorphismL2, glassmorphismL2Hover } from "$layout";
+import { container2, container2Hover } from "$layout";
 import { safeNavigate } from "$utils/navigation/freshNavigationUtils.ts";
 import type { JSX } from "preact";
 
@@ -26,7 +26,7 @@ export const PaginationButtonsSSRSafe = ({
 }: PaginationProps): JSX.Element | null => {
   const navBase = `
   flex items-center justify-center
-  ${glassmorphismL2} ${glassmorphismL2Hover}
+  ${container2} ${container2Hover}
   !rounded-full !backdrop-blur-md`;
   const navArrow = `${navBase} group
   w-10 h-10 tablet:w-9 tablet:h-9`;

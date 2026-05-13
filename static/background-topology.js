@@ -253,9 +253,9 @@
                      * colorPalette: array of colors that randomly alternate
                      */
                     (this.prototype.defaultOptions = {
-                        color: "#c219ff",
+                        color: "#D946EF",
                         backgroundColor: "#000000",
-                        colorPalette: ["#bb00ff", "#000000", "#c219ff", "#000000", "#c933ff", "#000000", "#cf4dff", "#000000", "#d666ff"]
+                        colorPalette: ["#F0ABFC", "#000000", "#E879F9", "#000000", "#E879F9", "#000000", "#D946EF", "#000000", "#D946EF", "#000000", "#C026D3"]
                     });
             }
             constructor(e) {
@@ -298,7 +298,7 @@
                                 // Mobile: 750 particles, Tablet/Desktop: 600 particles
                                 const isMobile = "undefined" != typeof navigator && (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768);
                                 c = isMobile ? 750 : 600;
-                                const colorPalette = e.options.colorPalette || ["#bb00ff", "#000000", "#c219ff", "#000000", "#c933ff", "#000000", "#cf4dff", "#000000", "#d666ff"];
+                                const colorPalette = e.options.colorPalette || ["#F0ABFC", "#000000", "#E879F9", "#000000", "#E879F9", "#000000", "#D946EF", "#000000", "#D946EF", "#000000", "#C026D3"];
                                 for (let e = 0; e < c; e++) {
                                     let s = t.random(t.width + 200),
                                         i = t.random(t.height + 200);

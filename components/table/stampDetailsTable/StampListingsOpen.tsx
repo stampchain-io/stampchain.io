@@ -4,7 +4,7 @@ import {
   cellCenterL2Detail,
   cellLeftL2Detail,
   cellRightL2Detail,
-  glassmorphismL2,
+  container2,
   ScrollContainer,
 } from "$layout";
 import {
@@ -48,7 +48,7 @@ export function StampListingsOpenTable({
             {/* ===== TABLE HEADER ===== */}
             <thead class="sticky top-0 z-10">
               {/* Only sticky on desktop */}
-              <tr class={`${glassmorphismL2}`}>
+              <tr class={`${container2}`}>
                 {headers.map((header, i) => {
                   const isFirst = i === 0;
                   const isLast = i === (headers?.length ?? 0) - 1;
@@ -84,7 +84,7 @@ export function StampListingsOpenTable({
                 return (
                   <tr
                     key={dispenser.source}
-                    class={`${glassmorphismL2} group cursor-pointer ${
+                    class={`${container2} group cursor-pointer ${
                       isEmpty ? "text-color-grey-semidark" : ""
                     } ${
                       isSelected

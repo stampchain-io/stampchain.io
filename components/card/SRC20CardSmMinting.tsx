@@ -10,7 +10,7 @@ import {
   cellLeftL2Card,
   cellRightL2Card,
   cellStickyLeft,
-  glassmorphismL2,
+  container2,
   shadowGlowPurple,
 } from "$layout";
 import { unicodeEscapeToEmoji } from "$lib/utils/ui/formatting/emojiUtils.ts";
@@ -76,7 +76,7 @@ export function SRC20CardSmMinting({
           ]).map((col) => <col key={col.key} class={col.className} />)}
         </colgroup>
         <thead>
-          <tr class={`${glassmorphismL2}`}>
+          <tr class={`${container2}`}>
             {headers.map((header, i) => {
               const isFirst = i === 0;
               const isLast = i === (headers?.length ?? 0) - 1;
@@ -166,7 +166,7 @@ export function SRC20CardSmMinting({
                 return (
                   <tr
                     key={src20.tx_hash}
-                    class={`${glassmorphismL2} ${shadowGlowPurple}`}
+                    class={`${container2} ${shadowGlowPurple}`}
                     onClick={(e) => {
                       // Only navigate if not clicking on image or button
                       const target = e.target as HTMLElement;
@@ -318,7 +318,7 @@ export function SRC20CardSmMinting({
               <tr>
                 <td
                   colSpan={headers?.length ?? 0}
-                  class={`w-full h-[46px] ${glassmorphismL2}`}
+                  class={`w-full h-[46px] ${container2}`}
                 >
                   <h6 class={`${valueDarkSm} text-center`}>
                     NO MINTING TOKENS

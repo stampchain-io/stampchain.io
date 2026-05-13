@@ -7,7 +7,7 @@ import { SettingsButton } from "$islands/button/SettingsButton.tsx";
 import { SortButton } from "$islands/button/SortButton.tsx";
 import FreshSRC20Gallery from "$islands/section/gallery/FreshSRC20Gallery.tsx";
 import { FreshStampGallery } from "$islands/section/gallery/FreshStampGallery.tsx";
-import { glassmorphism, shadowGlowPurple } from "$layout";
+import { container1, shadowGlowPurple } from "$layout";
 import {
   createPaginationHandler,
   getCurrentUrl,
@@ -233,7 +233,7 @@ function DispenserRow(
 
   return (
     <div
-      class={`flex justify-between ${glassmorphism} rounded-2xl hover:border-color-purple-light ${shadowGlowPurple} border-2 border-transparent`}
+      class={`flex justify-between ${container1} rounded-2xl hover:border-color-purple-light ${shadowGlowPurple} border-2 border-transparent`}
     >
       <div class="flex p-3 mobileLg:p-6 gap-6 uppercase w-full">
         <a

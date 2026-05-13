@@ -3,7 +3,7 @@ import { PaginationButtons, SortButton } from "$button";
 import { Icon, LoadingIcon, PlaceholderImage } from "$icon";
 import {
   containerBackground,
-  glassmorphismL2,
+  container2,
   rowContainerBackground,
 } from "$layout";
 import { tooltipIcon } from "$notification";
@@ -183,7 +183,7 @@ function SectionHeader({
           : ( */
         }
         <div
-          class={`flex relative ${glassmorphismL2} !rounded-full
+          class={`flex relative ${container2} !rounded-full
              items-start justify-between
              gap-7 py-1.5 px-5
              tablet:gap-5 tablet:py-1 tablet:px-4`}
@@ -403,7 +403,7 @@ function DispenserRow(
   /* ===== RENDER DISPENSER ROW ===== */
   return (
     <div
-      class={`${glassmorphismL2} p-5`}
+      class={`${container2} p-5`}
     >
       <div class="flex gap-6 w-full">
         <a
@@ -411,7 +411,7 @@ function DispenserRow(
           class={`${imageSize} relative flex-shrink-0`}
         >
           <div
-            class={`${glassmorphismL2} !border relative aspect-square`}
+            class={`${container2} !border relative aspect-square`}
           >
             <div class="stamp-container absolute inset-0 flex items-center justify-center p-1">
               <div class="relative z-10 w-full h-full">

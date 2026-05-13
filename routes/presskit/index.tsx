@@ -5,7 +5,7 @@ import {
   body,
   containerBackground,
   containerGap,
-  glassmorphismL2,
+  container2,
 } from "$layout";
 import {
   label,
@@ -63,7 +63,7 @@ function ImagePlaceholder(
 ) {
   return (
     <div
-      class={`${width} ${height} ${glassmorphismL2} flex flex-col items-center justify-center p-5 gap-2.5`}
+      class={`${width} ${height} ${container2} flex flex-col items-center justify-center p-5 gap-2.5`}
     >
       {img
         ? (
@@ -214,7 +214,7 @@ export default function PressKit() {
 
           {/* Typeface + palette */}
           <div
-            class={`flex flex-col gap-4 mobileLg:w-1/2 tablet:w-1/3 ${glassmorphismL2} p-5`}
+            class={`flex flex-col gap-4 mobileLg:w-1/2 tablet:w-1/3 ${container2} p-5`}
           >
             <div>
               <h3 class={labelSm}>TYPEFACE</h3>
@@ -323,7 +323,7 @@ export default function PressKit() {
 
           {/* Typeface + palette */}
           <div
-            class={`flex flex-col gap-4 mobileLg:w-1/2 tablet:w-1/3 ${glassmorphismL2} p-5`}
+            class={`flex flex-col gap-4 mobileLg:w-1/2 tablet:w-1/3 ${container2} p-5`}
           >
             <div>
               <h3 class={labelSm}>TYPEFACE</h3>

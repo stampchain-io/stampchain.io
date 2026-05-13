@@ -5,7 +5,7 @@ import {
   cellLeftL2Card,
   cellRightL2Card,
   cellStickyLeft,
-  glassmorphismL2,
+  container2,
   shadowGlowPurple,
 } from "$layout";
 import { safeNavigate } from "$lib/utils/navigation/freshNavigationUtils.ts";
@@ -140,7 +140,7 @@ export function SRC20CardSm({
           ).map((col) => <col key={col.key} class={col.className} />)}
         </colgroup>
         <thead>
-          <tr class={`${glassmorphismL2}`}>
+          <tr class={`${container2}`}>
             {headers.map((header, i) => {
               const isFirst = i === 0;
               const isLast = i === (headers?.length ?? 0) - 1;
@@ -203,7 +203,7 @@ export function SRC20CardSm({
                 return (
                   <tr
                     key={src20.tx_hash}
-                    class={`${glassmorphismL2} ${shadowGlowPurple}`}
+                    class={`${container2} ${shadowGlowPurple}`}
                     onClick={(e) => {
                       // Only navigate if not clicking on image or chart
                       const target = e.target as HTMLElement;
@@ -429,7 +429,7 @@ export function SRC20CardSm({
               <tr>
                 <td
                   colSpan={headers?.length ?? 0}
-                  class={`w-full h-[46px] ${glassmorphismL2}`}
+                  class={`w-full h-[46px] ${container2}`}
                 >
                   <h6 class={`${valueDarkSm} text-center`}>
                     NO TOKENS TO DISPLAY

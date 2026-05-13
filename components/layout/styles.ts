@@ -22,16 +22,18 @@ export const shadowGlowPurple =
 export const shadowGlowGrey =
   `group hover:shadow-[0px_0px_16px_color-mix(in_srgb,var(--color-grey-light)_75%,transparent)] ${transitionColors} cursor-pointer`;
 
-// Glassmorphism styles
-// Overlay layer styles - used for drawer and modal containers - rename to containerOverlay
-export const glassmorphismOverlay =
-  `bg-gradient-to-b from-color-background/95 via-color-background/70 to-black/90 backdrop-blur-lg`;
-// 1st layer styles - rename to containerL1
-export const glassmorphism =
+// Container styles
+// Overlay layer styles - used for drawer and modal containers
+export const container0 =
+  `bg-gradient-to-b from-color-neutral-950/95 via-color-neutral-900/70 to-neutral-1000/90 backdrop-blur-lg`;
+// 1st layer styles
+export const container1 =
   `bg-border-container-1 rounded-3xl backdrop-blur-sm ${shadow}`;
-// 2nd layer styles - register tool tld dropdown uses same hardcoded values - rename to containerL2
-export const glassmorphismL2 = `bg-border-container-2 rounded-2xl`;
-export const glassmorphismL2Hover = `bg-border-container-2-hover rounded-2xl`;
+// 2nd layer styles - register tool tld dropdown uses same hardcoded values
+export const container2 = `bg-border-container-2 rounded-2xl`;
+export const container2Hover = `bg-border-container-2-hover rounded-2xl`;
+export const containerPill =
+  `flex items-center py-1 px-3 bg-gradient-to-b from-color-neutral-800 to-color-neutral-900 rounded-full cursor-default select-none`;
 
 /* ===== BODY STYLES ===== */
 // Main body styles
@@ -40,26 +42,25 @@ export const bodyTool = `
   ${body} mobileMd:max-w-[420px] mobileMd:mx-auto
 `;
 export const bodyArticle = `
-  ${body} tablet:max-w-[922px] tablet:mx-auto p-5 ${glassmorphism}
+  ${body} tablet:max-w-[922px] tablet:mx-auto p-5 ${container1}
 `;
 
 /* ===== CONTAINER STYLES ===== */
 // Base styles
-export const containerBackground = `${body} p-5 ${glassmorphism}`;
+export const containerBackground = `${body} p-5 ${container1}`;
 export const containerGap = "gap-5 mobileLg:gap-7.5";
-export const containerDetailImage = `relative p-5 ${glassmorphism}`;
+export const containerDetailImage = `relative p-5 ${container1}`;
 export const containerStickyBottom = `sticky bottom-0 mt-auto py-9 tablet:py-6`;
 
 // Stamp Card styles
-export const containerCard = `${glassmorphism} ${shadowGlowPurple}
+export const containerCard = `${container1} ${shadowGlowPurple}
   hover:border-color-purple-light`; // check if used
 
-export const containerCardL2 = `${glassmorphismL2} ${shadowGlowPurple}
+export const containerCardL2 = `${container2} ${shadowGlowPurple}
   hover:border-color-purple-light`;
 
 // Table card container styles - check if used
-export const containerCardTable =
-  `rounded-3xl ${glassmorphism} ${shadowGlowPurple}
+export const containerCardTable = `rounded-3xl ${container1} ${shadowGlowPurple}
   hover:border-color-purple-light`;
 
 // Global styles
@@ -74,7 +75,7 @@ export const rowForm = "flex w-full";
 export const rowResponsiveForm =
   "flex flex-col min-[420px]:flex-row w-full gap-5 min-[420px]:[&>*]:flex-1";
 export const rowContainerBackground =
-  `flex items-center justify-center w-full h-[46px] ${glassmorphism}`; // update all tables to use this instead of custom code
+  `flex items-center justify-center w-full h-[46px] ${container1}`; // update all tables to use this instead of custom code
 /* ===== COL STYLES ===== */
 
 /* ===== CELL STYLES ===== */
@@ -113,9 +114,9 @@ export const cellStickyLeft =
 
 /* ===== IMAGE STYLES ===== */
 export const imagePreviewTool =
-  `flex items-center justify-center min-w-[100px] h-[100px] ${glassmorphismL2}`;
+  `flex items-center justify-center min-w-[100px] h-[100px] ${container2}`;
 export const imageUploadTool =
-  `flex items-center justify-center min-w-[100px] h-[100px] ${glassmorphismL2} hover:bg-color-grey-dark/30 ${transitionColors} cursor-pointer`;
+  `flex items-center justify-center min-w-[100px] h-[100px] ${container2} hover:bg-color-grey-dark/30 ${transitionColors} cursor-pointer`;
 
 /* ===== LOADER STYLES ===== */
 // Text loader styles are defined in /text/styles.ts
@@ -147,10 +148,10 @@ export type LayoutStyles = {
   shadow: string;
   shadowL2: string;
 
-  glassmorphism: string;
-  glassmorphismOverlay: string;
-  glassmorphismL2: string;
-  glassmorphismL2Hover: string;
+  container1: string;
+  container0: string;
+  container2: string;
+  container2Hover: string;
 
   // Body styles
   body: string;

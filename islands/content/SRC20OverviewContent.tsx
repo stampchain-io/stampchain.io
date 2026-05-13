@@ -3,7 +3,7 @@ import type { SRC20OverviewContentProps } from "$types/ui.d.ts";
 import { useState } from "preact/hooks";
 // import type { SRC20Row } from "$types/src20.d.ts"; // Removed unused import
 import { SRC20OverviewHeader } from "$header";
-import { glassmorphismL2 } from "$layout";
+import { container2 } from "$layout";
 import { SRC20Gallery } from "$section";
 import {
   createFreshPaginationHandler,
@@ -107,7 +107,7 @@ export function SRC20OverviewContent({
       {/* ✅ FRESH.JS: Show loading overlay during navigation */}
       {isNavigating && (
         <div class="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-center justify-center">
-          <div class={`${glassmorphismL2} p-4 shadow-lg`}>
+          <div class={`${container2} p-4 shadow-lg`}>
             <div class="animate-spin w-6 h-6 border-2 border-color-purple-light border-t-transparent rounded-full">
             </div>
           </div>

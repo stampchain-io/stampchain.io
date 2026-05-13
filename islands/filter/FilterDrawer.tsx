@@ -20,7 +20,7 @@ import type { FilterType } from "$islands/button/FilterButton.tsx";
 import { FilterContentSRC20 } from "$islands/filter/FilterContentSRC20.tsx";
 import {
   containerStickyBottom,
-  glassmorphismOverlay,
+  container0,
   transitionTransform,
 } from "$layout";
 import { useBreakpoints } from "$lib/hooks/useBreakpoints.ts";
@@ -345,7 +345,7 @@ const FilterDrawer = (
       id={drawerId}
       ref={drawerRef}
       class={`fixed top-0 z-40 h-[100dvh] left-0 right-auto w-full
-        ${glassmorphismOverlay} ${transitionTransform}
+        ${container0} ${transitionTransform}
         min-[420px]:w-[340px] min-[420px]:rounded-r-3xl min-[420px]:border-r-[1px] min-[420px]:border-r-color-border/75
         min-[420px]:shadow-[12px_0_12px_-6px_rgba(8,7,8,0.75)]
         tablet:right-0 tablet:left-auto tablet:w-[300px] tablet:rounded-l-3xl tablet:border-l-[1px] tablet:border-l-color-border/75 tablet:shadow-[-12px_0_12px_-6px_rgba(8,7,8,0.75)]

@@ -4,7 +4,7 @@ import {
   cellCenterL2Detail,
   cellLeftL2Detail,
   cellRightL2Detail,
-  glassmorphismL2,
+  container2,
 } from "$layout";
 import {
   abbreviateAddress,
@@ -50,7 +50,7 @@ export function StampListingsAllTable(
         {/* ===== TABLE HEADER ===== */}
         <thead class="sticky top-0 z-10">
           {/* Only sticky on desktop */}
-          <tr class={`${glassmorphismL2}`}>
+          <tr class={`${container2}`}>
             {headers.map((header, i) => {
               const isFirst = i === 0;
               const isLast = i === (headers?.length ?? 0) - 1;
@@ -84,7 +84,7 @@ export function StampListingsAllTable(
               return (
                 <tr
                   key={`${dispenser.tx_hash}-${index}`}
-                  class={`${glassmorphismL2} group ${
+                  class={`${container2} group ${
                     isEmpty ? "text-color-grey-semidark" : ""
                   }`}
                 >
@@ -183,7 +183,7 @@ export function StampListingsAllTable(
               <tr>
                 <td
                   colSpan={headers?.length ?? 0}
-                  class={`w-full h-[34px] ${glassmorphismL2}`}
+                  class={`w-full h-[34px] ${container2}`}
                 >
                   <h6 class={`${valueDarkSm} text-center`}>
                     NO LISTINGS AT THE MOMENT

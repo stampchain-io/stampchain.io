@@ -5,7 +5,7 @@ import {
   body,
   containerBackground,
   containerGap,
-  glassmorphism,
+  container1,
 } from "$layout";
 import {
   headingGreyLDLink,
@@ -44,7 +44,7 @@ export default function MediaPage() {
       </section>
 
       {/* ===== INTERVIEWS SECTION ===== */}
-      <section class={`flex flex-col ${glassmorphism} p-5`}>
+      <section class={`flex flex-col ${container1} p-5`}>
         <h1 class={titleGreyLD}>Interviews</h1>
         <div
           class={`grid grid-cols-1 mobileLg:grid-cols-2 desktop:grid-cols-3 ${containerGap}`}

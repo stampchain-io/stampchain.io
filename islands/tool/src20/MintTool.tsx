@@ -15,7 +15,7 @@ import {
   containerColForm,
   containerGap,
   containerRowForm,
-  glassmorphismL2,
+  container2,
   imagePreviewTool,
   loaderSpinGrey,
 } from "$layout";
@@ -55,7 +55,7 @@ const MintProgress = (
         </h5>
         {/* Progress bar */}
         <div
-          class={`relative w-full max-w-[420px] h-3 ${glassmorphismL2} rounded-full`}
+          class={`relative w-full max-w-[420px] h-3 ${container2} rounded-full`}
         >
           <div
             class="absolute top-[1px] left-[1px] right-[1px] h-2 bg-color-grey rounded-full"

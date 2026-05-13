@@ -1,6 +1,6 @@
 /* ===== STATUS MESSAGES ===== */
 /*@baba-move file*/
-import { glassmorphism } from "$layout";
+import { container1 } from "$layout";
 import type { StatusMessagesProps } from "$types/ui.d.ts";
 
 export function StatusMessages({
@@ -28,7 +28,7 @@ export function StatusMessages({
     <>
       {hasSubmissionMessage && (
         <div
-          class={`w-full mt-4 ${glassmorphism} bg-gradient-to-br from-green-900/15 to-green-800/25 border-green-500/20 p-4`}
+          class={`w-full mt-4 ${container1} bg-gradient-to-br from-green-900/15 to-green-800/25 border-green-500/20 p-4`}
         >
           <p class="text-green-400 text-center font-medium">{messageText}</p>
           {txid && (
@@ -48,7 +48,7 @@ export function StatusMessages({
       )}
       {apiError && (
         <div
-          class={`w-full mt-4 ${glassmorphism} bg-gradient-to-br from-red-900/15 to-red-800/25 border-red-500/20 p-4`}
+          class={`w-full mt-4 ${container1} bg-gradient-to-br from-red-900/15 to-red-800/25 border-red-500/20 p-4`}
         >
           <div class="flex items-center justify-center gap-3">
             <p class="text-red-400 text-center font-medium">{apiError}</p>
@@ -76,7 +76,7 @@ export function StatusMessages({
       )}
       {fileUploadError && (
         <div
-          class={`w-full mt-4 ${glassmorphism} bg-gradient-to-br from-yellow-900/15 to-yellow-800/25 border-yellow-500/20 p-4`}
+          class={`w-full mt-4 ${container1} bg-gradient-to-br from-yellow-900/15 to-yellow-800/25 border-yellow-500/20 p-4`}
         >
           <p class="text-yellow-400 text-center font-medium">
             {fileUploadError}
@@ -85,14 +85,14 @@ export function StatusMessages({
       )}
       {walletError && (
         <div
-          class={`w-full mt-4 ${glassmorphism} bg-gradient-to-br from-red-900/15 to-red-800/25 border-red-500/20 p-4`}
+          class={`w-full mt-4 ${container1} bg-gradient-to-br from-red-900/15 to-red-800/25 border-red-500/20 p-4`}
         >
           <p class="text-red-400 text-center font-medium">{walletError}</p>
         </div>
       )}
       {maraError && !apiError && (
         <div
-          class={`w-full mt-4 ${glassmorphism} bg-gradient-to-br from-purple-900/15 to-purple-800/25 border-purple-500/20 p-4`}
+          class={`w-full mt-4 ${container1} bg-gradient-to-br from-purple-900/15 to-purple-800/25 border-purple-500/20 p-4`}
         >
           <p class="text-purple-400 text-center font-medium">
             MARA Service: {maraError}

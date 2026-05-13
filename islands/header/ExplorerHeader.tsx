@@ -1,6 +1,6 @@
 /* ===== EXPLORER HEADER COMPONENT ===== */
 import { SortButton } from "$islands/button/SortButton.tsx";
-import { glassmorphism } from "$layout";
+import { container1 } from "$layout";
 import { titleGreyLD } from "$text";
 
 /* ===== COMPONENT ===== */
@@ -14,7 +14,7 @@ export const ExplorerHeader = () => {
       {/* Controls Section */}
       <div class="flex flex-col">
         <div
-          class={`flex relative ${glassmorphism} !rounded-full
+          class={`flex relative ${container1} !rounded-full
              items-start justify-between
              gap-7 py-1.5 px-5
              tablet:gap-5 tablet:py-1 tablet:px-4`}

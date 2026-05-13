@@ -13,7 +13,7 @@ import {
   bodyTool,
   containerBackground,
   containerGap,
-  glassmorphismL2Hover,
+  container2Hover,
   transitionAll,
 } from "$layout";
 import { useTransactionConstructionService } from "$lib/hooks/useTransactionConstructionService.ts";
@@ -300,11 +300,11 @@ export function SRC101RegisterTool({
             aria-label="Bitname input"
           />
 
-          {/* TLD Dropdown InputField - styled like glassmorphismL2/Hover */}
+          {/* TLD Dropdown InputField - styled like container2/Hover */}
           <div class="relative w-[64px]" ref={tldDropdownRef}>
             <div
               class={`h-10 px-4 border border-color-border/75 rounded-2xl
-                !bg-color-background/60 ${glassmorphismL2Hover}
+                !bg-color-background/60 ${container2Hover}
                 font-semibold text-sm text-color-grey text-right backdrop-blur-sm hover:text-color-grey-light tracking-wider ${transitionAll} !duration-200 focus-visible:!outline-none cursor-pointer flex items-center justify-end ${
                 openTldDropdown && !isSelectingTld ? "input-open-bottom" : ""
               }`}

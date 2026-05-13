@@ -7,7 +7,7 @@ import {
   cellLeftCard,
   cellRightCard,
   cellStickyLeft,
-  glassmorphism,
+  container1,
   shadowGlowPurple,
 } from "$layout";
 import {
@@ -189,7 +189,7 @@ export function SRC20CardMinting({
           ]).map((col) => <col key={col.key} class={col.className} />)}
         </colgroup>
         <thead>
-          <tr class={`${glassmorphism}`}>
+          <tr class={`${container1}`}>
             {headers.map((header, i) => {
               const isFirst = i === 0;
               const isLast = i === (headers?.length ?? 0) - 1;
@@ -268,7 +268,7 @@ export function SRC20CardMinting({
                 return (
                   <tr
                     key={src20.tx_hash}
-                    class={`${glassmorphism} ${shadowGlowPurple}`}
+                    class={`${container1} ${shadowGlowPurple}`}
                     onClick={(e) => {
                       // Only navigate if not clicking on image or button
                       const target = e.target as HTMLElement;
@@ -437,7 +437,7 @@ export function SRC20CardMinting({
               <tr>
                 <td
                   colSpan={headers?.length ?? 0}
-                  class={`w-full h-[46px] ${glassmorphism}`}
+                  class={`w-full h-[46px] ${container1}`}
                 >
                   <h6 class={`${valueDarkSm} text-center`}>
                     NO MINTING TOKENS

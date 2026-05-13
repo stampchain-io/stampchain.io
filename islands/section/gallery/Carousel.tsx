@@ -3,7 +3,7 @@
 import createCarouselSlider from "$client/utils/carousel-slider.ts";
 import { IS_BROWSER } from "$fresh/runtime.ts";
 import { PlaceholderImage } from "$icon";
-import { glassmorphismL2, shadowGlowPurple } from "$layout";
+import { container2, shadowGlowPurple } from "$layout";
 import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
 import {
   getStampImageSrc,
@@ -242,7 +242,7 @@ export default function CarouselGallery(props: CarouselHomeProps) {
                       class={`hover-gradient hover:bg-color-purple-light ${shadowGlowPurple} p-0.5 rounded-3xl`}
                     >
                       <div
-                        class={`relative min-h-[150px] mobileMd:min-h-[242px] mobileLg:min-h-[200px] tablet:min-h-[269px] desktop:min-h-[408px] p-[6px] mobileMd:p-[12px] desktop:p-[18px] rounded-3xl ${glassmorphismL2} hover:bg-black`}
+                        class={`relative min-h-[150px] mobileMd:min-h-[242px] mobileLg:min-h-[200px] tablet:min-h-[269px] desktop:min-h-[408px] p-[6px] mobileMd:p-[12px] desktop:p-[18px] rounded-3xl ${container2} hover:bg-black`}
                       >
                         {validatedContent[stamp.tx_hash] || (
                           <img

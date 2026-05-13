@@ -4,7 +4,7 @@ import {
   cellCenterL2Detail,
   cellLeftL2Detail,
   cellRightL2Detail,
-  glassmorphismL2,
+  container2,
 } from "$layout";
 import {
   abbreviateAddress,
@@ -40,7 +40,7 @@ export function SRC20MintsTable(
         {/* ===== TABLE HEADER ===== */}
         <thead class="sticky top-0 z-10">
           {/* Only sticky on desktop */}
-          <tr class={`${glassmorphismL2}`}>
+          <tr class={`${container2}`}>
             {headers.map((header, i) => {
               const isFirst = i === 0;
               const isLast = i === (headers?.length ?? 0) - 1;
@@ -71,7 +71,7 @@ export function SRC20MintsTable(
             ? mints?.map((mint: SRC20Row, index: number) => (
               <tr
                 key={`${mint.tx_hash}-${index}`}
-                class={`${glassmorphismL2} group`}
+                class={`${container2} group`}
               >
                 {/* AMOUNT */}
                 <td
@@ -151,7 +151,7 @@ export function SRC20MintsTable(
               <tr>
                 <td
                   colSpan={headers?.length ?? 0}
-                  class={`w-full h-[34px] ${glassmorphismL2}`}
+                  class={`w-full h-[34px] ${container2}`}
                 >
                   <h6 class={`${valueDarkSm} text-center`}>
                     NO MINTS YET
