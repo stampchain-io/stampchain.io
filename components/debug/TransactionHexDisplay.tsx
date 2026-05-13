@@ -1,11 +1,11 @@
-import { glassmorphism } from "$layout";
-import type { TransactionHexDisplayProps } from "$types/ui.d.ts";
 import { Icon } from "$icon";
-import { useState } from "preact/hooks";
+import { container1 } from "$layout";
 import { showToast } from "$lib/utils/ui/notifications/toastSignal.ts";
+import type { TransactionHexDisplayProps } from "$types/ui.d.ts";
+import { useState } from "preact/hooks";
 
 /**
- * Displays transaction hex in a glassmorphism box with copy functionality
+ * Displays transaction hex in a container1 box with copy functionality
  * Useful for debugging MARA submissions or manual transaction broadcasts
  */
 export function TransactionHexDisplay({
@@ -35,7 +35,7 @@ export function TransactionHexDisplay({
 
   return (
     <div
-      class={`${glassmorphism} bg-gradient-to-br from-purple-900/10 to-purple-800/15 border-purple-500/15 p-4 ${className}`}
+      class={`${container1} bg-gradient-to-br from-purple-900/10 to-purple-800/15 border-purple-500/15 p-4 ${className}`}
     >
       <div class="flex items-start justify-between mb-3">
         <div class="flex items-center gap-2">

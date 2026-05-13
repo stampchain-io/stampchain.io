@@ -16,21 +16,21 @@ The app UI is inspired by Apple design principles, with dark themed multilayered
                         ▲
 ┌─────────────────────────────────────────────────────┐
 │  Overlay Layer: Drawers & Modals                    │
-│  - glassmorphismOverlay                             │
+│  - container0                                       │
 │  - backdrop-blur-lg                                 │
 │  - Used by: FilterDrawer, Header mobile menu        │
 └─────────────────────────────────────────────────────┘
                         ▲
 ┌─────────────────────────────────────────────────────┐
 │  Layer 1: Primary Containers                        │
-│  - glassmorphism (rounded-3xl)                      │
+│  - container1 (rounded-3xl)                         │
 │  - Page bodies, cards, tokens                       │
 │  - Used by: Body containers, StampCards             │
 └─────────────────────────────────────────────────────┘
                         ▲
 ┌─────────────────────────────────────────────────────┐
 │  Layer 2: Nested Elements                           │
-│  - glassmorphismL2 (rounded-2xl)                    │
+│  - container2 (rounded-2xl)                         │
 │  - Child containers, detail tables                  │
 │  - Used by: Nested cards, detail rows               │
 └─────────────────────────────────────────────────────┘
@@ -53,7 +53,7 @@ The app UI is inspired by Apple design principles, with dark themed multilayered
       - Desktop: 1500 particles
 
 - Overlay layer styles:
-  - GlassmorphismOverlay
+  - Container0
     - Used for drawers background and modal (base) containers
     - Darker black background with gradient opacity
     - Background blur:
@@ -71,7 +71,7 @@ The app UI is inspired by Apple design principles, with dark themed multilayered
         - Shadow: shadow-[0_4px_8px_rgba(13,11,13,0.2),inset_0_1px_0_rgba(13,11,13,0.1),inset_0_-1px_0_rgba(13,11,13,0.1),inset_0_0_1px_1px_rgba(13,11,13,0.1)]
 
 - Layer 1:
-  - Glassmorphism
+  - Container1
     - Used for page body containers, stampcards, tokencards
     - Black background with medium opacity
     - Rounded corners (24px) and background blur:
@@ -83,8 +83,8 @@ The app UI is inspired by Apple design principles, with dark themed multilayered
       - shadow-[0_4px_8px_rgba(13,11,13,0.2),inset_0_1px_0_rgba(13,11,13,0.1),inset_0_-1px_0_rgba(13,11,13,0.1),inset_0_0_1px_1px_rgba(13,11,13,0.1)]
 
 - Layer 2 styles:
-  - GlassmorphismL2
-    - Used for child containers inside of parent layer 1 glassmorphism containers
+  - Container2
+    - Used for child containers inside of parent layer 1 containers
     - Black background with high opacity
     - Rounded corners (16px) and small background blur:
       - rounded-2xl backdrop-blur-xs
@@ -93,7 +93,7 @@ The app UI is inspired by Apple design principles, with dark themed multilayered
     - Shadow: Smaller outer and inner shadows:
       - shadow-[0_2px_4px_rgba(13,11,13,0.1),inset_0_1px_0_rgba(13,11,13,0.08),inset_0_-1px_0_rgba(13,11,13,0.08),inset_0_0_2px_2px_rgba(13,11,13,0.08)]
 
-  - GlassmorphismL2Hover
+  - Container2Hover
     - Combines background and border hover styles
     - Intended to be used with layer 2 elements
     - Background: bg-color-background/60
@@ -116,7 +116,7 @@ The app UI is inspired by Apple design principles, with dark themed multilayered
   - **Exports**:
     - Transition utilities: `transitionColors`, `transitionTransform`, `transitionAll`
     - Shadow variants: `shadow`, `shadowL2`, `shadowGlowPurple`, `shadowGlowGrey`
-    - Glassmorphism layers: `glassmorphism`, `glassmorphismOverlay`, `glassmorphismL2`, `glassmorphismL2Hover`
+    - Container layers: `container1`, `container0`, `container2`, `container2Hover`
     - Body styles: `body`, `bodyTool`, `bodyArticle`, `gapSection`, `containerGap`, `containerGap`
     - Container styles: `containerBackground`, `containerCard`, `containerCardL2`, `containerColForm`
     - Cell styles: `cellLeftCard`, `cellRightCard`, `cellCenterCard` (+ L2 variants)
@@ -126,7 +126,7 @@ The app UI is inspired by Apple design principles, with dark themed multilayered
 
 - **ModalBase.tsx**: Base modal component with consistent styling and behavior
   - **Purpose**: Reusable modal foundation for all modal dialogs
-  - **Key Features**: Glassmorphism overlay styling, keyboard shortcuts (Escape), close button with delayed tooltip, animation support, responsive width
+  - **Key Features**: Container overlay styling, keyboard shortcuts (Escape), close button with delayed tooltip, animation support, responsive width
   - **Props**: `onClose`, `title`, `children`, `className`, `contentClassName`, `hideHeader`
 
 - **ModalSearchBase.tsx**: Specialized search modal container
@@ -216,11 +216,11 @@ export type LayoutStyles = {
   shadowGlowPurple: string;
   shadowGlowGrey: string;
 
-  // Glassmorphism
-  glassmorphism: string;
-  glassmorphismOverlay: string;
-  glassmorphismL2: string;
-  glassmorphismL2Hover: string;
+  // Container layers
+  container1: string;
+  container0: string;
+  container2: string;
+  container2Hover: string;
 
   // Body styles
   body: string;
@@ -294,7 +294,7 @@ interface MetaTagsProps {
 
 ### Creating a Page Layout
 ```tsx
-import { body, containerBackground, glassmorphism } from "$layout";
+import { body, containerBackground } from "$layout";
 
 export default function StampPage() {
   return (
@@ -329,13 +329,13 @@ export function StampCard({ stamp }) {
 
 ### Nested Layer 2 Components
 ```tsx
-import { glassmorphism, glassmorphismL2, glassmorphismL2Hover } from "$layout";
+import { container1, container2, container2Hover } from "$layout";
 
 export function DetailContainer() {
   return (
-    <div class={glassmorphism}>
+    <div class={container1}>
       {/* Layer 1 container */}
-      <div class={`${glassmorphismL2} ${glassmorphismL2Hover} group cursor-pointer`}>
+      <div class={`${container2} ${container2Hover} group cursor-pointer`}>
         {/* Layer 2 nested element with hover effects */}
       </div>
     </div>
@@ -546,7 +546,7 @@ color-border           // #332f32
 The layout system integrates with the global style system through:
 
 - **Consistent breakpoints**: mobile, mobileLg, mobileMd, tablet, desktop
-- **Glassmorphism variants**: overlay, base, L2 with hover states
+- **Container layer variants**: container0 (overlay), container1 (base), container2 / container2Hover (L2)
 - **Shadow system**: standard, L2, and glow effects
 - **Transition utilities**: colors, transform, and all with consistent durations
 - **Responsive design**: mobile-first approach with progressive enhancement
@@ -562,7 +562,7 @@ The layout system integrates with the global style system through:
 ### Style Constant Pattern
 ```typescript
 // Pattern used in styles.ts
-export const glassmorphism = `border border-color-border/50 rounded-3xl
+export const container1 = `border border-color-border/50 rounded-3xl
   bg-gradient-to-br from-[#191919]/40 via-color-background/50 to-black/60
   backdrop-blur ${shadow}`;
 ```

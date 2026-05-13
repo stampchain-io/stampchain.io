@@ -359,18 +359,18 @@ export function ActiveListings({ listings }) {
 
 ## Style System Integration
 
-### Glassmorphism Effects
+### Container Layer Styling
 
-All tables use consistent glassmorphism styling from the layout system:
+All tables use consistent container layer styling from the layout system:
 
 ```tsx
 // Header row
-<tr class={`${glassmorphismL2}`}>
+<tr class={`${container2}`}>
   {/* Headers */}
 </tr>
 
 // Data rows with hover
-<tr class={`${glassmorphismL2} group`}>
+<tr class={`${container2} group`}>
   {/* Cells */}
 </tr>
 ```
@@ -601,7 +601,7 @@ import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
   <tr>
     <td
       colSpan={headers.length}
-      class={`w-full h-[34px] ${glassmorphismL2}`}
+      class={`w-full h-[34px] ${container2}`}
     >
       <h6 class={`${valueDarkSm} text-center`}>
         NO DATA AVAILABLE
@@ -744,7 +744,7 @@ export interface NewTableProps {
 import {
   cellLeftL2Detail,
   cellRightL2Detail,
-  glassmorphismL2
+  container2
 } from "$layout";
 import { colGroup, cellAlign } from "$components/layout/types.ts";
 import { labelXs, textSm, valueDarkSm } from "$text";
@@ -764,7 +764,7 @@ export function NewTable({ data, isLoading = false }: NewTableProps) {
         </colgroup>
 
         <thead>
-          <tr class={glassmorphismL2}>
+          <tr class={container2}>
             {headers.map((header, i) => (
               <th
                 key={header}
@@ -778,7 +778,7 @@ export function NewTable({ data, isLoading = false }: NewTableProps) {
 
         <tbody>
           {!isLoading && data?.map((item) => (
-            <tr key={item.id} class={`${glassmorphismL2} group`}>
+            <tr key={item.id} class={`${container2} group`}>
               <td class={cellLeftL2Detail}>{item.id}</td>
               <td class={`text-center ${valueDarkSm}`}>{item.value}</td>
               <td class={cellRightL2Detail}>
