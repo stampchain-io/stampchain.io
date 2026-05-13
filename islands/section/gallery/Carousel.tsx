@@ -261,7 +261,7 @@ export default function CarouselGallery(props: CarouselHomeProps) {
                           >
                             <div class="w-full pb-1">
                               <div class="desktop:hidden flex justify-center items-center w-full">
-                                <h3 class="font-black text-lg color-grey-gradientDL text-center">
+                                <h3 class="font-black text-lg bg-gradient-to-l color-neutral-gradient text-center">
                                   <span class="font-light text-color-grey-light">
                                     #
                                   </span>
@@ -269,13 +269,13 @@ export default function CarouselGallery(props: CarouselHomeProps) {
                                 </h3>
                               </div>
                               <div class="hidden mobileLg:flex justify-between items-end w-full flex-1 px-1 desktop:px-3 pb-1.5 desktop:pb-2">
-                                <h3 class="hidden desktop:block font-black text-3xl color-grey-gradientDL desktop:text-left">
+                                <h3 class="hidden desktop:block font-black text-3xl bg-gradient-to-l color-neutral-gradient desktop:text-left">
                                   <span class="font-light text-color-grey-light">
                                     #
                                   </span>
                                   {stamp.stamp}
                                 </h3>
-                                <h4 class="font-medium text-sm desktop:text-base color-grey-gradientLD text-left desktop:text-center tracking-normal mb-0.5">
+                                <h4 class="font-medium text-sm desktop:text-base bg-gradient-to-r color-neutral-gradient text-left desktop:text-center tracking-normal mb-0.5">
                                   {stamp.creator_name
                                     ? stamp.creator_name
                                     : abbreviateAddress(stamp.creator, 8)}

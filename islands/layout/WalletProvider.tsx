@@ -5,8 +5,8 @@ import { okxProvider } from "$client/wallet/okx.ts";
 import { phantomProvider } from "$client/wallet/phantom.ts";
 import { tapWalletProvider } from "$client/wallet/tapwallet.ts";
 import { unisatProvider } from "$client/wallet/unisat.ts";
-import { xverseProvider } from "$client/wallet/xverse.ts";
 import { checkWalletAvailability } from "$client/wallet/wallet.ts";
+import { xverseProvider } from "$client/wallet/xverse.ts";
 import { WALLET_PROVIDERS } from "$constants";
 import { closeForegroundModal, closeModal } from "$islands/modal/states.ts";
 import { containerCardL2 } from "$layout";
@@ -124,7 +124,9 @@ export function WalletProvider(
       {/* ===== PROVIDER NAME ===== */}
       <h6
         class={`font-extrabold text-lg uppercase tracking-wide ${
-          isHovered ? "text-color-purple-light" : "color-grey-gradientLD"
+          isHovered
+            ? "text-color-purple-light"
+            : "bg-gradient-to-r color-neutral-gradient"
         }`}
       >
         {providerInfo.name}

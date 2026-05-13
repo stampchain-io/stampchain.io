@@ -24,7 +24,7 @@ import { mapProgressiveFeeDetails } from "$lib/utils/performance/fees/fee-estima
 import { getCSRFToken } from "$lib/utils/security/clientSecurityUtils.ts";
 import { StatusMessages, tooltipButton, tooltipImage } from "$notification";
 import { FeeCalculatorBase } from "$section";
-import { titleGreyLD } from "$text";
+import { titlePurpleLD } from "$text";
 import axiod from "axiod";
 import { useEffect, useRef, useState } from "preact/hooks";
 
@@ -335,8 +335,8 @@ export function SRC20DeployTool(
   if (!config) {
     return (
       <div class={`${bodyTool} ${containerGap}`}>
-        <h1 class={`${titleGreyLD} mx-auto -mb-2 mobileLg:-mb-4`}>
-          DEPLOY
+        <h1 class={`${titlePurpleLD} mx-auto -mb-2 mobileLg:-mb-4`}>
+          Deploy
         </h1>
         <DeployToolSkeleton />
       </div>
@@ -346,8 +346,8 @@ export function SRC20DeployTool(
   /* ===== COMPONENT RENDER ===== */
   return (
     <div class={`${bodyTool} ${containerGap}`}>
-      <h1 class={`${titleGreyLD} mx-auto -mb-2 mobileLg:-mb-4`}>
-        DEPLOY
+      <h1 class={`${titlePurpleLD} mx-auto -mb-2 mobileLg:-mb-4`}>
+        Deploy
       </h1>
 
       <form
@@ -408,7 +408,9 @@ export function SRC20DeployTool(
                     weight="extraLight"
                     size="xl"
                     color="custom"
-                    className="stroke-color-grey-dark group-hover:stroke-color-grey-semidark/80"
+                    className="stroke-color-neutral-600 group-hover:stroke-color-hover"
+                    colorAccent="var(--color-primary-400)"
+                    colorAccentHover="var(--color-primary-300)"
                   />
                 </label>
               )}

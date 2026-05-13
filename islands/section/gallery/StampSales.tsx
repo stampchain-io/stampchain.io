@@ -164,7 +164,7 @@ export function StampSalesGallery({
       <h3
         class={variant === "home"
           ? titleGreyLD
-          : "text-3xl tablet:text-7xl text-left mb-2 bg-clip-text text-transparent color-purple-gradientDL font-black"}
+          : "text-3xl tablet:text-7xl text-left mb-2 bg-gradient-to-l color-primary-gradient font-black"}
       >
         {title}
       </h3>

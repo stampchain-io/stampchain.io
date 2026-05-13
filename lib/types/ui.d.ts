@@ -2620,6 +2620,10 @@ export interface ToggleSwitchButtonProps {
 
   // Optional ref forwarding
   buttonRef?: preact.RefObject<HTMLButtonElement>;
+
+  // Optional overrides for the knob background color/gradient classes
+  activeKnobClassName?: string;
+  inactiveKnobClassName?: string;
 }
 
 // ICON COMPONENT PROPS
