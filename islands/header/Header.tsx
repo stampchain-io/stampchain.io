@@ -457,7 +457,7 @@ export function Header() {
                 />
               </div>
               <h6
-                class={`font-extrabold text-2xl color-grey-gradientLD tracking-wide select-none inline-block w-fit ${
+                class={`font-extrabold text-2xl bg-gradient-to-r color-neutral-gradient tracking-wide select-none inline-block w-fit ${
                   type === "menu" ? "italic font-black pr-0.5" : ""
                 }`}
               >

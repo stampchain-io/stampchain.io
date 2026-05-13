@@ -3,9 +3,9 @@ import { Icon } from "$icon";
 import { containerBackground } from "$layout";
 import {
   copyright,
-  logoPurpleLD,
-  navLinkTransparentPurple,
-  overlayPurple,
+  logoPrimary,
+  navLinkFooter,
+  navLinkFooterOverlay,
   tagline,
 } from "$text";
 import { useEffect, useState } from "preact/hooks";
@@ -20,11 +20,11 @@ interface FooterLink {
 
 /* ===== NAVIGATION CONFIGURATIONS ===== */
 const resourcesLinks: FooterLink[] = [
+  { title: "Media", href: "/media" },
+  { title: "How-To", href: "/howto" },
   { title: "FAQ", href: "/faq" },
-  { title: "HOW-TO", href: "/howto" },
-  { title: "MEDIA", href: "/media" },
   {
-    title: "PRESS KIT",
+    title: "Press Kit",
     href:
       "https://drive.google.com/drive/folders/18QsMTZ_ZII5FVxuAs2CLFoLdZE3NOdlT",
     isExternal: true,
@@ -32,23 +32,23 @@ const resourcesLinks: FooterLink[] = [
 ];
 
 const aboutLinks: FooterLink[] = [
-  { title: "ABOUT", href: "/about" },
-  { title: "DONATE", href: "/about#donate" },
-  { title: "CONTACT", href: "/about#contact" },
-  { title: "TERMS", href: "/termsofservice" },
+  { title: "About", href: "/about" },
+  { title: "Donate", href: "/about#donate" },
+  { title: "Contact", href: "/about#contact" },
+  { title: "Terms", href: "/termsofservice" },
 ];
 
 const mobileLinks: FooterLink[] = [
-  { title: "ABOUT", href: "/about" },
-  { title: "DONATE", href: "/about#donate" },
+  { title: "About", href: "/about" },
+  { title: "Donate", href: "/about#donate" },
   {
-    title: "PRESS KIT",
+    title: "Press Kit",
     href:
       "https://drive.google.com/drive/folders/18QsMTZ_ZII5FVxuAs2CLFoLdZE3NOdlT",
     isExternal: true,
     hiddenOnMobile: true,
   },
-  { title: "TERMS", href: "/termsofservice" },
+  { title: "Terms", href: "/termsofservice" },
 ];
 
 /* ===== SOCIAL MEDIA CONFIGURATION ===== */
@@ -129,7 +129,7 @@ export function Footer() {
           {/* ===== LOGO AND TAGLINE ===== */}
           <div class="flex flex-col">
             <h5
-              class={`${logoPurpleLD} text-center mobileMd:text-left`}
+              class={`${logoPrimary} text-center mobileMd:text-left`}
             >
               STAMPCHAIN
               <span class="font-extralight pr-1">
@@ -159,7 +159,7 @@ export function Footer() {
         </div>
 
         {/* ===== DESKTOP RIGHT SECTION ===== */}
-        <div class={`${overlayPurple}`}>
+        <div class={`${navLinkFooterOverlay}`}>
           <div class="hidden tablet:flex flex-row justify-end w-[300px] pt-1">
             {/* ===== RESOURCES LINKS ===== */}
             <div class="flex w-1/2 ">
@@ -169,7 +169,7 @@ export function Footer() {
                     key={link.href}
                     href={link.href}
                     f-partial={link.isExternal ? "" : link.href}
-                    class={`${navLinkTransparentPurple}`}
+                    class={`${navLinkFooter}`}
                     target={link.isExternal ? "_blank" : undefined}
                     rel={link.isExternal ? "noopener noreferrer" : undefined}
                   >
@@ -187,7 +187,7 @@ export function Footer() {
                     key={link.href}
                     href={link.href}
                     f-partial={link.isExternal ? "" : link.href}
-                    class={`${navLinkTransparentPurple}`}
+                    class={`${navLinkFooter}`}
                     target={link.isExternal ? "_blank" : undefined}
                     rel={link.isExternal ? "noopener noreferrer" : undefined}
                   >
@@ -210,7 +210,7 @@ export function Footer() {
                   key={link.href}
                   href={link.href}
                   f-partial={link.isExternal ? "" : link.href}
-                  class={`${navLinkTransparentPurple}`}
+                  class={`${navLinkFooter}`}
                   target={link.isExternal ? "_blank" : undefined}
                   rel={link.isExternal ? "noopener noreferrer" : undefined}
                 >
@@ -230,7 +230,7 @@ export function Footer() {
                     key={link.href}
                     href={link.href}
                     f-partial={link.isExternal ? "" : link.href}
-                    class={`${navLinkTransparentPurple}`}
+                    class={`${navLinkFooter}`}
                     target={link.isExternal ? "_blank" : undefined}
                     rel={link.isExternal ? "noopener noreferrer" : undefined}
                   >
@@ -248,7 +248,7 @@ export function Footer() {
                     key={link.href}
                     href={link.href}
                     f-partial={link.isExternal ? "" : link.href}
-                    class={`${navLinkTransparentPurple}`}
+                    class={`${navLinkFooter}`}
                     target={link.isExternal ? "_blank" : undefined}
                     rel={link.isExternal ? "noopener noreferrer" : undefined}
                   >
