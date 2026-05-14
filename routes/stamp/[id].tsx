@@ -5,12 +5,17 @@ import { StampImage, StampInfo } from "$content";
 import { Head } from "$fresh/runtime.ts";
 import { Handlers } from "$fresh/server.ts";
 import { body, containerBackground, containerGap } from "$layout";
+import {
+  DEV_DUMMY_MODE,
+  DUMMY_STAMP_DETAIL_PAGE,
+  withTimeout,
+} from "$lib/utils/devDummyData.ts";
 import { generateStampJsonLd } from "$lib/utils/jsonLd.ts";
 import { logger, LogNamespace } from "$lib/utils/logger.ts";
 import { StampGallery } from "$section";
 import { serverConfig } from "$server/config/config.ts";
-import { CollectionRepository } from "$server/database/collectionRepository.ts";
 import { StampController } from "$server/controller/stampController.ts";
+import { CollectionRepository } from "$server/database/collectionRepository.ts";
 import { getPreviewUrl } from "$server/services/aws/previewStorageService.ts";
 import { CounterpartyDispenserService } from "$server/services/counterpartyApiService.ts";
 import { RouteType } from "$server/services/infrastructure/cacheService.ts";
@@ -46,16 +51,22 @@ interface StampData {
 /* ===== SERVER HANDLER ===== */
 export const handler: Handlers<StampData> = {
   async GET(req: Request, ctx) {
+    if (DEV_DUMMY_MODE) {
+      return ctx.render({ ...DUMMY_STAMP_DETAIL_PAGE, url: req.url });
+    }
     try {
       const { id } = ctx.params;
       // Get stamp details first with market data
-      const stampData = await StampController.getStampDetailsById(
-        id,
-        "all",
-        RouteType.STAMP_DETAIL,
-        undefined,
-        true,
-        false,
+      const stampData = await withTimeout(
+        StampController.getStampDetailsById(
+          id,
+          "all",
+          RouteType.STAMP_DETAIL,
+          undefined,
+          true,
+          false,
+        ),
+        15000,
       );
       if (!stampData?.data?.stamp) {
         return ctx.renderNotFound();
@@ -185,20 +196,7 @@ export const handler: Handlers<StampData> = {
       if ((error as Error).message?.includes("Stamp not found")) {
         return ctx.renderNotFound();
       }
-      return ctx.render({
-        error: error instanceof Error ? error.message : "Internal server error",
-        stamp: {} as StampRow,
-        total: 0,
-        sends: [],
-        dispensers: [],
-        dispenses: [],
-        holders: [],
-        vaults: [],
-        last_block: 0,
-        stamps_recent: [],
-        lowestPriceDispenser: null,
-        url: req.url,
-      });
+      return ctx.render({ ...DUMMY_STAMP_DETAIL_PAGE, url: req.url });
     }
   },
 };

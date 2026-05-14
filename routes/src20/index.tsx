@@ -3,6 +3,10 @@
 import { SRC20OverviewContent } from "$content";
 import { Handlers } from "$fresh/server.ts";
 import { body } from "$layout";
+import {
+  DEV_DUMMY_MODE,
+  DUMMY_TOKEN_OVERVIEW_PAGE,
+} from "$lib/utils/devDummyData.ts";
 
 /* ===== HELPER FUNCTIONS ===== */
 /**
@@ -23,6 +27,7 @@ async function fetchFromAPI(endpoint: string, baseUrl: string): Promise<any> {
       headers: {
         "X-API-Version": "2.3", // Use latest API version with market data
       },
+      signal: AbortSignal.timeout(15000),
     });
 
     if (!response.ok) {
@@ -61,7 +66,7 @@ async function fetchFromAPI(endpoint: string, baseUrl: string): Promise<any> {
       `[SRC20] API call error: ${endpoint}`,
       error,
     );
-    return { data: [], total: 0, page: 1, totalPages: 0 };
+    return DUMMY_TOKEN_OVERVIEW_PAGE;
   }
 }
 
@@ -69,6 +74,19 @@ async function fetchFromAPI(endpoint: string, baseUrl: string): Promise<any> {
 export const handler: Handlers = {
   async GET(req, ctx) {
     const url = new URL(req.url);
+
+    if (DEV_DUMMY_MODE) {
+      return ctx.render({
+        mintingData: DUMMY_TOKEN_OVERVIEW_PAGE,
+        timeframe: "24H",
+        sortBy: "TRENDING",
+        sortDirection: "desc",
+        viewType: "minted",
+        btcPrice: 65000,
+        btcPriceSource: "dummy",
+      });
+    }
+
     const page = parseInt(url.searchParams.get("page") || "1");
     const limit = 50;
     const timeframe = (url.searchParams.get("timeframe") || "24H") as
@@ -247,14 +265,12 @@ export const handler: Handlers = {
         error,
       );
 
-      const emptyData = { data: [], total: 0, page: 1, totalPages: 0 };
       return ctx.render({
-        mintingData: emptyData,
+        mintingData: DUMMY_TOKEN_OVERVIEW_PAGE,
         timeframe,
         sortBy,
         sortDirection,
-        viewType, // Pass viewType to frontend
-        // Pass BTC price even in error case
+        viewType,
         btcPrice: undefined,
         btcPriceSource: "error",
       });

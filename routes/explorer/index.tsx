@@ -8,6 +8,11 @@ import type { StampFilterType, StampType } from "$constants";
 import { ExplorerHeader } from "$header";
 import { StampController } from "$server/controller/stampController.ts";
 import { CollectionService } from "$server/services/core/collectionService.ts";
+import {
+  DEV_DUMMY_MODE,
+  DUMMY_STAMP_OVERVIEW_PAGE,
+  withTimeout,
+} from "$lib/utils/devDummyData.ts";
 import type { StampPageProps } from "$types/api.d.ts";
 
 /* ===== CONSTANTS ===== */
@@ -27,6 +32,20 @@ export const handler: Handlers = {
     // Only process requests for /stamp route
     if (url.searchParams.has("_fresh") && !url.pathname.startsWith("/stamp")) {
       return new Response(null, { status: 204 });
+    }
+
+    if (DEV_DUMMY_MODE) {
+      return ctx.render({
+        stamps: DUMMY_STAMP_OVERVIEW_PAGE.data,
+        pagination: DUMMY_STAMP_OVERVIEW_PAGE.pagination,
+        page: 1,
+        limit: 60,
+        totalPages: 1,
+        filterBy: [],
+        sortBy: "DESC",
+        selectedTab: "all",
+        partial: false,
+      });
     }
 
     try {
@@ -52,9 +71,12 @@ export const handler: Handlers = {
         // Handle recent sales view with type filtering
         // Note: SRC-20 excluded from recent sales as they're handled separately in the app
         const recentSalesType = selectedTab === "src20" ? "all" : selectedTab;
-        result = await StampController.getRecentSales(page, page_size, {
-          type: recentSalesType === "all" ? "all" : recentSalesType,
-        });
+        result = await withTimeout(
+          StampController.getRecentSales(page, page_size, {
+            type: recentSalesType === "all" ? "all" : recentSalesType,
+          }),
+          15000,
+        );
       } else {
         // Handle regular stamp listing
         const ident: SUBPROTOCOLS[] = [];
@@ -62,8 +84,9 @@ export const handler: Handlers = {
 
         // Special handling for POSH stamps
         if (selectedTab === "posh") {
-          const poshCollection = await CollectionService.getCollectionByName(
-            "posh",
+          const poshCollection = await withTimeout(
+            CollectionService.getCollectionByName("posh"),
+            15000,
           );
           if (poshCollection) {
             collectionId = poshCollection.collection_id;
@@ -73,16 +96,19 @@ export const handler: Handlers = {
         }
 
         // Fetch stamps with filters
-        result = await StampController.getStamps({
-          page,
-          limit: page_size,
-          sortBy: sortBy as "DESC" | "ASC",
-          type: selectedTab,
-          filterBy,
-          ident,
-          collectionId,
-          url: url.origin,
-        });
+        result = await withTimeout(
+          StampController.getStamps({
+            page,
+            limit: page_size,
+            sortBy: sortBy as "DESC" | "ASC",
+            type: selectedTab,
+            filterBy,
+            ident,
+            collectionId,
+            url: url.origin,
+          }),
+          15000,
+        );
       }
 
       /* ===== RESPONSE FORMATTING ===== */
@@ -103,7 +129,17 @@ export const handler: Handlers = {
       });
     } catch (error) {
       console.error(error);
-      return ctx.render({ error: `Error: Internal server error` });
+      return ctx.render({
+        stamps: DUMMY_STAMP_OVERVIEW_PAGE.data,
+        pagination: DUMMY_STAMP_OVERVIEW_PAGE.pagination,
+        page: 1,
+        limit: 60,
+        totalPages: 1,
+        filterBy: [],
+        sortBy: "DESC",
+        selectedTab: "all",
+        partial: false,
+      });
     }
   },
 };

@@ -7,6 +7,11 @@ import type { StampRow, StampSaleRow } from "$types/stamp.d.ts";
 import { HomeHeader } from "$header";
 import { body, containerBackground, containerGap } from "$layout";
 import {
+  DEV_DUMMY_MODE,
+  DUMMY_LANDING_PAGE,
+  DUMMY_TOKEN_OVERVIEW_PAGE,
+} from "$lib/utils/devDummyData.ts";
+import {
   GetStampingCta,
   PartnersBanner,
   SRC20Gallery,
@@ -67,6 +72,18 @@ export const handler: Handlers<HomePageData> = {
 
     console.log(`[HOMEPAGE] Starting homepage request`);
 
+    if (DEV_DUMMY_MODE) {
+      return await ctx.render({
+        ...DUMMY_LANDING_PAGE,
+        src20Data: {
+          minted: DUMMY_TOKEN_OVERVIEW_PAGE as any,
+          minting: DUMMY_TOKEN_OVERVIEW_PAGE as any,
+        },
+        btcPrice: 65000,
+        btcPriceSource: "dummy",
+      });
+    }
+
     try {
       /* ===== SINGLE BTC PRICE FETCH ===== */
       // 🚀 PERFORMANCE: Use singleton BTC price service to eliminate duplicate fetches
@@ -124,13 +141,7 @@ export const handler: Handlers<HomePageData> = {
           fetchWithFallback(
             () =>
               StampController.getHomePageData(btcPrice, btcPriceData.source),
-            {
-              carouselStamps: [],
-              stamps_art: [],
-              stamps_src721: [],
-              stamps_posh: [],
-              collectionData: [],
-            },
+            DUMMY_LANDING_PAGE,
             "StampController.getHomePageData",
           ),
           // Top minted SRC20 tokens - call service directly
@@ -167,7 +178,7 @@ export const handler: Handlers<HomePageData> = {
                 totalPages: paginatedResult.totalPages || 1,
               };
             },
-            { data: [], total: 0, page: 1, totalPages: 0 },
+            DUMMY_TOKEN_OVERVIEW_PAGE,
             "fetchTopMintedTokens",
           ),
           // Trending minting SRC20 tokens - call service directly
@@ -204,7 +215,7 @@ export const handler: Handlers<HomePageData> = {
                 totalPages: paginatedResult.totalPages || 1,
               };
             },
-            { data: [], total: 0, page: 1, totalPages: 0 },
+            DUMMY_TOKEN_OVERVIEW_PAGE,
             "fetchTrendingActiveMintingTokensV2",
           ),
           // Recent stamp sales - call controller directly
@@ -268,15 +279,10 @@ export const handler: Handlers<HomePageData> = {
 
       // ECS-specific: Return minimal working page instead of failing completely
       return await ctx.render({
-        carouselStamps: [],
-        stamps_art: [],
-        stamps_src721: [],
-        stamps_posh: [],
-        collectionData: [],
-        error: "Service temporarily unavailable", // This will show a friendly error message
+        ...DUMMY_LANDING_PAGE,
         src20Data: {
-          minted: { data: [], total: 0, page: 1, totalPages: 0 },
-          minting: { data: [], total: 0, page: 1, totalPages: 0 },
+          minted: DUMMY_TOKEN_OVERVIEW_PAGE as any,
+          minting: DUMMY_TOKEN_OVERVIEW_PAGE as any,
         },
       });
     }

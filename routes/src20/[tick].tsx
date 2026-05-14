@@ -3,6 +3,11 @@ import { Handlers } from "$fresh/server.ts";
 import { SRC20DetailHeader } from "$islands/header/index.ts";
 import ChartWidget from "$islands/layout/ChartWidget.tsx";
 import { body, containerGap } from "$layout";
+import {
+  DEV_DUMMY_MODE,
+  DUMMY_TOKEN_DETAIL_PAGE,
+  withTimeout,
+} from "$lib/utils/devDummyData.ts";
 import { Src20Controller } from "$server/controller/src20Controller.ts";
 import { DetailsTableBase, HoldersTable } from "$table";
 import type { ProcessedHolder } from "$types/wallet.d.ts";
@@ -10,6 +15,9 @@ import type { ProcessedHolder } from "$types/wallet.d.ts";
 /* ===== SERVER HANDLER ===== */
 export const handler: Handlers = {
   async GET(_req, ctx) {
+    if (DEV_DUMMY_MODE) {
+      return await ctx.render(DUMMY_TOKEN_DETAIL_PAGE);
+    }
     try {
       /* ===== TOKEN IDENTIFICATION ===== */
       const rawTick = ctx.params.tick;
@@ -17,28 +25,31 @@ export const handler: Handlers = {
       const encodedTick = encodeURIComponent(rawTick);
 
       /* ===== SERVER-SIDE DATA FETCHING ===== */
-      const [body, transferCount, mintCount, combinedListings] = await Promise
-        .all([
-          Src20Controller.fetchSrc20TickPageData(decodedTick),
-          // 🚀 SERVER-SIDE: Use controller directly instead of HTTP fetch
-          Src20Controller.getTickData({
-            tick: decodedTick,
-            limit: 1,
-            page: 1,
-            op: "TRANSFER",
-          }).then((result) => ({ total: result.total })),
-          // 🚀 SERVER-SIDE: Use controller directly instead of HTTP fetch
-          Src20Controller.getTickData({
-            tick: decodedTick,
-            limit: 1,
-            page: 1,
-            op: "MINT",
-          }).then((result) => ({ total: result.total })),
-          // 🚀 EXTERNAL API: Keep external call but with better error handling
-          fetch(
-            `https://api.stampscan.xyz/utxo/combinedListings?tick=${encodedTick}`,
-          ).then((r) => r.ok ? r.json() : []).catch(() => []),
-        ]);
+      const [body, transferCount, mintCount, combinedListings] =
+        await withTimeout(
+          Promise.all([
+            Src20Controller.fetchSrc20TickPageData(decodedTick),
+            // 🚀 SERVER-SIDE: Use controller directly instead of HTTP fetch
+            Src20Controller.getTickData({
+              tick: decodedTick,
+              limit: 1,
+              page: 1,
+              op: "TRANSFER",
+            }).then((result) => ({ total: result.total })),
+            // 🚀 SERVER-SIDE: Use controller directly instead of HTTP fetch
+            Src20Controller.getTickData({
+              tick: decodedTick,
+              limit: 1,
+              page: 1,
+              op: "MINT",
+            }).then((result) => ({ total: result.total })),
+            // 🚀 EXTERNAL API: Keep external call but with better error handling
+            fetch(
+              `https://api.stampscan.xyz/utxo/combinedListings?tick=${encodedTick}`,
+            ).then((r) => r.ok ? r.json() : []).catch(() => []),
+          ]),
+          15000,
+        );
 
       if (!body) {
         return ctx.renderNotFound();
@@ -65,9 +76,7 @@ export const handler: Handlers = {
       if ((error as Error).message?.includes("not found")) {
         return ctx.renderNotFound();
       }
-      return ctx.render({
-        error: error instanceof Error ? error.message : "Internal server error",
-      });
+      return await ctx.render(DUMMY_TOKEN_DETAIL_PAGE);
     }
   },
 };

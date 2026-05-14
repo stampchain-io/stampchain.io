@@ -350,7 +350,10 @@ export function StampCard({
     const legacyPrice = stamp.floorPrice !== "priceless"
       ? stamp.floorPrice
       : stamp.recentSalePrice;
-    if (legacyPrice !== "priceless" && !isNaN(Number(legacyPrice))) {
+    if (
+      legacyPrice !== "priceless" && legacyPrice !== null &&
+      !isNaN(Number(legacyPrice)) && Number(legacyPrice) > 0
+    ) {
       return {
         text: `${stripTrailingZeros(Number(legacyPrice).toFixed(8))} BTC`,
         style: `${TEXT_STYLES.price.base} ${TEXT_STYLES.price.sizes}`,
