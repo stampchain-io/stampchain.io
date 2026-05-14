@@ -12,7 +12,17 @@
  * Loading via <img src="...svg"> sidesteps this entirely: the browser fetches and
  * parses the file as a standalone SVG document where xlink:href and all gradient
  * references work as designed, with no Preact/hydration involvement.
+ *
+ *       ORIGINAL IMG TAG:
+ *       <img
+        src="/img/logo/logo-duotone-gradient.svg"
+        alt=""
+        class="w-9 h-9 tablet:w-8 tablet:h-8"
+      />
+
  */
+
+import { Icon } from "$icon";
 
 interface LogoIconProps {
   href?: string;
@@ -37,11 +47,16 @@ export function LogoIcon({
       class={`inline-block ${className}`.trim()}
       {...(fPartial !== undefined ? { "f-partial": fPartial } : {})}
     >
-      <img
-        src="/img/logo/logo-duotone-gradient.svg"
-        alt=""
-        class="w-9 h-9 tablet:w-8 tablet:h-8"
-      />
+      <span aria-hidden="true">
+        <Icon
+          type="icon"
+          name="stampchain"
+          weight="light"
+          size="mdR"
+          color="custom"
+          className="stroke-color-neutral-400 hover:stroke-color-primary-500"
+        />
+      </span>
     </a>
   );
 }

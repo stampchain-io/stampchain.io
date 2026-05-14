@@ -124,18 +124,18 @@ export const iconStyles = {
 
   iconButton: {
     greyDark:
-      "stroke-color-grey-semidark hover:stroke-color-grey-light group-hover:stroke-color-grey-light fill-none hover:fill-none group-hover:fill-none cursor-pointer [&_path[class*='fill-stroke']]:fill-color-grey-semidark [&:hover_path[class*='fill-stroke']]:fill-color-grey-light [&:group-hover_path[class*='fill-stroke']]:fill-color-grey-light",
+      "stroke-color-neutral-600 hover:stroke-color-hover group-hover:stroke-color-hover fill-none hover:fill-none group-hover:fill-none cursor-pointer [&_path[class*='fill-stroke']]:fill-color-neutral-600 [&:hover_path[class*='fill-stroke']]:fill-color-hover [&:group-hover_path[class*='fill-stroke']]:fill-color-hover",
     grey:
-      "stroke-color-grey hover:stroke-color-grey-light group-hover:stroke-color-grey-light fill-none hover:fill-none group-hover:fill-none cursor-pointer [&_path[class*='fill-stroke']]:fill-color-grey [&:hover_path[class*='fill-stroke']]:fill-color-grey-light [&:group-hover_path[class*='fill-stroke']]:fill-color-grey-light",
+      "stroke-color-neutral-500 hover:stroke-color-hover group-hover:stroke-color-hover fill-none hover:fill-none group-hover:fill-none cursor-pointer [&_path[class*='fill-stroke']]:fill-color-neutral-500 [&:hover_path[class*='fill-stroke']]:fill-color-hover [&:group-hover_path[class*='fill-stroke']]:fill-color-hover",
     greyLight:
-      "stroke-color-grey-semilight hover:stroke-color-grey-light group-hover:stroke-color-grey-light fill-none hover:fill-none group-hover:fill-none cursor-pointer [&_path[class*='fill-stroke']]:fill-color-grey-semilight [&:hover_path[class*='fill-stroke']]:fill-color-grey-light [&:group-hover_path[class*='fill-stroke']]:fill-color-grey-light",
+      "stroke-color-neutral-400 hover:stroke-color-hover group-hover:stroke-color-hover fill-none hover:fill-none group-hover:fill-none cursor-pointer [&_path[class*='fill-stroke']]:fill-color-neutral-400 [&:hover_path[class*='fill-stroke']]:fill-color-hover [&:group-hover_path[class*='fill-stroke']]:fill-color-hover",
 
     purpleDark:
-      "stroke-color-purple-semidark hover:stroke-color-purple-light group-hover:stroke-color-purple-light fill-none hover:fill-none group-hover:fill-none cursor-pointer [&_path[class*='fill-stroke']]:fill-color-purple-semidark [&:hover_path[class*='fill-stroke']]:fill-color-purple-light [&:group-hover_path[class*='fill-stroke']]:fill-color-purple-light",
+      "stroke-color-purple-semidark hover:stroke-color-hover group-hover:stroke-color-hover fill-none hover:fill-none group-hover:fill-none cursor-pointer [&_path[class*='fill-stroke']]:fill-color-purple-semidark [&:hover_path[class*='fill-stroke']]:fill-color-hover [&:group-hover_path[class*='fill-stroke']]:fill-color-hover",
     purple:
-      "stroke-color-purple hover:stroke-color-purple-light group-hover:stroke-color-purple-light fill-none hover:fill-none group-hover:fill-none cursor-pointer [&_path[class*='fill-stroke']]:fill-color-purple [&:hover_path[class*='fill-stroke']]:fill-color-purple-light [&:group-hover_path[class*='fill-stroke']]:fill-color-purple-light",
+      "stroke-color-purple hover:stroke-color-hover group-hover:stroke-color-hover fill-none hover:fill-none group-hover:fill-none cursor-pointer [&_path[class*='fill-stroke']]:fill-color-purple [&:hover_path[class*='fill-stroke']]:fill-color-hover [&:group-hover_path[class*='fill-stroke']]:fill-color-hover",
     purpleLight:
-      "stroke-color-purple-semilight hover:stroke-color-purple-light group-hover:stroke-color-purple-light fill-none hover:fill-none group-hover:fill-none cursor-pointer [&_path[class*='fill-stroke']]:fill-color-purple-semilight [&:hover_path[class*='fill-stroke']]:fill-color-purple-light [&:group-hover_path[class*='fill-stroke']]:fill-color-purple-light",
+      "stroke-color-purple-semilight hover:stroke-color-hover group-hover:stroke-color-hover fill-none hover:fill-none group-hover:fill-none cursor-pointer [&_path[class*='fill-stroke']]:fill-color-purple-semilight [&:hover_path[class*='fill-stroke']]:fill-color-hover [&:group-hover_path[class*='fill-stroke']]:fill-color-hover",
 
     custom: "fill-none cursor-pointer",
   },
