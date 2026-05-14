@@ -2,7 +2,7 @@
 import { SearchErrorDisplay, SearchInputField } from "$form";
 import { Icon } from "$icon";
 import { closeModal, openModal, searchState } from "$islands/modal/states.ts";
-import { ModalSearchBase, transitionColors } from "$layout";
+import { container1, ModalSearchBase, transitionColors } from "$layout";
 import { generateSearchErrorMessage } from "$lib/utils/data/search/searchInputClassifier.ts";
 import { isValidBitcoinAddress } from "$lib/utils/typeGuards.ts";
 import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
@@ -161,7 +161,7 @@ function SearchContent({
   const error = searchState.value.error;
 
   return (
-    <>
+    <div class={container1}>
       <SearchInputField
         value={searchState.value.term}
         onChange={setSearchTerm}
@@ -169,7 +169,6 @@ function SearchContent({
         placeholder="TOKEN, ADDY OR TX HASH"
         inputRef={inputRef}
         autoFocus={autoFocus}
-        hasResults={rawResults.length > 0}
         hasError={!!error}
         isLoading={searchState.value.isLoading}
       />
@@ -240,6 +239,6 @@ function SearchContent({
           </ul>
         )
         : null}
-    </>
+    </div>
   );
 }

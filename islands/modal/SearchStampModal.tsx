@@ -2,7 +2,7 @@
 import { SearchErrorDisplay, SearchInputField } from "$form";
 import { Icon, PlaceholderImage } from "$icon";
 import { closeModal, openModal, searchState } from "$islands/modal/states.ts";
-import { ModalSearchBase, transitionColors } from "$layout";
+import { container1, ModalSearchBase, transitionColors } from "$layout";
 import { generateSearchErrorMessage } from "$lib/utils/data/search/searchInputClassifier.ts";
 import { isValidBitcoinAddress } from "$lib/utils/typeGuards.ts";
 import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
@@ -184,7 +184,7 @@ function SearchContent({
   const error = searchState.value.error;
 
   return (
-    <>
+    <div class={container1}>
       <SearchInputField
         value={searchState.value.term}
         onChange={setSearchTerm}
@@ -192,7 +192,6 @@ function SearchContent({
         placeholder="STAMP #, CPID, ADDY OR TX HASH"
         inputRef={inputRef}
         autoFocus={autoFocus}
-        hasResults={rawResults.length > 0}
         hasError={!!error}
         isLoading={searchState.value.isLoading}
       />
@@ -224,10 +223,10 @@ function SearchContent({
                         />
                       </div>
                       <div class="flex flex-col flex-1 min-w-0">
-                        <span class="text-sm font-medium text-color-grey-light">
+                        <span class="text-sm font-medium text-color-neutral-400">
                           VIEW WALLET
                         </span>
-                        <span class="text-xs text-color-grey truncate">
+                        <span class="text-xs text-color-neutral-500 truncate">
                           {result.address?.startsWith("bc1p")
                             ? abbreviateAddress(result.address, 20)
                             : result.address}
@@ -246,10 +245,10 @@ function SearchContent({
                         alt={`Stamp ${result.stamp}`}
                       />
                       <div class="flex flex-col flex-1">
-                        <span class="text-sm font-medium text-color-grey-light">
+                        <span class="text-sm font-medium text-color-neutral-400">
                           #{result.stamp} - {result.cpid}
                         </span>
-                        <span class="text-xs text-color-grey truncate">
+                        <span class="text-xs text-color-neutral-500 truncate">
                           {result.creator?.startsWith("bc1p")
                             ? abbreviateAddress(result.creator, 20)
                             : result.creator}
@@ -261,6 +260,6 @@ function SearchContent({
           </ul>
         )
         : null}
-    </>
+    </div>
   );
 }

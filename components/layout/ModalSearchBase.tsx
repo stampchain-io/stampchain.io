@@ -46,7 +46,7 @@ export function ModalSearchBase({ children, onClose }: ModalSearchBaseProps) {
       class="w-[90vw] mobileMd:w-[480px] my-16 mobileLg:my-[76px]"
       onClick={(e) => e.stopPropagation()}
     >
-      <div class={`relative ${container1} !border-color-border`}>
+      <div class={`relative ${container1}`}>
         <div class="relative flex flex-col max-h-[90%] overflow-hidden">
           {children}
         </div>
