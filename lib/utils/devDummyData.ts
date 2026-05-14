@@ -37,7 +37,7 @@ export const DUMMY_STAMP_ART = {
   stamp_hash: "A6074625865641549156",
   file_hash: "",
   file_size_bytes: 420,
-  floorPrice: null,
+  floorPrice: "priceless" as const,
   floorPriceUSD: null,
   marketData: null,
 };
@@ -119,7 +119,7 @@ export const DUMMY_LANDING_PAGE = {
   carouselStamps: [],
   stamps_art: [DUMMY_STAMP_ART],
   stamps_posh: [DUMMY_STAMP_ART],
-  stamps_src721: [DUMMY_TOKEN_SRC20],
+  stamps_src721: [DUMMY_STAMP_ART],
   collectionData: [],
 };
 

@@ -293,7 +293,6 @@ export const handler: Handlers<HomePageData> = {
 export default function Home({ data }: PageProps<HomePageData>) {
   /* ===== DATA EXTRACTION ===== */
   const {
-    _carouselStamps = [],
     stamps_art = [],
     stamps_src721 = [],
     stamps_posh = [],
