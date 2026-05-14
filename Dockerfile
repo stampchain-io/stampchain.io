@@ -5,12 +5,10 @@ FROM denoland/deno:alpine-2.6.9
 ENV HOME=/app \
     DENO_DIR=/app/.deno \
     DENO_ENV=production \
-    NODE_DEBUG=* \
     XDG_CONFIG_HOME=/app/.config \
     XDG_CACHE_HOME=/app/.cache \
     XDG_DATA_HOME=/app/.local/share \
-    NPM_CONFIG_CACHE=/app/.npm \
-    REDIS_LOG_LEVEL=DEBUG
+    NPM_CONFIG_CACHE=/app/.npm
 
 # Install minimal runtime tools (Chromium removed — preview rendering offloaded to CF Worker)
 RUN apk add --no-cache \
@@ -75,7 +73,6 @@ ENV DENO_PERMISSIONS="--allow-net --allow-read --allow-write --allow-env --allow
     SKIP_REDIS_TLS=true \
     DENO_ENV=production \
     CACHE=true \
-    REDIS_DEBUG=true \
     REDIS_TIMEOUT=15000 \
     REDIS_MAX_RETRIES=10
 
