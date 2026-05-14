@@ -88,3 +88,6 @@ export const SATOSHIS_PER_BTC = 100000000;
 
 /** Maximum retry attempts for XCP operations */
 export const MAX_XCP_RETRIES = 5;
+
+/** Maximum retry attempts for QuickNode Bitcoin RPC calls (circuit breaker handles repeated failures) */
+export const MAX_QUICKNODE_RETRIES = 2;

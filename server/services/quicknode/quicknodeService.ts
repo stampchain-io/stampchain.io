@@ -1,12 +1,19 @@
-import { BLOCKCHAIN_API_BASE_URL, MAX_XCP_RETRIES } from "$constants";
+import { BLOCKCHAIN_API_BASE_URL, MAX_QUICKNODE_RETRIES } from "$constants";
 import { serverConfig } from "$server/config/config.ts";
 import { FetchHttpClient } from "$server/interfaces/httpClient.ts";
+import {
+  CircuitBreaker,
+  CircuitBreakerError,
+  createQuickNodeCircuitBreaker,
+} from "$server/utils/circuitBreaker.ts";
 
-// Create httpClient instance for QuickNode service
+// Create httpClient instance for QuickNode service.
+// Timeout is intentionally tight (5s) — Bitcoin Core RPCs normally respond in <500ms.
+// Failed calls cascade quickly into the circuit breaker rather than padding tail latency.
 const httpClient = new FetchHttpClient(
-  10000, // defaultTimeout
-  3,     // defaultRetries
-  1000   // defaultRetryDelay
+  5000, // defaultTimeout (5s, was 10s)
+  1,    // defaultRetries (CB + outer retry loop handle the rest)
+  500   // defaultRetryDelay
 );
 
 // Interface for QuickNode estimatesmartfee response
@@ -25,6 +32,12 @@ interface NormalizedFeeEstimate {
 }
 
 export class QuicknodeService {
+  // Shared circuit breaker for all QuickNode RPC traffic. When the upstream is
+  // unhealthy (suspended endpoint, network partition, etc.) it short-circuits
+  // additional calls so the public-API fallback chain runs immediately instead
+  // of stacking 5s timeouts × MAX_QUICKNODE_RETRIES per call site.
+  private static readonly breaker: CircuitBreaker = createQuickNodeCircuitBreaker();
+
   // Instead of storing the full URL with API key as a static property,
   // construct it only when needed and never expose it
   private static getQuickNodeUrl(): string {
@@ -49,10 +62,37 @@ export class QuicknodeService {
     return endpoint.replace(/^https?:\/\//, '');
   }
 
+  /**
+   * Public entry point. Wraps the retry loop in the QuickNode circuit breaker
+   * so that consecutive failures (e.g. suspended endpoint, network partition)
+   * open the circuit and subsequent calls fail in <1ms — letting CommonUTXO
+   * service / utxoUtils fall through to the public-API chain (mempool.space,
+   * blockstream.info, blockchain.info, blockcypher) without delay.
+   */
   static async fetchQuicknode(
     method: string,
     params: any[],
-    retries = 0,
+  ): Promise<any> {
+    try {
+      return await this.breaker.execute(() =>
+        this.fetchQuicknodeWithRetry(method, params, 0)
+      );
+    } catch (error) {
+      if (error instanceof CircuitBreakerError) {
+        // Surface a stable error shape so callers can detect open-circuit and
+        // route to fallbacks without parsing free-form messages.
+        console.warn(
+          `[QuickNode] Circuit open, skipping RPC ${method}: ${error.message}`,
+        );
+      }
+      throw error;
+    }
+  }
+
+  private static async fetchQuicknodeWithRetry(
+    method: string,
+    params: any[],
+    retries: number,
   ): Promise<any> {
     try {
       // Log the request without exposing sensitive information
@@ -105,10 +145,10 @@ export class QuicknodeService {
         retryCount: retries,
       });
 
-      if (retries < MAX_XCP_RETRIES) {
-        console.log(`Retrying QuickNode request... (${retries + 1}/${MAX_XCP_RETRIES})`);
+      if (retries < MAX_QUICKNODE_RETRIES) {
+        console.log(`Retrying QuickNode request... (${retries + 1}/${MAX_QUICKNODE_RETRIES})`);
         await new Promise((resolve) => setTimeout(resolve, 1000));
-        return await this.fetchQuicknode(method, params, retries + 1);
+        return await this.fetchQuicknodeWithRetry(method, params, retries + 1);
       } else {
         console.error("Max retries reached. Giving up on QuickNode request.");
         throw error;
