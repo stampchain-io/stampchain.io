@@ -394,6 +394,23 @@ build_env_json() {
     [[ "$key" == DB_PASSWORD ]] && continue
     [[ "$key" == DB_HOST ]] && continue
 
+    # QuickNode disabled in production (endpoint suspended; public-API fallback
+    # chain handles all UTXO/raw-tx traffic). Filtering these envs out means
+    # CommonUTXOService.isQuickNodeConfigured -> false and the entire QuickNode
+    # code path is skipped at every call site. To re-enable QuickNode:
+    #   1. Remove these two filter lines.
+    #   2. Add QUICKNODE_ENDPOINT=<host> to .env (plain).
+    #   3. Add QUICKNODE_API_KEY_SECRET_ARN=arn:aws:secretsmanager:...:secret:stamps-app/quicknode-api-key-XXXXXX
+    #      to .env. The secrets[] block below picks it up via ${QUICKNODE_API_KEY_SECRET_ARN:+...}.
+    [[ "$key" == QUICKNODE_ENDPOINT ]] && continue
+    [[ "$key" == QUICKNODE_API_KEY ]] && continue
+
+    # Debug logging stripped in prod (was flooding CloudWatch with HTTP socket
+    # internals and per-call Redis lines, contributing to 504 timeouts).
+    [[ "$key" == REDIS_DEBUG ]] && continue
+    [[ "$key" == REDIS_LOG_LEVEL ]] && continue
+    [[ "$key" == NODE_DEBUG ]] && continue
+
     # Strip quotes from value
     value="${value%\"}"
     value="${value#\"}"
@@ -430,86 +447,118 @@ build_env_json() {
 # Deploy to ECS (register task definition + force new deployment)
 # ---------------------------------------------------------------------------
 deploy_ecs() {
-  echo -e "${BLUE}--- Deploying to ECS ---${NC}"
+  echo -e "${BLUE}--- Deploying to ECS (CI-aligned flow) ---${NC}"
 
-  local script_dir
-  script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-  local project_dir="$(dirname "$script_dir")"
-  local env_file="${project_dir}/.env"
-  local task_def_file="/tmp/stamps-task-def-${TIMESTAMP}.json"
+  local current_td_file="/tmp/stamps-current-task-def-${TIMESTAMP}.json"
+  local new_td_file="/tmp/stamps-new-task-def-${TIMESTAMP}.json"
+  local image_uri="${ECR_REPOSITORY}:${IMAGE_TAG}"
 
-  # Build env vars from .env
-  echo -e "${YELLOW}Building task definition from .env...${NC}"
-  local env_json
-  env_json=$(build_env_json "$env_file")
-
-  # Validate network config
-  if [ -z "$SUBNET_1" ] || [ -z "$SECURITY_GROUP" ]; then
-    echo -e "${RED}Error: Network configuration missing.${NC}"
-    echo "Set AWS_PUBLIC_SUBNET_1, AWS_PUBLIC_SUBNET_2, AWS_ECS_SECURITY_GROUP in .env"
+  # Mirror .github/workflows/production-deploy.yml: read CURRENT task def from
+  # ECS, modify in place (image swap + env scrub + optional secret merge),
+  # register a new revision, force-deploy. We do NOT pass --desired-count or
+  # --network-configuration so the Application Auto Scaling policy (min=1,
+  # max=3, 60% CPU target tracking) and the existing network attachment are
+  # preserved across deploys. Env vars are inherited from the existing task
+  # def, not rebuilt from local .env — keeping local and CI in lockstep.
+  echo -e "${YELLOW}Reading current task definition ${TASK_FAMILY}...${NC}"
+  if ! aws ecs describe-task-definition \
+        --task-definition "${TASK_FAMILY}" \
+        --query 'taskDefinition' \
+        > "${current_td_file}"; then
+    echo -e "${RED}Error: could not describe current task-definition ${TASK_FAMILY}${NC}"
     exit 1
   fi
 
-  # Create task definition JSON
-  cat > "${task_def_file}" << TASKDEF
-{
-  "family": "${TASK_FAMILY}",
-  "executionRoleArn": "arn:aws:iam::${AWS_ACCOUNT_ID}:role/${EXECUTION_ROLE}",
-  "taskRoleArn": "arn:aws:iam::${AWS_ACCOUNT_ID}:role/${TASK_ROLE}",
-  "networkMode": "awsvpc",
-  "containerDefinitions": [
-    {
-      "name": "${CONTAINER_NAME}",
-      "image": "${ECR_REPOSITORY}:${IMAGE_TAG}",
-      "essential": true,
-      "portMappings": [
-        {
-          "containerPort": 8000,
-          "hostPort": 8000,
-          "protocol": "tcp"
-        }
-      ],
-      "environment": ${env_json},
-      "secrets": [
-        {"name": "DB_USER", "valueFrom": "${DB_SECRET_ARN}:username::"},
-        {"name": "DB_PASSWORD", "valueFrom": "${DB_SECRET_ARN}:password::"},
-        {"name": "DB_HOST", "valueFrom": "${DB_SECRET_ARN}:host::"}
-      ],
-      "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-          "awslogs-group": "/aws/ecs/${ECS_CLUSTER}",
-          "awslogs-region": "${AWS_REGION}",
-          "awslogs-stream-prefix": "stamps-app"
-        }
-      }
-    }
-  ],
-  "runtimePlatform": {
-    "cpuArchitecture": "ARM64",
-    "operatingSystemFamily": "LINUX"
-  },
-  "requiresCompatibilities": ["FARGATE"],
-  "cpu": "${CPU_UNITS}",
-  "memory": "${MEMORY}"
+  # Container-side transform: image swap, env scrub, optional QUICKNODE secret
+  # merge, metadata strip. Driven by env vars to keep the python free of shell
+  # interpolation gotchas (no quoting issues for ARN strings, etc).
+  CONTAINER_NAME="${CONTAINER_NAME}" \
+  IMAGE_URI="${image_uri}" \
+  CURRENT_TD_FILE="${current_td_file}" \
+  NEW_TD_FILE="${new_td_file}" \
+  QUICKNODE_API_KEY_SECRET_ARN="${QUICKNODE_API_KEY_SECRET_ARN:-}" \
+  python3 << 'PYEND'
+import json
+import os
+
+with open(os.environ['CURRENT_TD_FILE']) as f:
+    td = json.load(f)
+
+container_name = os.environ['CONTAINER_NAME']
+image_uri = os.environ['IMAGE_URI']
+qn_secret_arn = os.environ.get('QUICKNODE_API_KEY_SECRET_ARN', '').strip()
+
+# Envs that must never appear in the running container.
+# - NODE_DEBUG / REDIS_DEBUG / REDIS_LOG_LEVEL: source of CloudWatch backpressure
+#   that contributed to 504s and broken stamp previews.
+# - QUICKNODE_ENDPOINT / QUICKNODE_API_KEY: upstream is currently suspended;
+#   absence here flips CommonUTXOService.isQuickNodeConfigured -> false so the
+#   public-API fallback chain (mempool.space, blockstream.info, blockchain.info,
+#   blockcypher) handles all traffic.
+# To re-enable QuickNode: remove ENDPOINT from this set, export
+# QUICKNODE_API_KEY_SECRET_ARN before running deploy.sh, and set QUICKNODE_ENDPOINT
+# back in the task def manually (or temporarily through this script).
+SCRUB_KEYS = {
+    'NODE_DEBUG',
+    'REDIS_DEBUG',
+    'REDIS_LOG_LEVEL',
+    'QUICKNODE_ENDPOINT',
+    'QUICKNODE_API_KEY',
 }
-TASKDEF
+
+found_container = False
+for container in td.get('containerDefinitions', []):
+    if container.get('name') != container_name:
+        continue
+    found_container = True
+
+    container['image'] = image_uri
+
+    env = container.get('environment') or []
+    scrubbed = [e for e in env if e.get('name') not in SCRUB_KEYS]
+    removed = [e['name'] for e in env if e.get('name') in SCRUB_KEYS]
+    container['environment'] = scrubbed
+    if removed:
+        print(f"[scrub] removed envs from container '{container_name}': {removed}")
+
+    if qn_secret_arn:
+        secrets = container.get('secrets') or []
+        # Idempotent: drop any existing QUICKNODE_API_KEY entry then re-add.
+        secrets = [s for s in secrets if s.get('name') != 'QUICKNODE_API_KEY']
+        secrets.append({'name': 'QUICKNODE_API_KEY', 'valueFrom': qn_secret_arn})
+        container['secrets'] = secrets
+        print(f"[secret] added QUICKNODE_API_KEY -> {qn_secret_arn}")
+
+if not found_container:
+    raise SystemExit(
+        f"container '{container_name}' not found in containerDefinitions"
+    )
+
+# Strip read-only metadata not accepted by register-task-definition.
+for key in ('taskDefinitionArn', 'revision', 'status', 'requiresAttributes',
+            'compatibilities', 'registeredAt', 'registeredBy'):
+    td.pop(key, None)
+
+with open(os.environ['NEW_TD_FILE'], 'w') as f:
+    json.dump(td, f, indent=2)
+
+print(f"[ok] wrote new task def to {os.environ['NEW_TD_FILE']}")
+PYEND
 
   if [ "$DRY_RUN" = true ]; then
-    echo -e "${YELLOW}[dry-run] Task definition:${NC}"
-    cat "${task_def_file}" | grep -v 'DB_PASSWORD\|API_KEY\|SECRET'
-    rm -f "${task_def_file}"
+    echo -e "${YELLOW}[dry-run] New task definition (sensitive valueFrom redacted):${NC}"
+    grep -v '"valueFrom":' "${new_td_file}" || true
+    rm -f "${current_td_file}" "${new_td_file}"
     return 0
   fi
 
-  # Ensure log group exists
+  # Ensure log group exists (no-op if already there)
   aws logs create-log-group --log-group-name "/aws/ecs/${ECS_CLUSTER}" 2>/dev/null || true
 
-  # Register task definition
   echo -e "${YELLOW}Registering task definition...${NC}"
   local task_def_arn
   task_def_arn=$(aws ecs register-task-definition \
-    --cli-input-json "file://${task_def_file}" \
+    --cli-input-json "file://${new_td_file}" \
     --query 'taskDefinition.taskDefinitionArn' \
     --output text)
 
@@ -517,18 +566,14 @@ TASKDEF
   revision=$(echo "$task_def_arn" | awk -F: '{print $NF}')
   echo -e "${GREEN}Task definition registered: ${TASK_FAMILY}:${revision}${NC}"
 
-  # Build subnet config
-  local subnet_config="${SUBNET_1}"
-  [ -n "$SUBNET_2" ] && subnet_config="${subnet_config},${SUBNET_2}"
-
-  # Update service
-  echo -e "${YELLOW}Updating ECS service...${NC}"
+  # Force a new deployment. Service-level config (desired count, network) is
+  # untouched on purpose — autoscaler manages count, network is stable. CI does
+  # the same.
+  echo -e "${YELLOW}Updating ECS service (force new deployment)...${NC}"
   aws ecs update-service \
     --cluster "${ECS_CLUSTER}" \
     --service "${ECS_SERVICE}" \
     --task-definition "${task_def_arn}" \
-    --desired-count "${DESIRED_COUNT}" \
-    --network-configuration "awsvpcConfiguration={subnets=[${subnet_config}],securityGroups=[${SECURITY_GROUP}],assignPublicIp=ENABLED}" \
     --force-new-deployment \
     --query 'service.deployments[0].{status:status,desired:desiredCount,running:runningCount}' \
     --output table
