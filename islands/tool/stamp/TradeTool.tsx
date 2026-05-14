@@ -26,7 +26,7 @@ import { bodyTool, containerBackground, containerGap } from "$layout";
 import type { UTXO, XcpBalance } from "$lib/types/index.d.ts";
 import { normalizeFeeRate } from "$lib/utils/fees.ts";
 import { StatusMessages } from "$notification";
-import { subtitleNeutral, titleNeutralLD } from "$text";
+import { subtitleNeutral, titleNeutral } from "$text";
 import type { ComposeAttachOptions } from "$types/services.d.ts";
 
 /* ===== CONSTANTS ===== */
@@ -694,7 +694,7 @@ export function StampTradeTool() {
   return (
     <div class={`${bodyTool} ${containerGap}`}>
       {/* ===== SELLER SECTION ===== */}
-      <h1 class={`${titleNeutralLD} mx-auto -mb-2 mobileLg:-mb-4`}>
+      <h1 class={`${titleNeutral} mx-auto -mb-2 mobileLg:-mb-4`}>
         TRADE
       </h1>
 

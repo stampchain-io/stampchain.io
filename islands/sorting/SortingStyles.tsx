@@ -5,10 +5,10 @@
  */
 
 import { buttonStyles } from "$button";
-import { TEXT_STYLES } from "$card";
 import { SortingComponent } from "$islands/sorting/SortingComponent.tsx";
 import { SortingProvider } from "$islands/sorting/SortingProvider.tsx";
 import type { ButtonSize } from "$lib/constants/uiConstants.ts";
+import { cardPriceMinimal } from "$text";
 import type {
   CompleteSortingInterfaceProps,
   StyledSortingButtonsProps,
@@ -199,8 +199,7 @@ function StyledSortingLabel({
     switch (variant) {
       case "compact":
         return `
-          ${TEXT_STYLES.minimal.price.base}
-          ${TEXT_STYLES.minimal.price.sizes}
+          ${cardPriceMinimal}
           text-color-grey-light
         `;
       case "inline":

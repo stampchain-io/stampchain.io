@@ -1,7 +1,7 @@
 /* ===== STAMP OVERVIEW GALLERY COMPONENT ===== */
 import { containerBackground, containerGap } from "$layout";
 import { StampGallery } from "$section";
-import { titleNeutralLD } from "$text";
+import { titleNeutral } from "$text";
 import type {
   StampGalleryProps,
   StampOverviewGalleryProps,
@@ -94,7 +94,7 @@ export function StampOverviewGallery({
       {/* ===== LATEST ART STAMPS SECTION ===== */}
       <div class={`${containerBackground} ${containerGap}`}>
         <div class="w-full -mb-6 mobileLg:-mb-9">
-          <h1 class={titleNeutralLD}>
+          <h1 class={titleNeutral}>
             <span class="block mobileLg:hidden">LATEST STAMPS</span>
             <span class="hidden mobileLg:block">LATEST ART STAMPS</span>
           </h1>

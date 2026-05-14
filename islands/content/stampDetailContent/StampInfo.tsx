@@ -27,7 +27,7 @@ import { Dispenser, StampListingsOpenTable } from "$table";
 import {
   headingGreyDLLink,
   labelSm,
-  titleNeutralLD,
+  titleNeutral,
   value2xl,
   value3xl,
   valueDark,
@@ -645,7 +645,7 @@ export function StampInfo({ stamp, lowestPriceDispenser }: StampInfoProps) {
           <div>
             <h2
               ref={titleRef}
-              className={`${titleNeutralLD} overflow-hidden`}
+              className={`${titleNeutral} overflow-hidden`}
               style={{
                 transform: `scale(${scale})`,
                 transformOrigin: "left",

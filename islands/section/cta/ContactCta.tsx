@@ -8,7 +8,7 @@ import {
   rowForm,
   rowResponsiveForm,
 } from "$layout";
-import { subtitleNeutral, text, textLg, titleNeutralLD } from "$text";
+import { subtitleNeutral, text, textLg, titleNeutral } from "$text";
 import type { FormEventHandler } from "$types/ui.d.ts";
 import { useState } from "preact/hooks";
 
@@ -38,7 +38,7 @@ const ContactCta = () => {
       <section class={containerBackground}>
         {/* ===== HEADER SECTION ===== */}
         <div class="flex flex-col">
-          <h4 class={titleNeutralLD}>
+          <h4 class={titleNeutral}>
             CONTACT
           </h4>
           <h5 class={subtitleNeutral}>

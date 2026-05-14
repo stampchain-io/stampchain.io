@@ -183,7 +183,6 @@ import * as $card_SRC20CardMinting from "./islands/card/SRC20CardMinting.tsx";
 import * as $card_StampCard from "./islands/card/StampCard.tsx";
 import * as $card_WalletStampCard from "./islands/card/WalletStampCard.tsx";
 import * as $card_index from "./islands/card/index.ts";
-import * as $card_styles from "./islands/card/styles.ts";
 import * as $content_CollectionDetailContent from "./islands/content/CollectionDetailContent.tsx";
 import * as $content_ExplorerContent from "./islands/content/ExplorerContent.tsx";
 import * as $content_SRC20OverviewContent from "./islands/content/SRC20OverviewContent.tsx";
@@ -535,7 +534,6 @@ const manifest = {
     "./islands/card/StampCard.tsx": $card_StampCard,
     "./islands/card/WalletStampCard.tsx": $card_WalletStampCard,
     "./islands/card/index.ts": $card_index,
-    "./islands/card/styles.ts": $card_styles,
     "./islands/content/CollectionDetailContent.tsx":
       $content_CollectionDetailContent,
     "./islands/content/ExplorerContent.tsx": $content_ExplorerContent,

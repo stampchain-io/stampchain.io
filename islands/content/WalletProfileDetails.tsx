@@ -9,7 +9,7 @@ import {
 } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { showToast } from "$lib/utils/ui/notifications/toastSignal.ts";
 import { tooltipIcon } from "$notification";
-import { label, subtitleNeutral, titleNeutralLD, valueSm } from "$text";
+import { label, subtitleNeutral, titleNeutral, valueSm } from "$text";
 import type { WalletProfileDetailsProps } from "$types/ui.d.ts";
 import { useEffect, useRef, useState } from "preact/hooks";
 import EditCreatorNameModal from "$islands/modal/EditCreatorNameModal.tsx";
@@ -123,7 +123,7 @@ function WalletOverview({ walletData }: { walletData: WalletOverviewInfo }) {
   /* ===== RENDER ===== */
   return (
     <div class="flex flex-col w-full">
-      <h1 class={titleNeutralLD}>WALLET</h1>
+      <h1 class={titleNeutral}>WALLET</h1>
       <div class="flex items-center gap-2">
         <h2 class={`${subtitleNeutral} tracking-wider`}>
           {displayName}

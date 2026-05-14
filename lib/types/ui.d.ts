@@ -3499,7 +3499,6 @@ export interface ToastComponentProps {
  */
 export interface WalletStampCardProps {
   stamp: any;
-  variant?: "default" | string;
   fromPage?: string;
 }
 

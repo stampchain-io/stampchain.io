@@ -13,7 +13,6 @@ export const CollectionDetailContent = ({ stamps = [] }: {
           <StampCard
             key={stamp.tx_hash}
             stamp={stamp}
-            variant="grey"
           />
         ))}
       </div>

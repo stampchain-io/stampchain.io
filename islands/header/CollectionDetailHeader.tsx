@@ -12,7 +12,7 @@ import {
   headingGreyDLLink,
   labelSm,
   textSm,
-  titleNeutralLD,
+  titleNeutral,
   value3xl,
   valueSm,
 } from "$text";
@@ -50,7 +50,7 @@ export const CollectionDetailHeader = (
               </div>
             )}
             <div class="flex flex-col pl-6">
-              <h1 class={`${titleNeutralLD} pb-1.5`}>
+              <h1 class={`${titleNeutral} pb-1.5`}>
                 {collection.collection_name.length > 12
                   ? (
                     <>

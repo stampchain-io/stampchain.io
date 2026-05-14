@@ -1,6 +1,6 @@
 /* ===== HOW-TO PAGE ===== */
 import { body, containerBackground, containerGap } from "$layout";
-import { headingGrey, subtitleNeutral, text, textLg, titleNeutralLD } from "$text";
+import { headingGrey, subtitleNeutral, text, textLg, titleNeutral } from "$text";
 
 /* ===== PAGE COMPONENT ===== */
 export default function HowToPage() {
@@ -8,7 +8,7 @@ export default function HowToPage() {
     <div class={`${body} ${containerGap}`}>
       {/* ===== INTRODUCTION SECTION ===== */}
       <section class={containerBackground}>
-        <h1 class={titleNeutralLD}>How-To</h1>
+        <h1 class={titleNeutral}>How-To</h1>
         <h2 class={subtitleNeutral}>Our step-by-step guides</h2>
         <p class={textLg}>
           <b>

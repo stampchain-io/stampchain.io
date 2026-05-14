@@ -1,7 +1,7 @@
 /* ===== ARTICLE COMPONENT ===== */
 import { body, bodyArticle, containerGap } from "$layout";
 import { ArticlesOverview } from "$section";
-import { headingGrey, subtitleNeutral, text, titleNeutralLD } from "$text";
+import { headingGrey, subtitleNeutral, text, titleNeutral } from "$text";
 import type { ArticleProps } from "$types/ui.d.ts";
 
 /* ===== TYPES ===== */
@@ -17,7 +17,7 @@ export function Article(
         {/* ===== MAIN CONTENT SECTION ===== */}
         <section>
           {/* ===== HEADER ===== */}
-          <h1 class={titleNeutralLD}>{title}</h1>
+          <h1 class={titleNeutral}>{title}</h1>
           <h2 class={subtitleNeutral}>{subtitle}</h2>
 
           {/* ===== FEATURED IMAGE ===== */}

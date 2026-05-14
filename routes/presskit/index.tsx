@@ -15,7 +15,7 @@ import {
   text,
   textLinkUnderline,
   textSm,
-  titleNeutralLD,
+  titleNeutral,
   valueSm,
   valueSmLink,
 } from "$text";
@@ -179,7 +179,7 @@ export default function PressKit() {
     <div class={`${body} ${containerGap}`}>
       {/* ===== SECTION 1: MEDIA KIT INTRO ===== */}
       <section class={containerBackground}>
-        <h1 class={titleNeutralLD}>MEDIA KIT</h1>
+        <h1 class={titleNeutral}>MEDIA KIT</h1>
         <h2 class={`${subtitleNeutral} !whitespace-normal`}>
           FOR THE BITCOIN STAMPS ECOSYSTEM
         </h2>
@@ -195,7 +195,7 @@ export default function PressKit() {
 
       {/* ===== SECTION 2: BITCOIN STAMPS BRANDING ===== */}
       <section class={containerBackground}>
-        <h3 class={titleNeutralLD}>BITCOIN STAMPS</h3>
+        <h3 class={titleNeutral}>BITCOIN STAMPS</h3>
         <h4 class={subtitleNeutral}>PROTOCOL BRANDING</h4>
 
         {/* Split row */}
@@ -300,7 +300,7 @@ export default function PressKit() {
 
       {/* ===== SECTION 3: STAMPCHAIN WEBSITE LOGO ===== */}
       <section class={containerBackground}>
-        <h3 class={titleNeutralLD}>STAMPCHAIN</h3>
+        <h3 class={titleNeutral}>STAMPCHAIN</h3>
         <h4 class={subtitleNeutral}>WEBSITE BRANDING</h4>
 
         {/* Split row */}
@@ -422,7 +422,7 @@ export default function PressKit() {
 
       {/* ===== SECTION 4: ART STAMPS & SRC20 TOKENS ===== */}
       <section class={containerBackground}>
-        <h3 class={titleNeutralLD}>STAMPS & TOKENS</h3>
+        <h3 class={titleNeutral}>STAMPS & TOKENS</h3>
         <h4 class={subtitleNeutral}>ICON SET</h4>
         <p class={text}>
           Art stamps icons for single and multiple stamps, and collections.
@@ -469,7 +469,7 @@ export default function PressKit() {
         <section
           class={`${containerBackground} tablet:w-1/2 tablet:min-w-0`}
         >
-          <h5 class={titleNeutralLD}>STAMP ART</h5>
+          <h5 class={titleNeutral}>STAMP ART</h5>
           <h6 class={subtitleNeutral}>SELECTED SPECIALS</h6>
           <p class={text}>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
@@ -500,7 +500,7 @@ export default function PressKit() {
         <section
           class={`${containerBackground} tablet:w-1/2 tablet:min-w-0`}
         >
-          <h5 class={titleNeutralLD}>STAMP MEMES</h5>
+          <h5 class={titleNeutral}>STAMP MEMES</h5>
           <h6 class={subtitleNeutral}>LOREM IPSUM</h6>
           <p class={text}>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do

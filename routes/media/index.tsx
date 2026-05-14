@@ -12,7 +12,7 @@ import {
   subtitleNeutral,
   text,
   textLg,
-  titleNeutralLD,
+  titleNeutral,
 } from "$text";
 
 /* ===== PAGE COMPONENT ===== */
@@ -23,7 +23,7 @@ export default function MediaPage() {
       {/* ===== INTRODUCTION SECTION ===== */}
       <section class={containerBackground}>
         <div class={`flex flex-col w-full`}>
-          <h1 class={titleNeutralLD}>Media Matters</h1>
+          <h1 class={titleNeutral}>Media Matters</h1>
           <h2 class={subtitleNeutral}>Stamp Mentions</h2>
           <p class={textLg}>
             Explore the world of Bitcoin Stamps with our curated list of news
@@ -45,7 +45,7 @@ export default function MediaPage() {
 
       {/* ===== INTERVIEWS SECTION ===== */}
       <section class={`flex flex-col ${container1} p-5`}>
-        <h1 class={titleNeutralLD}>Interviews</h1>
+        <h1 class={titleNeutral}>Interviews</h1>
         <div
           class={`grid grid-cols-1 mobileLg:grid-cols-2 desktop:grid-cols-3 ${containerGap}`}
         >
@@ -132,7 +132,7 @@ export default function MediaPage() {
       {/* ===== NEWS SECTION ===== */}
       <section>
         <div class={containerBackground}>
-          <h1 class={titleNeutralLD}>In the News</h1>
+          <h1 class={titleNeutral}>In the News</h1>
           <h2 class={subtitleNeutral}>Breaking Stories</h2>
           {/* ===== NEWS ARTICLES LIST ===== */}
           <div class={`flex flex-col min-[940px]:flex-row ${containerGap}`}>
@@ -257,7 +257,7 @@ export default function MediaPage() {
 
       {/* ===== REPORTS SECTION ===== */}
       <section class={containerBackground}>
-        <h1 class={titleNeutralLD}>Reports</h1>
+        <h1 class={titleNeutral}>Reports</h1>
         <div class="flex flex-col mobileLg:flex-row gap-3 mobileMd:gap-6 mobileLg:gap-9 desktop:gap-12">
           {/* ===== SQRR DEEP DIVE ===== */}
           <div

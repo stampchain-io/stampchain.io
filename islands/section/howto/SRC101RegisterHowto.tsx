@@ -1,13 +1,13 @@
 /* ===== HOW TO REGISTER BITNAME COMPONENT ===== */
 import { containerBackground } from "$layout";
-import { subtitleNeutral, text, titleNeutralLD } from "$text";
+import { subtitleNeutral, text, titleNeutral } from "$text";
 
 /* ===== COMPONENT ===== */
 export const SRC101RegisterHowto = () => {
   return (
     <div class={`${containerBackground} gap-5`}>
       <div class="flex flex-col">
-        <h3 class={titleNeutralLD}>HOW-TO</h3>
+        <h3 class={titleNeutral}>HOW-TO</h3>
         <h2 class={subtitleNeutral}>REGISTER YOUR BITNAME</h2>
         <p class={text}>
           <ul class="list-disc pl-5 space-y-2">

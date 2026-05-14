@@ -2,7 +2,7 @@
 import { BREAKPOINTS } from "$constants";
 import { useWindowSize } from "$lib/hooks/useWindowSize.ts";
 import { CollectionsBanner } from "$section";
-import { subtitleNeutral, titleNeutralLD } from "$text";
+import { subtitleNeutral, titleNeutral } from "$text";
 import type { Collection } from "$types/stamp.d.ts";
 import { useEffect, useState } from "preact/hooks";
 // Local copy of props to avoid importing server-only types
@@ -69,7 +69,7 @@ export default function CollectionGallery({
   const grid = gridClass ?? "grid grid-cols-1 gap-4";
   return (
     <div>
-      {title && <h3 class={titleNeutralLD}>{title}</h3>}
+      {title && <h3 class={titleNeutral}>{title}</h3>}
       {subTitle && (
         <h4
           class={subtitleNeutral +

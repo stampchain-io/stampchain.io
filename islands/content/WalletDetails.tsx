@@ -12,7 +12,7 @@ import { tooltipIcon } from "$notification";
 import {
   labelSm,
   subtitleNeutral,
-  titleNeutralLD,
+  titleNeutral,
   valueLg,
   valueSm,
   valueXl,
@@ -128,7 +128,7 @@ function WalletOverview(
     >
       <div class="flex flex-col w-full tablet:w-1/2 ${container1} rounded-2xl p-3 mobileMd:p-6 space-y-1.5 mobileLg:space-y-3">
         <div class="flex">
-          <p class={titleNeutralLD}>
+          <p class={titleNeutral}>
             {walletData.address.startsWith("1D") ||
                 walletData.dispensers?.total > 0
               ? "DISPENSER"

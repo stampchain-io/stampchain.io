@@ -9,7 +9,7 @@ import { containerBackground } from "$layout";
 import type { WalletOverviewInfo } from "$lib/types/index.d.ts";
 import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { tooltipIcon } from "$notification";
-import { titleNeutralLD } from "$text";
+import { titleNeutral } from "$text";
 import type { WalletDashboardDetailsProps } from "$types/ui.d.ts";
 import { useEffect, useRef, useState } from "preact/hooks";
 
@@ -421,7 +421,7 @@ function DashboardProfile() {
           />
         </div>
         <div class="flex ml-1.5 mobileMd:ml-0 mt-1.5 mobileMd:-mt-2 mobileLg:mt-0">
-          <h5 class={titleNeutralLD}>
+          <h5 class={titleNeutral}>
             ANONYMOUS
           </h5>
         </div>

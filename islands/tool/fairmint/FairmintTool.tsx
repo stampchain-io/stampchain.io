@@ -14,7 +14,7 @@ import { logger } from "$lib/utils/logger.ts";
 import { mapProgressiveFeeDetails } from "$lib/utils/performance/fees/fee-estimation-utils.ts";
 import { StatusMessages } from "$notification";
 import { FeeCalculatorBase } from "$section";
-import { titleNeutralLD } from "$text";
+import { titleNeutral } from "$text";
 import type { FairmintToolProps } from "$types/ui.d.ts";
 import { useEffect, useState } from "preact/hooks";
 
@@ -113,7 +113,7 @@ export function FairmintTool({ fairminters }: FairmintToolProps) {
 
   return (
     <div class={`${bodyTool} ${containerGap}`} data-testid="fairmint-tool">
-      <h1 class={`${titleNeutralLD} mx-auto -mb-2 mobileLg:-mb-4`}>
+      <h1 class={`${titleNeutral} mx-auto -mb-2 mobileLg:-mb-4`}>
         FAIRMINT
       </h1>
 

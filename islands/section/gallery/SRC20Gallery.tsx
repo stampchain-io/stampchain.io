@@ -9,7 +9,7 @@ import {
 } from "$card";
 import { useLoadingSkeleton } from "$lib/hooks/useLoadingSkeleton.ts";
 import { unicodeEscapeToEmoji } from "$lib/utils/ui/formatting/emojiUtils.ts";
-import { subtitleNeutral, titleNeutralLD } from "$text";
+import { subtitleNeutral, titleNeutral } from "$text";
 import type { EnrichedSRC20Row } from "$types/src20.d.ts";
 import type { SRC20GalleryProps } from "$types/ui.d.ts";
 import { useEffect, useMemo, useState } from "preact/hooks";
@@ -109,7 +109,7 @@ export function SRC20Gallery({
     <div class="w-full">
       {title && (
         <h1
-          class={`${titleNeutralLD} ${
+          class={`${titleNeutral} ${
             fromPage === "home" && viewType === "minting" ? "opacity-0" : ""
           }`}
         >

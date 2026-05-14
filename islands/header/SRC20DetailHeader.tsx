@@ -11,7 +11,7 @@ import {
 import { constructStampUrl } from "$lib/utils/ui/media/imageUtils.ts";
 import {
   labelSm,
-  titleNeutralLD,
+  titleNeutral,
   valueNegative,
   valueNeutral,
   valuePositive,
@@ -115,7 +115,7 @@ export function SRC20DetailHeader({
               <div class="relative z-10">
                 {/* Token name and social links */}
                 <div class="flex">
-                  <h1 class={`${titleNeutralLD} uppercase`}>
+                  <h1 class={`${titleNeutral} uppercase`}>
                     {tickValue}
                   </h1>
                   <div class="flex gap-3 items-center">

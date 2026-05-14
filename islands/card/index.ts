@@ -1,6 +1,3 @@
-/* ===== TOKEN CARDS - TEXT STYLING ===== */
-export * from "$islands/card/styles.ts";
-
 /* ===== STAMP CARDS ===== */
 export * from "$islands/card/StampCard.tsx";
 export * from "$islands/card/WalletStampCard.tsx";

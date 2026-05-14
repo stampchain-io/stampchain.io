@@ -50,7 +50,7 @@ import {
   tooltipImage,
 } from "$notification";
 import { FeeCalculatorBase } from "$section";
-import { labelLg, subtitleNeutral, titleNeutralLD } from "$text";
+import { labelLg, subtitleNeutral, titleNeutral } from "$text";
 import {
   getSearchParams,
   isBrowser,
@@ -240,7 +240,7 @@ export function StampingTool() {
   if (isLoading) {
     return (
       <div class={`${bodyTool} ${containerGap}`}>
-        <h1 class={`${titleNeutralLD} mx-auto -mb-2 mobileLg:-mb-4`}>
+        <h1 class={`${titleNeutral} mx-auto -mb-2 mobileLg:-mb-4`}>
           STAMP
         </h1>
         <StampingToolSkeleton />
@@ -251,7 +251,7 @@ export function StampingTool() {
   if (!config) {
     return (
       <div class={bodyTool}>
-        <h5 class={`${titleNeutralLD} mx-auto mb-2`}>ERROR</h5>
+        <h5 class={`${titleNeutral} mx-auto mb-2`}>ERROR</h5>
         <h6 class={`${subtitleNeutral} mx-auto`}>CONFIGURATION NOT LOADED</h6>
       </div>
     );
@@ -2111,7 +2111,7 @@ function StampingToolMain({ config }: { config: Config }) {
   /* ===== COMPONENT RENDER ===== */
   return (
     <div class={`${bodyTool} ${containerGap}`}>
-      <h1 class={`${titleNeutralLD} mx-auto -mb-2 mobileLg:-mb-4`}>
+      <h1 class={`${titleNeutral} mx-auto -mb-2 mobileLg:-mb-4`}>
         STAMP
       </h1>
 

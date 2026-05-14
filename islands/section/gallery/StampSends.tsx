@@ -1,6 +1,6 @@
 /* ===== STAMP RECENT SALES GALLERY COMPONENT ===== */
 import { StampCard } from "$card";
-import { subtitleNeutral, titleNeutralDL, titleNeutralLD } from "$text";
+import { subtitleNeutral, titleNeutralDL, titleNeutral } from "$text";
 import type { StampSendsGalleryProps } from "$types/ui.d.ts";
 import type { JSX } from "preact";
 
@@ -16,7 +16,7 @@ export default function StampSendsGallery({
     <div class="flex flex-col w-full items-start tablet:items-end">
       {/* ===== TITLE SECTION ===== */}
       <div class="w-full">
-        <h3 class={`${titleNeutralLD} tablet:hidden`}>
+        <h3 class={`${titleNeutral} tablet:hidden`}>
           RECENT SALES
         </h3>
         <h3 class={`hidden tablet:block w-full text-right ${titleNeutralDL}`}>

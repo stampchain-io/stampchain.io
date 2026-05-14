@@ -9,7 +9,7 @@ import { Src20Controller } from "$server/controller/src20Controller.ts";
 
 import { body } from "$layout";
 import { UploadImageTable } from "$table";
-import { titleNeutralLD } from "$text";
+import { titleNeutral } from "$text";
 
 /* ===== SERVER HANDLER ===== */
 export const handler: Handlers = {
@@ -63,7 +63,7 @@ export function UploadBackground(props: PropTypes) {
   return (
     <>
       <div class={body}>
-        <h1 class={titleNeutralLD}>SRC20 STAMP UPLOAD</h1>
+        <h1 class={titleNeutral}>SRC20 STAMP UPLOAD</h1>
 
         <UploadImageTable data={data} />
       </div>

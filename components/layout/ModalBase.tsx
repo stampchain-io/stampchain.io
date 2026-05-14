@@ -3,7 +3,7 @@ import { closeModal } from "$islands/modal/states.ts";
 import { container0, shadow } from "$layout";
 import { logger } from "$lib/utils/logger.ts";
 import { tooltipIcon } from "$notification";
-import { titleNeutralLD } from "$text";
+import { titleNeutral } from "$text";
 import type { ModalBaseProps } from "$types/ui.d.ts";
 import { useEffect, useRef, useState } from "preact/hooks";
 
@@ -115,7 +115,7 @@ export function ModalBase({
             </div>
 
             <div class="w-full text-center">
-              <h2 class={`${titleNeutralLD} pb-6`}>
+              <h2 class={`${titleNeutral} pb-6`}>
                 {title}
               </h2>
             </div>

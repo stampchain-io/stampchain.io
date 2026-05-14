@@ -2280,7 +2280,6 @@ export interface StampGalleryProps {
   displayCounts?: any;
   pagination?: any;
   showMinDetails?: boolean;
-  variant?: "default" | "grey";
   viewAllLink?: string;
   alignRight?: boolean;
   fromPage?: string;

@@ -58,7 +58,7 @@ The Text system provides a comprehensive typography solution with consistent sty
 - **Modifier**: Link, Active, Responsive (R), Minimal, Glow, Position
 
 **Examples**:
-- `titleNeutralLD` = Title style with grey gradient from light to dark
+- `titleNeutral` = Title style with grey gradient from light to dark
 - `navLinkPurpleActive` = Purple navigation link in active state
 - `valueSmLink` = Small value with link hover effect
 - `cardStampNumberMinimal` = Minimal card variant for stamp numbers
@@ -249,13 +249,13 @@ navLinkTransparentPurple: "font-light text-[13px] hover:text-color-purple-light"
 
 ```typescript
 // Grey Light to Dark (primary)
-titleNeutralLD: "font-black text-3xl color-grey-gradientDL cursor-default"
+titleNeutral: "font-black text-3xl color-grey-gradientDL cursor-default"
 
 // Grey Dark to Light (alternative)
 titleNeutralDL: "font-black text-3xl color-grey-gradientLD cursor-default"
 
 // Purple Light to Dark
-titlePrimaryLD: "font-black text-3xl color-purple-gradientLD cursor-default"
+titlePrimary: "font-black text-3xl color-purple-gradientLD cursor-default"
 
 // Purple Dark to Light
 titlePrimaryDL: "font-black text-3xl color-purple-gradientDL cursor-default"
@@ -507,9 +507,9 @@ export type TextStyles = {
   navLinkTransparentPurple: string;
 
   // Title styles (4)
-  titleNeutralLD: string;
+  titleNeutral: string;
   titleNeutralDL: string;
-  titlePrimaryLD: string;
+  titlePrimary: string;
   titlePrimaryDL: string;
 
   // Subtitle styles (2)
@@ -594,12 +594,12 @@ export type TextStyles = {
 
 ### Page Layout
 ```tsx
-import { titleNeutralLD, subtitleNeutral, text } from "$text";
+import { titleNeutral, subtitleNeutral, text } from "$text";
 
 export function PageHeader() {
   return (
     <div class="flex flex-col gap-4">
-      <h1 class={titleNeutralLD}>Explore Bitcoin Stamps</h1>
+      <h1 class={titleNeutral}>Explore Bitcoin Stamps</h1>
       <h2 class={subtitleNeutral}>Digital Artifacts on Bitcoin</h2>
       <p class={text}>
         Discover unique digital stamps permanently embedded on the Bitcoin blockchain
@@ -847,7 +847,7 @@ The text system follows SEO best practices with proper heading structure:
 
 | Tag | Text Style | Purpose | SEO Impact |
 |-----|-----------|---------|------------|
-| **H1** | titleNeutralLD, titlePrimaryLD | Page title | High - One per page, primary keyword |
+| **H1** | titleNeutral, titlePrimary | Page title | High - One per page, primary keyword |
 | **H2** | subtitleNeutral, subtitlePrimary | Major sections | High - Main subtopics, secondary keywords |
 | **H3** | headingGreyLD, headingGrey | Subsections | Medium - Supporting points, related keywords |
 | **H4** | headingGreyLDLink, headingGreyDLLink | Minor sections | Medium - Feature titles, UI sections |
@@ -904,19 +904,19 @@ The text system follows SEO best practices with proper heading structure:
 ### Import Strategy
 ```tsx
 // For component usage - import specific styles
-import { titleNeutralLD, text, labelSm } from "$text";
+import { titleNeutral, text, labelSm } from "$text";
 
 // For type work - import the type
 import type { TextStyles } from "$text";
 
 // Type-safe style references
-const myStyle: keyof TextStyles = "titleNeutralLD";
+const myStyle: keyof TextStyles = "titleNeutral";
 ```
 
 ### Composition Patterns
 ```tsx
 // Combining with Tailwind utilities
-<h1 class={`${titleNeutralLD} mb-4 tablet:mb-6`}>Title</h1>
+<h1 class={`${titleNeutral} mb-4 tablet:mb-6`}>Title</h1>
 
 // Dynamic style selection
 const headingClass = isActive ? navLinkPurpleActive : navLinkPurple;
@@ -936,7 +936,7 @@ const headingClass = isActive ? navLinkPurpleActive : navLinkPurple;
 ### Page Title Section
 ```tsx
 <div class="flex flex-col gap-3">
-  <h1 class={titleNeutralLD}>Page Title</h1>
+  <h1 class={titleNeutral}>Page Title</h1>
   <h2 class={subtitleNeutral}>Subtitle</h2>
 </div>
 ```

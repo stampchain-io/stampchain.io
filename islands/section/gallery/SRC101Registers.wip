@@ -3,7 +3,7 @@ import type { JSX } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import type { StampTransaction } from "$lib/types/stamping.ts";
 import { StampCard } from "$card";
-import { subtitleNeutral, titleNeutralDL, titleNeutralLD } from "$text";
+import { subtitleNeutral, titleNeutralDL, titleNeutral } from "$text";
 
 /* ===== COMPONENT ===== */
 export default function SRC101RegistersGallery(): JSX.Element {
@@ -42,7 +42,7 @@ export default function SRC101RegistersGallery(): JSX.Element {
     <div class="flex flex-col items-start tablet:items-end">
       {/* ===== TITLE SECTION ===== */}
       <div>
-        <h4 class={`${titleNeutralLD} tablet:hidden`}>
+        <h4 class={`${titleNeutral} tablet:hidden`}>
           BITNAMES
         </h4>
         <h4 class={`${titleNeutralDL} hidden tablet:block`}>

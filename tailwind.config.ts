@@ -446,11 +446,11 @@ export default {
         // Pair with bg-gradient-to-r (LD) or bg-gradient-to-l (DL) at the usage site
         ".color-neutral-gradient": {
           "--tw-gradient-from":
-            "var(--color-neutral-200) var(--tw-gradient-from-position)",
+            "var(--color-neutral-300) var(--tw-gradient-from-position)",
           "--tw-gradient-via":
-            "var(--color-neutral-300) var(--tw-gradient-via-position)",
+            "var(--color-neutral-400) var(--tw-gradient-via-position)",
           "--tw-gradient-to":
-            "var(--color-neutral-500) var(--tw-gradient-to-position)",
+            "var(--color-neutral-600) var(--tw-gradient-to-position)",
           "--tw-gradient-stops":
             "var(--tw-gradient-from), var(--tw-gradient-via), var(--tw-gradient-to)",
           "-webkit-background-clip": "text",
@@ -465,6 +465,20 @@ export default {
             "var(--color-primary-400) var(--tw-gradient-via-position)",
           "--tw-gradient-to":
             "var(--color-primary-600) var(--tw-gradient-to-position)",
+          "--tw-gradient-stops":
+            "var(--tw-gradient-from), var(--tw-gradient-via), var(--tw-gradient-to)",
+          "-webkit-background-clip": "text",
+          "-webkit-text-fill-color": "transparent",
+          "background-clip": "text",
+          "text-fill-color": "transparent",
+        },
+        ".color-secondary-gradient": {
+          "--tw-gradient-from":
+            "var(--color-secondary-300) var(--tw-gradient-from-position)",
+          "--tw-gradient-via":
+            "var(--color-secondary-400) var(--tw-gradient-via-position)",
+          "--tw-gradient-to":
+            "var(--color-secondary-600) var(--tw-gradient-to-position)",
           "--tw-gradient-stops":
             "var(--tw-gradient-from), var(--tw-gradient-via), var(--tw-gradient-to)",
           "-webkit-background-clip": "text",

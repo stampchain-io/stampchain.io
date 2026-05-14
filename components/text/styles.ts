@@ -57,14 +57,16 @@ export const navLinkFooterOverlay =
 /* ======================================================================== */
 
 /* ===== TITLE STYLES ===== */
-export const titleNeutralLD =
+export const titleNeutral =
   `${titleFont} bg-gradient-to-r color-neutral-gradient cursor-default ${select}`;
 export const titleNeutralDL =
   `${titleFont} bg-gradient-to-l color-neutral-gradient cursor-default ${select}`;
-export const titlePrimaryLD =
+export const titlePrimary =
   `${titleFont} bg-gradient-to-r color-primary-gradient cursor-default ${select}`;
 export const titlePrimaryDL =
   `${titleFont} bg-gradient-to-l color-primary-gradient cursor-default ${select}`;
+export const titleSecondary =
+  `${titleFont} bg-gradient-to-r color-secondary-gradient cursor-default ${select}`;
 
 /* ===== SUBTITLE STYLES ===== */
 export const subtitleNeutral =
@@ -166,12 +168,10 @@ export const value5xlPurpleGlow =
 export const value7xlPurpleGlow =
   `font-black text-7xl text-black text-stroke-glow-large cursor-default ${select}`; // used in about header
 // Dark variants
-export const valueDarkXs =
-  `font-medium text-xs text-color-grey-semidark tracking-tighter ${select}`; // used for addy styling in mobile/table header
 export const valueDarkSm =
-  `font-medium text-sm text-color-grey-semidark tracking-tighter ${select}`; // used for addy styling in desktop header
+  `font-normal text-sm text-color-neutral-500 ${select}`; // used for tables and addy styling in wallet button
 export const valueDark =
-  `font-semibold text-base text-color-grey-semidark ${select}`; // used in tables
+  `font-semibold text-base text-color-neutral-600 ${select}`; // used in tables
 // Color variants
 export const valuePositive = `text-color-green-400`;
 export const valueNegative = `text-color-red-400`;
@@ -199,47 +199,28 @@ export const copyright =
 export const toggleSymbol =
   `font-bold text-[10px] text-black cursor-default ${select}`; // used in ToggleSwitchButton.tsx for $/BTC symbols
 
-// Captions - used for stamp/token cards
-
 /* =================================================================== */
 /* ===== CARD TEXT STYLES ===== */
 // Standard card styles
-export const cardHashSymbol =
-  `font-light text-color-purple-light text-lg mobileLg:text-xl ${select}`;
 export const cardStampNumber =
-  `font-extrabold text-color-purple-light truncate max-w-full text-lg mobileLg:text-xl ${select}`;
+  `max-w-full font-black text-md min-[420px]:text-lg
+   bg-gradient-to-r color-neutral-gradient color-gradient-hover
+   truncate ${transitionColors} ${select}`;
 export const cardCreator =
-  `font-semibold text-color-grey-light break-words text-center pt-1 text-xs mobileMd:text-sm ${select}`;
+  `pt-1 font-semibold text-xs mobileMd:text-sm text-color-neutral-400 break-words text-center ${select}`;
 export const cardPrice =
-  `font-normal text-color-grey-light text-nowrap text-xs mobileLg:text-sm ${select}`;
-export const cardMimeType =
-  `font-normal text-color-grey text-nowrap text-xs mobileLg:text-sm ${select}`;
+  `font-normal text-xs text-color-secondary-400 text-nowrap ${select}`;
+export const cardFileType =
+  `font-normal text-xs text-color-neutral-500 text-nowrap ${select}`;
 export const cardSupply =
-  `font-medium text-color-grey text-right text-xs mobileLg:text-base ${select}`;
+  `font-medium text-xs text-color-primary-400 text-right ${select}`;
 
 // Minimal card variant styles
-export const cardHashSymbolMinimal =
-  `font-light text-color-grey-light group-hover:text-color-hover text-xs mobileSm:text-base mobileLg:text-xl tablet:text-xl desktop:text-xl ${transitionColors} ${select}`;
 export const cardStampNumberMinimal =
-  `font-black bg-gradient-to-r color-neutral-gradient color-gradient-hover truncate text-sm mobileSm:text-base mobileLg:text-xl tablet:text-xl desktop:text-xl ${transitionColors} ${select}`;
+  `max-w-full font-black text-xs mobileLg:text-sm
+  bg-gradient-to-r color-neutral-gradient color-gradient-hover truncate ${transitionColors} ${select}`;
 export const cardPriceMinimal =
-  `font-normal text-color-grey truncate text-nowrap text-[10px] mobileMd:text-xs mobileLg:text-sm ${select}`;
-
-// Grey gradient card variant styles
-export const cardHashSymbolGrey =
-  `font-light text-color-grey group-hover:text-color-hover text-lg min-[420px]:text-xl ${transitionColors} ${select}`;
-export const cardStampNumberGrey =
-  `font-black bg-gradient-to-r color-neutral-gradient color-gradient-hover truncate max-w-full text-lg min-[420px]:text-xl ${transitionColors} ${select}`;
-
-/* =================================================================== */
-/* ===== CARD CONFIGURATION - check if used ===== */
-export const ABBREVIATION_LENGTHS = {
-  desktop: 5,
-  tablet: 5,
-  mobileLg: 4,
-  mobileMd: 5,
-  mobileSm: 5,
-} as const;
+  `font-normal text-[10px] mobileMd:text-xs text-color-neutral-500 truncate text-nowrap ${select}`;
 
 /* ===== UNCATEGORIZED STYLES ===== */
 // Add any new styles you cannot categorize here
@@ -265,9 +246,9 @@ export type TextStyles = {
   navLinkFooter: string;
   navLinkFooterOverlayText: string;
   // Title styles
-  titleNeutralLD: string;
+  titleNeutral: string;
   titleNeutralDL: string;
-  titlePrimaryLD: string;
+  titlePrimary: string;
   titlePrimaryDL: string;
   // Subtitle styles
   subtitleNeutral: string;
@@ -332,15 +313,11 @@ export type TextStyles = {
   copyright: string;
   toggleSymbol: string;
   // Card text styles
-  cardHashSymbol: string;
-  cardStampNumber: string;
   cardCreator: string;
   cardPrice: string;
-  cardMimeType: string;
+  cardFileType: string;
   cardSupply: string;
-  cardHashSymbolMinimal: string;
   cardStampNumberMinimal: string;
   cardPriceMinimal: string;
-  cardHashSymbolGrey: string;
-  cardStampNumberGrey: string;
+  cardStampNumber: string;
 };

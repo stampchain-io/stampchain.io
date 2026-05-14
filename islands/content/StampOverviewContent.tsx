@@ -29,7 +29,6 @@ export function StampOverviewContent({
                 stamp={stamp}
                 isRecentSale={isRecentSales}
                 showDetails
-                variant="grey"
                 {...(fromPage && { fromPage })}
               />
             ))}

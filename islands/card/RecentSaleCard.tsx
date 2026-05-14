@@ -44,7 +44,6 @@ export function RecentSaleCard({
           isRecentSale
           showMinDetails={!showFullDetails}
           showDetails={showFullDetails}
-          variant="default"
         />
 
         {/* Sale Badge */}

@@ -4,8 +4,8 @@
 import { Icon, LoadingIcon, PlaceholderImage } from "$icon";
 import StampTextContent from "$islands/content/stampDetailContent/StampTextContent.tsx";
 import {
-  container1,
-  container2,
+  container2Hover,
+  containerPill,
   shadowGlowPurple,
   transitionColors,
 } from "$layout";
@@ -18,10 +18,18 @@ import {
   getStampImageSrc,
   getStampPreviewUrl,
 } from "$lib/utils/ui/media/imageUtils.ts";
+import {
+  cardCreator,
+  cardFileType,
+  cardPrice,
+  cardPriceMinimal,
+  cardStampNumber,
+  cardStampNumberMinimal,
+  cardSupply,
+} from "$text";
 import type { StampRow } from "$types/stamp.d.ts";
 import { VNode } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
-import { TEXT_STYLES } from "./styles.ts";
 
 /* ===== TYPES ===== */
 interface StampWithSaleData extends Omit<StampRow, "stamp_base64"> {
@@ -40,14 +48,12 @@ export function StampCard({
   showDetails = true,
   showEdition = false,
   showMinDetails = false,
-  variant = "default",
 }: {
   stamp: StampWithSaleData;
   isRecentSale?: boolean;
   showDetails?: boolean;
   showEdition?: boolean;
   showMinDetails?: boolean;
-  variant?: "default" | "grey";
 }) {
   /* ===== STATE ===== */
   const [loading, setLoading] = useState<boolean>(true);
@@ -324,7 +330,7 @@ export function StampCard({
         text: `${
           stripTrailingZeros(stamp.sale_data.btc_amount.toFixed(8))
         } BTC`,
-        style: `${TEXT_STYLES.price.base} ${TEXT_STYLES.price.sizes}`,
+        style: cardPrice,
       };
     }
 
@@ -340,7 +346,7 @@ export function StampCard({
       if (marketPrice !== null && marketPrice > 0) {
         return {
           text: `${stripTrailingZeros(Number(marketPrice).toFixed(8))} BTC`,
-          style: `${TEXT_STYLES.price.base} ${TEXT_STYLES.price.sizes}`,
+          style: cardPrice,
         };
       }
     }
@@ -356,19 +362,19 @@ export function StampCard({
     ) {
       return {
         text: `${stripTrailingZeros(Number(legacyPrice).toFixed(8))} BTC`,
-        style: `${TEXT_STYLES.price.base} ${TEXT_STYLES.price.sizes}`,
+        style: cardPrice,
       };
     }
 
     // Default to mime type if no valid price
     return {
       text: stamp.stamp_mimetype?.split("/")[1]?.toUpperCase() || "UNKNOWN",
-      style: `${TEXT_STYLES.mimeType.base} ${TEXT_STYLES.mimeType.sizes}`,
+      style: cardFileType,
     };
   };
 
   /* ===== COMPUTED VALUES ===== */
-  const shouldDisplayHash = Number(stamp.stamp ?? 0) >= 0 ||
+  const displayStampHash = Number(stamp.stamp ?? 0) >= 0 ||
     (stamp.cpid && stamp.cpid.charAt(0) === "A");
 
   const supplyDisplay = isRecentSale
@@ -397,16 +403,6 @@ export function StampCard({
     ? "+100000"
     : stamp.supply;
 
-  /* ===== STYLE HELPERS ===== */
-  const getTextStyles = (type: "hashSymbol" | "stampNumber") => {
-    if (variant === "grey") {
-      return `${TEXT_STYLES.greyGradient[type].base} ${
-        TEXT_STYLES.greyGradient[type].sizes
-      }`;
-    }
-    return `${TEXT_STYLES[type].base} ${TEXT_STYLES[type].sizes}`;
-  };
-
   const isLongNumber = (value: string | number) => {
     const stringValue = String(value);
     return stringValue.length > 6;
@@ -421,11 +417,11 @@ export function StampCard({
         f-partial={`/stamp/${stamp.tx_hash}`}
         data-long-number={isLongNumber(stampValue)}
         class={`
-          text-white group relative z-0 flex flex-col
+          text-color-neutral-200 group relative z-0 flex flex-col
           p-stamp-card mobileLg:p-3
           w-full h-full
-          hover:border-color-purple-light ${shadowGlowPurple}
-          ${container1} ${transitionColors}
+          hover:border-color-hover ${shadowGlowPurple}
+          ${container2Hover} ${transitionColors}
         `}
       >
         {/* ===== ATOM ICON ===== */}
@@ -444,40 +440,28 @@ export function StampCard({
           <div class="flex flex-col items-center px-[6px] pt-5 pb-0">
             {/* Stamp Number with container */}
             <div class="flex items-center justify-center max-w-[90%]">
-              {shouldDisplayHash && (
-                <span
-                  class={getTextStyles("hashSymbol")}
-                >
-                  #
-                </span>
-              )}
-              <span
-                class={getTextStyles("stampNumber")}
-              >
+              <span class={cardStampNumber}>
+                {displayStampHash && <span class="font-light">#</span>}
                 {stampValue}
               </span>
             </div>
 
             {/* Creator Name or Abbreviated Address */}
-            <div
-              class={`${TEXT_STYLES.creator.base} ${TEXT_STYLES.creator.sizes} mt-1`}
-            >
+            <div class={`${cardCreator} mt-1`}>
               {creatorDisplay}
             </div>
 
             {/* Price and Supply */}
             <div class="flex justify-between items-center mt-4 w-full">
               {/* Price on the Left */}
-              <div class={`text-left ${container2} px-3 py-1`}>
-                <span
-                  class={renderPrice().style}
-                >
+              <div class={`text-left ${containerPill}`}>
+                <span class={renderPrice().style}>
                   {renderPrice().text}
                 </span>
               </div>
               {/* Supply/Editions on the Right */}
               <div
-                class={`${TEXT_STYLES.supply.base} ${TEXT_STYLES.supply.sizes} text-right ${container2} px-3 py-1`}
+                class={`${cardSupply} text-right ${containerPill}`}
               >
                 {supplyDisplay}
               </div>
@@ -489,28 +473,16 @@ export function StampCard({
         {showEdition && (
           <div class="flex flex-col items-center px-1.5 mobileLg:px-3 pt-1.5 mobileLg:pt-3">
             <div class="flex items-center justify-center">
-              {shouldDisplayHash && (
-                <span
-                  class={`${TEXT_STYLES.minimal.hashSymbol.base} ${TEXT_STYLES.minimal.hashSymbol.sizes}`}
-                >
-                  #
-                </span>
-              )}
-              <span
-                class={`${TEXT_STYLES.minimal.stampNumber.base} ${TEXT_STYLES.minimal.stampNumber.sizes}`}
-              >
+              <span class={cardStampNumberMinimal}>
+                {displayStampHash && <span class="font-light">#</span>}
                 {stampValue}
               </span>
             </div>
             <div class="-mt-1 mobileLg:mt-0.5 w-full flex justify-between items-center">
-              <span
-                class={`${TEXT_STYLES.minimal.price.base} ${TEXT_STYLES.minimal.price.sizes}`}
-              >
+              <span class={cardPriceMinimal}>
                 {editionCount}
               </span>
-              <span
-                class={`${TEXT_STYLES.minimal.price.base} ${TEXT_STYLES.minimal.price.sizes}`}
-              >
+              <span class={cardPriceMinimal}>
                 {renderPrice().text}
               </span>
             </div>
@@ -521,23 +493,13 @@ export function StampCard({
         {showMinDetails && !showDetails && (
           <div class="flex flex-col items-center px-1.5 mobileLg:px-3 pt-1.5 mobileLg:pt-3">
             <div class="flex items-center justify-center">
-              {shouldDisplayHash && (
-                <span
-                  class={`${TEXT_STYLES.minimal.hashSymbol.base} ${TEXT_STYLES.minimal.hashSymbol.sizes}`}
-                >
-                  #
-                </span>
-              )}
-              <span
-                class={`${TEXT_STYLES.minimal.stampNumber.base} ${TEXT_STYLES.minimal.stampNumber.sizes}`}
-              >
+              <span class={cardStampNumberMinimal}>
+                {displayStampHash && <span class="font-light">#</span>}
                 {stampValue}
               </span>
             </div>
             <div class="-mt-1 mobileLg:mt-0.5">
-              <span
-                class={`${TEXT_STYLES.minimal.price.base} ${TEXT_STYLES.minimal.price.sizes}`}
-              >
+              <span class={cardPriceMinimal}>
                 {renderPrice().text}
               </span>
             </div>

@@ -2,7 +2,7 @@
 import { Button } from "$button";
 import { ARTICLE_LINKS } from "$components/section/howto/data.ts"; // needs direct import - cannot use "$howto"
 import { bodyArticle, containerGap } from "$layout";
-import { headingGreyLDLink, subtitleNeutral, text, titleNeutralLD } from "$text";
+import { headingGreyLDLink, subtitleNeutral, text, titleNeutral } from "$text";
 
 /* ===== COMPONENT ===== */
 export function ArticlesOverview() {
@@ -10,7 +10,7 @@ export function ArticlesOverview() {
   return (
     <section class={bodyArticle}>
       {/* ===== SECTION TITLE ===== */}
-      <h1 class={titleNeutralLD}>
+      <h1 class={titleNeutral}>
         KEEP READING
       </h1>
 

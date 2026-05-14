@@ -21,7 +21,7 @@ import { logger } from "$lib/utils/logger.ts";
 import { mapProgressiveFeeDetails } from "$lib/utils/performance/fees/fee-estimation-utils.ts";
 import { StatusMessages, tooltipButton } from "$notification";
 import { FeeCalculatorBase } from "$section";
-import { titleNeutralLD } from "$text";
+import { titleNeutral } from "$text";
 import type { ROOT_DOMAIN_TYPES } from "$types/base.d.ts";
 import type { SRC101Balance } from "$types/src101.d.ts";
 import type { SRC101RegisterToolProps } from "$types/ui.d.ts";
@@ -207,7 +207,7 @@ export function SRC101RegisterTool({
   if (!config) {
     return (
       <div class={`${bodyTool} ${containerGap}`}>
-        <h1 class={`${titleNeutralLD} mx-auto -mb-2 mobileLg:-mb-4`}>
+        <h1 class={`${titleNeutral} mx-auto -mb-2 mobileLg:-mb-4`}>
           REGISTER
         </h1>
         <RegisterToolSkeleton />
@@ -273,7 +273,7 @@ export function SRC101RegisterTool({
   /* ===== COMPONENT RENDER ===== */
   return (
     <div class={`${bodyTool} ${containerGap}`}>
-      <h1 class={`${titleNeutralLD} mx-auto -mb-2 mobileLg:-mb-4`}>
+      <h1 class={`${titleNeutral} mx-auto -mb-2 mobileLg:-mb-4`}>
         REGISTER
       </h1>
 

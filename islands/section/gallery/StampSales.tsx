@@ -2,7 +2,7 @@
 /*@baba-153+154-move Refreshing to ViewAllButton-remove default (not used)*/
 import { containerBackground, loaderSpinXsGrey } from "$layout";
 import { StampGallery } from "$section";
-import { titleNeutralLD, valueDarkSm } from "$text";
+import { titleNeutral, valueDarkSm } from "$text";
 import type { StampWithEnhancedSaleData } from "$types/marketData.d.ts";
 import type { StampSalesProps } from "$types/ui.d.ts";
 import { useEffect, useState } from "preact/hooks";
@@ -142,7 +142,6 @@ export function StampSalesGallery({
       showDetails: false,
       viewAllLink: "/stamp?view=sales",
       showMinDetails: true,
-      variant: "grey" as const,
       gridClass: gridClass || defaultHomeGridClass,
       displayCounts: displayCounts || defaultHomeDisplayCounts,
     }
@@ -163,7 +162,7 @@ export function StampSalesGallery({
     <div class={containerBackground}>
       <h3
         class={variant === "home"
-          ? titleNeutralLD
+          ? titleNeutral
           : "text-3xl tablet:text-7xl text-left mb-2 bg-gradient-to-l color-primary-gradient font-black"}
       >
         {title}

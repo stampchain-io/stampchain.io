@@ -9,16 +9,6 @@ import { memo } from "preact/compat";
 import { useEffect, useRef, useState } from "preact/hooks";
 
 import { WalletStampValue } from "$components/display/BTCValueDisplay.tsx";
-import {
-  cardCreator,
-  cardHashSymbol,
-  cardHashSymbolGrey,
-  cardMimeType,
-  cardPrice,
-  cardStampNumber,
-  cardStampNumberGrey,
-  cardSupply,
-} from "$components/text/styles.ts";
 import { isAtomicIconVisible } from "$lib/utils/bitcoin/stamps/stampUtils.ts";
 import {
   abbreviateAddress,
@@ -28,6 +18,13 @@ import {
   getStampImageSrc,
   getStampPreviewUrl,
 } from "$lib/utils/ui/media/imageUtils.ts";
+import {
+  cardCreator,
+  cardFileType,
+  cardPrice,
+  cardStampNumber,
+  cardSupply,
+} from "$text";
 
 /* ===== TYPES ===== */
 
@@ -51,7 +48,7 @@ const formatQuantityDisplay = (
 
 /* ===== MAIN COMPONENT ===== */
 const WalletStampCardComponent = (
-  { stamp, variant = "default", fromPage }: WalletStampCardProps,
+  { stamp, fromPage }: WalletStampCardProps,
 ) => {
   /* ===== STATE ===== */
   const [loading, setLoading] = useState<boolean>(true);
@@ -355,7 +352,7 @@ const WalletStampCardComponent = (
   };
 
   /* ===== COMPUTED VALUES ===== */
-  const shouldDisplayHash = Number(stamp.stamp ?? 0) >= 0 ||
+  const displayStampHash = Number(stamp.stamp ?? 0) >= 0 ||
     (stamp.cpid && stamp.cpid.charAt(0) === "A");
 
   // Use dynamic abbreviation length
@@ -367,14 +364,6 @@ const WalletStampCardComponent = (
       (stamp.cpid && stamp.cpid.charAt(0) === "A")
     ? `${stamp.stamp}`
     : `${stamp.cpid}`;
-
-  /* ===== STYLE HELPERS ===== */
-  const getTextStyles = (type: "hashSymbol" | "stampNumber") => {
-    if (variant === "grey") {
-      return type === "hashSymbol" ? cardHashSymbolGrey : cardStampNumberGrey;
-    }
-    return type === "hashSymbol" ? cardHashSymbol : cardStampNumber;
-  };
 
   const isLongNumber = (value: string | number) => {
     const stringValue = String(value);
@@ -393,7 +382,7 @@ const WalletStampCardComponent = (
   // Determine fallback display
   const fallbackDisplay = {
     text: stamp.stamp_mimetype?.split("/")[1]?.toUpperCase() || "UNKNOWN",
-    style: cardMimeType,
+    style: cardFileType,
     title: `File Type: ${stamp.stamp_mimetype || "Unknown"}`,
   };
 
@@ -438,16 +427,8 @@ const WalletStampCardComponent = (
         <div class="flex flex-col items-center px-[6px] pt-[18px] pb-0">
           {/* Stamp Number with container */}
           <div class="flex items-center justify-center max-w-[90%]">
-            {shouldDisplayHash && (
-              <span
-                class={getTextStyles("hashSymbol")}
-              >
-                #
-              </span>
-            )}
-            <span
-              class={getTextStyles("stampNumber")}
-            >
+            <span class={cardStampNumber}>
+              {displayStampHash && <span class="font-light">#</span>}
               {stampValue}
             </span>
           </div>

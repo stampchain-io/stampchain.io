@@ -4,7 +4,7 @@ import { StampCard } from "$card";
 import { BREAKPOINTS } from "$constants";
 import { SortButton } from "$islands/button/SortButton.tsx";
 import { useLoadingSkeleton } from "$lib/hooks/useLoadingSkeleton.ts";
-import { subtitleNeutral, titleNeutralDL, titleNeutralLD } from "$text";
+import { subtitleNeutral, titleNeutralDL, titleNeutral } from "$text";
 import type { StampGalleryProps, StampRow } from "$types/stamp.d.ts";
 import { useEffect, useRef, useState } from "preact/hooks";
 import Swiper from "swiper";
@@ -25,7 +25,6 @@ export default function StampGallery({
   displayCounts,
   pagination,
   showMinDetails = false,
-  variant = "default",
   viewAllLink,
   alignRight = false,
   fromPage = "",
@@ -165,14 +164,14 @@ export default function StampGallery({
             >
               <h1
                 class={`${
-                  alignRight ? titleNeutralLD : titleNeutralLD
+                  alignRight ? titleNeutral : titleNeutral
                 } tablet:hidden`}
               >
                 {title}
               </h1>
               <h1
                 class={`hidden tablet:block ${
-                  alignRight ? titleNeutralDL : titleNeutralLD
+                  alignRight ? titleNeutralDL : titleNeutral
                 }`}
               >
                 {title}
@@ -221,7 +220,6 @@ export default function StampGallery({
                       showDetails={showDetails}
                       showEdition={showEdition}
                       showMinDetails={showMinDetails}
-                      variant={variant}
                       {...(fromPage && { fromPage })}
                     />
                   </div>
@@ -264,7 +262,6 @@ export default function StampGallery({
                       showDetails={showDetails}
                       showEdition={showEdition}
                       showMinDetails={showMinDetails}
-                      variant={variant}
                       {...(fromPage && { fromPage })}
                     />
                   </div>

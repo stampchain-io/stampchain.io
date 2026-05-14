@@ -11,7 +11,7 @@ import {
   label,
   labelSm,
   subtitleNeutral,
-  titleNeutralLD,
+  titleNeutral,
   valueDarkSm,
   valueSm,
 } from "$text";
@@ -131,7 +131,7 @@ function SectionHeader({
       f-partial={`/${config.paramName}`}
     >
       <div class="flex items-center gap-4">
-        <h2 class={titleNeutralLD}>
+        <h2 class={titleNeutral}>
           {title}
         </h2>
         {sortMetrics && (

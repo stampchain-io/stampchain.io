@@ -18,7 +18,6 @@ import {
   navSublinkActiveDesktop,
   navSublinkDesktop,
   valueDarkSm,
-  valueDarkXs,
 } from "$text";
 import { useEffect, useRef, useState } from "preact/hooks";
 
@@ -240,7 +239,7 @@ export const WalletButton = (
                 name="copy"
                 weight="normal"
                 size="xxs"
-                color="greyDark"
+                color="grey"
                 className="mb-0.5"
                 onClick={copy}
               />
@@ -260,9 +259,9 @@ export const WalletButton = (
               </div>
             </div>
             <h6
-              class={`${valueDarkXs} transition-colors duration-200 peer-hover:text-color-hover`}
+              class={`${valueDarkSm} !text-xs transition-colors duration-200 peer-hover:text-color-hover`}
             >
-              {abbreviateAddress(address, 7)}
+              {abbreviateAddress(address, 8)}
             </h6>
           </div>
           <div class="flex items-center gap-3 mb-0.5">
@@ -351,7 +350,7 @@ export const WalletButton = (
                   name="copy"
                   weight="normal"
                   size="xs"
-                  color="greyDark"
+                  color="grey"
                   className="mb-0.5"
                   onClick={copy}
                 />
@@ -373,7 +372,7 @@ export const WalletButton = (
               <h6
                 class={`${valueDarkSm} transition-colors duration-200 peer-hover:text-color-hover`}
               >
-                {abbreviateAddress(address, 12)}
+                {abbreviateAddress(address, 11)}
               </h6>
             </div>
             <div class="flex justify-between items-end flex-1">

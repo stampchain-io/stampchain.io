@@ -2,7 +2,7 @@
 import { Button } from "$button";
 import { Head } from "$fresh/runtime.ts";
 import { containerBackground } from "$layout";
-import { subtitleNeutral, titleNeutralLD } from "$text";
+import { subtitleNeutral, titleNeutral } from "$text";
 
 /* ===== PAGE COMPONENT ===== */
 export default function Error404Page() {
@@ -17,7 +17,7 @@ export default function Error404Page() {
         class={`${containerBackground} mobileMd:max-w-[420px] mobileMd:mx-auto justify-center items-center`}
       >
         <div class="flex flex-col justify-center items-center">
-          <div class={titleNeutralLD}>WHOOPS</div>
+          <div class={titleNeutral}>WHOOPS</div>
           <div class={subtitleNeutral}>SOMETHING WENT WRONG</div>
         </div>
         <img
