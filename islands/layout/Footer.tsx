@@ -3,6 +3,7 @@ import { Icon } from "$icon";
 import { containerBackground } from "$layout";
 import {
   copyright,
+  eyebrowPrimary,
   logoPrimary,
   navLinkFooter,
   navLinkFooterOverlay,
@@ -32,7 +33,7 @@ const resourcesLinks: FooterLink[] = [
 ];
 
 const aboutLinks: FooterLink[] = [
-  { title: "About", href: "/about" },
+  { title: "Stampchain", href: "/about" },
   { title: "Donate", href: "/about#donate" },
   { title: "Contact", href: "/about#contact" },
   { title: "Terms", href: "/termsofservice" },
@@ -59,8 +60,8 @@ const socialLinks = [
         type="iconButton"
         name="twitter"
         weight="light"
-        size="md"
-        color="purple"
+        size="smR"
+        color="greyLight"
         href="https://x.com/Stampchain"
         target="_blank"
       />
@@ -72,8 +73,8 @@ const socialLinks = [
         type="iconButton"
         name="telegram"
         weight="light"
-        size="md"
-        color="purple"
+        size="smR"
+        color="greyLight"
         href="https://t.me/BitcoinStamps"
         target="_blank"
       />
@@ -85,8 +86,8 @@ const socialLinks = [
         type="iconButton"
         name="discord"
         weight="light"
-        size="md"
-        color="purple"
+        size="smR"
+        color="greyLight"
         href="https://discord.gg/BRYRt4bH"
         target="_blank"
       />
@@ -98,8 +99,8 @@ const socialLinks = [
         type="iconButton"
         name="github"
         weight="light"
-        size="md"
-        color="purple"
+        size="smR"
+        color="greyLight"
         href="https://github.com/stampchain-io/"
         target="_blank"
       />
@@ -127,31 +128,30 @@ export function Footer() {
         items-center mobileMd:items-end tablet:items-start gap-1
       ">
           {/* ===== LOGO AND TAGLINE ===== */}
-          <div class="flex flex-col">
-            <h5
-              class={`${logoPrimary} text-center mobileMd:text-left`}
-            >
-              STAMPCHAIN
-              <span class="font-extralight pr-1">
-                .IO
+          <div class="flex flex-col items-center mobileMd:items-start">
+            <h5 class={logoPrimary}>
+              STAMP<span class="bg-gradient-to-r from-color-secondary-500 via-color-secondary-400 to-color-secondary-300 bg-clip-text text-transparent">
+                CHAIN
               </span>
             </h5>
-            <h6
-              class={`${tagline} text-center mobileMd:text-left`}
-            >
-              IMMORTALISED ART - STORED ON BITCOIN
+            <h6 class={tagline}>
+              IMMORTALISED ART
+              <span class="text-color-neutral-400">&nbsp;-&nbsp;</span>
+              <span class="bg-gradient-to-r from-color-secondary-500 via-color-secondary-400 to-color-secondary-300 bg-clip-text text-transparent">
+                STORED ON BITCOIN
+              </span>
             </h6>
           </div>
 
           {/* ===== SOCIAL MEDIA ICONS ===== */}
-          <div class="flex gap-6 tablet:gap-5 mt-3 mobileMd:mt-0 tablet:mt-3">
+          <div class="flex gap-6 tablet:gap-4 mt-3 mobileMd:mt-0 tablet:mt-auto">
             {socialLinks.map((link, index) => (
               <div key={index}>
                 {link.icon}
               </div>
             ))}
           </div>
-          <div class="hidden tablet:flex w-full  mt-3 mb-1">
+          <div class="hidden tablet:flex w-full mt-3 mb-1 tablet:mt-1 tablet:mb-0">
             <h6 class={`${copyright}`}>
               <span class="italic">STAMPCHAIN</span> &copy; 2026
             </h6>
@@ -164,6 +164,7 @@ export function Footer() {
             {/* ===== RESOURCES LINKS ===== */}
             <div class="flex w-1/2 ">
               <div class="flex flex-col w-full justify-center gap-1">
+                <h6 class={`${eyebrowPrimary}`}>RESOURCES</h6>
                 {resourcesLinks.map((link) => (
                   <a
                     key={link.href}
@@ -182,6 +183,7 @@ export function Footer() {
             {/* ===== ABOUT LINKS  ===== */}
             <div class="flex w-1/2">
               <div class="flex flex-col w-full justify-center gap-1 text-right">
+                <h6 class={`${eyebrowPrimary}`}>ABOUT</h6>
                 {aboutLinks.map((link) => (
                   <a
                     key={link.href}

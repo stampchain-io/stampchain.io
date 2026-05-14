@@ -1,6 +1,7 @@
 import { Icon } from "$icon";
 import { containerStickyBottom } from "$layout";
 import {
+  labelXs,
   navLinkActiveMobile,
   navLinkMobile,
   navSublinkActiveMobile,
@@ -127,7 +128,7 @@ export function MenuButton({ onOpenDrawer }: MenuButtonProps) {
 
   const subnavigation = () => {
     return (
-      <div class="flex flex-col gap-3 -mb-1.5">
+      <div class="flex flex-col gap-3">
         {subNavLinks.map((link) => (
           <a
             key={link.title}
@@ -170,13 +171,69 @@ export function MenuButton({ onOpenDrawer }: MenuButtonProps) {
           {navigation()}
         </div>
 
-        {/* Bottom - Sub navigation content */}
+        {/* Bottom - Sub navigation and version */}
         <div class={containerStickyBottom}>
           {subnavigation()}
+          <div class="flex items-end -mb-1.5 mt-3">
+            <CounterpartyVersion />
+          </div>
         </div>
       </div>
     ),
     // Current path for external use
     currentPath,
   };
+}
+
+function CounterpartyVersion() {
+  const [version, setVersion] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    const fetchVersion = async () => {
+      try {
+        const res = await fetch("/api/v2/counterparty/version", {
+          headers: { "X-CSRF-Token": "safe" },
+        });
+        const data = await res.json();
+        if (!cancelled) {
+          setVersion(data?.version ?? null);
+        }
+      } catch (_e) {
+        if (!cancelled) setVersion(null);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    fetchVersion();
+
+    // Refresh periodically to keep up-to-date
+    const interval = globalThis.setInterval(fetchVersion, 24 * 60 * 60 * 1000);
+    return () => {
+      cancelled = true;
+      globalThis.clearInterval(interval);
+    };
+  }, []);
+
+  return (
+    <div class="flex items-center justify-center">
+      <Icon
+        type="icon"
+        name="version"
+        weight="normal"
+        size="xs"
+        color="greyDark"
+        className="mr-3"
+      />
+      <span class={labelXs}>
+        COUNTERPARTY {loading
+          ? <span class="animate-pulse">vXX.X.X</span>
+          : version
+          ? <>v{version}</>
+          : <>v N/A</>}
+      </span>
+    </div>
+  );
 }

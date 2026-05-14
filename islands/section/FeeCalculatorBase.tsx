@@ -277,7 +277,7 @@ export function FeeCalculatorBase({
           </span>{" "}
           SAT/vB
         </h6>
-        <h6 class="font-light text-base text-color-neutral-300 mb-1.5 cursor-default select-none">
+        <h6 class="font-light text-sm text-color-primary-400 mb-1.5 cursor-default select-none">
           <span class="text-color-neutral-500 pr-2.5">FEE</span>
           <span
             class={`font-bold ${maraMode ? "" : ""}`}
@@ -733,6 +733,7 @@ export function FeeCalculatorBase({
                 toggleButtonId="currency-toggle"
                 activeSymbol="$"
                 inactiveSymbol="₿"
+                activeKnobClassName="bg-gradient-to-r from-color-primary-300 to-color-primary-400"
                 inactiveKnobClassName="bg-gradient-to-r from-color-orange-400 to-color-orange-300"
                 onMouseEnter={handleCurrencyMouseEnter}
                 onMouseLeave={handleCurrencyMouseLeave}
@@ -751,7 +752,7 @@ export function FeeCalculatorBase({
 
       <div class="mt-6 flex flex-col-reverse justify-start min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-between">
         <h6
-          class={`text-lg font-light cursor-default select-none ${
+          class={`text-base font-light cursor-default select-none ${
             coinType === "BTC"
               ? "text-color-orange-400"
               : "text-color-primary-400"
@@ -866,10 +867,10 @@ export function FeeCalculatorBase({
                 ${
                 tosAgreed
                   ? canHoverSelected
-                    ? "bg-color-neutral-900 border-color-neutral-600  group-hover:border-color-primary-400"
+                    ? "bg-color-neutral-900 border-color-neutral-600  group-hover:border-color-hover"
                     : "bg-color-neutral-900 border-color-neutral-600"
                   : canHoverSelected
-                  ? "bg-color-neutral-900 border-color-neutral-400 group-hover:border-color-primary-400"
+                  ? "bg-color-neutral-900 border-color-neutral-400 group-hover:border-color-hover"
                   : "bg-color-neutral-900 border-color-neutral-400"
               }
               `}
@@ -881,7 +882,7 @@ export function FeeCalculatorBase({
                   ${tosAgreed ? "scale-100" : "scale-0"}
                   ${
                   canHoverSelected
-                    ? "bg-color-neutral-600 group-hover:bg-color-primary-400"
+                    ? "bg-color-neutral-600 group-hover:bg-color-hover"
                     : "bg-color-neutral-600"
                 }
                 `}
@@ -889,16 +890,16 @@ export function FeeCalculatorBase({
             </div>
             <span
               className={`
-                font-medium text-xs uppercase select-none
+                font-normal text-xs uppercase select-none
                 transition-colors duration-200
                 ${
                 tosAgreed ? "text-color-neutral-600" : "text-color-neutral-400"
               }
                 ${
                 tosAgreed
-                  ? canHoverSelected ? "group-hover:text-color-primary-400" : ""
+                  ? canHoverSelected ? "group-hover:text-color-hover" : ""
                   : canHoverSelected
-                  ? "group-hover:text-color-primary-400"
+                  ? "group-hover:text-color-hover"
                   : ""
               }
               `}
@@ -915,7 +916,7 @@ export function FeeCalculatorBase({
                         ? "text-color-neutral-600"
                         : "text-color-neutral-600"
                     }
-                      hover:text-color-primary-400
+                      hover:text-color-hover
                     `}
                   >
                     Terms
@@ -931,7 +932,7 @@ export function FeeCalculatorBase({
                         ? "text-color-neutral-600"
                         : "text-color-neutral-600"
                     }
-                      hover:text-color-primary-400
+                      hover:text-color-hover
                     `}
                   >
                     Terms of Service

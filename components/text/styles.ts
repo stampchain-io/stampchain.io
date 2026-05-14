@@ -1,5 +1,5 @@
 /* ===== TEXT STYLES MODULE ===== */
-/* =================================================================== */
+/* ======================================================================== */
 
 /* ===== BASE STYLES ===== */
 const logoFont = "font-black italic text-3xl tracking-wide inline-block w-fit";
@@ -12,17 +12,17 @@ const valueFont = "font-medium text-color-neutral-300";
 const select = "select-none whitespace-nowrap";
 const transitionColors = "transition-colors duration-200";
 
-/* =================================================================== */
+/* ======================================================================== */
 
-/* =================================================================== */
+/* ======================================================================== */
 
 /* ===== LOGO STYLES ===== */
 export const logoPrimary = // used in footer
-  `${logoFont} bg-gradient-to-r color-primary-gradient ${select}`;
+  `${logoFont} bg-gradient-to-r from-color-primary-400 via-color-primary-500 to-color-primary-600 bg-clip-text text-transparent ${select}`;
 export const logoPrimaryHover =
   `${logoFont} bg-gradient-to-r color-primary-gradient color-gradient-hover ${transitionColors} cursor-pointer ${select}`;
 
-/* =================================================================== */
+/* ======================================================================== */
 
 /* ===== NAVIGATION STYLES ===== */
 // Header Navigation - Desktop
@@ -50,12 +50,12 @@ export const navSublinkActiveMobile =
 
 // Footer - transparent text - used with the navLinkFooterOverlay class
 export const navLinkFooter =
-  `font-normal text-sm tablet:text-[13px] hover:text-color-hover tracking-tight ${transitionColors} cursor-pointer ${select}`;
+  `font-normal text-[13px] tablet:text-xs uppercase hover:text-color-hover tracking-tight ${transitionColors} cursor-pointer ${select}`;
 export const navLinkFooterOverlay =
-  `bg-gradient-to-r from-color-primary-500 to-color-primary-600 tablet:bg-gradient-to-l
-  text-transparent bg-clip-text`;
+  `bg-gradient-to-b tablet:bg-gradient-to-r from-color-neutral-400 via-color-neutral-400 to-color-neutral-500 text-transparent bg-clip-text`;
 
-/* =================================================================== */
+/* ======================================================================== */
+
 /* ===== TITLE STYLES ===== */
 export const titleNeutralLD =
   `${titleFont} bg-gradient-to-r color-neutral-gradient cursor-default ${select}`;
@@ -173,9 +173,9 @@ export const valueDarkSm =
 export const valueDark =
   `font-semibold text-base text-color-grey-semidark ${select}`; // used in tables
 // Color variants
-export const valuePositive = `text-color-green-semilight`;
-export const valueNegative = `text-color-red-semilight`;
-export const valueNeutral = `text-color-grey-semidark`;
+export const valuePositive = `text-color-green-400`;
+export const valueNegative = `text-color-red-400`;
+export const valueNeutral = `text-color-neutral-400`;
 
 /* ===== NOTIFICATION AND TOOLTIP STYLES ===== */
 // One text style for tooltips - defined in /notifications/styles.ts
@@ -187,15 +187,15 @@ export const valueNeutral = `text-color-grey-semidark`;
 /* =================================================================== */
 /* ===== SPECIAL TEXT STYLES ===== */
 export const eyebrowNeutral =
-  `font-extrabold text-[0.625rem] text-color-neutral-500 tracking-wider cursor-default ${select}`; // descriptive text above icons, links, etc.
+  `font-bold text-[0.625rem] text-color-neutral-500 tracking-wider cursor-default ${select}`; // descriptive text above icons, links, etc.
 export const eyebrowPrimary =
-  `font-extrabold text-[0.625rem] text-color-primary-500 tracking-wider cursor-default ${select}`;
+  `font-bold text-[0.625rem] text-color-primary-500 tracking-wider cursor-default ${select}`;
 export const eyebrowSecondary =
-  `font-extrabold text-[0.625rem] text-color-secondary-500 tracking-wider cursor-default ${select}`;
+  `font-bold text-[0.625rem] text-color-secondary-500 tracking-wider cursor-default ${select}`;
 export const tagline =
-  `font-regular text-xs bg-gradient-to-r color-primary-gradient ${select}`; // used in footer
+  `font-regular text-xs bg-gradient-to-r from-color-primary-400 via-color-primary-500 to-color-primary-600 bg-clip-text text-transparent ${select}`; // used in footer
 export const copyright =
-  `font-normal text-xs mobileMd:text-sm tablet:text-xs text-color-grey-dark cursor-default ${select}`; // used in the footer for copyright and counterparty version text
+  `font-normal text-xs text-color-neutral-600 cursor-default ${select}`; // used in the footer for copyright and counterparty version text
 export const toggleSymbol =
   `font-bold text-[10px] text-black cursor-default ${select}`; // used in ToggleSwitchButton.tsx for $/BTC symbols
 
@@ -263,7 +263,7 @@ export type TextStyles = {
   navSublinkMobile: string;
   navSublinkActiveMobile: string;
   navLinkFooter: string;
-  navLinkFooterOverlay: string;
+  navLinkFooterOverlayText: string;
   // Title styles
   titleNeutralLD: string;
   titleNeutralDL: string;

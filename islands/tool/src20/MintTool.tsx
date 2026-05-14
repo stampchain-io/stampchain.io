@@ -11,11 +11,11 @@ import { Icon } from "$icon";
 import { MintToolSkeleton } from "$indicators";
 import {
   bodyTool,
+  container2,
   containerBackground,
   containerColForm,
   containerGap,
   containerRowForm,
-  container2,
   imagePreviewTool,
   loaderSpinGrey,
 } from "$layout";
@@ -26,7 +26,7 @@ import { mapProgressiveFeeDetails } from "$lib/utils/performance/fees/fee-estima
 import { getSRC20ImageSrc } from "$lib/utils/ui/media/imageUtils.ts";
 import { StatusMessages } from "$notification";
 import { FeeCalculatorBase } from "$section";
-import { labelLg, labelSm, titleNeutralLD, valueLg, valueSm } from "$text";
+import { label, labelXs, titleNeutralLD, value, valueXs } from "$text";
 import type { MintProgressProps } from "$types/ui.d.ts";
 import axiod from "axiod";
 import { useEffect, useRef, useState } from "preact/hooks";
@@ -44,9 +44,9 @@ const MintProgress = (
     gap-3 min-[480px]:gap-0 mt-2 min-[480px]:mt-0">
       {/* Progress indicator */}
       <div class="flex flex-col w-full min-[480px]:w-[55%] gap-1.5">
-        <h5 class={labelLg}>
+        <h5 class={label}>
           PROGRESS
-          <span class={`${valueLg} pl-3`}>
+          <span class={`${value} !text-color-primary-400 pl-3`}>
             {progress?.toString().match(/^-?\d+(?:\.\d{0,2})?/)?.[0] ?? "0"}
             <span class="font-light">
               %
@@ -58,7 +58,7 @@ const MintProgress = (
           class={`relative w-full max-w-[420px] h-3 ${container2} rounded-full`}
         >
           <div
-            class="absolute top-[1px] left-[1px] right-[1px] h-2 bg-color-grey rounded-full"
+            class="absolute top-[1px] left-[1px] right-[1px] h-2 bg-gradient-to-r from-color-primary-500 via-color-primary-400 to-color-primary-300 rounded-full"
             style={{ width: progressWidth }}
           />
         </div>
@@ -69,14 +69,14 @@ const MintProgress = (
         class={`flex flex-col w-full items-start mt-2 -mb-1
         min-[480px]:w-[45%] min-[480px]:justify-end min-[480px]:items-end`}
       >
-        <h5 class={labelSm}>
-          SUPPLY <span class={`${valueSm} pl-1.5`}>{maxSupply}</span>
+        <h5 class={labelXs}>
+          SUPPLY <span class={`${valueXs} pl-1.5`}>{maxSupply}</span>
         </h5>
-        <h5 class={labelSm}>
-          LIMIT <span class={`${valueSm} pl-1.5`}>{limit}</span>
+        <h5 class={labelXs}>
+          LIMIT <span class={`${valueXs} pl-1.5`}>{limit}</span>
         </h5>
-        <h5 class={labelSm}>
-          MINTERS <span class={`${valueSm} pl-1.5`}>{minters}</span>
+        <h5 class={labelXs}>
+          MINTERS <span class={`${valueXs} pl-1.5`}>{minters}</span>
         </h5>
       </div>
     </div>
@@ -489,8 +489,7 @@ export function SRC20MintTool({
                   name="previewImage"
                   weight="extraLight"
                   size="xl"
-                  color="custom"
-                  className="stroke-color-grey-dark"
+                  color="greyDark"
                 />
               )}
           </div>

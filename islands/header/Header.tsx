@@ -4,11 +4,7 @@ import { MenuButton } from "$islands/button/MenuButton.tsx";
 import { SearchButton } from "$islands/button/SearchButton.tsx";
 import { ToolsButton } from "$islands/button/ToolsButton.tsx";
 import { WalletButton } from "$islands/button/WalletButton.tsx";
-import {
-  container1,
-  container0,
-  transitionTransform,
-} from "$layout";
+import { container0, container1, transitionTransform } from "$layout";
 import { useFees } from "$lib/hooks/useFees.ts";
 import { tooltipIcon } from "$notification";
 import { navLinkActiveDesktop, navLinkDesktop } from "$text";
@@ -422,7 +418,7 @@ export function Header() {
       <div
         ref={drawerContent === type ? drawerRef : null}
         class={`flex tablet:hidden flex-col justify-between
-          fixed top-0 right-0 left-auto w-full min-[420px]:w-[340px] h-[100dvh] z-30
+          fixed top-0 right-0 left-auto w-full min-[420px]:w-[340px] h-[100dvh] z-modal
           min-[420px]:rounded-l-3xl min-[420px]:border-l-[1px]
           min-[420px]:border-l-color-border/75 min-[420px]:shadow-[-12px_0_12px_-6px_rgba(8,7,8,0.75)]
           ${container0} ${transitionTransform} transition-transform will-change-transform
@@ -457,7 +453,7 @@ export function Header() {
                 />
               </div>
               <h6
-                class={`font-extrabold text-2xl bg-gradient-to-r color-neutral-gradient tracking-wide select-none inline-block w-fit ${
+                class={`font-extrabold text-2xl bg-gradient-to-r color-primary-gradient tracking-wide select-none inline-block w-fit ${
                   type === "menu" ? "italic font-black pr-0.5" : ""
                 }`}
               >

@@ -13,7 +13,6 @@ import {
 } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { tooltipIcon } from "$notification";
 import {
-  labelXs,
   navLinkActiveMobile,
   navLinkMobile,
   navSublinkActiveDesktop,
@@ -36,6 +35,7 @@ interface WalletButtonProps {
 /* ===== WALLET CONFIGURATION ===== */
 const getWalletLinks = (address: string): WalletLink[] => [
   { title: "DASHBOARD", href: `/wallet/${address}` },
+  { title: "PROFILE", href: `/profile` },
   { title: "DISCONNECT" },
 ];
 
@@ -290,6 +290,14 @@ export const WalletButton = (
             Dashboard
           </a>
           <a
+            href={`/profile`}
+            class={isActive(`/profile`)
+              ? `${navSublinkActiveDesktop}`
+              : `${navSublinkDesktop}`}
+          >
+            Profile
+          </a>
+          <a
             onClick={() => walletSignOut()}
             class={`${navSublinkDesktop}`}
           >
@@ -303,8 +311,33 @@ export const WalletButton = (
       <div class="flex flex-col h-full px-9 tablet:px-6">
         {/* Top - Main navigation content */}
         <div class="flex flex-col flex-1 items-start pt-9 tablet:pt-6 gap-5">
+          {getWalletLinks(address).map((link) => (
+            <a
+              key={link.title}
+              href={link.href}
+              onClick={() => {
+                if (link.title === "DISCONNECT") {
+                  walletSignOut();
+                }
+                if (link.href) {
+                  setCurrentPath(link.href);
+                }
+              }}
+              class={`${
+                link.href && link.title === "DASHBOARD" && isActive(link.href)
+                  ? navLinkActiveMobile
+                  : navLinkMobile
+              }`}
+            >
+              {link.title}
+            </a>
+          ))}
+        </div>
+
+        {/* Bottom - Wallet address and balance */}
+        <div class={containerStickyBottom}>
           <div
-            class={`flex-col bg-border-container-2-secondary rounded-2xl w-full -mt-1.5 mb-3 px-4 py-3 space-y-1`}
+            class={`flex-col bg-border-container-2-secondary rounded-2xl w-full px-4 py-3 space-y-1`}
           >
             <div class="flex flex-row-reverse justify-start items-center gap-3">
               <div
@@ -359,35 +392,6 @@ export const WalletButton = (
               </h6>
             </div>
           </div>
-
-          {getWalletLinks(address).map((link) => (
-            <a
-              key={link.title}
-              href={link.href}
-              onClick={() => {
-                if (link.title === "DISCONNECT") {
-                  walletSignOut();
-                }
-                if (link.href) {
-                  setCurrentPath(link.href);
-                }
-              }}
-              class={`${
-                link.href && link.title === "DASHBOARD" && isActive(link.href)
-                  ? navLinkActiveMobile
-                  : navLinkMobile
-              }`}
-            >
-              {link.title}
-            </a>
-          ))}
-        </div>
-
-        {/* Bottom - Counterparty version */}
-        <div class={containerStickyBottom}>
-          <div class={`flex items-end -mb-1.5`}>
-            <CounterpartyVersion />
-          </div>
         </div>
       </div>
     ),
@@ -395,56 +399,3 @@ export const WalletButton = (
     isConnected: Boolean(isConnected && address),
   };
 };
-
-function CounterpartyVersion() {
-  const [version, setVersion] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    let cancelled = false;
-    const fetchVersion = async () => {
-      try {
-        const res = await fetch("/api/v2/counterparty/version", {
-          headers: { "X-CSRF-Token": "safe" },
-        });
-        const data = await res.json();
-        if (!cancelled) {
-          setVersion(data?.version ?? null);
-        }
-      } catch (_e) {
-        if (!cancelled) setVersion(null);
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    };
-
-    fetchVersion();
-
-    // Refresh periodically to keep up-to-date
-    const interval = globalThis.setInterval(fetchVersion, 24 * 60 * 60 * 1000);
-    return () => {
-      cancelled = true;
-      globalThis.clearInterval(interval);
-    };
-  }, []);
-
-  return (
-    <div class={`flex items-center`}>
-      <Icon
-        type="icon"
-        name="version"
-        weight="normal"
-        size="xs"
-        color="greyDark"
-        className="mr-3"
-      />
-      <span class={labelXs}>
-        COUNTERPARTY {loading
-          ? <span class="animate-pulse">vXX.X.X</span>
-          : version
-          ? <>v{version}</>
-          : <>v N/A</>}
-      </span>
-    </div>
-  );
-}

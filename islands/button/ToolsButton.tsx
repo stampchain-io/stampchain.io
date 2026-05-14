@@ -97,7 +97,7 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
     return (
       <div class="flex flex-col space-y-0 w-full">
         {/* STAMPS Section */}
-        <div class="flex flex-col space-y-4">
+        <div class="flex flex-col space-y-5">
           <h6 class={`${eyebrowPrimary} -mb-7 text-right`}>
             STAMPS
           </h6>
@@ -121,7 +121,7 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
         </div>
 
         {/* TOKENS Section */}
-        <div class="flex flex-col space-y-4">
+        <div class="flex flex-col space-y-5">
           <h6 class={`${eyebrowPrimary} mt-3 -mb-7 text-right`}>
             TOKENS
           </h6>
@@ -146,7 +146,7 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
         </div>
 
         {/* BITNAME Section */}
-        <div class="flex flex-col space-y-4">
+        <div class="flex flex-col space-y-5">
           <h6 class={`${eyebrowPrimary} mt-3 -mb-7 text-right`}>
             BITNAME
           </h6>
