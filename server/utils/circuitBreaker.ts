@@ -442,3 +442,20 @@ export function createApiCircuitBreaker(
     monitoringPeriod: 60000,   // Monitor over 1 minute
   });
 }
+
+/**
+ * Circuit breaker for QuickNode Bitcoin RPC. Tuned for fast-fail so a dead
+ * endpoint does not extend request latency past the upstream proxy (Cloudflare)
+ * 100s budget. Public-API fallbacks in CommonUTXOService/utxoUtils run after the
+ * breaker rejects.
+ */
+export function createQuickNodeCircuitBreaker(name: string = 'QuickNode-RPC'): CircuitBreaker {
+  return new CircuitBreaker({
+    name,
+    failureThreshold: 3,        // Open after 3 failures within monitoringPeriod
+    successThreshold: 2,        // Need 2 successes to close from HALF_OPEN
+    timeout: 60000,             // Probe for recovery every 60s
+    requestTimeout: 5000,       // 5s per RPC (Bitcoin Core RPCs normally <500ms)
+    monitoringPeriod: 120000,   // Track failures over 2 minutes
+  });
+}
