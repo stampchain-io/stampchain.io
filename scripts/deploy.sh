@@ -351,17 +351,106 @@ build_local() {
   script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
   local project_dir="$(dirname "$script_dir")"
 
+  # ── Local-build safety guard ──
+  # 2026-05-14 incident: a local-built image segfaulted on ECS startup (exit
+  # 139) intermittently — same image had non-deterministic outcomes (2 of 3
+  # tasks SIGSEGV, 1 ran fine). Root cause undiagnosed (likely a Fresh/Deno
+  # boot-time race that doesn't surface under CodeBuild's slightly different
+  # layer-cache layout). Because :latest was overwritten before the crash was
+  # detected, recovery required re-tagging from a known-good digest.
+  #
+  # To prevent recurrence: build to a temporary ECR tag first, run the image
+  # locally 3 times, refuse to retag :latest if any run exits with code 139
+  # (SIGSEGV) within 30 seconds. The 3-iteration loop catches a ~67%-per-run
+  # crash rate with ~96% confidence. Local container runs without DB/Redis env
+  # so non-139 exit codes are expected (DB connect fails) and treated as
+  # inconclusive-but-acceptable; only 139 specifically fails the guard.
+  local SMOKE_TAG_SUFFIX="smoke-${TIMESTAMP}"
+  local SMOKE_TAG="${ECR_REPOSITORY}:${SMOKE_TAG_SUFFIX}"
+
   run docker buildx build \
     --platform linux/arm64 \
-    --tag "${ECR_REPOSITORY}:${IMAGE_TAG}" \
-    --tag "${ECR_REPOSITORY}:${VERSION_TAG}" \
+    --tag "${SMOKE_TAG}" \
     --cache-from "type=registry,ref=${ECR_REPOSITORY}:buildcache" \
     --cache-to "type=registry,ref=${ECR_REPOSITORY}:buildcache,mode=max" \
     --push \
     --progress=plain \
     "${project_dir}"
 
-  echo -e "${GREEN}Image built and pushed to ECR${NC}"
+  if [ "$DRY_RUN" = true ]; then
+    echo -e "${YELLOW}[dry-run] Would smoke-test ${SMOKE_TAG} then retag :latest + :${VERSION_TAG}${NC}"
+    return 0
+  fi
+
+  echo -e "${YELLOW}Smoke-testing built image (3 × 30s local runs, SIGSEGV detection)...${NC}"
+  if ! docker pull --platform=linux/arm64 "${SMOKE_TAG}" >/dev/null 2>&1; then
+    echo -e "${RED}Failed to pull ${SMOKE_TAG} for smoke test.${NC}"
+    exit 1
+  fi
+
+  local smoke_passed=true
+  local i
+  for i in 1 2 3; do
+    local container_name="stamps-smoke-${TIMESTAMP}-${i}"
+    docker run -d --rm --name "${container_name}" --entrypoint sh "${SMOKE_TAG}" \
+      -c "deno run \$DENO_PERMISSIONS main.ts" >/dev/null 2>&1 || \
+      docker run -d --name "${container_name}" "${SMOKE_TAG}" >/dev/null
+    sleep 30
+    local status exit_code
+    status=$(docker inspect --format='{{.State.Status}}' "${container_name}" 2>/dev/null || echo "missing")
+    exit_code=$(docker inspect --format='{{.State.ExitCode}}' "${container_name}" 2>/dev/null || echo "?")
+    if [ "$status" = "running" ]; then
+      echo -e "  iter $i: ${GREEN}running after 30s — pass${NC}"
+      docker stop "${container_name}" >/dev/null 2>&1
+    elif [ "$exit_code" = "139" ]; then
+      echo -e "  iter $i: ${RED}SIGSEGV (exit 139) within 30s — FAIL${NC}"
+      smoke_passed=false
+      echo "  ───── container logs ─────"
+      docker logs "${container_name}" 2>&1 | tail -40 | sed 's/^/    /'
+      echo "  ───── end logs ─────"
+    else
+      echo -e "  iter $i: ${YELLOW}exit ${exit_code} (status=${status}) — inconclusive (likely env-related, allowing)${NC}"
+    fi
+    docker rm "${container_name}" >/dev/null 2>&1 || true
+  done
+
+  if [ "$smoke_passed" = false ]; then
+    echo -e "${RED}Smoke test FAILED — refusing to retag ${IMAGE_TAG}.${NC}"
+    echo -e "${YELLOW}Built image is still available at ${SMOKE_TAG} for inspection.${NC}"
+    echo -e "${YELLOW}To investigate: docker pull --platform=linux/arm64 ${SMOKE_TAG} && docker run --rm -it ${SMOKE_TAG}${NC}"
+    exit 1
+  fi
+
+  echo -e "${GREEN}Smoke test passed (3/3). Retagging in ECR...${NC}"
+  local smoke_manifest
+  smoke_manifest=$(aws ecr batch-get-image \
+    --region "${AWS_REGION}" \
+    --repository-name "${ECR_REPO_NAME}" \
+    --image-ids imageTag="${SMOKE_TAG_SUFFIX}" \
+    --query 'images[0].imageManifest' \
+    --output text)
+  if [ -z "$smoke_manifest" ] || [ "$smoke_manifest" = "None" ]; then
+    echo -e "${RED}Could not fetch manifest for ${SMOKE_TAG_SUFFIX} from ECR.${NC}"
+    exit 1
+  fi
+
+  aws ecr put-image \
+    --region "${AWS_REGION}" \
+    --repository-name "${ECR_REPO_NAME}" \
+    --image-tag "${IMAGE_TAG}" \
+    --image-manifest "$smoke_manifest" >/dev/null
+  aws ecr put-image \
+    --region "${AWS_REGION}" \
+    --repository-name "${ECR_REPO_NAME}" \
+    --image-tag "${VERSION_TAG}" \
+    --image-manifest "$smoke_manifest" >/dev/null
+
+  aws ecr batch-delete-image \
+    --region "${AWS_REGION}" \
+    --repository-name "${ECR_REPO_NAME}" \
+    --image-ids imageTag="${SMOKE_TAG_SUFFIX}" >/dev/null 2>&1 || true
+
+  echo -e "${GREEN}Image built, smoke-tested, and tagged as ${IMAGE_TAG} + ${VERSION_TAG} in ECR${NC}"
 }
 
 # ---------------------------------------------------------------------------
