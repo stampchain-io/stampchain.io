@@ -118,10 +118,7 @@ export const label = `${labelFont} text-base ${select}`; // old dataLabel name
 export const labelLg = `${labelFont} text-lg ${select}`;
 export const labelXl = `${labelFont} text-xl ${select}`;
 export const labelXsR = `${labelFont} text-xs tablet:text-[10px] ${select}`; // used for the filter file type labels
-export const labelXsPosition =
-  `flex justify-end mt-1 tablet:mt-0 -mb-5 tablet:-mb-4`; // used for the filter file type label positioning
 export const labelLightSm = `font-light text-sm text-color-grey ${select}`;
-
 export const labelSmPurple =
   `font-light text-sm text-color-purple-light tracking-wide mb-0.5 ${select}`;
 
@@ -130,17 +127,16 @@ export const labelLogicResponsive = ( // used for the filter labels
   canHoverSelected: boolean,
 ): string => `
   inline-block ml-3 tablet:ml-[9px] pt-[1px] tablet:pt-0
-  font-semibold text-sm tablet:text-xs
-  transition-colors duration-200
-  select-pointer select-none
+  font-medium text-sm tablet:text-xs
+  ${transitionColors} ${select} cursor-pointer
   ${
   checked
     ? canHoverSelected
-      ? "text-color-grey-light group-hover:text-color-hover"
-      : "text-color-grey-light"
+      ? "text-color-primary-400 group-hover:text-color-hover"
+      : "text-color-primary-400"
     : canHoverSelected
-    ? "text-color-grey group-hover:text-color-hover"
-    : "text-color-grey"
+    ? "text-color-neutral-500 group-hover:text-color-hover"
+    : "text-color-neutral-500"
 }
 `;
 
@@ -193,11 +189,13 @@ export const valueNeutral = `text-color-neutral-400`;
 
 /* ===== SPECIAL TEXT STYLES ===== */
 export const eyebrowNeutral =
-  `font-bold text-[0.625rem] text-color-neutral-500 tracking-wider cursor-default ${select}`; // descriptive text above icons, links, etc.
+  `font-bold text-sm tablet:text-[0.625rem] text-color-neutral-500 tracking-wider cursor-default ${select}`; // descriptive text above icons, links, etc.
 export const eyebrowPrimary =
-  `font-bold text-[0.625rem] text-color-primary-500 tracking-wider cursor-default ${select}`;
+  `font-bold text-sm tablet:text-[0.625rem] text-color-primary-500 tracking-wider cursor-default ${select}`;
 export const eyebrowSecondary =
-  `font-bold text-[0.625rem] text-color-secondary-500 tracking-wider cursor-default ${select}`;
+  `font-bold text-sm tablet:text-[0.625rem] text-color-secondary-500 tracking-wider cursor-default ${select}`;
+export const eyebrowPositionFilter =
+  `flex justify-end mt-1 tablet:mt-0 -mb-5 tablet:-mb-4`; // used for the filter file type label positioning
 export const tagline =
   `font-regular text-xs bg-gradient-to-r from-color-primary-400 via-color-primary-500 to-color-primary-600 bg-clip-text text-transparent ${select}`; // used in footer
 export const copyright =
@@ -283,7 +281,7 @@ export type TextStyles = {
   labelLg: string;
   labelXl: string;
   labelXsR: string;
-  labelXsPosition: string;
+
   labelLightSm: string;
   labelSmPurple: string;
   labelLogicResponsive: (
@@ -314,6 +312,7 @@ export type TextStyles = {
   eyebrowNeutral: string;
   eyebrowPrimary: string;
   eyebrowSecondary: string;
+  eyebrowPositionFilter: string;
   tagline: string;
   copyright: string;
   toggleSymbol: string;
