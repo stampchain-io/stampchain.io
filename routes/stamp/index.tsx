@@ -32,15 +32,39 @@ export const handler: Handlers = {
     // Now using direct controller/service calls instead of HTTP fetch
 
     if (DEV_DUMMY_MODE) {
+      const typeParam = url.searchParams.get("type") || "classic";
+      const all = DUMMY_STAMP_OVERVIEW_PAGE.data;
+
+      // Filter dummy stamps to match the selected tab
+      const stampsByType: Record<string, typeof all> = {
+        // Classic: STAMP ident, numeric cpid (starts with "A"), positive stamp
+        classic: all.filter((s) =>
+          s.ident === "STAMP" && s.cpid.startsWith("A") && s.stamp >= 0
+        ),
+        // Posh: STAMP ident, named cpid (does not start with "A")
+        posh: all.filter((s) => s.ident === "STAMP" && !s.cpid.startsWith("A")),
+        // Cursed: show posh stamps as a proxy for demo purposes
+        cursed: all.filter((s) =>
+          s.ident === "STAMP" && !s.cpid.startsWith("A")
+        ),
+        // SRC-721: recursive stamps
+        "src-721": all.filter((s) => s.ident === "SRC-721"),
+      };
+
+      const stamps = stampsByType[typeParam] ?? all;
+
       return ctx.render({
-        stamps: DUMMY_STAMP_OVERVIEW_PAGE.data,
-        pagination: DUMMY_STAMP_OVERVIEW_PAGE.pagination,
+        stamps,
+        pagination: {
+          ...DUMMY_STAMP_OVERVIEW_PAGE.pagination,
+          total: stamps.length,
+        },
         recentSales: [],
         filters: queryParamsToFilters(url.search),
         page: 1,
         page_size: 60,
         sortBy: "DESC",
-        selectedTab: "all",
+        selectedTab: typeParam,
         totalPages: 1,
       });
     }
@@ -105,7 +129,9 @@ export const handler: Handlers = {
               const salesResult = result.data || [];
               // Cast the result via unknown - data will be transformed to proper format later
               recentSalesData = (Array.isArray(salesResult)
-                ? salesResult.filter((item) => item !== null)
+                ? salesResult.filter((item) =>
+                  item !== null
+                )
                 : []) as unknown as StampSaleRow[];
 
               // Debug: Check received data for stamp_url issues
@@ -189,9 +215,9 @@ export const handler: Handlers = {
               recentSalesData = [];
             }
           } else {
-            // ✅ IMPROVED: Handle type-based filtering vs POSH collection
+            // Handle type-based filtering (classic/posh/cursed/src-721) or all-stamps mode
             try {
-              // If a specific type is requested, fetch stamps by type instead of collection
+              // If a specific type is requested, fetch stamps by type; otherwise show all
               if (typeFilter !== "all") {
                 /* ===== TYPE-BASED STAMP FILTERING ===== */
                 try {
@@ -248,79 +274,64 @@ export const handler: Handlers = {
                   stampsData = { data: [], pagination: { total: 0 } };
                 }
               } else {
-                /* ===== DEFAULT: POSH COLLECTION ===== */
-                let poshCollection = null;
+                /* ===== ALL STAMPS — no type filter ===== */
                 try {
-                  // Import CollectionService to get collection directly
-                  const { CollectionService } = await import(
-                    "$server/services/core/collectionService.ts"
+                  // Parse all filter parameters from URL
+                  const filterPayload = queryParamsToServicePayload(url.search);
+
+                  // Remove undefined values to satisfy TypeScript's exactOptionalPropertyTypes
+                  const cleanFilters = Object.fromEntries(
+                    Object.entries(filterPayload).filter(([_, v]) =>
+                      v !== undefined
+                    ),
                   );
-                  poshCollection = await CollectionService.getCollectionByName(
-                    "posh",
+
+                  // Fetch without a type restriction so every art stamp is returned
+                  const { type: _type, ...filtersWithoutType } = cleanFilters;
+
+                  const controllerResult = await StampController.getStamps({
+                    ...filtersWithoutType,
+                    page,
+                    limit: page_size,
+                    sortBy: sortBy as "ASC" | "DESC",
+                    url: url.toString(),
+                  });
+
+                  stampsData = {
+                    data: Array.isArray(controllerResult.data)
+                      ? controllerResult.data
+                      : [],
+                    pagination: {
+                      total: "total" in controllerResult
+                        ? (controllerResult.total || 0)
+                        : 0,
+                      page: "page" in controllerResult
+                        ? (controllerResult.page || page)
+                        : page,
+                      totalPages: "totalPages" in controllerResult
+                        ? (controllerResult.totalPages || 0)
+                        : 0,
+                    },
+                  };
+
+                  console.log(
+                    `[Stamp Route] All stamps mode: fetched ${
+                      stampsData.data?.length || 0
+                    } stamps`,
                   );
-                } catch (poshError) {
-                  console.error(
-                    "[POSH Collection Service Error]",
-                    (poshError as Error).message || "Unknown error",
-                  );
-                }
-
-                /* ===== STAMPS FOR COLLECTION ===== */
-                if (poshCollection) {
-                  try {
-                    // Parse all filter parameters from URL
-                    const filterPayload = queryParamsToServicePayload(
-                      url.search,
-                    );
-
-                    // Remove undefined values to satisfy TypeScript's exactOptionalPropertyTypes
-                    const cleanFilters = Object.fromEntries(
-                      Object.entries(filterPayload).filter(([_, v]) =>
-                        v !== undefined
-                      ),
-                    );
-
-                    // Call StampController directly instead of making HTTP request
-                    const controllerResult = await StampController.getStamps({
-                      ...cleanFilters, // ✅ Apply all filters from URL first
-                      page,
-                      limit: page_size,
-                      sortBy: sortBy as "ASC" | "DESC",
-                      collectionId: poshCollection.collection_id.toString(),
-                      url: url.toString(),
-                    });
-
-                    stampsData = {
-                      data: Array.isArray(controllerResult.data)
-                        ? controllerResult.data
-                        : [],
-                      pagination: {
-                        total: "total" in controllerResult
-                          ? (controllerResult.total || 0)
-                          : 0,
-                        page: "page" in controllerResult
-                          ? (controllerResult.page || page)
-                          : page,
-                        totalPages: "totalPages" in controllerResult
-                          ? (controllerResult.totalPages || 0)
-                          : 0,
-                      },
-                    };
-                  } catch (stampError) {
-                    console.error("[Stamp Gallery Error] Stamp Gallery:", {
-                      message: (stampError as Error).message || "Unknown error",
-                      url: url.pathname,
-                      timestamp: new Date().toISOString(),
-                    });
-                    // Use fallback data
-                    stampsData = { data: [], pagination: { total: 0 } };
-                  }
+                } catch (allError) {
+                  console.error("[All Stamps Error]:", {
+                    message: (allError as Error).message || "Unknown error",
+                    url: url.pathname,
+                    timestamp: new Date().toISOString(),
+                  });
+                  stampsData = { data: [], pagination: { total: 0 } };
                 }
               }
-            } catch (collectionError) {
+            } catch (outerError) {
               console.error(
-                "[Collection Error]",
-                (collectionError as Error).message || "Unknown error",
+                "[Stamp Fetch Error]",
+                (outerError as Error).message || "Unknown error",
               );
               stampsData = { data: [], pagination: { total: 0 } };
             }

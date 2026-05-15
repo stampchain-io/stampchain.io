@@ -9,6 +9,7 @@ import { body, containerBackground, containerGap } from "$layout";
 import {
   DEV_DUMMY_MODE,
   DUMMY_LANDING_PAGE,
+  DUMMY_RECENT_SALES,
   DUMMY_TOKEN_OVERVIEW_PAGE,
 } from "$lib/utils/devDummyData.ts";
 import {
@@ -78,6 +79,12 @@ export const handler: Handlers<HomePageData> = {
         src20Data: {
           minted: DUMMY_TOKEN_OVERVIEW_PAGE as any,
           minting: DUMMY_TOKEN_OVERVIEW_PAGE as any,
+        },
+        recentSalesData: {
+          data: DUMMY_RECENT_SALES as any,
+          total: DUMMY_RECENT_SALES.length,
+          page: 1,
+          totalPages: 1,
         },
         btcPrice: 65000,
         btcPriceSource: "dummy",
