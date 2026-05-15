@@ -3,7 +3,7 @@ import type { JSX } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import type { StampTransaction } from "$lib/types/stamping.ts";
 import { StampCard } from "$card";
-import { subtitleNeutral, titleNeutralDL, titleNeutral } from "$text";
+import { subtitleNeutral, titleNeutral } from "$text";
 
 /* ===== COMPONENT ===== */
 export default function SRC101RegistersGallery(): JSX.Element {
@@ -45,7 +45,7 @@ export default function SRC101RegistersGallery(): JSX.Element {
         <h4 class={`${titleNeutral} tablet:hidden`}>
           BITNAMES
         </h4>
-        <h4 class={`${titleNeutralDL} hidden tablet:block`}>
+        <h4 class={`${titleNeutral} !bg-gradient-to-l hidden tablet:block`}>
           BITNAMES
         </h4>
       </div>

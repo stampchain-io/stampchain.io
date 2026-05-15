@@ -4,7 +4,7 @@ import { StampCard } from "$card";
 import { BREAKPOINTS } from "$constants";
 import { SortButton } from "$islands/button/SortButton.tsx";
 import { useLoadingSkeleton } from "$lib/hooks/useLoadingSkeleton.ts";
-import { subtitleNeutral, titleNeutralDL, titleNeutral } from "$text";
+import { subtitleNeutral, titleNeutral } from "$text";
 import type { StampGalleryProps, StampRow } from "$types/stamp.d.ts";
 import { useEffect, useRef, useState } from "preact/hooks";
 import Swiper from "swiper";
@@ -171,7 +171,9 @@ export default function StampGallery({
               </h1>
               <h1
                 class={`hidden tablet:block ${
-                  alignRight ? titleNeutralDL : titleNeutral
+                  alignRight
+                    ? `${titleNeutral} !bg-gradient-to-l`
+                    : titleNeutral
                 }`}
               >
                 {title}

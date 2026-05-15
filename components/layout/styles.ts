@@ -18,17 +18,16 @@ export const shadow =
 export const shadowL2 =
   "shadow-[0_2px_4px_rgba(13,11,13,0.1),inset_0_1px_0_rgba(13,11,13,0.08),inset_0_-1px_0_rgba(13,11,13,0.08),inset_0_0_2px_2px_rgba(13,11,13,0.08)]";
 export const shadowGlowPurple =
-  `group hover:shadow-[0px_0px_16px_color-mix(in_srgb,var(--color-purple-light)_75%,transparent)] ${transitionColors} cursor-pointer`;
+  `group hover:shadow-[0px_0px_16px_color-mix(in_srgb,var(--color-primary-500)_75%,transparent)] ${transitionColors} cursor-pointer`;
 export const shadowGlowGrey =
-  `group hover:shadow-[0px_0px_16px_color-mix(in_srgb,var(--color-grey-light)_75%,transparent)] ${transitionColors} cursor-pointer`;
+  `group hover:shadow-[0px_0px_16px_color-mix(in_srgb,var(--color-neutral-500)_75%,transparent)] ${transitionColors} cursor-pointer`;
 
 /* ===== CONTAINER LAYER STYLES ===== */
 // Overlay layer styles - used for drawer and modal containers
 export const container0 =
   `bg-gradient-to-b from-color-neutral-950/95 via-color-neutral-900/70 to-neutral-1000/90 backdrop-blur-lg`;
 // 1st layer styles
-export const container1 =
-  `bg-border-container-1 rounded-3xl backdrop-blur-sm ${shadow}`;
+export const container1 = `bg-border-container-1 rounded-3xl backdrop-blur-sm`;
 // 2nd layer styles - register tool tld dropdown uses same hardcoded values
 export const container2 = `bg-border-container-2 rounded-2xl`;
 export const container2Hover = `bg-border-container-2-hover rounded-2xl`;

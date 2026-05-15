@@ -9,7 +9,7 @@ import {
   notificationHeading,
   notificationTextError,
 } from "$notification";
-import { subtitleNeutral, titleNeutralDL, titleNeutral } from "$text";
+import { subtitleNeutral, titleNeutral } from "$text";
 import type { JSX } from "preact";
 import { useEffect, useState } from "preact/hooks";
 
@@ -61,7 +61,7 @@ export default function SRC20DeploysGallery(): JSX.Element {
           RECENT DEPLOYS
         </h4>
         <h4
-          class={`${titleNeutralDL} hidden tablet:block w-full tablet:text-right`}
+          class={`${titleNeutral} !bg-gradient-to-l hidden tablet:block w-full tablet:text-right`}
         >
           RECENT DEPLOYS
         </h4>

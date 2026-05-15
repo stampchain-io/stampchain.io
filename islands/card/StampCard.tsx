@@ -95,6 +95,13 @@ export function StampCard({
 
   const fetchStampImage = () => {
     setLoading(true);
+    // Use embedded base64 as a data URI when available — works without CDN access
+    if (stamp.stamp_base64) {
+      const mime = stamp.stamp_mimetype ?? "image/png";
+      setSrc(`data:${mime};base64,${stamp.stamp_base64}`);
+      setLoading(false);
+      return;
+    }
     const res = getStampImageSrc(stamp as StampRow);
     setSrc(res);
     setLoading(false);

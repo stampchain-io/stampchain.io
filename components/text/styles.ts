@@ -59,20 +59,22 @@ export const navLinkFooterOverlay =
 /* ===== TITLE STYLES ===== */
 export const titleNeutral =
   `${titleFont} bg-gradient-to-r color-neutral-gradient cursor-default ${select}`;
-export const titleNeutralDL =
-  `${titleFont} bg-gradient-to-l color-neutral-gradient cursor-default ${select}`;
 export const titlePrimary =
   `${titleFont} bg-gradient-to-r color-primary-gradient cursor-default ${select}`;
-export const titlePrimaryDL =
-  `${titleFont} bg-gradient-to-l color-primary-gradient cursor-default ${select}`;
 export const titleSecondary =
   `${titleFont} bg-gradient-to-r color-secondary-gradient cursor-default ${select}`;
+
+/* ======================================================================== */
 
 /* ===== SUBTITLE STYLES ===== */
 export const subtitleNeutral =
   `${subtitleFont} text-color-neutral-100 cursor-default ${select}`;
 export const subtitlePrimary =
   `${subtitleFont} text-color-primary-400 cursor-default ${select}`;
+export const subtitleSecondary =
+  `${subtitleFont} text-color-secondary-400 cursor-default ${select}`;
+
+/* ======================================================================== */
 
 /* ===== HEADING STYLES ===== */
 export const headingGrey2 =
@@ -88,7 +90,8 @@ export const headingGrey =
 export const headingPurpleLD =
   `font-black text-sm mobileMd:text-lg bg-gradient-to-r color-primary-gradient tracking-wide inline-block w-fit text-center mt-3 mobileMd:mt-4 mobileLg:mt-5 mb-1 mobileMd:mb-0 ${select}`; // used specifically in team banner gallery
 
-/* =================================================================== */
+/* ======================================================================== */
+
 /* ===== BODY TEXT STYLES ===== */
 export const textXxs = `${textFont} text-[10px]`;
 export const textXs = `${textFont} text-xs`;
@@ -105,7 +108,8 @@ export const textLinkUnderline =
 /* ===== LINK STYLES ===== */
 // Use the specific link styles created or just add "animated-underline" to the class name to apply an animated underline effect
 
-/* =================================================================== */
+/* ======================================================================== */
+
 /* ===== LABEL STYLES ===== */
 export const labelXxs = `${labelFont} text-[10px] ${select}`;
 export const labelXs = `${labelFont} text-xs ${select}`;
@@ -140,9 +144,10 @@ export const labelLogicResponsive = ( // used for the filter labels
 }
 `;
 
-/* =================================================================== */
+/* ======================================================================== */
+
 /* ===== VALUE STYLES ===== */
-// Grey variants
+// Neutral variants
 export const valueXs = `${valueFont} text-xs ${select}`;
 export const valueSm = `${valueFont} text-sm ${select}`;
 export const valueSmLink =
@@ -184,7 +189,8 @@ export const valueNeutral = `text-color-neutral-400`;
 /* ===== CODE STYLES ===== */
 // Add "font-courier-prime" to the class name to use the Courier font and make text monospace
 
-/* =================================================================== */
+/* ======================================================================== */
+
 /* ===== SPECIAL TEXT STYLES ===== */
 export const eyebrowNeutral =
   `font-bold text-[0.625rem] text-color-neutral-500 tracking-wider cursor-default ${select}`; // descriptive text above icons, links, etc.
@@ -199,7 +205,8 @@ export const copyright =
 export const toggleSymbol =
   `font-bold text-[10px] text-black cursor-default ${select}`; // used in ToggleSwitchButton.tsx for $/BTC symbols
 
-/* =================================================================== */
+/* ======================================================================== */
+
 /* ===== CARD TEXT STYLES ===== */
 // Standard card styles
 export const cardStampNumber =
@@ -225,13 +232,11 @@ export const cardPriceMinimal =
 /* ===== UNCATEGORIZED STYLES ===== */
 // Add any new styles you cannot categorize here
 
-/* =================================================================== */
+/* ======================================================================== */
 
 /* ===== TYPE DEFINITIONS ===== */
 export type TextStyles = {
   // Logo styles
-  logoPurpleDL: string;
-  logoPurpleDLLink: string;
   logoPrimary: string;
   logoPrimaryHover: string;
   // Navigation styles
@@ -244,15 +249,15 @@ export type TextStyles = {
   navSublinkMobile: string;
   navSublinkActiveMobile: string;
   navLinkFooter: string;
-  navLinkFooterOverlayText: string;
+  navLinkFooterOverlay: string;
   // Title styles
   titleNeutral: string;
-  titleNeutralDL: string;
   titlePrimary: string;
-  titlePrimaryDL: string;
+  titleSecondary: string;
   // Subtitle styles
   subtitleNeutral: string;
   subtitlePrimary: string;
+  subtitleSecondary: string;
   // Heading styles
   headingGrey2: string;
   headingGreyLD: string;
@@ -301,10 +306,10 @@ export type TextStyles = {
   value5xlPurpleGlow: string;
   value7xlPurpleGlow: string;
   valueDarkSm: string;
-  valueDarkXs: string;
   valueDark: string;
-  valueGain: string;
-  valueLoss: string;
+  valuePositive: string;
+  valueNegative: string;
+  valueNeutral: string;
   // Special text styles
   eyebrowNeutral: string;
   eyebrowPrimary: string;
@@ -313,11 +318,11 @@ export type TextStyles = {
   copyright: string;
   toggleSymbol: string;
   // Card text styles
+  cardStampNumber: string;
   cardCreator: string;
   cardPrice: string;
   cardFileType: string;
   cardSupply: string;
   cardStampNumberMinimal: string;
   cardPriceMinimal: string;
-  cardStampNumber: string;
 };

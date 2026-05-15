@@ -7,7 +7,7 @@ import {
   notificationHeading,
   notificationTextError,
 } from "$notification";
-import { subtitleNeutral, titleNeutralDL, titleNeutral } from "$text";
+import { subtitleNeutral, titleNeutral } from "$text";
 import type { SRC20Row } from "$types/src20.d.ts";
 import { useEffect, useState } from "preact/hooks";
 
@@ -61,7 +61,7 @@ export default function SRC20MintsGallery() {
           TRENDING
         </h4>
         <h4
-          class={`hidden tablet:block w-full tablet:text-right ${titleNeutralDL}`}
+          class={`hidden tablet:block w-full tablet:text-right ${titleNeutral} !bg-gradient-to-l`}
         >
           TRENDING
         </h4>
