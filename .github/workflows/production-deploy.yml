@@ -261,17 +261,44 @@ jobs:
             --task-definition "${{ env.TASK_FAMILY }}" \
             --query 'taskDefinition' > /tmp/current-task-def.json
 
-          # Create new task def: swap image, remove metadata fields
+          # Create new task def: swap image, scrub forbidden envs, remove metadata fields
           python3 -c "
           import json, sys
 
           with open('/tmp/current-task-def.json') as f:
               td = json.load(f)
 
-          # Update container image
+          # Envs that must never appear in the running container. Without this
+          # scrub, describe-task-definition would inherit them from the previous
+          # revision and silently re-introduce known-bad settings every deploy.
+          # - NODE_DEBUG / REDIS_DEBUG / REDIS_LOG_LEVEL: cause massive CloudWatch
+          #   log spam (HTTP socket internals + per-cache-op lines) that
+          #   contributed to the 2026-05-14 504 incident.
+          # - QUICKNODE_ENDPOINT / QUICKNODE_API_KEY: upstream is currently
+          #   suspended; with these absent, CommonUTXOService.isQuickNodeConfigured
+          #   returns False and the public-API fallback chain handles all UTXO
+          #   traffic without per-call timeouts. To re-enable QuickNode in the
+          #   future: remove the two keys from SCRUB_KEYS, add the envs back to
+          #   the task def (or pass QUICKNODE_API_KEY via Secrets Manager
+          #   valueFrom in the 'secrets' block of this template), and merge.
+          SCRUB_KEYS = {
+              'NODE_DEBUG',
+              'REDIS_DEBUG',
+              'REDIS_LOG_LEVEL',
+              'QUICKNODE_ENDPOINT',
+              'QUICKNODE_API_KEY',
+          }
+
+          # Update container image + scrub envs
           for container in td.get('containerDefinitions', []):
               if container.get('name') == '${{ env.CONTAINER_NAME }}':
                   container['image'] = '${IMAGE_URI}'
+                  env = container.get('environment') or []
+                  scrubbed = [e for e in env if e.get('name') not in SCRUB_KEYS]
+                  removed = [e['name'] for e in env if e.get('name') in SCRUB_KEYS]
+                  container['environment'] = scrubbed
+                  if removed:
+                      print('Scrubbed envs from task def:', removed)
 
           # Remove metadata fields that can't be in registration request
           for key in ['taskDefinitionArn', 'revision', 'status', 'requiresAttributes',
