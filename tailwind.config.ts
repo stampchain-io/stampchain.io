@@ -231,10 +231,6 @@ export default {
         "search-icon": "12px",
         "stroke-width": "2px",
       },
-      boxShadow: {
-        "stamp": "0px 0px 18px #aa00ff",
-        "stamp-hover": "0px 0px 24px #aa00ff",
-      },
       aspectRatio: {
         "stamp": "1",
       },
