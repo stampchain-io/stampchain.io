@@ -1,5 +1,13 @@
 # Dependabot configuration - targets dev branch
 # PRs flow: dependabot -> dev (CI validation) -> main (production deploy)
+#
+# Supply-chain hardening: `cooldown` makes Dependabot wait N days after a
+# version is published before opening a PR for it. Defends against the
+# compromised-package class of npm supply-chain attacks (e.g. event-stream,
+# ua-parser-js, debian-utils, the 2024-2025 wave) where malicious code is
+# discovered and pulled within a few days of publication. Note: cooldown
+# applies to ROUTINE version bumps only. Dependabot security alerts and
+# CVE-driven updates BYPASS cooldown — those still arrive immediately.
 version: 2
 updates:
   # GitHub Actions - keep workflows up to date
@@ -9,6 +17,11 @@ updates:
     schedule:
       interval: "weekly"
       day: "monday"
+    cooldown:
+      default-days: 7
+      semver-major-days: 14
+      semver-minor-days: 7
+      semver-patch-days: 7
     labels:
       - "dependencies"
       - "github-actions"
@@ -26,6 +39,11 @@ updates:
     schedule:
       interval: "weekly"
       day: "monday"
+    cooldown:
+      default-days: 7
+      semver-major-days: 14
+      semver-minor-days: 7
+      semver-patch-days: 7
     labels:
       - "dependencies"
     commit-message:

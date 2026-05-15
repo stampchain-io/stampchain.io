@@ -49,10 +49,16 @@ USER deno
 # Build Fresh assets and ensure they're available
 RUN DENO_ENV=production deno run --allow-all main.ts build || (echo "Build failed" && exit 1)
 
-# Cache dependencies with proper error handling (without lock file)
+# Cache dependencies against the committed lockfile. --frozen=true forces deno
+# to fail the build if deno.lock is missing, out-of-date, or any integrity hash
+# doesn't match — defends against silent transitive-dep replacement (the npm
+# supply-chain attack class). To regenerate the lock after intentional dep
+# updates: `deno cache --lock=deno.lock main.ts` locally, commit deno.lock.
+# Optionally add --minimum-dependency-age=P7D when updating deps to filter out
+# packages published in the last 7 days (Deno 2.6+ unstable flag).
 RUN DENO_DIR=/app/.deno \
     NPM_CONFIG_CACHE=/app/.npm \
-    deno cache --reload main.ts || (echo "Cache failed" && exit 1)
+    deno cache --frozen=true main.ts || (echo "Cache failed — lockfile mismatch or missing? Run 'deno cache --lock=deno.lock main.ts' locally and recommit." && exit 1)
 
 # Ensure _fresh directory is present and has correct permissions
 RUN ls -la /app/_fresh 2>/dev/null || echo "Warning: _fresh directory not found after build"
