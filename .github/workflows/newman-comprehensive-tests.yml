@@ -232,6 +232,10 @@ jobs:
 
       - name: Create PR comment with results
         if: github.event_name == 'pull_request' && always()
+        # Fork PRs receive a read-only GITHUB_TOKEN; commenting fails with
+        # HttpError 403 "Resource not accessible by integration". Don't fail
+        # the whole job on that — the Newman tests above are what matter.
+        continue-on-error: true
         uses: actions/github-script@v9
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -919,6 +923,10 @@ jobs:
 
       - name: Create PR comment with results
         if: github.event_name == 'pull_request' && always()
+        # Fork PRs receive a read-only GITHUB_TOKEN; commenting fails with
+        # HttpError 403 "Resource not accessible by integration". Don't fail
+        # the whole job on that — the Newman tests above are what matter.
+        continue-on-error: true
         uses: actions/github-script@v9
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -1094,6 +1102,10 @@ jobs:
 
       - name: Comment on PR with results
         if: always() && github.event_name == 'pull_request'
+        # Fork PRs receive a read-only GITHUB_TOKEN; commenting fails with
+        # HttpError 403 "Resource not accessible by integration". Don't fail
+        # the whole job on that — the Newman tests above are what matter.
+        continue-on-error: true
         uses: actions/github-script@v9
         with:
           script: |

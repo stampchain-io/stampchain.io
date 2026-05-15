@@ -142,6 +142,10 @@ jobs:
       # Create a summary comment for PR
       - name: Create PR Comment with Quality Results
         if: github.event_name == 'pull_request'
+        # Fork PRs receive a read-only GITHUB_TOKEN; commenting fails with
+        # HttpError 403 "Resource not accessible by integration". Don't fail
+        # the whole job on that — the quality checks above are what matter.
+        continue-on-error: true
         uses: actions/github-script@v9
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
