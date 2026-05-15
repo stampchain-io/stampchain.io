@@ -155,7 +155,7 @@ The button system uses a 5-step gradient color system with CSS variables, provid
 - **ToolsButton.tsx**: Tools menu dropdown
 - **MenuButton.tsx**: Mobile navigation menu
 - **ToggleButton.tsx**: Client-side toggle with state
-- **SelectorButtons.tsx**: Multi-option selector group
+- **SelectorButtons.tsx**: Multi-option pill selector (radio group); pill geometry uses CSS `calc`, no DOM measurement (see implementation notes below)
 - **PaginationButtons.tsx**: Page navigation controls
 - **PaginationButtonsSSRSafe.tsx**: SSR-safe pagination
 - **RangeSlider.tsx**: Single value range slider
@@ -382,6 +382,9 @@ export function FeeSelector() {
 ```
 
 ### Selector Buttons (Radio Group)
+
+Controlled component: pass `value` and `onChange` (see [SelectorButtonsProps](mdc:lib/types/ui.d.ts)).
+
 ```tsx
 import { SelectorButtons } from "$button";
 
@@ -390,14 +393,24 @@ export function ViewModeSelector() {
     <SelectorButtons
       options={[
         { value: "grid", label: "Grid" },
-        { value: "list", label: "List" }
+        { value: "list", label: "List" },
       ]}
-      selected="grid"
-      onSelect={(value) => console.log(value)}
+      value="grid"
+      onChange={(value) => console.log(value)}
+      size="smR"
+      color="grey"
     />
   );
 }
 ```
+
+#### SelectorButtons implementation notes ([islands/button/SelectorButtons.tsx](mdc:islands/button/SelectorButtons.tsx))
+
+- **Pill position**: Index-based `left`/`width` with `calc()` against the grid container (`repeat(N, 1fr)`). Do not use `offsetLeft`, `ResizeObserver`, or width transitions for the pill; that caused misalignment and flash when fonts or layout settled.
+- **Vertical alignment**: Keep pill inset (`top-*` / `bottom-*` on the absolute pill) in sync with label vertical margin (`my-*`) plus container padding so hover backgrounds line up with the pill.
+- **Structure**: Put cursor and `state.disabled` on the option **wrapper** `div` only; keep **label** classes for colour/background only to avoid duplication.
+- **Cursor**: Native `<input type="radio">` uses `cursor: default`. Use `cursor-[inherit]` on the invisible input and on the label so `!cursor-pointer` / `!cursor-default` from the wrapper apply when the label stacks above the input.
+- **Stamp overview**: [StampOverviewHeader.tsx](mdc:islands/header/StampOverviewHeader.tsx) uses five options (`all`, `classic`, `posh`, `src-721`, `cursed`) with `FrontendStampType` from [stampConstants.ts](mdc:lib/constants/stampConstants.ts); URL `type` and `FilterOptionsStamp` defaults stay aligned with that type union.
 
 ## Style System Integration
 

@@ -31,6 +31,8 @@ export const STAMP_TYPES = {
   CLASSIC: "classic",
   /** Posh stamps - premium quality stamps */
   POSH: "posh",
+  /** SRC-721 recursive stamps */
+  SRC721: "src-721",
   /** SRC-20 images - for showing SRC-20 related imagery */
   SRC20: "src20",
 } as const;
@@ -76,12 +78,14 @@ export type HandlerStampType =
 
 /**
  * Frontend-specific stamp types for UI filtering
- * Excludes meta types (all, stamps) and SRC-20 imagery
+ * Includes all, classic, posh, src-721 (recursive), and cursed
  */
 export const FRONTEND_STAMP_TYPES = {
+  ALL: STAMP_TYPES.ALL,
   CLASSIC: STAMP_TYPES.CLASSIC,
   CURSED: STAMP_TYPES.CURSED,
   POSH: STAMP_TYPES.POSH,
+  SRC721: STAMP_TYPES.SRC721,
 } as const;
 
 export const FRONTEND_STAMP_TYPE_VALUES = Object.values(FRONTEND_STAMP_TYPES);

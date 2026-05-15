@@ -2,7 +2,7 @@
 import { Icon } from "$icon";
 import { ActivityBadge } from "$islands/badge/index.ts";
 import { StampCard } from "$islands/card/StampCard.tsx";
-import { container2, shadowGlowPurple } from "$layout";
+import { container2Hover, shadowGlowPurple } from "$layout";
 import { AccessibilityUtils } from "$lib/utils/ui/accessibility/accessibilityUtils.ts";
 import {
   abbreviateAddress,
@@ -30,7 +30,7 @@ export function RecentSaleCard({
 
   return (
     <div
-      class={`${container2} border-2 border-transparent hover:border-color-purple-light ${shadowGlowPurple} transition-all duration-200 overflow-hidden`}
+      class={`${container2Hover} ${shadowGlowPurple} transition-all duration-200 overflow-hidden`}
       role="article"
       aria-label={cardLabel}
       aria-describedby={showFullDetails
@@ -72,11 +72,11 @@ export function RecentSaleCard({
           <div class="flex justify-between items-center">
             <span class="text-gray-400 text-sm">Sale Price:</span>
             <div class="text-right">
-              <div class="font-mono text-white font-bold">
+              <div class="font-semibold text-color-secondary-400">
                 {formatBTCAmount(sale.sale_data.btc_amount)} BTC
               </div>
               {usdValue && (
-                <div class="text-gray-400 text-xs">
+                <div class="text-neutral-500 text-xs">
                   ${usdValue.toFixed(2)} USD
                 </div>
               )}

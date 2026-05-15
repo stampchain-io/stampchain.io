@@ -68,7 +68,7 @@ export const titleSecondary =
 
 /* ===== SUBTITLE STYLES ===== */
 export const subtitleNeutral =
-  `${subtitleFont} text-color-neutral-100 cursor-default ${select}`;
+  `${subtitleFont} text-color-neutral-300 cursor-default ${select}`;
 export const subtitlePrimary =
   `${subtitleFont} text-color-primary-400 cursor-default ${select}`;
 export const subtitleSecondary =
@@ -227,7 +227,7 @@ export const cardStampNumberMinimal =
   `max-w-full font-black text-xs mobileLg:text-sm
   bg-gradient-to-r color-neutral-gradient color-gradient-hover truncate ${transitionColors} ${select}`;
 export const cardPriceMinimal =
-  `font-normal text-[10px] mobileMd:text-xs text-color-neutral-500 truncate text-nowrap ${select}`;
+  `font-normal text-[10px] mobileLg:text-xs text-color-secondary-400 truncate text-nowrap ${select}`;
 
 /* ===== UNCATEGORIZED STYLES ===== */
 // Add any new styles you cannot categorize here

@@ -24,7 +24,7 @@ interface NavLink {
 const desktopNavLinks: NavLink[] = [
   {
     title: "Stamps",
-    href: "/stamp?type=classic",
+    href: "/stamp",
     icon: "artStamp",
   },
   {

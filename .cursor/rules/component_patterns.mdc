@@ -19,3 +19,15 @@ component_patterns:
     - HowToLayout
     - CollectionLayout
     - StampLayout
+
+# SelectorButtons ([islands/button/SelectorButtons.tsx](mdc:islands/button/SelectorButtons.tsx))
+
+- **DO** position the selection pill with CSS `calc` from the selected option index and `N = options.length` (equal `1fr` columns). Avoid measuring DOM (`offsetLeft`, `getBoundingClientRect`, `ResizeObserver`) for pill X/width.
+- **DO** align pill vertical inset (`top-*` / `bottom-*`) with label vertical margin plus container padding so hover fills match the pill.
+- **DO** split concerns: wrapper `div` gets `cursor` and `state.disabled`; `label` gets text/background classes only.
+- **DO** set `cursor-[inherit]` on the hidden radio `input` and on the `label` so inherited `!cursor-pointer` / `!cursor-default` from the wrapper win over UA styles.
+- **Reference docs**: [components/button/doc.md](mdc:components/button/doc.md) (Selector Buttons section).
+
+# Art Stamps type selector ([islands/header/StampOverviewHeader.tsx](mdc:islands/header/StampOverviewHeader.tsx))
+
+- Options map to `FrontendStampType` in [lib/constants/stampConstants.ts](mdc:lib/constants/stampConstants.ts) (`all`, `classic`, `posh`, `src-721`, `cursed`). Keep [routes/stamp/index.tsx](mdc:routes/stamp/index.tsx) and [FilterOptionsStamp.tsx](mdc:islands/filter/FilterOptionsStamp.tsx) (`filtersToQueryParams`, `queryParamsToFilters`) in sync when adding or renaming types.

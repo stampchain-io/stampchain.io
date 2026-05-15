@@ -68,7 +68,7 @@ export type StampFilters = {
 };
 
 export const defaultFilters: StampFilters = {
-  stampType: "classic", // Changed default to classic // Default to showing all stamp types
+  stampType: "all",
   market: "",
   dispensers: false,
   atomics: false,
@@ -109,11 +109,11 @@ export function filtersToQueryParams(
 ) {
   const queryParams = new URLSearchParams(search);
 
-  // STAMP TYPE (NEW!)
-  if (filters.stampType && filters.stampType !== "classic") {
+  // STAMP TYPE
+  if (filters.stampType && filters.stampType !== "all") {
     queryParams.set("type", filters.stampType);
   } else {
-    queryParams.delete("type"); // Default to classic (no type param needed)
+    queryParams.delete("type"); // Default to all (no type param needed)
   }
 
   // MARKET TYPE
@@ -424,7 +424,7 @@ export function queryParamsToFilters(query: string): StampFilters {
   const params = new URLSearchParams(query);
 
   const filtersPartial: Partial<StampFilters> = {
-    stampType: "classic", // Default stamp type
+    stampType: "all", // Default stamp type
     market: "",
     dispensers: false,
     atomics: false,

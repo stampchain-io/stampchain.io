@@ -446,11 +446,12 @@ export function StampCard({
         {showDetails && !showMinDetails && (
           <div class="flex flex-col items-center px-[6px] pt-5 pb-0">
             {/* Stamp Number with container */}
-            <div class="flex items-center justify-center max-w-[90%]">
-              <span class={cardStampNumber}>
-                {displayStampHash && <span class="font-light">#</span>}
-                {stampValue}
-              </span>
+            <div
+              class={`flex items-center justify-center max-w-[90%]
+              ${cardStampNumber}`}
+            >
+              {displayStampHash && <span class="font-light">#</span>}
+              {stampValue}
             </div>
 
             {/* Creator Name or Abbreviated Address */}
@@ -461,10 +462,8 @@ export function StampCard({
             {/* Price and Supply */}
             <div class="flex justify-between items-center mt-4 w-full">
               {/* Price on the Left */}
-              <div class={`text-left ${containerPill}`}>
-                <span class={renderPrice().style}>
-                  {renderPrice().text}
-                </span>
+              <div class={`text-left ${containerPill} ${renderPrice().style}`}>
+                {renderPrice().text}
               </div>
               {/* Supply/Editions on the Right */}
               <div
@@ -479,19 +478,18 @@ export function StampCard({
         {/* ===== EDITION SECTION ===== */}
         {showEdition && (
           <div class="flex flex-col items-center px-1.5 mobileLg:px-3 pt-1.5 mobileLg:pt-3">
-            <div class="flex items-center justify-center">
-              <span class={cardStampNumberMinimal}>
-                {displayStampHash && <span class="font-light">#</span>}
-                {stampValue}
-              </span>
+            <div
+              class={`flex items-center justify-center
+              ${cardStampNumberMinimal}`}
+            >
+              {displayStampHash && <span class="font-light">#</span>}
+              {stampValue}
             </div>
-            <div class="-mt-1 mobileLg:mt-0.5 w-full flex justify-between items-center">
-              <span class={cardPriceMinimal}>
-                {editionCount}
-              </span>
-              <span class={cardPriceMinimal}>
-                {renderPrice().text}
-              </span>
+            <div
+              class={`-mt-1 mobileLg:mt-0.5 w-full flex justify-between items-center ${cardPriceMinimal}`}
+            >
+              {editionCount}
+              {renderPrice().text}
             </div>
           </div>
         )}
@@ -499,16 +497,15 @@ export function StampCard({
         {/* ===== MINIMAL DETAILS SECTION ===== */}
         {showMinDetails && !showDetails && (
           <div class="flex flex-col items-center px-1.5 mobileLg:px-3 pt-1.5 mobileLg:pt-3">
-            <div class="flex items-center justify-center">
-              <span class={cardStampNumberMinimal}>
-                {displayStampHash && <span class="font-light">#</span>}
-                {stampValue}
-              </span>
+            <div
+              class={`flex items-center justify-center
+              ${cardStampNumberMinimal}`}
+            >
+              {displayStampHash && <span class="font-light">#</span>}
+              {stampValue}
             </div>
-            <div class="-mt-1 mobileLg:mt-0.5">
-              <span class={cardPriceMinimal}>
-                {renderPrice().text}
-              </span>
+            <div class={`mt-2 ${containerPill} ${cardPriceMinimal}`}>
+              {renderPrice().text}
             </div>
           </div>
         )}
