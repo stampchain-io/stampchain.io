@@ -1,7 +1,7 @@
 /* ===== EXPLORER PAGE ===== */
 import { ExplorerContent } from "$content";
 import { Handlers } from "$fresh/server.ts";
-import { body } from "$layout";
+import { containerBackground } from "$layout";
 import type { SUBPROTOCOLS } from "$types/base.d.ts";
 
 import type { StampFilterType, StampType } from "$constants";
@@ -161,7 +161,7 @@ export function ExplorerPage(props: StampPageProps) {
   /* ===== RENDER ===== */
   return (
     <div
-      class={body}
+      class={containerBackground}
       f-client-nav
       data-partial="/explorer"
     >

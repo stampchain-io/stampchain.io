@@ -2,7 +2,7 @@
 /*@baba-149*/
 import { SRC20OverviewContent } from "$content";
 import { Handlers } from "$fresh/server.ts";
-import { body } from "$layout";
+import { containerBackground } from "$layout";
 import {
   DEV_DUMMY_MODE,
   DUMMY_TOKEN_OVERVIEW_PAGE,
@@ -296,7 +296,7 @@ export default function SRC20OverviewPage({ data }: any) {
 
   return (
     <div
-      class={`${body} -mb-3`}
+      class={`${containerBackground} -mb-3`}
       f-client-nav
       data-partial="/src20"
     >

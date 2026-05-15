@@ -4,7 +4,7 @@ import { FRONTEND_STAMP_TYPE_VALUES } from "$constants";
 import { StampOverviewContent } from "$content";
 import { Handlers } from "$fresh/server.ts";
 import { StampOverviewHeader } from "$header";
-import { body } from "$layout";
+import { containerBackground } from "$layout";
 
 import {
   queryParamsToFilters,
@@ -32,22 +32,19 @@ export const handler: Handlers = {
     // Now using direct controller/service calls instead of HTTP fetch
 
     if (DEV_DUMMY_MODE) {
-      const typeParam = url.searchParams.get("type") || "classic";
+      const typeParam = url.searchParams.get("type") || "all";
       const all = DUMMY_STAMP_OVERVIEW_PAGE.data;
 
       // Filter dummy stamps to match the selected tab
       const stampsByType: Record<string, typeof all> = {
-        // Classic: STAMP ident, numeric cpid (starts with "A"), positive stamp
+        all,
         classic: all.filter((s) =>
           s.ident === "STAMP" && s.cpid.startsWith("A") && s.stamp >= 0
         ),
-        // Posh: STAMP ident, named cpid (does not start with "A")
         posh: all.filter((s) => s.ident === "STAMP" && !s.cpid.startsWith("A")),
-        // Cursed: show posh stamps as a proxy for demo purposes
         cursed: all.filter((s) =>
           s.ident === "STAMP" && !s.cpid.startsWith("A")
         ),
-        // SRC-721: recursive stamps
         "src-721": all.filter((s) => s.ident === "SRC-721"),
       };
 
@@ -89,13 +86,13 @@ export const handler: Handlers = {
             marketMode === "sales" || // ✅ NEW: marketplace sales filter uses sales view
             url.searchParams.get("recentSales") === "true"; // Backward compatibility
 
-          // ✅ NEW: Handle type parameter for stamp filtering (classic, cursed, posh, etc.)
+          // Handle type parameter for stamp filtering (all, classic, posh, src-721, cursed)
           // Note: SRC-20 excluded from frontend options as they're handled separately in the app
-          const stampType = url.searchParams.get("type") || "classic"; // Default to classic
+          const stampType = url.searchParams.get("type") || "all"; // Default to all
           const typeFilter =
             FRONTEND_STAMP_TYPE_VALUES.includes(stampType as any)
               ? stampType
-              : "classic";
+              : "all";
 
           /* ===== DATA FETCHING BASED ON MODE ===== */
           let stampsData: {
@@ -393,7 +390,7 @@ export function StampOverviewPage(props: StampPageProps) {
   /* ===== RENDER ===== */
   return (
     <div
-      class={body}
+      class={containerBackground}
       f-client-nav
       data-partial="/stamp"
     >
