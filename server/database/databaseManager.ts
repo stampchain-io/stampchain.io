@@ -199,17 +199,24 @@ class DatabaseManager {
   async getClient(): Promise<Client> {
     if (this.#pool.length > 0) {
       const client = this.#pool.pop() as Client;
+      // Increment immediately on pop so closeClient()'s decrement correctly
+      // cancels if validation fails. Previously we only incremented on success,
+      // which made closeClient on a popped-but-not-yet-counted client
+      // double-decrement the counter — leading to long-running counter drift
+      // toward negative values, which let getClient() create connections past
+      // CONNECTION_LIMIT under steady churn (root cause of 2026-05-14 ERROR
+      // 1040 incident: stamps_app accumulated 120 conns from 1 task with
+      // DB_CONNECTION_LIMIT=50).
+      this.#activeConnections++;
 
-      // Validate connection before returning
       try {
         await this.#validateConnection(client);
-        this.#activeConnections++; // Track connection taken from pool
         return client;
       } catch (error) {
         this.#logger.warn(`Connection validation failed: ${error}`);
-        // Connection is invalid, close it and try to get another one
+        // closeClient() decrements #activeConnections, which correctly cancels
+        // the increment above for this failed-validation path.
         await this.closeClient(client);
-        // Recursively try to get another connection (this won't increment activeConnections again)
         return this.getClient();
       }
     }
