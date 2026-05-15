@@ -19,11 +19,10 @@ import { CloseIcon, Icon } from "$icon";
 import type { FilterType } from "$islands/button/FilterButton.tsx";
 import { FilterContentSRC20 } from "$islands/filter/FilterContentSRC20.tsx";
 import {
-  containerStickyBottom,
   container0,
+  containerStickyBottom,
   transitionTransform,
 } from "$layout";
-import { useBreakpoints } from "$lib/hooks/useBreakpoints.ts";
 import { tooltipIcon } from "$notification";
 import {
   getSearchParams,
@@ -48,8 +47,6 @@ const FilterDrawer = (
     type?: FilterType;
   },
 ) => {
-  const { isMobile } = useBreakpoints();
-
   // Parse the current URL parameters to initialize filters
   const getInitialFilters = (): AllFilters => {
     // SSR-safe browser environment check
@@ -200,35 +197,32 @@ const FilterDrawer = (
     };
   }, [open]); // Remove currentFilters from dependencies
 
-  // Mobile single-section logic: Only allow one collapsible section open at a time on mobile
+  // Accordion: only one collapsible section open at a time
   useEffect(() => {
-    if (!isMobile() || !open) return;
+    if (!open) return;
 
     const handleSectionToggle = (event: Event) => {
       const target = event.target as HTMLElement;
-
-      // Only target main section toggle buttons
       const sectionButton = target.closest("button[data-section-toggle]");
 
       if (!sectionButton || !drawerRef.current?.contains(sectionButton)) return;
 
-      // Check if the current section is about to be opened (currently closed)
       const currentSection = sectionButton.nextElementSibling;
       const isCurrentlyExpanded = currentSection?.getAttribute(
         "data-section-expanded",
       ) === "true";
 
-      // Only close other sections if we're opening this one (not closing it)
+      // Only close others when opening a section (not when closing)
       if (!isCurrentlyExpanded) {
-        // Find all other main section toggle buttons and close their sections
         const allSectionButtons = drawerRef.current.querySelectorAll(
           "button[data-section-toggle]",
         );
         allSectionButtons.forEach((button) => {
           if (button !== sectionButton) {
             const nextSibling = button.nextElementSibling;
-            if (nextSibling?.getAttribute("data-section-expanded") === "true") {
-              // This section is expanded, close it
+            if (
+              nextSibling?.getAttribute("data-section-expanded") === "true"
+            ) {
               (button as HTMLButtonElement).click();
             }
           }
@@ -236,7 +230,6 @@ const FilterDrawer = (
       }
     };
 
-    // Use capture phase to handle this before the section's own click handler
     drawerRef.current?.addEventListener("click", handleSectionToggle, true);
 
     return () => {
@@ -246,7 +239,7 @@ const FilterDrawer = (
         true,
       );
     };
-  }, [isMobile, open]);
+  }, [open]);
 
   // Add tooltip state for close button
   const [isCloseTooltipVisible, setIsCloseTooltipVisible] = useState(false);
@@ -346,9 +339,9 @@ const FilterDrawer = (
       ref={drawerRef}
       class={`fixed top-0 z-40 h-[100dvh] left-0 right-auto w-full
         ${container0} ${transitionTransform}
-        min-[420px]:w-[340px] min-[420px]:rounded-r-3xl min-[420px]:border-r-[1px] min-[420px]:border-r-color-border/75
+        min-[420px]:w-[340px] min-[420px]:rounded-r-3xl min-[420px]:border-r-[1px] min-[420px]:border-r-color-border
         min-[420px]:shadow-[12px_0_12px_-6px_rgba(8,7,8,0.75)]
-        tablet:right-0 tablet:left-auto tablet:w-[300px] tablet:rounded-l-3xl tablet:border-l-[1px] tablet:border-l-color-border/75 tablet:shadow-[-12px_0_12px_-6px_rgba(8,7,8,0.75)]
+        tablet:right-0 tablet:left-auto tablet:w-[300px] tablet:rounded-l-3xl tablet:border-l-[1px] tablet:border-l-color-border tablet:shadow-[-12px_0_12px_-6px_rgba(8,7,8,0.75)]
         ${
         open ? "translate-x-0" : "-translate-x-full tablet:translate-x-full"
       }`}

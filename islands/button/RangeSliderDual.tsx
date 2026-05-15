@@ -1,5 +1,4 @@
-import { sliderKnob, trackFill } from "$button";
-import { container2 } from "$layout";
+import { sliderBar, sliderKnob, trackFill } from "$button";
 import { formatNumberWithCommas } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 
@@ -232,6 +231,7 @@ export const RangeSliderDual = ({
   const [pendingMin, setPendingMin] = useState(initialMin || config.min);
   const [pendingMax, setPendingMax] = useState(initialMax || config.max);
   const [isDragging, setIsDragging] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const [hoveredHandle, setHoveredHandle] = useState<"min" | "max" | null>(
     null,
   );
@@ -658,7 +658,10 @@ export const RangeSliderDual = ({
   }, [isDragging, pendingMin, pendingMax, onChange, variant]);
 
   // Define the gradient colors
-  const trackGradientFill = (hoveredHandle: "min" | "max" | null) => {
+  const trackGradientFill = (
+    hoveredHandle: "min" | "max" | null,
+    isHovered: boolean,
+  ) => {
     // Calculate percentages based on our non-linear scale with adjusted positioning
     const minPercent = adjustedValueToPositionMin(minValue);
     const maxPercent = (variant === "fileSize" && maxValue >= config.max) ||
@@ -680,27 +683,33 @@ export const RangeSliderDual = ({
       return {
         ...baseStyle,
         background:
-          "linear-gradient(90deg, var(--color-grey-semilight) 5%, var(--color-grey) 75%)",
+          "linear-gradient(90deg, var(--color-primary-400) 5%, var(--color-primary-500) 50%, var(--color-primary-400) 95%)",
       };
     } else if (hoveredHandle === "max") {
       return {
         ...baseStyle,
         background:
-          "linear-gradient(90deg, var(--color-grey) 25%, var(--color-grey-semilight) 95%)",
+          "linear-gradient(90deg, var(--color-primary-400) 5%, var(--color-primary-500) 50%, var(--color-primary-400) 95%)",
+      };
+    } else if (isHovered) {
+      return {
+        ...baseStyle,
+        background:
+          "linear-gradient(90deg, var(--color-primary-400), var(--color-primary-400) 95%)",
       };
     }
 
     return {
       ...baseStyle,
       background:
-        "linear-gradient(90deg, var(--color-grey) 5%, var(--color-grey-semidark) 40%, var(--color-grey-semidark) 60%, var(--color-grey) 95%)",
+        "linear-gradient(90deg, var(--color-neutral-400) 5%, var(--color-neutral-800) 40%, var(--color-neutral-800) 60%, var(--color-neutral-400) 95%)",
     };
   };
 
   return (
     <div class={`w-full ${variant === "price" ? "mt-0 mb-2" : ""}`}>
-      <div class="flex w-full justify-center pb-1.5 tablet:pb-1">
-        <div class="flex items-center text-sm tablet:text-xs font-regular">
+      <div class="flex w-full justify-center pb-3 tablet:pb-1.5">
+        <div class="flex items-center font-regular text-[0.625rem] tablet:text-[0.5625rem]">
           {/* Min Value - Clickable/Editable */}
           {editingMin
             ? (
@@ -774,7 +783,8 @@ export const RangeSliderDual = ({
                   variant === "price"
                     ? "w-[84px] tablet:w-[72px]"
                     : "w-[72px] tablet:w-16"
-                } text-right bg-transparent text-color-grey-light placeholder:text-color-grey-light px-1 text-sm tablet:text-xs outline-none focus:outline-none focus:ring-0 border-0 border-b-[1px] border-color-grey-light focus:border-b-[1px] focus:border-color-grey-light no-outline`}
+                } text-right bg-color-neutral-800 rounded-full -my-0.5 px-1.5 py-0.5 text-color-neutral-400 placeholder:text-color-neutral-400
+                text-[0.625rem] tablet:text-[0.5625rem] focus-visible:outline-none`}
                 autoFocus
               />
             )
@@ -785,17 +795,17 @@ export const RangeSliderDual = ({
                     ? "w-[84px] tablet:w-[72px]"
                     : "w-[72px] tablet:w-16"
                 } text-right cursor-pointer select-none ${
-                  hoveredHandle === "min"
-                    ? "text-color-grey-light"
-                    : "text-color-grey"
-                } hover:text-color-grey-light transition-colors duration-200`}
+                  hoveredHandle === "min" || isHovered
+                    ? "text-color-hover"
+                    : "text-color-neutral-400"
+                } hover:text-color-hover transition-colors duration-200`}
                 onClick={() => startEditing("min")}
               >
                 {config.formatValue(minValue)}
               </div>
             )}
 
-          <span class="mx-2 text-color-grey">-</span>
+          <span class="mx-2 text-color-neutral-500">-</span>
 
           {/* Max Value - Clickable/Editable */}
           {editingMax
@@ -866,17 +876,18 @@ export const RangeSliderDual = ({
                 }}
                 placeholder="NO LIMIT"
                 tabIndex={2}
-                class="w-[72px] tablet:w-16 text-left bg-transparent text-color-grey-light placeholder:text-color-grey-light px-1 text-sm tablet:text-xs outline-none focus:outline-none focus:ring-0 border-0 border-b-[1px] border-color-grey-light focus:border-b-[1px] focus:border-color-grey-light no-outline"
+                class="w-[72px] tablet:w-16 text-left bg-color-neutral-800 rounded-full -my-0.5 px-1.5 py-0.5 text-color-neutral-400 placeholder:text-color-neutral-400
+                text-[0.625rem] tablet:text-[0.5625rem] focus-visible:outline-none"
                 autoFocus
               />
             )
             : (
               <div
                 class={`w-[72px] tablet:w-16 text-left cursor-pointer select-none ${
-                  hoveredHandle === "max"
-                    ? "text-color-grey-light"
-                    : "text-color-grey"
-                } hover:text-color-grey-light transition-colors duration-200`}
+                  hoveredHandle === "max" || isHovered
+                    ? "text-color-hover"
+                    : "text-color-neutral-400"
+                } hover:text-color-hover transition-colors duration-200`}
                 onClick={() => startEditing("max")}
               >
                 {config.formatValue(maxValue)}
@@ -886,53 +897,56 @@ export const RangeSliderDual = ({
       </div>
 
       <div
-        class={`relative h-5 tablet:h-4 !rounded-full ${container2}`}
-        ref={sliderRef}
+        class={sliderBar}
         onClick={handleTrackClick}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
-        {/* Track fill with dynamic gradient */}
-        <div
-          class={trackFill}
-          style={trackGradientFill(hoveredHandle)}
-        />
+        <div class="absolute inset-y-0 left-[3px] right-[3px]" ref={sliderRef}>
+          {/* Track fill with dynamic gradient */}
+          <div
+            class={trackFill}
+            style={trackGradientFill(hoveredHandle, isHovered)}
+          />
 
-        {/* Min handle input - using 0-100 range for the slider */}
-        <input
-          type="range"
-          min="0"
-          max="100"
-          step="1"
-          value={adjustedValueToPositionMin(minValue)}
-          onChange={handleMinInput}
-          onInput={handleMinInput}
-          onMouseEnter={() => setHoveredHandle("min")}
-          onMouseLeave={() => setHoveredHandle(null)}
-          tabIndex={3}
-          class={`${sliderKnob} ${
-            lastChangedHandle === "min" ? "z-20" : "z-10"
-          }`}
-        />
+          {/* Min handle input - using 0-100 range for the slider */}
+          <input
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            value={adjustedValueToPositionMin(minValue)}
+            onChange={handleMinInput}
+            onInput={handleMinInput}
+            onMouseEnter={() => setHoveredHandle("min")}
+            onMouseLeave={() => setHoveredHandle(null)}
+            tabIndex={3}
+            class={`${sliderKnob} ${
+              lastChangedHandle === "min" ? "z-20" : "z-10"
+            }`}
+          />
 
-        {/* Max handle input - using 0-100 range for the slider */}
-        <input
-          type="range"
-          min="0"
-          max="100"
-          step="1"
-          value={adjustedValueToPositionMax(maxValue)}
-          onChange={handleMaxInput}
-          onInput={handleMaxInput}
-          onMouseEnter={() => setHoveredHandle("max")}
-          onMouseLeave={() => setHoveredHandle(null)}
-          tabIndex={4}
-          class={`${sliderKnob} ${
-            lastChangedHandle === "max" ? "z-20" : "z-10"
-          }`}
-        />
+          {/* Max handle input - using 0-100 range for the slider */}
+          <input
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            value={adjustedValueToPositionMax(maxValue)}
+            onChange={handleMaxInput}
+            onInput={handleMaxInput}
+            onMouseEnter={() => setHoveredHandle("max")}
+            onMouseLeave={() => setHoveredHandle(null)}
+            tabIndex={4}
+            class={`${sliderKnob} ${
+              lastChangedHandle === "max" ? "z-20" : "z-10"
+            }`}
+          />
+        </div>
       </div>
 
       {/* Tick marks for the segment boundaries */}
-      <div class="relative w-full h-6 pt-1.5 tablet:pt-1 text-xs tablet:text-[10px] font-regular text-color-grey-semidark cursor-default select-none">
+      <div class="relative w-full h-6 pt-1.5 tablet:pt-1 text-xs tablet:text-[10px] font-regular text-color-neutral-500 cursor-default select-none">
         {config.tickMarks.map((mark, index) => {
           const position = config.tickMarkPositions[index];
           const isFirst = index === 0;
@@ -948,9 +962,9 @@ export const RangeSliderDual = ({
                   ? "transform-none"
                   : "transform -translate-x-1/2"
               } ${
-                hoveredHandle !== null
-                  ? "text-color-grey"
-                  : "text-color-grey-semidark"
+                hoveredHandle !== null || isHovered
+                  ? "text-color-hover"
+                  : "text-color-neutral-600"
               } transition-colors duration-100`}
             >
               {mark}

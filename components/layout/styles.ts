@@ -25,7 +25,7 @@ export const shadowGlowGrey =
 /* ===== CONTAINER LAYER STYLES ===== */
 // Overlay layer styles - used for drawer and modal containers
 export const container0 =
-  `bg-gradient-to-b from-color-neutral-950/95 via-color-neutral-900/70 to-neutral-1000/90 backdrop-blur-lg`;
+  `bg-gradient-to-b from-color-neutral-950/95 via-color-neutral-900/90 to-neutral-1000/90 backdrop-blur-lg`;
 // 1st layer styles
 export const container1 = `bg-border-container-1 rounded-3xl backdrop-blur-sm`;
 // 2nd layer styles - register tool tld dropdown uses same hardcoded values
@@ -137,7 +137,6 @@ export const loaderSpinLgPurple = `${loaderSpin} w-9 h-9 border-color-purple`;
 /* ===== TYPE DEFINITIONS ===== */
 export type LayoutStyles = {
   // Base styles
-  hr: string;
   transitionColors: string;
   transitionTransform: string;
   transitionAll: string;
@@ -147,10 +146,11 @@ export type LayoutStyles = {
   shadow: string;
   shadowL2: string;
 
-  container1: string;
   container0: string;
+  container1: string;
   container2: string;
   container2Hover: string;
+  containerPill: string;
 
   // Body styles
   body: string;
@@ -172,10 +172,7 @@ export type LayoutStyles = {
   // Row styles
   rowForm: string;
   rowResponsiveForm: string;
-  rowTable: string;
-  rowCardBorderLeft: string;
-  rowCardBorderRight: string;
-  rowCardBorderCenter: string;
+  rowContainerBackground: string;
 
   // Cell styles
   cellLeftCard: string;
@@ -189,6 +186,10 @@ export type LayoutStyles = {
   cellCenterL2Detail: string;
   cellStickyLeft: string;
 
+  // Image styles
+  imagePreviewTool: string;
+  imageUploadTool: string;
+
   // Loader styles
   loaderSpinXsGrey: string;
   loaderSpinSmGrey: string;
@@ -199,10 +200,6 @@ export type LayoutStyles = {
   loaderSpinPurple: string;
   loaderSpinLgPurple: string;
   loaderSkeleton: string;
-  loaderSkeletonImage: string;
-  loaderSkeletonMd: string;
-  loaderSkeletonLg: string;
-  loaderSkeletonFull: string;
 };
 
 /* ===== ALIGNMENT UTILITIES ===== */

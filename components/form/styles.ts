@@ -93,11 +93,11 @@ export const inputCheckbox = (
   ${
   checked
     ? canHoverSelected
-      ? "border-color-grey-light after:bg-color-grey-light group-hover:border-color-grey group-hover:after:bg-color-grey"
-      : "border-color-grey-light after:bg-color-grey-light"
+      ? "border-color-primary-400 after:bg-color-primary-400 group-hover:border-color-hover group-hover:after:bg-color-hover"
+      : "border-color-primary-400 after:bg-color-primary-400"
     : canHoverSelected
-    ? "border-color-grey group-hover:border-color-grey-light"
-    : "border-color-grey"
+    ? "border-color-neutral-500 group-hover:border-color-hover"
+    : "border-color-neutral-500"
 }
     after:content-['']
     after:block
@@ -139,13 +139,13 @@ export const labelLarge =
 /* ===== STATE STYLES ===== */
 export const stateDisabled = "opacity-50 cursor-not-allowed";
 export const stateLoading = "cursor-wait opacity-75";
-export const stateError = "text-xs border-red-500 focus:border-red-500";
-export const stateSuccess = "text-xs border-green-500 focus:border-green-500";
+export const stateError = "text-xs border-red-400 focus:border-red-400";
+export const stateSuccess = "text-xs border-green-400 focus:border-green-400";
 
 /* ===== MESSAGE STYLES ===== */
-export const messageError = "text-xs text-red-500 mt-2";
-export const messageSuccess = "text-xs text-green-500 mt-2";
-export const messageHelp = "text-xs text-color-grey-dark mt-1";
+export const messageError = "text-xs text-red-400 mt-2";
+export const messageSuccess = "text-xs text-green-400 mt-2";
+export const messageHelp = "text-xs text-color-neutral-500 mt-1";
 /* ===== ===== ===== */
 
 /* ===== TYPE DEFINITIONS ===== */
@@ -162,8 +162,10 @@ export type FormStyles = {
   inputNumeric: string;
   inputTextarea: string;
   inputSelect: string;
-  inputCheckbox: string;
-  inputRadio: string;
+  inputCheckbox: (
+    checked: boolean,
+    canHoverSelected: boolean,
+  ) => string;
   inputFieldDropdown: string;
   inputFieldDropdownHover: string;
 

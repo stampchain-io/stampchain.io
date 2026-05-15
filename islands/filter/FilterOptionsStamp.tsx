@@ -457,7 +457,7 @@ export function queryParamsToFilters(query: string): StampFilters {
     priceSource: "",
   };
 
-  // Parse stamp type parameter (NEW!)
+  // Parse stamp type parameter
   const stampTypeParam = params.get("type") || params.get("stampType");
   if (
     stampTypeParam &&

@@ -1,4 +1,4 @@
-import { RangeSliderDual, SelectorButtons, ToggleButton } from "$button";
+import { RangeSliderDual, ToggleButton } from "$button";
 import type {
   FrontendStampType,
   StampEdition,
@@ -10,13 +10,17 @@ import { inputCheckbox } from "$form";
 import { Checkbox } from "$islands/filter/FilterComponents.tsx";
 import { StampFilters } from "$islands/filter/FilterOptionsStamp.tsx";
 import { CollapsibleSection } from "$islands/layout/CollapsibleSection.tsx";
-import { labelLogicResponsive, labelXsPosition, labelXsR } from "$text";
+import {
+  eyebrowPositionFilter,
+  eyebrowPrimary,
+  labelLogicResponsive,
+} from "$text";
 import type { RadioProps } from "$types/ui.d.ts";
 import { useEffect, useRef, useState } from "preact/hooks";
 
 const defaultFilters: StampFilters = {
   // Stamp Type
-  stampType: "classic",
+  stampType: "all",
   // Market Place
   market: "",
   dispensers: false,
@@ -915,6 +919,14 @@ export const FilterContentStamp = ({
       const newFilters = {
         ...prevFilters,
         stampType: type,
+        // Clear filters that don't apply to recursive stamps
+        ...(type === "src-721" && {
+          fileType: [],
+          fileSize: null,
+          fileSizeMin: "",
+          fileSizeMax: "",
+          editions: [],
+        }),
       };
       onFiltersChange(newFilters);
       return newFilters;
@@ -923,22 +935,50 @@ export const FilterContentStamp = ({
 
   return (
     <div ref={drawerRef}>
-      {/* 🎯 STAMP TYPE FILTER - SELECTOR BUTTONS */}
-      <SelectorButtons
-        options={[
-          { value: "classic", label: "CLASSIC" },
-
-          { value: "posh", label: "POSH" },
-
-          { value: "cursed", label: "CURSED" },
-        ]}
-        value={filters.stampType}
-        onChange={(value) =>
-          handleStampTypeChange(value as "cursed" | "classic" | "posh")}
-        size="smR"
-        color="grey"
-        className="mt-2 mb-5 -mx-0.5"
-      />
+      {/* 🎯 STAMP TYPE FILTER */}
+      <CollapsibleSection
+        title="STAMP TYPE"
+        section="stampType"
+        expanded={expandedSections.stampType}
+        toggle={() => toggleSection("stampType")}
+        variant="collapsibleTitle"
+      >
+        <Radio
+          label="ALL"
+          value="all"
+          name="stampType"
+          checked={filters.stampType === "all"}
+          onChange={() => handleStampTypeChange("all")}
+        />
+        <Radio
+          label="CLASSIC"
+          value="classic"
+          name="stampType"
+          checked={filters.stampType === "classic"}
+          onChange={() => handleStampTypeChange("classic")}
+        />
+        <Radio
+          label="POSH"
+          value="posh"
+          name="stampType"
+          checked={filters.stampType === "posh"}
+          onChange={() => handleStampTypeChange("posh")}
+        />
+        <Radio
+          label="RECURSIVE"
+          value="src-721"
+          name="stampType"
+          checked={filters.stampType === "src-721"}
+          onChange={() => handleStampTypeChange("src-721")}
+        />
+        <Radio
+          label="CURSED"
+          value="cursed"
+          name="stampType"
+          checked={filters.stampType === "cursed"}
+          onChange={() => handleStampTypeChange("cursed")}
+        />
+      </CollapsibleSection>
 
       <CollapsibleSection
         title="MARKET PLACE"
@@ -955,7 +995,7 @@ export const FilterContentStamp = ({
             onChange={(value) =>
               toggleMarketType(value as "listings" | "sales")}
             mode="single"
-            size="smR"
+            size="xsR"
             spacing="evenFullwidth"
           />
         </div>
@@ -988,7 +1028,7 @@ export const FilterContentStamp = ({
                   }
                 }}
                 mode="multi"
-                size="smR"
+                size="xsR"
                 spacing="evenFullwidth"
                 disabledOptions={["atomics"]}
                 alwaysSelectedOptions={["dispensers"]}
@@ -1006,7 +1046,7 @@ export const FilterContentStamp = ({
                   checked={filters.listings === "all"}
                   onChange={() => handleListingPriceType("all")}
                 />
-                <div class={`${labelXsR} ${labelXsPosition}`}>
+                <div class={`${eyebrowPrimary} ${eyebrowPositionFilter}`}>
                   PRICE RANGE
                 </div>
                 <Radio
@@ -1080,7 +1120,7 @@ export const FilterContentStamp = ({
                   }
                 }}
                 mode="multi"
-                size="smR"
+                size="xsR"
                 spacing="evenFullwidth"
                 disabledOptions={["atomics"]}
                 alwaysSelectedOptions={["dispensers"]}
@@ -1104,7 +1144,7 @@ export const FilterContentStamp = ({
               checked={filters.sales === "volume"}
               onChange={() => handleSalesType("volume")}
             />
-            <div class={`${labelXsR} ${labelXsPosition}`}>
+            <div class={`${eyebrowPrimary} ${eyebrowPositionFilter}`}>
               PRICE RANGE
             </div>
             <Radio
@@ -1145,7 +1185,7 @@ export const FilterContentStamp = ({
                   onChange={(value) => handleVolumeChange(value as string)}
                   mode="single"
                   spacing="evenFullwidth"
-                  size="smR"
+                  size="xsR"
                 />
               </div>
             )} */
@@ -1154,247 +1194,255 @@ export const FilterContentStamp = ({
         )}
       </CollapsibleSection>
 
-      <CollapsibleSection
-        title="FILE TYPE"
-        section="fileType"
-        expanded={expandedSections.fileType}
-        toggle={() => toggleSection("fileType")}
-        variant="collapsibleTitle"
-      >
-        {/* Category: PIXEL */}
-        <div class={`${labelXsR} ${labelXsPosition}`}>
-          PIXELS
-        </div>
-        <Checkbox
-          key="jpg"
-          label="JPG/JPEG"
-          checked={filters.fileType.includes("jpg") ||
-            filters.fileType.includes("jpeg")}
-          onChange={() => toggleFileType("jpg")}
-        />
+      {filters.stampType !== "src-721" && (
+        <CollapsibleSection
+          title="FILE TYPE"
+          section="fileType"
+          expanded={expandedSections.fileType}
+          toggle={() => toggleSection("fileType")}
+          variant="collapsibleTitle"
+        >
+          {/* Category: PIXEL */}
+          <div class={`${eyebrowPrimary} ${eyebrowPositionFilter}`}>
+            PIXELS
+          </div>
+          <Checkbox
+            key="jpg"
+            label="JPG/JPEG"
+            checked={filters.fileType.includes("jpg") ||
+              filters.fileType.includes("jpeg")}
+            onChange={() => toggleFileType("jpg")}
+          />
 
-        <Checkbox
-          key="png"
-          label="PNG"
-          checked={filters.fileType.includes("png")}
-          onChange={() => toggleFileType("png")}
-        />
-        <Checkbox
-          key="gif"
-          label="GIF"
-          checked={filters.fileType.includes("gif")}
-          onChange={() => toggleFileType("gif")}
-        />
-        <Checkbox
-          key="webp"
-          label="WEBP"
-          checked={filters.fileType.includes("webp")}
-          onChange={() => toggleFileType("webp")}
-        />
-        <Checkbox
-          key="avif"
-          label="AVIF"
-          checked={filters.fileType.includes("avif")}
-          onChange={() => toggleFileType("avif")}
-        />
-        <Checkbox
-          key="bmp"
-          label="BMP"
-          checked={filters.fileType.includes("bmp")}
-          onChange={() => toggleFileType("bmp")}
-        />
+          <Checkbox
+            key="png"
+            label="PNG"
+            checked={filters.fileType.includes("png")}
+            onChange={() => toggleFileType("png")}
+          />
+          <Checkbox
+            key="gif"
+            label="GIF"
+            checked={filters.fileType.includes("gif")}
+            onChange={() => toggleFileType("gif")}
+          />
+          <Checkbox
+            key="webp"
+            label="WEBP"
+            checked={filters.fileType.includes("webp")}
+            onChange={() => toggleFileType("webp")}
+          />
+          <Checkbox
+            key="avif"
+            label="AVIF"
+            checked={filters.fileType.includes("avif")}
+            onChange={() => toggleFileType("avif")}
+          />
+          <Checkbox
+            key="bmp"
+            label="BMP"
+            checked={filters.fileType.includes("bmp")}
+            onChange={() => toggleFileType("bmp")}
+          />
 
-        {/* Category: VECTOR */}
-        <div class={`${labelXsR} ${labelXsPosition}`}>
-          VECTOR
-        </div>
-        <Checkbox
-          key="svg"
-          label="SVG"
-          checked={filters.fileType.includes("svg")}
-          onChange={() => toggleFileType("svg")}
-        />
-        <Checkbox
-          key="html"
-          label="HTML"
-          checked={filters.fileType.includes("html")}
-          onChange={() => toggleFileType("html")}
-        />
-        {
-          /* <Checkbox
+          {/* Category: VECTOR */}
+          <div class={`${eyebrowPrimary} ${eyebrowPositionFilter}`}>
+            VECTOR
+          </div>
+          <Checkbox
+            key="svg"
+            label="SVG"
+            checked={filters.fileType.includes("svg")}
+            onChange={() => toggleFileType("svg")}
+          />
+          <Checkbox
+            key="html"
+            label="HTML"
+            checked={filters.fileType.includes("html")}
+            onChange={() => toggleFileType("html")}
+          />
+          {
+            /* <Checkbox
           key="txt"
           label="TXT"
           checked={filters.fileType.includes("txt")}
           onChange={() => toggleFileType("txt")}
         />*/
-        }
+          }
 
-        {/* Category: AUDIO */}
-        <div class={`${labelXsR} ${labelXsPosition}`}>
-          AUDIO
-        </div>
-        <Checkbox
-          key="mp3"
-          label="MP3/MPEG"
-          checked={filters.fileType.includes("mp3") ||
-            filters.fileType.includes("mpeg")}
-          onChange={() => toggleFileType("mp3")}
-        />
-
-        {/* Category: ENCODING */}
-        <div class={`${labelXsR} ${labelXsPosition}`}>
-          ENCODING
-        </div>
-        <Checkbox
-          key="legacy"
-          label="LEGACY"
-          checked={filters.fileType.includes("legacy")}
-          onChange={() => toggleFileType("legacy")}
-        />
-        <Checkbox
-          key="olga"
-          label="OLGA"
-          checked={filters.fileType.includes("olga")}
-          onChange={() => toggleFileType("olga")}
-        />
-      </CollapsibleSection>
-
-      <CollapsibleSection
-        title="FILE SIZE"
-        section="fileSize"
-        expanded={expandedSections.fileSize}
-        toggle={() => toggleSection("fileSize")}
-        variant="collapsibleTitle"
-      >
-        <Radio
-          label="< 1KB"
-          value="<1kb"
-          checked={filters.fileSize === "<1kb"}
-          onChange={() => handleFileSizeChange("<1kb")}
-          name="fileSize"
-        />
-        <Radio
-          label="1KB - 7KB"
-          value="1kb-7kb"
-          checked={filters.fileSize === "1kb-7kb"}
-          onChange={() => handleFileSizeChange("1kb-7kb")}
-          name="fileSize"
-        />
-        <Radio
-          label="7KB - 32KB"
-          value="7kb-32kb"
-          checked={filters.fileSize === "7kb-32kb"}
-          onChange={() => handleFileSizeChange("7kb-32kb")}
-          name="fileSize"
-        />
-        <Radio
-          label="32KB - 64KB"
-          value="32kb-64kb"
-          checked={filters.fileSize === "32kb-64kb"}
-          onChange={() => handleFileSizeChange("32kb-64kb")}
-          name="fileSize"
-        />
-        <Radio
-          label="CUSTOM FILE SIZE"
-          value="custom"
-          checked={filters.fileSize === "custom"}
-          onChange={() => handleFileSizeChange("custom")}
-          name="fileSize"
-        />
-
-        {filters.fileSize === "custom" && (
-          <div class="mt-2">
-            <RangeSliderDual
-              variant="fileSize"
-              onChange={handleFileSizeRangeChange}
-              initialMin={filters.fileSizeMin
-                ? parseInt(filters.fileSizeMin)
-                : 0}
-              initialMax={filters.fileSizeMax
-                ? parseInt(filters.fileSizeMax)
-                : Infinity}
-            />
+          {/* Category: AUDIO */}
+          <div class={`${eyebrowPrimary} ${eyebrowPositionFilter}`}>
+            AUDIO
           </div>
-        )}
-      </CollapsibleSection>
-
-      <CollapsibleSection
-        title="EDITIONS"
-        section="editions"
-        expanded={expandedSections.editions}
-        toggle={() => toggleSection("editions")}
-        variant="collapsibleTitle"
-      >
-        <Checkbox
-          label="1/1"
-          checked={filters.editions.includes("single")}
-          onChange={() => toggleEdition("single")}
-        />
-        <Checkbox
-          label="MULTIPLE"
-          checked={filters.editions.includes("multiple")}
-          onChange={() => toggleEdition("multiple")}
-        />
-        <Checkbox
-          label="LOCKED"
-          checked={filters.editions.includes("locked")}
-          onChange={() => toggleEdition("locked")}
-        />
-        <Checkbox
-          label="UNLOCKED"
-          checked={filters.editions.includes("unlocked")}
-          onChange={() => toggleEdition("unlocked")}
-        />
-        <Checkbox
-          label="DIVISIBLE"
-          checked={filters.editions.includes("divisible")}
-          onChange={() => toggleEdition("divisible")}
-        />
-      </CollapsibleSection>
-
-      <CollapsibleSection
-        title="RANGE"
-        section="range"
-        expanded={expandedSections.range}
-        toggle={() => toggleSection("range")}
-        variant="collapsibleTitle"
-      >
-        {/* Preset ranges */}
-        {[100, 1000, 5000, 10000].map((value) => (
-          <Radio
-            key={value}
-            label={`< ${value}`}
-            value={value.toString()}
-            name="range"
-            checked={filters.range === value.toString()}
-            onChange={() => handleRangeChange(value.toString())}
+          <Checkbox
+            key="mp3"
+            label="MP3/MPEG"
+            checked={filters.fileType.includes("mp3") ||
+              filters.fileType.includes("mpeg")}
+            onChange={() => toggleFileType("mp3")}
           />
-        ))}
 
-        {/* Custom range option */}
-        <Radio
-          label="CUSTOM RANGE"
-          value="custom"
-          name="range"
-          checked={!filters.range &&
-            (filters.rangeMin !== "" || filters.rangeMax !== "")}
-          onChange={handleCustomRangeToggle}
-        />
-
-        {/* Custom range slider */}
-        <CollapsibleSection
-          title=""
-          section="customRange"
-          expanded={expandedSections.customRange}
-          toggle={() => {}}
-          variant="collapsibleLabel"
-        >
-          <RangeSliderDual
-            variant="range"
-            onChange={handleRangeSliderChange}
+          {/* Category: ENCODING */}
+          <div class={`${eyebrowPrimary} ${eyebrowPositionFilter}`}>
+            ENCODING
+          </div>
+          <Checkbox
+            key="legacy"
+            label="LEGACY"
+            checked={filters.fileType.includes("legacy")}
+            onChange={() => toggleFileType("legacy")}
+          />
+          <Checkbox
+            key="olga"
+            label="OLGA"
+            checked={filters.fileType.includes("olga")}
+            onChange={() => toggleFileType("olga")}
           />
         </CollapsibleSection>
-      </CollapsibleSection>
+      )}
+
+      {filters.stampType !== "src-721" && (
+        <CollapsibleSection
+          title="FILE SIZE"
+          section="fileSize"
+          expanded={expandedSections.fileSize}
+          toggle={() => toggleSection("fileSize")}
+          variant="collapsibleTitle"
+        >
+          <Radio
+            label="< 1KB"
+            value="<1kb"
+            checked={filters.fileSize === "<1kb"}
+            onChange={() => handleFileSizeChange("<1kb")}
+            name="fileSize"
+          />
+          <Radio
+            label="1KB - 7KB"
+            value="1kb-7kb"
+            checked={filters.fileSize === "1kb-7kb"}
+            onChange={() => handleFileSizeChange("1kb-7kb")}
+            name="fileSize"
+          />
+          <Radio
+            label="7KB - 32KB"
+            value="7kb-32kb"
+            checked={filters.fileSize === "7kb-32kb"}
+            onChange={() => handleFileSizeChange("7kb-32kb")}
+            name="fileSize"
+          />
+          <Radio
+            label="32KB - 64KB"
+            value="32kb-64kb"
+            checked={filters.fileSize === "32kb-64kb"}
+            onChange={() => handleFileSizeChange("32kb-64kb")}
+            name="fileSize"
+          />
+          <Radio
+            label="CUSTOM FILE SIZE"
+            value="custom"
+            checked={filters.fileSize === "custom"}
+            onChange={() => handleFileSizeChange("custom")}
+            name="fileSize"
+          />
+
+          {filters.fileSize === "custom" && (
+            <div class="mt-2">
+              <RangeSliderDual
+                variant="fileSize"
+                onChange={handleFileSizeRangeChange}
+                initialMin={filters.fileSizeMin
+                  ? parseInt(filters.fileSizeMin)
+                  : 0}
+                initialMax={filters.fileSizeMax
+                  ? parseInt(filters.fileSizeMax)
+                  : Infinity}
+              />
+            </div>
+          )}
+        </CollapsibleSection>
+      )}
+
+      {filters.stampType !== "src-721" && (
+        <CollapsibleSection
+          title="EDITIONS"
+          section="editions"
+          expanded={expandedSections.editions}
+          toggle={() => toggleSection("editions")}
+          variant="collapsibleTitle"
+        >
+          <Checkbox
+            label="1/1"
+            checked={filters.editions.includes("single")}
+            onChange={() => toggleEdition("single")}
+          />
+          <Checkbox
+            label="MULTIPLE"
+            checked={filters.editions.includes("multiple")}
+            onChange={() => toggleEdition("multiple")}
+          />
+          <Checkbox
+            label="LOCKED"
+            checked={filters.editions.includes("locked")}
+            onChange={() => toggleEdition("locked")}
+          />
+          <Checkbox
+            label="UNLOCKED"
+            checked={filters.editions.includes("unlocked")}
+            onChange={() => toggleEdition("unlocked")}
+          />
+          <Checkbox
+            label="DIVISIBLE"
+            checked={filters.editions.includes("divisible")}
+            onChange={() => toggleEdition("divisible")}
+          />
+        </CollapsibleSection>
+      )}
+
+      {filters.stampType !== "posh" && filters.stampType !== "cursed" && (
+        <CollapsibleSection
+          title="RANGE"
+          section="range"
+          expanded={expandedSections.range}
+          toggle={() => toggleSection("range")}
+          variant="collapsibleTitle"
+        >
+          {/* Preset ranges */}
+          {[100, 1000, 5000, 10000].map((value) => (
+            <Radio
+              key={value}
+              label={`< ${value}`}
+              value={value.toString()}
+              name="range"
+              checked={filters.range === value.toString()}
+              onChange={() => handleRangeChange(value.toString())}
+            />
+          ))}
+
+          {/* Custom range option */}
+          <Radio
+            label="CUSTOM RANGE"
+            value="custom"
+            name="range"
+            checked={!filters.range &&
+              (filters.rangeMin !== "" || filters.rangeMax !== "")}
+            onChange={handleCustomRangeToggle}
+          />
+
+          {/* Custom range slider */}
+          <CollapsibleSection
+            title=""
+            section="customRange"
+            expanded={expandedSections.customRange}
+            toggle={() => {}}
+            variant="collapsibleLabel"
+          >
+            <RangeSliderDual
+              variant="range"
+              onChange={handleRangeSliderChange}
+            />
+          </CollapsibleSection>
+        </CollapsibleSection>
+      )}
     </div>
   );
 };

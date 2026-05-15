@@ -122,7 +122,7 @@ export const StampOverviewHeader = (
           <div
             class={`flex relative ${container2} !rounded-full
              items-start justify-between
-             py-1.5 px-4 tablet:py-1 tablet:px-4 gap-4 tablet:gap-3`}
+             py-1.5 px-5 tablet:py-1 tablet:px-4 gap-5 tablet:gap-4`}
           >
             <FilterButton
               count={countActiveStampFilters(
