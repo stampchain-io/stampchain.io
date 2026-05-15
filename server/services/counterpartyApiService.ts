@@ -1612,6 +1612,66 @@ export class CounterpartyApiManager {
     throw new Error("All nodes failed to compose fairmint transaction.");
   }
 
+  static async composeBroadcast(
+    address: string,
+    text: string,
+    value: number = -1,
+    fee_per_kb: number = 10000,
+    timestamp: number = Math.floor(Date.now() / 1000)
+  ): Promise<string> {
+    const endpoint = `/addresses/${address}/compose/broadcast`;
+    const body = {
+      text,
+      value,
+      timestamp,
+      fee_per_kb,
+      allow_unconfirmed_inputs: true
+    };
+
+    let lastError: string | null = null;
+    let isRateLimited = false;
+
+    // We can't use fetchXcpV2WithCache because this is a POST request
+    for (const node of XCP_V2_NODES) {
+      if (node.name === "mock") continue; // Skip mock node for real composes
+      const url = `${node.url}${endpoint}`;
+
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        });
+
+        if (response.status === 429) {
+          isRateLimited = true;
+          continue;
+        }
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          lastError = data.error?.message || data.error || `HTTP error ${response.status}`;
+          continue;
+        }
+
+        if (data.result && data.result.rawtransaction) {
+          return data.result.rawtransaction;
+        } else {
+          lastError = "Invalid response from Counterparty API";
+        }
+      } catch (error) {
+        lastError = error instanceof Error ? error.message : String(error);
+      }
+    }
+
+    if (isRateLimited) {
+      throw new Error("All Counterparty nodes are currently rate limited.");
+    }
+
+    throw new Error(lastError || "All nodes failed to compose broadcast transaction.");
+  }
+
   static async getFairminters(): Promise<Fairminter[]> {
     const endpoint = "/fairminters";
     let allFairminters: Fairminter[] = [];

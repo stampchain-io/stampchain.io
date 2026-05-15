@@ -55,6 +55,15 @@ import * as $api_v2_error from "./routes/api/v2/error.ts";
 import * as $api_v2_fairmint_compose from "./routes/api/v2/fairmint/compose.ts";
 import * as $api_v2_fairmint_index from "./routes/api/v2/fairmint/index.ts";
 import * as $api_v2_health from "./routes/api/v2/health.ts";
+import * as $api_v2_news_auth_burner_generate from "./routes/api/v2/news/auth/burner/generate.ts";
+import * as $api_v2_news_auth_burner_publish from "./routes/api/v2/news/auth/burner/publish.ts";
+import * as $api_v2_news_auth_burner_status from "./routes/api/v2/news/auth/burner/status.ts";
+import * as $api_v2_news_auth_challenge from "./routes/api/v2/news/auth/challenge.ts";
+import * as $api_v2_news_auth_construct_publish from "./routes/api/v2/news/auth/construct-publish.ts";
+import * as $api_v2_news_auth_login from "./routes/api/v2/news/auth/login.ts";
+import * as $api_v2_news_auth_logout from "./routes/api/v2/news/auth/logout.ts";
+import * as $api_v2_news_broadcasts from "./routes/api/v2/news/broadcasts.ts";
+import * as $api_v2_news_publisher_address_ from "./routes/api/v2/news/publisher/[address].ts";
 import * as $api_v2_olga_estimate from "./routes/api/v2/olga/estimate.ts";
 import * as $api_v2_olga_mint from "./routes/api/v2/olga/mint.ts";
 import * as $api_v2_src101_deploy_hash_tokenid_ from "./routes/api/v2/src101/[deploy_hash]/[tokenid].ts";
@@ -132,6 +141,10 @@ import * as $howto_transferbitname_index from "./routes/howto/transferbitname/in
 import * as $howto_transfertoken_index from "./routes/howto/transfertoken/index.tsx";
 import * as $index from "./routes/index.tsx";
 import * as $media_index from "./routes/media/index.tsx";
+import * as $news_address_ from "./routes/news/[address].tsx";
+import * as $news_index from "./routes/news/index.tsx";
+import * as $news_profile_me from "./routes/news/profile/me.tsx";
+import * as $news_publish from "./routes/news/publish.tsx";
 import * as $presskit_index from "./routes/presskit/index.tsx";
 import * as $s_id_ from "./routes/s/[...id].tsx";
 import * as $sitemap_xml from "./routes/sitemap.xml.ts";
@@ -253,6 +266,8 @@ import * as $modal_SearchSRC20Modal from "./islands/modal/SearchSRC20Modal.tsx";
 import * as $modal_SearchStampModal from "./islands/modal/SearchStampModal.tsx";
 import * as $modal_SendBTCModal from "./islands/modal/SendBTCModal.tsx";
 import * as $modal_states from "./islands/modal/states.ts";
+import * as $news_ProfileRedirect from "./islands/news/ProfileRedirect.tsx";
+import * as $news_PublishPortal from "./islands/news/PublishPortal.tsx";
 import * as $section_FeeCalculatorBase from "./islands/section/FeeCalculatorBase.tsx";
 import * as $section_cta_ContactCta from "./islands/section/cta/ContactCta.tsx";
 import * as $section_cta_DonateCta from "./islands/section/cta/DonateCta.tsx";
@@ -383,6 +398,20 @@ const manifest = {
     "./routes/api/v2/fairmint/compose.ts": $api_v2_fairmint_compose,
     "./routes/api/v2/fairmint/index.ts": $api_v2_fairmint_index,
     "./routes/api/v2/health.ts": $api_v2_health,
+    "./routes/api/v2/news/auth/burner/generate.ts":
+      $api_v2_news_auth_burner_generate,
+    "./routes/api/v2/news/auth/burner/publish.ts":
+      $api_v2_news_auth_burner_publish,
+    "./routes/api/v2/news/auth/burner/status.ts":
+      $api_v2_news_auth_burner_status,
+    "./routes/api/v2/news/auth/challenge.ts": $api_v2_news_auth_challenge,
+    "./routes/api/v2/news/auth/construct-publish.ts":
+      $api_v2_news_auth_construct_publish,
+    "./routes/api/v2/news/auth/login.ts": $api_v2_news_auth_login,
+    "./routes/api/v2/news/auth/logout.ts": $api_v2_news_auth_logout,
+    "./routes/api/v2/news/broadcasts.ts": $api_v2_news_broadcasts,
+    "./routes/api/v2/news/publisher/[address].ts":
+      $api_v2_news_publisher_address_,
     "./routes/api/v2/olga/estimate.ts": $api_v2_olga_estimate,
     "./routes/api/v2/olga/mint.ts": $api_v2_olga_mint,
     "./routes/api/v2/src101/[deploy_hash]/[tokenid].ts":
@@ -481,6 +510,10 @@ const manifest = {
     "./routes/howto/transfertoken/index.tsx": $howto_transfertoken_index,
     "./routes/index.tsx": $index,
     "./routes/media/index.tsx": $media_index,
+    "./routes/news/[address].tsx": $news_address_,
+    "./routes/news/index.tsx": $news_index,
+    "./routes/news/profile/me.tsx": $news_profile_me,
+    "./routes/news/publish.tsx": $news_publish,
     "./routes/presskit/index.tsx": $presskit_index,
     "./routes/s/[...id].tsx": $s_id_,
     "./routes/sitemap.xml.ts": $sitemap_xml,
@@ -619,6 +652,8 @@ const manifest = {
     "./islands/modal/SearchStampModal.tsx": $modal_SearchStampModal,
     "./islands/modal/SendBTCModal.tsx": $modal_SendBTCModal,
     "./islands/modal/states.ts": $modal_states,
+    "./islands/news/ProfileRedirect.tsx": $news_ProfileRedirect,
+    "./islands/news/PublishPortal.tsx": $news_PublishPortal,
     "./islands/section/FeeCalculatorBase.tsx": $section_FeeCalculatorBase,
     "./islands/section/cta/ContactCta.tsx": $section_cta_ContactCta,
     "./islands/section/cta/DonateCta.tsx": $section_cta_DonateCta,
