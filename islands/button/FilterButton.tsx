@@ -56,9 +56,9 @@ export function FilterButton(
       <Icon
         type="iconButton"
         name="filter"
-        weight="normal"
-        size="smR"
-        color="grey"
+        weight="bold"
+        size="xsR"
+        color="greyLight"
         onClick={() => {
           setOpen(!open);
           setIsTooltipVisible(false);

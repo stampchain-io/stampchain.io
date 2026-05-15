@@ -10,13 +10,14 @@ import {
   filtersToQueryParams,
   StampFilters as FilterStampFilters,
 } from "$islands/filter/FilterOptionsStamp.tsx";
-import { container1 } from "$layout";
+import { container2 } from "$layout";
 import {
   getCurrentPathname,
   safeNavigate,
 } from "$lib/utils/navigation/freshNavigationUtils.ts";
-import { titleNeutral } from "$text";
+import { titlePrimary } from "$text";
 import type { StampOverviewHeaderProps } from "$types/ui.d.ts";
+import { createPortal } from "preact/compat";
 import { useCallback, useState } from "preact/hooks";
 
 /* ===== COMPONENT ===== */
@@ -93,7 +94,7 @@ export const StampOverviewHeader = (
     <div class="relative flex flex-col w-full gap-1.5">
       <div class="flex flex-row justify-between items-start w-full">
         {/* ===== TITLE ===== */}
-        <h1 class={`${titleNeutral} ml-1.5`}>ART STAMPS</h1>
+        <h1 class={`${titlePrimary} ml-1.5`}>ART STAMPS</h1>
       </div>
 
       {/* ===== STAMP TYPE SELECTOR AND CONTROLS ===== */}
@@ -102,14 +103,16 @@ export const StampOverviewHeader = (
         <div class="flex gap-3 w-full mobileMd:w-auto">
           <SelectorButtons
             options={[
+              { value: "all", label: "ALL" },
               { value: "classic", label: "CLASSIC" },
               { value: "posh", label: "POSH" },
+              { value: "src-721", label: "RECURSIVE" },
               { value: "cursed", label: "CURSED" },
             ]}
-            value={currentFilters.stampType || "classic"}
+            value={currentFilters.stampType || "all"}
             onChange={handleStampTypeChange}
-            size="smR"
-            color="grey"
+            size="xsR"
+            color="purple"
             className="w-full mobileMd:w-auto"
           />
         </div>
@@ -117,10 +120,9 @@ export const StampOverviewHeader = (
         {/* Filter and Sort Controls - Right */}
         <div class="flex justify-start mobileMd:justify-end pt-3 mobileMd:pt-0">
           <div
-            class={`flex relative ${container1} !rounded-full
+            class={`flex relative ${container2} !rounded-full
              items-start justify-between
-             gap-7 py-1.5 px-5
-             tablet:gap-5 tablet:py-1 tablet:px-4 `}
+             py-1.5 px-4 tablet:py-1 tablet:px-4 gap-4 tablet:gap-3`}
           >
             <FilterButton
               count={countActiveStampFilters(
@@ -135,12 +137,15 @@ export const StampOverviewHeader = (
         </div>
       </div>
 
-      {/* Filter Drawer */}
-      <FilterDrawer
-        open={isOpen1}
-        setOpen={handleOpen1}
-        type="stamp"
-      />
+      {/* Filter Drawer — portalled to document.body to escape backdrop-filter containing block */}
+      {typeof document !== "undefined" && createPortal(
+        <FilterDrawer
+          open={isOpen1}
+          setOpen={handleOpen1}
+          type="stamp"
+        />,
+        document.body,
+      )}
     </div>
   );
 };
