@@ -2287,9 +2287,9 @@ export interface StampGalleryProps {
 }
 
 /**
- * Props for FreshStampGallery component
+ * Props for StampGalleryWallet component
  */
-export interface FreshStampGalleryProps {
+export interface StampGalleryWalletProps {
   initialData: StampRow[];
   initialPagination: PaginationState;
   address?: string;

@@ -11,8 +11,8 @@ import { describe, it } from "jsr:@std/testing@1.0.14/bdd";
 describe("SSR Safety Integration Tests", () => {
   const testFiles = [
     "islands/modal/FilterSRC20Modal.tsx",
-    "components/card/SRC20CardMinting.tsx",
-    "components/card/SRC20CardSmMinting.tsx",
+    "components/table/src20OverviewTable/SRC20Minting.tsx",
+    "components/table/src20OverviewTable/SRC20MintingNarrow.tsx",
     "lib/utils/navigation/freshNavigationUtils.ts",
     "islands/modal/SearchSRC20Modal.tsx",
     "islands/modal/SearchStampModal.tsx",
@@ -208,8 +208,9 @@ describe("SSR Safety Pattern Recognition", () => {
     assertStringIncludes(content, "globalThis.location.href");
   });
 
-  it("should recognize SRC20CardMinting safety pattern", async () => {
-    const filePath = "../components/card/SRC20CardMinting.tsx";
+  it("should recognize SRC20Minting safety pattern", async () => {
+    const filePath =
+      "../components/table/src20OverviewTable/SRC20Minting.tsx";
     if (!existsSync(filePath)) return;
 
     const content = await Deno.readTextFile(filePath);

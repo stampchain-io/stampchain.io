@@ -19,7 +19,7 @@ function splitTextAndEmojis(text: string): { text: string; emoji: string } {
   };
 }
 
-Deno.test("SRC20Card splitTextAndEmojis - string inputs (normal case)", () => {
+Deno.test("SRC20Overview splitTextAndEmojis - string inputs (normal case)", () => {
   // Test basic text without emojis
   assertEquals(
     splitTextAndEmojis("PEPE"),
@@ -67,7 +67,7 @@ Deno.test("SRC20Card splitTextAndEmojis - string inputs (normal case)", () => {
   );
 });
 
-Deno.test("SRC20Card splitTextAndEmojis - numeric inputs (bug case)", () => {
+Deno.test("SRC20Overview splitTextAndEmojis - numeric inputs (bug case)", () => {
   // Test with number 420 - the original bug case
   assertEquals(
     splitTextAndEmojis(420 as any),
@@ -111,7 +111,7 @@ Deno.test("SRC20Card splitTextAndEmojis - numeric inputs (bug case)", () => {
   );
 });
 
-Deno.test("SRC20Card splitTextAndEmojis - null/undefined inputs", () => {
+Deno.test("SRC20Overview splitTextAndEmojis - null/undefined inputs", () => {
   // Test with null
   assertEquals(
     splitTextAndEmojis(null as any),
@@ -125,7 +125,7 @@ Deno.test("SRC20Card splitTextAndEmojis - null/undefined inputs", () => {
   );
 });
 
-Deno.test("SRC20Card splitTextAndEmojis - empty and whitespace inputs", () => {
+Deno.test("SRC20Overview splitTextAndEmojis - empty and whitespace inputs", () => {
   // Test with empty string (already covered but worth emphasizing)
   assertEquals(
     splitTextAndEmojis(""),
@@ -145,7 +145,7 @@ Deno.test("SRC20Card splitTextAndEmojis - empty and whitespace inputs", () => {
   );
 });
 
-Deno.test("SRC20Card splitTextAndEmojis - mixed content with various data types", () => {
+Deno.test("SRC20Overview splitTextAndEmojis - mixed content with various data types", () => {
   // Test boolean - true is truthy
   assertEquals(
     splitTextAndEmojis(true as any),
@@ -171,7 +171,7 @@ Deno.test("SRC20Card splitTextAndEmojis - mixed content with various data types"
   );
 });
 
-Deno.test("SRC20Card splitTextAndEmojis - edge cases with emojis", () => {
+Deno.test("SRC20Overview splitTextAndEmojis - edge cases with emojis", () => {
   // Test with various emoji types
 
   // Standard emoji
@@ -205,7 +205,7 @@ Deno.test("SRC20Card splitTextAndEmojis - edge cases with emojis", () => {
   );
 });
 
-Deno.test("SRC20Card splitTextAndEmojis - special characters", () => {
+Deno.test("SRC20Overview splitTextAndEmojis - special characters", () => {
   // Test with special characters that aren't emojis
   assertEquals(
     splitTextAndEmojis("TEST@#$%"),
@@ -225,7 +225,7 @@ Deno.test("SRC20Card splitTextAndEmojis - special characters", () => {
   );
 });
 
-Deno.test("SRC20Card splitTextAndEmojis - real-world SRC20 token examples", () => {
+Deno.test("SRC20Overview splitTextAndEmojis - real-world SRC20 token examples", () => {
   // Test common SRC20 token patterns that might cause issues
 
   // Numeric token names

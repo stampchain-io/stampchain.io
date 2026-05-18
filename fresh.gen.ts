@@ -177,9 +177,6 @@ import * as $button_ToolsButton from "./islands/button/ToolsButton.tsx";
 import * as $button_WalletButton from "./islands/button/WalletButton.tsx";
 import * as $button_buttonActions from "./islands/button/buttonActions.tsx";
 import * as $card_RecentSaleCard from "./islands/card/RecentSaleCard.tsx";
-import * as $card_SRC20CardBase from "./islands/card/SRC20CardBase.tsx";
-import * as $card_SRC20CardMinted from "./islands/card/SRC20CardMinted.tsx";
-import * as $card_SRC20CardMinting from "./islands/card/SRC20CardMinting.tsx";
 import * as $card_StampCard from "./islands/card/StampCard.tsx";
 import * as $card_WalletStampCard from "./islands/card/WalletStampCard.tsx";
 import * as $card_index from "./islands/card/index.ts";
@@ -263,15 +260,15 @@ import * as $section_feed_SalesActivityFeed from "./islands/section/feed/SalesAc
 import * as $section_gallery_Carousel from "./islands/section/gallery/Carousel.tsx";
 import * as $section_gallery_CollectionDetailGallery from "./islands/section/gallery/CollectionDetailGallery.tsx";
 import * as $section_gallery_CollectionGallery from "./islands/section/gallery/CollectionGallery.tsx";
-import * as $section_gallery_FreshSRC20Gallery from "./islands/section/gallery/FreshSRC20Gallery.tsx";
-import * as $section_gallery_FreshStampGallery from "./islands/section/gallery/FreshStampGallery.tsx";
 import * as $section_gallery_PartnersBanner from "./islands/section/gallery/PartnersBanner.tsx";
 import * as $section_gallery_RecentSalesGallery from "./islands/section/gallery/RecentSalesGallery.tsx";
 import * as $section_gallery_SRC20Deploys from "./islands/section/gallery/SRC20Deploys.tsx";
 import * as $section_gallery_SRC20Gallery from "./islands/section/gallery/SRC20Gallery.tsx";
+import * as $section_gallery_SRC20GalleryWallet from "./islands/section/gallery/SRC20GalleryWallet.tsx";
 import * as $section_gallery_SRC20Mints from "./islands/section/gallery/SRC20Mints.tsx";
 import * as $section_gallery_SRC20Transfers from "./islands/section/gallery/SRC20Transfers.tsx";
 import * as $section_gallery_StampGallery from "./islands/section/gallery/StampGallery.tsx";
+import * as $section_gallery_StampGalleryWallet from "./islands/section/gallery/StampGalleryWallet.tsx";
 import * as $section_gallery_StampOverviewGallery from "./islands/section/gallery/StampOverviewGallery.tsx";
 import * as $section_gallery_StampSales from "./islands/section/gallery/StampSales.tsx";
 import * as $section_gallery_StampSends from "./islands/section/gallery/StampSends.tsx";
@@ -528,9 +525,6 @@ const manifest = {
     "./islands/button/WalletButton.tsx": $button_WalletButton,
     "./islands/button/buttonActions.tsx": $button_buttonActions,
     "./islands/card/RecentSaleCard.tsx": $card_RecentSaleCard,
-    "./islands/card/SRC20CardBase.tsx": $card_SRC20CardBase,
-    "./islands/card/SRC20CardMinted.tsx": $card_SRC20CardMinted,
-    "./islands/card/SRC20CardMinting.tsx": $card_SRC20CardMinting,
     "./islands/card/StampCard.tsx": $card_StampCard,
     "./islands/card/WalletStampCard.tsx": $card_WalletStampCard,
     "./islands/card/index.ts": $card_index,
@@ -633,20 +627,20 @@ const manifest = {
       $section_gallery_CollectionDetailGallery,
     "./islands/section/gallery/CollectionGallery.tsx":
       $section_gallery_CollectionGallery,
-    "./islands/section/gallery/FreshSRC20Gallery.tsx":
-      $section_gallery_FreshSRC20Gallery,
-    "./islands/section/gallery/FreshStampGallery.tsx":
-      $section_gallery_FreshStampGallery,
     "./islands/section/gallery/PartnersBanner.tsx":
       $section_gallery_PartnersBanner,
     "./islands/section/gallery/RecentSalesGallery.tsx":
       $section_gallery_RecentSalesGallery,
     "./islands/section/gallery/SRC20Deploys.tsx": $section_gallery_SRC20Deploys,
     "./islands/section/gallery/SRC20Gallery.tsx": $section_gallery_SRC20Gallery,
+    "./islands/section/gallery/SRC20GalleryWallet.tsx":
+      $section_gallery_SRC20GalleryWallet,
     "./islands/section/gallery/SRC20Mints.tsx": $section_gallery_SRC20Mints,
     "./islands/section/gallery/SRC20Transfers.tsx":
       $section_gallery_SRC20Transfers,
     "./islands/section/gallery/StampGallery.tsx": $section_gallery_StampGallery,
+    "./islands/section/gallery/StampGalleryWallet.tsx":
+      $section_gallery_StampGalleryWallet,
     "./islands/section/gallery/StampOverviewGallery.tsx":
       $section_gallery_StampOverviewGallery,
     "./islands/section/gallery/StampSales.tsx": $section_gallery_StampSales,

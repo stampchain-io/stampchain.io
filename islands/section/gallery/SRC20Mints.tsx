@@ -1,5 +1,5 @@
 /* ===== SRC20 RECENT MINTS GALLERY COMPONENT ===== */
-import { SRC20CardSmMinting } from "$card";
+import { SRC20MintingNarrow } from "$card";
 import { containerBackground } from "$layout";
 import {
   notificationBody,
@@ -105,7 +105,7 @@ export default function SRC20MintsGallery() {
         )
         : (
           <div class="-mb-3">
-            <SRC20CardSmMinting
+            <SRC20MintingNarrow
               data={transactions}
               fromPage="stamping/src20"
               timeframe="24H"

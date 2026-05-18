@@ -1,16 +1,16 @@
 /**
- * @fileoverview FreshSRC20Gallery - Fresh.js-compatible SRC-20 gallery
- * @description Replaces SRC20Gallery with Fresh.js partial navigation and
- * maintains existing sorting functionality (ASC/DESC)
+ * @fileoverview SRC20GalleryWallet - Wallet-specific SRC-20 gallery
+ * @description Client-side gallery for wallet SRC-20 token holdings with
+ * pagination and sorting functionality (ASC/DESC)
  */
 
 import { PaginationButtons } from "$button";
-import { SRC20CardSm } from "$components/card/SRC20CardSm.tsx";
+import { SRC20OverviewNarrow } from "$components/table/src20OverviewTable/SRC20OverviewNarrow.tsx";
 import { LoadingIcon } from "$icon";
 import { useSSRSafeNavigation } from "$lib/hooks/useSSRSafeNavigation.ts";
 import { hasProperty, isNumber } from "$lib/utils/errorTypeGuards.ts";
 import type { EnrichedSRC20Row } from "$types/src20.d.ts";
-import type { SRC20GalleryProps as FreshSRC20GalleryProps } from "$types/ui.d.ts";
+import type { SRC20GalleryProps as SRC20GalleryWalletProps } from "$types/ui.d.ts";
 import { useEffect, useMemo, useState } from "preact/hooks";
 
 // ===== TYPES =====
@@ -26,7 +26,7 @@ interface FreshNavigationOptions {
 
 // ===== COMPONENT =====
 
-export default function FreshSRC20Gallery({
+export default function SRC20GalleryWallet({
   initialData,
   initialPagination,
   address,
@@ -34,7 +34,7 @@ export default function FreshSRC20Gallery({
   fromPage = "wallet",
   showLoadingSkeleton = true,
   enablePartialNavigation = true,
-}: FreshSRC20GalleryProps) {
+}: SRC20GalleryWalletProps) {
   const { updateSearchParams, isClient } = useSSRSafeNavigation();
   // ===== STATE =====
   const [tokens, setTokens] = useState<EnrichedSRC20Row[]>(initialData);
@@ -393,7 +393,7 @@ export default function FreshSRC20Gallery({
 
       {/* SRC-20 Token Table */}
       <div class="relative">
-        <SRC20CardSm
+        <SRC20OverviewNarrow
           data={memoizedTokens}
           fromPage={fromPage}
           onImageClick={(imgSrc: string) => {

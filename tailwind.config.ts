@@ -561,7 +561,7 @@ export default {
             "border-radius": "inherit",
             "padding": "1px",
             "background":
-              "linear-gradient(to bottom, var(--color-neutral-800), var(--color-neutral-900))",
+              "linear-gradient(to bottom, var(--color-neutral-700), var(--color-neutral-800), var(--color-neutral-900))",
             "-webkit-mask":
               "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
             "mask":
@@ -590,7 +590,7 @@ export default {
             "border-radius": "inherit",
             "padding": "1px",
             "background":
-              "linear-gradient(to bottom, var(--color-neutral-700), var(--color-neutral-800))",
+              "linear-gradient(to bottom, var(--color-neutral-700), var(--color-neutral-700), var(--color-neutral-800))",
             "-webkit-mask":
               "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
             "mask":
@@ -610,7 +610,7 @@ export default {
             "border-radius": "inherit",
             "padding": "1px",
             "background":
-              "linear-gradient(to bottom, var(--color-primary-300), var(--color-primary-400))",
+              "linear-gradient(to bottom, var(--color-primary-300), var(--color-primary-400), var(--color-primary-400))",
             "-webkit-mask":
               "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
             "mask":
@@ -630,7 +630,7 @@ export default {
             "border-radius": "inherit",
             "padding": "1px",
             "background":
-              "linear-gradient(to bottom, var(--color-primary-400), var(--color-primary-400))",
+              "linear-gradient(to bottom, var(--color-primary-400), var(--color-primary-400), var(--color-primary-400))",
             "-webkit-mask":
               "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
             "mask":

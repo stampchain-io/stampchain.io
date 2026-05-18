@@ -2,15 +2,15 @@
 
 /**
  * Import Alias Improvement Analysis Script
- * 
+ *
  * This script analyzes the codebase to identify and categorize
  * import alias improvements using ts-morph v20+ for AST analysis.
- * 
+ *
  * Designed for Task 32.1: Create Impact Analysis and Categorization Script
  */
 
 import { walk } from "https://deno.land/std@0.219.1/fs/mod.ts";
-import { basename, dirname, relative, join } from "https://deno.land/std@0.219.1/path/mod.ts";
+import { basename, dirname, join } from "https://deno.land/std@0.219.1/path/mod.ts";
 
 interface ImportImprovement {
   file: string;
@@ -55,7 +55,7 @@ class ImportAnalyzer {
 
   async analyzeCodebase(): Promise<AnalysisReport> {
     console.log("🔍 Starting import alias improvement analysis...");
-    
+
     // Scan all TypeScript files
     const files = [];
     for await (const entry of walk(".", {
@@ -100,11 +100,11 @@ class ImportAnalyzer {
     try {
       const content = await this.readFile(filePath);
       const lines = content.split('\n');
-      
+
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
         const importMatch = this.extractImportStatement(line);
-        
+
         if (importMatch) {
           const improvement = this.analyzeImportStatement(
             filePath,
@@ -142,14 +142,14 @@ class ImportAnalyzer {
       // Side effect imports: import "path"
       /import\s+['"`]([^'"`]+)['"`]/
     ];
-    
+
     for (const pattern of patterns) {
       const match = line.match(pattern);
       if (match) {
         return match;
       }
     }
-    
+
     return null;
   }
 
@@ -160,22 +160,22 @@ class ImportAnalyzer {
     fullLine: string
   ): ImportImprovement | null {
     const importPath = importMatch[1];
-    
+
     // Skip if already using alias
     if (importPath.startsWith("$") || importPath.startsWith("@std/")) {
       return null;
     }
 
     // Skip node: imports and external modules
-    if (importPath.startsWith("node:") || 
-        importPath.startsWith("npm:") || 
+    if (importPath.startsWith("node:") ||
+        importPath.startsWith("npm:") ||
         importPath.startsWith("jsr:") ||
         importPath.startsWith("https://")) {
       return null;
     }
 
     const suggestedImport = this.suggestAliasImport(filePath, importPath);
-    
+
     if (suggestedImport && suggestedImport !== importPath) {
       return {
         file: filePath,
@@ -197,7 +197,7 @@ class ImportAnalyzer {
     if (importPath.startsWith("./") || importPath.startsWith("../")) {
       const fromDir = dirname(fromFile);
       let resolvedPath: string;
-      
+
       try {
         // Resolve the relative path to an absolute path
         resolvedPath = join(fromDir, importPath);
@@ -210,54 +210,54 @@ class ImportAnalyzer {
       // Find matching alias pattern
       for (const { alias, path } of aliasPatterns) {
         const aliasPath = path.replace(/\/$/, "");
-        
+
         // Check if the resolved path starts with the alias base path
         if (resolvedPath.startsWith(aliasPath)) {
           const relativePart = resolvedPath.substring(aliasPath.length + 1);
           return `${alias}${relativePart}`;
         }
       }
-      
+
       // Try manual mapping for common patterns
       const projectRoot = process.cwd();
       const fullPath = join(projectRoot, resolvedPath);
-      
+
       // Map to specific aliases based on path structure
       if (fullPath.includes("/lib/types/")) {
         const typesPart = fullPath.substring(fullPath.indexOf("/lib/types/") + 11);
         return `$types/${typesPart}`;
       }
-      
+
       if (fullPath.includes("/lib/utils/")) {
         const utilsPart = fullPath.substring(fullPath.indexOf("/lib/utils/") + 11);
         return `$lib/utils/${utilsPart}`;
       }
-      
+
       if (fullPath.includes("/lib/")) {
         const libPart = fullPath.substring(fullPath.indexOf("/lib/") + 5);
         return `$lib/${libPart}`;
       }
-      
+
       if (fullPath.includes("/server/")) {
         const serverPart = fullPath.substring(fullPath.indexOf("/server/") + 8);
         return `$server/${serverPart}`;
       }
-      
+
       if (fullPath.includes("/components/")) {
         const componentsPart = fullPath.substring(fullPath.indexOf("/components/") + 12);
         return `$components/${componentsPart}`;
       }
-      
+
       if (fullPath.includes("/islands/")) {
         const islandsPart = fullPath.substring(fullPath.indexOf("/islands/") + 9);
         return `$islands/${islandsPart}`;
       }
-      
+
       if (fullPath.includes("/client/")) {
         const clientPart = fullPath.substring(fullPath.indexOf("/client/") + 8);
         return `$client/${clientPart}`;
       }
-      
+
       if (fullPath.includes("/routes/")) {
         const routesPart = fullPath.substring(fullPath.indexOf("/routes/") + 8);
         return `$routes/${routesPart}`;
@@ -269,20 +269,20 @@ class ImportAnalyzer {
 
   private calculateImpactLevel(filePath: string, importPath: string): "high" | "medium" | "low" {
     // High impact: Core services, API routes, frequently used components
-    if (filePath.includes("/routes/api/") || 
+    if (filePath.includes("/routes/api/") ||
         filePath.includes("/server/services/") ||
         filePath.includes("/server/controller/") ||
         filePath.includes("/islands/") && this.isFrequentlyUsedComponent(filePath)) {
       return "high";
     }
-    
+
     // Medium impact: Components, utilities, client code
-    if (filePath.includes("/components/") || 
+    if (filePath.includes("/components/") ||
         filePath.includes("/client/") ||
         filePath.includes("/lib/utils/")) {
       return "medium";
     }
-    
+
     // Low impact: Tests, configuration, one-off files
     return "low";
   }
@@ -291,72 +291,72 @@ class ImportAnalyzer {
     if (currentImport.startsWith("./") || currentImport.startsWith("../")) {
       return "relative-to-alias";
     }
-    
+
     if (suggestedImport.startsWith("$")) {
       return "import-map-utilization";
     }
-    
+
     return "standardization";
   }
 
   private categorizeFile(filePath: string): ImportImprovement["category"] {
-    if (filePath.includes("/server/services/") || 
+    if (filePath.includes("/server/services/") ||
         filePath.includes("/server/controller/") ||
         filePath.includes("/routes/api/")) {
       return "services";
     }
-    
+
     if (filePath.includes("/routes/") && !filePath.includes("/api/")) {
       return "routes";
     }
-    
-    if (filePath.includes("/components/") || 
+
+    if (filePath.includes("/components/") ||
         filePath.includes("/islands/")) {
       return "components";
     }
-    
-    if (filePath.includes("/lib/") || 
+
+    if (filePath.includes("/lib/") ||
         filePath.includes("/utils/") ||
         filePath.includes("/client/")) {
       return "utilities";
     }
-    
-    if (filePath.includes("/tests/") || 
+
+    if (filePath.includes("/tests/") ||
         filePath.includes(".test.") ||
         filePath.includes(".spec.")) {
       return "tests";
     }
-    
+
     if (filePath.includes("/types/") || filePath.endsWith(".d.ts")) {
       return "types";
     }
-    
+
     return "utilities";
   }
 
   private calculatePriority(filePath: string, importPath: string): number {
     let priority = 50; // Base priority
-    
+
     // High priority for frequently accessed files
     if (filePath.includes("/routes/api/")) priority += 30;
     if (filePath.includes("/server/services/")) priority += 25;
     if (filePath.includes("/islands/")) priority += 20;
     if (filePath.includes("/components/")) priority += 15;
-    
+
     // Bonus for complex relative paths
     const relativeDepth = (importPath.match(/\.\.\//g) || []).length;
     priority += relativeDepth * 5;
-    
+
     // Bonus for type imports (better tree-shaking)
     if (importPath.includes("/types/")) priority += 10;
-    
+
     return priority;
   }
 
   private isFrequentlyUsedComponent(filePath: string): boolean {
     const fileName = basename(filePath, ".tsx");
     const frequentlyUsed = [
-      "StampCard", "SRC20Card", "FilterContent", "Gallery", 
+      "StampCard", "SRC20Overview", "FilterContent", "Gallery",
       "DataTable", "Header", "Navigation", "Modal"
     ];
     return frequentlyUsed.some(name => fileName.includes(name));
@@ -365,7 +365,7 @@ class ImportAnalyzer {
   private generateReport(): AnalysisReport {
     // Sort by priority
     const priorityRanking = [...this.improvements].sort((a, b) => b.priority - a.priority);
-    
+
     // Categorize improvements
     const categorizedImprovements: Record<string, ImportImprovement[]> = {};
     for (const improvement of this.improvements) {
@@ -378,7 +378,7 @@ class ImportAnalyzer {
 
     // Create batch strategy
     const batchStrategy = this.createBatchStrategy(priorityRanking);
-    
+
     // Calculate impact summary
     const impactSummary: Record<string, number> = {};
     for (const improvement of this.improvements) {
@@ -459,4 +459,4 @@ if (import.meta.main) {
   await main();
 }
 
-export { ImportAnalyzer, type ImportImprovement, type AnalysisReport };
+export { ImportAnalyzer, type AnalysisReport, type ImportImprovement };

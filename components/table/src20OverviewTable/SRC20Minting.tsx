@@ -19,16 +19,16 @@ import { formatDate } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { constructStampUrl } from "$lib/utils/ui/media/imageUtils.ts";
 import { labelXs, textSm, valueDarkSm } from "$text";
 import type { SRC20Row } from "$types/src20.d.ts";
-import type { SRC20CardMintingProps } from "$types/ui.d.ts";
+import type { SRC20MintingProps } from "$types/ui.d.ts";
 import type { TargetedEvent } from "preact/compat";
 
-export function SRC20CardMinting({
+export function SRC20Minting({
   data,
   fromPage: _fromPage,
   timeframe,
   onImageClick,
   currentSort,
-}: SRC20CardMintingProps) {
+}: SRC20MintingProps) {
   const headers = [
     "TOKEN",
     "MINTS",
@@ -39,16 +39,13 @@ export function SRC20CardMinting({
     "MINT",
   ];
 
-  // Helper function to handle header clicks for sorting
   const handleHeaderClick = (headerName: string) => {
-    // Skip sorting for empty header (MINT button) and TRENDING (leave for now as requested)
     if (headerName === "" || headerName === "TRENDING") {
       return;
     }
 
-    // Map header names to API sort parameters
     const sortMapping: Record<string, string> = {
-      "TOKEN": "TOKEN", // Add TOKEN for alphabetical sorting
+      "TOKEN": "TOKEN",
       "MINTS": "MINTS",
       "PROGRESS": "PROGRESS",
       "DEPLOY": "DEPLOY",
@@ -58,29 +55,24 @@ export function SRC20CardMinting({
     const apiSortKey = sortMapping[headerName];
     if (!apiSortKey) return;
 
-    // Determine new direction
     const isCurrentSort = currentSort?.filter === apiSortKey;
     const newDirection = isCurrentSort && currentSort.direction === "desc"
       ? "asc"
       : "desc";
 
-    // Navigate with new sort parameters
     if (typeof globalThis !== "undefined" && globalThis?.location) {
-      // Use location.href safely with SSR guard
       const currentHref = globalThis.location?.href;
       if (!currentHref) return;
 
       const url = new URL(currentHref);
       url.searchParams.set("sortBy", apiSortKey);
       url.searchParams.set("sortDirection", newDirection);
-      url.searchParams.set("page", "1"); // Reset to page 1 when sorting changes
+      url.searchParams.set("page", "1");
 
-      // Use Fresh.js navigation
       const link = document.createElement("a");
       link.href = url.toString();
       link.setAttribute("f-partial", "");
       link.style.display = "none";
-      // Type-safe DOM manipulation for navigation
       const bodyElement = document.body;
       bodyElement.appendChild(link as Node);
       link.click();
@@ -88,7 +80,6 @@ export function SRC20CardMinting({
     }
   };
 
-  // Helper function to get segmented control header class names (Apple HIG style)
   const getSegmentedHeaderClass = (
     index: number,
     isFirst: boolean,
@@ -100,14 +91,12 @@ export function SRC20CardMinting({
       cellAlign(index, headers?.length ?? 0)
     } py-2`;
 
-    // Row background color and rounded corners
     const rowClass = isFirst
       ? cellLeftCard
       : isLast
       ? cellRightCard
       : cellCenterCard;
 
-    // Selected segment styling
     const selectedClass = isSelected ? "text-color-grey-light" : "";
 
     const colorClass = isSelected
@@ -126,9 +115,7 @@ export function SRC20CardMinting({
       .trim();
   };
 
-  // Helper function to render sort indicator
   const renderSortIndicator = (headerName: string) => {
-    // Map header names to API sort parameters
     const sortMapping: Record<string, string> = {
       "TOKEN": "TOKEN",
       "MINTS": "MINTS",
@@ -195,7 +182,6 @@ export function SRC20CardMinting({
               const isLast = i === (headers?.length ?? 0) - 1;
               const isClickable = header !== "" && header !== "TRENDING";
 
-              // Get sort state for segmented control styling
               const sortMapping: Record<string, string> = {
                 "TOKEN": "TOKEN",
                 "MINTS": "MINTS",
@@ -234,11 +220,6 @@ export function SRC20CardMinting({
           {data?.length
             ? (
               data.map((src20: SRC20Row) => {
-                // SRC-20 Image URL Logic:
-                // 1. Use deploy_img if provided (for deploy operations: https://stampchain.io/stamps/{deploy_tx}.svg)
-                // 2. Use stamp_url if provided (for transaction stamps: https://stampchain.io/stamps/{tx_hash}.svg)
-                // 3. Fallback to constructing URL from deploy_tx if available
-                // 4. Final fallback to placeholder image
                 const imageUrl = src20.deploy_img ||
                   src20.stamp_url ||
                   (src20.deploy_tx
@@ -255,11 +236,10 @@ export function SRC20CardMinting({
                 ) => {
                   event.preventDefault();
 
-                  // SSR-safe browser environment check
                   if (
                     typeof globalThis === "undefined" || !globalThis?.location
                   ) {
-                    return; // Cannot navigate during SSR
+                    return;
                   }
 
                   globalThis.location.href = mintHref;
@@ -270,7 +250,6 @@ export function SRC20CardMinting({
                     key={src20.tx_hash}
                     class={`${container1} ${shadowGlowPurple}`}
                     onClick={(e) => {
-                      // Only navigate if not clicking on image or button
                       const target = e.target as HTMLElement;
                       const isImage = target.tagName === "IMG";
                       const isButton = target.closest("button");
@@ -302,7 +281,7 @@ export function SRC20CardMinting({
                           class="w-7 h-7 rounded cursor-pointer"
                           onClick={(e) => {
                             e.preventDefault();
-                            e.stopPropagation(); // Prevent row click
+                            e.stopPropagation();
                             if (imageUrl) onImageClick?.(imageUrl);
                           }}
                           alt={unicodeEscapeToEmoji(src20.tick ?? "")}

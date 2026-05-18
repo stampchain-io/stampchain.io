@@ -1,13 +1,13 @@
 /**
- * @fileoverview FreshStampGallery - Fresh.js-compatible stamp gallery
- * @description Replaces AjaxStampGallery with Fresh.js partial navigation and
- * world-class sorting infrastructure integration
+ * @fileoverview StampGalleryWallet - Wallet-specific stamp gallery
+ * @description Client-side gallery for wallet stamp holdings with
+ * pagination and sorting infrastructure integration
  */
 
 import { PaginationButtons } from "$button";
 import { LoadingIcon } from "$icon";
 import { StampCard } from "$islands/card/StampCard.tsx";
-import type { FreshStampGalleryProps, StampRow } from "$types/stamp.d.ts";
+import type { StampGalleryWalletProps, StampRow } from "$types/stamp.d.ts";
 import type { PaginationState } from "$types/ui.d.ts";
 import { useEffect, useState } from "preact/hooks";
 
@@ -21,7 +21,7 @@ interface FreshNavigationOptions {
 
 // ===== MAIN COMPONENT =====
 
-export function FreshStampGallery({
+export function StampGalleryWallet({
   initialData,
   initialPagination,
   address,
@@ -31,7 +31,7 @@ export function FreshStampGallery({
   gridClass =
     "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4",
   showDetails = true,
-}: FreshStampGalleryProps) {
+}: StampGalleryWalletProps) {
   // ===== STATE =====
   const [stamps, setStamps] = useState<StampRow[]>(initialData);
   const [currentSort, setCurrentSort] = useState<"ASC" | "DESC">(
@@ -126,7 +126,7 @@ export function FreshStampGallery({
         ? err.message
         : "Failed to load stamps";
       setError(errorMessage);
-      console.error("FreshStampGallery navigation error:", err);
+      console.error("StampGalleryWallet navigation error:", err);
     } finally {
       setLoading(false);
     }

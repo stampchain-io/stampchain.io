@@ -65,7 +65,7 @@ export const DUMMY_STAMP_POSH = {
   stamp: -1829,
   cpid: "KEVINA",
   ident: "STAMP" as const,
-  stamp_mimetype: "image/png",
+  stamp_mimetype: "image/jpeg",
   stamp_url:
     "https://stampchain.io/stamps/32257e9db4f9d979f8a5d0a703a630c7056ce5a5cae8cba9f69ea168c0562e39.png",
   stamp_base64:
@@ -176,8 +176,10 @@ export function withDummySaleData<T extends Record<string, any>>(
   );
 }
 
-/* ===== BASE TOKEN: KEVIN ===== */
-export const DUMMY_TOKEN_SRC20 = {
+/* ===== SRC-20 TOKENS ===== */
+
+/* ----- KEVIN: fully minted, active market ----- */
+export const DUMMY_TOKEN_KEVIN = {
   p: "SRC-20",
   tick: "KEVIN",
   tick_hash: "kevin0000000000000000000000000000000000000000000000000000000000",
@@ -186,7 +188,7 @@ export const DUMMY_TOKEN_SRC20 = {
   creator_name: null,
   tx_hash: "kevin1111111111111111111111111111111111111111111111111111111111",
   block_index: 800000,
-  block_time: new Date("2024-01-01T00:00:00.000Z"),
+  block_time: new Date("2024-01-15T00:00:00.000Z"),
   destination: "1GZsmqM5PFBytkC81JxcSWDU5QzNwaCs2M",
   status: "valid",
   row_num: 1,
@@ -198,14 +200,392 @@ export const DUMMY_TOKEN_SRC20 = {
   holders: 42069,
   deploy_img: null,
   stamp_url: null,
+  deploy_tx: "kevin1111111111111111111111111111111111111111111111111111111111",
+  progress: "100.00",
+  top_mints_percentage: null,
+  mint_progress: {
+    max_supply: "21000000",
+    total_minted: "21000000",
+    limit: "100000",
+    total_mints: 21000,
+    progress: "100.00",
+    decimals: 18,
+    tx_hash: "kevin1111111111111111111111111111111111111111111111111111111111",
+    tick: "KEVIN",
+  },
   market_data: {
     price_btc: 0.0000042,
-    market_cap_btc: 88.38,
+    change_24h_percent: 6.9,
     volume_24h_btc: 12.5,
-    price_change_24h: 6.9,
+    market_cap_btc: 88.38,
+    holder_count: 42069,
     source_type: "last_traded" as const,
   },
 };
+
+/* ----- STAMP: fully minted, bearish market ----- */
+export const DUMMY_TOKEN_STAMP = {
+  p: "SRC-20",
+  tick: "STAMP",
+  tick_hash: "stamp000000000000000000000000000000000000000000000000000000000",
+  op: "DEPLOY",
+  creator: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+  creator_name: "stamper.btc",
+  tx_hash: "stamp111111111111111111111111111111111111111111111111111111111",
+  block_index: 810000,
+  block_time: new Date("2024-03-01T00:00:00.000Z"),
+  destination: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+  status: "valid",
+  row_num: 2,
+  fee_rate_sat_vb: null,
+  fee: null,
+  max: "100000000",
+  lim: "1000000",
+  deci: 8,
+  holders: 8841,
+  deploy_img: null,
+  stamp_url: null,
+  deploy_tx: "stamp111111111111111111111111111111111111111111111111111111111",
+  progress: "100.00",
+  top_mints_percentage: null,
+  mint_progress: {
+    max_supply: "100000000",
+    total_minted: "100000000",
+    limit: "1000000",
+    total_mints: 4200,
+    progress: "100.00",
+    decimals: 8,
+    tx_hash: "stamp111111111111111111111111111111111111111111111111111111111",
+    tick: "STAMP",
+  },
+  market_data: {
+    price_btc: 0.00000069,
+    change_24h_percent: -3.2,
+    volume_24h_btc: 2.1,
+    market_cap_btc: 6.9,
+    holder_count: 8841,
+    source_type: "last_traded" as const,
+  },
+};
+
+/* ----- PEPE: minting in progress (~72%) ----- */
+export const DUMMY_TOKEN_PEPE = {
+  p: "SRC-20",
+  tick: "PEPE",
+  tick_hash: "pepe0000000000000000000000000000000000000000000000000000000000",
+  op: "DEPLOY",
+  creator: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+  creator_name: null,
+  tx_hash: "pepe1111111111111111111111111111111111111111111111111111111111",
+  block_index: 825000,
+  block_time: new Date("2024-06-10T00:00:00.000Z"),
+  destination: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+  status: "valid",
+  row_num: 3,
+  fee_rate_sat_vb: null,
+  fee: null,
+  max: "69000000",
+  lim: "690000",
+  deci: 18,
+  holders: 2847,
+  deploy_img: null,
+  stamp_url: null,
+  deploy_tx: "pepe1111111111111111111111111111111111111111111111111111111111",
+  progress: "72.00",
+  top_mints_percentage: 23.5,
+  mint_progress: {
+    max_supply: "69000000",
+    total_minted: "49680000",
+    limit: "690000",
+    total_mints: 72,
+    progress: "72.00",
+    decimals: 18,
+    tx_hash: "pepe1111111111111111111111111111111111111111111111111111111111",
+    tick: "PEPE",
+  },
+  market_data: null,
+};
+
+/* ----- BOBO: early minting stage (~18%) ----- */
+export const DUMMY_TOKEN_BOBO = {
+  p: "SRC-20",
+  tick: "BOBO",
+  tick_hash: "bobo0000000000000000000000000000000000000000000000000000000000",
+  op: "DEPLOY",
+  creator: "bc1q9d3xa5gg45q2j39szuqn9k7pt3lmnah37mqad5",
+  creator_name: null,
+  tx_hash: "bobo1111111111111111111111111111111111111111111111111111111111",
+  block_index: 840000,
+  block_time: new Date("2024-09-20T00:00:00.000Z"),
+  destination: "bc1q9d3xa5gg45q2j39szuqn9k7pt3lmnah37mqad5",
+  status: "valid",
+  row_num: 4,
+  fee_rate_sat_vb: null,
+  fee: null,
+  max: "42000000",
+  lim: "420000",
+  deci: 18,
+  holders: 420,
+  deploy_img: null,
+  stamp_url: null,
+  deploy_tx: "bobo1111111111111111111111111111111111111111111111111111111111",
+  progress: "18.00",
+  top_mints_percentage: 8.2,
+  mint_progress: {
+    max_supply: "42000000",
+    total_minted: "7560000",
+    limit: "420000",
+    total_mints: 18,
+    progress: "18.00",
+    decimals: 18,
+    tx_hash: "bobo1111111111111111111111111111111111111111111111111111111111",
+    tick: "BOBO",
+  },
+  market_data: null,
+};
+
+/* Backward-compat alias — old code that imports DUMMY_TOKEN_SRC20 keeps working */
+export const DUMMY_TOKEN_SRC20 = DUMMY_TOKEN_KEVIN;
+
+/* ===== SRC-20 TRANSACTION DATA ===== */
+/*
+ * Shapes match Src20Detail from lib/types/src20.d.ts.
+ * block_time is a string here (as the type specifies for detail views).
+ * amt uses string representation for serialisation safety.
+ */
+
+export const DUMMY_SRC20_DEPLOYS = [
+  {
+    tx_hash: "kevin1111111111111111111111111111111111111111111111111111111111",
+    block_index: 800000,
+    p: "SRC-20",
+    op: "DEPLOY",
+    tick: "KEVIN",
+    creator: "1GZsmqM5PFBytkC81JxcSWDU5QzNwaCs2M",
+    creator_name: null,
+    amt: null,
+    deci: 18,
+    lim: "100000",
+    max: "21000000",
+    destination: "1GZsmqM5PFBytkC81JxcSWDU5QzNwaCs2M",
+    block_time: "2024-01-15T00:00:00.000Z",
+    destination_name: "",
+  },
+  {
+    tx_hash: "stamp111111111111111111111111111111111111111111111111111111111",
+    block_index: 810000,
+    p: "SRC-20",
+    op: "DEPLOY",
+    tick: "STAMP",
+    creator: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+    creator_name: "stamper.btc",
+    amt: null,
+    deci: 8,
+    lim: "1000000",
+    max: "100000000",
+    destination: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+    block_time: "2024-03-01T00:00:00.000Z",
+    destination_name: "stamper.btc",
+  },
+  {
+    tx_hash: "pepe1111111111111111111111111111111111111111111111111111111111",
+    block_index: 825000,
+    p: "SRC-20",
+    op: "DEPLOY",
+    tick: "PEPE",
+    creator: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+    creator_name: null,
+    amt: null,
+    deci: 18,
+    lim: "690000",
+    max: "69000000",
+    destination: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+    block_time: "2024-06-10T00:00:00.000Z",
+    destination_name: "",
+  },
+  {
+    tx_hash: "bobo1111111111111111111111111111111111111111111111111111111111",
+    block_index: 840000,
+    p: "SRC-20",
+    op: "DEPLOY",
+    tick: "BOBO",
+    creator: "bc1q9d3xa5gg45q2j39szuqn9k7pt3lmnah37mqad5",
+    creator_name: null,
+    amt: null,
+    deci: 18,
+    lim: "420000",
+    max: "42000000",
+    destination: "bc1q9d3xa5gg45q2j39szuqn9k7pt3lmnah37mqad5",
+    block_time: "2024-09-20T00:00:00.000Z",
+    destination_name: "",
+  },
+];
+
+export const DUMMY_SRC20_MINTS = [
+  {
+    tx_hash: "kevinmint111111111111111111111111111111111111111111111111111111",
+    block_index: 800100,
+    p: "SRC-20",
+    op: "MINT",
+    tick: "KEVIN",
+    creator: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+    creator_name: null,
+    amt: "100000",
+    deci: 18,
+    lim: "100000",
+    max: "21000000",
+    destination: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+    block_time: "2024-01-16T04:20:00.000Z",
+    destination_name: "",
+  },
+  {
+    tx_hash: "kevinmint222222222222222222222222222222222222222222222222222222",
+    block_index: 800420,
+    p: "SRC-20",
+    op: "MINT",
+    tick: "KEVIN",
+    creator: "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa",
+    creator_name: null,
+    amt: "100000",
+    deci: 18,
+    lim: "100000",
+    max: "21000000",
+    destination: "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa",
+    block_time: "2024-01-18T10:00:00.000Z",
+    destination_name: "",
+  },
+  {
+    tx_hash: "stampmint11111111111111111111111111111111111111111111111111111",
+    block_index: 810500,
+    p: "SRC-20",
+    op: "MINT",
+    tick: "STAMP",
+    creator: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+    creator_name: "stamper.btc",
+    amt: "1000000",
+    deci: 8,
+    lim: "1000000",
+    max: "100000000",
+    destination: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+    block_time: "2024-03-05T08:00:00.000Z",
+    destination_name: "stamper.btc",
+  },
+  {
+    tx_hash: "pepemint1111111111111111111111111111111111111111111111111111111",
+    block_index: 825100,
+    p: "SRC-20",
+    op: "MINT",
+    tick: "PEPE",
+    creator: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+    creator_name: "stamper.btc",
+    amt: "690000",
+    deci: 18,
+    lim: "690000",
+    max: "69000000",
+    destination: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+    block_time: "2024-06-11T12:00:00.000Z",
+    destination_name: "stamper.btc",
+  },
+  {
+    tx_hash: "pepemint2222222222222222222222222222222222222222222222222222222",
+    block_index: 825200,
+    p: "SRC-20",
+    op: "MINT",
+    tick: "PEPE",
+    creator: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+    creator_name: null,
+    amt: "690000",
+    deci: 18,
+    lim: "690000",
+    max: "69000000",
+    destination: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+    block_time: "2024-06-12T18:00:00.000Z",
+    destination_name: "",
+  },
+  {
+    tx_hash: "bobomint1111111111111111111111111111111111111111111111111111111",
+    block_index: 840200,
+    p: "SRC-20",
+    op: "MINT",
+    tick: "BOBO",
+    creator: "1GZsmqM5PFBytkC81JxcSWDU5QzNwaCs2M",
+    creator_name: null,
+    amt: "420000",
+    deci: 18,
+    lim: "420000",
+    max: "42000000",
+    destination: "1GZsmqM5PFBytkC81JxcSWDU5QzNwaCs2M",
+    block_time: "2024-09-21T06:00:00.000Z",
+    destination_name: "",
+  },
+];
+
+export const DUMMY_SRC20_TRANSFERS = [
+  {
+    tx_hash: "kevintx1111111111111111111111111111111111111111111111111111111",
+    block_index: 801000,
+    p: "SRC-20",
+    op: "TRANSFER",
+    tick: "KEVIN",
+    creator: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+    creator_name: null,
+    amt: "50000",
+    deci: 18,
+    lim: "100000",
+    max: "21000000",
+    destination: "1GZsmqM5PFBytkC81JxcSWDU5QzNwaCs2M",
+    block_time: "2024-02-01T09:00:00.000Z",
+    destination_name: "",
+  },
+  {
+    tx_hash: "kevintx2222222222222222222222222222222222222222222222222222222",
+    block_index: 805000,
+    p: "SRC-20",
+    op: "TRANSFER",
+    tick: "KEVIN",
+    creator: "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa",
+    creator_name: null,
+    amt: "25000",
+    deci: 18,
+    lim: "100000",
+    max: "21000000",
+    destination: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+    block_time: "2024-02-20T15:30:00.000Z",
+    destination_name: "stamper.btc",
+  },
+  {
+    tx_hash: "stamptx1111111111111111111111111111111111111111111111111111111",
+    block_index: 812000,
+    p: "SRC-20",
+    op: "TRANSFER",
+    tick: "STAMP",
+    creator: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+    creator_name: "stamper.btc",
+    amt: "500000",
+    deci: 8,
+    lim: "1000000",
+    max: "100000000",
+    destination: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+    block_time: "2024-03-10T11:00:00.000Z",
+    destination_name: "",
+  },
+  {
+    tx_hash: "stamptx2222222222222222222222222222222222222222222222222222222",
+    block_index: 820000,
+    p: "SRC-20",
+    op: "TRANSFER",
+    tick: "STAMP",
+    creator: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+    creator_name: null,
+    amt: "200000",
+    deci: 8,
+    lim: "1000000",
+    max: "100000000",
+    destination: "1GZsmqM5PFBytkC81JxcSWDU5QzNwaCs2M",
+    block_time: "2024-04-05T20:00:00.000Z",
+    destination_name: "",
+  },
+];
 
 /* ===== PAGE-LEVEL DUMMY SHAPES ===== */
 
@@ -290,15 +670,100 @@ export const DUMMY_LANDING_PAGE = {
 };
 
 /**
- * Stamp overview — 24 stamps cycling [CLASSIC, POSH, SRC-721] × 8.
- * Every 3rd entry (SRC-721) is marked for sale @ 0.000021 BTC.
- * Tab filtering in the route handler trims this list to the right type.
+ * Stamp overview — cycles [CLASSIC, POSH, SRC-721, SRC-20 DEPLOY,
+ * SRC-20 MINT, SRC-20 TRANSFER] × 4 = 24 visible stamps.
+ * Every 3rd entry is marked for sale via withDummySaleData.
  * Desktop grid: 6 cols × 4 rows = 24 visible stamps.
  */
+const DUMMY_STAMP_SRC20_DEPLOY = {
+  stamp: -10001,
+  cpid: "kevin1111111111111111111111111111111111111111111111111111111111",
+  ident: "SRC-20" as const,
+  stamp_mimetype: "application/json",
+  stamp_url: null,
+  stamp_base64: null,
+  block_index: 800000,
+  tx_hash: "kevin1111111111111111111111111111111111111111111111111111111111",
+  tx_index: 0,
+  block_time: new Date("2024-01-15T00:00:00.000Z"),
+  creator: "1GZsmqM5PFBytkC81JxcSWDU5QzNwaCs2M",
+  creator_name: null,
+  supply: 21000000,
+  unbound_quantity: 0,
+  divisible: false,
+  keyburn: null,
+  locked: 1,
+  stamp_hash: "kevin1111111111111111111111111111111111111111111111111111111111",
+  file_hash: "",
+  file_size_bytes: 118,
+  floorPrice: "priceless" as const,
+  floorPriceUSD: null,
+  marketData: null,
+};
+
+const DUMMY_STAMP_SRC20_MINT = {
+  stamp: -10002,
+  cpid: "pepemint1111111111111111111111111111111111111111111111111111111",
+  ident: "SRC-20" as const,
+  stamp_mimetype: "application/json",
+  stamp_url: null,
+  stamp_base64: null,
+  block_index: 825100,
+  tx_hash: "pepemint1111111111111111111111111111111111111111111111111111111",
+  tx_index: 0,
+  block_time: new Date("2024-06-11T12:00:00.000Z"),
+  creator: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+  creator_name: "stamper.btc",
+  supply: 690000,
+  unbound_quantity: 690000,
+  divisible: false,
+  keyburn: null,
+  locked: 0,
+  stamp_hash: "pepemint1111111111111111111111111111111111111111111111111111111",
+  file_hash: "",
+  file_size_bytes: 96,
+  floorPrice: "priceless" as const,
+  floorPriceUSD: null,
+  marketData: null,
+};
+
+const DUMMY_STAMP_SRC20_TRANSFER = {
+  stamp: -10003,
+  cpid: "kevintx1111111111111111111111111111111111111111111111111111111",
+  ident: "SRC-20" as const,
+  stamp_mimetype: "application/json",
+  stamp_url: null,
+  stamp_base64: null,
+  block_index: 801000,
+  tx_hash: "kevintx1111111111111111111111111111111111111111111111111111111",
+  tx_index: 0,
+  block_time: new Date("2024-02-01T09:00:00.000Z"),
+  creator: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+  creator_name: null,
+  supply: 50000,
+  unbound_quantity: 50000,
+  divisible: false,
+  keyburn: null,
+  locked: 0,
+  stamp_hash: "kevintx1111111111111111111111111111111111111111111111111111111",
+  file_hash: "",
+  file_size_bytes: 102,
+  floorPrice: "priceless" as const,
+  floorPriceUSD: null,
+  marketData: null,
+};
+
 const _overviewStamps = withDummySaleData(
   Array.from({ length: 24 }, (_, i) => {
-    const bases = [DUMMY_STAMP_CLASSIC, DUMMY_STAMP_POSH, DUMMY_STAMP_SRC721];
-    return { ...bases[i % 3] };
+    const bases = [
+      DUMMY_STAMP_CLASSIC,
+      DUMMY_STAMP_POSH,
+      DUMMY_STAMP_SRC721,
+      DUMMY_STAMP_SRC20_DEPLOY,
+      DUMMY_STAMP_SRC20_MINT,
+      DUMMY_STAMP_SRC20_TRANSFER,
+    ];
+    return { ...bases[i % bases.length] };
   }),
   DUMMY_STAMP_SRC721_DISPENSER,
 );
@@ -307,13 +772,25 @@ export const DUMMY_STAMP_OVERVIEW_PAGE = {
   pagination: { total: 24, page: 1, totalPages: 1 },
 };
 
-/** SRC-20 overview — paginated token list */
-export const DUMMY_TOKEN_OVERVIEW_PAGE = {
-  data: [DUMMY_TOKEN_SRC20],
-  total: 1,
+/**
+ * SRC-20 explorer overview — 4 tokens: 2 fully minted (KEVIN, STAMP),
+ * 2 still minting (PEPE at 72%, BOBO at 18%).
+ * Used in both the explorer page and /src20 overview in DEV_DUMMY_MODE.
+ */
+export const DUMMY_EXPLORER_OVERVIEW_PAGE = {
+  data: [
+    DUMMY_TOKEN_KEVIN,
+    DUMMY_TOKEN_STAMP,
+    DUMMY_TOKEN_PEPE,
+    DUMMY_TOKEN_BOBO,
+  ],
+  total: 4,
   page: 1,
   totalPages: 1,
 };
+
+/** Backward-compat alias — routes/index.tsx and routes/src20/index.tsx keep working */
+export const DUMMY_TOKEN_OVERVIEW_PAGE = DUMMY_EXPLORER_OVERVIEW_PAGE;
 
 /** Stamp detail page */
 export const DUMMY_STAMP_DETAIL_PAGE = {
@@ -334,9 +811,9 @@ export const DUMMY_STAMP_DETAIL_PAGE = {
   url: "",
 };
 
-/** SRC-20 token detail page */
+/** SRC-20 token detail page (KEVIN — fully minted) */
 export const DUMMY_TOKEN_DETAIL_PAGE = {
-  deployment: DUMMY_TOKEN_SRC20,
+  deployment: DUMMY_TOKEN_KEVIN,
   mint_status: {
     max_supply: 21000000,
     total_minted: 21000000,
@@ -347,9 +824,11 @@ export const DUMMY_TOKEN_DETAIL_PAGE = {
   },
   total_holders: 42069,
   total_mints: 21000,
-  total_transfers: 8800,
+  total_transfers: 2,
   holders: [],
   last_block: 0,
   highcharts: [],
-  initialCounts: { totalTransfers: 8800, totalMints: 21000 },
+  sends: DUMMY_SRC20_TRANSFERS.filter((t) => t.tick === "KEVIN"),
+  mints: DUMMY_SRC20_MINTS.filter((m) => m.tick === "KEVIN"),
+  initialCounts: { totalTransfers: 2, totalMints: 21000 },
 };

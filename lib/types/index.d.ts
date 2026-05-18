@@ -248,7 +248,6 @@ export type {
   // Shared component types
   SharedListProps,
   SpacingScale,
-  SRC20CardProps,
   SRC20CardSize,
   // Gallery and card types
   // Table and display types

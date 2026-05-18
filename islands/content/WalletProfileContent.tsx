@@ -1,11 +1,18 @@
 /* ===== WALLET PROFILE CONTENT COMPONENT ===== */
 import { PaginationButtons, SortButton } from "$button";
 import { Icon, LoadingIcon, PlaceholderImage } from "$icon";
+import SRC20GalleryWallet from "$islands/section/gallery/SRC20GalleryWallet.tsx";
+import { StampGalleryWallet } from "$islands/section/gallery/StampGalleryWallet.tsx";
 import {
-  containerBackground,
   container2,
+  containerBackground,
   rowContainerBackground,
 } from "$layout";
+import {
+  abbreviateAddress,
+  formatBTCAmount,
+} from "$lib/utils/ui/formatting/formatUtils.ts";
+import { getStampImageSrc } from "$lib/utils/ui/media/imageUtils.ts";
 import { tooltipIcon } from "$notification";
 import {
   label,
@@ -20,14 +27,6 @@ import type {
   EnhancedWalletContentProps,
   SectionHeaderProps,
 } from "$types/ui.d.ts";
-// AjaxStampGallery has been replaced with FreshStampGallery for Fresh.js partial navigation
-import FreshSRC20Gallery from "$islands/section/gallery/FreshSRC20Gallery.tsx";
-import { FreshStampGallery } from "$islands/section/gallery/FreshStampGallery.tsx";
-import {
-  abbreviateAddress,
-  formatBTCAmount,
-} from "$lib/utils/ui/formatting/formatUtils.ts";
-import { getStampImageSrc } from "$lib/utils/ui/media/imageUtils.ts";
 import {
   createPaginationHandler,
   isBrowser,
@@ -694,7 +693,7 @@ function WalletProfileContentInner({
         <div f-partial="/stamps">
           {stamps.data?.length
             ? (
-              <FreshStampGallery
+              <StampGalleryWallet
                 initialData={stamps.data}
                 initialPagination={{
                   page: stamps.pagination.page,
@@ -762,7 +761,7 @@ function WalletProfileContentInner({
         <div f-partial="/src20">
           {src20.data?.length
             ? (
-              <FreshSRC20Gallery
+              <SRC20GalleryWallet
                 initialData={src20.data}
                 initialPagination={{
                   page: src20.pagination.page,

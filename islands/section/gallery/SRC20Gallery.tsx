@@ -2,10 +2,10 @@
 // @baba - add token cards specific to wallet page
 import { PaginationButtons, ViewAllButton } from "$button";
 import {
-  SRC20Card,
-  SRC20CardMinting,
-  SRC20CardSm,
-  SRC20CardSmMinting,
+  SRC20Minting,
+  SRC20MintingNarrow,
+  SRC20Overview,
+  SRC20OverviewNarrow,
 } from "$card";
 import { useLoadingSkeleton } from "$lib/hooks/useLoadingSkeleton.ts";
 import { unicodeEscapeToEmoji } from "$lib/utils/ui/formatting/emojiUtils.ts";
@@ -75,10 +75,10 @@ export function SRC20Gallery({
   const CardComponent = useMemo(() => {
     // For /src20 page, use full-size cards
     if (fromPage === "src20" || fromPage === "stamping/src20") {
-      return viewType === "minted" ? SRC20Card : SRC20CardMinting;
+      return viewType === "minted" ? SRC20Overview : SRC20Minting;
     }
     // For other pages (home, wallet), use small cards
-    return viewType === "minted" ? SRC20CardSm : SRC20CardSmMinting;
+    return viewType === "minted" ? SRC20OverviewNarrow : SRC20MintingNarrow;
   }, [viewType, fromPage]);
 
   // 🚀 PREACT OPTIMIZATION: Memoized card props

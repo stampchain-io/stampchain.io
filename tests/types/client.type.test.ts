@@ -1225,7 +1225,6 @@ import type {
   ResponsiveValue,
   ScreenReaderProps,
   SelectProps,
-  SRC20CardProps,
   // Bitcoin Stamps UI Types
   StampGalleryProps,
   ToastProps,
@@ -1407,20 +1406,6 @@ Deno.test("UI Component Types - Notification Component Structure", () => {
 });
 
 Deno.test("UI Component Types - Bitcoin Stamps UI Structure", () => {
-  // Test SRC20CardProps interface
-  const src20CardProps: SRC20CardProps = {
-    tick: "STAMPS",
-    balance: "1000",
-    decimals: 18,
-    price: 0.05,
-    change24h: 5.2,
-    onClick: () => {},
-  };
-
-  assertEquals(src20CardProps.tick, "STAMPS");
-  assertEquals(src20CardProps.balance, "1000");
-  assertEquals(src20CardProps.decimals, 18);
-
   // Test StampGalleryProps interface
   const stampGalleryProps: StampGalleryProps = {
     stamps: [],

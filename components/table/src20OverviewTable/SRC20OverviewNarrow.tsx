@@ -1,4 +1,3 @@
-// import { SRC20Row } from "$globals";
 import { cellAlign, colGroup } from "$components/layout/types.ts";
 import {
   cellCenterL2Card,
@@ -21,22 +20,20 @@ import {
 } from "$text";
 import type { EnrichedSRC20Row } from "$types/src20.d.ts";
 
-interface SRC20CardSmProps {
+interface SRC20OverviewNarrowProps {
   data: EnrichedSRC20Row[];
   fromPage: "src20" | "wallet" | "stamping/src20" | "home";
   onImageClick: (imgSrc: string) => void;
 }
 
-export function SRC20CardSm({
+export function SRC20OverviewNarrow({
   data,
   fromPage,
   onImageClick,
-}: SRC20CardSmProps) {
-  // Helper functions for data processing (matching SRC20Card)
+}: SRC20OverviewNarrowProps) {
   function getMarketCap(src20: any): number {
     const marketCap = src20?.market_data?.market_cap_btc;
     if (!marketCap) return 0;
-    // Parse as float to handle string values from API
     const parsed = parseFloat(marketCap);
     return isNaN(parsed) ? 0 : parsed;
   }
@@ -44,7 +41,6 @@ export function SRC20CardSm({
   function getPrice(src20: any): number {
     const price = src20?.market_data?.price_btc;
     if (!price) return 0;
-    // Parse as float to handle string values from API
     const parsed = parseFloat(price.toString());
     return isNaN(parsed) ? 0 : parsed;
   }
@@ -52,7 +48,6 @@ export function SRC20CardSm({
   function getVolume24h(src20: any): number {
     const volume = src20.market_data?.volume_24h_btc ?? src20.volume_7d_btc;
     if (!volume) return 0;
-    // Parse as float to handle string values from API
     const parsed = parseFloat(volume.toString());
     return isNaN(parsed) ? 0 : parsed;
   }
@@ -145,7 +140,6 @@ export function SRC20CardSm({
               const isFirst = i === 0;
               const isLast = i === (headers?.length ?? 0) - 1;
 
-              // Apply consistent border logic for the new layout
               let rowClass = "";
               if (header === "TOKEN") {
                 rowClass = cellLeftL2Card;
@@ -161,7 +155,6 @@ export function SRC20CardSm({
               } else if (header === "MARKETCAP") {
                 rowClass = cellRightL2Card;
               } else {
-                // Fallback for any other headers
                 rowClass = isFirst
                   ? cellLeftL2Card
                   : isLast
@@ -197,7 +190,6 @@ export function SRC20CardSm({
           {data?.length
             ? (
               data.map((src20: EnrichedSRC20Row) => {
-                // Use centralized image URL logic
                 const imageUrl = getSRC20ImageSrc(src20);
 
                 return (
@@ -205,10 +197,9 @@ export function SRC20CardSm({
                     key={src20.tx_hash}
                     class={`${container2} ${shadowGlowPurple}`}
                     onClick={(e) => {
-                      // Only navigate if not clicking on image or chart
                       const target = e.target as HTMLElement;
                       const isImage = target.tagName === "IMG";
-                      const isChart = target.closest("[data-chart-widget]"); // Add this data attribute to ChartWidget
+                      const isChart = target.closest("[data-chart-widget]");
                       if (
                         !isImage && !isChart && !e.ctrlKey && !e.metaKey &&
                         e.button !== 1
@@ -235,7 +226,7 @@ export function SRC20CardSm({
                           class="w-7 h-7 rounded cursor-pointer"
                           onClick={(e) => {
                             e.preventDefault();
-                            e.stopPropagation(); // Prevent row click
+                            e.stopPropagation();
                             if (imageUrl) onImageClick?.(imageUrl);
                           }}
                           alt={unicodeEscapeToEmoji(src20.tick ?? "")}
@@ -273,7 +264,6 @@ export function SRC20CardSm({
                         {(() => {
                           const balance = Number(src20.amt || 0);
                           if (balance === 0) return "0";
-                          // Format with commas for large numbers
                           return balance.toLocaleString();
                         })()}
                       </td>
@@ -288,32 +278,24 @@ export function SRC20CardSm({
                       } ${cellCenterL2Card}`}
                     >
                       {(() => {
-                        // Use helper function for consistent data processing
                         const priceInBtc = getPrice(src20);
                         if (priceInBtc === 0) {
                           return "0 SATS";
                         }
                         const priceInSats = priceInBtc * 1e8;
 
-                        // Smart formatting based on price level
                         if (priceInSats < 0.0001) {
-                          // For extremely small values, show with high precision
                           return priceInSats.toFixed(6) + " SATS";
                         } else if (priceInSats < 1) {
-                          // For values less than 1 sat, show 4 decimal places
                           return priceInSats.toFixed(4) + " SATS";
                         } else if (priceInSats < 10) {
-                          // For values 1-10 sats, show 2 decimal places
                           return priceInSats.toFixed(2) + " SATS";
                         } else if (priceInSats < 100) {
-                          // For values 10-100 sats, show 1 decimal place
                           return priceInSats.toFixed(1) + " SATS";
                         } else if (priceInSats < 1000) {
-                          // For values 100-1000 sats, show whole numbers
                           return Math.round(priceInSats).toLocaleString() +
                             " SATS";
                         } else {
-                          // For values above 1000 sats, use comma formatting
                           return Math.round(priceInSats).toLocaleString() +
                             " SATS";
                         }
@@ -323,12 +305,10 @@ export function SRC20CardSm({
                     <td
                       class={`${cellCenterL2Card} text-center`}
                     >
-                      {/* Use change_24h_percent */}
                       {(() => {
                         const changePercent =
                           src20.market_data?.change_24h_percent ?? 0;
 
-                        // Convert to number and validate
                         const changeValue = Number(changePercent);
                         if (isNaN(changeValue)) {
                           return <span class="text-color-grey">N/A</span>;
@@ -356,30 +336,22 @@ export function SRC20CardSm({
                       text-center tablet:text-right desktop:text-center`}
                     >
                       {(() => {
-                        // Use helper function for consistent data processing
                         const volume = getVolume24h(src20);
                         if (volume === 0) {
                           return "0 BTC";
                         }
 
-                        // Smart formatting based on volume level
                         if (volume < 0.0001) {
-                          // For very small volumes, show 6 decimals
                           return volume.toFixed(6) + " BTC";
                         } else if (volume < 0.01) {
-                          // For small volumes, show 4 decimals
                           return volume.toFixed(4) + " BTC";
                         } else if (volume < 0.1) {
-                          // For medium-small volumes, show 3 decimals
                           return volume.toFixed(3) + " BTC";
                         } else if (volume < 1) {
-                          // For sub-1 BTC volumes, show 2 decimals
                           return volume.toFixed(2) + " BTC";
                         } else if (volume < 100) {
-                          // For 1-100 BTC, show 2 decimals
                           return volume.toFixed(2) + " BTC";
                         } else {
-                          // For large volumes, show whole numbers with commas
                           return Math.round(volume).toLocaleString() + " BTC";
                         }
                       })()}
@@ -398,24 +370,18 @@ export function SRC20CardSm({
                     `}
                     >
                       {(() => {
-                        // Use helper function for consistent data processing
                         const marketCap = getMarketCap(src20);
                         if (marketCap === 0) {
                           return "0 BTC";
                         }
 
-                        // Smart formatting for market cap
                         if (marketCap < 1) {
-                          // For small market caps, show 2 decimals
                           return marketCap.toFixed(2) + " BTC";
                         } else if (marketCap < 100) {
-                          // For medium market caps, show 2 decimals
                           return marketCap.toFixed(2) + " BTC";
                         } else if (marketCap < 1000) {
-                          // For larger market caps, show 1 decimal
                           return marketCap.toFixed(1) + " BTC";
                         } else {
-                          // For very large market caps, show whole numbers with commas
                           return Math.round(marketCap).toLocaleString() +
                             " BTC";
                         }

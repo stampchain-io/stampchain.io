@@ -2,9 +2,8 @@
 import { Button } from "$button";
 import { cellAlign, colGroup } from "$components/layout/types.ts";
 import type { SRC20Row } from "$types/src20.d.ts";
-import type { SRC20CardSmMintingProps } from "$types/ui.d.ts";
+import type { SRC20MintingNarrowProps } from "$types/ui.d.ts";
 import type { TargetedEvent } from "preact/compat";
-// SRC20 card component for minting state
 import {
   cellCenterL2Card,
   cellLeftL2Card,
@@ -22,10 +21,10 @@ import {
   safeNavigate,
 } from "$utils/navigation/freshNavigationUtils.ts";
 
-export function SRC20CardSmMinting({
-  data = [], // Default to empty array to prevent undefined errors
+export function SRC20MintingNarrow({
+  data = [],
   onImageClick,
-}: SRC20CardSmMintingProps) {
+}: SRC20MintingNarrowProps) {
   const headers = [
     "TOKEN",
     "MINTS",
@@ -81,7 +80,6 @@ export function SRC20CardSmMinting({
               const isFirst = i === 0;
               const isLast = i === (headers?.length ?? 0) - 1;
 
-              // Row background color and rounded corners
               const rowClass = isFirst
                 ? cellLeftL2Card
                 : isLast
@@ -95,7 +93,7 @@ export function SRC20CardSmMinting({
                     cellAlign(i, headers?.length ?? 0)
                   } py-2 ${rowClass} ${
                     i === 1
-                      ? "tablet:hidden min-[1280px]:table-cell" // MINTS - show on mobile, hide on tablet, show on desktop
+                      ? "tablet:hidden min-[1280px]:table-cell"
                       : ""
                   } ${isFirst ? cellStickyLeft : ""}`}
                 >
@@ -109,11 +107,6 @@ export function SRC20CardSmMinting({
           {data?.length
             ? (
               data.map((src20: SRC20Row) => {
-                // SRC-20 Image URL Logic:
-                // 1. Use deploy_img if provided (for deploy operations: https://stampchain.io/stamps/{deploy_tx}.svg)
-                // 2. Use stamp_url if provided (for transaction stamps: https://stampchain.io/stamps/{tx_hash}.svg)
-                // 3. Fallback to constructing URL from deploy_tx if available
-                // 4. Final fallback to placeholder image
                 const imageUrl = src20.deploy_img ||
                   src20.stamp_url ||
                   (src20.deploy_tx
@@ -134,31 +127,26 @@ export function SRC20CardSmMinting({
                 ) => {
                   event.preventDefault();
 
-                  // SSR-safe browser environment check
                   if (!isBrowser()) {
-                    return; // Cannot navigate during SSR
+                    return;
                   }
 
-                  // Check if we're already on the mint page
                   const currentUrl = getCurrentUrl();
                   const url = new URL(currentUrl);
                   const isMintPage = url.pathname.includes("/tool/src20/mint");
 
                   if (isMintPage) {
-                    // If we're on the mint page, update URL parameters to populate form
                     const newUrl = new URL(currentUrl);
                     newUrl.searchParams.set("tick", src20.tick ?? "");
                     newUrl.searchParams.set("trxType", "olga");
                     globalThis.history.replaceState({}, "", newUrl.toString());
 
-                    // Trigger a custom event that the MintTool can listen to
                     globalThis.dispatchEvent(
                       new CustomEvent("mintTokenSelected", {
                         detail: { tick: src20.tick ?? "" },
                       }),
                     );
                   } else {
-                    // Otherwise, navigate to mint page with parameters
                     safeNavigate(mintHref);
                   }
                 };
@@ -168,7 +156,6 @@ export function SRC20CardSmMinting({
                     key={src20.tx_hash}
                     class={`${container2} ${shadowGlowPurple}`}
                     onClick={(e) => {
-                      // Only navigate if not clicking on image or button
                       const target = e.target as HTMLElement;
                       const isImage = target.tagName === "IMG";
                       const isButton = target.closest("button");
@@ -241,7 +228,6 @@ export function SRC20CardSmMinting({
                         <div class="flex flex-col w-[65px] min-[380px]:w-[75px] min-[400px]:w-[85px] min-[420px]:w-[100px] min-[480px]:w-[125px] mobileLg:w-[160px] tablet:w-[80px] min-[1080px]:w-[90px] min-[1180px]:w-[110px] desktop:w-[160px] gap-1">
                           <div class="!text-xs text-center">
                             {(() => {
-                              // ✅ FIXED: Use the same data access pattern as SRC20CardMinting
                               const progressRaw =
                                 src20.mint_progress?.progress ??
                                   src20.progress ?? 0;
@@ -259,7 +245,6 @@ export function SRC20CardSmMinting({
                               style={{
                                 width: `${
                                   (() => {
-                                    // ✅ FIXED: Use the same data access pattern as SRC20CardMinting
                                     const progressRaw =
                                       src20.mint_progress?.progress ??
                                         src20.progress ?? 0;
@@ -286,7 +271,6 @@ export function SRC20CardSmMinting({
                       } ${cellCenterL2Card}`}
                     >
                       {(() => {
-                        // ✅ FIXED: Use the same data access pattern as SRC20CardMinting
                         const holderCount =
                           (src20 as any)?.market_data?.holder_count ||
                           (src20 as any)?.holders ||

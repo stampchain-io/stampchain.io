@@ -31,12 +31,10 @@ import type { HighchartsData } from "$types/ui.d.ts";
 function getMarketCap(src20: any): number {
   const marketCap = src20?.market_data?.market_cap_btc;
   if (!marketCap) return 0;
-  // Parse as float to handle string values from API
   const parsed = parseFloat(marketCap);
   return isNaN(parsed) ? 0 : parsed;
 }
 
-// Helper to get price source type label
 function getPriceSourceLabel(sourceType?: string): string {
   switch (sourceType) {
     case "last_traded":
@@ -51,11 +49,9 @@ function getPriceSourceLabel(sourceType?: string): string {
   }
 }
 
-// ✅ FIXED: Use price_btc for fungible SRC-20 tokens (not floor_price_btc)
 function getPrice(src20: any): number {
   const price = src20?.market_data?.price_btc;
   if (!price) return 0;
-  // Parse as float to handle string values from API
   const parsed = parseFloat(price.toString());
   return isNaN(parsed) ? 0 : parsed;
 }
@@ -63,12 +59,11 @@ function getPrice(src20: any): number {
 function getVolume24h(src20: any): number {
   const volume = src20.market_data?.volume_24h_btc ?? src20.volume_7d_btc;
   if (!volume) return 0;
-  // Parse as float to handle string values from API
   const parsed = parseFloat(volume.toString());
   return isNaN(parsed) ? 0 : parsed;
 }
 
-interface SRC20CardProps {
+interface SRC20OverviewProps {
   data: any;
   fromPage?: string;
   timeframe?: string;
@@ -79,13 +74,13 @@ interface SRC20CardProps {
   } | null;
 }
 
-export function SRC20Card({
+export function SRC20Overview({
   data,
   fromPage: _fromPage,
   timeframe,
   onImageClick,
   currentSort,
-}: SRC20CardProps) {
+}: SRC20OverviewProps) {
   const headers = [
     "TOKEN",
     "PRICE",
@@ -97,16 +92,13 @@ export function SRC20Card({
     "CHART",
   ];
 
-  // Helper function to handle header clicks for sorting
   const handleHeaderClick = (headerName: string) => {
-    // Skip sorting for CHART header (non-interactive)
     if (headerName === "CHART") {
       return;
     }
 
-    // Map header names to API sort parameters
     const sortMapping: Record<string, string> = {
-      "TOKEN": "TOKEN", // Alphabetical sorting
+      "TOKEN": "TOKEN",
       "PRICE": "PRICE",
       "CHANGE": "CHANGE",
       "VOLUME": "VOLUME",
@@ -118,21 +110,18 @@ export function SRC20Card({
     const apiSortKey = sortMapping[headerName];
     if (!apiSortKey) return;
 
-    // Determine new direction
     const isCurrentSort = currentSort?.filter === apiSortKey;
     const newDirection = isCurrentSort && currentSort.direction === "desc"
       ? "asc"
       : "desc";
 
-    // Navigate with new sort parameters using SSR-safe URL builder
     if (isBrowser()) {
       const url = SSRSafeUrlBuilder.fromCurrent()
         .setParam("sortBy", apiSortKey)
         .setParam("sortDirection", newDirection)
-        .setParam("page", "1") // Reset to page 1 when sorting changes
+        .setParam("page", "1")
         .toString();
 
-      // Use Fresh.js navigation
       const link = document.createElement("a");
       link.href = url;
       link.setAttribute("f-partial", "");
@@ -143,7 +132,6 @@ export function SRC20Card({
     }
   };
 
-  // Helper function to get segmented control header class names (Apple HIG style)
   const getSegmentedHeaderClass = (
     index: number,
     isFirst: boolean,
@@ -155,14 +143,12 @@ export function SRC20Card({
       cellAlign(index, headers?.length ?? 0)
     } py-2`;
 
-    // Row background color and rounded corners
     const rowClass = isFirst
       ? cellLeftCard
       : isLast
       ? cellRightCard
       : cellCenterCard;
 
-    // Selected segment styling
     const selectedClass = isSelected ? "text-color-grey-light" : "";
 
     const colorClass = isSelected
@@ -181,9 +167,7 @@ export function SRC20Card({
       .trim();
   };
 
-  // Helper function to render sort indicator
   const renderSortIndicator = (headerName: string) => {
-    // Map header names to API sort parameters
     const sortMapping: Record<string, string> = {
       "TOKEN": "TOKEN",
       "PRICE": "PRICE",
@@ -208,7 +192,7 @@ export function SRC20Card({
           size="xxxs"
           color="custom"
           className={`stroke-color-grey-light transition-all duration-200 transform ${
-            currentSort.direction === "desc" ? "scale-y-[-1]" : ""
+            currentSort?.direction === "desc" ? "scale-y-[-1]" : ""
           }`}
         />
       </span>
@@ -216,7 +200,6 @@ export function SRC20Card({
   };
 
   function splitTextAndEmojis(text: string): { text: string; emoji: string } {
-    // Ensure text is actually a string
     if (typeof text !== "string") {
       return { text: String(text || ""), emoji: "" };
     }
@@ -257,7 +240,6 @@ export function SRC20Card({
               const isLast = i === (headers?.length ?? 0) - 1;
               const isClickable = header !== "CHART";
 
-              // Get sort state for segmented control styling
               const sortMapping: Record<string, string> = {
                 "TOKEN": "TOKEN",
                 "PRICE": "PRICE",
@@ -299,11 +281,6 @@ export function SRC20Card({
           {data?.length
             ? (
               data.map((src20: SRC20Row) => {
-                // SRC-20 Image URL Logic:
-                // 1. Use deploy_img if provided (for deploy operations: https://stampchain.io/stamps/{deploy_tx}.svg)
-                // 2. Use stamp_url if provided (for transaction stamps: https://stampchain.io/stamps/{tx_hash}.svg)
-                // 3. Fallback to constructing URL from deploy_tx if available
-                // 4. Final fallback to null (will render PlaceholderImage component)
                 const imageUrl = src20.deploy_img ||
                   src20.stamp_url ||
                   (src20.deploy_tx ? constructStampUrl(src20.deploy_tx) : null);
@@ -313,18 +290,16 @@ export function SRC20Card({
                     key={src20.tx_hash}
                     class={`${container1} ${shadowGlowPurple}`}
                     onClick={(e) => {
-                      // Only navigate if not clicking on image or chart
                       const target = e.target as HTMLElement;
                       const isImage = target.tagName === "IMG";
-                      const isChart = target.closest("[data-chart-widget]"); // Add this data attribute to ChartWidget
+                      const isChart = target.closest("[data-chart-widget]");
                       if (
                         !isImage && !isChart && !e.ctrlKey && !e.metaKey &&
                         e.button !== 1
                       ) {
                         e.preventDefault();
-                        // SSR-safe browser environment check
                         if (!isBrowser()) {
-                          return; // Cannot navigate during SSR
+                          return;
                         }
                         const href = `/src20/${
                           encodeURIComponent(
@@ -349,7 +324,7 @@ export function SRC20Card({
                               class="w-7 h-7 rounded cursor-pointer"
                               onClick={(e) => {
                                 e.preventDefault();
-                                e.stopPropagation(); // Prevent row click
+                                e.stopPropagation();
                                 if (imageUrl) onImageClick?.(imageUrl);
                               }}
                               alt={unicodeEscapeToEmoji(src20.tick ?? "")}
@@ -360,7 +335,7 @@ export function SRC20Card({
                               class="w-7 h-7 rounded cursor-pointer overflow-hidden"
                               onClick={(e) => {
                                 e.preventDefault();
-                                e.stopPropagation(); // Prevent row click
+                                e.stopPropagation();
                               }}
                             >
                               <PlaceholderImage variant="no-image" />
@@ -400,9 +375,8 @@ export function SRC20Card({
                       } ${cellCenterCard}`}
                     >
                       {(() => {
-                        // ✅ CLEANED: No more root-level field access
                         const priceInBtc = getPrice(src20);
-                        const priceSourceType = undefined; // price_source_type not available in MarketListingAggregated
+                        const priceSourceType = undefined;
                         const sourceLabel = getPriceSourceLabel(
                           priceSourceType,
                         );
@@ -412,25 +386,19 @@ export function SRC20Card({
                         }
                         const priceInSats = priceInBtc * 1e8;
 
-                        // Smart formatting based on price level
                         let priceDisplay = "";
                         if (priceInSats < 0.0001) {
-                          // For extremely small values, show with high precision
                           priceDisplay = priceInSats.toFixed(6) + " SATS";
                         } else if (priceInSats < 1) {
-                          // For values less than 1 sat, show 4 decimal places
                           priceDisplay = priceInSats.toFixed(4) + " SATS";
                         } else if (priceInSats < 10) {
-                          // For values 1-10 sats, show 2 decimal places
                           priceDisplay = priceInSats.toFixed(2) + " SATS";
                         } else if (priceInSats < 100000) {
-                          // For larger values, use comma formatting
                           priceDisplay = priceInSats.toLocaleString("en-US", {
                             minimumFractionDigits: 0,
                             maximumFractionDigits: 0,
                           }) + " SATS";
                         } else {
-                          // For very large values, switch to K/M notation
                           const millions = priceInSats / 1000000;
                           if (millions >= 1) {
                             priceDisplay = millions.toFixed(2) + "M SATS";
@@ -440,7 +408,6 @@ export function SRC20Card({
                           }
                         }
 
-                        // Add price source indicator if available
                         if (sourceLabel) {
                           return (
                             <span class="relative">
@@ -488,30 +455,22 @@ export function SRC20Card({
                       } ${cellCenterCard}`}
                     >
                       {(() => {
-                        // ✅ CLEANED: No more type casting chaos
                         const volume = getVolume24h(src20);
                         if (volume === 0) {
                           return "0 BTC";
                         }
 
-                        // Smart formatting based on volume level
                         if (volume < 0.0001) {
-                          // For very small volumes, show 6 decimals
                           return volume.toFixed(6) + " BTC";
                         } else if (volume < 0.01) {
-                          // For small volumes, show 4 decimals
                           return volume.toFixed(4) + " BTC";
                         } else if (volume < 0.1) {
-                          // For medium-small volumes, show 3 decimals
                           return volume.toFixed(3) + " BTC";
                         } else if (volume < 1) {
-                          // For sub-1 BTC volumes, show 2 decimals
                           return volume.toFixed(2) + " BTC";
                         } else if (volume < 100) {
-                          // For 1-100 BTC, show 2 decimals
                           return volume.toFixed(2) + " BTC";
                         } else {
-                          // For large volumes, show whole numbers with commas
                           return Math.round(volume).toLocaleString() + " BTC";
                         }
                       })()}
@@ -523,27 +482,21 @@ export function SRC20Card({
                       } ${cellCenterCard}`}
                     >
                       {(() => {
-                        // ✅ FIXED: Use correct market data path with proper typing
                         const marketCap = getMarketCap(src20);
                         if (marketCap === 0) {
                           return "0 BTC";
                         } else if (marketCap < 1) {
-                          // For small market caps, show 2 decimals
                           return marketCap.toFixed(2) + " BTC";
                         } else if (marketCap < 100) {
-                          // For medium market caps, show 2 decimals
                           return marketCap.toFixed(2) + " BTC";
                         } else if (marketCap < 1000) {
-                          // For larger market caps, show 1 decimal
                           return marketCap.toFixed(1) + " BTC";
                         } else {
-                          // For very large market caps, show whole numbers with commas
                           return Math.round(marketCap).toLocaleString() +
                             " BTC";
                         }
                       })()}
                     </td>
-
                     {/* DEPLOY */}
                     <td
                       class={`${
@@ -563,15 +516,12 @@ export function SRC20Card({
                       } ${cellCenterCard}`}
                     >
                       {(() => {
-                        // First try market_data.holder_count (v2.3 structure)
                         const holderCount = src20.market_data?.holder_count ??
-                          // Fallback to root level holders for backward compatibility
                           src20.holders ??
                           0;
                         return Number(holderCount).toLocaleString();
                       })()}
                     </td>
-
                     {/* CHART */}
                     <td
                       class={`${

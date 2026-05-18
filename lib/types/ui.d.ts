@@ -209,8 +209,8 @@ export interface TableProps<T = any> {
 //   FilterSRC20ModalProps,
 //   FlexboxProps,
 //   FormControlProps,
-//   FreshSRC20GalleryProps,
-//   FreshStampGalleryProps,
+//   SRC20GalleryWalletProps,
+//   StampGalleryWalletProps,
 //   GearIconProps,
 //   GridProps,
 //   HoldersTableBaseProps,
@@ -272,10 +272,7 @@ export interface TableProps<T = any> {
 //   SortProps,
 //   SpinnerProps,
 //   SRC101RegisterToolProps,
-//   SRC20CardMintingProps,
-//   SRC20CardProps,
-//   SRC20CardSmMintingProps,
-//   SRC20CardSmProps,
+//   SRC20MintingNarrowProps,
 //   SRC20DetailPageProps,
 //   SRC20InputFieldProps,
 //   SRC20MintedTableProps,
@@ -3107,28 +3104,6 @@ export interface TransactionStatusProps {
 }
 
 /**
- * SRC20CardBaseProps - Migrated from SRC20CardBase.tsx
- */
-export interface SRC20CardBaseProps {
-  // For individual card usage (SRC20CardBase component)
-  src20?: SRC20Row | null | undefined;
-  // For bulk card usage (SRC20Card, SRC20CardSm components)
-  data?: SRC20Row[] | null;
-  // fromPage is reserved for future use
-  fromPage?: "src20" | "wallet" | "stamping/src20" | "home";
-  // timeframe is reserved for future use
-  timeframe?: Timeframe;
-  onImageClick?: (imgSrc: string) => void;
-  children?: preact.ComponentChildren;
-  totalColumns?: number;
-  // Current sort state for table headers
-  currentSort?: {
-    filter: string;
-    direction: "asc" | "desc";
-  };
-}
-
-/**
  * EnhancedWalletContentProps - Migrated from WalletProfileContent.tsx
  */
 export interface EnhancedWalletContentProps extends WalletContentProps {
@@ -3348,7 +3323,7 @@ export interface AdvancedFeeCalculatorProps extends BaseFeeCalculatorProps {
  * Consolidated from stamp.d.ts and pagination.d.ts to support all consumers
  */
 export interface PaginationState {
-  // Basic pagination properties (for FreshStampGallery compatibility)
+  // Basic pagination properties (for StampGalleryWallet compatibility)
   page: number;
   limit: number;
   total: number;
@@ -3444,7 +3419,7 @@ export interface StampingProps {
 export interface SRC20MintingProps {
   // For stamping transaction tracking
   transactions?: SRC20Transaction[];
-  // For minting card components (SRC20CardMinting, SRC20CardSmMinting)
+  // For minting table components (SRC20Minting, SRC20MintingNarrow)
   data?: SRC20Row[];
   fromPage?: "src20" | "wallet" | "stamping/src20" | "home";
   // For table components
@@ -4051,11 +4026,7 @@ export interface AlertContext {
 /**
  * Backward compatibility aliases for commonly expected type names
  */
-export type SRC20CardProps = SRC20CardBaseProps;
-export type SRC20CardMintingProps = SRC20MintingProps;
-export type SRC20CardSmProps = SRC20CardBaseProps;
-export interface SRC20CardSmMintingProps extends SRC20MintingProps {
-  // Ensure explicit onImageClick type handling
+export interface SRC20MintingNarrowProps extends SRC20MintingProps {
   onImageClick?: (imgSrc: string) => void;
 }
 export type SRC20MintsProps = SRC20MintingProps;
