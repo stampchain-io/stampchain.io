@@ -1,8 +1,15 @@
 /* ===== EXPLORER CONTENT COMPONENT ===== */
 import { PaginationButtons } from "$button";
 import { StampCard } from "$card";
+import { SRC20Card } from "$islands/card/SRC20Card.tsx";
+import type { SRC20Row } from "$types/src20.d.ts";
 import type { StampRow } from "$types/stamp.d.ts";
 import type { ExplorerContentProps } from "$types/ui.d.ts";
+
+/* ===== TYPES ===== */
+type MixedItem =
+  | { kind: "stamp"; item: StampRow }
+  | { kind: "src20"; item: SRC20Row };
 
 /* ===== COMPONENT ===== */
 export function ExplorerContent({
@@ -10,23 +17,49 @@ export function ExplorerContent({
   isRecentSales = false,
   pagination,
   fromPage,
+  src20DataCard,
 }: ExplorerContentProps) {
+  /* ===== MERGE + SORT by block_index DESC ===== */
+  const stampItems: MixedItem[] = (stamps ?? []).map((s) => ({
+    kind: "stamp",
+    item: s,
+  }));
+  const src20Items: MixedItem[] = (src20DataCard?.data ?? []).map((s) => ({
+    kind: "src20",
+    item: s,
+  }));
+
+  const mixed: MixedItem[] = [...stampItems, ...src20Items].sort(
+    (a, b) => b.item.block_index - a.item.block_index,
+  );
+
   /* ===== RENDER ===== */
   return (
     <div class="w-full pt-3 mobileMd:pt-6">
-      {/* ===== STAMPS GRID ===== */}
+      {/* ===== OVERVIEW GRID ===== */}
       <div class="grid grid-cols-2 mobileMd:grid-cols-3 mobileLg:grid-cols-4 tablet:grid-cols-5 desktop:grid-cols-6 gap-6 w-full auto-rows-fr">
-        {(stamps ?? []).map((stamp: StampRow, index: number) => (
-          <StampCard
-            key={isRecentSales && stamp.sale_data
-              ? `${stamp.tx_hash}-${stamp.sale_data.tx_hash}-${stamp.sale_data.block_index}-${index}`
-              : stamp.tx_hash}
-            stamp={stamp}
-            isRecentSale={isRecentSales}
-            showDetails
-            {...(fromPage && { fromPage })}
-          />
-        ))}
+        {mixed.map((entry, index) => {
+          if (entry.kind === "stamp") {
+            const stamp = entry.item;
+            return (
+              <StampCard
+                key={isRecentSales && stamp.sale_data
+                  ? `${stamp.tx_hash}-${stamp.sale_data.tx_hash}-${stamp.sale_data.block_index}-${index}`
+                  : stamp.tx_hash}
+                stamp={stamp}
+                isRecentSale={isRecentSales}
+                showDetails
+                {...(fromPage && { fromPage })}
+              />
+            );
+          }
+          return (
+            <SRC20Card
+              key={entry.item.tx_hash}
+              src20={entry.item}
+            />
+          );
+        })}
       </div>
 
       {/* ===== PAGINATION ===== */}

@@ -2222,7 +2222,7 @@ export interface ExplorerContentProps extends BaseComponentProps {
     prefix?: string;
   };
   fromPage?: string;
-  src20Data?: {
+  src20DataCard?: {
     data: import("./src20.d.ts").SRC20Row[];
     total: number;
     page: number;

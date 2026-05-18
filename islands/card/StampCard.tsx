@@ -434,7 +434,7 @@ export function StampCard({
         f-partial={`/stamp/${stamp.tx_hash}`}
         data-long-number={isLongNumber(stampValue)}
         class={`
-          text-color-green-200 group relative z-0 flex flex-col
+          group relative z-0 flex flex-col
           p-stamp-card mobileLg:p-3
           w-full h-full
           hover:border-color-hover ${shadowGlowPurple}

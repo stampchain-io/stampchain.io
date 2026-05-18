@@ -670,100 +670,14 @@ export const DUMMY_LANDING_PAGE = {
 };
 
 /**
- * Stamp overview — cycles [CLASSIC, POSH, SRC-721, SRC-20 DEPLOY,
- * SRC-20 MINT, SRC-20 TRANSFER] × 4 = 24 visible stamps.
- * Every 3rd entry is marked for sale via withDummySaleData.
+ * Stamp overview — 24 stamps cycling [CLASSIC, POSH, SRC-721] × 8.
+ * Every 3rd entry (SRC-721) is marked for sale @ 0.000021 BTC.
  * Desktop grid: 6 cols × 4 rows = 24 visible stamps.
  */
-const DUMMY_STAMP_SRC20_DEPLOY = {
-  stamp: -10001,
-  cpid: "kevin1111111111111111111111111111111111111111111111111111111111",
-  ident: "SRC-20" as const,
-  stamp_mimetype: "application/json",
-  stamp_url: null,
-  stamp_base64: null,
-  block_index: 800000,
-  tx_hash: "kevin1111111111111111111111111111111111111111111111111111111111",
-  tx_index: 0,
-  block_time: new Date("2024-01-15T00:00:00.000Z"),
-  creator: "1GZsmqM5PFBytkC81JxcSWDU5QzNwaCs2M",
-  creator_name: null,
-  supply: 21000000,
-  unbound_quantity: 0,
-  divisible: false,
-  keyburn: null,
-  locked: 1,
-  stamp_hash: "kevin1111111111111111111111111111111111111111111111111111111111",
-  file_hash: "",
-  file_size_bytes: 118,
-  floorPrice: "priceless" as const,
-  floorPriceUSD: null,
-  marketData: null,
-};
-
-const DUMMY_STAMP_SRC20_MINT = {
-  stamp: -10002,
-  cpid: "pepemint1111111111111111111111111111111111111111111111111111111",
-  ident: "SRC-20" as const,
-  stamp_mimetype: "application/json",
-  stamp_url: null,
-  stamp_base64: null,
-  block_index: 825100,
-  tx_hash: "pepemint1111111111111111111111111111111111111111111111111111111",
-  tx_index: 0,
-  block_time: new Date("2024-06-11T12:00:00.000Z"),
-  creator: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
-  creator_name: "stamper.btc",
-  supply: 690000,
-  unbound_quantity: 690000,
-  divisible: false,
-  keyburn: null,
-  locked: 0,
-  stamp_hash: "pepemint1111111111111111111111111111111111111111111111111111111",
-  file_hash: "",
-  file_size_bytes: 96,
-  floorPrice: "priceless" as const,
-  floorPriceUSD: null,
-  marketData: null,
-};
-
-const DUMMY_STAMP_SRC20_TRANSFER = {
-  stamp: -10003,
-  cpid: "kevintx1111111111111111111111111111111111111111111111111111111",
-  ident: "SRC-20" as const,
-  stamp_mimetype: "application/json",
-  stamp_url: null,
-  stamp_base64: null,
-  block_index: 801000,
-  tx_hash: "kevintx1111111111111111111111111111111111111111111111111111111",
-  tx_index: 0,
-  block_time: new Date("2024-02-01T09:00:00.000Z"),
-  creator: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
-  creator_name: null,
-  supply: 50000,
-  unbound_quantity: 50000,
-  divisible: false,
-  keyburn: null,
-  locked: 0,
-  stamp_hash: "kevintx1111111111111111111111111111111111111111111111111111111",
-  file_hash: "",
-  file_size_bytes: 102,
-  floorPrice: "priceless" as const,
-  floorPriceUSD: null,
-  marketData: null,
-};
-
 const _overviewStamps = withDummySaleData(
   Array.from({ length: 24 }, (_, i) => {
-    const bases = [
-      DUMMY_STAMP_CLASSIC,
-      DUMMY_STAMP_POSH,
-      DUMMY_STAMP_SRC721,
-      DUMMY_STAMP_SRC20_DEPLOY,
-      DUMMY_STAMP_SRC20_MINT,
-      DUMMY_STAMP_SRC20_TRANSFER,
-    ];
-    return { ...bases[i % bases.length] };
+    const bases = [DUMMY_STAMP_CLASSIC, DUMMY_STAMP_POSH, DUMMY_STAMP_SRC721];
+    return { ...bases[i % 3] };
   }),
   DUMMY_STAMP_SRC721_DISPENSER,
 );
