@@ -41,33 +41,40 @@ export function SRC20Card({ src20 }: SRC20CardProps) {
 
   /* ===== SHARED TOP ROW: image + ticker + supply ===== */
   const renderTopRow = (supplyLabel: string) => (
-    <div class="flex items-center gap-3">
-      {/* Image — 48px rounded */}
-      <div class="flex-shrink-0 w-12 h-12 rounded-lg overflow-hidden">
-        {imageUrl
-          ? (
-            <img
-              src={imageUrl}
-              alt={tick}
-              class="w-full h-full object-cover"
-              onError={() => setImgError(true)}
-            />
-          )
-          : <PlaceholderImage variant="no-image" />}
+    <>
+      <div class="flex items-center gap-3">
+        {/* Image — 48px rounded */}
+        <div class="flex-shrink-0 w-12 h-12 rounded-lg overflow-hidden">
+          {imageUrl
+            ? (
+              <img
+                src={imageUrl}
+                alt={tick}
+                class="w-full h-full object-cover"
+                onError={() => setImgError(true)}
+              />
+            )
+            : <PlaceholderImage variant="no-image" />}
+        </div>
+
+        {/* Ticker + supply */}
+        <div class="flex flex-col min-w-0 flex-1">
+          <div class={`${cardStampNumber} truncate`}>
+            {tick}
+          </div>
+          <div class={`${containerPill} ${cardSupply} mt-1 w-fit`}>
+            {supplyLabel}
+          </div>
+        </div>
       </div>
 
-      {/* Ticker + supply */}
-      <div class="flex flex-col min-w-0 flex-1">
-        <div
-          class={`${cardStampNumber} truncate`}
-        >
-          {tick}
-        </div>
-        <div class={`${containerPill} ${cardSupply} mt-1 w-fit`}>
-          {supplyLabel}
+      {/* Operation type pill — centered */}
+      <div class="flex justify-center mt-3">
+        <div class={`${containerPill} ${cardSupply}`}>
+          {op}
         </div>
       </div>
-    </div>
+    </>
   );
 
   /* ===== TRANSFER LAYOUT ===== */

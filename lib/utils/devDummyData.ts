@@ -23,7 +23,7 @@ export const DUMMY_STAMP_CLASSIC = {
     "https://stampchain.io/stamps/6c7ff116f4ac8fe76d763946e9d917ca270f3b95c3b3949a478635fa617324ca.png",
   stamp_base64:
     "iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAADBQTFRFsoRvmWJFpHtkhKG21GsYE2YTlYqHg3Rta1dRdWpliUoovYp1sYBsAQEBAAAA3G4WoGdNfQAAAS5JREFUeNp8kwuShCAMRAMyYICE+992OkFF3antKj/Fo0Mjkca/ovWqh35i1XJIf2DNpUiGSi7yB2vOKkFEQTmLPrEaNFWRfc9rAbpod9VqHLUWVmUJ1C9eHhip+DRDSGDr64XLzkIX7lUyn6s75gPHNu2Yv/BQfrgNo94bE64YY++iO9+i7cAIJNQI9xixt7W2suPPZ6PWcHfMb0xQaJBF39fGgBEktN4mbl6cF2aeuIXJ7bveosEu8BoOVjw+sLVJ6dQOOdbngQLbBMuHvQvrqx0E4wbFzPxyjwEsrmDuF05JOlVXsNq34sm5Vfd2AhWWR6+loZtxU5S6OtHcKanRisOABO3oP0M6P4tu26Y1yKQBATBynrdBx8GT41l9yP8mmtRxmNFR/Rgb4yvAAJBiJf+Le3jDAAAAAElFTkSuQmCC",
-  block_index: 783718,
+  block_index: 826000,
   tx_hash: "6c7ff116f4ac8fe76d763946e9d917ca270f3b95c3b3949a478635fa617324ca",
   tx_index: 0,
   block_time: new Date("2023-04-10T00:00:00.000Z"),
@@ -70,7 +70,7 @@ export const DUMMY_STAMP_POSH = {
     "https://stampchain.io/stamps/32257e9db4f9d979f8a5d0a703a630c7056ce5a5cae8cba9f69ea168c0562e39.png",
   stamp_base64:
     "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",
-  block_index: 926896,
+  block_index: 813000,
   tx_hash: "32257e9db4f9d979f8a5d0a703a630c7056ce5a5cae8cba9f69ea168c0562e39",
   tx_index: 0,
   block_time: new Date("2025-12-07T00:00:00.000Z"),
@@ -116,7 +116,7 @@ export const DUMMY_STAMP_SRC721 = {
     "https://stampchain.io/stamps/b74313d300902c0cdf88dc101fb8f4c9ab7ad89c978edd30ca4ee7987cccdedd.svg",
   stamp_base64:
     "iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAj0lEQVR4nO3VyQ2AIBQE0OmeUI1l/DamDG4ajXpAkUUMCBzmAAk8diB6mksEA5aalhrAGbvsSrY9RgAWg6NqGAmoD0csTPKSFBw5YN8AXu3xE+gbRB9wtnvMEjCtTpVSW1z1az6BjTG3J/yoz/ZkshaYzR8u8cBa685mzG5gWL9Q+zNmAii/hSWw3YBlX+oFrQtX5n6ExHgAAAAASUVORK5CYII=",
-  block_index: 933541,
+  block_index: 839000,
   tx_hash: "1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b",
   tx_index: 0,
   block_time: new Date("2023-06-01T00:00:00.000Z"),
@@ -174,6 +174,16 @@ export function withDummySaleData<T extends Record<string, any>>(
       }
       : s
   );
+}
+
+/* ===== HELPER: Fisher-Yates shuffle (runs once at module load) ===== */
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
 }
 
 /* ===== SRC-20 TOKENS ===== */
@@ -589,10 +599,6 @@ export const DUMMY_SRC20_TRANSFERS = [
 
 /* ===== PAGE-LEVEL DUMMY SHAPES ===== */
 
-/* Tiny helper — n copies of a base object (each spread so they're distinct) */
-const rep = <T extends Record<string, unknown>>(base: T, n: number): T[] =>
-  Array.from({ length: n }, () => ({ ...base }));
-
 /* Sale entries cycling [CLASSIC, POSH, SRC721] with staggered time labels */
 const _saleBase = [
   {
@@ -660,12 +666,12 @@ export const DUMMY_RECENT_SALES = _timeLabels.map((timeLabel, i) => {
  */
 export const DUMMY_LANDING_PAGE = {
   carouselStamps: [],
-  stamps_art: rep(DUMMY_STAMP_CLASSIC, 24),
-  stamps_posh: withDummySaleData(
-    rep(DUMMY_STAMP_POSH, 14),
-    DUMMY_STAMP_POSH_DISPENSER,
+  stamps_art: shuffle(
+    Array.from({ length: 24 }, (_, i) => {
+      const bases = [DUMMY_STAMP_CLASSIC, DUMMY_STAMP_POSH, DUMMY_STAMP_SRC721];
+      return { ...bases[i % bases.length] };
+    }),
   ),
-  stamps_src721: rep(DUMMY_STAMP_SRC721, 12),
   collectionData: [],
 };
 
@@ -674,12 +680,14 @@ export const DUMMY_LANDING_PAGE = {
  * Every 3rd entry (SRC-721) is marked for sale @ 0.000021 BTC.
  * Desktop grid: 6 cols × 4 rows = 24 visible stamps.
  */
-const _overviewStamps = withDummySaleData(
-  Array.from({ length: 24 }, (_, i) => {
-    const bases = [DUMMY_STAMP_CLASSIC, DUMMY_STAMP_POSH, DUMMY_STAMP_SRC721];
-    return { ...bases[i % 3] };
-  }),
-  DUMMY_STAMP_SRC721_DISPENSER,
+const _overviewStamps = shuffle(
+  withDummySaleData(
+    Array.from({ length: 24 }, (_, i) => {
+      const bases = [DUMMY_STAMP_CLASSIC, DUMMY_STAMP_POSH, DUMMY_STAMP_SRC721];
+      return { ...bases[i % 3] };
+    }),
+    DUMMY_STAMP_SRC721_DISPENSER,
+  ),
 );
 export const DUMMY_STAMP_OVERVIEW_PAGE = {
   data: _overviewStamps,
@@ -692,13 +700,119 @@ export const DUMMY_STAMP_OVERVIEW_PAGE = {
  * Used in both the explorer page and /src20 overview in DEV_DUMMY_MODE.
  */
 export const DUMMY_EXPLORER_OVERVIEW_PAGE = {
-  data: [
+  data: shuffle([
+    /* ===== KEVIN ===== */
     DUMMY_TOKEN_KEVIN,
+    {
+      ...DUMMY_TOKEN_KEVIN,
+      op: "MINT",
+      amt: "100000",
+      tx_hash:
+        "kevin2222222222222222222222222222222222222222222222222222222222",
+      block_index: 800100,
+      block_time: new Date("2024-01-16T04:20:00.000Z"),
+      creator: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+      creator_name: null,
+      destination: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+      destination_name: null,
+    },
+    {
+      ...DUMMY_TOKEN_KEVIN,
+      op: "TRANSFER",
+      amt: "50000",
+      tx_hash:
+        "kevin3333333333333333333333333333333333333333333333333333333333",
+      block_index: 801000,
+      block_time: new Date("2024-02-01T09:00:00.000Z"),
+      creator: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+      creator_name: null,
+      destination: "1GZsmqM5PFBytkC81JxcSWDU5QzNwaCs2M",
+      destination_name: null,
+    },
+    /* ===== STAMP ===== */
     DUMMY_TOKEN_STAMP,
+    {
+      ...DUMMY_TOKEN_STAMP,
+      op: "MINT",
+      amt: "1000000",
+      tx_hash: "stamp222222222222222222222222222222222222222222222222222222222",
+      block_index: 810500,
+      block_time: new Date("2024-03-05T08:00:00.000Z"),
+      creator: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+      creator_name: "stamper.btc",
+      destination: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+      destination_name: "stamper.btc",
+    },
+    {
+      ...DUMMY_TOKEN_STAMP,
+      op: "TRANSFER",
+      amt: "500000",
+      tx_hash: "stamp333333333333333333333333333333333333333333333333333333333",
+      block_index: 812000,
+      block_time: new Date("2024-03-10T11:00:00.000Z"),
+      creator: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+      creator_name: "stamper.btc",
+      destination: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+      destination_name: null,
+    },
+    /* ===== PEPE ===== */
     DUMMY_TOKEN_PEPE,
+    {
+      ...DUMMY_TOKEN_PEPE,
+      op: "MINT",
+      amt: "690000",
+      tx_hash:
+        "pepe22222222222222222222222222222222222222222222222222222222222",
+      block_index: 825100,
+      block_time: new Date("2024-06-11T12:00:00.000Z"),
+      creator: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+      creator_name: "stamper.btc",
+      destination: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+      destination_name: "stamper.btc",
+    },
+    {
+      ...DUMMY_TOKEN_PEPE,
+      op: "TRANSFER",
+      amt: "345000",
+      tx_hash:
+        "pepe33333333333333333333333333333333333333333333333333333333333",
+      block_index: 826000,
+      block_time: new Date("2024-06-15T08:00:00.000Z"),
+      creator: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+      creator_name: "stamper.btc",
+      destination: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+      destination_name: null,
+    },
+    /* ===== BOBO ===== */
     DUMMY_TOKEN_BOBO,
-  ],
-  total: 4,
+    {
+      ...DUMMY_TOKEN_BOBO,
+      op: "MINT",
+      amt: "420000",
+      tx_hash:
+        "bobo22222222222222222222222222222222222222222222222222222222222",
+      block_index: 840200,
+      block_time: new Date("2024-09-21T06:00:00.000Z"),
+      creator: "1GZsmqM5PFBytkC81JxcSWDU5QzNwaCs2M",
+      creator_name: null,
+      destination: "1GZsmqM5PFBytkC81JxcSWDU5QzNwaCs2M",
+      destination_name: null,
+    },
+    {
+      ...DUMMY_TOKEN_BOBO,
+      op: "TRANSFER",
+      amt: "210000",
+      tx_hash:
+        "bobo33333333333333333333333333333333333333333333333333333333333",
+      block_index: 841000,
+      block_time: new Date("2024-10-01T12:00:00.000Z"),
+      creator: "1GZsmqM5PFBytkC81JxcSWDU5QzNwaCs2M",
+      creator_name: null,
+      destination: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+      destination_name: null,
+    },
+  ]),
+  total: 12,
   page: 1,
   totalPages: 1,
 };

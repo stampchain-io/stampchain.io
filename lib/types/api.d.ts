@@ -784,6 +784,7 @@ export type StampPageProps = {
       page: number;
       totalPages: number;
     } | null;
+    section?: "all" | "stamps" | "tokens";
   };
 };
 

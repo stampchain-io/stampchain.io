@@ -18,6 +18,7 @@ export function ExplorerContent({
   pagination,
   fromPage,
   src20DataCard,
+  section = "all",
 }: ExplorerContentProps) {
   /* ===== MERGE + SORT by block_index DESC ===== */
   const stampItems: MixedItem[] = (stamps ?? []).map((s) => ({
@@ -30,15 +31,22 @@ export function ExplorerContent({
   }));
 
   const mixed: MixedItem[] = [...stampItems, ...src20Items].sort(
-    (a, b) => b.item.block_index - a.item.block_index,
+    (a, b) => Number(b.item.block_index) - Number(a.item.block_index),
   );
+
+  /* ===== FILTER by section ===== */
+  const visible: MixedItem[] = section === "stamps"
+    ? mixed.filter((e) => e.kind === "stamp")
+    : section === "tokens"
+    ? mixed.filter((e) => e.kind === "src20")
+    : mixed;
 
   /* ===== RENDER ===== */
   return (
     <div class="w-full pt-3 mobileMd:pt-6">
       {/* ===== OVERVIEW GRID ===== */}
       <div class="grid grid-cols-2 mobileMd:grid-cols-3 mobileLg:grid-cols-4 tablet:grid-cols-5 desktop:grid-cols-6 gap-6 w-full auto-rows-fr">
-        {mixed.map((entry, index) => {
+        {visible.map((entry, index) => {
           if (entry.kind === "stamp") {
             const stamp = entry.item;
             return (

@@ -19,7 +19,7 @@ export function LoadingIcon({
     >
       <div
         className={`flex items-center justify-center max-w-none
-          bg-gradient-to-br from-color-purple-semidark/75 via-color-purple-dark/75 to-black rounded-2xl
+          bg-gradient-to-br from-color-primary-300 via-color-primary-400 to-color-primary-500 rounded-xl
           object-contain ${transitionColors} ${containerClassName}`}
       >
         <Icon
@@ -27,7 +27,7 @@ export function LoadingIcon({
           name="stamp"
           weight="custom"
           size="custom"
-          color="purple"
+          color="purpleDark"
           className={`p-[25%] [stroke-width:0.5] w-full h-full ${className}`}
         />
       </div>

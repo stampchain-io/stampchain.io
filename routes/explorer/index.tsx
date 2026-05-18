@@ -57,6 +57,12 @@ export const handler: Handlers = {
       return new Response(null, { status: 204 });
     }
 
+    // Read section early so it is available in every render path (DEV, try, catch)
+    const section = (url.searchParams.get("section") || "all") as
+      | "all"
+      | "stamps"
+      | "tokens";
+
     if (DEV_DUMMY_MODE) {
       return ctx.render({
         stamps: DUMMY_STAMP_OVERVIEW_PAGE.data,
@@ -68,6 +74,7 @@ export const handler: Handlers = {
         filterBy: [],
         sortBy: "DESC",
         selectedTab: "all",
+        section,
         partial: false,
       });
     }
@@ -113,10 +120,11 @@ export const handler: Handlers = {
           ),
         ]);
       } else {
-        // Regular stamp listing + SRC-20 transactions in parallel
+        // Regular stamp listing + SRC-20 transactions in parallel.
+        // Skip each fetch when the section selector excludes it.
         let collectionId;
 
-        if (selectedTab === "posh") {
+        if (selectedTab === "posh" && section !== "tokens") {
           const poshCollection = await withTimeout(
             CollectionService.getCollectionByName("posh"),
             15000,
@@ -128,8 +136,9 @@ export const handler: Handlers = {
           }
         }
 
-        [stampResult, src20Result] = await Promise.all([
-          withTimeout(
+        const stampFetch = section === "tokens"
+          ? Promise.resolve({ data: [], total: 0, page: 1, totalPages: 1 })
+          : withTimeout(
             StampController.getStamps({
               page,
               limit: page_size,
@@ -141,8 +150,11 @@ export const handler: Handlers = {
               url: url.origin,
             }),
             15000,
-          ),
-          withTimeout(
+          );
+
+        const src20Fetch = section === "stamps"
+          ? Promise.resolve({ data: [], total: 0, page: 1, totalPages: 1 })
+          : withTimeout(
             SRC20Service.QueryService.fetchBasicSrc20Data(
               {
                 limit: page_size,
@@ -151,7 +163,11 @@ export const handler: Handlers = {
               },
             ).then(extractSrc20Rows),
             15000,
-          ),
+          );
+
+        [stampResult, src20Result] = await Promise.all([
+          stampFetch,
+          src20Fetch,
         ]);
       }
 
@@ -166,6 +182,7 @@ export const handler: Handlers = {
         page,
         limit: page_size,
         src20DataCard: src20Result,
+        section,
       };
 
       return ctx.render({
@@ -184,6 +201,7 @@ export const handler: Handlers = {
         filterBy: [],
         sortBy: "DESC",
         selectedTab: "all",
+        section,
         partial: false,
       });
     }
@@ -200,6 +218,7 @@ export function ExplorerPage(props: StampPageProps) {
     sortBy: _sortBy,
     selectedTab,
     src20DataCard,
+    section = "all",
   } = props.data;
 
   const stampsArray = Array.isArray(stamps) ? stamps : [];
@@ -213,13 +232,14 @@ export function ExplorerPage(props: StampPageProps) {
       data-partial="/explorer"
     >
       {/* Header Component with Filter Controls */}
-      <ExplorerHeader />
+      <ExplorerHeader currentSection={section} />
 
       {/* Main Content with Pagination */}
       <ExplorerContent
         stamps={stampsArray}
         isRecentSales={isRecentSales}
         src20DataCard={src20DataCard ?? null}
+        section={section}
         pagination={{
           page,
           totalPages,

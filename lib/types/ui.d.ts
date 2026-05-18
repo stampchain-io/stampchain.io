@@ -2228,6 +2228,14 @@ export interface ExplorerContentProps extends BaseComponentProps {
     page: number;
     totalPages: number;
   } | null;
+  section?: "all" | "stamps" | "tokens";
+}
+
+/**
+ * Explorer Header component props
+ */
+export interface ExplorerHeaderProps extends BaseComponentProps {
+  currentSection?: "all" | "stamps" | "tokens";
 }
 
 /**
