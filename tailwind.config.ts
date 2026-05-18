@@ -142,7 +142,7 @@ export default {
             /* container-2 gradient background in layout/styles.ts */
           },
           border: {
-            DEFAULT: "#404040", /* neutral-700 */
+            DEFAULT: "#262626", /* neutral-800 */
             /* container-1 border defined below */
             /* container-2 border hover uses "color-hover" */
           },

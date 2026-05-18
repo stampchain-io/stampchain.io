@@ -207,8 +207,7 @@ export const toggleSymbol =
 
 /* ===== CARD TEXT STYLES ===== */
 // Standard card styles
-export const cardStampNumber =
-  `max-w-full font-black text-md min-[420px]:text-lg
+export const cardStampNumber = `w-fit font-black text-md min-[420px]:text-lg
    bg-gradient-to-r color-neutral-gradient color-gradient-hover
    truncate ${transitionColors} ${select}`;
 export const cardCreator =

@@ -31,8 +31,10 @@ export const container1 = `bg-border-container-1 rounded-3xl backdrop-blur-sm`;
 // 2nd layer styles - register tool tld dropdown uses same hardcoded values
 export const container2 = `bg-border-container-2 rounded-2xl`;
 export const container2Hover = `bg-border-container-2-hover rounded-2xl`;
-export const containerPill =
-  `flex items-center py-1 px-3 bg-gradient-to-b from-color-neutral-800 to-color-neutral-900 rounded-full cursor-default select-none`;
+export const container3 = `border border-color-border rounded-xl
+  bg-gradient-to-b from-color-neutral-800 via-color-neutral-900 to-color-neutral-950 cursor-default select-none`;
+export const containerPill = `flex items-center py-1 px-3 rounded-full
+  bg-gradient-to-b from-color-neutral-700 via-color-neutral-800 to-color-neutral-900 cursor-default select-none`;
 
 /* ===== BODY STYLES ===== */
 // Main body styles
@@ -150,6 +152,7 @@ export type LayoutStyles = {
   container1: string;
   container2: string;
   container2Hover: string;
+  container3: string;
   containerPill: string;
 
   // Body styles

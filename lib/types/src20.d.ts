@@ -137,6 +137,7 @@ export interface SRC20Row {
   value?: number; // Token value
 
   // Display and reference fields
+  stamp?: number | null; // Bitcoin Stamps stamp number for this transaction
   stamp_url?: string; // Associated stamp URL
   deploy_img?: string; // Deployment image URL
   deploy_tx?: string; // Deployment transaction hash

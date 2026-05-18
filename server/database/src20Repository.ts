@@ -404,6 +404,7 @@ export class SRC20Repository {
           COALESCE(smd.progress_percentage, 0) as progress,
           COALESCE(smd.total_minted, 0) as minted_amt,
           COALESCE(smd.total_mints, 0) as total_mints,
+          st.stamp,
           -- Add deploy_tx for image URL generation
           CASE
             WHEN src20.op = 'DEPLOY' THEN src20.tx_hash
@@ -422,7 +423,8 @@ export class SRC20Repository {
         FROM ${SRC20_TABLE} src20
         LEFT JOIN creator creator_info ON src20.creator = creator_info.address
         LEFT JOIN creator destination_info ON src20.destination = destination_info.address
-        LEFT JOIN src20_market_data smd ON smd.tick = src20.tick${feeFieldsJoin}
+        LEFT JOIN src20_market_data smd ON smd.tick = src20.tick
+        LEFT JOIN ${STAMP_TABLE} st ON st.tx_hash = src20.tx_hash${feeFieldsJoin}
         ${whereClause}
         ORDER BY ${finalOrderBy}
         ${limitOffsetClause}

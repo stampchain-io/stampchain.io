@@ -149,6 +149,16 @@ export const DUMMY_STAMP_SRC721_DISPENSER = {
   oracle_price_last_updated: null,
 };
 
+/* 6-entry cycle: each type once without price, once with listing price */
+const _stampBases = [
+  DUMMY_STAMP_CLASSIC,
+  { ...DUMMY_STAMP_CLASSIC, floorPrice: 0.00042, lowestPriceDispenser: DUMMY_STAMP_CLASSIC_DISPENSER },
+  DUMMY_STAMP_POSH,
+  { ...DUMMY_STAMP_POSH, floorPrice: 0.0069, lowestPriceDispenser: DUMMY_STAMP_POSH_DISPENSER },
+  DUMMY_STAMP_SRC721,
+  { ...DUMMY_STAMP_SRC721, floorPrice: 0.000021, lowestPriceDispenser: DUMMY_STAMP_SRC721_DISPENSER },
+];
+
 /* ===== HELPER: reject after ms milliseconds ===== */
 export function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   return Promise.race([
@@ -204,6 +214,7 @@ export const DUMMY_TOKEN_KEVIN = {
   row_num: 1,
   fee_rate_sat_vb: null,
   fee: null,
+  stamp: 1450686,
   max: "21000000",
   lim: "100000",
   deci: 18,
@@ -249,6 +260,7 @@ export const DUMMY_TOKEN_STAMP = {
   row_num: 2,
   fee_rate_sat_vb: null,
   fee: null,
+  stamp: 1383566,
   max: "100000000",
   lim: "1000000",
   deci: 8,
@@ -294,6 +306,7 @@ export const DUMMY_TOKEN_PEPE = {
   row_num: 3,
   fee_rate_sat_vb: null,
   fee: null,
+  stamp: 1496420,
   max: "69000000",
   lim: "690000",
   deci: 18,
@@ -332,6 +345,7 @@ export const DUMMY_TOKEN_BOBO = {
   row_num: 4,
   fee_rate_sat_vb: null,
   fee: null,
+  stamp: 1512345,
   max: "42000000",
   lim: "420000",
   deci: 18,
@@ -391,7 +405,7 @@ export const DUMMY_SRC20_DEPLOYS = [
     creator_name: "stamper.btc",
     amt: null,
     deci: 8,
-    lim: "1000000",
+    lim: "10000000",
     max: "100000000",
     destination: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
     block_time: "2024-03-01T00:00:00.000Z",
@@ -407,7 +421,7 @@ export const DUMMY_SRC20_DEPLOYS = [
     creator_name: null,
     amt: null,
     deci: 18,
-    lim: "690000",
+    lim: "6900000",
     max: "69000000",
     destination: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
     block_time: "2024-06-10T00:00:00.000Z",
@@ -423,7 +437,7 @@ export const DUMMY_SRC20_DEPLOYS = [
     creator_name: null,
     amt: null,
     deci: 18,
-    lim: "420000",
+    lim: "4200000",
     max: "42000000",
     destination: "bc1q9d3xa5gg45q2j39szuqn9k7pt3lmnah37mqad5",
     block_time: "2024-09-20T00:00:00.000Z",
@@ -667,10 +681,7 @@ export const DUMMY_RECENT_SALES = _timeLabels.map((timeLabel, i) => {
 export const DUMMY_LANDING_PAGE = {
   carouselStamps: [],
   stamps_art: shuffle(
-    Array.from({ length: 24 }, (_, i) => {
-      const bases = [DUMMY_STAMP_CLASSIC, DUMMY_STAMP_POSH, DUMMY_STAMP_SRC721];
-      return { ...bases[i % bases.length] };
-    }),
+    Array.from({ length: 24 }, (_, i) => ({ ..._stampBases[i % _stampBases.length] })),
   ),
   collectionData: [],
 };
@@ -681,13 +692,7 @@ export const DUMMY_LANDING_PAGE = {
  * Desktop grid: 6 cols × 4 rows = 24 visible stamps.
  */
 const _overviewStamps = shuffle(
-  withDummySaleData(
-    Array.from({ length: 24 }, (_, i) => {
-      const bases = [DUMMY_STAMP_CLASSIC, DUMMY_STAMP_POSH, DUMMY_STAMP_SRC721];
-      return { ...bases[i % 3] };
-    }),
-    DUMMY_STAMP_SRC721_DISPENSER,
-  ),
+  Array.from({ length: 24 }, (_, i) => ({ ..._stampBases[i % _stampBases.length] })),
 );
 export const DUMMY_STAMP_OVERVIEW_PAGE = {
   data: _overviewStamps,
