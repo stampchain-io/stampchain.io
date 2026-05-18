@@ -2225,6 +2225,12 @@ export interface ExplorerContentProps extends BaseComponentProps {
     prefix?: string;
   };
   fromPage?: string;
+  src20Data?: {
+    data: import("./src20.d.ts").SRC20Row[];
+    total: number;
+    page: number;
+    totalPages: number;
+  } | null;
 }
 
 /**

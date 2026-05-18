@@ -4,8 +4,6 @@ import { StampCard } from "$card";
 import type { StampRow } from "$types/stamp.d.ts";
 import type { ExplorerContentProps } from "$types/ui.d.ts";
 
-/* ===== TYPES ===== */
-
 /* ===== COMPONENT ===== */
 export function ExplorerContent({
   stamps,

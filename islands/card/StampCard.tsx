@@ -11,6 +11,7 @@ import {
 } from "$layout";
 import {
   abbreviateAddress,
+  formatFileSize,
   formatSupplyValue,
   stripTrailingZeros,
 } from "$lib/utils/ui/formatting/formatUtils.ts";
@@ -20,6 +21,7 @@ import {
 } from "$lib/utils/ui/media/imageUtils.ts";
 import {
   cardCreator,
+  cardFileSize,
   cardFileType,
   cardPrice,
   cardPriceMinimal,
@@ -60,6 +62,9 @@ export function StampCard({
   const [src, setSrc] = useState<string | undefined>(undefined);
   const [validatedContent, setValidatedContent] = useState<VNode | null>(null);
   const [isValidating, setIsValidating] = useState<boolean>(false);
+  const [windowWidth, setWindowWidth] = useState<number>(
+    typeof globalThis !== "undefined" ? globalThis.innerWidth ?? 0 : 0,
+  );
 
   // Audio-related state (always declared to avoid conditional hooks)
   const [isPlaying, setIsPlaying] = useState(false);
@@ -84,14 +89,7 @@ export function StampCard({
     }
   };
 
-  const getAbbreviationLength = () => {
-    if (typeof globalThis !== "undefined" && globalThis.innerWidth) {
-      if (globalThis.innerWidth < 768) return 4;
-      if (globalThis.innerWidth < 1024) return 6;
-      return 8;
-    }
-    return 6;
-  };
+  const abbreviationLength = windowWidth < 768 ? 4 : windowWidth < 1024 ? 5 : 5;
 
   const fetchStampImage = () => {
     setLoading(true);
@@ -108,6 +106,13 @@ export function StampCard({
   };
 
   /* ===== EFFECTS ===== */
+  // Update abbreviation length on window resize
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(globalThis.innerWidth ?? 0);
+    globalThis.addEventListener("resize", handleResize);
+    return () => globalThis.removeEventListener("resize", handleResize);
+  }, []);
+
   // Fetch stamp image on mount
   useEffect(() => {
     fetchStampImage();
@@ -140,7 +145,7 @@ export function StampCard({
                     src={getStampPreviewUrl(stamp as StampRow)}
                     loading="lazy"
                     alt={`Stamp No. ${stamp.stamp}`}
-                    class="max-w-none object-contain rounded-2xl pixelart stamp-image h-full w-full"
+                    class="max-w-none object-contain rounded-xl pixelart stamp-image h-full w-full"
                     onLoad={() => setLoading(false)}
                     onError={handleImageError}
                   />
@@ -156,7 +161,7 @@ export function StampCard({
                     src={src}
                     loading="lazy"
                     alt={`Stamp No. ${stamp.stamp}`}
-                    class="max-w-none object-contain rounded-2xl pixelart stamp-image h-full w-full"
+                    class="max-w-none object-contain rounded-xl pixelart stamp-image h-full w-full"
                     onLoad={() => setLoading(false)}
                     onError={handleImageError}
                   />
@@ -231,14 +236,14 @@ export function StampCard({
               }}
               class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-[40px] tablet:w-[34px] aspect-square flex items-center justify-center group/button"
             >
-              <div class="absolute inset-0 bg-black opacity-50 rounded-full" />
+              <div class="absolute inset-0 bg-color-neutral-1000 opacity-50 rounded-full" />
               <Icon
                 name={isPlaying ? "pause" : "play"}
                 type="iconButton"
                 weight="bold"
                 size="xsR"
                 color="custom"
-                className="relative z-10 [&_path]:fill-color-grey-dark [&_path]:group-hover/button:fill-color-purple-light transition-all duration-200"
+                className="relative z-10 [&_path]:fill-color-neutral-600 [&_path]:group-hover/button:fill-color-hover transition-all duration-200"
               />
             </button>
           </div>
@@ -259,7 +264,7 @@ export function StampCard({
               src={getStampPreviewUrl(stamp as StampRow)}
               loading="lazy"
               alt={`Stamp No. ${stamp.stamp}`}
-              class="max-w-none object-contain rounded-2xl pixelart stamp-image h-full w-full"
+              class="max-w-none object-contain rounded-xl pixelart stamp-image h-full w-full"
               onLoad={() => setLoading(false)}
               onError={handleImageError}
             />
@@ -322,7 +327,7 @@ export function StampCard({
             src={src}
             loading="lazy"
             alt={`Stamp No. ${stamp.stamp}`}
-            class="max-w-none object-contain rounded-2xl pixelart stamp-image h-full w-full"
+            class="max-w-none object-contain rounded-xl pixelart stamp-image h-full w-full"
             onLoad={() => setLoading(false)}
             onError={handleImageError}
           />
@@ -385,19 +390,21 @@ export function StampCard({
     (stamp.cpid && stamp.cpid.charAt(0) === "A");
 
   const supplyDisplay = isRecentSale
-    ? `Qty: ${stamp.supply || 1}` // For recent sales, show transaction quantity
+    ? `${stamp.supply || 1}` // For recent sales, show transaction quantity
     : stamp.ident !== "SRC-20" && stamp.balance
     ? `${formatSupplyValue(Number(stamp.balance), stamp.divisible)}/${
       stamp.supply < 100000 && !stamp.divisible
         ? formatSupplyValue(stamp.supply ?? 0, stamp.divisible)
         : "+100000"
     }`
-    : `1/${formatSupplyValue(stamp.supply ?? 0, stamp.divisible)}`;
+    : stamp.supply === 1
+    ? "1/1"
+    : `${formatSupplyValue(stamp.supply ?? 0, stamp.divisible)}`;
 
   // Use dynamic abbreviation length
   const creatorDisplay = stamp.creator_name
     ? stamp.creator_name
-    : abbreviateAddress(stamp.creator, getAbbreviationLength());
+    : abbreviateAddress(stamp.creator, abbreviationLength);
 
   const stampValue = Number(stamp.stamp ?? 0) >= 0 ||
       (stamp.cpid && stamp.cpid.charAt(0) === "A")
@@ -415,6 +422,9 @@ export function StampCard({
     return stringValue.length > 6;
   };
 
+  const priceData = renderPrice();
+  const isListed = priceData.style === cardPrice;
+
   /* ===== RENDER ===== */
   return (
     <div class="relative flex justify-center w-full h-full max-w-72">
@@ -424,7 +434,7 @@ export function StampCard({
         f-partial={`/stamp/${stamp.tx_hash}`}
         data-long-number={isLongNumber(stampValue)}
         class={`
-          text-color-neutral-200 group relative z-0 flex flex-col
+          text-color-green-200 group relative z-0 flex flex-col
           p-stamp-card mobileLg:p-3
           w-full h-full
           hover:border-color-hover ${shadowGlowPurple}
@@ -459,18 +469,102 @@ export function StampCard({
               {creatorDisplay}
             </div>
 
-            {/* Price and Supply */}
+            {/* Row 1: Supply (left) + Status Icons (right) */}
             <div class="flex justify-between items-center mt-4 w-full">
-              {/* Price on the Left */}
-              <div class={`text-left ${containerPill} ${renderPrice().style}`}>
-                {renderPrice().text}
-              </div>
-              {/* Supply/Editions on the Right */}
-              <div
-                class={`${cardSupply} text-right ${containerPill}`}
-              >
+              {/* Supply aligned left */}
+              <div class={`${containerPill} ${cardSupply}`}>
                 {supplyDisplay}
               </div>
+              {/* Locked/Keyburn/Divisible/Recursive Icons */}
+              <div class="flex items-center gap-1.5">
+                {stamp.ident === "SRC-721" && (
+                  <Icon
+                    type="icon"
+                    name="recursive"
+                    weight="bold"
+                    size="xxs"
+                    color="greyLight"
+                    ariaLabel="Recursive"
+                  />
+                )}
+                {stamp.divisible && (
+                  <Icon
+                    type="icon"
+                    name="divisible"
+                    weight="bold"
+                    size="xxs"
+                    color="greyLight"
+                    ariaLabel="Divisible"
+                  />
+                )}
+                {stamp.keyburn != null && (
+                  <Icon
+                    type="icon"
+                    name="keyburned"
+                    weight="bold"
+                    size="xxs"
+                    color="greyLight"
+                    ariaLabel="Keyburned"
+                  />
+                )}
+                {stamp.locked
+                  ? (
+                    <Icon
+                      type="icon"
+                      name="locked"
+                      weight="bold"
+                      size="xxs"
+                      color="greyLight"
+                      ariaLabel="Locked"
+                    />
+                  )
+                  : (
+                    <Icon
+                      type="icon"
+                      name="unlocked"
+                      weight="bold"
+                      size="xxs"
+                      color="greyLight"
+                      ariaLabel="Unlocked"
+                    />
+                  )}
+              </div>
+            </div>
+
+            {/* Row 2: Price pill (if listed) OR File type + File size pills */}
+            <div
+              class={`flex items-center mt-3 w-full ${
+                isListed ? "justify-center" : "justify-between"
+              }`}
+            >
+              {isListed
+                ? (
+                  <div
+                    class={`${containerPill} ${cardPrice}`}
+                  >
+                    {priceData.text}
+                  </div>
+                )
+                : (
+                  <>
+                    <div
+                      class={`${containerPill} ${cardFileType}`}
+                    >
+                      {stamp.stamp_mimetype?.split("/")[1]?.toUpperCase() ||
+                        "UNKNOWN"}
+                    </div>
+                    {stamp.file_size_bytes != null && (
+                      <div
+                        class={`${containerPill} ${cardFileSize}`}
+                      >
+                        {formatFileSize(
+                          stamp.file_size_bytes,
+                          stamp.stamp_mimetype === "text/plain",
+                        )}
+                      </div>
+                    )}
+                  </>
+                )}
             </div>
           </div>
         )}

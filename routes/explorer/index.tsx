@@ -6,13 +6,14 @@ import type { SUBPROTOCOLS } from "$types/base.d.ts";
 
 import type { StampFilterType, StampType } from "$constants";
 import { ExplorerHeader } from "$header";
-import { StampController } from "$server/controller/stampController.ts";
-import { CollectionService } from "$server/services/core/collectionService.ts";
 import {
   DEV_DUMMY_MODE,
+  DUMMY_EXPLORER_OVERVIEW_PAGE,
   DUMMY_STAMP_OVERVIEW_PAGE,
   withTimeout,
 } from "$lib/utils/devDummyData.ts";
+import { StampController } from "$server/controller/stampController.ts";
+import { CollectionService } from "$server/services/core/collectionService.ts";
 import type { StampPageProps } from "$types/api.d.ts";
 
 /* ===== CONSTANTS ===== */
@@ -38,6 +39,7 @@ export const handler: Handlers = {
       return ctx.render({
         stamps: DUMMY_STAMP_OVERVIEW_PAGE.data,
         pagination: DUMMY_STAMP_OVERVIEW_PAGE.pagination,
+        src20Data: DUMMY_EXPLORER_OVERVIEW_PAGE,
         page: 1,
         limit: 60,
         totalPages: 1,
@@ -132,6 +134,7 @@ export const handler: Handlers = {
       return ctx.render({
         stamps: DUMMY_STAMP_OVERVIEW_PAGE.data,
         pagination: DUMMY_STAMP_OVERVIEW_PAGE.pagination,
+        src20Data: DUMMY_EXPLORER_OVERVIEW_PAGE,
         page: 1,
         limit: 60,
         totalPages: 1,
@@ -153,6 +156,7 @@ export function ExplorerPage(props: StampPageProps) {
     filterBy: _filterBy,
     sortBy: _sortBy,
     selectedTab,
+    src20Data,
   } = props.data;
 
   const stampsArray = Array.isArray(stamps) ? stamps : [];
@@ -172,6 +176,7 @@ export function ExplorerPage(props: StampPageProps) {
       <ExplorerContent
         stamps={stampsArray}
         isRecentSales={isRecentSales}
+        src20Data={src20Data ?? null}
         pagination={{
           page,
           totalPages,

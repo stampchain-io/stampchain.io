@@ -119,14 +119,19 @@ export function StampInfo({ stamp, lowestPriceDispenser }: StampInfoProps) {
   const [isUnlockedTooltipVisible, setIsUnlockedTooltipVisible] = useState(
     false,
   );
+  const [isRecursiveTooltipVisible, setIsRecursiveTooltipVisible] = useState(
+    false,
+  );
   const [allowDivisibleTooltip, setAllowDivisibleTooltip] = useState(true);
   const [allowKeyburnTooltip, setAllowKeyburnTooltip] = useState(true);
   const [allowLockedTooltip, setAllowLockedTooltip] = useState(true);
   const [allowUnlockedTooltip, setAllowUnlockedTooltip] = useState(true);
+  const [allowRecursiveTooltip, setAllowRecursiveTooltip] = useState(true);
   const divisibleTooltipTimeoutRef = useRef<number | null>(null);
   const keyburnTooltipTimeoutRef = useRef<number | null>(null);
   const lockedTooltipTimeoutRef = useRef<number | null>(null);
   const unlockedTooltipTimeoutRef = useRef<number | null>(null);
+  const recursiveTooltipTimeoutRef = useRef<number | null>(null);
 
   /* ===== EFFECTS ===== */
   // Cleanup effect
@@ -137,6 +142,7 @@ export function StampInfo({ stamp, lowestPriceDispenser }: StampInfoProps) {
         keyburnTooltipTimeoutRef,
         lockedTooltipTimeoutRef,
         unlockedTooltipTimeoutRef,
+        recursiveTooltipTimeoutRef,
       ].forEach((ref) => {
         if (ref.current) {
           globalThis.clearTimeout(ref.current);
@@ -221,6 +227,25 @@ export function StampInfo({ stamp, lowestPriceDispenser }: StampInfoProps) {
     }
     setIsUnlockedTooltipVisible(false);
     setAllowUnlockedTooltip(true);
+  };
+
+  const handleRecursiveMouseEnter = () => {
+    if (allowRecursiveTooltip) {
+      if (recursiveTooltipTimeoutRef.current) {
+        globalThis.clearTimeout(recursiveTooltipTimeoutRef.current);
+      }
+      recursiveTooltipTimeoutRef.current = globalThis.setTimeout(() => {
+        setIsRecursiveTooltipVisible(true);
+      }, 500);
+    }
+  };
+
+  const handleRecursiveMouseLeave = () => {
+    if (recursiveTooltipTimeoutRef.current) {
+      globalThis.clearTimeout(recursiveTooltipTimeoutRef.current);
+    }
+    setIsRecursiveTooltipVisible(false);
+    setAllowRecursiveTooltip(true);
   };
 
   /* ===== HELPER FUNCTIONS ===== */
@@ -849,6 +874,29 @@ export function StampInfo({ stamp, lowestPriceDispenser }: StampInfoProps) {
               </h6>
             </div>
             <div className="flex flex-1 justify-end items-end pb-1 space-x-[9px]">
+              {stamp.ident === "SRC-721" && (
+                <div
+                  className="relative group"
+                  onMouseEnter={handleRecursiveMouseEnter}
+                  onMouseLeave={handleRecursiveMouseLeave}
+                >
+                  <Icon
+                    type="icon"
+                    name="recursive"
+                    weight="normal"
+                    size="xs"
+                    color="greyDark"
+                    ariaLabel="Recursive"
+                  />
+                  <div
+                    className={`${tooltipIcon} ${
+                      isRecursiveTooltipVisible ? "opacity-100" : "opacity-0"
+                    }`}
+                  >
+                    RECURSIVE
+                  </div>
+                </div>
+              )}
               {stamp.divisible == true && (
                 <div
                   className="relative group"

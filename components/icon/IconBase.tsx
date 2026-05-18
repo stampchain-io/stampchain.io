@@ -67,6 +67,8 @@ export function Icon(props: IconVariants) {
       speedSlow: "time10",
       speedMedium: "time30",
       speedFast: "time60",
+      displayGrid: "gridSquare",
+      displayList: "gridRow",
 
       // Caret Icons
       caretUp: "caretUp",
@@ -100,6 +102,7 @@ export function Icon(props: IconVariants) {
       unlocked: "lockOpen",
       keyburned: "flame",
       divisible: "imageDivide",
+      recursive: "layers3",
       atom: "atom",
       dispenserListings: "imagesStar",
 

@@ -213,12 +213,14 @@ export const cardStampNumber =
    truncate ${transitionColors} ${select}`;
 export const cardCreator =
   `pt-1 font-semibold text-xs mobileMd:text-sm text-color-neutral-400 break-words text-center ${select}`;
-export const cardPrice =
-  `font-normal text-xs text-color-secondary-400 text-nowrap ${select}`;
-export const cardFileType =
-  `font-normal text-xs text-color-neutral-500 text-nowrap ${select}`;
 export const cardSupply =
-  `font-medium text-xs text-color-primary-400 text-right ${select}`;
+  `font-semibold text-xs text-color-primary-400 ${select}`;
+export const cardFileType =
+  `font-medium text-xs text-color-neutral-400 text-nowrap ${select}`;
+export const cardFileSize =
+  `font-normal text-xs text-color-neutral-500 text-nowrap ${select}`;
+export const cardPrice =
+  `font-medium text-xs text-color-secondary-400 text-nowrap ${select}`;
 
 // Minimal card variant styles
 export const cardStampNumberMinimal =
@@ -319,9 +321,10 @@ export type TextStyles = {
   // Card text styles
   cardStampNumber: string;
   cardCreator: string;
-  cardPrice: string;
-  cardFileType: string;
   cardSupply: string;
+  cardFileType: string;
+  cardFileSize: string;
+  cardPrice: string;
   cardStampNumberMinimal: string;
   cardPriceMinimal: string;
 };
