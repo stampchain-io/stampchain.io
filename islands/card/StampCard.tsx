@@ -437,7 +437,7 @@ export function StampCard({
           group relative z-0 flex flex-col
           p-stamp-card mobileLg:p-3
           w-full h-full
-          hover:border-color-hover ${shadowGlowPurple}
+          ${shadowGlowPurple}
           ${container2Hover} ${transitionColors}
         `}
       >
@@ -454,7 +454,7 @@ export function StampCard({
 
         {/* ===== DETAILS SECTION ===== */}
         {showDetails && !showMinDetails && (
-          <div class="flex flex-col items-center px-[6px] pt-5 pb-0">
+          <div class="flex flex-col items-center pt-5 pb-0">
             {/* Stamp Number with container */}
             <div
               class={`flex items-center justify-center max-w-[90%]

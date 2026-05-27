@@ -14,7 +14,10 @@ export function StampOverviewContent({
   isRecentSales = false,
   pagination,
   fromPage,
+  viewMode = "detail",
 }: StampOverviewContentProps) {
+  const isMinimal = viewMode === "minimal";
+
   /* ===== RENDER ===== */
   return (
     <div class="w-full pt-3 mobileMd:pt-6">
@@ -28,7 +31,8 @@ export function StampOverviewContent({
                   : stamp.tx_hash}
                 stamp={stamp}
                 isRecentSale={isRecentSales}
-                showDetails
+                showDetails={!isMinimal}
+                showMinDetails={false}
                 {...(fromPage && { fromPage })}
               />
             ))}

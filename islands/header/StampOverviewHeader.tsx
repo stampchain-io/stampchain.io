@@ -1,6 +1,7 @@
 /* ===== STAMP OVERVIEW HEADER COMPONENT ===== */
 /* TODO (@baba) - update filter and styling */
 import { SelectorButtons } from "$button";
+import { Icon } from "$components/icon/IconBase.tsx";
 import type { FrontendStampType } from "$constants";
 import { FilterButton } from "$islands/button/FilterButton.tsx";
 import { SortButton } from "$islands/button/SortButton.tsx";
@@ -22,7 +23,10 @@ import { useCallback, useState } from "preact/hooks";
 
 /* ===== COMPONENT ===== */
 export const StampOverviewHeader = (
-  { currentFilters = defaultFilters }: StampOverviewHeaderProps,
+  {
+    currentFilters = defaultFilters,
+    viewMode = "detail",
+  }: StampOverviewHeaderProps,
 ) => {
   /* ===== STATE MANAGEMENT ===== */
   const [isOpen1, setIsOpen1] = useState(false);
@@ -56,6 +60,21 @@ export const StampOverviewHeader = (
       safeNavigate(newUrl);
     },
     [currentFilters],
+  );
+
+  const handleViewModeChange = useCallback(
+    (mode: "detail" | "minimal") => {
+      if (typeof globalThis === "undefined" || !globalThis?.location) {
+        return;
+      }
+
+      const params = new URLSearchParams(globalThis.location.search);
+      params.set("display", mode);
+
+      const newUrl = getCurrentPathname() + `?${params.toString()}`;
+      safeNavigate(newUrl);
+    },
+    [],
   );
 
   /* ===== HELPER FUNCTION ===== */
@@ -117,11 +136,48 @@ export const StampOverviewHeader = (
           />
         </div>
 
-        {/* Filter and Sort Controls - Right */}
-        <div class="flex justify-start mobileMd:justify-end pt-3 mobileMd:pt-0">
+        {/* View Mode + Filter and Sort Controls - Right */}
+        <div class="flex justify-start mobileMd:justify-end pt-3 mobileMd:pt-0 gap-3">
+          {/* View Mode Toggle */}
           <div
-            class={`flex relative ${container2} !rounded-full
-             items-start justify-between
+            class={`flex relative ${container2} rounded-full
+             items-center justify-between
+             py-1.5 px-5 tablet:py-1 tablet:px-4 gap-5 tablet:gap-4`}
+          >
+            <Icon
+              type="iconButton"
+              name="displayCardDetail"
+              weight="bold"
+              size="xsR"
+              color="grey"
+              className={viewMode !== "minimal"
+                ? "!stroke-color-neutral-400 !cursor-default !pointer-events-none"
+                : ""}
+              {...(viewMode === "minimal" && {
+                onClick: () => handleViewModeChange("detail"),
+              })}
+              ariaLabel="Detailed view"
+            />
+            <Icon
+              type="iconButton"
+              name="displayCardMinimal"
+              weight="bold"
+              size="xsR"
+              color="grey"
+              className={viewMode === "minimal"
+                ? "!stroke-color-neutral-400 !cursor-default !pointer-events-none"
+                : ""}
+              {...(viewMode !== "minimal" && {
+                onClick: () => handleViewModeChange("minimal"),
+              })}
+              ariaLabel="Minimal view"
+            />
+          </div>
+
+          {/* Filter and Sort Controls */}
+          <div
+            class={`flex relative ${container2} rounded-full
+             items-center justify-between
              py-1.5 px-5 tablet:py-1 tablet:px-4 gap-5 tablet:gap-4`}
           >
             <FilterButton

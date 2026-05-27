@@ -1212,6 +1212,7 @@ export interface StampOverviewContentProps {
     prefix?: string;
   };
   fromPage?: string;
+  viewMode?: "detail" | "minimal";
 }
 
 export interface StampListingsAllProps {
@@ -3151,6 +3152,7 @@ export interface SRC20DetailHeaderProps {
  */
 export type StampOverviewHeaderProps = {
   currentFilters?: StampFilters;
+  viewMode?: "detail" | "minimal";
 };
 
 /**

@@ -49,6 +49,10 @@ export const handler: Handlers = {
       };
 
       const stamps = stampsByType[typeParam] ?? all;
+      const displayParam = url.searchParams.get("display");
+      const cardView: "detail" | "minimal" = displayParam === "minimal"
+        ? "minimal"
+        : "detail";
 
       return ctx.render({
         stamps,
@@ -63,6 +67,7 @@ export const handler: Handlers = {
         sortBy: "DESC",
         selectedTab: typeParam,
         totalPages: 1,
+        cardView,
       });
     }
 
@@ -335,6 +340,11 @@ export const handler: Handlers = {
           }
 
           /* ===== RENDER PAGE ===== */
+          const displayParam = url.searchParams.get("display");
+          const cardView: "detail" | "minimal" = displayParam === "minimal"
+            ? "minimal"
+            : "detail";
+
           return ctx.render({
             stamps: stampsData.data || [],
             pagination: stampsData.pagination || { total: 0 },
@@ -347,6 +357,7 @@ export const handler: Handlers = {
             selectedTab: recentSales ? "recent_sales" : "all",
             totalPages: stampsData.pagination?.totalPages ||
               Math.ceil((stampsData.pagination?.total || 0) / page_size),
+            cardView,
           });
         })(),
         15000,
@@ -358,6 +369,7 @@ export const handler: Handlers = {
       );
 
       // Ultimate fallback
+      const displayParamFallback = url.searchParams.get("display");
       return ctx.render({
         stamps: DUMMY_STAMP_OVERVIEW_PAGE.data,
         pagination: DUMMY_STAMP_OVERVIEW_PAGE.pagination,
@@ -368,6 +380,7 @@ export const handler: Handlers = {
         sortBy: "DESC",
         selectedTab: "all",
         totalPages: 1,
+        cardView: displayParamFallback === "minimal" ? "minimal" : "detail",
       });
     }
   },
@@ -383,7 +396,9 @@ export function StampOverviewPage(props: StampPageProps) {
     selectedTab,
     filters,
     search: _search,
+    cardView: cardViewRaw,
   } = props.data;
+  const cardView: "detail" | "minimal" = cardViewRaw ?? "detail";
   const stampsArray = Array.isArray(stamps) ? stamps : [];
   const isRecentSales = selectedTab === "recent_sales";
 
@@ -397,6 +412,7 @@ export function StampOverviewPage(props: StampPageProps) {
       {/* Header Component with Filter Controls */}
       <StampOverviewHeader
         currentFilters={filters as StampFilters}
+        viewMode={cardView}
       />
 
       {/* Main Content with Pagination */}
@@ -408,6 +424,7 @@ export function StampOverviewPage(props: StampPageProps) {
           totalPages,
           // Remove onPageChange to let PaginationButtons component use its built-in Fresh navigation
         }}
+        viewMode={cardView}
       />
     </div>
   );
