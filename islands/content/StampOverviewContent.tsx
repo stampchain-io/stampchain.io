@@ -3,7 +3,7 @@ import { PaginationButtons } from "$button";
 import { StampCard } from "$card";
 import { containerBackground } from "$layout";
 import { valueDark } from "$text";
-import type { StampRow } from "$types/stamp.d.ts";
+import type { StampCardVariant, StampRow } from "$types/stamp.d.ts";
 import type { StampOverviewContentProps } from "$types/ui.d.ts";
 
 /* ===== TYPES ===== */
@@ -16,7 +16,9 @@ export function StampOverviewContent({
   fromPage,
   viewMode = "detail",
 }: StampOverviewContentProps) {
-  const isMinimal = viewMode === "minimal";
+  const cardVariant: StampCardVariant = viewMode === "minimal"
+    ? "image"
+    : "imageDetail";
 
   /* ===== RENDER ===== */
   return (
@@ -31,8 +33,7 @@ export function StampOverviewContent({
                   : stamp.tx_hash}
                 stamp={stamp}
                 isRecentSale={isRecentSales}
-                showDetails={!isMinimal}
-                showMinDetails={false}
+                variant={cardVariant}
                 {...(fromPage && { fromPage })}
               />
             ))}

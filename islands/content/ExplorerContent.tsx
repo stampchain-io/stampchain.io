@@ -56,7 +56,7 @@ export function ExplorerContent({
                   : stamp.tx_hash}
                 stamp={stamp}
                 isRecentSale={isRecentSales}
-                showDetails
+                variant="imageDetail"
                 {...(fromPage && { fromPage })}
               />
             );

@@ -113,7 +113,7 @@ export default function SRC20TransfersGallery(): JSX.Element {
                   stamp_url: constructStampUrl(stamp.tx_hash, "svg"),
                 }}
                 isRecentSale={false}
-                showDetails={false}
+                variant="image"
               />
             ))}
           </div>

@@ -9,6 +9,7 @@ import {
   shadowGlowPurple,
   transitionColors,
 } from "$layout";
+import type { StampCardVariant } from "$types/stamp.d.ts";
 import {
   abbreviateAddress,
   formatFileSize,
@@ -47,15 +48,11 @@ interface StampWithSaleData extends Omit<StampRow, "stamp_base64"> {
 export function StampCard({
   stamp,
   isRecentSale = false,
-  showDetails = true,
-  showEdition = false,
-  showMinDetails = false,
+  variant = "imageDetail",
 }: {
   stamp: StampWithSaleData;
   isRecentSale?: boolean;
-  showDetails?: boolean;
-  showEdition?: boolean;
-  showMinDetails?: boolean;
+  variant?: StampCardVariant;
 }) {
   /* ===== STATE ===== */
   const [loading, setLoading] = useState<boolean>(true);
@@ -411,12 +408,6 @@ export function StampCard({
     ? `${stamp.stamp}`
     : `${stamp.cpid}`;
 
-  const editionCount = stamp.divisible
-    ? (stamp.supply / 100000000).toFixed(2)
-    : stamp.supply > 100000
-    ? "+100000"
-    : stamp.supply;
-
   const isLongNumber = (value: string | number) => {
     const stringValue = String(value);
     return stringValue.length > 6;
@@ -450,10 +441,18 @@ export function StampCard({
           <div class="aspect-stamp w-full h-full overflow-hidden flex items-center justify-center">
             {renderContent()}
           </div>
+          {/* ===== IMAGE PILL OVERLAY ===== */}
+          {variant === "imagePill" && (
+            <div class="absolute bottom-2 right-2 z-20">
+              <div class={`${containerPill} ${cardSupply}`}>
+                {supplyDisplay}
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* ===== DETAILS SECTION ===== */}
-        {showDetails && !showMinDetails && (
+        {/* ===== DETAILS SECTION (imageDetail) ===== */}
+        {variant === "imageDetail" && (
           <div class="flex flex-col items-center pt-5 pb-0">
             {/* Stamp Number with container */}
             <div
@@ -569,27 +568,8 @@ export function StampCard({
           </div>
         )}
 
-        {/* ===== EDITION SECTION ===== */}
-        {showEdition && (
-          <div class="flex flex-col items-center px-1.5 mobileLg:px-3 pt-1.5 mobileLg:pt-3">
-            <div
-              class={`flex items-center justify-center
-              ${cardStampNumberMinimal}`}
-            >
-              {displayStampHash && <span class="font-light">#</span>}
-              {stampValue}
-            </div>
-            <div
-              class={`-mt-1 mobileLg:mt-0.5 w-full flex justify-between items-center ${cardPriceMinimal}`}
-            >
-              {editionCount}
-              {renderPrice().text}
-            </div>
-          </div>
-        )}
-
-        {/* ===== MINIMAL DETAILS SECTION ===== */}
-        {showMinDetails && !showDetails && (
+        {/* ===== MINIMAL DETAILS SECTION (imageMinimal) ===== */}
+        {variant === "imageMinimal" && (
           <div class="flex flex-col items-center px-1.5 mobileLg:px-3 pt-1.5 mobileLg:pt-3">
             <div
               class={`flex items-center justify-center

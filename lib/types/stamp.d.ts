@@ -2264,6 +2264,19 @@ export declare function isValidStampTransaction(
 // ============================================================================
 
 /**
+ * Display variant for StampCard and gallery components.
+ * - "image"       : thumbnail only, no footer
+ * - "imageDetail" : full footer (stamp#, creator, supply, icons, price/type)
+ * - "imageMinimal": stamp# + price pill below image
+ * - "imagePill"   : thumbnail with supply/edition overlay pill (bottom-right)
+ */
+export type StampCardVariant =
+  | "image"
+  | "imageDetail"
+  | "imageMinimal"
+  | "imagePill";
+
+/**
  * Props for StampGallery component
  */
 export interface StampGalleryProps {
@@ -2274,12 +2287,10 @@ export interface StampGalleryProps {
   layout?: "grid" | "list";
   isRecentSales?: boolean;
   filterBy?: string;
-  showDetails?: boolean;
-  showEdition?: boolean;
+  variant?: StampCardVariant;
   gridClass?: string;
   displayCounts?: any;
   pagination?: any;
-  showMinDetails?: boolean;
   viewAllLink?: string;
   alignRight?: boolean;
   fromPage?: string;
@@ -2297,7 +2308,7 @@ export interface StampGalleryWalletProps {
   enablePartialNavigation?: boolean;
   showLoadingSkeleton?: boolean;
   gridClass?: string;
-  showDetails?: boolean;
+  variant?: StampCardVariant;
 }
 
 /**

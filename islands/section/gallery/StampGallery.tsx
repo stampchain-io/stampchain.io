@@ -19,12 +19,10 @@ export default function StampGallery({
   layout = "grid",
   isRecentSales = false,
   filterBy,
-  showDetails = false,
-  showEdition = false,
+  variant = "image",
   gridClass,
   displayCounts,
   pagination,
-  showMinDetails = false,
   viewAllLink,
   alignRight = false,
   fromPage = "",
@@ -219,9 +217,7 @@ export default function StampGallery({
                     <StampCard
                       stamp={stamp}
                       isRecentSale={isRecentSales}
-                      showDetails={showDetails}
-                      showEdition={showEdition}
-                      showMinDetails={showMinDetails}
+                      variant={variant}
                       {...(fromPage && { fromPage })}
                     />
                   </div>
@@ -261,9 +257,7 @@ export default function StampGallery({
                     <StampCard
                       stamp={stamp}
                       isRecentSale={isRecentSales}
-                      showDetails={showDetails}
-                      showEdition={showEdition}
-                      showMinDetails={showMinDetails}
+                      variant={variant}
                       {...(fromPage && { fromPage })}
                     />
                   </div>

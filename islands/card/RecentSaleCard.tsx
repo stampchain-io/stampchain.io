@@ -42,8 +42,7 @@ export function RecentSaleCard({
         <StampCard
           stamp={sale}
           isRecentSale
-          showMinDetails={!showFullDetails}
-          showDetails={showFullDetails}
+          variant={showFullDetails ? "imageDetail" : "imageMinimal"}
         />
 
         {/* Sale Badge */}

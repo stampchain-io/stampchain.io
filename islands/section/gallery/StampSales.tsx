@@ -139,9 +139,8 @@ export function StampSalesGallery({
       fromPage: "home",
       layout: "grid" as const,
       isRecentSales: true,
-      showDetails: false,
+      variant: "imageMinimal" as const,
       viewAllLink: "/stamp?view=sales",
-      showMinDetails: true,
       gridClass: gridClass || defaultHomeGridClass,
       displayCounts: displayCounts || defaultHomeDisplayCounts,
     }
@@ -151,8 +150,7 @@ export function StampSalesGallery({
       stamps: recentSales,
       layout: "grid" as const,
       isRecentSales: true,
-      showDetails: false,
-      showMinDetails: true,
+      variant: "imageMinimal" as const,
       gridClass: gridClass || defaultDetailGridClass,
       displayCounts: displayCounts || defaultDetailDisplayCounts,
     };

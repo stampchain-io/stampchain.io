@@ -22,8 +22,7 @@ export function StampOverviewGallery({
       stamps: stamps_art,
       fromPage: "home",
       layout: "grid",
-      showDetails: false,
-      showEdition: false,
+      variant: "image" as const,
       viewAllLink: "/stamp/art",
       gridClass: `
         grid w-full gap-6
@@ -47,8 +46,7 @@ export function StampOverviewGallery({
       stamps: stamps_posh,
       fromPage: "home",
       layout: "grid",
-      showDetails: false,
-      showEdition: false,
+      variant: "image" as const,
       viewAllLink: "/collection/posh",
       gridClass: `
         grid w-full gap-3 mobileMd:gap-6
@@ -69,7 +67,7 @@ export function StampOverviewGallery({
       stamps: stamps_src721,
       fromPage: "home",
       layout: "grid",
-      showDetails: false,
+      variant: "image" as const,
       viewAllLink: "/collection/recursive",
       gridClass: `
         grid w-full gap-3 mobileMd:gap-6

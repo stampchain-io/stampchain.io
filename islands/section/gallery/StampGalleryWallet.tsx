@@ -30,7 +30,7 @@ export function StampGalleryWallet({
   showLoadingSkeleton = true,
   gridClass =
     "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4",
-  showDetails = true,
+  variant = "imageDetail",
 }: StampGalleryWalletProps) {
   // ===== STATE =====
   const [stamps, setStamps] = useState<StampRow[]>(initialData);
@@ -296,7 +296,7 @@ export function StampGalleryWallet({
             <StampCard
               key={stamp.stamp}
               stamp={stamp}
-              showDetails={showDetails}
+              variant={variant}
             />
           ))}
         </div>

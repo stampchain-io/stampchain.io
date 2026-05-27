@@ -301,8 +301,7 @@ export default function DonateCta() {
       <div class="w-[134px] mobileLg:w-[174px] tablet:w-[204px]">
         <StampCard
           stamp={DONATE_STAMP as unknown as StampRow}
-          showDetails={false}
-          showMinDetails={false}
+          variant="image"
         />
       </div>
       <Button

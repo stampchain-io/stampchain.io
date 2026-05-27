@@ -724,7 +724,7 @@ function WalletProfileContentInner({
                 }}
                 address={address}
                 initialSort="DESC"
-                showDetails={false}
+                variant="image"
                 gridClass={`
                 grid w-full
                 gap-3

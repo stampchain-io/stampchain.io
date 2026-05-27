@@ -37,7 +37,7 @@ export default function StampSendsGallery({
               key={index}
               stamp={stamp}
               isRecentSale
-              showDetails={false}
+              variant="image"
             />
           ))
           : (
