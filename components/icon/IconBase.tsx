@@ -69,9 +69,9 @@ export function Icon(props: IconVariants) {
       speedFast: "time60",
 
       // View Mode Icons
-      viewSquare: "gridSquare4",
-      viewCard: "gridCard",
       viewRow: "gridRow",
+      viewCardDetail: "gridCard",
+      viewCardMinimal: "gridSquare4",
 
       // Caret Icons
       caretUp: "caretUp",

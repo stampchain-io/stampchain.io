@@ -49,8 +49,8 @@ export const handler: Handlers = {
       };
 
       const stamps = stampsByType[typeParam] ?? all;
-      const displayParam = url.searchParams.get("display");
-      const cardView: "detail" | "minimal" = displayParam === "minimal"
+      const viewParam = url.searchParams.get("view");
+      const cardView: "detail" | "minimal" = viewParam === "minimal"
         ? "minimal"
         : "detail";
 
@@ -340,8 +340,8 @@ export const handler: Handlers = {
           }
 
           /* ===== RENDER PAGE ===== */
-          const displayParam = url.searchParams.get("display");
-          const cardView: "detail" | "minimal" = displayParam === "minimal"
+          const viewParam = url.searchParams.get("view");
+          const cardView: "detail" | "minimal" = viewParam === "minimal"
             ? "minimal"
             : "detail";
 
@@ -369,7 +369,7 @@ export const handler: Handlers = {
       );
 
       // Ultimate fallback
-      const displayParamFallback = url.searchParams.get("display");
+      const viewParamFallback = url.searchParams.get("view");
       return ctx.render({
         stamps: DUMMY_STAMP_OVERVIEW_PAGE.data,
         pagination: DUMMY_STAMP_OVERVIEW_PAGE.pagination,
@@ -380,7 +380,7 @@ export const handler: Handlers = {
         sortBy: "DESC",
         selectedTab: "all",
         totalPages: 1,
-        cardView: displayParamFallback === "minimal" ? "minimal" : "detail",
+        cardView: viewParamFallback === "minimal" ? "minimal" : "detail",
       });
     }
   },

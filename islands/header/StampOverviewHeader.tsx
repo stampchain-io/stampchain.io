@@ -49,12 +49,17 @@ export const StampOverviewHeader = (
         stampType: type as FrontendStampType,
       };
 
-      // Convert filters to query params
+      // Convert filters to query params, preserving the current view mode
       const queryParams = filtersToQueryParams("", updatedFilters);
+      const params = new URLSearchParams(queryParams);
+      const currentView = new URLSearchParams(globalThis.location.search).get(
+        "view",
+      );
+      if (currentView) params.set("view", currentView);
 
       // Construct new URL
       const newUrl = getCurrentPathname() +
-        (queryParams ? `?${queryParams}` : "");
+        (params.toString() ? `?${params.toString()}` : "");
 
       // Navigate immediately - page reloads with new data
       safeNavigate(newUrl);
@@ -69,7 +74,7 @@ export const StampOverviewHeader = (
       }
 
       const params = new URLSearchParams(globalThis.location.search);
-      params.set("display", mode);
+      params.set("view", mode);
 
       const newUrl = getCurrentPathname() + `?${params.toString()}`;
       safeNavigate(newUrl);
@@ -141,36 +146,24 @@ export const StampOverviewHeader = (
           {/* View Mode Toggle */}
           <div
             class={`flex relative ${container2} rounded-full
-             items-center justify-between
-             py-1.5 px-5 tablet:py-1 tablet:px-4 gap-5 tablet:gap-4`}
+             items-center justify-center
+             p-1`}
           >
             <Icon
               type="iconButton"
-              name="displayCardDetail"
+              name={viewMode === "minimal"
+                ? "viewCardMinimal"
+                : "viewCardDetail"}
               weight="bold"
-              size="xsR"
-              color="grey"
-              className={viewMode !== "minimal"
-                ? "!stroke-color-neutral-400 !cursor-default !pointer-events-none"
-                : ""}
-              {...(viewMode === "minimal" && {
-                onClick: () => handleViewModeChange("detail"),
-              })}
-              ariaLabel="Detailed view"
-            />
-            <Icon
-              type="iconButton"
-              name="displayCardMinimal"
-              weight="bold"
-              size="xsR"
-              color="grey"
-              className={viewMode === "minimal"
-                ? "!stroke-color-neutral-400 !cursor-default !pointer-events-none"
-                : ""}
-              {...(viewMode !== "minimal" && {
-                onClick: () => handleViewModeChange("minimal"),
-              })}
-              ariaLabel="Minimal view"
+              size="md"
+              color="greyLight"
+              className="p-1.5 bg-transparent rounded-full hover:bg-gradient-to-b hover:from-color-neutral-800 hover:via-color-neutral-800 hover:to-color-neutral-900"
+              onClick={() => handleViewModeChange(
+                viewMode === "minimal" ? "detail" : "minimal",
+              )}
+              ariaLabel={viewMode === "minimal"
+                ? "Switch to detailed view"
+                : "Switch to minimal view"}
             />
           </div>
 
@@ -178,7 +171,7 @@ export const StampOverviewHeader = (
           <div
             class={`flex relative ${container2} rounded-full
              items-center justify-between
-             py-1.5 px-5 tablet:py-1 tablet:px-4 gap-5 tablet:gap-4`}
+             p-1 gap-1.5 tablet:gap-1`}
           >
             <FilterButton
               count={countActiveStampFilters(

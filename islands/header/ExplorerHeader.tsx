@@ -1,7 +1,7 @@
 /* ===== EXPLORER HEADER COMPONENT ===== */
 import { SelectorButtons } from "$button";
 import { SortButton } from "$islands/button/SortButton.tsx";
-import { container1 } from "$layout";
+import { container2 } from "$layout";
 import {
   getCurrentPathname,
   safeNavigate,
@@ -55,10 +55,9 @@ export const ExplorerHeader = (
         {/* Sort Controls - Right */}
         <div class="flex justify-start mobileMd:justify-end pt-3 mobileMd:pt-0">
           <div
-            class={`flex relative ${container1} !rounded-full
+            class={`flex relative ${container2} rounded-full
                items-start justify-between
-               gap-7 py-1.5 px-5
-               tablet:gap-5 tablet:py-1 tablet:px-4`}
+               p-1 gap-1.5 tablet:gap-1`}
           >
             <SortButton />
           </div>
