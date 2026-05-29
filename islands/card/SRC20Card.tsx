@@ -12,6 +12,7 @@ import { unicodeEscapeToEmoji } from "$lib/utils/ui/formatting/emojiUtils.ts";
 import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { getSRC20ImageSrc } from "$lib/utils/ui/media/imageUtils.ts";
 import {
+  cardCreator,
   cardFileSize,
   cardFileType,
   cardPrice,
@@ -67,7 +68,7 @@ export function SRC20Card({ src20, variant = "detail" }: SRC20CardProps) {
 
         {/* Ticker */}
 
-        <div class={`${cardStampNumber} truncate`}>
+        <div class={`${cardCreator} !pt-0 truncate`}>
           {tick}
         </div>
       </div>
@@ -208,11 +209,46 @@ export function SRC20Card({ src20, variant = "detail" }: SRC20CardProps) {
 
     return (
       <>
-        {renderTopRow()}
+        {/* ===== TOP: image + ticker pill, stamp number ===== */}
+        <div>
+          <div
+            class={`${container2} rounded-full px-1.5 py-0.5 flex items-center gap-3`}
+          >
+            <div class="flex-shrink-0 w-6 h-6 rounded-full overflow-hidden">
+              {imageUrl
+                ? (
+                  <img
+                    src={imageUrl}
+                    alt={tick}
+                    class="w-full h-full object-cover"
+                    onError={() => setImgError(true)}
+                  />
+                )
+                : <PlaceholderImage variant="no-image" />}
+            </div>
+            <div class={`${cardCreator} truncate`}>
+              {tick}
+            </div>
+          </div>
 
-        {/* Amount pill */}
-        <div class={`mt-3 w-fit mx-auto ${containerPill} ${cardPrice}`}>
-          {amount}
+          {src20.stamp != null && (
+            <div class="flex justify-center">
+              <div class={`${cardStampNumber} mt-3`}>
+                <span class="font-light">#</span>
+                {src20.stamp.toLocaleString()}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* ===== BOTTOM: operation pill, amount ===== */}
+        <div class="flex flex-col items-center gap-3">
+          <div class={`${containerPill} ${cardSupply}`}>
+            {op}
+          </div>
+          <div class={`w-fit ${containerPill} ${cardPrice}`}>
+            {amount}
+          </div>
         </div>
       </>
     );
@@ -230,20 +266,19 @@ export function SRC20Card({ src20, variant = "detail" }: SRC20CardProps) {
           p-3 w-full h-full
           ${shadowGlowPurple}
           ${container2Hover} ${transitionColors}
+          ${variant === "minimal" ? "justify-between overflow-hidden" : ""}
         `}
       >
-        {variant === "minimal"
-          ? renderMinimal()
-          : (
-            <>
-              {op === "TRANSFER" && renderTransfer()}
-              {op === "DEPLOY" && renderDeploy()}
-              {op === "MINT" && renderMint()}
-              {op !== "TRANSFER" && op !== "DEPLOY" && op !== "MINT" && (
-                renderDeploy()
-              )}
-            </>
-          )}
+        {variant === "minimal" ? renderMinimal() : (
+          <>
+            {op === "TRANSFER" && renderTransfer()}
+            {op === "DEPLOY" && renderDeploy()}
+            {op === "MINT" && renderMint()}
+            {op !== "TRANSFER" && op !== "DEPLOY" && op !== "MINT" && (
+              renderDeploy()
+            )}
+          </>
+        )}
       </a>
     </div>
   );

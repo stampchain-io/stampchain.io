@@ -48,27 +48,38 @@ export function ExplorerContent({
       {/* ===== OVERVIEW GRID ===== */}
       <div class="grid grid-cols-2 mobileMd:grid-cols-3 mobileLg:grid-cols-4 tablet:grid-cols-5 desktop:grid-cols-6 gap-6 w-full auto-rows-fr">
         {visible.map((entry, index) => {
-          if (entry.kind === "stamp") {
-            const stamp = entry.item;
-            return (
+          const key = entry.kind === "stamp"
+            ? (isRecentSales && entry.item.sale_data
+              ? `${entry.item.tx_hash}-${entry.item.sale_data.tx_hash}-${entry.item.sale_data.block_index}-${index}`
+              : entry.item.tx_hash)
+            : entry.item.tx_hash;
+
+          const card = entry.kind === "stamp"
+            ? (
               <StampCard
-                key={isRecentSales && stamp.sale_data
-                  ? `${stamp.tx_hash}-${stamp.sale_data.tx_hash}-${stamp.sale_data.block_index}-${index}`
-                  : stamp.tx_hash}
-                stamp={stamp}
+                stamp={entry.item}
                 isRecentSale={isRecentSales}
                 variant={viewMode === "minimal" ? "image" : "imageDetail"}
                 {...(fromPage && { fromPage })}
               />
+            )
+            : (
+              <SRC20Card
+                src20={entry.item}
+                variant={viewMode}
+              />
             );
-          }
-          return (
-            <SRC20Card
-              key={entry.item.tx_hash}
-              src20={entry.item}
-              variant={viewMode}
-            />
-          );
+
+          // MINIMAL view: square each cell so a taller SRC20 card can't
+          // stretch the row and break the stamp's 1:1 aspect ratio.
+          // Detailed view is rendered exactly as before.
+          return viewMode === "minimal"
+            ? (
+              <div key={key} class="w-full max-w-72 mx-auto aspect-square">
+                {card}
+              </div>
+            )
+            : <div key={key} class="contents">{card}</div>;
         })}
       </div>
 
