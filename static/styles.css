@@ -4,6 +4,28 @@
 @tailwind utilities;
 
 
+/* ===== GRADIENT ANIMATION SUPPORT ===== */
+/* Register typed custom properties so browsers can interpolate gradient   */
+/* color stops during transitions. Without @property, CSS treats custom    */
+/* properties as opaque strings and cannot animate between gradient values. */
+/* Supported: Chrome 85+, Firefox 128+, Safari 15.4+                       */
+@property --gradient-stop-from {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+@property --gradient-stop-via {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+@property --gradient-stop-to {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+
 /* ===== BASE STYLES ===== */
 /* Ensure html and body take full height without overflow */
 html,

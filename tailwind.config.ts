@@ -439,14 +439,20 @@ export default {
         },
 
         // Canonical gradient classes
-        // Pair with bg-gradient-to-r (LD) or bg-gradient-to-l (DL) at the usage site
+        // Pair with bg-gradient-to-r (LD) or bg-gradient-to-l (DL) at the usage site.
+        // Color stops are routed through @property-registered vars (--gradient-stop-*)
+        // so that .color-gradient-hover can smoothly transition them. The registered
+        // vars cascade into Tailwind's --tw-gradient-* chain, which feeds background-image.
         ".color-neutral-gradient": {
+          "--gradient-stop-from": "var(--color-neutral-300)",
+          "--gradient-stop-via": "var(--color-neutral-400)",
+          "--gradient-stop-to": "var(--color-neutral-600)",
           "--tw-gradient-from":
-            "var(--color-neutral-300) var(--tw-gradient-from-position)",
+            "var(--gradient-stop-from) var(--tw-gradient-from-position)",
           "--tw-gradient-via":
-            "var(--color-neutral-400) var(--tw-gradient-via-position)",
+            "var(--gradient-stop-via) var(--tw-gradient-via-position)",
           "--tw-gradient-to":
-            "var(--color-neutral-600) var(--tw-gradient-to-position)",
+            "var(--gradient-stop-to) var(--tw-gradient-to-position)",
           "--tw-gradient-stops":
             "var(--tw-gradient-from), var(--tw-gradient-via), var(--tw-gradient-to)",
           "-webkit-background-clip": "text",
@@ -455,12 +461,15 @@ export default {
           "text-fill-color": "transparent",
         },
         ".color-primary-gradient": {
+          "--gradient-stop-from": "var(--color-primary-300)",
+          "--gradient-stop-via": "var(--color-primary-400)",
+          "--gradient-stop-to": "var(--color-primary-600)",
           "--tw-gradient-from":
-            "var(--color-primary-300) var(--tw-gradient-from-position)",
+            "var(--gradient-stop-from) var(--tw-gradient-from-position)",
           "--tw-gradient-via":
-            "var(--color-primary-400) var(--tw-gradient-via-position)",
+            "var(--gradient-stop-via) var(--tw-gradient-via-position)",
           "--tw-gradient-to":
-            "var(--color-primary-600) var(--tw-gradient-to-position)",
+            "var(--gradient-stop-to) var(--tw-gradient-to-position)",
           "--tw-gradient-stops":
             "var(--tw-gradient-from), var(--tw-gradient-via), var(--tw-gradient-to)",
           "-webkit-background-clip": "text",
@@ -469,12 +478,15 @@ export default {
           "text-fill-color": "transparent",
         },
         ".color-secondary-gradient": {
+          "--gradient-stop-from": "var(--color-secondary-300)",
+          "--gradient-stop-via": "var(--color-secondary-400)",
+          "--gradient-stop-to": "var(--color-secondary-600)",
           "--tw-gradient-from":
-            "var(--color-secondary-300) var(--tw-gradient-from-position)",
+            "var(--gradient-stop-from) var(--tw-gradient-from-position)",
           "--tw-gradient-via":
-            "var(--color-secondary-400) var(--tw-gradient-via-position)",
+            "var(--gradient-stop-via) var(--tw-gradient-via-position)",
           "--tw-gradient-to":
-            "var(--color-secondary-600) var(--tw-gradient-to-position)",
+            "var(--gradient-stop-to) var(--tw-gradient-to-position)",
           "--tw-gradient-stops":
             "var(--tw-gradient-from), var(--tw-gradient-via), var(--tw-gradient-to)",
           "-webkit-background-clip": "text",
@@ -483,19 +495,21 @@ export default {
           "text-fill-color": "transparent",
         },
         // Add to an element alongside color-neutral-gradient or color-primary-gradient
-        // to enable a smooth hover transition to solid primary-400 text
+        // to enable a smooth hover transition to solid primary-400 text.
+        // Transitions the registered --gradient-stop-* vars (typed as <color>) so the
+        // browser can interpolate gradient stops symmetrically in both hover directions.
         ".color-gradient-hover": {
           "transition":
-            "background 0.2s ease-in-out, -webkit-text-fill-color 0.2s ease-in-out, text-fill-color 0.2s ease-in-out",
+            "--gradient-stop-from 0.2s ease-in-out, --gradient-stop-via 0.2s ease-in-out, --gradient-stop-to 0.2s ease-in-out",
           "&:hover": {
-            "background": "none",
-            "-webkit-text-fill-color": "var(--color-primary-400)",
-            "text-fill-color": "var(--color-primary-400)",
+            "--gradient-stop-from": "var(--color-primary-400)",
+            "--gradient-stop-via": "var(--color-primary-400)",
+            "--gradient-stop-to": "var(--color-primary-400)",
           },
           ".group:hover &": {
-            "background": "none",
-            "-webkit-text-fill-color": "var(--color-primary-400)",
-            "text-fill-color": "var(--color-primary-400)",
+            "--gradient-stop-from": "var(--color-primary-400)",
+            "--gradient-stop-via": "var(--color-primary-400)",
+            "--gradient-stop-to": "var(--color-primary-400)",
           },
         },
 

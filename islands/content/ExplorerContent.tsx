@@ -19,6 +19,7 @@ export function ExplorerContent({
   fromPage,
   src20DataCard,
   section = "all",
+  viewMode = "detail",
 }: ExplorerContentProps) {
   /* ===== MERGE + SORT by block_index DESC ===== */
   const stampItems: MixedItem[] = (stamps ?? []).map((s) => ({
@@ -56,7 +57,7 @@ export function ExplorerContent({
                   : stamp.tx_hash}
                 stamp={stamp}
                 isRecentSale={isRecentSales}
-                variant="imageDetail"
+                variant={viewMode === "minimal" ? "image" : "imageDetail"}
                 {...(fromPage && { fromPage })}
               />
             );
@@ -65,6 +66,7 @@ export function ExplorerContent({
             <SRC20Card
               key={entry.item.tx_hash}
               src20={entry.item}
+              variant={viewMode}
             />
           );
         })}

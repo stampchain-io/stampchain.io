@@ -2230,6 +2230,7 @@ export interface ExplorerContentProps extends BaseComponentProps {
     totalPages: number;
   } | null;
   section?: "all" | "stamps" | "tokens";
+  viewMode?: "detail" | "minimal";
 }
 
 /**
@@ -2237,6 +2238,7 @@ export interface ExplorerContentProps extends BaseComponentProps {
  */
 export interface ExplorerHeaderProps extends BaseComponentProps {
   currentSection?: "all" | "stamps" | "tokens";
+  viewMode?: "detail" | "minimal";
 }
 
 /**

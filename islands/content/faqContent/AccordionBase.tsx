@@ -29,11 +29,12 @@ export const Accordion = (
         onClick={toggleAccordion}
       >
         {/* Title with Gradient Styling - uses bg-gradient-to-r color-neutral-gradient color-gradient-hover instead of headingGreyLDLink because group-hover overrides the hover state */}
+        {/* group-hover overrides --gradient-stop-* to a custom grey instead of the default primary-400 used by color-gradient-hover */}
         <h2
-          class={`font-bold text-xl tracking-wide bg-gradient-to-r color-neutral-gradient color-gradient-hover group-hover:[background:none_!important] group-hover:[-webkit-text-fill-color:var(--color-grey-semilight)_!important] group-hover:[text-fill-color:var(--color-grey-semilight)_!important] transition-colors duration-200
+          class={`font-bold text-xl tracking-wide bg-gradient-to-r color-neutral-gradient color-gradient-hover group-hover:[--gradient-stop-from:var(--color-grey-semilight)] group-hover:[--gradient-stop-via:var(--color-grey-semilight)] group-hover:[--gradient-stop-to:var(--color-grey-semilight)]
             ${
             isOpen
-              ? "[background:none_!important] [-webkit-text-fill-color:var(--color-grey-semilight)_!important] [text-fill-color:var(--color-grey-semilight)_!important] "
+              ? "[--gradient-stop-from:var(--color-grey-semilight)] [--gradient-stop-via:var(--color-grey-semilight)] [--gradient-stop-to:var(--color-grey-semilight)]"
               : ""
           }`}
         >

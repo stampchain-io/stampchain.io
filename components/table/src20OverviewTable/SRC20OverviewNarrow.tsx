@@ -240,7 +240,7 @@ export function SRC20OverviewNarrow({
                               return (
                                 <>
                                   {text && (
-                                    <span class="bg-gradient-to-l color-neutral-gradient color-gradient-hover inline-block transition-colors duration-200">
+                                    <span class="bg-gradient-to-l color-neutral-gradient color-gradient-hover inline-block">
                                       {text.toUpperCase()}
                                     </span>
                                   )}

@@ -63,6 +63,11 @@ export const handler: Handlers = {
       | "stamps"
       | "tokens";
 
+    // Read card view mode — "sales" is handled separately via recentSales
+    const cardView = url.searchParams.get("view") === "minimal"
+      ? "minimal"
+      : "detail" as "detail" | "minimal";
+
     if (DEV_DUMMY_MODE) {
       return ctx.render({
         stamps: DUMMY_STAMP_OVERVIEW_PAGE.data,
@@ -75,6 +80,7 @@ export const handler: Handlers = {
         sortBy: "DESC",
         selectedTab: "all",
         section,
+        cardView,
         partial: false,
       });
     }
@@ -183,6 +189,7 @@ export const handler: Handlers = {
         limit: page_size,
         src20DataCard: src20Result,
         section,
+        cardView,
       };
 
       return ctx.render({
@@ -202,6 +209,7 @@ export const handler: Handlers = {
         sortBy: "DESC",
         selectedTab: "all",
         section,
+        cardView,
         partial: false,
       });
     }
@@ -219,6 +227,7 @@ export function ExplorerPage(props: StampPageProps) {
     selectedTab,
     src20DataCard,
     section = "all",
+    cardView = "detail",
   } = props.data;
 
   const stampsArray = Array.isArray(stamps) ? stamps : [];
@@ -232,7 +241,10 @@ export function ExplorerPage(props: StampPageProps) {
       data-partial="/explorer"
     >
       {/* Header Component with Filter Controls */}
-      <ExplorerHeader currentSection={section} />
+      <ExplorerHeader
+        currentSection={section}
+        viewMode={cardView}
+      />
 
       {/* Main Content with Pagination */}
       <ExplorerContent
@@ -240,6 +252,7 @@ export function ExplorerPage(props: StampPageProps) {
         isRecentSales={isRecentSales}
         src20DataCard={src20DataCard ?? null}
         section={section}
+        viewMode={cardView}
         pagination={{
           page,
           totalPages,

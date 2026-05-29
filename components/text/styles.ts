@@ -20,7 +20,7 @@ const transitionColors = "transition-colors duration-200";
 export const logoPrimary = // used in footer
   `${logoFont} bg-gradient-to-r from-color-primary-400 via-color-primary-500 to-color-primary-600 bg-clip-text text-transparent ${select}`;
 export const logoPrimaryHover =
-  `${logoFont} bg-gradient-to-r color-primary-gradient color-gradient-hover ${transitionColors} cursor-pointer ${select}`;
+  `${logoFont} bg-gradient-to-r color-primary-gradient color-gradient-hover cursor-pointer ${select}`;
 
 /* ======================================================================== */
 
@@ -41,7 +41,7 @@ export const navLinkMobile = `font-extrabold text-xl uppercase
   bg-gradient-to-r color-neutral-gradient color-gradient-hover
   tracking-wider inline-block w-fit cursor-pointer ${select}`;
 export const navLinkActiveMobile =
-  `${navLinkMobile} [background:none_!important] [-webkit-text-fill-color:var(--color-primary-400)_!important] [text-fill-color:var(--color-primary-400)_!important] !cursor-default`;
+  `${navLinkMobile} [--gradient-stop-from:var(--color-primary-400)] [--gradient-stop-via:var(--color-primary-400)] [--gradient-stop-to:var(--color-primary-400)] !cursor-default`;
 export const navSublinkMobile = `font-semibold text-sm tablet:text-xs uppercase
   text-color-neutral-400 hover:text-color-hover
   tracking-wide ${transitionColors} cursor-pointer ${select}`;
@@ -82,9 +82,9 @@ export const headingGrey2 =
 export const headingGreyLD =
   `font-bold text-xl bg-gradient-to-r color-neutral-gradient tracking-wide inline-block w-fit relative ${select}`;
 export const headingGreyLDLink =
-  `font-bold text-lg bg-gradient-to-r color-neutral-gradient color-gradient-hover tracking-wide inline-block w-fit relative ${transitionColors} cursor-pointer ${select}`; // used in media page / keep reading in howto pages / accordion titles (custom code)
+  `font-bold text-lg bg-gradient-to-r color-neutral-gradient color-gradient-hover tracking-wide inline-block w-fit relative cursor-pointer ${select}`; // used in media page / keep reading in howto pages / accordion titles (custom code)
 export const headingGreyDLLink =
-  `font-bold text-lg bg-gradient-to-l color-neutral-gradient color-gradient-hover tracking-wide inline-block w-fit relative -mt-1 ${transitionColors} cursor-pointer ${select}`; // used in collection and stamp detail pages
+  `font-bold text-lg bg-gradient-to-l color-neutral-gradient color-gradient-hover tracking-wide inline-block w-fit relative -mt-1 cursor-pointer ${select}`; // used in collection and stamp detail pages
 export const headingGrey =
   `font-bold text-2xl text-color-neutral-300 cursor-default ${select}`; // used in howto overview and detail pages / donate CTA
 export const headingPurpleLD =
@@ -209,7 +209,7 @@ export const toggleSymbol =
 // Standard card styles
 export const cardStampNumber = `w-fit font-black text-md min-[420px]:text-lg
    bg-gradient-to-r color-neutral-gradient color-gradient-hover
-   truncate ${transitionColors} ${select}`;
+   truncate ${select}`;
 export const cardCreator =
   `pt-1 font-semibold text-xs mobileMd:text-sm text-color-neutral-400 break-words text-center ${select}`;
 export const cardSupply =
@@ -224,7 +224,7 @@ export const cardPrice =
 // Minimal card variant styles
 export const cardStampNumberMinimal =
   `max-w-full font-black text-xs mobileLg:text-sm
-  bg-gradient-to-r color-neutral-gradient color-gradient-hover truncate ${transitionColors} ${select}`;
+  bg-gradient-to-r color-neutral-gradient color-gradient-hover truncate ${select}`;
 export const cardPriceMinimal =
   `font-normal text-[10px] mobileLg:text-xs text-color-secondary-400 truncate text-nowrap ${select}`;
 

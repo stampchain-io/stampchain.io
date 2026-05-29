@@ -24,6 +24,7 @@ import { useState } from "preact/hooks";
 /* ===== TYPES ===== */
 interface SRC20CardProps {
   src20: SRC20Row;
+  variant?: "detail" | "minimal";
 }
 
 /* ===== HELPERS ===== */
@@ -35,7 +36,7 @@ function formatAmount(amt: string | bigint | undefined): string {
 }
 
 /* ===== COMPONENT ===== */
-export function SRC20Card({ src20 }: SRC20CardProps) {
+export function SRC20Card({ src20, variant = "detail" }: SRC20CardProps) {
   const [imgError, setImgError] = useState(false);
 
   const tick = unicodeEscapeToEmoji(src20.tick ?? "");
@@ -199,6 +200,24 @@ export function SRC20Card({ src20 }: SRC20CardProps) {
     );
   };
 
+  /* ===== MINIMAL LAYOUT (all ops) ===== */
+  const renderMinimal = () => {
+    const amount = op === "DEPLOY"
+      ? formatAmount(src20.max)
+      : formatAmount(src20.amt);
+
+    return (
+      <>
+        {renderTopRow()}
+
+        {/* Amount pill */}
+        <div class={`mt-3 w-fit mx-auto ${containerPill} ${cardPrice}`}>
+          {amount}
+        </div>
+      </>
+    );
+  };
+
   /* ===== RENDER ===== */
   return (
     <div class="relative flex justify-center w-full h-full max-w-72">
@@ -213,13 +232,18 @@ export function SRC20Card({ src20 }: SRC20CardProps) {
           ${container2Hover} ${transitionColors}
         `}
       >
-        {op === "TRANSFER" && renderTransfer()}
-        {op === "DEPLOY" && renderDeploy()}
-        {op === "MINT" && renderMint()}
-        {op !== "TRANSFER" && op !== "DEPLOY" && op !== "MINT" && (
-          /* Fallback for unknown op types */
-          renderDeploy()
-        )}
+        {variant === "minimal"
+          ? renderMinimal()
+          : (
+            <>
+              {op === "TRANSFER" && renderTransfer()}
+              {op === "DEPLOY" && renderDeploy()}
+              {op === "MINT" && renderMint()}
+              {op !== "TRANSFER" && op !== "DEPLOY" && op !== "MINT" && (
+                renderDeploy()
+              )}
+            </>
+          )}
       </a>
     </div>
   );
