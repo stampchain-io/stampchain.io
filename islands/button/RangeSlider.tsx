@@ -159,7 +159,7 @@ export const RangeSlider = ({
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
       >
-        <div class="absolute inset-y-0 left-[3px] right-[3px]" ref={sliderRef}>
+        <div class="absolute inset-y-0 left-0.5 right-0.5" ref={sliderRef}>
           {/* Track fill with dynamic gradient */}
           <div
             class={trackFill}

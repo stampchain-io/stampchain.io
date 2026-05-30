@@ -1,7 +1,6 @@
 /* ===== SRC20 TRANSACTION CARD COMPONENT ===== */
 import { Icon, PlaceholderImage } from "$icon";
 import {
-  container2,
   container2Hover,
   container3,
   containerPill,
@@ -50,7 +49,7 @@ export function SRC20Card({ src20, variant = "detail" }: SRC20CardProps) {
   const renderTopRow = () => (
     <>
       <div
-        class={`flex items-center ${container2} rounded-full p-1 gap-2`}
+        class={`flex items-center ${container3} !rounded-full p-1 gap-2`}
       >
         {/* Image — 24px rounded */}
         <div class="flex-shrink-0 w-8 h-8 rounded-full overflow-hidden">
@@ -218,7 +217,7 @@ export function SRC20Card({ src20, variant = "detail" }: SRC20CardProps) {
     return (
       <>
         {/* ticker row */}
-        <div class={`flex items-center ${container2} rounded-full p-1 gap-2`}>
+        <div class={`flex items-center ${container3} rounded-full p-1 gap-2`}>
           <div class="flex-shrink-0 w-6 h-6 rounded-full overflow-hidden">
             {imageUrl
               ? (

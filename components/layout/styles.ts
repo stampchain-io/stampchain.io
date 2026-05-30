@@ -31,7 +31,7 @@ export const container1 =
   `bg-gradient-to-b from-color-neutral-800/40 via-color-neutral-900/60 to-neutral-950/80 border border-color-neutral-800 rounded-3xl backdrop-blur-sm`;
 // 2nd layer styles - register tool tld dropdown uses same hardcoded values
 export const container2 =
-  `bg-gradient-to-b from-color-neutral-900/60 via-color-neutral-950/80 to-neutral-1000 border border-color-neutral-700 rounded-2xl`;
+  `bg-gradient-to-b from-color-neutral-800/40 via-color-neutral-900/60 to-neutral-950/80 border border-color-neutral-700 rounded-2xl`;
 export const container2Hover =
   `${container2} hover:border-color-hover ${transitionColors}`;
 export const container3 = `border border-color-neutral-800 rounded-xl

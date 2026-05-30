@@ -130,18 +130,14 @@ export const StampOverviewHeader = (
         <div class="flex justify-start mobileMd:justify-end pt-3 mobileMd:pt-0 gap-3">
           {/* View Mode Toggle */}
           <div
-            class={`flex relative ${container2} rounded-full
-             items-center justify-center
-             px-1 py-0.5`}
+            class={`relative flex items-center justify-center px-1 py-0.5 ${container2} rounded-full`}
           >
             <ViewButton viewMode={viewMode} />
           </div>
 
           {/* Filter and Sort Controls */}
           <div
-            class={`flex relative ${container2} rounded-full
-             items-center justify-between
-             px-1 py-0.5 gap-1.5 tablet:gap-1`}
+            class={`relative flex items-center justify-between px-1 py-0.5 gap-1.5 tablet:gap-1 ${container2} rounded-full`}
           >
             <FilterButton
               count={countActiveStampFilters(
