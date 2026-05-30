@@ -62,7 +62,7 @@ export const ExplorerHeader = (
           <div
             class={`flex relative ${container2} rounded-full
              items-center justify-center
-             p-1`}
+             px-1 py-0.5`}
           >
             <ViewButton viewMode={viewMode} />
           </div>
@@ -71,7 +71,7 @@ export const ExplorerHeader = (
           <div
             class={`flex relative ${container2} rounded-full
                items-start justify-between
-               p-1 gap-1.5 tablet:gap-1`}
+               px-1 py-0.5 gap-1.5 tablet:gap-1`}
           >
             <SortButton />
           </div>
