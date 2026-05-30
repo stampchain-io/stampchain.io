@@ -207,11 +207,11 @@ export const toggleSymbol =
 
 /* ===== CARD TEXT STYLES ===== */
 // Standard card styles
-export const cardStampNumber = `w-fit font-black text-md min-[420px]:text-lg
+export const cardStampNumber = `font-black text-md min-[420px]:text-lg
    bg-gradient-to-r color-neutral-gradient color-gradient-hover
-   truncate ${select}`;
+   truncate ${select} w-fit`;
 export const cardCreator =
-  `pt-1 font-semibold text-xs mobileMd:text-sm text-color-neutral-400 break-words text-center ${select}`;
+  `font-semibold text-xs mobileMd:text-sm text-color-neutral-400 break-words text-center ${select}`;
 export const cardSupply =
   `font-semibold text-xs text-color-primary-400 ${select}`;
 export const cardFileType =

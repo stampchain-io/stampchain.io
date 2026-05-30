@@ -174,6 +174,7 @@ import * as $button_SettingsButton from "./islands/button/SettingsButton.tsx";
 import * as $button_SortButton from "./islands/button/SortButton.tsx";
 import * as $button_ToggleButton from "./islands/button/ToggleButton.tsx";
 import * as $button_ToolsButton from "./islands/button/ToolsButton.tsx";
+import * as $button_ViewButton from "./islands/button/ViewButton.tsx";
 import * as $button_WalletButton from "./islands/button/WalletButton.tsx";
 import * as $button_buttonActions from "./islands/button/buttonActions.tsx";
 import * as $card_RecentSaleCard from "./islands/card/RecentSaleCard.tsx";
@@ -523,6 +524,7 @@ const manifest = {
     "./islands/button/SortButton.tsx": $button_SortButton,
     "./islands/button/ToggleButton.tsx": $button_ToggleButton,
     "./islands/button/ToolsButton.tsx": $button_ToolsButton,
+    "./islands/button/ViewButton.tsx": $button_ViewButton,
     "./islands/button/WalletButton.tsx": $button_WalletButton,
     "./islands/button/buttonActions.tsx": $button_buttonActions,
     "./islands/card/RecentSaleCard.tsx": $card_RecentSaleCard,

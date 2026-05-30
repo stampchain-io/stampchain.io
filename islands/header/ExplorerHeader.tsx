@@ -70,8 +70,8 @@ export const ExplorerHeader = (
           {/* Sort Controls */}
           <div
             class={`flex relative ${container2} rounded-full
-               items-start justify-between
-               px-1 py-0.5 gap-1.5 tablet:gap-1`}
+               items-center justify-center
+               px-1 py-0.5`}
           >
             <SortButton />
           </div>

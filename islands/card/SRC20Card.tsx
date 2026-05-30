@@ -50,10 +50,10 @@ export function SRC20Card({ src20, variant = "detail" }: SRC20CardProps) {
   const renderTopRow = () => (
     <>
       <div
-        class={`${container2} rounded-full px-1.5 py-0.5 flex items-center gap-3`}
+        class={`flex items-center ${container2} rounded-full p-1 gap-2`}
       >
         {/* Image — 24px rounded */}
-        <div class="flex-shrink-0 w-6 h-6 rounded-full overflow-hidden">
+        <div class="flex-shrink-0 w-8 h-8 rounded-full overflow-hidden">
           {imageUrl
             ? (
               <img
@@ -67,16 +67,17 @@ export function SRC20Card({ src20, variant = "detail" }: SRC20CardProps) {
         </div>
 
         {/* Ticker */}
-
-        <div class={`${cardCreator} !pt-0 truncate`}>
+        <div
+          class={`${cardCreator} min-[420px]:before:content-['$'] before:text-color-neutral-500`}
+        >
           {tick}
         </div>
       </div>
 
       {/* Stamp number */}
-      <div class="flex justify-center gap-3">
+      <div class="mt-2.5 flex justify-center gap-3">
         {src20.stamp != null && (
-          <div class={`${cardStampNumber} mt-3`}>
+          <div class={`${cardStampNumber}`}>
             <span class="font-light">#</span>
             {src20.stamp.toLocaleString()}
           </div>
@@ -84,7 +85,7 @@ export function SRC20Card({ src20, variant = "detail" }: SRC20CardProps) {
       </div>
 
       {/* Operation type pill — centered */}
-      <div class="flex justify-center mt-3">
+      <div class="mt-3 flex justify-center">
         <div class={`${containerPill} ${cardSupply}`}>
           {op}
         </div>
@@ -103,11 +104,11 @@ export function SRC20Card({ src20, variant = "detail" }: SRC20CardProps) {
       </div>
 
       {/* From → To */}
-      <div class="flex-1 min-h-6" />
+      <div class="hidden min-[420px]:flex flex-1 min-h-3" />
       <div
-        class={`flex flex-col items-center justify-center px-3 py-2.5 gap-0.5 ${container3}`}
+        class={`hidden min-[420px]:flex flex-col items-center justify-center px-3 py-2.5 gap-0.5 ${container3}`}
       >
-        <div class={cardFileSize}>
+        <div class={cardFileType}>
           {src20.creator_name ?? abbreviateAddress(src20.creator, 5)}
         </div>
         <Icon
@@ -117,7 +118,7 @@ export function SRC20Card({ src20, variant = "detail" }: SRC20CardProps) {
           size="sm"
           color="grey"
         />
-        <div class={cardFileType}>
+        <div class={cardFileSize}>
           {src20.destination_name ??
             (src20.destination ? abbreviateAddress(src20.destination, 5) : "—")}
         </div>
@@ -137,10 +138,17 @@ export function SRC20Card({ src20, variant = "detail" }: SRC20CardProps) {
         {src20.max ? formatAmount(src20.max) : "—"}
       </div>
 
+      {/* Mint limit */}
+      {src20.lim && (
+        <div class={`mt-3 w-fit mx-auto ${containerPill} ${cardFileSize}`}>
+          {formatAmount(src20.lim)}
+        </div>
+      )}
+
       {/* Creator */}
-      <div class="flex-1 min-h-6" />
+      <div class="hidden min-[420px]:flex flex-1 min-h-3" />
       <div
-        class={`flex flex-col items-center justify-center px-3 py-2.5 ${container3}`}
+        class={`hidden min-[420px]:flex flex-col items-center justify-center px-3 py-2.5 ${container3}`}
       >
         <div class={cardFileType}>
           {src20.creator_name ?? abbreviateAddress(src20.creator, 5)}
@@ -161,17 +169,17 @@ export function SRC20Card({ src20, variant = "detail" }: SRC20CardProps) {
       <>
         {renderTopRow()}
 
-        {/* Minted amount */}
-        <div
-          class={`mt-3 w-fit mx-auto ${containerPill} ${cardPrice}`}
-        >
-          {formatAmount(src20.amt)}
-        </div>
+        {/* Max supply */}
+        {(src20.max || src20.mint_progress?.max_supply) && (
+          <div class={`mt-3 w-fit mx-auto ${containerPill} ${cardFileSize}`}>
+            {formatAmount(src20.max ?? src20.mint_progress?.max_supply)}
+          </div>
+        )}
 
         {/* Recipient (destination) */}
-        <div class="flex-1 min-h-6" />
+        <div class="hidden min-[420px]:flex flex-1 min-h-3" />
         <div
-          class={`flex flex-col items-center justify-center px-3 py-2.5 gap-3 ${container3}`}
+          class={`hidden min-[420px]:flex flex-col items-center justify-center px-3 py-2.5 gap-3 ${container3}`}
         >
           <div class={cardFileType}>
             {src20.destination_name ??
@@ -209,43 +217,55 @@ export function SRC20Card({ src20, variant = "detail" }: SRC20CardProps) {
 
     return (
       <>
-        {/* ===== TOP: image + ticker pill, stamp number ===== */}
-        <div>
-          <div
-            class={`${container2} rounded-full px-1.5 py-0.5 flex items-center gap-3`}
-          >
-            <div class="flex-shrink-0 w-6 h-6 rounded-full overflow-hidden">
-              {imageUrl
-                ? (
-                  <img
-                    src={imageUrl}
-                    alt={tick}
-                    class="w-full h-full object-cover"
-                    onError={() => setImgError(true)}
-                  />
-                )
-                : <PlaceholderImage variant="no-image" />}
-            </div>
-            <div class={`${cardCreator} truncate`}>
-              {tick}
-            </div>
+        {/* ticker row */}
+        <div class={`flex items-center ${container2} rounded-full p-1 gap-2`}>
+          <div class="flex-shrink-0 w-6 h-6 rounded-full overflow-hidden">
+            {imageUrl
+              ? (
+                <img
+                  src={imageUrl}
+                  alt={tick}
+                  class="w-full h-full object-cover"
+                  onError={() => setImgError(true)}
+                />
+              )
+              : <PlaceholderImage variant="no-image" />}
           </div>
-
-          {src20.stamp != null && (
-            <div class="flex justify-center">
-              <div class={`${cardStampNumber} mt-3`}>
-                <span class="font-light">#</span>
-                {src20.stamp.toLocaleString()}
-              </div>
-            </div>
-          )}
+          <div
+            class={`${cardCreator} min-[420px]:before:content-['$'] before:text-color-neutral-500`}
+          >
+            {tick}
+          </div>
         </div>
 
-        {/* ===== BOTTOM: operation pill, amount ===== */}
-        <div class="flex flex-col items-center gap-3">
+        {/* spacer 1 */}
+        <div class="flex-[0_1_10px]" />
+
+        {/* stamp number */}
+        {src20.stamp != null && (
+          <div class="flex justify-center">
+            <div class={cardStampNumber}>
+              <span class="font-light">#</span>
+              {src20.stamp.toLocaleString()}
+            </div>
+          </div>
+        )}
+
+        {/* spacer 2 */}
+        <div class="flex-[0_1_12px]" />
+
+        {/* op pill */}
+        <div class="flex justify-center">
           <div class={`${containerPill} ${cardSupply}`}>
             {op}
           </div>
+        </div>
+
+        {/* spacer 3 */}
+        <div class="hidden min-[420px]:flex flex-[0_1_12px]" />
+
+        {/* amount */}
+        <div class="hidden min-[420px]:flex justify-center">
           <div class={`w-fit ${containerPill} ${cardPrice}`}>
             {amount}
           </div>
@@ -266,7 +286,6 @@ export function SRC20Card({ src20, variant = "detail" }: SRC20CardProps) {
           p-3 w-full h-full
           ${shadowGlowPurple}
           ${container2Hover} ${transitionColors}
-          ${variant === "minimal" ? "justify-between overflow-hidden" : ""}
         `}
       >
         {variant === "minimal" ? renderMinimal() : (

@@ -9,7 +9,6 @@ import {
   shadowGlowPurple,
   transitionColors,
 } from "$layout";
-import type { StampCardVariant } from "$types/stamp.d.ts";
 import {
   abbreviateAddress,
   formatFileSize,
@@ -30,7 +29,7 @@ import {
   cardStampNumberMinimal,
   cardSupply,
 } from "$text";
-import type { StampRow } from "$types/stamp.d.ts";
+import type { StampCardVariant, StampRow } from "$types/stamp.d.ts";
 import { VNode } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
 
@@ -453,7 +452,7 @@ export function StampCard({
 
         {/* ===== DETAILS SECTION (imageDetail) ===== */}
         {variant === "imageDetail" && (
-          <div class="flex flex-col items-center pt-5 pb-0">
+          <div class="flex flex-col items-center mt-3">
             {/* Stamp Number with container */}
             <div
               class={`flex items-center justify-center max-w-[90%]
@@ -469,7 +468,7 @@ export function StampCard({
             </div>
 
             {/* Row 1: Supply (left) + Status Icons (right) */}
-            <div class="flex justify-between items-center mt-4 w-full">
+            <div class="flex justify-between items-center mt-3 w-full">
               {/* Supply aligned left */}
               <div class={`${containerPill} ${cardSupply}`}>
                 {supplyDisplay}
