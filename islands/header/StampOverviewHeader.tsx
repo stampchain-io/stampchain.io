@@ -1,10 +1,10 @@
 /* ===== STAMP OVERVIEW HEADER COMPONENT ===== */
 /* TODO (@baba) - update filter and styling */
 import { SelectorButtons } from "$button";
-import { Icon } from "$components/icon/IconBase.tsx";
 import type { FrontendStampType } from "$constants";
 import { FilterButton } from "$islands/button/FilterButton.tsx";
 import { SortButton } from "$islands/button/SortButton.tsx";
+import { ViewButton } from "$islands/button/ViewButton.tsx";
 import FilterDrawer from "$islands/filter/FilterDrawer.tsx";
 import {
   defaultFilters,
@@ -65,21 +65,6 @@ export const StampOverviewHeader = (
       safeNavigate(newUrl);
     },
     [currentFilters],
-  );
-
-  const handleViewModeChange = useCallback(
-    (mode: "detail" | "minimal") => {
-      if (typeof globalThis === "undefined" || !globalThis?.location) {
-        return;
-      }
-
-      const params = new URLSearchParams(globalThis.location.search);
-      params.set("view", mode);
-
-      const newUrl = getCurrentPathname() + `?${params.toString()}`;
-      safeNavigate(newUrl);
-    },
-    [],
   );
 
   /* ===== HELPER FUNCTION ===== */
@@ -149,22 +134,7 @@ export const StampOverviewHeader = (
              items-center justify-center
              p-1`}
           >
-            <Icon
-              type="iconButton"
-              name={viewMode === "minimal"
-                ? "viewCardMinimal"
-                : "viewCardDetail"}
-              weight="bold"
-              size="md"
-              color="greyLight"
-              className="p-1.5 bg-transparent rounded-full hover:bg-gradient-to-b hover:from-color-neutral-800 hover:via-color-neutral-800 hover:to-color-neutral-900"
-              onClick={() => handleViewModeChange(
-                viewMode === "minimal" ? "detail" : "minimal",
-              )}
-              ariaLabel={viewMode === "minimal"
-                ? "Switch to detailed view"
-                : "Switch to minimal view"}
-            />
+            <ViewButton viewMode={viewMode} />
           </div>
 
           {/* Filter and Sort Controls */}
