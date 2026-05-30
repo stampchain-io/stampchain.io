@@ -58,7 +58,7 @@ export function FilterButton(
         name="filter"
         weight="bold"
         size="md"
-        color={count > 0 ? "purpleLight" : "greyLight"}
+        color={count > 0 ? "purpleLight" : "grey"}
         className="p-1.5 bg-transparent rounded-full hover:bg-gradient-to-b hover:from-color-neutral-800 hover:via-color-neutral-800 hover:to-color-neutral-900"
         onClick={() => {
           setOpen(!open);

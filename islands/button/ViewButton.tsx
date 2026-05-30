@@ -26,7 +26,7 @@ export function ViewButton(
       name={viewMode === "minimal" ? "viewCardMinimal" : "viewCardDetail"}
       weight="bold"
       size="md"
-      color="greyLight"
+      color="grey"
       className="p-1.5 bg-transparent rounded-full hover:bg-gradient-to-b hover:from-color-neutral-800 hover:via-color-neutral-800 hover:to-color-neutral-900"
       onClick={() =>
         handleViewModeChange(

@@ -83,7 +83,7 @@ export const SelectorButtons = ({
   return (
     <div
       class={`relative grid p-0.5 select-none
-        ${container2} !rounded-full
+        ${container2} rounded-full
         ${
         (colorProp === "purple" || colorProp === "grey")
           ? colorVariants[colorProp]
@@ -125,7 +125,7 @@ export const SelectorButtons = ({
         // Only appearance (color/bg) on the label — no cursor or disabled duplication.
         const labelClass = isSelected && isMounted
           ? `mx-0.5 text-color-neutral-1000 ${transitionColors}`
-          : `mx-0.5 bg-transparent text-color-neutral-400 ${
+          : `mx-0.5 bg-transparent text-color-neutral-500 ${
             isMounted
               ? `${transitionColors} hover:!text-color-hover hover:bg-gradient-to-b hover:from-color-neutral-800 hover:via-color-neutral-800 hover:to-color-neutral-900`
               : "transition-none"

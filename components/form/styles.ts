@@ -18,8 +18,6 @@ const inputInner = `
 
 /* ===== WRAPPER STYLES ===== */
 // Applied to the <div> that wraps an <input>/<select>/<textarea>.
-// The gradient border (::before pseudo-element in bg-border-container-2)
-// only works on regular elements, not replaced/void elements like <input>.
 
 export const inputFieldWrapper = `
   ${inputFieldHeight} w-full

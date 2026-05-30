@@ -27,11 +27,14 @@ export const shadowGlowGrey =
 export const container0 =
   `bg-gradient-to-b from-color-neutral-950/95 via-color-neutral-900/90 to-neutral-1000/90 backdrop-blur-lg`;
 // 1st layer styles
-export const container1 = `bg-border-container-1 rounded-3xl backdrop-blur-sm`;
+export const container1 =
+  `bg-gradient-to-b from-color-neutral-800/40 via-color-neutral-900/60 to-neutral-950/80 border border-color-neutral-800 rounded-3xl backdrop-blur-sm`;
 // 2nd layer styles - register tool tld dropdown uses same hardcoded values
-export const container2 = `bg-border-container-2 rounded-2xl`;
-export const container2Hover = `bg-border-container-2-hover rounded-2xl`;
-export const container3 = `border border-color-border rounded-xl
+export const container2 =
+  `bg-gradient-to-b from-color-neutral-900/60 via-color-neutral-950/80 to-neutral-1000 border border-color-neutral-700 rounded-2xl`;
+export const container2Hover =
+  `${container2} hover:border-color-hover ${transitionColors}`;
+export const container3 = `border border-color-neutral-800 rounded-xl
   bg-gradient-to-b from-color-neutral-800 via-color-neutral-900 to-color-neutral-950 cursor-default select-none`;
 export const containerPill = `flex items-center py-1 px-3 rounded-full
   bg-gradient-to-b from-color-neutral-700 via-color-neutral-800 to-color-neutral-900 cursor-default select-none`;
@@ -84,24 +87,24 @@ export const rowContainerBackground =
 // Stamp and SRC20 Table Row Cards - Stamp/tokencards
 export const cellLeftCard =
   `p-3 pl-4 rounded-l-3xl border-y-[1px] border-l-[1px] border-r-0 border-color-border/50
-  group-hover:bg-black/20 group-hover:border-color-purple-light ${transitionColors} whitespace-nowrap`;
+  group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
 export const cellRightCard =
   `p-3 pr-4 rounded-r-3xl border-y-[1px] border-r-[1px] border-l-0 border-color-border/50
-  group-hover:bg-black/20 group-hover:border-color-purple-light ${transitionColors} whitespace-nowrap`;
+  group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
 export const cellCenterCard =
   `p-3 border-y-[1px] border-x-0 border-color-border/50
-  group-hover:bg-black/20 group-hover:border-color-purple-light ${transitionColors} whitespace-nowrap`;
+  group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
 // Layer 2
 // Stamp and SRC20 Table Row Cards - Stamp/tokencards inside of layer 1
 export const cellLeftL2Card =
   `p-3 pl-4 rounded-l-2xl border-y-[1px] border-l-[1px] border-r-0 border-color-border/75
-  group-hover:bg-black/20 group-hover:border-color-purple-light ${transitionColors} whitespace-nowrap`;
+  group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
 export const cellRightL2Card =
   `p-3 pr-4 rounded-r-2xl border-y-[1px] border-r-[1px] border-l-0 border-color-border/75
-  group-hover:bg-black/20 group-hover:border-color-purple-light ${transitionColors} whitespace-nowrap`;
+  group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
 export const cellCenterL2Card =
   `p-3 border-y-[1px] border-x-0 border-color-border/75
-  group-hover:bg-black/20 group-hover:border-color-purple-light ${transitionColors} whitespace-nowrap`;
+  group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
 // Stamp and SRC20 Detail pages Table Rows
 export const cellLeftL2Detail =
   `p-1.5 pl-3 rounded-l-2xl border-y-[1px] border-l-[1px] border-r-0 border-color-border/75 group-hover:bg-black/20 group-hover:border-color-border ${transitionColors} whitespace-nowrap`;
