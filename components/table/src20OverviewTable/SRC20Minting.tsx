@@ -3,9 +3,9 @@ import { Button } from "$button";
 import { cellAlign, colGroup } from "$components/layout/types.ts";
 import { Icon } from "$icon";
 import {
-  cellCenterCard,
-  cellLeftCard,
-  cellRightCard,
+  cellCenterL2Card,
+  cellLeftL2Card,
+  cellRightL2Card,
   cellStickyLeft,
   container1,
   shadowGlowPurple,
@@ -17,7 +17,7 @@ import {
 import { unicodeEscapeToEmoji } from "$lib/utils/ui/formatting/emojiUtils.ts";
 import { formatDate } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { constructStampUrl } from "$lib/utils/ui/media/imageUtils.ts";
-import { labelXs, textSm, valueDarkSm } from "$text";
+import { labelXxs, textSm, valueDarkSm } from "$text";
 import type { SRC20Row } from "$types/src20.d.ts";
 import type { SRC20MintingProps } from "$types/ui.d.ts";
 import type { TargetedEvent } from "preact/compat";
@@ -87,23 +87,23 @@ export function SRC20Minting({
     isSelected: boolean,
     isClickable: boolean,
   ) => {
-    const baseClass = `${labelXs} ${
+    const baseClass = `${labelXxs} ${
       cellAlign(index, headers?.length ?? 0)
-    } py-2`;
+    } py-1.5`;
 
     const rowClass = isFirst
-      ? cellLeftCard
+      ? cellLeftL2Card
       : isLast
-      ? cellRightCard
-      : cellCenterCard;
+      ? cellRightL2Card
+      : cellCenterL2Card;
 
-    const selectedClass = isSelected ? "text-color-grey-light" : "";
+    const selectedClass = isSelected ? "text-color-primary-400" : "";
 
     const colorClass = isSelected
-      ? "text-color-grey-light"
+      ? "text-color-primary-400"
       : isClickable
-      ? "text-color-grey-semidark hover:text-color-grey-light"
-      : "text-color-grey-semidark";
+      ? "text-color-neutral-500 hover:text-color-hover"
+      : "text-color-neutral-500";
 
     const clickableClass = isClickable
       ? "cursor-pointer transition-all duration-200 select-none"
@@ -137,7 +137,7 @@ export function SRC20Minting({
           weight="normal"
           size="xxxs"
           color="custom"
-          className={`stroke-color-grey-light transition-all duration-200 transform ${
+          className={`stroke-color-primary-400 transition-all duration-200 transform ${
             currentSort.direction === "desc" ? "scale-y-[-1]" : ""
           }`}
         />
@@ -273,7 +273,7 @@ export function SRC20Minting({
                     <td
                       class={`${
                         cellAlign(0, headers?.length ?? 0)
-                      } ${cellLeftCard} ${cellStickyLeft}`}
+                      } ${cellLeftL2Card} ${cellStickyLeft}`}
                     >
                       <div class="flex items-center gap-4">
                         <img
@@ -313,7 +313,7 @@ export function SRC20Minting({
                     <td
                       class={`${
                         cellAlign(1, headers?.length ?? 0)
-                      } ${cellCenterCard}`}
+                      } ${cellCenterL2Card}`}
                     >
                       {src20.mint_progress?.total_mints || "N/A"}
                     </td>
@@ -321,7 +321,7 @@ export function SRC20Minting({
                     <td
                       class={`${
                         cellAlign(2, headers?.length ?? 0)
-                      } ${cellCenterCard}`}
+                      } ${cellCenterL2Card}`}
                     >
                       <div class="flex items-center justify-center w-full">
                         <div class="flex flex-col w-[100px] min-[420px]:w-[120px] mobileLg:w-[160px] gap-1">
@@ -336,11 +336,11 @@ export function SRC20Minting({
                               }
                               return progressValue.toFixed(1);
                             })()}
-                            <span class="text-color-grey-light">%</span>
+                            <span class="text-color-neutral-400">%</span>
                           </div>
-                          <div class="relative h-1.5 bg-color-grey rounded-full">
+                          <div class="relative h-1.5 bg-color-neutral-800 rounded-full">
                             <div
-                              class="absolute left-0 top-0 h-1.5 bg-color-purple rounded-full"
+                              class="absolute left-0 top-0 h-1.5 bg-gradient-to-r from-color-primary-500 via-color-primary-400 to-color-primary-300 rounded-full"
                               style={{
                                 width: `${
                                   (() => {
@@ -367,7 +367,7 @@ export function SRC20Minting({
                     <td
                       class={`${
                         cellAlign(3, headers?.length ?? 0)
-                      } ${cellCenterCard}`}
+                      } ${cellCenterL2Card}`}
                     >
                       {"N/A"}
                     </td>
@@ -375,7 +375,7 @@ export function SRC20Minting({
                     <td
                       class={`${
                         cellAlign(4, headers?.length ?? 0)
-                      } ${cellCenterCard}`}
+                      } ${cellCenterL2Card}`}
                     >
                       {formatDate(new Date(src20.block_time), {
                         month: "numeric",
@@ -387,7 +387,7 @@ export function SRC20Minting({
                     <td
                       class={`${
                         cellAlign(5, headers?.length ?? 0)
-                      } ${cellCenterCard}`}
+                      } ${cellCenterL2Card}`}
                     >
                       {Number(
                         (src20 as any)?.market_data?.holder_count ||
@@ -396,11 +396,11 @@ export function SRC20Minting({
                     </td>
                     {/* MINT BUTTON */}
                     <td
-                      class={`text-right ${cellRightCard}`}
+                      class={`text-right ${cellRightL2Card}`}
                     >
                       <Button
-                        variant="flat"
-                        color="grey"
+                        variant="outline"
+                        color="purple"
                         size="xsR"
                         href={mintHref}
                         onClick={handleMintClick}

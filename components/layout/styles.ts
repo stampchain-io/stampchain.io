@@ -23,7 +23,7 @@ export const shadowGlowGrey =
   `group hover:shadow-[0px_0px_16px_color-mix(in_srgb,var(--color-neutral-500)_75%,transparent)] ${transitionColors} cursor-pointer`;
 
 /* ===== CONTAINER LAYER STYLES ===== */
-// Overlay layer styles - used for drawer and modal containers
+// Overlay layer styles - used for drawer and modal containers, border defined locally
 export const container0 =
   `bg-gradient-to-b from-color-neutral-950/95 via-color-neutral-900/90 to-neutral-1000/90 backdrop-blur-lg`;
 // 1st layer styles
@@ -85,36 +85,35 @@ export const rowContainerBackground =
 /* ===== CELL STYLES ===== */
 // Layer 1
 // Stamp and SRC20 Table Row Cards - Stamp/tokencards
-export const cellLeftCard =
-  `p-3 pl-4 rounded-l-3xl border-y-[1px] border-l-[1px] border-r-0 border-color-border/50
-  group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
-export const cellRightCard =
-  `p-3 pr-4 rounded-r-3xl border-y-[1px] border-r-[1px] border-l-0 border-color-border/50
-  group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
-export const cellCenterCard =
-  `p-3 border-y-[1px] border-x-0 border-color-border/50
-  group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
+// export const cellLeftCard =
+//   `p-3 pl-4 rounded-l-3xl border-y-[1px] border-l-[1px] border-r-0 border-color-border
+//   group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
+// export const cellRightCard =
+//   `p-3 pr-4 rounded-r-3xl border-y-[1px] border-r-[1px] border-l-0 border-color-border
+//   group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
+// export const cellCenterCard = `p-3 border-y-[1px] border-x-0 border-color-border
+//   group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
 // Layer 2
 // Stamp and SRC20 Table Row Cards - Stamp/tokencards inside of layer 1
 export const cellLeftL2Card =
-  `p-3 pl-4 rounded-l-2xl border-y-[1px] border-l-[1px] border-r-0 border-color-border/75
+  `p-3 pl-4 rounded-l-2xl border-y-[1px] border-l-[1px] border-r-0 border-color-neutral-700
   group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
 export const cellRightL2Card =
-  `p-3 pr-4 rounded-r-2xl border-y-[1px] border-r-[1px] border-l-0 border-color-border/75
+  `p-3 pr-4 rounded-r-2xl border-y-[1px] border-r-[1px] border-l-0 border-color-neutral-700
   group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
 export const cellCenterL2Card =
-  `p-3 border-y-[1px] border-x-0 border-color-border/75
+  `p-3 border-y-[1px] border-x-0 border-color-neutral-700
   group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
 // Stamp and SRC20 Detail pages Table Rows
 export const cellLeftL2Detail =
-  `p-1.5 pl-3 rounded-l-2xl border-y-[1px] border-l-[1px] border-r-0 border-color-border/75 group-hover:bg-black/20 group-hover:border-color-border ${transitionColors} whitespace-nowrap`;
+  `p-1.5 pl-3 rounded-l-2xl border-y-[1px] border-l-[1px] border-r-0 border-color-neutral-700 group-hover:bg-black/20 group-hover:border-color-border ${transitionColors} whitespace-nowrap`;
 export const cellRightL2Detail =
-  `p-1.5 pr-3 rounded-r-2xl border-y-[1px] border-r-[1px] border-l-0 border-color-border/75 group-hover:bg-black/20 group-hover:border-color-border ${transitionColors} whitespace-nowrap`;
+  `p-1.5 pr-3 rounded-r-2xl border-y-[1px] border-r-[1px] border-l-0 border-color-neutral-700 group-hover:bg-black/20 group-hover:border-color-border ${transitionColors} whitespace-nowrap`;
 export const cellCenterL2Detail =
-  `p-1.5 border-y-[1px] border-x-0 border-color-border/75 group-hover:bg-black/20 group-hover:border-color-border ${transitionColors} whitespace-nowrap`;
+  `p-1.5 border-y-[1px] border-x-0 border-color-neutral-700 group-hover:bg-black/20 group-hover:border-color-border ${transitionColors} whitespace-nowrap`;
 
 export const cellStickyLeft =
-  `sticky left-0 bg-black/70 tablet:bg-transparent backdrop-blur-xl tablet:backdrop-blur-none z-10`;
+  `sticky left-0 bg-transparent backdrop-blur-2xl tablet:backdrop-blur-none z-10`;
 
 /* ===== IMAGE STYLES ===== */
 export const imagePreviewTool =
@@ -128,7 +127,7 @@ export const imageUploadTool =
 // Base loader style
 const loaderSpin = "animate-spin rounded-full border-b-[2px]";
 export const loaderSkeleton =
-  `bg-color-background/50 border border-color-border/50 animate-pulse`;
+  `bg-color-background border border-color-border animate-pulse`;
 // Spinning loader styles
 export const loaderSpinXsGrey = `${loaderSpin} w-3 h-3 border-color-grey`;
 export const loaderSpinSmGrey = `${loaderSpin} w-5 h-5 border-color-grey`;
@@ -181,9 +180,9 @@ export type LayoutStyles = {
   rowContainerBackground: string;
 
   // Cell styles
-  cellLeftCard: string;
-  cellRightCard: string;
-  cellCenterCard: string;
+  // cellLeftCard: string;   // unused — replaced by cellLeftL2Card
+  // cellRightCard: string;  // unused — replaced by cellRightL2Card
+  // cellCenterCard: string; // unused — replaced by cellCenterL2Card
   cellLeftL2Card: string;
   cellRightL2Card: string;
   cellCenterL2Card: string;

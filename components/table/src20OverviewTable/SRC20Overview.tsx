@@ -3,9 +3,9 @@ import { SSRSafeUrlBuilder } from "$components/navigation/SSRSafeUrlBuilder.tsx"
 import { Icon, PlaceholderImage } from "$icon";
 import ChartWidget from "$islands/layout/ChartWidget.tsx";
 import {
-  cellCenterCard,
-  cellLeftCard,
-  cellRightCard,
+  cellCenterL2Card,
+  cellLeftL2Card,
+  cellRightL2Card,
   cellStickyLeft,
   container1,
   shadowGlowPurple,
@@ -18,7 +18,7 @@ import { unicodeEscapeToEmoji } from "$lib/utils/ui/formatting/emojiUtils.ts";
 import { formatDate } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { constructStampUrl } from "$lib/utils/ui/media/imageUtils.ts";
 import {
-  labelXs,
+  labelXxs,
   textSm,
   valueDarkSm,
   valueNegative,
@@ -139,23 +139,23 @@ export function SRC20Overview({
     isSelected: boolean,
     isClickable: boolean,
   ) => {
-    const baseClass = `${labelXs} ${
+    const baseClass = `${labelXxs} ${
       cellAlign(index, headers?.length ?? 0)
-    } py-2`;
+    } py-1.5`;
 
     const rowClass = isFirst
-      ? cellLeftCard
+      ? cellLeftL2Card
       : isLast
-      ? cellRightCard
-      : cellCenterCard;
+      ? cellRightL2Card
+      : cellCenterL2Card;
 
-    const selectedClass = isSelected ? "text-color-grey-light" : "";
+    const selectedClass = isSelected ? "text-color-primary-400" : "";
 
     const colorClass = isSelected
-      ? "text-color-grey-light"
+      ? "text-color-primary-400"
       : isClickable
-      ? "text-color-grey-semidark hover:text-color-grey-light"
-      : "text-color-grey-semidark";
+      ? "text-color-neutral-500 hover:text-color-hover"
+      : "text-color-neutral-500";
 
     const clickableClass = isClickable
       ? "cursor-pointer transition-all duration-200 select-none"
@@ -191,7 +191,7 @@ export function SRC20Overview({
           weight="normal"
           size="xxxs"
           color="custom"
-          className={`stroke-color-grey-light transition-all duration-200 transform ${
+          className={`stroke-color-primary-400 transition-all duration-200 transform ${
             currentSort?.direction === "desc" ? "scale-y-[-1]" : ""
           }`}
         />
@@ -314,7 +314,7 @@ export function SRC20Overview({
                     <td
                       class={`${
                         cellAlign(0, headers?.length ?? 0)
-                      } ${cellLeftCard} ${cellStickyLeft}`}
+                      } ${cellLeftL2Card} ${cellStickyLeft}`}
                     >
                       <div class="flex items-center gap-4">
                         {imageUrl
@@ -372,7 +372,7 @@ export function SRC20Overview({
                     <td
                       class={`${
                         cellAlign(1, headers?.length ?? 0)
-                      } ${cellCenterCard}`}
+                      } ${cellCenterL2Card}`}
                     >
                       {(() => {
                         const priceInBtc = getPrice(src20);
@@ -412,7 +412,7 @@ export function SRC20Overview({
                           return (
                             <span class="relative">
                               {priceDisplay}
-                              <sup class="text-[8px] text-color-grey-light ml-0.5">
+                              <sup class="text-[8px] text-color-neutral-500 ml-0.5">
                                 {sourceLabel}
                               </sup>
                             </span>
@@ -424,7 +424,7 @@ export function SRC20Overview({
                     </td>
                     {/* CHANGE */}
                     <td
-                      class={`${cellCenterCard} text-center`}
+                      class={`${cellCenterL2Card} text-center`}
                     >
                       {(() => {
                         const change = src20.market_data?.change_24h_percent;
@@ -445,14 +445,14 @@ export function SRC20Overview({
                             );
                           }
                         }
-                        return <span class="text-color-grey">N/A</span>;
+                        return <span class="text-color-neutral-500">N/A</span>;
                       })()}
                     </td>
                     {/* VOLUME */}
                     <td
                       class={`${
                         cellAlign(3, headers?.length ?? 0)
-                      } ${cellCenterCard}`}
+                      } ${cellCenterL2Card}`}
                     >
                       {(() => {
                         const volume = getVolume24h(src20);
@@ -479,7 +479,7 @@ export function SRC20Overview({
                     <td
                       class={`${
                         cellAlign(4, headers?.length ?? 0)
-                      } ${cellCenterCard}`}
+                      } ${cellCenterL2Card}`}
                     >
                       {(() => {
                         const marketCap = getMarketCap(src20);
@@ -501,7 +501,7 @@ export function SRC20Overview({
                     <td
                       class={`${
                         cellAlign(5, headers?.length ?? 0)
-                      } ${cellCenterCard}`}
+                      } ${cellCenterL2Card}`}
                     >
                       {formatDate(new Date(src20.block_time), {
                         month: "numeric",
@@ -513,7 +513,7 @@ export function SRC20Overview({
                     <td
                       class={`${
                         cellAlign(6, headers?.length ?? 0)
-                      } ${cellCenterCard}`}
+                      } ${cellCenterL2Card}`}
                     >
                       {(() => {
                         const holderCount = src20.market_data?.holder_count ??
@@ -526,7 +526,7 @@ export function SRC20Overview({
                     <td
                       class={`${
                         cellAlign(7, headers?.length ?? 0)
-                      } ${cellRightCard} !py-0`}
+                      } ${cellRightL2Card} !py-0`}
                     >
                       {src20.chart
                         ? (
@@ -539,7 +539,7 @@ export function SRC20Overview({
                           />
                         )
                         : (
-                          <div class="flex items-center justify-center text-xs text-color-grey-light opacity-60">
+                          <div class="flex items-center justify-center text-xs text-color-neutral-500">
                             <span>—</span>
                           </div>
                         )}

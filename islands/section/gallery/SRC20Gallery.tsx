@@ -47,6 +47,15 @@ export function SRC20Gallery({
     }
   }, [serverData]);
 
+  // Sync data from initialData (used by the /src20 page). Fresh preserves island
+  // state across partial navigations, so without this the table would keep
+  // showing stale rows after a filter/view/timeframe change.
+  useEffect(() => {
+    if (serverData) return; // serverData-driven pages (home) handled above
+    setData(initialData || []);
+    setIsLoading(false);
+  }, [initialData]);
+
   // 🚀 REMOVED: Client-side API calls for /src20 page - use server-side rendering only
   // This eliminates dual data sources and ensures consistency
 

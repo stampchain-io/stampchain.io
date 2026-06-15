@@ -2,6 +2,7 @@
 /*@baba-149*/
 import { SRC20OverviewContent } from "$content";
 import { Handlers } from "$fresh/server.ts";
+import { SRC20OverviewHeader } from "$header";
 import { containerBackground } from "$layout";
 import {
   DEV_DUMMY_MODE,
@@ -76,12 +77,34 @@ export const handler: Handlers = {
     const url = new URL(req.url);
 
     if (DEV_DUMMY_MODE) {
+      const dummyTimeframe = url.searchParams.get("timeframe") || "24H";
+      const dummySortBy = url.searchParams.get("sortBy") || "TRENDING";
+      const dummySortDirection = url.searchParams.get("sortDirection") ||
+        "desc";
+      const dummyViewType = (url.searchParams.get("viewType") || "minted") as
+        | "minted"
+        | "minting";
+
+      // Mirror the real API (op=DEPLOY = one row per token), then split by
+      // minting status: progress < 100 = still minting, >= 100 = fully minted.
+      const deployRows = DUMMY_TOKEN_OVERVIEW_PAGE.data.filter(
+        (row: { op?: string }) => row?.op === "DEPLOY",
+      );
+      const filtered = deployRows.filter((row: { progress?: string }) => {
+        const pct = parseFloat(row?.progress ?? "100");
+        return dummyViewType === "minting" ? pct < 100 : pct >= 100;
+      });
+
       return ctx.render({
-        mintingData: DUMMY_TOKEN_OVERVIEW_PAGE,
-        timeframe: "24H",
-        sortBy: "TRENDING",
-        sortDirection: "desc",
-        viewType: "minted",
+        mintingData: {
+          ...DUMMY_TOKEN_OVERVIEW_PAGE,
+          data: filtered,
+          total: filtered.length,
+        },
+        timeframe: dummyTimeframe,
+        sortBy: dummySortBy,
+        sortDirection: dummySortDirection,
+        viewType: dummyViewType,
         btcPrice: 65000,
         btcPriceSource: "dummy",
       });
@@ -300,6 +323,12 @@ export default function SRC20OverviewPage({ data }: any) {
       f-client-nav
       data-partial="/src20"
     >
+      <SRC20OverviewHeader
+        viewType={viewType}
+        timeframe={timeframe}
+        sortBy={sortBy}
+        sortDirection={sortDirection}
+      />
       <SRC20OverviewContent
         mintingData={mintingData}
         timeframe={timeframe}

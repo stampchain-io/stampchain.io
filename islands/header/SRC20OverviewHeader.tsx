@@ -1,57 +1,57 @@
 /* ===== SRC20 HEADER COMPONENT ===== */
-/* @baba - update search button styling */
 import { SelectorButtons, ToggleButton } from "$button";
-import { titleNeutral } from "$text";
+import {
+  navigateWithFreshPartial,
+} from "$lib/utils/navigation/freshNavigationUtils.ts";
+import { titlePrimary } from "$text";
 import type { SRC20OverviewHeaderProps } from "$types/ui.d.ts";
-import { useCallback, useState } from "preact/hooks";
-
-/* ===== TYPES ===== */
+import { useCallback } from "preact/hooks";
 
 /* ===== COMPONENT ===== */
-export const SRC20OverviewHeader = (
-  {
-    onViewTypeChange,
-    viewType,
-    onTimeframeChange,
-    onFilterChange,
-    currentSort,
-  }: SRC20OverviewHeaderProps,
-) => {
-  // 🚀 SIMPLIFIED STATE: Reduced complexity with modern patterns
-  const [selectedTimeframe, setSelectedTimeframe] = useState<string>("24H");
+export const SRC20OverviewHeader = ({
+  viewType = "minted",
+  timeframe = "24H",
+  sortBy = "TRENDING",
+  sortDirection = "desc",
+}: SRC20OverviewHeaderProps) => {
+  /* ===== NAVIGATION HANDLERS ===== */
+  const handleViewTypeClick = useCallback((newViewType: string) => {
+    navigateWithFreshPartial("/src20", {
+      viewType: newViewType,
+      timeframe: "24H",
+      sortBy,
+      sortDirection,
+    }, true);
+  }, [sortBy, sortDirection]);
 
-  // 🚀 PREACT OPTIMIZATION: Memoized handlers
-  const handleViewTypeClick = useCallback((viewType: string) => {
-    // Reset timeframe to default when switching views
-    setSelectedTimeframe("24H");
-    onTimeframeChange?.("24H");
-    // Pass the new view type to the parent component
-    onViewTypeChange?.(viewType);
-  }, [onViewTypeChange, onTimeframeChange]);
-
-  const handleTimeframeClick = useCallback(
-    (timeframe: string) => {
-      setSelectedTimeframe(timeframe);
-      onTimeframeChange?.(timeframe as "24H" | "7D" | "30D");
-    },
-    [onTimeframeChange],
-  );
+  const handleTimeframeClick = useCallback((newTimeframe: string) => {
+    navigateWithFreshPartial("/src20", {
+      timeframe: newTimeframe,
+      viewType,
+      sortBy,
+      sortDirection,
+    }, false);
+  }, [viewType, sortBy, sortDirection]);
 
   const handleTrendingClick = useCallback(() => {
-    const currentFilter = currentSort?.filter || "TRENDING";
-    const newFilter = currentFilter === "TRENDING" ? "DEPLOY" : "TRENDING";
-    onFilterChange?.(newFilter);
-  }, [onFilterChange, currentSort?.filter]);
+    const newFilter = sortBy === "TRENDING" ? "DEPLOY" : "TRENDING";
+    navigateWithFreshPartial("/src20", {
+      sortBy: newFilter,
+      sortDirection,
+      viewType,
+      timeframe,
+    }, true);
+  }, [sortBy, sortDirection, viewType, timeframe]);
 
   /* ===== RENDER ===== */
   return (
     <div class="relative flex flex-col w-full gap-1.5">
       <div class="flex flex-row justify-between items-start w-full">
         {/* ===== TITLE ===== */}
-        <h1 class={`${titleNeutral} ml-1.5`}>SRC-20 TOKENS</h1>
+        <h1 class={`${titlePrimary} ml-1.5`}>SRC-20 TOKENS</h1>
       </div>
 
-      {/* ===== TRENDING, MINTED/MINTING AND TIMEFRAME BUTTONS ===== */}
+      {/* ===== MINTED/MINTING, TRENDING AND TIMEFRAME BUTTONS ===== */}
       <div class="flex flex-col mobileLg:flex-row justify-between w-full">
         {/* Minting/Minted */}
         <div class="flex gap-3 w-full mobileMd:w-auto">
@@ -62,8 +62,8 @@ export const SRC20OverviewHeader = (
             ]}
             value={viewType}
             onChange={handleViewTypeClick}
-            size="smR"
-            color="grey"
+            size="xsR"
+            color="purple"
             className="w-full mobileMd:w-auto"
           />
         </div>
@@ -74,11 +74,11 @@ export const SRC20OverviewHeader = (
           <div class="mt-[3px]">
             <ToggleButton
               options={["TRENDING"]}
-              selected={currentSort?.filter === "TRENDING" ? "TRENDING" : ""}
+              selected={sortBy === "TRENDING" ? "TRENDING" : ""}
               onChange={handleTrendingClick}
               mode="single"
-              size="smR"
-              color="grey"
+              size="xsR"
+              color="purple"
             />
           </div>
 
@@ -89,10 +89,10 @@ export const SRC20OverviewHeader = (
               { value: "7D", label: "7D" },
               { value: "30D", label: "30D" },
             ]}
-            value={selectedTimeframe}
+            value={timeframe}
             onChange={handleTimeframeClick}
-            size="smR"
-            color="grey"
+            size="xsR"
+            color="purple"
           />
         </div>
       </div>

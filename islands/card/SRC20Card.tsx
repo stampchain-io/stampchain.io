@@ -137,7 +137,7 @@ export function SRC20Card({ src20, variant = "detail" }: SRC20CardProps) {
         {src20.max ? formatAmount(src20.max) : "—"}
       </div>
 
-      {/* Mint limit */}
+      {/* Limit per mint */}
       {src20.lim && (
         <div class={`mt-3 w-fit mx-auto ${containerPill} ${cardFileSize}`}>
           {formatAmount(src20.lim)}
@@ -170,8 +170,19 @@ export function SRC20Card({ src20, variant = "detail" }: SRC20CardProps) {
 
         {/* Max supply */}
         {(src20.max || src20.mint_progress?.max_supply) && (
-          <div class={`mt-3 w-fit mx-auto ${containerPill} ${cardFileSize}`}>
+          <div
+            class={`hidden min-[820px]:flex min-[1024px]:hidden min-[1048px]:flex mt-3 w-fit mx-auto ${containerPill} ${cardFileSize}`}
+          >
             {formatAmount(src20.max ?? src20.mint_progress?.max_supply)}
+          </div>
+        )}
+
+        {/* Limit per mint */}
+        {src20.lim && (
+          <div
+            class={`mt-3 w-fit mx-auto ${containerPill} ${cardPrice}`}
+          >
+            {formatAmount(src20.lim)}
           </div>
         )}
 

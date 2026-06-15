@@ -93,7 +93,10 @@ export const safeNavigate = (
   if (partialPath && !options?.replace) {
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("f-partial", partialPath);
+    // Use the full destination URL (incl. query params) for the partial fetch,
+    // matching the codebase convention (f-partial={href}). Using the bare
+    // partialPath would fetch default content and ignore filters/sort/view.
+    link.setAttribute("f-partial", url);
     link.style.display = "none";
     document.body.appendChild(link as unknown as Node);
     link.click();

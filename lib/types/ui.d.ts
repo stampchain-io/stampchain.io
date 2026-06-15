@@ -3518,11 +3518,10 @@ export interface RangeInputProps {
  * SRC20OverviewHeaderProps - Props for SRC20OverviewHeader component
  */
 export interface SRC20OverviewHeaderProps {
-  onViewTypeChange?: (viewType: string) => void;
   viewType?: string;
-  onTimeframeChange?: (timeframe: string) => void;
-  onFilterChange?: (filter: any) => void;
-  currentSort?: any;
+  timeframe?: string;
+  sortBy?: string;
+  sortDirection?: string;
 }
 
 /**
