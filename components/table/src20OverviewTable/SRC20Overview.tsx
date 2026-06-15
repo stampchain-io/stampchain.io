@@ -7,7 +7,7 @@ import {
   cellLeftL2Card,
   cellRightL2Card,
   cellStickyLeft,
-  container1,
+  container2,
   shadowGlowPurple,
 } from "$layout";
 import {
@@ -19,7 +19,7 @@ import { formatDate } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { constructStampUrl } from "$lib/utils/ui/media/imageUtils.ts";
 import {
   labelXxs,
-  textSm,
+  textXs,
   valueDarkSm,
   valueNegative,
   valueNeutral,
@@ -217,7 +217,7 @@ export function SRC20Overview({
 
   return (
     <div class="overflow-x-auto tablet:overflow-x-visible scrollbar-hide">
-      <table class={`w-full border-separate border-spacing-y-3 ${textSm}`}>
+      <table class={`w-full border-separate border-spacing-y-3 ${textXs}`}>
         <colgroup>
           {colGroup([
             {
@@ -234,7 +234,7 @@ export function SRC20Overview({
           ]).map((col) => <col key={col.key} class={col.className} />)}
         </colgroup>
         <thead>
-          <tr class={`${container1}`}>
+          <tr class={`${container2}`}>
             {headers.map((header, i) => {
               const isFirst = i === 0;
               const isLast = i === (headers?.length ?? 0) - 1;
@@ -288,7 +288,7 @@ export function SRC20Overview({
                 return (
                   <tr
                     key={src20.tx_hash}
-                    class={`${container1} ${shadowGlowPurple}`}
+                    class={`${container2} ${shadowGlowPurple}`}
                     onClick={(e) => {
                       const target = e.target as HTMLElement;
                       const isImage = target.tagName === "IMG";
@@ -552,7 +552,7 @@ export function SRC20Overview({
               <tr>
                 <td
                   colSpan={headers?.length ?? 0}
-                  class={`w-full h-[46px] ${container1}`}
+                  class={`w-full h-[46px] ${container2}`}
                 >
                   <h6 class={`${valueDarkSm} text-center`}>
                     NO TOKENS TO DISPLAY

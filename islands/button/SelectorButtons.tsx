@@ -74,15 +74,15 @@ export const SelectorButtons = ({
   // Derive pill position from selected index using pure CSS calc — no DOM measurement needed.
   // All columns are equal (1fr), container has p-0.5 (2px padding), labels have mx-0.5 (2px margin).
   // pill left  = 2px (container padding) + i * columnWidth + 2px (label margin)
-  //            = calc(4px + i * (100% - 4px) / N)
-  // pill width = columnWidth - 4px (label margins)
-  //            = calc((100% - 4px) / N - 4px)
+  //            = calc(2px + i * (100% - 2px) / N)
+  // pill width = columnWidth - 2px (label margins)
+  //            = calc((100% - 2px) / N - 2px)
   const N = options.length;
   const selectedIndex = options.findIndex((o) => o.value === selectedValue);
 
   return (
     <div
-      class={`relative grid p-0.5 select-none
+      class={`relative grid p-0 select-none
         ${container2} rounded-full
         ${
         (colorProp === "purple" || colorProp === "grey")
@@ -99,10 +99,10 @@ export const SelectorButtons = ({
       {/* Pill — hidden during SSR, positioned via pure CSS math after hydration */}
       {isMounted && selectedIndex !== -1 && (
         <div
-          class={`!absolute top-1 bottom-1 z-10 ${buttonStyles.variant.flat}`}
+          class={`!absolute top-0.5 bottom-0.5 z-10 ${buttonStyles.variant.flat}`}
           style={{
-            left: `calc(4px + ${selectedIndex} * (100% - 4px) / ${N})`,
-            width: `calc((100% - 4px) / ${N} - 4px)`,
+            left: `calc(2px + ${selectedIndex} * (100% - 2px) / ${N})`,
+            width: `calc((100% - 2px) / ${N} - 2px)`,
             transition: "left 200ms ease-out",
           }}
         />
