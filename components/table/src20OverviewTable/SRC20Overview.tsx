@@ -141,7 +141,7 @@ export function SRC20Overview({
   ) => {
     const baseClass = `${labelXxs} ${
       cellAlign(index, headers?.length ?? 0)
-    } py-1.5`;
+    } py-1.5 !px-5`;
 
     const rowClass = isFirst
       ? cellLeftL2Card
@@ -222,15 +222,15 @@ export function SRC20Overview({
           {colGroup([
             {
               width:
-                "min-w-[150px] max-w-[180px] w-auto sticky left-0 tablet:static",
+                "min-w-[120px] max-w-[150px] w-auto sticky left-0 tablet:static",
             }, // TOKEN
-            { width: "min-w-[120px] w-auto" }, // PRICE
+            { width: "min-w-[100px] w-auto" }, // PRICE
             { width: "min-w-[90px] w-auto" }, // CHANGE
             { width: "min-w-[110px] w-auto" }, // VOLUME
             { width: "min-w-[110px] w-auto" }, // MARKETCAP
             { width: "min-w-[110px] w-auto" }, // DEPLOY
             { width: "min-w-[90px] w-auto" }, // HOLDERS
-            { width: "min-w-[160px] w-auto" }, // CHART
+            { width: "min-w-[150px] w-auto" }, // CHART
           ]).map((col) => <col key={col.key} class={col.className} />)}
         </colgroup>
         <thead>
@@ -321,7 +321,7 @@ export function SRC20Overview({
                           ? (
                             <img
                               src={imageUrl}
-                              class="w-7 h-7 rounded cursor-pointer"
+                              class="w-6 h-6 rounded-full cursor-pointer"
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
@@ -332,7 +332,7 @@ export function SRC20Overview({
                           )
                           : (
                             <div
-                              class="w-7 h-7 rounded cursor-pointer overflow-hidden"
+                              class="w-6 h-6 rounded-full cursor-pointer overflow-hidden"
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
@@ -342,7 +342,7 @@ export function SRC20Overview({
                             </div>
                           )}
                         <div class="flex flex-col">
-                          <div class="font-bold text-base uppercase tracking-wide">
+                          <div class="font-extrabold text-sm uppercase tracking-wide">
                             {(() => {
                               const tickValue = src20.tick ?? "";
                               const emojiValue = unicodeEscapeToEmoji(
@@ -354,7 +354,7 @@ export function SRC20Overview({
                               return (
                                 <>
                                   {text && (
-                                    <span class="bg-gradient-to-l color-neutral-gradient color-gradient-hover inline-block">
+                                    <span class="bg-gradient-to-r color-neutral-gradient color-gradient-hover inline-block">
                                       {text.toUpperCase()}
                                     </span>
                                   )}

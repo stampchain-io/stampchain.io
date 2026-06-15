@@ -89,7 +89,7 @@ export function SRC20Minting({
   ) => {
     const baseClass = `${labelXxs} ${
       cellAlign(index, headers?.length ?? 0)
-    } py-1.5`;
+    } py-1.5 !px-5`;
 
     const rowClass = isFirst
       ? cellLeftL2Card
@@ -165,10 +165,10 @@ export function SRC20Minting({
           {colGroup([
             {
               width:
-                "min-w-[150px] max-w-[180px] w-auto sticky left-0 tablet:static",
+                "min-w-[120px] max-w-[150px] w-auto sticky left-0 tablet:static",
             }, // TOKEN
             { width: "min-w-[100px] w-auto" }, // MINTS
-            { width: "min-w-[120px] w-auto" }, // PROGRESS
+            { width: "min-w-[130px] w-auto" }, // PROGRESS
             { width: "min-w-[110px] w-auto" }, // TRENDING
             { width: "min-w-[110px] w-auto" }, // DEPLOY
             { width: "min-w-[90px] w-auto" }, // HOLDERS
@@ -278,7 +278,7 @@ export function SRC20Minting({
                       <div class="flex items-center gap-4">
                         <img
                           src={imageUrl}
-                          class="w-7 h-7 rounded cursor-pointer"
+                          class="w-6 h-6 rounded-full cursor-pointer"
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
@@ -287,7 +287,7 @@ export function SRC20Minting({
                           alt={unicodeEscapeToEmoji(src20.tick ?? "")}
                         />
                         <div class="flex flex-col">
-                          <div class="font-bold text-base uppercase tracking-wide">
+                          <div class="font-extrabold text-sm uppercase tracking-wide">
                             {(() => {
                               const { text, emoji } = splitTextAndEmojis(
                                 unicodeEscapeToEmoji(src20.tick ?? ""),
@@ -295,7 +295,7 @@ export function SRC20Minting({
                               return (
                                 <>
                                   {text && (
-                                    <span class="bg-gradient-to-l color-neutral-gradient color-gradient-hover inline-block">
+                                    <span class="bg-gradient-to-r color-neutral-gradient color-gradient-hover inline-block">
                                       {text.toUpperCase()}
                                     </span>
                                   )}
@@ -324,21 +324,8 @@ export function SRC20Minting({
                       } ${cellCenterL2Card}`}
                     >
                       <div class="flex items-center justify-center w-full">
-                        <div class="flex flex-col w-[100px] min-[420px]:w-[120px] mobileLg:w-[160px] gap-1">
-                          <div class="!text-xs text-center">
-                            {(() => {
-                              const progressRaw =
-                                src20.mint_progress?.progress ??
-                                  src20.progress ?? 0;
-                              const progressValue = Number(progressRaw);
-                              if (isNaN(progressValue)) {
-                                return "0";
-                              }
-                              return progressValue.toFixed(1);
-                            })()}
-                            <span class="text-color-neutral-400">%</span>
-                          </div>
-                          <div class="relative h-1.5 bg-color-neutral-800 rounded-full">
+                        <div class="flex flex-row items-center w-[100px] min-[420px]:w-[120px] mobileLg:w-[140px] gap-1.5">
+                          <div class="relative flex-1 h-1.5 bg-color-neutral-800 rounded-full">
                             <div
                               class="absolute left-0 top-0 h-1.5 bg-gradient-to-r from-color-primary-500 via-color-primary-400 to-color-primary-300 rounded-full"
                               style={{
@@ -359,6 +346,19 @@ export function SRC20Minting({
                                 }%`,
                               }}
                             />
+                          </div>
+                          <div class="!text-[10px] shrink-0">
+                            {(() => {
+                              const progressRaw =
+                                src20.mint_progress?.progress ??
+                                  src20.progress ?? 0;
+                              const progressValue = Number(progressRaw);
+                              if (isNaN(progressValue)) {
+                                return "0";
+                              }
+                              return progressValue.toFixed(1);
+                            })()}
+                            %
                           </div>
                         </div>
                       </div>
@@ -399,9 +399,9 @@ export function SRC20Minting({
                       class={`text-right ${cellRightL2Card}`}
                     >
                       <Button
-                        variant="outline"
+                        variant="outlineFlat"
                         color="purple"
-                        size="xsR"
+                        size="xxsR"
                         href={mintHref}
                         onClick={handleMintClick}
                       >

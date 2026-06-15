@@ -93,16 +93,17 @@ export const rowContainerBackground =
 //   group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
 // export const cellCenterCard = `p-3 border-y-[1px] border-x-0 border-color-border
 //   group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
+
 // Layer 2
 // Stamp and SRC20 Table Row Cards - Stamp/tokencards inside of layer 1
 export const cellLeftL2Card =
-  `p-3 pl-4 rounded-l-2xl border-y-[1px] border-l-[1px] border-r-0 border-color-neutral-700
+  `p-1 pl-1 rounded-l-2xl border-y-[1px] border-l-[1px] border-r-0 border-color-neutral-700
   group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
 export const cellRightL2Card =
-  `p-3 pr-4 rounded-r-2xl border-y-[1px] border-r-[1px] border-l-0 border-color-neutral-700
+  `p-1 pr-1 rounded-r-2xl border-y-[1px] border-r-[1px] border-l-0 border-color-neutral-700
   group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
 export const cellCenterL2Card =
-  `p-3 border-y-[1px] border-x-0 border-color-neutral-700
+  `p-1 border-y-[1px] border-x-0 border-color-neutral-700
   group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
 // Stamp and SRC20 Detail pages Table Rows
 export const cellLeftL2Detail =
