@@ -35,7 +35,7 @@ export const container2 =
 export const container2Hover =
   `${container2} hover:border-color-hover ${transitionColors}`;
 export const container3 = `border border-color-neutral-800 rounded-xl
-  bg-gradient-to-b from-color-neutral-800 via-color-neutral-900 to-color-neutral-950 cursor-default select-none`;
+  bg-gradient-to-b from-color-neutral-800/80 via-color-neutral-900/90 to-color-neutral-950 cursor-default select-none`;
 export const containerPill = `flex items-center py-1 px-3 rounded-full
   bg-gradient-to-b from-color-neutral-700 via-color-neutral-800 to-color-neutral-900 cursor-default select-none`;
 

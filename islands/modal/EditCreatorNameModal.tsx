@@ -1,6 +1,6 @@
 /* ===== EDIT CREATOR NAME MODAL COMPONENT ===== */
 import { walletContext } from "$client/wallet/wallet.ts";
-import { inputField, inputFieldWrapper } from "$form";
+import { inputField } from "$form";
 import { closeModal } from "$islands/modal/states.ts";
 import { ModalBase } from "$layout";
 import { logger } from "$lib/utils/logger.ts";
@@ -271,23 +271,17 @@ function EditCreatorNameModal({
 
               {/* ===== TEXT INPUT WITH CHARACTER COUNTER ===== */}
               <div class="relative">
-                <div
-                  class={`${inputFieldWrapper} ${
+                <input
+                  type="text"
+                  value={newName}
+                  onInput={handleInput}
+                  placeholder="Enter creator name"
+                  maxLength={CREATOR_NAME_MAX_LENGTH + 5}
+                  disabled={isSubmitting}
+                  class={`${inputField} ${
                     isOverLimit ? "ring-1 ring-red-500/75 ring-inset" : ""
                   } ${isSubmitting ? "opacity-60 cursor-not-allowed" : ""}`}
-                >
-                  <input
-                    type="text"
-                    value={newName}
-                    onInput={handleInput}
-                    placeholder="Enter creator name"
-                    maxLength={CREATOR_NAME_MAX_LENGTH + 5}
-                    disabled={isSubmitting}
-                    class={`${inputField} ${
-                      isSubmitting ? "cursor-not-allowed" : ""
-                    }`}
-                  />
-                </div>
+                />
 
                 {/* ===== CHARACTER COUNTER ===== */}
                 <span

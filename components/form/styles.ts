@@ -1,64 +1,30 @@
 /* ===== FORM STYLES MODULE ===== */
-import { container2Hover, transitionColors } from "$layout";
+import { container2Hover } from "$layout";
 
 /* ===== BASE STYLES ===== */
 // Global sizes
 const inputFieldHeight = "h-10";
 const inputFieldWidth = "!w-10";
 
-// Inner element style — applied to the actual <input>/<select>/<textarea>.
-// Transparent and borderless because <input> does not support ::before pseudo-elements,
-// so the gradient border must live on a wrapping <div> (see wrapper exports below).
-const inputInner = `
-  px-5 w-full h-full bg-transparent border-none
-  focus:outline-none focus-visible:outline-none
+export const inputField = `
+  ${inputFieldHeight} px-5 w-full bg-transparent
+  ${container2Hover}
+  focus:outline-none focus-visible:outline-none focus:bg-color-neutral-1000
   font-normal text-xs text-color-neutral-200
   placeholder:font-light placeholder:text-color-neutral-500 placeholder:uppercase
 `;
 
-/* ===== WRAPPER STYLES ===== */
-// Applied to the <div> that wraps an <input>/<select>/<textarea>.
-
-export const inputFieldWrapper = `
-  ${inputFieldHeight} w-full
-  ${container2Hover} ${transitionColors}
-  flex items-center
-  focus:outline-none focus-visible:outline-none
-  focus-within:bg-color-neutral-1000
-`;
-
-export const inputFieldSquareWrapper = `
-  ${inputFieldHeight} ${inputFieldWidth}
-  ${container2Hover} ${transitionColors}
-  flex items-center justify-center
-  focus-within:bg-color-neutral-1000
-`;
-
-export const inputTextareaWrapper = `
-  w-full pt-3 h-auto
-  ${container2Hover} ${transitionColors}
-  focus-within:bg-color-neutral-1000
-`;
-
-/* ===== INNER INPUT STYLES ===== */
-// Applied to the actual form element inside the wrapper.
-
-export const inputField = inputInner;
-
 export const inputFieldSquare = `
-  ${inputInner}
-  !w-full !px-0.5 text-center
+  ${inputFieldHeight} ${inputFieldWidth} bg-transparent
+  ${container2Hover}
+  focus:outline-none focus-visible:outline-none focus:bg-color-neutral-1000
+  font-normal text-xs text-color-neutral-200 text-center px-0.5
 `;
 
-// Outline input - for custom wrapper implementations
-export const inputFieldOutline = `
-  ${inputFieldHeight} w-full
-`;
-
-// Textarea inner — no h-full (wrapper is auto-height, not fixed).
 export const inputTextarea = `
-  px-5 w-full h-[100px] min-h-[100px] resize-none bg-transparent border-none
-  focus:outline-none focus-visible:outline-none
+  px-5 pt-3 w-full h-[100px] min-h-[100px] resize-none bg-transparent
+  ${container2Hover}
+  focus:outline-none focus-visible:outline-none focus:bg-color-neutral-1000
   font-normal text-xs text-color-neutral-200
   placeholder:font-light placeholder:text-color-neutral-500 placeholder:uppercase
 `;
@@ -74,7 +40,7 @@ overflow-y-auto scrollbar-background-layer2 shadow-lg cursor-pointer`;
 export const inputFieldDropdownHover = `
 flex justify-between py-2.5 px-3
 border-b-[1px] border-color-border last:border-b-0
-${container2Hover} ${transitionColors} uppercase cursor-pointer`;
+${container2Hover} uppercase cursor-pointer`;
 
 // Checkbox - used for both checkboxes and radiobuttons
 export const inputCheckbox = (
@@ -127,15 +93,9 @@ export const inputSelect = `
   pr-10
 `;
 /* ===== ===== ===== */
-/* ===== NOT IN USE NOR UPDATED ===== */
-/* ===== LABEL STYLES ===== */
-export const labelBase =
-  "font-medium text-base text-color-neutral-200 cursor-default select-none whitespace-nowrap";
-export const labelLarge =
-  "font-medium text-lg text-color-neutral-200 cursor-default select-none whitespace-nowrap";
-
+/* ===== NOT IN USE OR NOT UPDATED ===== */
 /* ===== STATE STYLES ===== */
-export const stateDisabled = "opacity-50 cursor-not-allowed";
+export const stateDisabled = "opacity-50 cursor-not-allowed"; // used in StampingTool
 export const stateLoading = "cursor-wait opacity-75";
 export const stateError = "text-xs border-red-400 focus:border-red-400";
 export const stateSuccess = "text-xs border-green-400 focus:border-green-400";
@@ -148,14 +108,8 @@ export const messageHelp = "text-xs text-color-neutral-500 mt-1";
 
 /* ===== TYPE DEFINITIONS ===== */
 export type FormStyles = {
-  // Wrappers (for <div> enclosing the actual input element)
-  inputFieldWrapper: string;
-  inputFieldSquareWrapper: string;
-  inputTextareaWrapper: string;
-
   // Inputs
   inputField: string;
-  inputFieldOutline: string;
   inputFieldSquare: string;
   inputNumeric: string;
   inputTextarea: string;
@@ -166,11 +120,6 @@ export type FormStyles = {
   ) => string;
   inputFieldDropdown: string;
   inputFieldDropdownHover: string;
-
-  // Gradients
-  // purple: string;
-  // grey: string;
-  // outlineGradient: string;
 
   // Labels - not used
   labelBase: string;

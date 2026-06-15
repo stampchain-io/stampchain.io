@@ -3,7 +3,7 @@ import { ToggleSwitchButton } from "$button";
 import { useSRC20Form } from "$client/hooks/useSRC20Form.ts";
 import { walletContext } from "$client/wallet/wallet.ts";
 import { ProgressiveEstimationIndicator } from "$components/indicators/ProgressiveEstimationIndicator.tsx";
-import { inputTextarea, inputTextareaWrapper, SRC20InputField } from "$form";
+import { inputTextarea, SRC20InputField } from "$form";
 import { Icon } from "$icon";
 import { DeployToolSkeleton } from "$indicators";
 import {
@@ -508,15 +508,13 @@ export function SRC20DeployTool(
           }`}
         >
           <div class={containerColForm}>
-            <div class={inputTextareaWrapper}>
-              <textarea
-                class={`${inputTextarea} scrollbar-background-layer1`}
-                placeholder="Description"
-                rows={3}
-                value={formState.description || ""}
-                onChange={(e) => handleInputChange(e, "description")}
-              />
-            </div>
+            <textarea
+              class={`${inputTextarea} scrollbar-background-layer1`}
+              placeholder="Description"
+              rows={3}
+              value={formState.description || ""}
+              onChange={(e) => handleInputChange(e, "description")}
+            />
             <div class={containerRowForm}>
               <SRC20InputField
                 type="text"
