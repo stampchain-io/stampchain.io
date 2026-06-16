@@ -4,7 +4,8 @@ import {
   getCurrentPathname,
   safeNavigate,
 } from "$lib/utils/navigation/freshNavigationUtils.ts";
-import { useCallback } from "preact/hooks";
+import { tooltipIcon } from "$notification";
+import { useCallback, useEffect, useRef, useState } from "preact/hooks";
 
 /* ===== TYPES ===== */
 type ViewMode = "detail" | "minimal" | "row";
@@ -13,6 +14,37 @@ type ViewMode = "detail" | "minimal" | "row";
 export function ViewButton(
   { viewMode }: { viewMode: ViewMode },
 ) {
+  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
+  const [allowTooltip, setAllowTooltip] = useState(true);
+  const tooltipTimeoutRef = useRef<number | null>(null);
+
+  const handleMouseEnter = () => {
+    if (allowTooltip) {
+      if (tooltipTimeoutRef.current) {
+        globalThis.clearTimeout(tooltipTimeoutRef.current);
+      }
+      tooltipTimeoutRef.current = globalThis.setTimeout(() => {
+        setIsTooltipVisible(true);
+      }, 1500);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (tooltipTimeoutRef.current) {
+      globalThis.clearTimeout(tooltipTimeoutRef.current);
+    }
+    setIsTooltipVisible(false);
+    setAllowTooltip(true);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (tooltipTimeoutRef.current) {
+        globalThis.clearTimeout(tooltipTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const handleViewModeChange = useCallback(
     (mode: ViewMode) => {
       if (typeof globalThis === "undefined" || !globalThis?.location) return;
@@ -42,14 +74,28 @@ export function ViewButton(
     : "Switch to detailed grid view";
 
   return (
-    <Icon
-      type="iconButton"
-      name={iconName}
-      weight="bold"
-      size="xxxs"
-      color="grey"
-      onClick={() => handleViewModeChange(nextMode)}
-      ariaLabel={ariaLabel}
-    />
+    <div
+      class="relative"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <Icon
+        type="iconButton"
+        name={iconName}
+        weight="bold"
+        size="custom"
+        color="greyLight"
+        className="w-[26px] h-[26px] tablet:w-[22px] tablet:h-[22px] p-1 bg-transparent group-hover:stroke-color-hover"
+        onClick={() => handleViewModeChange(nextMode)}
+        ariaLabel={ariaLabel}
+      />
+      <div
+        className={`${tooltipIcon} ${
+          isTooltipVisible ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        VIEW MODE
+      </div>
+    </div>
   );
 }

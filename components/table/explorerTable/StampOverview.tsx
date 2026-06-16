@@ -1,6 +1,6 @@
 /* ===== STAMP EXPLORER TABLE COMPONENT ===== */
 import { cellAlign, colGroup } from "$components/layout/types.ts";
-import { PlaceholderImage } from "$icon";
+import { Icon, PlaceholderImage } from "$icon";
 import {
   cellCenterL2Card,
   cellLeftL2Card,
@@ -15,7 +15,6 @@ import {
 import {
   abbreviateAddress,
   formatDate,
-  formatFileSize,
   formatSupplyValue,
 } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { getStampImageSrc } from "$lib/utils/ui/media/imageUtils.ts";
@@ -26,15 +25,23 @@ import type { StampRow } from "$types/stamp.d.ts";
 const HEADERS = [
   "IMAGE",
   "STAMP #",
+  "TYPE",
   "CPID",
   "ADDRESS",
-  "SUPPLY",
-  "TYPE",
-  "SIZE",
+  "EDITIONS",
   "TX HASH",
   "BLOCK",
   "DATE",
 ];
+
+/* ===== HELPERS ===== */
+function getStampType(stamp: StampRow): string {
+  if (stamp.ident === "SRC-721") return "RECURSIVE";
+  if (stamp.stamp !== null && stamp.stamp < 0) {
+    return stamp.cpid?.startsWith("A") ? "CURSED" : "POSH";
+  }
+  return "CLASSIC";
+}
 
 /* ===== ROW COMPONENT ===== */
 interface StampOverviewRowProps {
@@ -58,17 +65,6 @@ export function StampOverviewRow({ stamp }: StampOverviewRowProps) {
     : stamp.supply === 1
     ? "1/1"
     : `${formatSupplyValue(stamp.supply ?? 0, stamp.divisible)}`;
-
-  const fileType = stamp.stamp_mimetype?.split("/")[1]?.toUpperCase() ||
-    "UNKNOWN";
-
-  /* ===== FILE SIZE ===== */
-  const fileSize = stamp.file_size_bytes != null
-    ? formatFileSize(
-      stamp.file_size_bytes,
-      stamp.stamp_mimetype === "text/plain",
-    )
-    : "—";
 
   /* ===== RENDER ===== */
   return (
@@ -125,11 +121,29 @@ export function StampOverviewRow({ stamp }: StampOverviewRowProps) {
         </a>
       </td>
 
+      {/* TYPE */}
+      <td
+        class={`${cellAlign(2, HEADERS.length)} ${cellCenterL2Card}`}
+      >
+        <div class="flex items-center justify-center gap-2">
+          <Icon
+            type="icon"
+            name="artStamp"
+            weight="bold"
+            size="xxs"
+            color="greyLight"
+          />
+          <span class="bg-gradient-to-r from-color-neutral-400 via-color-neutral-300 to-color-neutral-200 inline-block text-transparent bg-clip-text w-fit">
+            {getStampType(stamp)}
+          </span>
+        </div>
+      </td>
+
       {/* CPID */}
       <td
         class={`${
-          cellAlign(2, HEADERS.length)
-        } ${cellCenterL2Card} text-color-neutral-400`}
+          cellAlign(3, HEADERS.length)
+        } ${cellCenterL2Card} text-color-neutral-300`}
       >
         {stamp.cpid ?? "—"}
       </td>
@@ -137,7 +151,7 @@ export function StampOverviewRow({ stamp }: StampOverviewRowProps) {
       {/* CREATOR */}
       <td
         class={`${
-          cellAlign(3, HEADERS.length)
+          cellAlign(4, HEADERS.length)
         } ${cellCenterL2Card} text-color-neutral-200`}
       >
         {creatorDisplay}
@@ -146,34 +160,16 @@ export function StampOverviewRow({ stamp }: StampOverviewRowProps) {
       {/* SUPPLY */}
       <td
         class={`${
-          cellAlign(4, HEADERS.length)
+          cellAlign(5, HEADERS.length)
         } ${cellCenterL2Card} text-color-neutral-200`}
       >
         {supplyDisplay}
       </td>
 
-      {/* TYPE */}
-      <td
-        class={`${
-          cellAlign(5, HEADERS.length)
-        } ${cellCenterL2Card} text-color-neutral-200`}
-      >
-        {fileType}
-      </td>
-
-      {/* SIZE */}
-      <td
-        class={`${
-          cellAlign(6, HEADERS.length)
-        } ${cellCenterL2Card} text-color-neutral-200`}
-      >
-        {fileSize}
-      </td>
-
       {/* TX HASH */}
       <td
         class={`${
-          cellAlign(7, HEADERS.length)
+          cellAlign(6, HEADERS.length)
         } ${cellCenterL2Card} text-color-neutral-400`}
       >
         {abbreviateAddress(stamp.tx_hash, 6)}
@@ -182,7 +178,7 @@ export function StampOverviewRow({ stamp }: StampOverviewRowProps) {
       {/* BLOCK */}
       <td
         class={`${
-          cellAlign(8, HEADERS.length)
+          cellAlign(7, HEADERS.length)
         } ${cellCenterL2Card} text-color-neutral-400`}
       >
         {stamp.block_index.toLocaleString()}
@@ -191,7 +187,7 @@ export function StampOverviewRow({ stamp }: StampOverviewRowProps) {
       {/* DATE */}
       <td
         class={`${
-          cellAlign(9, HEADERS.length)
+          cellAlign(8, HEADERS.length)
         } ${cellRightL2Card} text-color-neutral-400 pr-3`}
       >
         {formatDate(new Date(stamp.block_time), {
@@ -217,16 +213,15 @@ export function StampOverviewTable({ stamps }: StampOverviewTableProps) {
       >
         <colgroup>
           {colGroup([
-            { width: "w-12" }, // IMAGE
-            { width: "min-w-[90px] w-auto" }, // STAMP #
-            { width: "min-w-[90px] w-auto" }, // CPID
+            { width: "min-w-[30px] w-auto" }, // IMAGE
+            { width: "min-w-[100px] w-auto" }, // STAMP #
+            { width: "min-w-[120px] w-auto" }, // TYPE
+            { width: "min-w-[170px] w-auto" }, // CPID
             { width: "min-w-[110px] w-auto" }, // CREATOR
             { width: "min-w-[90px] w-auto" }, // SUPPLY
-            { width: "min-w-[70px] w-auto" }, // TYPE
-            { width: "min-w-[80px] w-auto" }, // SIZE
             { width: "min-w-[110px] w-auto" }, // TX HASH
-            { width: "min-w-[90px] w-auto" }, // BLOCK
-            { width: "min-w-[100px] w-auto" }, // DATE
+            { width: "min-w-[70px] w-auto" }, // BLOCK
+            { width: "min-w-[90px] w-auto" }, // DATE
           ]).map((col) => <col key={col.key} class={col.className} />)}
         </colgroup>
         <thead>

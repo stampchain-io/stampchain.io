@@ -1,17 +1,12 @@
 /* ===== EXPLORER CONTENT COMPONENT ===== */
 import { PaginationButtons } from "$button";
 import { StampCard } from "$card";
-import { SRC20OverviewTable } from "$components/table/explorerTable/SRC20Overview.tsx";
-import { StampOverviewTable } from "$components/table/explorerTable/StampOverview.tsx";
+import {
+  ExplorerTableBase,
+  type MixedItem,
+} from "$components/table/explorerTable/ExplorerTableBase.tsx";
 import { SRC20Card } from "$islands/card/SRC20Card.tsx";
-import type { SRC20Row } from "$types/src20.d.ts";
-import type { StampRow } from "$types/stamp.d.ts";
 import type { ExplorerContentProps } from "$types/ui.d.ts";
-
-/* ===== TYPES ===== */
-type MixedItem =
-  | { kind: "stamp"; item: StampRow }
-  | { kind: "src20"; item: SRC20Row };
 
 /* ===== COMPONENT ===== */
 export function ExplorerContent({
@@ -44,28 +39,13 @@ export function ExplorerContent({
     ? mixed.filter((e) => e.kind === "src20")
     : mixed;
 
-  /* ===== SPLIT for row view ===== */
-  const visibleStamps = visible
-    .filter((e) => e.kind === "stamp")
-    .map((e) => e.item as StampRow);
-  const visibleSrc20s = visible
-    .filter((e) => e.kind === "src20")
-    .map((e) => e.item as SRC20Row);
-
   /* ===== RENDER ===== */
   return (
     <div class="w-full pt-3 mobileMd:pt-6">
       {viewMode === "row"
         ? (
           /* ===== ROW TABLE VIEW ===== */
-          <div class="flex flex-col gap-6">
-            {visibleStamps.length > 0 && (
-              <StampOverviewTable stamps={visibleStamps} />
-            )}
-            {visibleSrc20s.length > 0 && (
-              <SRC20OverviewTable src20s={visibleSrc20s} />
-            )}
-          </div>
+          <ExplorerTableBase items={visible} />
         )
         : (
           /* ===== CARD GRID VIEW ===== */
