@@ -25,7 +25,7 @@ export const shadowGlowGrey =
 /* ===== CONTAINER LAYER STYLES ===== */
 // Overlay layer styles - used for drawer and modal containers, border defined locally
 export const container0 =
-  `bg-gradient-to-b from-color-neutral-950/95 via-color-neutral-900/90 to-neutral-1000/90 backdrop-blur-lg`;
+  `bg-gradient-to-b from-color-neutral-950/95 via-color-neutral-900/90 to-neutral-1000/95 backdrop-blur-lg`;
 // 1st layer styles
 export const container1 =
   `bg-gradient-to-b from-color-neutral-800/40 via-color-neutral-900/60 to-neutral-950/80 border border-color-neutral-800 rounded-3xl backdrop-blur-sm`;

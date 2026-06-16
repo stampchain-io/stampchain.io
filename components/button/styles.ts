@@ -1,5 +1,5 @@
 /* ===== BUTTON STYLES MODULE ===== */
-import { container2Hover, shadowL2, transitionColors } from "$layout";
+import { container2Hover, transitionColors } from "$layout";
 import { JSX } from "preact";
 
 /* ===== TYPE DEFINITIONS ===== */
@@ -68,22 +68,23 @@ export interface ButtonVariants {
 /* ===== BUTTON VARIANT BASE STYLES DEFINITIONS ===== */
 /* ToggleButton.tsx uses custom hover states for the selected state */
 const baseOutline = `
-  bg-color-background bg-opacity-10 hover:bg-opacity-50
-  border border-[var(--color-button-semidark)] rounded-full
-  text-[var(--color-button-semidark)]
-  backdrop-blur-sm opacity-90 hover:opacity-100`;
+  bg-transparent
+  border-[0.9px] border-[var(--color-button)] rounded-full
+  text-[var(--color-button)]
+  hover:bg-[linear-gradient(to_bottom,var(--color-button),var(--color-button),var(--color-button-dark))] hover:text-[var(--color-background)]
+  backdrop-blur-md`;
 const baseFlat = `
-  bg-[linear-gradient(to_bottom_right,var(--color-button-light),var(--color-button-semilight),var(--color-button),var(--color-button-semidark),var(--color-button-dark))]
-  border border-[var(--color-button-dark)] rounded-full
+  bg-[linear-gradient(to_bottom,var(--color-button),var(--color-button),var(--color-button-dark))]
+  border-[0.9px] border-[var(--color-button)] rounded-full
   text-color-background
-  backdrop-blur-sm opacity-90 hover:opacity-100
-  `;
+  hover:bg-[linear-gradient(to_bottom,transparent,transparent,transparent)] hover:text-[var(--color-button)]
+  backdrop-blur-md`;
 
 export const buttonStyles: ButtonVariants = {
   /* ===== BASE STYLES ===== */
   base: `
     inline-flex items-center justify-center
-    font-semibold tracking-wide
+    font-medium tracking-wide
     ${transitionColors} cursor-pointer
   `,
 
@@ -95,44 +96,46 @@ export const buttonStyles: ButtonVariants = {
       text-[var(--color-button-dark)] hover:text-[var(--color-button)]
     `,
     outline: `
-      ${baseOutline} ${shadowL2}
+      ${baseOutline}
     `,
     flat: `
-      ${baseFlat} ${shadowL2}
+      ${baseFlat}
     `,
     flatOutline: `
-      ${baseFlat} ${shadowL2}
+      ${baseFlat}
       !items-center !justify-center
       hover:!bg-[linear-gradient(to_bottom_right,var(--color-background),var(--color-background),var(--color-background),var(--color-background),var(--color-background))]
       hover:!border-[var(--color-button-semidark)]
       hover:!text-[var(--color-button-semidark)] hover:!opacity-90
     `,
     outlineFlat: `
-      ${baseOutline} ${shadowL2}
+      ${baseOutline}
       !items-center !justify-center
       hover:!bg-[linear-gradient(to_bottom_right,var(--color-button-light),var(--color-button-semilight),var(--color-button),var(--color-button-semidark),var(--color-button-dark))]
       hover:!border-[var(--color-button-dark)]
       hover:!text-color-background hover:!opacity-90
     `,
-    custom: `${shadowL2}`,
+    custom: ``,
   },
 
   /* ===== COLOR STYLES ===== */
   /* Must use CSS variables, since Tailwind CSS definitions are utility classes and won't work */
   color: {
     grey: `
-      [--color-button-dark:var(--color-grey-dark)]
-      [--color-button-semidark:var(--color-grey-semidark)]
-      [--color-button:var(--color-grey)]
-      [--color-button-semilight:var(--color-grey-semilight)]
-      [--color-button-light:var(--color-grey-light)]
+      [--color-button-light:var(--color-neutral-300)]
+      [--color-button:var(--color-neutral-400)]
+      [--color-button-dark:var(--color-neutral-500)]
+
+      [--color-button-semidark:var(--color-secondary-400]
+      [--color-button-semilight:var(--color-secondary-400)]
     `,
     purple: `
-      [--color-button-dark:var(--color-purple-dark)]
-      [--color-button-semidark:var(--color-purple-semidark)]
-      [--color-button:var(--color-purple)]
-      [--color-button-semilight:var(--color-purple-semilight)]
-      [--color-button-light:var(--color-purple-light)]
+      [--color-button-light:var(--color-primary-300)]
+      [--color-button:var(--color-primary-400)]
+      [--color-button-dark:var(--color-primary-500)]
+
+      [--color-button-semilight:var(--color-primary-400)]
+      [--color-button-semidark:var(--color-primary-600)]
     `,
     test: `
       [--color-button-dark:var(--color-red-dark)]

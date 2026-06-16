@@ -150,7 +150,7 @@ export const SelectorButtons = ({
               for={`${uniqueName.current}-${option.value}`}
               class={`
                 relative flex items-center justify-center my-0.5 z-20 cursor-[inherit]
-                font-normal text-center !rounded-full
+                font-medium text-center tracking-wide !rounded-full
                 ${buttonStyles.size[size]}
                 ${labelClass}
               `}

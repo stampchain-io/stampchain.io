@@ -95,7 +95,7 @@ export const ExplorerHeader = (
 
           {/* Filter + Sort Controls */}
           <div
-            class={`relative flex items-center justify-between px-1 py-0.5 gap-1.5 tablet:gap-1 ${container2} rounded-full`}
+            class={`relative flex items-center justify-between px-1 py-0.5 gap-3 tablet:gap-1 ${container2} rounded-full`}
           >
             <FilterButton
               count={activeFilterCount}

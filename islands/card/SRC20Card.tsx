@@ -15,7 +15,6 @@ import {
   cardCreator,
   cardFileSize,
   cardFileType,
-  cardPrice,
   cardStampNumber,
   cardSupply,
 } from "$text";
@@ -99,7 +98,7 @@ export function SRC20Card({ src20, variant = "detail" }: SRC20CardProps) {
       {renderTopRow()}
 
       {/* Amount */}
-      <div class={`mt-3 w-fit mx-auto ${containerPill} ${cardPrice}`}>
+      <div class={`mt-3 w-fit mx-auto ${containerPill} ${cardFileType}`}>
         {formatAmount(src20.amt)}
       </div>
 
@@ -116,7 +115,7 @@ export function SRC20Card({ src20, variant = "detail" }: SRC20CardProps) {
           name="caretDown"
           weight="bold"
           size="sm"
-          color="grey"
+          color="greyLight"
         />
         <div class={cardFileSize}>
           {src20.destination_name ??
@@ -133,7 +132,7 @@ export function SRC20Card({ src20, variant = "detail" }: SRC20CardProps) {
 
       {/* Max supply */}
       <div
-        class={`mt-3 w-fit mx-auto ${containerPill} ${cardPrice}`}
+        class={`mt-3 w-fit mx-auto ${containerPill} ${cardFileType}`}
       >
         {src20.max ? formatAmount(src20.max) : "—"}
       </div>
@@ -181,7 +180,7 @@ export function SRC20Card({ src20, variant = "detail" }: SRC20CardProps) {
         {/* Limit per mint */}
         {src20.lim && (
           <div
-            class={`mt-3 w-fit mx-auto ${containerPill} ${cardPrice}`}
+            class={`mt-3 w-fit mx-auto ${containerPill} ${cardFileType}`}
           >
             {formatAmount(src20.lim)}
           </div>
@@ -229,7 +228,9 @@ export function SRC20Card({ src20, variant = "detail" }: SRC20CardProps) {
     return (
       <>
         {/* ticker row */}
-        <div class={`flex items-center ${container2} rounded-full !p-5 gap-2`}>
+        <div
+          class={`flex items-center ${container2} rounded-full p-1 gap-2`}
+        >
           <div class="flex-shrink-0 w-6 h-6 rounded-full overflow-hidden">
             {imageUrl
               ? (
@@ -277,7 +278,7 @@ export function SRC20Card({ src20, variant = "detail" }: SRC20CardProps) {
 
         {/* amount */}
         <div class="hidden min-[420px]:flex justify-center">
-          <div class={`w-fit ${containerPill} ${cardPrice}`}>
+          <div class={`w-fit ${containerPill} ${cardFileType}`}>
             {amount}
           </div>
         </div>

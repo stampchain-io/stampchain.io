@@ -470,7 +470,7 @@ const FilterDrawer = (
             CLEAR
           </Button>
           <Button
-            variant="flat"
+            variant="outline"
             color="purple"
             size="smR"
             onClick={handleApplyFilters}
