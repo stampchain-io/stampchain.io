@@ -60,14 +60,14 @@ export const ExplorerHeader = (
         <div class="flex justify-start mobileMd:justify-end pt-3 mobileMd:pt-0 gap-3">
           {/* View Mode Toggle */}
           <div
-            class={`relative flex items-center justify-center px-1 py-0.5 ${container2} rounded-full`}
+            class={`relative flex items-center justify-center px-2 !py-0 ${container2} rounded-full`}
           >
             <ViewButton viewMode={viewMode} />
           </div>
 
           {/* Sort Controls */}
           <div
-            class={`relative flex items-center justify-center px-1 py-0.5 ${container2} rounded-full`}
+            class={`relative flex items-center justify-center px-2 !py-0 ${container2} rounded-full`}
           >
             <SortButton />
           </div>

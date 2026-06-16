@@ -98,9 +98,8 @@ export function SortButton(
           type="iconButton"
           name={sort === "DESC" ? "sortDesc" : "sortAsc"}
           weight="bold"
-          size="md"
+          size="xxxs"
           color="grey"
-          className="p-1.5 bg-transparent rounded-full hover:bg-gradient-to-b hover:from-color-neutral-800 hover:via-color-neutral-800 hover:to-color-neutral-900"
           ariaLabel={`Sorted ${sort === "DESC" ? "descending" : "ascending"}`}
         />
       </a>

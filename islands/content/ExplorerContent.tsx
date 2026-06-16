@@ -1,6 +1,8 @@
 /* ===== EXPLORER CONTENT COMPONENT ===== */
 import { PaginationButtons } from "$button";
 import { StampCard } from "$card";
+import { SRC20OverviewTable } from "$components/table/explorerTable/SRC20Overview.tsx";
+import { StampOverviewTable } from "$components/table/explorerTable/StampOverview.tsx";
 import { SRC20Card } from "$islands/card/SRC20Card.tsx";
 import type { SRC20Row } from "$types/src20.d.ts";
 import type { StampRow } from "$types/stamp.d.ts";
@@ -42,46 +44,68 @@ export function ExplorerContent({
     ? mixed.filter((e) => e.kind === "src20")
     : mixed;
 
+  /* ===== SPLIT for row view ===== */
+  const visibleStamps = visible
+    .filter((e) => e.kind === "stamp")
+    .map((e) => e.item as StampRow);
+  const visibleSrc20s = visible
+    .filter((e) => e.kind === "src20")
+    .map((e) => e.item as SRC20Row);
+
   /* ===== RENDER ===== */
   return (
     <div class="w-full pt-3 mobileMd:pt-6">
-      {/* ===== OVERVIEW GRID ===== */}
-      <div class="grid grid-cols-2 mobileMd:grid-cols-3 mobileLg:grid-cols-4 tablet:grid-cols-5 desktop:grid-cols-6 gap-6 w-full auto-rows-fr">
-        {visible.map((entry, index) => {
-          const key = entry.kind === "stamp"
-            ? (isRecentSales && entry.item.sale_data
-              ? `${entry.item.tx_hash}-${entry.item.sale_data.tx_hash}-${entry.item.sale_data.block_index}-${index}`
-              : entry.item.tx_hash)
-            : entry.item.tx_hash;
+      {viewMode === "row"
+        ? (
+          /* ===== ROW TABLE VIEW ===== */
+          <div class="flex flex-col gap-6">
+            {visibleStamps.length > 0 && (
+              <StampOverviewTable stamps={visibleStamps} />
+            )}
+            {visibleSrc20s.length > 0 && (
+              <SRC20OverviewTable src20s={visibleSrc20s} />
+            )}
+          </div>
+        )
+        : (
+          /* ===== CARD GRID VIEW ===== */
+          <div class="grid grid-cols-2 mobileMd:grid-cols-3 mobileLg:grid-cols-4 tablet:grid-cols-5 desktop:grid-cols-6 gap-6 w-full auto-rows-fr">
+            {visible.map((entry, index) => {
+              const key = entry.kind === "stamp"
+                ? (isRecentSales && entry.item.sale_data
+                  ? `${entry.item.tx_hash}-${entry.item.sale_data.tx_hash}-${entry.item.sale_data.block_index}-${index}`
+                  : entry.item.tx_hash)
+                : entry.item.tx_hash;
 
-          const card = entry.kind === "stamp"
-            ? (
-              <StampCard
-                stamp={entry.item}
-                isRecentSale={isRecentSales}
-                variant={viewMode === "minimal" ? "image" : "imageDetail"}
-                {...(fromPage && { fromPage })}
-              />
-            )
-            : (
-              <SRC20Card
-                src20={entry.item}
-                variant={viewMode}
-              />
-            );
+              const card = entry.kind === "stamp"
+                ? (
+                  <StampCard
+                    stamp={entry.item}
+                    isRecentSale={isRecentSales}
+                    variant={viewMode === "minimal" ? "image" : "imageDetail"}
+                    {...(fromPage && { fromPage })}
+                  />
+                )
+                : (
+                  <SRC20Card
+                    src20={entry.item}
+                    variant={viewMode === "minimal" ? "minimal" : "detail"}
+                  />
+                );
 
-          // MINIMAL view: square each cell so a taller SRC20 card can't
-          // stretch the row and break the stamp's 1:1 aspect ratio.
-          // Detailed view is rendered exactly as before.
-          return viewMode === "minimal"
-            ? (
-              <div key={key} class="w-full max-w-72 mx-auto aspect-square">
-                {card}
-              </div>
-            )
-            : <div key={key} class="contents">{card}</div>;
-        })}
-      </div>
+              // MINIMAL view: square each cell so a taller SRC20 card can't
+              // stretch the row and break the stamp's 1:1 aspect ratio.
+              // Detailed view is rendered exactly as before.
+              return viewMode === "minimal"
+                ? (
+                  <div key={key} class="w-full max-w-72 mx-auto aspect-square">
+                    {card}
+                  </div>
+                )
+                : <div key={key} class="contents">{card}</div>;
+            })}
+          </div>
+        )}
 
       {/* ===== PAGINATION ===== */}
       {pagination && pagination.totalPages > 1 && (

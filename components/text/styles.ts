@@ -211,13 +211,13 @@ export const cardStampNumber = `font-black text-md min-[420px]:text-lg
    bg-gradient-to-r color-neutral-gradient color-gradient-hover
    truncate ${select} w-fit`;
 export const cardCreator =
-  `font-semibold text-xs mobileMd:text-sm text-color-neutral-400 break-words text-center ${select}`;
+  `font-semibold text-xs mobileMd:text-sm text-color-neutral-200 break-words text-center ${select}`;
 export const cardSupply =
   `font-semibold text-xs text-color-primary-400 ${select}`;
 export const cardFileType =
-  `font-medium text-xs text-color-neutral-400 text-nowrap ${select}`;
+  `font-medium text-xs text-color-neutral-300 text-nowrap ${select}`;
 export const cardFileSize =
-  `font-normal text-xs text-color-neutral-500 text-nowrap ${select}`;
+  `font-normal text-xs text-color-neutral-400 text-nowrap ${select}`;
 export const cardPrice =
   `font-medium text-xs text-color-secondary-400 text-nowrap ${select}`;
 

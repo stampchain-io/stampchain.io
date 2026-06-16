@@ -64,9 +64,12 @@ export const handler: Handlers = {
       | "tokens";
 
     // Read card view mode — "sales" is handled separately via recentSales
-    const cardView = url.searchParams.get("view") === "minimal"
+    const viewParam = url.searchParams.get("view");
+    const cardView: "detail" | "minimal" | "row" = viewParam === "minimal"
       ? "minimal"
-      : "detail" as "detail" | "minimal";
+      : viewParam === "row"
+      ? "row"
+      : "detail";
 
     if (DEV_DUMMY_MODE) {
       return ctx.render({

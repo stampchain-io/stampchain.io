@@ -6,12 +6,15 @@ import {
 } from "$lib/utils/navigation/freshNavigationUtils.ts";
 import { useCallback } from "preact/hooks";
 
+/* ===== TYPES ===== */
+type ViewMode = "detail" | "minimal" | "row";
+
 /* ===== COMPONENT ===== */
 export function ViewButton(
-  { viewMode }: { viewMode: "detail" | "minimal" },
+  { viewMode }: { viewMode: ViewMode },
 ) {
   const handleViewModeChange = useCallback(
-    (mode: "detail" | "minimal") => {
+    (mode: ViewMode) => {
       if (typeof globalThis === "undefined" || !globalThis?.location) return;
       const params = new URLSearchParams(globalThis.location.search);
       params.set("view", mode);
@@ -20,21 +23,33 @@ export function ViewButton(
     [],
   );
 
+  const nextMode: ViewMode = viewMode === "detail"
+    ? "minimal"
+    : viewMode === "minimal"
+    ? "row"
+    : "detail";
+
+  const iconName = viewMode === "minimal"
+    ? "viewCardMinimal"
+    : viewMode === "row"
+    ? "viewRow"
+    : "viewCardDetail";
+
+  const ariaLabel = viewMode === "detail"
+    ? "Switch to minimal grid view"
+    : viewMode === "minimal"
+    ? "Switch to row view"
+    : "Switch to detailed grid view";
+
   return (
     <Icon
       type="iconButton"
-      name={viewMode === "minimal" ? "viewCardMinimal" : "viewCardDetail"}
+      name={iconName}
       weight="bold"
-      size="md"
+      size="xxxs"
       color="grey"
-      className="p-1.5 bg-transparent rounded-full hover:bg-gradient-to-b hover:from-color-neutral-800 hover:via-color-neutral-800 hover:to-color-neutral-900"
-      onClick={() =>
-        handleViewModeChange(
-          viewMode === "minimal" ? "detail" : "minimal",
-        )}
-      ariaLabel={viewMode === "minimal"
-        ? "Switch to detailed view"
-        : "Switch to minimal view"}
+      onClick={() => handleViewModeChange(nextMode)}
+      ariaLabel={ariaLabel}
     />
   );
 }

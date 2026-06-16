@@ -382,9 +382,6 @@ export function StampCard({
   };
 
   /* ===== COMPUTED VALUES ===== */
-  const displayStampHash = Number(stamp.stamp ?? 0) >= 0 ||
-    (stamp.cpid && stamp.cpid.charAt(0) === "A");
-
   const supplyDisplay = isRecentSale
     ? `${stamp.supply || 1}` // For recent sales, show transaction quantity
     : stamp.ident !== "SRC-20" && stamp.balance
@@ -402,10 +399,8 @@ export function StampCard({
     ? stamp.creator_name
     : abbreviateAddress(stamp.creator, abbreviationLength);
 
-  const stampValue = Number(stamp.stamp ?? 0) >= 0 ||
-      (stamp.cpid && stamp.cpid.charAt(0) === "A")
-    ? `${stamp.stamp}`
-    : `${stamp.cpid}`;
+  const stampValue = stamp.stamp != null ? `${stamp.stamp}` : `${stamp.cpid}`;
+  const displayStampHash = stamp.stamp != null;
 
   const isLongNumber = (value: string | number) => {
     const stringValue = String(value);
