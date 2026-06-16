@@ -31,6 +31,7 @@ const HEADERS = [
   "SUPPLY",
   "TYPE",
   "SIZE",
+  "TX HASH",
   "BLOCK",
   "DATE",
 ];
@@ -91,14 +92,14 @@ export function StampOverviewRow({ stamp }: StampOverviewRowProps) {
           href={href}
           f-partial={href}
           target="_top"
-          class="flex items-center justify-center w-9 h-9 rounded-xl"
+          class="flex items-center justify-center w-8 h-8 rounded-xl overflow-hidden"
         >
           {imgSrc
             ? (
               <img
                 src={imgSrc}
                 alt={`Stamp ${stamp.stamp ?? stamp.cpid ?? ""}`}
-                class="w-9 h-9 object-contain rounded-xl pixelart"
+                class="w-8 h-8 object-contain rounded-xl pixelart"
               />
             )
             : <PlaceholderImage variant="no-image" />}
@@ -106,7 +107,7 @@ export function StampOverviewRow({ stamp }: StampOverviewRowProps) {
       </td>
 
       {/* STAMP # */}
-      <td class={`${cellCenterL2Card} text-center`}>
+      <td class={`${cellAlign(1, HEADERS.length)} ${cellCenterL2Card}`}>
         <a
           href={href}
           f-partial={href}
@@ -125,37 +126,74 @@ export function StampOverviewRow({ stamp }: StampOverviewRowProps) {
       </td>
 
       {/* CPID */}
-      <td class={`${cellCenterL2Card} text-color-neutral-300 text-center`}>
+      <td
+        class={`${
+          cellAlign(2, HEADERS.length)
+        } ${cellCenterL2Card} text-color-neutral-400`}
+      >
         {stamp.cpid ?? "—"}
       </td>
 
       {/* CREATOR */}
-      <td class={`${cellCenterL2Card} text-color-neutral-200 text-center`}>
+      <td
+        class={`${
+          cellAlign(3, HEADERS.length)
+        } ${cellCenterL2Card} text-color-neutral-200`}
+      >
         {creatorDisplay}
       </td>
 
       {/* SUPPLY */}
-      <td class={`${cellCenterL2Card} text-color-neutral-200 text-center`}>
+      <td
+        class={`${
+          cellAlign(4, HEADERS.length)
+        } ${cellCenterL2Card} text-color-neutral-200`}
+      >
         {supplyDisplay}
       </td>
 
       {/* TYPE */}
-      <td class={`${cellCenterL2Card} text-color-neutral-200 text-center`}>
+      <td
+        class={`${
+          cellAlign(5, HEADERS.length)
+        } ${cellCenterL2Card} text-color-neutral-200`}
+      >
         {fileType}
       </td>
 
       {/* SIZE */}
-      <td class={`${cellCenterL2Card} text-color-neutral-200 text-center`}>
+      <td
+        class={`${
+          cellAlign(6, HEADERS.length)
+        } ${cellCenterL2Card} text-color-neutral-200`}
+      >
         {fileSize}
       </td>
 
+      {/* TX HASH */}
+      <td
+        class={`${
+          cellAlign(7, HEADERS.length)
+        } ${cellCenterL2Card} text-color-neutral-400`}
+      >
+        {abbreviateAddress(stamp.tx_hash, 6)}
+      </td>
+
       {/* BLOCK */}
-      <td class={`${cellCenterL2Card} text-color-neutral-300 text-center`}>
+      <td
+        class={`${
+          cellAlign(8, HEADERS.length)
+        } ${cellCenterL2Card} text-color-neutral-400`}
+      >
         {stamp.block_index.toLocaleString()}
       </td>
 
       {/* DATE */}
-      <td class={`${cellRightL2Card} text-color-neutral-300 text-right pr-3`}>
+      <td
+        class={`${
+          cellAlign(9, HEADERS.length)
+        } ${cellRightL2Card} text-color-neutral-400 pr-3`}
+      >
         {formatDate(new Date(stamp.block_time), {
           month: "numeric",
           day: "numeric",
@@ -186,6 +224,7 @@ export function StampOverviewTable({ stamps }: StampOverviewTableProps) {
             { width: "min-w-[90px] w-auto" }, // SUPPLY
             { width: "min-w-[70px] w-auto" }, // TYPE
             { width: "min-w-[80px] w-auto" }, // SIZE
+            { width: "min-w-[110px] w-auto" }, // TX HASH
             { width: "min-w-[90px] w-auto" }, // BLOCK
             { width: "min-w-[100px] w-auto" }, // DATE
           ]).map((col) => <col key={col.key} class={col.className} />)}

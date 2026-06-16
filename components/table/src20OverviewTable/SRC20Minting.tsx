@@ -1,7 +1,7 @@
 /* reinamora - update Trending calculations */
 import { Button } from "$button";
 import { cellAlign, colGroup } from "$components/layout/types.ts";
-import { Icon } from "$icon";
+import { Icon, PlaceholderImage } from "$icon";
 import {
   cellCenterL2Card,
   cellLeftL2Card,
@@ -16,7 +16,7 @@ import {
 } from "$lib/utils/navigation/freshNavigationUtils.ts";
 import { unicodeEscapeToEmoji } from "$lib/utils/ui/formatting/emojiUtils.ts";
 import { formatDate } from "$lib/utils/ui/formatting/formatUtils.ts";
-import { constructStampUrl } from "$lib/utils/ui/media/imageUtils.ts";
+import { getSRC20ImageSrc } from "$lib/utils/ui/media/imageUtils.ts";
 import { labelXxs, textXs, valueDarkSm } from "$text";
 import type { SRC20Row } from "$types/src20.d.ts";
 import type { SRC20MintingProps } from "$types/ui.d.ts";
@@ -221,11 +221,8 @@ export function SRC20Minting({
             ? (
               data.map((src20: SRC20Row) => {
                 const imageUrl = src20.deploy_img ||
-                  src20.stamp_url ||
-                  (src20.deploy_tx
-                    ? constructStampUrl(src20.deploy_tx)
-                    : null) ||
-                  "/img/placeholder/stamp-no-image.svg";
+                  getSRC20ImageSrc(src20) ||
+                  null;
 
                 const mintHref = `/tool/src20/mint?tick=${
                   encodeURIComponent(src20.tick ?? "")
@@ -276,16 +273,33 @@ export function SRC20Minting({
                       } ${cellLeftL2Card} ${cellStickyLeft}`}
                     >
                       <div class="flex items-center gap-4">
-                        <img
-                          src={imageUrl}
-                          class="w-6 h-6 rounded-full cursor-pointer"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            if (imageUrl) onImageClick?.(imageUrl);
-                          }}
-                          alt={unicodeEscapeToEmoji(src20.tick ?? "")}
-                        />
+                        {imageUrl
+                          ? (
+                            <img
+                              src={imageUrl}
+                              class="w-8 h-8 rounded-xl cursor-pointer"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                onImageClick?.(imageUrl);
+                              }}
+                              alt={unicodeEscapeToEmoji(src20.tick ?? "")}
+                            />
+                          )
+                          : (
+                            <div
+                              class="w-8 h-8 rounded-xl overflow-hidden"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                              }}
+                            >
+                              <PlaceholderImage
+                                variant="no-image"
+                                className="!rounded-xl"
+                              />
+                            </div>
+                          )}
                         <div class="flex flex-col">
                           <div class="font-extrabold text-sm uppercase tracking-wide">
                             {(() => {

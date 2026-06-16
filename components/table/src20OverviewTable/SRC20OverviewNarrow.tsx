@@ -1,4 +1,5 @@
 import { cellAlign, colGroup } from "$components/layout/types.ts";
+import { PlaceholderImage } from "$icon";
 import {
   cellCenterL2Card,
   cellLeftL2Card,
@@ -221,16 +222,33 @@ export function SRC20OverviewNarrow({
                       } ${cellLeftL2Card} ${cellStickyLeft}`}
                     >
                       <div class="flex items-center gap-4">
-                        <img
-                          src={imageUrl}
-                          class="w-7 h-7 rounded cursor-pointer"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            if (imageUrl) onImageClick?.(imageUrl);
-                          }}
-                          alt={unicodeEscapeToEmoji(src20.tick ?? "")}
-                        />
+                        {imageUrl
+                          ? (
+                            <img
+                              src={imageUrl}
+                              class="w-7 h-7 rounded-xl cursor-pointer"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                onImageClick?.(imageUrl);
+                              }}
+                              alt={unicodeEscapeToEmoji(src20.tick ?? "")}
+                            />
+                          )
+                          : (
+                            <div
+                              class="w-7 h-7 rounded-xl overflow-hidden"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                              }}
+                            >
+                              <PlaceholderImage
+                                variant="no-image"
+                                className="!rounded-xl"
+                              />
+                            </div>
+                          )}
                         <div class="flex flex-col">
                           <div class="font-bold text-base uppercase tracking-wide">
                             {(() => {

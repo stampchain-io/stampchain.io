@@ -1,9 +1,7 @@
 /* @reinamora - update Trending calculations */
 import { Button } from "$button";
 import { cellAlign, colGroup } from "$components/layout/types.ts";
-import type { SRC20Row } from "$types/src20.d.ts";
-import type { SRC20MintingNarrowProps } from "$types/ui.d.ts";
-import type { TargetedEvent } from "preact/compat";
+import { PlaceholderImage } from "$icon";
 import {
   cellCenterL2Card,
   cellLeftL2Card,
@@ -13,13 +11,16 @@ import {
   shadowGlowPurple,
 } from "$layout";
 import { unicodeEscapeToEmoji } from "$lib/utils/ui/formatting/emojiUtils.ts";
-import { constructStampUrl } from "$lib/utils/ui/media/imageUtils.ts";
+import { getSRC20ImageSrc } from "$lib/utils/ui/media/imageUtils.ts";
 import { labelXs, textSm, valueDarkSm } from "$text";
+import type { SRC20Row } from "$types/src20.d.ts";
+import type { SRC20MintingNarrowProps } from "$types/ui.d.ts";
 import {
   getCurrentUrl,
   isBrowser,
   safeNavigate,
 } from "$utils/navigation/freshNavigationUtils.ts";
+import type { TargetedEvent } from "preact/compat";
 
 export function SRC20MintingNarrow({
   data = [],
@@ -92,9 +93,7 @@ export function SRC20MintingNarrow({
                   class={`${labelXs} ${
                     cellAlign(i, headers?.length ?? 0)
                   } py-2 ${rowClass} ${
-                    i === 1
-                      ? "tablet:hidden min-[1280px]:table-cell"
-                      : ""
+                    i === 1 ? "tablet:hidden min-[1280px]:table-cell" : ""
                   } ${isFirst ? cellStickyLeft : ""}`}
                 >
                   {header}
@@ -108,11 +107,8 @@ export function SRC20MintingNarrow({
             ? (
               data.map((src20: SRC20Row) => {
                 const imageUrl = src20.deploy_img ||
-                  src20.stamp_url ||
-                  (src20.deploy_tx
-                    ? constructStampUrl(src20.deploy_tx)
-                    : null) ||
-                  "/img/placeholder/stamp-no-image.svg";
+                  getSRC20ImageSrc(src20) ||
+                  null;
 
                 const href = `/src20/${
                   encodeURIComponent(unicodeEscapeToEmoji(src20.tick ?? ""))
@@ -177,15 +173,33 @@ export function SRC20MintingNarrow({
                       } ${cellLeftL2Card} ${cellStickyLeft}`}
                     >
                       <div class="flex items-center gap-4">
-                        <img
-                          src={imageUrl}
-                          class="w-7 h-7 rounded cursor-pointer"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            if (imageUrl) onImageClick?.(imageUrl);
-                          }}
-                          alt={unicodeEscapeToEmoji(src20.tick ?? "")}
-                        />
+                        {imageUrl
+                          ? (
+                            <img
+                              src={imageUrl}
+                              class="w-7 h-7 rounded-xl cursor-pointer"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                onImageClick?.(imageUrl);
+                              }}
+                              alt={unicodeEscapeToEmoji(src20.tick ?? "")}
+                            />
+                          )
+                          : (
+                            <div
+                              class="w-7 h-7 rounded-xl overflow-hidden"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                              }}
+                            >
+                              <PlaceholderImage
+                                variant="no-image"
+                                className="!rounded-xl"
+                              />
+                            </div>
+                          )}
                         <div class="flex flex-col">
                           <div class="font-bold text-base uppercase tracking-wide">
                             {(() => {

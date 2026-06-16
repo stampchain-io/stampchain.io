@@ -16,7 +16,7 @@ import {
 } from "$lib/utils/navigation/freshNavigationUtils.ts";
 import { unicodeEscapeToEmoji } from "$lib/utils/ui/formatting/emojiUtils.ts";
 import { formatDate } from "$lib/utils/ui/formatting/formatUtils.ts";
-import { constructStampUrl } from "$lib/utils/ui/media/imageUtils.ts";
+import { getSRC20ImageSrc } from "$lib/utils/ui/media/imageUtils.ts";
 import {
   labelXxs,
   textXs,
@@ -282,8 +282,8 @@ export function SRC20Overview({
             ? (
               data.map((src20: SRC20Row) => {
                 const imageUrl = src20.deploy_img ||
-                  src20.stamp_url ||
-                  (src20.deploy_tx ? constructStampUrl(src20.deploy_tx) : null);
+                  getSRC20ImageSrc(src20) ||
+                  null;
 
                 return (
                   <tr
@@ -321,7 +321,7 @@ export function SRC20Overview({
                           ? (
                             <img
                               src={imageUrl}
-                              class="w-6 h-6 rounded-full cursor-pointer"
+                              class="w-8 h-8 rounded-xl cursor-pointer"
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
@@ -332,13 +332,16 @@ export function SRC20Overview({
                           )
                           : (
                             <div
-                              class="w-6 h-6 rounded-full cursor-pointer overflow-hidden"
+                              class="w-8 h-8 rounded-xl cursor-pointer overflow-hidden"
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
                               }}
                             >
-                              <PlaceholderImage variant="no-image" />
+                              <PlaceholderImage
+                                variant="no-image"
+                                className="!rounded-xl"
+                              />
                             </div>
                           )}
                         <div class="flex flex-col">

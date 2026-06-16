@@ -13,7 +13,10 @@ import {
   safeNavigate,
 } from "$lib/utils/navigation/freshNavigationUtils.ts";
 import { unicodeEscapeToEmoji } from "$lib/utils/ui/formatting/emojiUtils.ts";
-import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
+import {
+  abbreviateAddress,
+  formatDate,
+} from "$lib/utils/ui/formatting/formatUtils.ts";
 import { getSRC20ImageSrc } from "$lib/utils/ui/media/imageUtils.ts";
 import { labelXxs, textXs } from "$text";
 import type { SRC20Row } from "$types/src20.d.ts";
@@ -27,6 +30,9 @@ const HEADERS = [
   "OP",
   "AMOUNT",
   "DEST / LIMIT",
+  "TX HASH",
+  "BLOCK",
+  "DATE",
 ];
 
 /* ===== HELPERS ===== */
@@ -96,32 +102,28 @@ export function SRC20OverviewRow({ src20 }: SRC20OverviewRowProps) {
     >
       {/* IMAGE */}
       <td
-        class={`${cellAlign(0, HEADERS.length)} ${cellLeftL2Card} !p-1.5`}
+        class={`${cellAlign(0, HEADERS.length)} ${cellLeftL2Card}`}
       >
         <a
           href={href}
           f-partial={href}
           target="_top"
-          class="flex items-center justify-center w-9 h-9 rounded-full overflow-hidden"
+          class="flex items-center justify-center w-8 h-8 rounded-xl overflow-hidden"
         >
           {imageUrl
             ? (
               <img
                 src={imageUrl}
                 alt={tick}
-                class="w-9 h-9 object-cover rounded-full"
+                class="w-8 h-8 object-contain rounded-xl"
               />
             )
-            : (
-              <div class="w-9 h-9 rounded-full overflow-hidden">
-                <PlaceholderImage variant="no-image" />
-              </div>
-            )}
+            : <PlaceholderImage variant="no-image" className="!rounded-xl" />}
         </a>
       </td>
 
       {/* STAMP # */}
-      <td class={`${cellCenterL2Card} text-center`}>
+      <td class={`${cellAlign(1, HEADERS.length)} ${cellCenterL2Card}`}>
         {src20.stamp != null
           ? (
             <a
@@ -138,12 +140,12 @@ export function SRC20OverviewRow({ src20 }: SRC20OverviewRowProps) {
       </td>
 
       {/* TICK */}
-      <td class={`${cellCenterL2Card} text-center`}>
+      <td class={`${cellAlign(2, HEADERS.length)} ${cellCenterL2Card}`}>
         <a
           href={href}
           f-partial={href}
           target="_top"
-          class="text-color-neutral-300"
+          class="text-color-neutral-400"
         >
           {tickText && tickText.toUpperCase()}
           {tickEmoji && <span class="emoji-ticker">{tickEmoji}</span>}
@@ -151,29 +153,70 @@ export function SRC20OverviewRow({ src20 }: SRC20OverviewRowProps) {
       </td>
 
       {/* ADDRESS */}
-      <td class={`${cellCenterL2Card} text-color-neutral-200 text-center`}>
+      <td
+        class={`${
+          cellAlign(3, HEADERS.length)
+        } ${cellCenterL2Card} text-color-neutral-200`}
+      >
         {src20.creator_name ?? abbreviateAddress(src20.creator, 5)}
       </td>
 
       {/* OP */}
-      <td class={`${cellCenterL2Card} text-center`}>
-        <div class="text-color-neutral-200">
-          {op}
-        </div>
+      <td
+        class={`${
+          cellAlign(4, HEADERS.length)
+        } ${cellCenterL2Card} text-color-neutral-200`}
+      >
+        {op}
       </td>
 
       {/* AMOUNT */}
-      <td class={`${cellCenterL2Card} text-color-neutral-200 text-center`}>
+      <td
+        class={`${
+          cellAlign(5, HEADERS.length)
+        } ${cellCenterL2Card} text-color-neutral-200`}
+      >
         {amount}
       </td>
 
       {/* DEST / LIMIT */}
       <td
         class={`${
-          cellAlign(HEADERS.length - 1, HEADERS.length)
-        } ${cellRightL2Card} text-color-neutral-200 text-right pr-3`}
+          cellAlign(6, HEADERS.length)
+        } ${cellCenterL2Card} text-color-neutral-200`}
       >
         {destOrLimit}
+      </td>
+
+      {/* TX HASH */}
+      <td
+        class={`${
+          cellAlign(7, HEADERS.length)
+        } ${cellCenterL2Card} text-color-neutral-400`}
+      >
+        {abbreviateAddress(src20.tx_hash, 6)}
+      </td>
+
+      {/* BLOCK */}
+      <td
+        class={`${
+          cellAlign(8, HEADERS.length)
+        } ${cellCenterL2Card} text-color-neutral-400`}
+      >
+        {src20.block_index.toLocaleString()}
+      </td>
+
+      {/* DATE */}
+      <td
+        class={`${
+          cellAlign(9, HEADERS.length)
+        } ${cellRightL2Card} text-color-neutral-400 pr-3`}
+      >
+        {formatDate(new Date(src20.block_time), {
+          month: "numeric",
+          day: "numeric",
+          year: "numeric",
+        }).toUpperCase()}
       </td>
     </tr>
   );
@@ -192,13 +235,16 @@ export function SRC20OverviewTable({ src20s }: SRC20OverviewTableProps) {
       >
         <colgroup>
           {colGroup([
-            { width: "w-14" }, // IMAGE
+            { width: "w-12" }, // IMAGE
             { width: "min-w-[90px] w-auto" }, // STAMP #
             { width: "min-w-[110px] w-auto" }, // TICK
             { width: "min-w-[110px] w-auto" }, // ADDRESS
             { width: "min-w-[90px] w-auto" }, // OP
             { width: "min-w-[100px] w-auto" }, // AMOUNT
-            { width: "min-w-[120px] w-auto" }, // DEST/LIMIT
+            { width: "min-w-[110px] w-auto" }, // DEST/LIMIT
+            { width: "min-w-[110px] w-auto" }, // TX HASH
+            { width: "min-w-[90px] w-auto" }, // BLOCK
+            { width: "min-w-[100px] w-auto" }, // DATE
           ]).map((col) => <col key={col.key} class={col.className} />)}
         </colgroup>
         <thead>
@@ -216,7 +262,7 @@ export function SRC20OverviewTable({ src20s }: SRC20OverviewTableProps) {
                   key={header}
                   class={`${labelXxs} ${
                     cellAlign(i, HEADERS.length)
-                  } py-1.5 !px-5 ${rowClass} text-color-neutral-500`}
+                  } py-1.5 !px-3 ${rowClass} text-color-neutral-500`}
                 >
                   {header}
                 </th>
