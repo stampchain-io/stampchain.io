@@ -57,9 +57,9 @@ export function FilterButton(
         type="iconButton"
         name="filter"
         weight="bold"
-        size="md"
-        color={count > 0 ? "purpleLight" : "grey"}
-        className="p-1.5 bg-transparent rounded-full hover:bg-gradient-to-b hover:from-color-neutral-800 hover:via-color-neutral-800 hover:to-color-neutral-900"
+        size="custom"
+        color={count > 0 ? "purpleLight" : "greyLight"}
+        className="w-[26px] h-[26px] tablet:w-[22px] tablet:h-[22px] p-1 bg-transparent group-hover:stroke-color-hover"
         onClick={() => {
           setOpen(!open);
           setIsTooltipVisible(false);

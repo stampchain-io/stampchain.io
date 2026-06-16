@@ -1,10 +1,10 @@
-import { FilterContentStamp } from "$islands/filter/FilterContentStamp.tsx";
+import { FilterContentStamps } from "$islands/filter/FilterContentStamps.tsx";
 import {
   defaultFilters as stampDefaultFilters,
   filtersToQueryParams as stampFiltersToQueryParams,
   queryParamsToFilters as stampQueryParamsToFilters,
   StampFilters,
-} from "$islands/filter/FilterOptionsStamp.tsx";
+} from "$islands/filter/FilterOptionsStamps.tsx";
 import { useEffect, useRef, useState } from "preact/hooks";
 // Import SRC20 filter options
 import {
@@ -13,6 +13,14 @@ import {
   queryParamsToFilters as src20QueryParamsToFilters,
   SRC20Filters,
 } from "$islands/filter/FilterOptionsSRC20.tsx";
+// Import Explorer filter options and content
+import { FilterContentExplorer } from "$islands/filter/FilterContentExplorer.tsx";
+import {
+  defaultFilters as explorerDefaultFilters,
+  ExplorerFilters,
+  filtersToQueryParams as explorerFiltersToQueryParams,
+  queryParamsToFilters as explorerQueryParamsToFilters,
+} from "$islands/filter/FilterOptionsExplorer.tsx";
 // Import SRC20 filter content
 import { Button } from "$button";
 import { CloseIcon, Icon } from "$icon";
@@ -38,7 +46,7 @@ const Tooltip = ({ visible, text }: { visible: boolean; text: string }) => (
 );
 
 // Define a type for all possible filter types
-type AllFilters = StampFilters | SRC20Filters;
+type AllFilters = StampFilters | SRC20Filters | ExplorerFilters;
 
 const FilterDrawer = (
   { open, setOpen, type = "stamp" }: {
@@ -64,7 +72,7 @@ const FilterDrawer = (
         break;
       }
       case "explorer": {
-        filters = src20QueryParamsToFilters(searchString); // Temporary fallback
+        filters = explorerQueryParamsToFilters(searchString);
         break;
       }
       default: {
@@ -81,8 +89,7 @@ const FilterDrawer = (
       case "src20":
         return { ...src20DefaultFilters };
       case "explorer":
-        // For future implementation
-        return { ...src20DefaultFilters }; // Temporary fallback
+        return { ...explorerDefaultFilters };
       default:
         return { ...stampDefaultFilters };
     }
@@ -298,9 +305,20 @@ const FilterDrawer = (
         baseParams,
         currentFilters as SRC20Filters,
       );
+    } else if (type === "explorer") {
+      const viewParam = existingParams.get("view");
+      const sortParam = existingParams.get("sortBy");
+      const base = [
+        viewParam && `view=${viewParam}`,
+        sortParam && `sortBy=${sortParam}`,
+      ].filter(Boolean).join("&");
+      queryParams = explorerFiltersToQueryParams(
+        base,
+        currentFilters as ExplorerFilters,
+      );
     } else {
-      // Handle explorer case or throw error - @baba - add explorer filter
-      throw new Error(`Unsupported filter type: ${type}`);
+      setOpen(false);
+      return;
     }
 
     // Construct the new URL with the query params
@@ -404,7 +422,7 @@ const FilterDrawer = (
           {/* Filter content based on type */}
           <div class="flex flex-col pt-6 pb-[120px] px-9 tablet:pt-5 tablet:pb-[100px] tablet:px-6">
             {type === "stamp" && (
-              <FilterContentStamp
+              <FilterContentStamps
                 initialFilters={currentFilters as StampFilters}
                 onFiltersChange={(filters) => {
                   setCurrentFilters(filters);
@@ -419,7 +437,14 @@ const FilterDrawer = (
                 }}
               />
             )}
-            {/* Add more filter content components for other types as needed */}
+            {type === "explorer" && (
+              <FilterContentExplorer
+                initialFilters={currentFilters as ExplorerFilters}
+                onFiltersChange={(filters) => {
+                  setCurrentFilters(filters);
+                }}
+              />
+            )}
           </div>
         </div>
 
@@ -430,7 +455,7 @@ const FilterDrawer = (
           <Button
             variant="outline"
             color="grey"
-            size="mdR"
+            size="smR"
             onClick={() => {
               isClearingRef.current = true;
               // Always clear to empty default filters (full reset)
@@ -446,8 +471,8 @@ const FilterDrawer = (
           </Button>
           <Button
             variant="flat"
-            color="grey"
-            size="mdR"
+            color="purple"
+            size="smR"
             onClick={handleApplyFilters}
             class="w-full"
           >

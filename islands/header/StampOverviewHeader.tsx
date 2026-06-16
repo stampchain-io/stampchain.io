@@ -10,7 +10,7 @@ import {
   defaultFilters,
   filtersToQueryParams,
   StampFilters as FilterStampFilters,
-} from "$islands/filter/FilterOptionsStamp.tsx";
+} from "$islands/filter/FilterOptionsStamps.tsx";
 import { container2 } from "$layout";
 import {
   getCurrentPathname,

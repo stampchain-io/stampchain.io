@@ -10,7 +10,7 @@ import {
   queryParamsToFilters,
   queryParamsToServicePayload,
   StampFilters,
-} from "$islands/filter/FilterOptionsStamp.tsx";
+} from "$islands/filter/FilterOptionsStamps.tsx";
 import type { StampPageProps } from "$types/api.d.ts";
 import type { StampRow, StampSaleRow } from "$types/stamp.d.ts";
 
@@ -398,7 +398,9 @@ export function StampOverviewPage(props: StampPageProps) {
     search: _search,
     cardView: cardViewRaw,
   } = props.data;
-  const cardView: "detail" | "minimal" = cardViewRaw ?? "detail";
+  const cardView: "detail" | "minimal" = cardViewRaw === "minimal"
+    ? "minimal"
+    : "detail";
   const stampsArray = Array.isArray(stamps) ? stamps : [];
   const isRecentSales = selectedTab === "recent_sales";
 

@@ -410,7 +410,7 @@ export function ViewModeSelector() {
 - **Vertical alignment**: Keep pill inset (`top-*` / `bottom-*` on the absolute pill) in sync with label vertical margin (`my-*`) plus container padding so hover backgrounds line up with the pill.
 - **Structure**: Put cursor and `state.disabled` on the option **wrapper** `div` only; keep **label** classes for colour/background only to avoid duplication.
 - **Cursor**: Native `<input type="radio">` uses `cursor: default`. Use `cursor-[inherit]` on the invisible input and on the label so `!cursor-pointer` / `!cursor-default` from the wrapper apply when the label stacks above the input.
-- **Stamp overview**: [StampOverviewHeader.tsx](mdc:islands/header/StampOverviewHeader.tsx) uses five options (`all`, `classic`, `posh`, `src-721`, `cursed`) with `FrontendStampType` from [stampConstants.ts](mdc:lib/constants/stampConstants.ts); URL `type` and `FilterOptionsStamp` defaults stay aligned with that type union.
+- **Stamp overview**: [StampOverviewHeader.tsx](mdc:islands/header/StampOverviewHeader.tsx) uses five options (`all`, `classic`, `posh`, `src-721`, `cursed`) with `FrontendStampType` from [stampConstants.ts](mdc:lib/constants/stampConstants.ts); URL `type` and `FilterOptionsStamps` defaults stay aligned with that type union.
 
 ## Style System Integration
 

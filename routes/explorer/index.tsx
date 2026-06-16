@@ -72,16 +72,33 @@ export const handler: Handlers = {
       : "detail";
 
     if (DEV_DUMMY_MODE) {
+      const selectedTab = (url.searchParams.get("type") || "all") as StampType;
+      const all = DUMMY_STAMP_OVERVIEW_PAGE.data;
+      const stampsByType: Record<string, typeof all> = {
+        all,
+        classic: all.filter((s) =>
+          s.ident === "STAMP" && s.cpid.startsWith("A") && s.stamp >= 0
+        ),
+        posh: all.filter((s) => s.ident === "STAMP" && !s.cpid.startsWith("A")),
+        cursed: all.filter((s) => s.stamp < 0),
+        "src-721": all.filter((s) => s.ident === "SRC-721"),
+      };
+      const stamps = section === "tokens"
+        ? []
+        : (stampsByType[selectedTab] ?? all);
       return ctx.render({
-        stamps: DUMMY_STAMP_OVERVIEW_PAGE.data,
-        pagination: DUMMY_STAMP_OVERVIEW_PAGE.pagination,
-        src20DataCard: DUMMY_EXPLORER_OVERVIEW_PAGE,
+        stamps,
+        pagination: {
+          ...DUMMY_STAMP_OVERVIEW_PAGE.pagination,
+          total: stamps.length,
+        },
+        src20DataCard: section === "stamps" ? null : DUMMY_EXPLORER_OVERVIEW_PAGE,
         page: 1,
         limit: 60,
         totalPages: 1,
         filterBy: [],
         sortBy: "DESC",
-        selectedTab: "all",
+        selectedTab,
         section,
         cardView,
         partial: false,

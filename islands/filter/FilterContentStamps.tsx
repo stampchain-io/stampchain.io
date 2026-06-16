@@ -8,7 +8,7 @@ import type {
 } from "$constants";
 import { inputCheckbox } from "$form";
 import { Checkbox } from "$islands/filter/FilterComponents.tsx";
-import { StampFilters } from "$islands/filter/FilterOptionsStamp.tsx";
+import { StampFilters } from "$islands/filter/FilterOptionsStamps.tsx";
 import { CollapsibleSection } from "$islands/layout/CollapsibleSection.tsx";
 import {
   eyebrowPositionFilter,
@@ -537,7 +537,7 @@ function hasActiveFilters(section: string, filters: StampFilters): boolean {
   }
 }
 
-export const FilterContentStamp = ({
+export const FilterContentStamps = ({
   initialFilters,
   onFiltersChange,
 }: {
@@ -1407,10 +1407,10 @@ export const FilterContentStamp = ({
           variant="collapsibleTitle"
         >
           {/* Preset ranges */}
-          {[100, 1000, 5000, 10000].map((value) => (
+          {[100, 1000, 5000, 10000, 500000, 1000000].map((value) => (
             <Radio
               key={value}
-              label={`< ${value}`}
+              label={`< ${value.toLocaleString("en")}`}
               value={value.toString()}
               name="range"
               checked={filters.range === value.toString()}
@@ -1447,4 +1447,4 @@ export const FilterContentStamp = ({
   );
 };
 
-export default FilterContentStamp;
+export default FilterContentStamps;

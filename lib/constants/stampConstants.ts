@@ -222,6 +222,8 @@ export const STAMP_RANGES = {
   RANGE_1000: "1000", // stamp < 1000
   RANGE_5000: "5000", // stamp < 5000
   RANGE_10000: "10000", // stamp < 10000
+  RANGE_500000: "500000", // stamp < 500,000
+  RANGE_1000000: "1000000", // stamp < 1,000,000
   CUSTOM: "custom", // User-defined range
 } as const;
 
