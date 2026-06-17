@@ -558,6 +558,17 @@ export interface IssuanceOptions {
   show_unconfirmed?: boolean;
   lock?: boolean;
   description?: string;
+  // Pin the exact UTXO set used for composition. Format: comma-separated
+  // `<txid>:<vout>:<value>:<scriptPubKeyHex>`. CP sorts this set by raw value
+  // descending and derives the ARC4 OP_RETURN key from the first (largest) entry.
+  inputs_set?: string;
+  // REQUIRED alongside inputs_set: without it CP consumes only the first input
+  // it needs (growing from 1), so the ARC4 key may be keyed off a single UTXO
+  // that does not match the multi-input transaction we build and broadcast.
+  use_all_inputs_set?: boolean;
+  // Avoid CP-side UTXO locking interfering with re-composition/retries; we sign
+  // and broadcast the transaction ourselves.
+  disable_utxo_locks?: boolean;
 }
 
 export class CounterpartyApiManager {

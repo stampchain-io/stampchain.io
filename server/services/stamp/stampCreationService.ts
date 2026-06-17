@@ -4,7 +4,7 @@ import { base64ToHex } from "$lib/utils/data/binary/baseUtils.ts";
 import { FileToAddressUtils } from "$lib/utils/bitcoin/encoding/fileToAddressUtils.ts";
 import { estimateMintingTransactionSize } from "$lib/utils/bitcoin/minting/transactionSizes.ts";
 import { estimateMARATransactionSize } from "$lib/utils/bitcoin/minting/maraTransactionSizeEstimator.ts";
-import { extractOutputs } from "$lib/utils/bitcoin/minting/transactionUtils.ts";
+import { arc4, extractOutputs } from "$lib/utils/bitcoin/minting/transactionUtils.ts";
 import { getScriptTypeInfo, validateWalletAddressForMinting } from "$lib/utils/bitcoin/scripts/scriptTypeUtils.ts";
 import { CounterpartyApiManager } from "$server/services/counterpartyApiService.ts";
 import { formatPsbtForLogging } from "$server/services/transaction/bitcoinTransactionBuilder.ts";
@@ -111,6 +111,41 @@ export class StampCreationService {
       // Convert qty from string to number if needed
       const qtyNumber = typeof qty === 'string' ? parseInt(qty, 10) : qty;
 
+      const hex_file = base64ToHex(file);
+      const cip33Addresses = FileToAddressUtils.fileToAddresses(hex_file) as string[];
+      const fileSize = Math.ceil((file.length * 3) / 4);
+      logger.debug("stamp-create", { message: "File and CIP33 details", fileSize, cip33AddressCount: cip33Addresses.length, hex_length: hex_file.length });
+
+      // Select the funding UTXOs BEFORE composing so the exact set (and its
+      // raw-value-descending order) can be pinned to Counterparty via inputs_set.
+      // CP derives the ARC4 OP_RETURN key from the largest-by-value entry, so
+      // pinning the same set + order here keeps vin[0] aligned with that key.
+      // (Dry runs skip this — they never touch the real CP composer.)
+      let orderedInputs: UTXO[] | undefined;
+      let inputsSet: string | undefined;
+      if (!isDryRun) {
+        const selected = await this.selectIssuanceInputs(
+          sourceWallet,
+          cip33Addresses,
+          dustValue,
+          service_fee,
+          service_fee_address,
+          normalizedSatsPerVB,
+        );
+        // Match CP's sort key exactly: raw value descending, with a deterministic
+        // (txid, vout) tiebreak so equal-value ties resolve identically on both
+        // sides (CP's value sort is stable over the order we send it).
+        orderedInputs = [...selected].sort(
+          (a, b) =>
+            (b.value - a.value) ||
+            a.txid.localeCompare(b.txid) ||
+            (a.vout - b.vout),
+        );
+        inputsSet = orderedInputs
+          .map((u) => `${u.txid}:${u.vout}:${u.value}:${u.script}`)
+          .join(",");
+      }
+
       const result = await this.createIssuanceTransaction({
         sourceWallet,
         assetName: assetName || "", // Provide default empty string for undefined assetName
@@ -123,6 +158,9 @@ export class StampCreationService {
         file, // Pass file data for accurate size calculation
         service_fee,
         outputValue: dustValue, // Pass the dust value for accurate fee estimation
+        ...(inputsSet
+          ? { inputs_set: inputsSet, use_all_inputs_set: true }
+          : {}),
       });
 
       if (!result.tx_hex) {
@@ -130,11 +168,6 @@ export class StampCreationService {
       }
 
       const hex = result.tx_hex;
-      const hex_file = base64ToHex(file);
-      const cip33Addresses = FileToAddressUtils.fileToAddresses(hex_file);
-
-      const fileSize = Math.ceil((file.length * 3) / 4);
-      logger.debug("stamp-create", { message: "File and CIP33 details", fileSize, cip33AddressCount: cip33Addresses.length, hex_length: hex_file.length });
 
       const psbtDetails = await this.generatePSBT(
         hex,
@@ -142,10 +175,11 @@ export class StampCreationService {
         normalizedSatsPerVB,
         service_fee,
         service_fee_address,
-        cip33Addresses as string[],
+        cip33Addresses,
         fileSize,
         isDryRun || false,
-        dustValue
+        dustValue,
+        orderedInputs,
       );
 
       if (isDryRun) {
@@ -178,6 +212,54 @@ export class StampCreationService {
     }
   }
 
+  /**
+   * Select the funding UTXOs for an issuance with full details (script, value)
+   * so the exact set can be pinned to Counterparty via inputs_set. Runs BEFORE
+   * composition; fee sizing uses a max-length OP_RETURN placeholder because the
+   * real Counterparty issuance OP_RETURN is a deterministic length.
+   */
+  private static async selectIssuanceInputs(
+    address: string,
+    cip33Addresses: string[],
+    dustValue: number,
+    service_fee: number,
+    recipient_fee: string,
+    satsPerVB: number,
+  ): Promise<UTXO[]> {
+    // Representative OP_RETURN output for fee sizing: OP_RETURN + OP_PUSHDATA1 +
+    // 80 data bytes (upper bound for a Counterparty issuance message).
+    const placeholderOpReturn = "6a4c50" + "00".repeat(80);
+    const outputsForSelection = [
+      { value: 0, script: placeholderOpReturn },
+      ...cip33Addresses.map((addr) => ({ value: dustValue, script: "", address: addr })),
+      ...(service_fee > 0 && recipient_fee
+        ? [{ value: service_fee, script: "", address: recipient_fee }]
+        : []),
+    ];
+
+    const { inputs } = await this.utxoService.selectUTXOsForTransaction(
+      address,
+      outputsForSelection,
+      satsPerVB,
+      0, // sigops_rate
+      1.5, // rbfBuffer
+      {
+        filterStampUTXOs: true, // Filter out stamp-bearing UTXOs
+        includeAncestors: true, // Fetch full details (script) for selected UTXOs
+      },
+    );
+
+    for (const input of inputs) {
+      if (!input.script) {
+        throw new Error(
+          `Pre-selected UTXO ${input.txid}:${input.vout} is missing its ` +
+            `scriptPubKey; cannot pin it to Counterparty inputs_set.`,
+        );
+      }
+    }
+    return inputs;
+  }
+
   private static async generatePSBT(
     tx: string,
     address: string,
@@ -187,7 +269,12 @@ export class StampCreationService {
     cip33Addresses: string[],
     fileSize: number,
     isDryRun: boolean,
-    dustValue: number = TX_CONSTANTS.DUST_SIZE
+    dustValue: number = TX_CONSTANTS.DUST_SIZE,
+    // Inputs pre-selected by createStampIssuance and pinned to CP via inputs_set,
+    // already ordered raw-value descending (CP's ARC4-key sort order). When
+    // provided, these are used verbatim instead of running an independent
+    // selection here, so vin[0] stays equal to the UTXO CP keyed the OP_RETURN to.
+    preSelectedInputs?: UTXO[]
   ) {
     let totalOutputValue = 0;
     let psbt;
@@ -437,20 +524,35 @@ export class StampCreationService {
         satsPerVB: satsPerVB
       });
 
-      // Use BitcoinUtxoManager for optimal UTXO selection with full details
-      const selectionResult = await this.utxoService.selectUTXOsForTransaction(
-        address,
-        outputsForSelection,
-        satsPerVB,
-        0, // sigops_rate
-        1.5, // rbfBuffer
-        {
-          filterStampUTXOs: true, // Filter out stamp-bearing UTXOs
-          includeAncestors: true,  // Get full details for selected UTXOs only
-        }
-      );
-
-      const { inputs, change: initialChange } = selectionResult;
+      // Use the inputs pre-selected (and pinned to CP via inputs_set) when
+      // available. Re-selecting here would derive an independent set/order and
+      // desynchronize vin[0] from the UTXO CP used to derive the ARC4 OP_RETURN
+      // key — the exact failure mode that makes stamp issuances unindexable.
+      let inputs: UTXO[];
+      let initialChange = 0;
+      if (preSelectedInputs && preSelectedInputs.length > 0) {
+        inputs = preSelectedInputs;
+        logger.debug("stamp-create", {
+          message: "Using pre-selected inputs pinned to CP inputs_set",
+          inputCount: inputs.length,
+          vin0: inputs[0] ? `${inputs[0].txid}:${inputs[0].vout}` : undefined,
+        });
+      } else {
+        // Use BitcoinUtxoManager for optimal UTXO selection with full details
+        const selectionResult = await this.utxoService.selectUTXOsForTransaction(
+          address,
+          outputsForSelection,
+          satsPerVB,
+          0, // sigops_rate
+          1.5, // rbfBuffer
+          {
+            filterStampUTXOs: true, // Filter out stamp-bearing UTXOs
+            includeAncestors: true,  // Get full details for selected UTXOs only
+          }
+        );
+        inputs = selectionResult.inputs;
+        initialChange = selectionResult.change;
+      }
       const totalInputValue = inputs.reduce((sum: number, input: UTXO) => sum + (input.value ?? 0), 0);
 
       logger.debug("stamp-create", {
@@ -653,6 +755,55 @@ export class StampCreationService {
         address: v.address
       })), psbtDetails: formatPsbtForLogging(psbt) });
 
+      // ---------------------------------------------------------------------
+      // Fail-closed ARC4 key guard.
+      // The Counterparty indexer derives the ARC4 key ONLY from
+      // vin[0].previous_output.txid (display byte order) and drops the whole
+      // transaction as "invalid OP_RETURN script" if the decrypted payload does
+      // not start with the CNTRPRTY prefix. inputs[0] is vin[0] because inputs
+      // are added to the PSBT in array order above. Verify here, before the PSBT
+      // ever leaves this service, that the OP_RETURN CP encrypted is recoverable
+      // from vin[0]. If not, abort rather than emit an unindexable issuance.
+      // ---------------------------------------------------------------------
+      if (!isDryRun && inputs.length > 0) {
+        const opReturnVout = vouts.find(
+          (v) => v.script instanceof Uint8Array && v.script[0] === 0x6a,
+        );
+        if (!opReturnVout || !(opReturnVout.script instanceof Uint8Array)) {
+          throw new Error(
+            "ARC4 key guard: no OP_RETURN output found in the composed transaction",
+          );
+        }
+        const decompiled = bitcoin.script.decompile(
+          Buffer.from(opReturnVout.script),
+        );
+        const encryptedPayload = decompiled && decompiled.length > 0
+          ? decompiled[decompiled.length - 1]
+          : null;
+        if (!encryptedPayload || !Buffer.isBuffer(encryptedPayload)) {
+          throw new Error(
+            "ARC4 key guard: OP_RETURN output has no data payload to verify",
+          );
+        }
+        // Indexer key = vin[0].prev_txid in display (big-endian) byte order.
+        // input.txid is already the display-order hex string.
+        const arc4Key = new Uint8Array(hex2bin(inputs[0].txid));
+        const decrypted = arc4(arc4Key, new Uint8Array(encryptedPayload));
+        const prefix = Buffer.from(decrypted.subarray(0, 8)).toString("utf8");
+        if (prefix !== "CNTRPRTY") {
+          throw new Error(
+            `ARC4 key mismatch: OP_RETURN is not decryptable from vin[0] ` +
+              `(${inputs[0].txid}:${inputs[0].vout}). Aborting to avoid ` +
+              `broadcasting an unindexable stamp issuance — the UTXO Counterparty ` +
+              `keyed the OP_RETURN against is not at input index 0.`,
+          );
+        }
+        logger.info("stamp-create", {
+          message: "ARC4 key guard passed: OP_RETURN decodes from vin[0]",
+          vin0: `${inputs[0].txid}:${inputs[0].vout}`,
+        });
+      }
+
       return {
         psbt,
         satsPerVB,
@@ -682,6 +833,8 @@ export class StampCreationService {
     file,
     service_fee,
     outputValue,
+    inputs_set,
+    use_all_inputs_set,
   }: {
     sourceWallet: string;
     assetName: string;
@@ -694,6 +847,11 @@ export class StampCreationService {
     file: string;
     service_fee: number;
     outputValue?: number;
+    // Pin the exact UTXO set CP composes against (see IssuanceOptions.inputs_set).
+    // CP keys the ARC4 OP_RETURN off the largest-by-raw-value entry, so the
+    // caller MUST place that same UTXO at vin[0] of the final transaction.
+    inputs_set?: string;
+    use_all_inputs_set?: boolean;
   }) {
     try {
       // Add wallet validation
@@ -783,7 +941,21 @@ export class StampCreationService {
           allow_unconfirmed_inputs: true,
           return_psbt: false, // Request hex instead of PSBT
           verbose: true,
-          encoding: 'opreturn'
+          encoding: 'opreturn',
+          // Pin the exact UTXO set so CP derives the ARC4 OP_RETURN key from a
+          // UTXO we control. use_all_inputs_set forces CP to consume every entry
+          // (default is "grow from 1"), guaranteeing the largest-by-value UTXO —
+          // which CP sorts to vin[0] and keys ARC4 against — is the one we pin to
+          // index 0 of the broadcast transaction. Without this the OP_RETURN is
+          // keyed off an input that may not be vin[0], and the stamp is dropped
+          // by the Counterparty indexer as an invalid OP_RETURN script.
+          ...(inputs_set
+            ? {
+              inputs_set,
+              use_all_inputs_set: use_all_inputs_set ?? true,
+              disable_utxo_locks: true,
+            }
+            : {}),
         }
       );
 
