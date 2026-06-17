@@ -125,42 +125,10 @@ export class StampCreationService {
       const fileSize = Math.ceil((file.length * 3) / 4);
       logger.debug("stamp-create", { message: "File and CIP33 details", fileSize, cip33AddressCount: cip33Addresses.length, hex_length: hex_file.length });
 
-      // Select the funding UTXOs BEFORE composing so the exact set (and its
-      // raw-value-descending order) can be pinned to Counterparty via inputs_set.
-      // CP derives the ARC4 OP_RETURN key from the largest-by-value entry, so
-      // pinning the same set + order here keeps vin[0] aligned with that key.
-      // (Dry runs skip this — they never touch the real CP composer.)
-      let orderedInputs: UTXO[] | undefined;
-      let inputsSet: string | undefined;
-      if (!isDryRun) {
-        const selected = await this.selectIssuanceInputs(
-          sourceWallet,
-          cip33Addresses,
-          dustValue,
-          service_fee,
-          service_fee_address,
-          normalizedSatsPerVB,
-        );
-        // Match CP's sort key exactly: raw value descending, with a deterministic
-        // (txid, vout) tiebreak so equal-value ties resolve identically on both
-        // sides (CP's value sort is stable over the order we send it).
-        // Order raw-value descending with a (txid, vout) tiebreak — Counterparty's
-        // exact sort key (composer.py:798) — then send inputs_set in this order.
-        orderedInputs = orderInputsForCounterparty(selected);
-        // CP hard-rejects inputs_set with more than MAX_INPUTS_SET entries
-        // (composer.py:639). Fail loud with an actionable message instead of a
-        // generic ComposeError; >100 funding inputs for one issuance requires a
-        // UTXO consolidation pass first.
-        if (orderedInputs.length > StampCreationService.MAX_INPUTS_SET) {
-          throw new Error(
-            `Issuance needs ${orderedInputs.length} funding inputs, exceeding ` +
-              `Counterparty's inputs_set limit of ${StampCreationService.MAX_INPUTS_SET}. ` +
-              `Consolidate UTXOs for ${sourceWallet} before minting.`,
-          );
-        }
-        inputsSet = formatInputsSet(orderedInputs);
-      }
-
+      // createIssuanceTransaction selects the funding UTXOs, pins them to
+      // Counterparty via inputs_set, and returns that same raw-value-ordered set
+      // (orderedInputs) so generatePSBT can place vin[0] — the UTXO CP keyed the
+      // ARC4 OP_RETURN against — at input index 0 of the broadcast transaction.
       const result = await this.createIssuanceTransaction({
         sourceWallet,
         assetName: assetName || "", // Provide default empty string for undefined assetName
@@ -172,10 +140,9 @@ export class StampCreationService {
         isDryRun: isDryRun || false,
         file, // Pass file data for accurate size calculation
         service_fee,
+        service_fee_address,
         outputValue: dustValue, // Pass the dust value for accurate fee estimation
-        ...(inputsSet
-          ? { inputs_set: inputsSet, use_all_inputs_set: true }
-          : {}),
+        cip33Addresses,
       });
 
       if (!result.tx_hex) {
@@ -194,7 +161,7 @@ export class StampCreationService {
         fileSize,
         isDryRun || false,
         dustValue,
-        orderedInputs,
+        result.orderedInputs,
       );
 
       if (isDryRun) {
@@ -834,9 +801,9 @@ export class StampCreationService {
     isDryRun,
     file,
     service_fee,
+    service_fee_address = "",
     outputValue,
-    inputs_set,
-    use_all_inputs_set,
+    cip33Addresses,
   }: {
     sourceWallet: string;
     assetName: string;
@@ -848,12 +815,12 @@ export class StampCreationService {
     isDryRun?: boolean;
     file: string;
     service_fee: number;
+    service_fee_address?: string;
     outputValue?: number;
-    // Pin the exact UTXO set CP composes against (see IssuanceOptions.inputs_set).
-    // CP keys the ARC4 OP_RETURN off the largest-by-raw-value entry, so the
-    // caller MUST place that same UTXO at vin[0] of the final transaction.
-    inputs_set?: string;
-    use_all_inputs_set?: boolean;
+    // CIP33 P2WSH data-output addresses (used to size coin selection); optional
+    // so existing callers/tests that don't compute them still type-check — when
+    // omitted they're derived from `file`.
+    cip33Addresses?: string[];
   }) {
     try {
       // Add wallet validation
@@ -930,6 +897,36 @@ export class StampCreationService {
         };
       }
 
+      // Select the funding UTXOs and pin them to Counterparty so CP derives the
+      // ARC4 OP_RETURN key from a UTXO we control. Selection + composition live
+      // together: we select precisely in order to compose against that set.
+      const issuanceDustValue = outputValue ?? TX_CONSTANTS.DUST_SIZE;
+      const issuanceCip33Addresses = cip33Addresses ??
+        (FileToAddressUtils.fileToAddresses(base64ToHex(file)) as string[]);
+      const selected = await this.selectIssuanceInputs(
+        sourceWallet,
+        issuanceCip33Addresses,
+        issuanceDustValue,
+        service_fee,
+        service_fee_address,
+        satsPerKB / 1000, // sats/kB -> sats/vB
+      );
+      // Order raw-value descending with a (txid, vout) tiebreak — Counterparty's
+      // exact sort key (composer.py:798) — and send inputs_set in this order so
+      // CP's vin[0] (the ARC4 key) equals the UTXO we pin to PSBT index 0.
+      const orderedInputs = orderInputsForCounterparty(selected);
+      // CP hard-rejects inputs_set with more than MAX_INPUTS_SET entries
+      // (composer.py:639). Fail loud with an actionable message instead of a
+      // generic ComposeError; >100 funding inputs needs a consolidation pass.
+      if (orderedInputs.length > StampCreationService.MAX_INPUTS_SET) {
+        throw new Error(
+          `Issuance needs ${orderedInputs.length} funding inputs, exceeding ` +
+            `Counterparty's inputs_set limit of ${StampCreationService.MAX_INPUTS_SET}. ` +
+            `Consolidate UTXOs for ${sourceWallet} before minting.`,
+        );
+      }
+      const inputsSet = formatInputsSet(orderedInputs);
+
       // Use the new V2 API call
       const response = await CounterpartyApiManager.createIssuance(
         sourceWallet,
@@ -944,20 +941,15 @@ export class StampCreationService {
           return_psbt: false, // Request hex instead of PSBT
           verbose: true,
           encoding: 'opreturn',
-          // Pin the exact UTXO set so CP derives the ARC4 OP_RETURN key from a
-          // UTXO we control. use_all_inputs_set forces CP to consume every entry
+          // use_all_inputs_set forces CP to consume every inputs_set entry
           // (default is "grow from 1"), guaranteeing the largest-by-value UTXO —
           // which CP sorts to vin[0] and keys ARC4 against — is the one we pin to
-          // index 0 of the broadcast transaction. Without this the OP_RETURN is
-          // keyed off an input that may not be vin[0], and the stamp is dropped
-          // by the Counterparty indexer as an invalid OP_RETURN script.
-          ...(inputs_set
-            ? {
-              inputs_set,
-              use_all_inputs_set: use_all_inputs_set ?? true,
-              disable_utxo_locks: true,
-            }
-            : {}),
+          // index 0 of the broadcast transaction. disable_utxo_locks keeps a
+          // re-compose deterministic. Without this the OP_RETURN may be keyed off
+          // an input that isn't vin[0] and the stamp is dropped by the indexer.
+          inputs_set: inputsSet,
+          use_all_inputs_set: true,
+          disable_utxo_locks: true,
         }
       );
 
@@ -976,9 +968,11 @@ export class StampCreationService {
         throw new Error('Transaction creation failed: No transaction data returned from API');
       }
 
-      // Return with tx_hex for compatibility with existing code
+      // Return tx_hex plus the raw-value-ordered inputs so the caller can pin
+      // vin[0] to the UTXO CP keyed the OP_RETURN against.
       return {
-        tx_hex: response.result.rawtransaction
+        tx_hex: response.result.rawtransaction,
+        orderedInputs,
       };
     } catch (error) {
       logger.error("stamp-create", { message: "Detailed createIssuanceTransaction error", error: error instanceof Error ? error.message : String(error) });
