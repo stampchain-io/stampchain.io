@@ -4,7 +4,12 @@ import { base64ToHex } from "$lib/utils/data/binary/baseUtils.ts";
 import { FileToAddressUtils } from "$lib/utils/bitcoin/encoding/fileToAddressUtils.ts";
 import { estimateMintingTransactionSize } from "$lib/utils/bitcoin/minting/transactionSizes.ts";
 import { estimateMARATransactionSize } from "$lib/utils/bitcoin/minting/maraTransactionSizeEstimator.ts";
-import { arc4, extractOutputs } from "$lib/utils/bitcoin/minting/transactionUtils.ts";
+import { extractOutputs } from "$lib/utils/bitcoin/minting/transactionUtils.ts";
+import {
+  formatInputsSet,
+  opReturnDecodesFromInput,
+  orderInputsForCounterparty,
+} from "$lib/utils/bitcoin/minting/counterpartyInputs.ts";
 import { getScriptTypeInfo, validateWalletAddressForMinting } from "$lib/utils/bitcoin/scripts/scriptTypeUtils.ts";
 import { CounterpartyApiManager } from "$server/services/counterpartyApiService.ts";
 import { formatPsbtForLogging } from "$server/services/transaction/bitcoinTransactionBuilder.ts";
@@ -139,12 +144,9 @@ export class StampCreationService {
         // Match CP's sort key exactly: raw value descending, with a deterministic
         // (txid, vout) tiebreak so equal-value ties resolve identically on both
         // sides (CP's value sort is stable over the order we send it).
-        orderedInputs = [...selected].sort(
-          (a, b) =>
-            (b.value - a.value) ||
-            a.txid.localeCompare(b.txid) ||
-            (a.vout - b.vout),
-        );
+        // Order raw-value descending with a (txid, vout) tiebreak — Counterparty's
+        // exact sort key (composer.py:798) — then send inputs_set in this order.
+        orderedInputs = orderInputsForCounterparty(selected);
         // CP hard-rejects inputs_set with more than MAX_INPUTS_SET entries
         // (composer.py:639). Fail loud with an actionable message instead of a
         // generic ComposeError; >100 funding inputs for one issuance requires a
@@ -156,11 +158,7 @@ export class StampCreationService {
               `Consolidate UTXOs for ${sourceWallet} before minting.`,
           );
         }
-        // Field 3 MUST be an integer satoshi count — CP does int(value) and
-        // rejects a decimal string ("invalid value"); field 4 is scriptPubKey hex.
-        inputsSet = orderedInputs
-          .map((u) => `${u.txid}:${u.vout}:${Math.round(u.value)}:${u.script}`)
-          .join(",");
+        inputsSet = formatInputsSet(orderedInputs);
       }
 
       const result = await this.createIssuanceTransaction({
@@ -791,23 +789,10 @@ export class StampCreationService {
             "ARC4 key guard: no OP_RETURN output found in the composed transaction",
           );
         }
-        const decompiled = bitcoin.script.decompile(
-          Buffer.from(opReturnVout.script),
-        );
-        const encryptedPayload = decompiled && decompiled.length > 0
-          ? decompiled[decompiled.length - 1]
-          : null;
-        if (!encryptedPayload || !Buffer.isBuffer(encryptedPayload)) {
-          throw new Error(
-            "ARC4 key guard: OP_RETURN output has no data payload to verify",
-          );
-        }
-        // Indexer key = vin[0].prev_txid in display (big-endian) byte order.
-        // input.txid is already the display-order hex string.
-        const arc4Key = new Uint8Array(hex2bin(inputs[0].txid));
-        const decrypted = arc4(arc4Key, new Uint8Array(encryptedPayload));
-        const prefix = Buffer.from(decrypted.subarray(0, 8)).toString("utf8");
-        if (prefix !== "CNTRPRTY") {
+        const opReturnScriptHex = Buffer.from(opReturnVout.script).toString("hex");
+        // inputs[0] is vin[0] (inputs are added to the PSBT in array order);
+        // input.txid is already display-order hex, matching the indexer's key.
+        if (!opReturnDecodesFromInput(opReturnScriptHex, inputs[0].txid)) {
           throw new Error(
             `ARC4 key mismatch: OP_RETURN is not decryptable from vin[0] ` +
               `(${inputs[0].txid}:${inputs[0].vout}). Aborting to avoid ` +
