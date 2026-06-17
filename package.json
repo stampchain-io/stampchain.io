@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "validate:schema": "npx @redocly/cli@latest lint --config .redocly.yaml --format stylish ./schema.yml",
+    "validate:schema": "npx @redocly/cli@2.30.6 lint --config .redocly.yaml --format stylish ./schema.yml",
     "validate:ci": "npm run validate:schema",
     "test:api": "NEWMAN_COLLECTION=tests/postman/collections/comprehensive.json docker-compose -f docker-compose.test.yml run --rm newman",
     "test:api:smoke": "NEWMAN_COLLECTION=tests/postman/collections/smoke.json docker-compose -f docker-compose.test.yml run --rm newman",

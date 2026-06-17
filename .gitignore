@@ -214,3 +214,6 @@ ssr-safety-report.json
 # tasks.json
 # tasks/
 tests/coverage/
+
+# Local coverage diagnostics (deno test --coverage)
+coverage_diag/
