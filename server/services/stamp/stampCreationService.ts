@@ -23,6 +23,10 @@ import type { UTXO } from "$types/base.d.ts";
 export class StampCreationService {
   private static commonUtxoService = new CommonUTXOService();
   private static utxoService = new BitcoinUtxoManager(); // Add BitcoinUtxoManager instance
+  // Counterparty composer hard limit on inputs_set entries (composer.py:36).
+  // Exceeding it makes CP reject compose with a ComposeError; we guard earlier
+  // with an actionable consolidation message.
+  private static readonly MAX_INPUTS_SET = 100;
 
   /**
    * 🚀 REMOVED: getFullUTXOsWithDetails method - replaced with optimal BitcoinUtxoManager pattern
@@ -141,8 +145,21 @@ export class StampCreationService {
             a.txid.localeCompare(b.txid) ||
             (a.vout - b.vout),
         );
+        // CP hard-rejects inputs_set with more than MAX_INPUTS_SET entries
+        // (composer.py:639). Fail loud with an actionable message instead of a
+        // generic ComposeError; >100 funding inputs for one issuance requires a
+        // UTXO consolidation pass first.
+        if (orderedInputs.length > StampCreationService.MAX_INPUTS_SET) {
+          throw new Error(
+            `Issuance needs ${orderedInputs.length} funding inputs, exceeding ` +
+              `Counterparty's inputs_set limit of ${StampCreationService.MAX_INPUTS_SET}. ` +
+              `Consolidate UTXOs for ${sourceWallet} before minting.`,
+          );
+        }
+        // Field 3 MUST be an integer satoshi count — CP does int(value) and
+        // rejects a decimal string ("invalid value"); field 4 is scriptPubKey hex.
         inputsSet = orderedInputs
-          .map((u) => `${u.txid}:${u.vout}:${u.value}:${u.script}`)
+          .map((u) => `${u.txid}:${u.vout}:${Math.round(u.value)}:${u.script}`)
           .join(",");
       }
 
