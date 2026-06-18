@@ -12,6 +12,7 @@ import { hex2bin } from "$lib/utils/data/binary/baseUtils.ts";
 import { logger } from "$lib/utils/logger.ts";
 import { estimateMintingTransactionSize } from "$lib/utils/bitcoin/minting/transactionSizes.ts";
 import { extractOutputs } from "$lib/utils/bitcoin/minting/transactionUtils.ts";
+import { opReturnDecodesFromInput } from "$lib/utils/bitcoin/minting/counterpartyInputs.ts";
 import { getScriptTypeInfo } from "$lib/utils/bitcoin/scripts/scriptTypeUtils.ts";
 import { CounterpartyApiManager } from "$server/services/counterpartyApiService.ts";
 import { CommonUTXOService } from "$server/services/utxo/commonUtxoService.ts";
@@ -222,7 +223,45 @@ export class GeneralBitcoinTransactionBuilder {
         }
       );
 
-      const { inputs } = selectionResult;
+      // Pin Counterparty's vin[0] (the ARC4 OP_RETURN key input) at PSBT index 0.
+      // CP encrypts the OP_RETURN against the txid of ITS first input, and the
+      // indexer derives the ARC4 key ONLY from vin[0]. extractOutputs() above
+      // discarded CP's inputs and we re-selected our own, so we must re-attach
+      // CP's vin[0] at index 0 or the issuance is silently dropped by the indexer
+      // (same failure mode as the pre-fix stamp issuance bug). Funding UTXOs are
+      // appended after it.
+      let inputs: UTXO[] = [...selectionResult.inputs];
+      const cpVin0 = (txObj.ins && txObj.ins.length > 0)
+        ? {
+          txid: Buffer.from(txObj.ins[0].hash).reverse().toString("hex"),
+          vout: txObj.ins[0].index,
+        }
+        : undefined;
+      if (cpVin0) {
+        const idx = inputs.findIndex(
+          (i) => i.txid === cpVin0.txid && i.vout === cpVin0.vout,
+        );
+        if (idx > 0) {
+          // Selected but not first — move it to index 0.
+          const [pin] = inputs.splice(idx, 1);
+          inputs = [pin, ...inputs];
+        } else if (idx === -1) {
+          // Not in our selection — fetch its details and prepend (adds funding).
+          const pinUtxo = await this.commonUtxoService.getSpecificUTXO(
+            cpVin0.txid,
+            cpVin0.vout,
+            { includeAncestorDetails: true },
+          );
+          if (!pinUtxo || !pinUtxo.script || pinUtxo.value === undefined) {
+            throw new Error(
+              `Failed to fetch Counterparty vin[0] UTXO ${cpVin0.txid}:${cpVin0.vout} ` +
+                `required for ARC4 key alignment of ${operationType}.`,
+            );
+          }
+          inputs = [pinUtxo, ...inputs];
+        }
+        // idx === 0: already first — nothing to do.
+      }
       const totalInputValue = inputs.reduce((sum: number, input: UTXO) => sum + safeUTXOValue(input), 0);
 
       // Recalculate with actual inputs
@@ -329,6 +368,26 @@ export class GeneralBitcoinTransactionBuilder {
         feeRate: actualFeeRate,
         size: actualEstimatedSize
       });
+
+      // Fail-closed ARC4 guard: if the Counterparty transaction carries an
+      // (ARC4-encrypted) OP_RETURN, it MUST decode from vin[0]. inputs[0] is
+      // vin[0] (added to the PSBT in array order above, with CP's vin[0] pinned
+      // first). Abort rather than emit an unindexable ${operationType}.
+      if (inputs.length > 0) {
+        const opReturnVout = vouts.find(
+          (v) => v.script instanceof Uint8Array && v.script[0] === 0x6a,
+        );
+        if (opReturnVout && opReturnVout.script instanceof Uint8Array) {
+          const opReturnHex = Buffer.from(opReturnVout.script).toString("hex");
+          if (!opReturnDecodesFromInput(opReturnHex, inputs[0].txid)) {
+            throw new Error(
+              `ARC4 key mismatch for ${operationType}: OP_RETURN does not decode ` +
+                `from vin[0] (${inputs[0].txid}). Aborting to avoid broadcasting an ` +
+                `unindexable Counterparty transaction.`,
+            );
+          }
+        }
+      }
 
       return {
         psbt,
