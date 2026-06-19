@@ -55,14 +55,16 @@ import { logger } from "$lib/utils/logger.ts";
 import { estimateMintingTransactionSize } from "$lib/utils/bitcoin/minting/transactionSizes.ts";
 import { arc4 } from "$lib/utils/bitcoin/minting/transactionUtils.ts";
 import { serverConfig } from "$server/config/config.ts";
-// Removed TransactionService import - using direct OptimalUTXOSelection instead
+// Canonical UTXO selector (same path stamp issuance + the general builder use):
+// selects on basic UTXOs then batch-fetches scripts ONLY for the selected
+// inputs (and hard-errors if a script is missing). Replaces the old
+// getFullUTXOsWithDetails (which fetched every UTXO's script up front then
+// discarded them) + raw OptimalUTXOSelection.selectUTXOs path.
 import type { BufferLike } from "$lib/types/utils.d.ts";
+import { BitcoinUtxoManager } from "$server/services/transaction/bitcoinUtxoManager.ts";
 import { CommonUTXOService } from "$server/services/utxo/commonUtxoService.ts";
-import { OptimalUTXOSelection } from "$server/services/utxo/optimalUtxoSelection.ts";
-import { CounterpartyApiManager } from "$server/services/counterpartyApiService.ts";
+import { assertMultisigPayloadDecodesFromInput } from "$lib/utils/bitcoin/minting/src20MultisigGuard.ts";
 import type {IPrepareSRC101TX} from "$server/types/services/src101.d.ts";
-import type { UTXO } from "$types/base.d.ts";
-import { convertUTXOsToBasic } from "$lib/utils/bitcoin/utxo/utxoTypeUtils.ts";
 import type { PSBTInput, VOUT } from "$types/src20.d.ts";
 import { crypto } from "@std/crypto";
 
@@ -72,95 +74,8 @@ export class SRC101MultisigPSBTService {
   private static readonly CHANGE_DUST = 1000;
   private static readonly THIRD_PUBKEY = "020202020202020202020202020202020202020202020202020202020202020202";
   private static commonUtxoService = new CommonUTXOService();
-
-  /**
-   * Simplified UTXO selection that gets full details upfront - same pattern as stamp minting
-   */
-  private static async getFullUTXOsWithDetails(
-    address: string,
-    filterStampUTXOs: boolean = true,
-    excludeUtxos: Array<{ txid: string; vout: number }> = []
-  ): Promise<UTXO[]> {
-    logger.debug("src101", {
-      message: "Fetching full UTXOs with details upfront for multisig",
-      address,
-      filterStampUTXOs,
-      excludeUtxos: excludeUtxos.length
-    });
-
-    // Get basic UTXOs first
-    let basicUtxos = await this.commonUtxoService.getSpendableUTXOs(address, undefined, {
-      includeAncestorDetails: true,
-      confirmedOnly: false
-    });
-
-    // Apply exclusions
-    if (excludeUtxos.length > 0) {
-      const excludeSet = new Set(excludeUtxos.map(u => `${u.txid}:${u.vout}`));
-      basicUtxos = basicUtxos.filter(utxo => !excludeSet.has(`${utxo.txid}:${utxo.vout}`));
-    }
-
-    // Filter stamp UTXOs if requested
-    if (filterStampUTXOs) {
-      try {
-        const stampBalances = await CounterpartyApiManager.getXcpBalancesByAddress(address, undefined, true);
-        const utxosToExcludeFromStamps = new Set<string>();
-        for (const balance of stampBalances.balances) {
-          if (balance.utxo) {
-            utxosToExcludeFromStamps.add(balance.utxo);
-          }
-        }
-        basicUtxos = basicUtxos.filter(
-          (utxo) => !utxosToExcludeFromStamps.has(`${utxo.txid}:${utxo.vout}`),
-        );
-      } catch (error) {
-        logger.error("src101", {
-          message: "Error filtering stamp UTXOs for multisig",
-          address,
-          error: (error as any).message
-        });
-      }
-    }
-
-    // Now get full details for all UTXOs upfront
-    const fullUTXOs: UTXO[] = [];
-    for (const basicUtxo of basicUtxos) {
-      try {
-        const fullUtxo = await this.commonUtxoService.getSpecificUTXO(
-          basicUtxo.txid,
-          basicUtxo.vout,
-          { includeAncestorDetails: true, confirmedOnly: false }
-        );
-
-        if (fullUtxo && fullUtxo.script) {
-          fullUTXOs.push(fullUtxo);
-        } else {
-          logger.warn("src101", {
-            message: "Skipping UTXO with missing script for multisig",
-            txid: basicUtxo.txid,
-            vout: basicUtxo.vout,
-            hasFullUtxo: !!fullUtxo,
-            hasScript: !!fullUtxo?.script
-          });
-        }
-      } catch (error) {
-        logger.warn("src101", {
-          message: "Failed to fetch full UTXO details for multisig",
-          txid: basicUtxo.txid,
-          vout: basicUtxo.vout,
-          error: (error as any).message
-        });
-      }
-    }
-
-    logger.debug("src101", {
-      message: "Full UTXOs fetched successfully for multisig",
-      total: fullUTXOs.length,
-      withScripts: fullUTXOs.filter(u => u.script).length
-    });
-
-    return fullUTXOs;
-  }
+  // Canonical UTXO selector shared with stamp issuance and the general builder.
+  private static utxoService = new BitcoinUtxoManager();
 
   static async preparePSBT({
     network,
@@ -192,36 +107,29 @@ export class SRC101MultisigPSBTService {
         { address: recAddress || changeAddress, value: recVault || this.RECIPIENT_DUST },
       ];
 
-      // Convert vouts to Output format for UTXO selection
+      // Convert vouts to the format expected by the selector
       const outputsForSelection = vouts.map(vout => ({
         value: vout.value,
         script: "",
         ...(vout.address && { address: vout.address })
       }));
 
-      // Get full UTXOs with details first - same pattern as stamp minting
-      const fullUTXOs = await this.getFullUTXOsWithDetails(sourceAddress, true, []);
-
-      if (fullUTXOs.length === 0) {
-        throw new Error("No UTXOs available for SRC-101 multisig transaction");
-      }
-
-      // Convert UTXOs to BasicUTXO format for selection
-      const basicUTXOsForSelection = convertUTXOsToBasic(fullUTXOs);
-
-      // Use optimal UTXO selection directly - same pattern as stamp minting
-      const selectionResult = OptimalUTXOSelection.selectUTXOs(
-        basicUTXOsForSelection,
+      // Select funding UTXOs via the canonical BitcoinUtxoManager — the same
+      // path stamp issuance + the general builder use. It selects on basic
+      // UTXOs then batch-fetches scripts ONLY for the selected inputs (and
+      // hard-errors if a script is missing), returning inputs that already HAVE
+      // their scripts. CRITICAL: the selector preserves input order, so
+      // inputs[0] stays the ARC4 key input and is added to the PSBT first.
+      const selectionResult = await this.utxoService.selectUTXOsForTransaction(
+        sourceAddress,
         outputsForSelection,
         feeRate,
-        {
-          avoidChange: true,
-          consolidationMode: false,
-          dustThreshold: 1000
-        }
+        0, // sigops_rate
+        1.5, // rbfBuffer
+        { filterStampUTXOs: true, includeAncestors: true },
       );
 
-      const { inputs, change: _change, fee } = selectionResult;
+      const { inputs, fee } = selectionResult;
 
       if (inputs.length === 0) {
         throw new Error("Unable to select suitable UTXOs for the transaction");
@@ -249,7 +157,7 @@ export class SRC101MultisigPSBTService {
         payloadBytes = new Uint8Array([...payloadBytes, ...new Uint8Array(padLength)]);
       }
 
-      // Encrypt data using first input's txid
+      // Encrypt data using first input's txid (inputs[0] == vin[0] == ARC4 key)
       const txidBytes = hex2bin(inputs[0].txid);
       const encryptedDataBytes = arc4(txidBytes, payloadBytes);
 
@@ -258,6 +166,10 @@ export class SRC101MultisigPSBTService {
       for (let i = 0; i < encryptedDataBytes.length; i += 62) {
         chunks.push(encryptedDataBytes.slice(i, i + 62));
       }
+
+      // Collect the multisig data-output scripts (in output order) so we can run
+      // the fail-closed ARC4 guard after the PSBT inputs are added.
+      const multisigScriptHexes: string[] = [];
 
       // Add multisig outputs
       for (const chunk of chunks) {
@@ -282,6 +194,7 @@ export class SRC101MultisigPSBTService {
         } while (!this.isValidPubkey(pubkey2));
 
         const script = `5121${pubkey1}21${pubkey2}21${this.THIRD_PUBKEY}53ae`;
+        multisigScriptHexes.push(script);
         vouts.push({
           script: new Uint8Array(hex2bin(script)) as BufferLike,
           value: this.MULTISIG_DUST,
@@ -295,7 +208,9 @@ export class SRC101MultisigPSBTService {
         vouts.push({ address: feeAddress, value: feeAmount });
       }
 
-      // Add inputs to PSBT
+      // Add inputs to PSBT — in the SAME order the selector returned them, so
+      // vin[0] == inputs[0] == the ARC4 key input. No BIP-69 / reordering sort
+      // exists between the arc4 call above and this loop.
       for (const input of inputs) {
         if (!input.script) {
           logger.error("src101-psbt-service", { message: "Input UTXO is missing script for SRC101 Multisig.", input });
@@ -326,6 +241,18 @@ export class SRC101MultisigPSBTService {
 
         psbt.addInput(psbtInput as any);
       }
+
+      // Fail-closed ARC4 guard: the SRC-101 payload is ARC4-encrypted with
+      // inputs[0].txid and carried in the bare-multisig data outputs. inputs[0]
+      // is vin[0] (added to the PSBT in array order above). Reassemble the
+      // payload from those outputs, decrypt with vin[0], and assert the
+      // length-prefixed "stamp:" plaintext. Abort rather than emit a tx the
+      // btc_stamps indexer (which keys ARC4 off vin[0]) would silently drop.
+      assertMultisigPayloadDecodesFromInput(
+        multisigScriptHexes,
+        inputs[0].txid,
+        "SRC-101",
+      );
 
       // Calculate total input and output values
       const totalInputValue = inputs.reduce((sum: any, input: any) =>
