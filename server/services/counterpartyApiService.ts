@@ -1553,7 +1553,10 @@ export class CounterpartyApiManager {
   static async composeFairmint(
     address: string,
     asset: string,
-    quantity: number,
+    // Optional: free fairminters REJECT quantity ("quantity is not allowed for
+    // free fairminters"); paid fairminters REQUIRE it. Callers pass undefined
+    // for free fairminters.
+    quantity: number | undefined,
     options: {
       encoding?: string;
       fee_per_kb?: number;
@@ -1584,7 +1587,9 @@ export class CounterpartyApiManager {
     const queryParams = new URLSearchParams();
 
     queryParams.append("asset", asset);
-    queryParams.append("quantity", quantity.toString());
+    if (quantity !== undefined && quantity !== null) {
+      queryParams.append("quantity", quantity.toString());
+    }
 
     // Set default options
     options.allow_unconfirmed_inputs = options.allow_unconfirmed_inputs ?? true;
@@ -1621,6 +1626,34 @@ export class CounterpartyApiManager {
     }
 
     throw new Error("All nodes failed to compose fairmint transaction.");
+  }
+
+  /**
+   * Look up the open fairminter for a single asset. The `price` field determines
+   * whether `compose/fairmint` must include `quantity` (free => omit, paid =>
+   * require). Returns null if none is open or all nodes are unreachable.
+   */
+  static async getAssetFairminter(
+    asset: string,
+  ): Promise<{ price: number; status: string } | null> {
+    const endpoint = `/assets/${encodeURIComponent(asset)}/fairminters`;
+    const queryParams = new URLSearchParams({ verbose: "true", status: "open" });
+    for (const node of XCP_V2_NODES) {
+      try {
+        const response = await httpClient.get(
+          `${node.url}${endpoint}?${queryParams.toString()}`,
+        );
+        if (response.ok) {
+          const fm = response.data?.result?.[0];
+          return fm
+            ? { price: Number(fm.price ?? 0), status: String(fm.status ?? "") }
+            : null;
+        }
+      } catch (_error) {
+        // try the next node
+      }
+    }
+    return null;
   }
 
   static async getFairminters(): Promise<Fairminter[]> {

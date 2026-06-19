@@ -23,9 +23,12 @@ export const handler: Handlers = {
         dryRun,
       } = body;
 
-      if (!address || !asset || !quantity) {
+      // `quantity` is required for PAID fairminters but must be OMITTED for free
+      // ones (CP rejects it with "quantity is not allowed for free fairminters").
+      // It is validated conditionally below, after we know the fairminter's price.
+      if (!address || !asset) {
         return ResponseUtil.badRequest(
-          "Missing required fields: address, asset, quantity",
+          "Missing required fields: address, asset",
         );
       }
 
@@ -45,11 +48,29 @@ export const handler: Handlers = {
         delete xcpApiOptions.service_fee; // Not for XCP API call
         delete xcpApiOptions.service_fee_address; // Not for XCP API call
 
+        // Free fairminters reject `quantity`; paid ones require it. Decide based
+        // on the fairminter's price.
+        const fairminter = await CounterpartyApiManager.getAssetFairminter(
+          asset,
+        );
+        const isFreeFairminter = fairminter !== null && fairminter.price === 0;
+        if (
+          !isFreeFairminter &&
+          (quantity === undefined || quantity === null || quantity === "")
+        ) {
+          return ResponseUtil.badRequest(
+            "quantity is required for paid fairminters",
+          );
+        }
+        const effectiveQuantity = isFreeFairminter
+          ? undefined
+          : Number(quantity);
+
         // ✅ NEW CLEAN PATTERN: Get raw hex instead of PSBT
         const response = await CounterpartyApiManager.composeFairmint(
           address,
           asset,
-          quantity,
+          effectiveQuantity,
           {
             ...xcpApiOptions,
             return_psbt: false, // ✅ CHANGED: Get raw hex, not PSBT
