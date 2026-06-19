@@ -5,7 +5,6 @@ import { Buffer } from "node:buffer";
 import { arc4 } from "$lib/utils/bitcoin/minting/transactionUtils.ts";
 import { hex2bin } from "$lib/utils/data/binary/baseUtils.ts";
 import { GeneralBitcoinTransactionBuilder } from "$server/services/transaction/generalBitcoinTransactionBuilder.ts";
-import { OptimalUTXOSelection } from "$server/services/utxo/optimalUtxoSelection.ts";
 
 // Synthetic txids (repeat() so no 64-char hex literal trips the secret-leak guard).
 const TXID_A = "a1".repeat(32); // Counterparty's vin[0] = the ARC4 key input
@@ -46,16 +45,11 @@ function vin0Txid(psbt: bitcoin.Psbt): string {
 
 Deno.test("generatePSBT - pins Counterparty vin[0] at PSBT index 0 even when the selector orders it elsewhere", async () => {
   const cpRawHex = buildCpRawHex(TXID_A, true);
-  // Selector returns CP's vin[0] (utxo A) NOT first — the builder must move it to index 0.
+  // Canonical selector returns CP's vin[0] (utxo A) NOT first — builder pins it to index 0.
   const selStub = stub(
-    OptimalUTXOSelection,
-    "selectUTXOs",
-    () => ({ inputs: [utxo(TXID_B), utxo(TXID_A)], change: 0, fee: 1000 }) as any,
-  );
-  const poolStub = stub(
-    GeneralBitcoinTransactionBuilder as any,
-    "getFullUTXOsWithDetails",
-    () => Promise.resolve([utxo(TXID_A), utxo(TXID_B)]),
+    (GeneralBitcoinTransactionBuilder as any).utxoService,
+    "selectUTXOsForTransaction",
+    () => Promise.resolve({ inputs: [utxo(TXID_B), utxo(TXID_A)], change: 0, fee: 1000 }),
   );
   try {
     const res = await GeneralBitcoinTransactionBuilder.generatePSBT(cpRawHex, {
@@ -70,7 +64,6 @@ Deno.test("generatePSBT - pins Counterparty vin[0] at PSBT index 0 even when the
     assert(res.psbt.txInputs.length === 2);
   } finally {
     selStub.restore();
-    poolStub.restore();
   }
 });
 
@@ -80,14 +73,9 @@ Deno.test("generatePSBT - fail-closed ARC4 guard aborts when vin[0] is NOT the O
   // TXID_A — the indexer would silently drop it, so the guard MUST throw.
   const cpRawHex = buildCpRawHex(TXID_A, false);
   const selStub = stub(
-    OptimalUTXOSelection,
-    "selectUTXOs",
-    () => ({ inputs: [utxo(TXID_B)], change: 0, fee: 1000 }) as any,
-  );
-  const poolStub = stub(
-    GeneralBitcoinTransactionBuilder as any,
-    "getFullUTXOsWithDetails",
-    () => Promise.resolve([utxo(TXID_B)]),
+    (GeneralBitcoinTransactionBuilder as any).utxoService,
+    "selectUTXOsForTransaction",
+    () => Promise.resolve({ inputs: [utxo(TXID_B)], change: 0, fee: 1000 }),
   );
   try {
     await assertRejects(
@@ -103,6 +91,5 @@ Deno.test("generatePSBT - fail-closed ARC4 guard aborts when vin[0] is NOT the O
     );
   } finally {
     selStub.restore();
-    poolStub.restore();
   }
 });
