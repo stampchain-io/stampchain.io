@@ -22,7 +22,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       # Setup Node.js (no cache due to gitignored package-lock.json)
       - name: Setup Node.js
