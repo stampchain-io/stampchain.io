@@ -35,6 +35,7 @@ interface ToolsButtonProps {
 
 /* ===== TOOLS CONFIGURATION ===== */
 const toolLinks: ToolLink[] = [
+  { title: "SWAP", href: "/swap" },
   { title: "CREATE", href: "/tool/stamp/create" },
   { title: "SEND", href: "/tool/stamp/send" },
   { title: "DEPLOY", href: "/tool/src20/deploy" },
@@ -96,9 +97,30 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
   const tools = () => {
     return (
       <div class="flex flex-col space-y-0 w-full">
-        {/* STAMPS Section */}
+        {/* DEX Section */}
         <div class="flex flex-col space-y-4">
           <h6 class={`${labelXs} -mb-7 text-right`}>
+            DEX
+          </h6>
+          {toolLinks.filter((link) => link.href === "/swap").map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              onClick={() => {
+                setCurrentPath(link.href);
+              }}
+              class={`inline-block w-full ${
+                isActive(link.href) ? navLinkGreyActive : navLinkGrey
+              }`}
+            >
+              {link.title}
+            </a>
+          ))}
+        </div>
+
+        {/* STAMPS Section */}
+        <div class="flex flex-col space-y-4">
+          <h6 class={`${labelXs} mt-3 -mb-7 text-right`}>
             STAMPS
           </h6>
           {toolLinks.filter((link) =>
@@ -293,6 +315,27 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
         {/* Column 2: Left aligned - Stamp tools */}
         <div class="flex flex-col -ml-3 space-y-1 text-left">
           <h6 class={labelXxs}>
+            DEX
+          </h6>
+          {toolLinks.filter((link) => link.href === "/swap").map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              onClick={() => {
+                setCurrentPath(link.href);
+              }}
+              class={isActive(link.href)
+                ? navSublinkPurpleActive
+                : navSublinkPurple}
+            >
+              {link.title}
+            </a>
+          ))}
+        </div>
+
+        {/* Column 3: Left aligned - Stamp tools */}
+        <div class="flex flex-col -ml-3 space-y-1 text-left">
+          <h6 class={labelXxs}>
             STAMPS
           </h6>
           {toolLinks.filter((link) =>
@@ -314,7 +357,7 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
           ))}
         </div>
 
-        {/* Column 3: Center aligned - Token tools */}
+        {/* Column 4: Center aligned - Token tools */}
         <div class="flex flex-col -ml-6 space-y-1 text-center">
           <h6 class={labelXxs}>
             TOKENS
@@ -339,7 +382,7 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
           ))}
         </div>
 
-        {/* Column 4: Right aligned - Register */}
+        {/* Column 5: Right aligned - Register */}
         <div class="flex flex-col space-y-1 text-right">
           <h6 class={labelXxs}>
             BITNAME

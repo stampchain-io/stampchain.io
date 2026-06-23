@@ -141,6 +141,8 @@ import * as $stamp_id_ from "./routes/stamp/[id].tsx";
 import * as $stamp_art from "./routes/stamp/art.tsx";
 import * as $stamp_index from "./routes/stamp/index.tsx";
 import * as $stamp_posh from "./routes/stamp/posh.tsx";
+import * as $swap_path_ from "./routes/swap/[...path].ts";
+import * as $swap_index from "./routes/swap/index.ts";
 import * as $termsofservice_index from "./routes/termsofservice/index.tsx";
 import * as $test_design_system from "./routes/test/design-system.tsx";
 import * as $test_horizon_psbt_html from "./routes/test/horizon-psbt.html.ts";
@@ -490,6 +492,8 @@ const manifest = {
     "./routes/stamp/art.tsx": $stamp_art,
     "./routes/stamp/index.tsx": $stamp_index,
     "./routes/stamp/posh.tsx": $stamp_posh,
+    "./routes/swap/[...path].ts": $swap_path_,
+    "./routes/swap/index.ts": $swap_index,
     "./routes/termsofservice/index.tsx": $termsofservice_index,
     "./routes/test/design-system.tsx": $test_design_system,
     "./routes/test/horizon-psbt.html.ts": $test_horizon_psbt_html,
