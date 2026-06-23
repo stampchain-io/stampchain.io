@@ -6,10 +6,13 @@ import type {
   ScriptTypeInfo,
 } from "$lib/types/transaction.d.ts";
 import { ApiResponseUtil } from "$lib/utils/api/responses/apiResponseUtil.ts";
-import { hex2bin } from "$lib/utils/data/binary/baseUtils.ts";
 import { logger } from "$lib/utils/logger.ts";
 import { estimateMintingTransactionSize } from "$lib/utils/bitcoin/minting/transactionSizes.ts";
 import { getScriptTypeInfo } from "$lib/utils/bitcoin/scripts/scriptTypeUtils.ts";
+import {
+  buildCpPsbtInput,
+  buildCpPsbtInputsFromRawTx,
+} from "$lib/utils/bitcoin/psbt/cpRawTxInputs.ts";
 import { serverConfig } from "$server/config/config.ts"; // Import serverConfig
 import { StampController } from "$server/controller/stampController.ts";
 import {
@@ -18,7 +21,6 @@ import {
   normalizeFeeRate,
 } from "$server/services/counterpartyApiService.ts";
 import { CommonUTXOService } from "$server/services/utxo/commonUtxoService.ts";
-import type { UTXO as ServiceUTXO } from "$types/index.d.ts";
 import { Buffer } from "node:buffer";
 
 // Update interface to accept either fee rate type and service fee
@@ -131,108 +133,35 @@ export const handler: Handlers = {
       if (inputs_set) { // User specified the input UTXO
         const [txid, voutStr] = inputs_set.split(":");
         const vout = parseInt(voutStr, 10);
-        const utxoDetails: ServiceUTXO | null = await commonUtxoService
-          .getSpecificUTXO(txid, vout);
-        if (
-          !utxoDetails || !utxoDetails.script || utxoDetails.value === undefined
-        ) {
-          throw new Error(
-            `Specified input UTXO ${inputs_set} not found or invalid.`,
-          );
-        }
-        sumOfUserInputs = BigInt(utxoDetails.value);
-        const scriptTypeInfo: ScriptTypeInfo = getScriptTypeInfo(
-          utxoDetails.script,
-        );
-        const inputData: any = {
-          hash: txid,
-          index: vout,
+        const built = await buildCpPsbtInput(commonUtxoService, {
+          txid,
+          vout,
           sequence,
-        };
-        if (scriptTypeInfo.isWitness) {
-          inputData.witnessUtxo = {
-            script: Buffer.from(hex2bin(utxoDetails.script)),
-            value: BigInt(utxoDetails.value),
-          };
-        } else {
-          const rawTx = (utxoDetails as any).rawTxHex ||
-            await commonUtxoService.getRawTransactionHex(txid);
-          if (!rawTx) {
-            throw new Error(`Raw tx not found for non-witness input ${txid}`);
-          }
-          inputData.nonWitnessUtxo = Buffer.from(hex2bin(rawTx));
-        }
-        if (
-          scriptTypeInfo.type === "P2SH" &&
-          (utxoDetails as any).redeemScript
-        ) {
-          inputData.redeemScript = Buffer.from(
-            hex2bin((utxoDetails as any).redeemScript),
-          );
-        }
-        psbt.addInput(inputData);
+        });
+        sumOfUserInputs = built.value;
+        psbt.addInput(built.inputData as any);
         inputsToSign.push({
           index: 0,
           address: address,
           sighashTypes: [Transaction.SIGHASH_ALL],
         });
-      } else { // Counterparty chose the input(s) - assume one for now from cpTx.ins[0]
-        if (!cpTx.ins || cpTx.ins.length === 0) {
-          throw new Error("CP rawtransaction has no inputs.");
-        }
-        const cpInput = cpTx.ins[0];
-        const inputTxid = Buffer.from(cpInput.hash).reverse().toString("hex");
-        const inputVout = cpInput.index;
-        const utxoDetails: ServiceUTXO | null = await commonUtxoService
-          .getSpecificUTXO(
-            inputTxid,
-            inputVout,
+      } else {
+        // Counterparty chose the input(s) — use ALL of them, in order, so vin[0]
+        // stays the input the CP payload is ARC4-keyed against (#1137). The prior
+        // code processed only cpTx.ins[0] and dropped the rest, underfunding
+        // attaches whenever CP funded the source from several UTXOs.
+        const { builtInputs, inputsToSign: cpInputsToSign, totalInputValue } =
+          await buildCpPsbtInputsFromRawTx(
+            commonUtxoService,
+            cpTx.ins,
+            address,
+            [Transaction.SIGHASH_ALL],
           );
-        if (
-          !utxoDetails || !utxoDetails.script || utxoDetails.value === undefined
-        ) {
-          throw new Error(
-            `Input UTXO ${inputTxid}:${inputVout} from CP raw tx not found or invalid.`,
-          );
+        sumOfUserInputs = totalInputValue;
+        for (const { inputData } of builtInputs) {
+          psbt.addInput(inputData as any);
         }
-        sumOfUserInputs = BigInt(utxoDetails.value);
-        const scriptTypeInfo: ScriptTypeInfo = getScriptTypeInfo(
-          utxoDetails.script,
-        );
-        const inputData: any = {
-          hash: inputTxid,
-          index: inputVout,
-          sequence: cpInput.sequence,
-        };
-        if (scriptTypeInfo.isWitness) {
-          inputData.witnessUtxo = {
-            script: Buffer.from(hex2bin(utxoDetails.script)),
-            value: BigInt(utxoDetails.value),
-          };
-        } else {
-          const rawTx = (utxoDetails as any).rawTxHex ||
-            await commonUtxoService.getRawTransactionHex(inputTxid);
-          if (!rawTx) {
-            throw new Error(
-              `Raw tx not found for non-witness input ${inputTxid}`,
-            );
-          }
-          inputData.nonWitnessUtxo = Buffer.from(hex2bin(rawTx));
-        }
-        if (
-          scriptTypeInfo.type === "P2SH" &&
-          (utxoDetails as any).redeemScript
-        ) {
-          inputData.redeemScript = Buffer.from(
-            hex2bin((utxoDetails as any).redeemScript),
-          );
-        }
-        psbt.addInput(inputData);
-        inputsToSign.push({
-          index: 0,
-          address: address,
-          sighashTypes: [Transaction.SIGHASH_ALL],
-        });
+        inputsToSign.push(...cpInputsToSign);
       }
 
       let cpOutputsTotalValue = BigInt(0);
