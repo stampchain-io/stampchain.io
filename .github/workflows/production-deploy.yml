@@ -411,56 +411,63 @@ jobs:
 
     steps:
       - name: Wait for new tasks to start serving
-        run: sleep 15
+        # Allow time for ALB target registration + MySQL pool warmup before
+        # probing. The previous 15s sat inside the ALB cutover window, so the
+        # smoke test saw transient ALB-level 503/000 and false-rolled-back a
+        # healthy build (#1143).
+        run: sleep 45
 
-      - name: Health check
+      - name: Health gate (authoritative — gates rollback)
         id: health
+        # The website deploy's health gate depends ONLY on the app's own
+        # /api/v2/health. That route returns 200 whenever the app process is up
+        # and serving (it reports internal-check failures in the JSON body but
+        # still 200s; only ?simple returns 503, which we deliberately do NOT
+        # use). A persistent non-200 across all retries means the app/ALB target
+        # is genuinely down -> legitimate rollback. Backend-data-plane
+        # availability (indexer MySQL) is checked separately, advisory-only.
         run: |
-          STATUS=$(curl -s -o /tmp/health.json -w "%{http_code}" \
-            --max-time 15 \
-            "${{ env.PROD_URL }}/api/v2/health" || echo "000")
+          ATTEMPTS=6
+          SLEEP=15
+          for i in $(seq 1 "$ATTEMPTS"); do
+            STATUS=$(curl -s -o /tmp/health.json -w "%{http_code}" \
+              --max-time 15 \
+              "${{ env.PROD_URL }}/api/v2/health" || echo "000")
+            echo "Health attempt ${i}/${ATTEMPTS}: ${STATUS}"
+            if [ "$STATUS" = "200" ]; then
+              echo "Health gate PASSED on attempt ${i}"
+              cat /tmp/health.json
+              exit 0
+            fi
+            if [ "$i" -lt "$ATTEMPTS" ]; then
+              echo "Health not ready (${STATUS}); retrying in ${SLEEP}s..."
+              sleep "$SLEEP"
+            fi
+          done
+          echo "::error::/api/v2/health did not return 200 after ${ATTEMPTS} attempts — app appears down, triggering rollback"
+          exit 1
 
-          echo "Health endpoint returned: ${STATUS}"
-
-          if [ "$STATUS" = "200" ]; then
-            echo "Health check PASSED"
-            cat /tmp/health.json
-          else
-            echo "::warning::Health check returned ${STATUS} (may still be starting)"
-          fi
-
-      - name: API smoke test
+      - name: Data-plane smoke test (advisory — never fails the deploy)
+        # These endpoints read the SEPARATE backend-indexer MySQL DB. Their
+        # 503/000 during an ALB cutover or an indexer hiccup is NOT a website
+        # build failure, so they emit ::warning:: only and never exit non-zero.
+        # (App-level DB errors surface as 500 via apiResponseUtil; a 503 here is
+        # ALB "no healthy target", not the app.)
         run: |
-          # Test key endpoints
           ENDPOINTS=(
-            "/api/v2/health"
             "/api/v2/stamps?limit=1"
             "/api/v2/src20?limit=1"
           )
-
-          PASS=0
-          FAIL=0
-
           for endpoint in "${ENDPOINTS[@]}"; do
             STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
               --max-time 10 \
               "${{ env.PROD_URL }}${endpoint}" || echo "000")
-
             if [ "$STATUS" = "200" ]; then
               echo "PASS: ${endpoint} (${STATUS})"
-              PASS=$((PASS + 1))
             else
-              echo "WARN: ${endpoint} (${STATUS})"
-              FAIL=$((FAIL + 1))
+              echo "::warning::Data endpoint ${endpoint} returned ${STATUS} (backend indexer/ALB — advisory, not gating the deploy)"
             fi
           done
-
-          echo "Smoke test: ${PASS} passed, ${FAIL} warnings"
-
-          if [ "$FAIL" -gt 1 ]; then
-            echo "::error::Multiple API endpoints failing"
-            exit 1
-          fi
 
       - name: Create deployment summary
         if: always()
