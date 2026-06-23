@@ -1,12 +1,8 @@
 // routes/api/v2/create/send.ts
 import { TX_CONSTANTS } from "$constants";
 import { Handlers } from "$fresh/server.ts";
-import type { UTXO as DetailedUTXO } from "$lib/types/index.d.ts";
-import type { ScriptTypeInfo } from "$lib/types/transaction.d.ts";
 import { ApiResponseUtil } from "$lib/utils/api/responses/apiResponseUtil.ts";
-import { hex2bin } from "$lib/utils/binary/baseUtils.ts";
 import { logger } from "$lib/utils/logger.ts";
-import { getScriptTypeInfo } from "$lib/utils/scriptTypeUtils.ts";
 import { CounterpartyApiManager } from "$server/services/counterpartyApiService.ts";
 import { CommonUTXOService } from "$server/services/utxo/commonUtxoService.ts";
 import type { SendRequestBody, SendResponse } from "$types/api.d.ts";
@@ -112,96 +108,24 @@ export const handler: Handlers<SendResponse | { error: string }> = {
       const rawCpTxHex = cpResponse.result.rawtransaction;
       const cpTx = Transaction.fromHex(rawCpTxHex);
 
-      if (!cpTx.ins || cpTx.ins.length === 0) {
-        throw new Error("Counterparty raw transaction has no inputs.");
-      }
-      // Assuming CP uses one input from the sourceAddress for simplicity in this model
-      if (cpTx.ins.length > 1) {
-        logger.warn("api", {
-          message:
-            "Counterparty raw tx has multiple inputs, processing only the first for PSBT.",
-          inputCount: cpTx.ins.length,
-        });
-      }
+      // Reconstruct PSBT inputs from ALL of Counterparty's chosen inputs, in
+      // order, so vin[0] stays the input the CP payload is ARC4-keyed against
+      // (#1137). The prior code processed only cpTx.ins[0] and dropped the rest,
+      // underfunding sends whenever CP funded the source from several UTXOs.
+      const { buildCpPsbtInputsFromRawTx } = await import(
+        "$lib/utils/bitcoin/psbt/cpRawTxInputs.ts"
+      );
+      const { builtInputs, inputsToSign } = await buildCpPsbtInputsFromRawTx(
+        commonUtxoService,
+        cpTx.ins,
+        address,
+        [Transaction.SIGHASH_ALL],
+      );
 
       const psbt = new Psbt({ network });
-      const inputsToSign: {
-        index: number;
-        address: string;
-        sighashTypes?: number[];
-      }[] = [];
-
-      // Process the first input (assuming Counterparty picked one from userAddress)
-      const cpInput = cpTx.ins[0];
-      const inputTxid = Buffer.from(cpInput.hash).reverse().toString("hex");
-      const inputVout = cpInput.index;
-
-      // Fetch full UTXO details for this input
-      const rawUtxoDetails = await commonUtxoService
-        .getSpecificUTXO(inputTxid, inputVout);
-      const utxoDetails: DetailedUTXO | null = rawUtxoDetails
-        ? {
-          ...rawUtxoDetails,
-          scriptType: rawUtxoDetails.scriptType as any, // Type cast to handle different ScriptType definitions
-        }
-        : null;
-      if (
-        !utxoDetails || !utxoDetails.script || utxoDetails.value === undefined
-      ) {
-        throw new Error(
-          `Failed to fetch UTXO details for input ${inputTxid}:${inputVout} from CP raw tx.`,
-        );
+      for (const { inputData } of builtInputs) {
+        psbt.addInput(inputData as any);
       }
-
-      const scriptTypeInfo: ScriptTypeInfo = getScriptTypeInfo(
-        utxoDetails.script,
-      );
-      const psbtInputData: any = {
-        hash: inputTxid,
-        index: inputVout,
-        sequence: cpInput.sequence, // Use sequence from CP's transaction
-      };
-
-      if (scriptTypeInfo.isWitness) {
-        psbtInputData.witnessUtxo = {
-          script: Buffer.from(hex2bin(utxoDetails.script)),
-          value: BigInt(utxoDetails.value),
-        };
-      } else {
-        // For non-witness, nonWitnessUtxo is the full previous tx hex
-        // If utxoDetails itself contains the rawTxHex for its parent, use it. Otherwise, fetch again.
-        const nonWitnessRawTxHex = utxoDetails.rawTxHex ||
-          await commonUtxoService.getRawTransactionHex(inputTxid);
-        if (!nonWitnessRawTxHex) {
-          throw new Error(
-            `Failed to get raw tx hex for non-witness input ${inputTxid}`,
-          );
-        }
-        psbtInputData.nonWitnessUtxo = Buffer.from(hex2bin(nonWitnessRawTxHex));
-      }
-      if (
-        scriptTypeInfo.type === "P2SH" &&
-        scriptTypeInfo.redeemScriptType?.isWitness
-      ) {
-        if (utxoDetails.redeemScript) {
-          psbtInputData.redeemScript = Buffer.from(
-            hex2bin(utxoDetails.redeemScript),
-          );
-        } else {
-          // This case implies P2SH-P2WPKH or P2SH-P2WSH where redeemScript is critical
-          // and must be derivable or provided. For now, log a warning if missing.
-          logger.warn("api", {
-            message:
-              `Redeem script missing for P2SH input ${inputTxid}:${inputVout}. PSBT may be incomplete.`,
-          });
-        }
-      }
-      psbt.addInput(psbtInputData);
-      inputsToSign.push({
-        index: 0,
-        address: address,
-        sighashTypes: [Transaction.SIGHASH_ALL],
-      });
 
       // Add all outputs from Counterparty's transaction
       for (const cpOutput of cpTx.outs) {
