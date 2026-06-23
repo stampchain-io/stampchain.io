@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #8322 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "8322.png",
+  "external_url": "https://kevin420.xyz/nft/8322",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:53.114Z",
+  "hash": "0b6b191309e7b5525617f93e1e5bf9fe07f157388cabb287b8d23f56d6e3e628",
+  "dna": "0b6b191309e7b552",
+  "edition": 8322,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

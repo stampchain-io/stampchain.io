@@ -1,0 +1,51 @@
+{
+  "name": "Kevin #5083 - Witch Nose",
+  "description": "A mystical Kevin with the rare Witch Nose!",
+  "image": "5083.png",
+  "external_url": "https://kevin420.xyz/nft/5083",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 8
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:45.130Z",
+  "hash": "89a2ff81c2e48e19bdec856768af801b6b61ef77cb6db500b3ecd65d081e011b",
+  "dna": "89a2ff81c2e48e19",
+  "edition": 5083,
+  "special": "Witch Nose",
+  "rarity": "Rare"
+}

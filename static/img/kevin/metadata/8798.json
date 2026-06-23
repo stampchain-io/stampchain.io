@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #8798 - Viva Mexico",
+  "description": "Celebrating Mexico with Viva style!",
+  "image": "8798.png",
+  "external_url": "https://kevin420.xyz/nft/8798",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:54.314Z",
+  "hash": "d690a7cf72b14166396f658d83146e6cb1c198ed643265053ed695d0f6b10b88",
+  "dna": "d690a7cf72b14166",
+  "edition": 8798,
+  "special": "Viva Mexico",
+  "rarity": "Uncommon"
+}

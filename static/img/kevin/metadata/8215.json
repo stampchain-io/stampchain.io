@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #8215 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "8215.png",
+  "external_url": "https://kevin420.xyz/nft/8215",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:52.872Z",
+  "hash": "d367f99c39c6ec6a2288a8a54fd5d13cf7a6f54061b80615d21718b845c85828",
+  "dna": "d367f99c39c6ec6a",
+  "edition": 8215,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

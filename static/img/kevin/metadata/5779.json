@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #5779 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "5779.png",
+  "external_url": "https://kevin420.xyz/nft/5779",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:46.883Z",
+  "hash": "fb27f03e2116374a529201f11c2875ceb598bfb6585a34bbc647ab03a31cab7d",
+  "dna": "fb27f03e2116374a",
+  "edition": 5779,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

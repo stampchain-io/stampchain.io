@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #2500 - NEXUS Convergence",
+  "description": "An extremely rare NEXUS convergence - when background and face align in perfect NEXUS harmony.",
+  "image": "2500.png",
+  "external_url": "https://kevin420.xyz/nft/2500",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:38.929Z",
+  "hash": "f50f084d94453a253fe45cded3fdd8f8ae511ce32e61a4ec2b0f4136a5aab7b0",
+  "dna": "f50f084d94453a25",
+  "edition": 2500,
+  "special": "Complete NEXUS",
+  "rarity": "Mythic"
+}

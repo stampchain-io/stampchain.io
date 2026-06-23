@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #9000 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "9000.png",
+  "external_url": "https://kevin420.xyz/nft/9000",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:54.886Z",
+  "hash": "5f9eb75fccc78cc3fe6237be1adaf4fffb55ad35ff2543315e3acea926694527",
+  "dna": "5f9eb75fccc78cc3",
+  "edition": 9000,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

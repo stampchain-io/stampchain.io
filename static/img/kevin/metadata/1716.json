@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #1716 - Vision Master",
+  "description": "Enhanced vision with both glasses and special eyes!",
+  "image": "1716.png",
+  "external_url": "https://kevin420.xyz/nft/1716",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.074Z",
+  "hash": "f514d72b93dedb1eb023dae2bdbdd823ee729067d24d3c394b3838d73030fdb9",
+  "dna": "f514d72b93dedb1e",
+  "edition": 1716,
+  "special": "Vision Master",
+  "rarity": "Rare"
+}

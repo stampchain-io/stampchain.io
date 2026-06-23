@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #7911 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "7911.png",
+  "external_url": "https://kevin420.xyz/nft/7911",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:52.124Z",
+  "hash": "a1045324958a808c69d9a642fe3578fff17547ed89059fc9a94cb26cf0583ecf",
+  "dna": "a1045324958a808c",
+  "edition": 7911,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

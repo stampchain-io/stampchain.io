@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #3877 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "3877.png",
+  "external_url": "https://kevin420.xyz/nft/3877",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:42.228Z",
+  "hash": "bd89d621c15bf702acad5d8bd11ac584e47be355e4d8a43559ca2b58e52867c9",
+  "dna": "bd89d621c15bf702",
+  "edition": 3877,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

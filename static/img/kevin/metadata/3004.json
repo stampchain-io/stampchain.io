@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #3004 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "3004.png",
+  "external_url": "https://kevin420.xyz/nft/3004",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:40.151Z",
+  "hash": "16d04d7a78d5a9db794a88a0645d19e8bf68dc944dff29261dfa6a80a70a933f",
+  "dna": "16d04d7a78d5a9db",
+  "edition": 3004,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

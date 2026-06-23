@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #6815 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "6815.png",
+  "external_url": "https://kevin420.xyz/nft/6815",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:49.405Z",
+  "hash": "ce46982465abd459608097fdbaa2c79257c3b6da1e13f0dcc2accec6aaa3fa8a",
+  "dna": "ce46982465abd459",
+  "edition": 6815,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

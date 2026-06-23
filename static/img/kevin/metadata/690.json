@@ -1,0 +1,51 @@
+{
+  "name": "Kevin #690 - Perfect Pepe",
+  "description": "The perfect alignment of Pepe face and Pepe Vision!",
+  "image": "690.png",
+  "external_url": "https://kevin420.xyz/nft/690",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 8
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.674Z",
+  "hash": "a77f6ea53239be4ed3d7165bca2ef83a46a0ee7831c90db7aa3807ad546dfa6f",
+  "dna": "a77f6ea53239be4e",
+  "edition": 690,
+  "special": "Perfect Pepe",
+  "rarity": "Rare"
+}

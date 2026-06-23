@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #7413 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "7413.png",
+  "external_url": "https://kevin420.xyz/nft/7413",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:50.904Z",
+  "hash": "23e4afa2e6a5090ecc85d055ad9f8a34e748f98164a784270338b603a72118a3",
+  "dna": "23e4afa2e6a5090e",
+  "edition": 7413,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

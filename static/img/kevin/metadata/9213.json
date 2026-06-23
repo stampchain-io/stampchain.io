@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #9213 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "9213.png",
+  "external_url": "https://kevin420.xyz/nft/9213",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:55.425Z",
+  "hash": "f19676a3e9c06d8c66afac6adbe2aa99d186ae2901d7598900718218d032ea95",
+  "dna": "f19676a3e9c06d8c",
+  "edition": 9213,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

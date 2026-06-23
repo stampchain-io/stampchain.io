@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #7069 - Witch Nose",
+  "description": "A mystical Kevin with the rare Witch Nose!",
+  "image": "7069.png",
+  "external_url": "https://kevin420.xyz/nft/7069",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:50.005Z",
+  "hash": "249cb478bbba9194b9de47ed34760966f687ab5e61043f57b80eac6d0069118b",
+  "dna": "249cb478bbba9194",
+  "edition": 7069,
+  "special": "Witch Nose",
+  "rarity": "Rare"
+}

@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #6516 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DITA!",
+  "image": "6516.png",
+  "external_url": "https://kevin420.xyz/nft/6516",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:48.674Z",
+  "hash": "772a8fd0afa9dd79303d2740ec325cd8f09340ca73286cb3c8515dcc560666f2",
+  "dna": "772a8fd0afa9dd79",
+  "edition": 6516,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

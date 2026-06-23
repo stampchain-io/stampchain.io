@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #1770 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "1770.png",
+  "external_url": "https://kevin420.xyz/nft/1770",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.199Z",
+  "hash": "5c662c107127098e917ad1cd27d5dbf5495de0475284aa53ff34c95cef701f7c",
+  "dna": "5c662c107127098e",
+  "edition": 1770,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

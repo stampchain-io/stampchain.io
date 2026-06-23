@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #1685 - Witch Nose",
+  "description": "A mystical Kevin with the rare Witch Nose!",
+  "image": "1685.png",
+  "external_url": "https://kevin420.xyz/nft/1685",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.003Z",
+  "hash": "5ffdbfbdf4610e3f0904e5fdb696423368ba6b0064849300cd4923e33ded8aa5",
+  "dna": "5ffdbfbdf4610e3f",
+  "edition": 1685,
+  "special": "Witch Nose",
+  "rarity": "Rare"
+}

@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #8737 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "8737.png",
+  "external_url": "https://kevin420.xyz/nft/8737",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:54.145Z",
+  "hash": "b05e1133516fc20be463581b2ad0ad5ea9c450e78bc0e30237d5a456aa6a9b85",
+  "dna": "b05e1133516fc20b",
+  "edition": 8737,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

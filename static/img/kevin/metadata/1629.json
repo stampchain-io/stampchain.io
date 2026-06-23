@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #1629 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "1629.png",
+  "external_url": "https://kevin420.xyz/nft/1629",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:36.877Z",
+  "hash": "e6069b934a7e11fccc9b02dd89878bdf90ce1508c5b7e4ef808b55e9aba58190",
+  "dna": "e6069b934a7e11fc",
+  "edition": 1629,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

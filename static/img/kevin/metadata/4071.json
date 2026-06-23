@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #4071 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "4071.png",
+  "external_url": "https://kevin420.xyz/nft/4071",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:42.694Z",
+  "hash": "7f89d06ece56b502282a20ab54ab6054c8ec8a09b564311ec0ccb55f78be0a3f",
+  "dna": "7f89d06ece56b502",
+  "edition": 4071,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

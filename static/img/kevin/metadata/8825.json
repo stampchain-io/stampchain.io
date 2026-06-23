@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #8825 - Night Mode",
+  "description": "Ready for the night with Blackhat and Cool Shades!",
+  "image": "8825.png",
+  "external_url": "https://kevin420.xyz/nft/8825",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:54.394Z",
+  "hash": "721580850f1e402757a1ba2ace057199564fdaf17c7f3c0f938c1ad80c2e3a27",
+  "dna": "721580850f1e4027",
+  "edition": 8825,
+  "special": "Night Mode",
+  "rarity": "Rare"
+}

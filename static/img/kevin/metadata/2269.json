@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #2269 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "2269.png",
+  "external_url": "https://kevin420.xyz/nft/2269",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:38.401Z",
+  "hash": "871f609cda3450972af984ca8bad6b57bc40e8bfd32cb54a60efb7d2ea0ab723",
+  "dna": "871f609cda345097",
+  "edition": 2269,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

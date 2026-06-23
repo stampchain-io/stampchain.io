@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #8278 - Night Mode",
+  "description": "Ready for the night with Blackhat and Cool Shades!",
+  "image": "8278.png",
+  "external_url": "https://kevin420.xyz/nft/8278",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:53.014Z",
+  "hash": "9de10d9cc05e1d6d3c244f8463971c003278030f01b3ec9484cc214075626dea",
+  "dna": "9de10d9cc05e1d6d",
+  "edition": 8278,
+  "special": "Night Mode",
+  "rarity": "Rare"
+}

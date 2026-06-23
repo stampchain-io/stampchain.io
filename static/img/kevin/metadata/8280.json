@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #8280 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "8280.png",
+  "external_url": "https://kevin420.xyz/nft/8280",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:53.018Z",
+  "hash": "61f0fd5fcaecb3c9822d87b9faaf7defa174219777b205f40ac81cd16240be33",
+  "dna": "61f0fd5fcaecb3c9",
+  "edition": 8280,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #3625 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "3625.png",
+  "external_url": "https://kevin420.xyz/nft/3625",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:41.625Z",
+  "hash": "af9a50178d92a33b1ec11b5c49565229d154a5ee2186e5e37ca2be8be22a8fa8",
+  "dna": "af9a50178d92a33b",
+  "edition": 3625,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #4669 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "4669.png",
+  "external_url": "https://kevin420.xyz/nft/4669",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:44.122Z",
+  "hash": "d9d7107838752db900c829c71c745274e0f7642b1dfebb90c23b2e03aca3297c",
+  "dna": "d9d7107838752db9",
+  "edition": 4669,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

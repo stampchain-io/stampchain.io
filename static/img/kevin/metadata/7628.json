@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #7628 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "7628.png",
+  "external_url": "https://kevin420.xyz/nft/7628",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:51.411Z",
+  "hash": "e145ee955533d3ce701570c155115031dc22d9a3c22c9fb5a0c2bbf9bf5c7732",
+  "dna": "e145ee955533d3ce",
+  "edition": 7628,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

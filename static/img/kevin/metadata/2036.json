@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #2036 - Vision Master",
+  "description": "Enhanced vision with both glasses and special eyes!",
+  "image": "2036.png",
+  "external_url": "https://kevin420.xyz/nft/2036",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.883Z",
+  "hash": "e13c7e1f25131a221b8332e03b1fbf6982bc54caf19c23387f9c694d26704051",
+  "dna": "e13c7e1f25131a22",
+  "edition": 2036,
+  "special": "Vision Master",
+  "rarity": "Rare"
+}

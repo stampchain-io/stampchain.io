@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #8992 - Minimal DEDKEV",
+  "description": "The minimalist DEDKEV - pure essence with minimal traits.",
+  "image": "8992.png",
+  "external_url": "https://kevin420.xyz/nft/8992",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:54.864Z",
+  "hash": "faa518020b782d70be14b96c810e8ca709a3c319bf5c64f2ed1ff3b91524b892",
+  "dna": "faa518020b782d70",
+  "edition": 8992,
+  "special": "Minimal DEDKEV",
+  "rarity": "Ultra Rare"
+}

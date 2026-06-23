@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #9020 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "9020.png",
+  "external_url": "https://kevin420.xyz/nft/9020",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:54.944Z",
+  "hash": "51bcb840c968cd304e328079ce83642b2447912f7daae7a0f5bba0b0a752df53",
+  "dna": "51bcb840c968cd30",
+  "edition": 9020,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

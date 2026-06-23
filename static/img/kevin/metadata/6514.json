@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #6514 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "6514.png",
+  "external_url": "https://kevin420.xyz/nft/6514",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:48.669Z",
+  "hash": "b214c46e17ae23aa4585f0dcce797274a1d521fe04e536aedef370b95f88d6d4",
+  "dna": "b214c46e17ae23aa",
+  "edition": 6514,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

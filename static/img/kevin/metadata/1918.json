@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #1918 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "1918.png",
+  "external_url": "https://kevin420.xyz/nft/1918",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.585Z",
+  "hash": "25b0855d3acb55316fdc0cde2c3884a3f85f566a09612c1e93ca6c7ae098931e",
+  "dna": "25b0855d3acb5531",
+  "edition": 1918,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

@@ -1,0 +1,59 @@
+{
+  "name": "Kevin #7400 - Witch Nose",
+  "description": "A mystical Kevin with the rare Witch Nose!",
+  "image": "7400.png",
+  "external_url": "https://kevin420.xyz/nft/7400",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 10
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:50.871Z",
+  "hash": "9190c64915705a21a1d8e6cb951ec8c30fac008868d15c079a4e06816916eff7",
+  "dna": "9190c64915705a21",
+  "edition": 7400,
+  "special": "Witch Nose",
+  "rarity": "Rare"
+}

@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #3681 - Minimal DEDKEV",
+  "description": "The minimalist DEDKEV - pure essence with minimal traits.",
+  "image": "3681.png",
+  "external_url": "https://kevin420.xyz/nft/3681",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:41.753Z",
+  "hash": "1c42121d1d13b9a2078e6d53b001e3310448679d83014c7957600397943b0583",
+  "dna": "1c42121d1d13b9a2",
+  "edition": 3681,
+  "special": "Minimal DEDKEV",
+  "rarity": "Ultra Rare"
+}

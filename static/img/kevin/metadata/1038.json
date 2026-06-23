@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #1038 - Witch Nose",
+  "description": "A mystical Kevin with the rare Witch Nose!",
+  "image": "1038.png",
+  "external_url": "https://kevin420.xyz/nft/1038",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:35.501Z",
+  "hash": "2a7d7b78bdd74d9e7f416a2150cbaf96535331fcc8d6b7498b1f034240bd0552",
+  "dna": "2a7d7b78bdd74d9e",
+  "edition": 1038,
+  "special": "Witch Nose",
+  "rarity": "Rare"
+}

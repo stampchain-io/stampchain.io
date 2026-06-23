@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #9968 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "9968.png",
+  "external_url": "https://kevin420.xyz/nft/9968",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:57.359Z",
+  "hash": "f51d1a36ef1ecc251ec93b0d55bb944832ed99da776d924864e20808ae5d65bf",
+  "dna": "f51d1a36ef1ecc25",
+  "edition": 9968,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

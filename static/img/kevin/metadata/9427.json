@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #9427 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "9427.png",
+  "external_url": "https://kevin420.xyz/nft/9427",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:55.981Z",
+  "hash": "12fd52d4434555f89b499bec5b0ce84068b9bf2f0a541a2fb6cb0c2d6d3c0e02",
+  "dna": "12fd52d4434555f8",
+  "edition": 9427,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

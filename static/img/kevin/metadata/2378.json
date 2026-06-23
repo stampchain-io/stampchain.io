@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #2378 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "2378.png",
+  "external_url": "https://kevin420.xyz/nft/2378",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:38.640Z",
+  "hash": "92ce068a06c662d6d3147dcb4754705f3c25eda2d01bc1c7a0b6f17f82445dc1",
+  "dna": "92ce068a06c662d6",
+  "edition": 2378,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

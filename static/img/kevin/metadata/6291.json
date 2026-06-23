@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #6291 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "6291.png",
+  "external_url": "https://kevin420.xyz/nft/6291",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:48.118Z",
+  "hash": "4bde3c6c50fcb4cf43f29cf6681a5d8a3eb75f52fe2f0c25a943964749ac6939",
+  "dna": "4bde3c6c50fcb4cf",
+  "edition": 6291,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

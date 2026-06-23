@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #8056 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "8056.png",
+  "external_url": "https://kevin420.xyz/nft/8056",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:52.472Z",
+  "hash": "ded04018fc3b448444047d807851af5a2a5fe38f32132a3b6a0f8164b10b4110",
+  "dna": "ded04018fc3b4484",
+  "edition": 8056,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

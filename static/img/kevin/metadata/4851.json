@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #4851 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "4851.png",
+  "external_url": "https://kevin420.xyz/nft/4851",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:44.588Z",
+  "hash": "e4be1be6c2d95c33d3071989d3c5d26e9904b8b5daf493e8e623d6f0a624a765",
+  "dna": "e4be1be6c2d95c33",
+  "edition": 4851,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

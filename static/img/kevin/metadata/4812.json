@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #4812 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "4812.png",
+  "external_url": "https://kevin420.xyz/nft/4812",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:44.495Z",
+  "hash": "33c38bf0a527febc129021646b5d5935802a8e07548daa9a88955d65e857cb32",
+  "dna": "33c38bf0a527febc",
+  "edition": 4812,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

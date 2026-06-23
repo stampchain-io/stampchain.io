@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #3268 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "3268.png",
+  "external_url": "https://kevin420.xyz/nft/3268",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:40.749Z",
+  "hash": "18a2a6a63f9aed37683416b534ccf681b299e493c8817d8d758fc467d1945c3c",
+  "dna": "18a2a6a63f9aed37",
+  "edition": 3268,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

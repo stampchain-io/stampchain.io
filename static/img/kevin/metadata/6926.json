@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #6926 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "6926.png",
+  "external_url": "https://kevin420.xyz/nft/6926",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:49.682Z",
+  "hash": "11ae5d6bf67d28cfc5037ccceb7bd2c151fa24950236aacebe8b1b929e8887b1",
+  "dna": "11ae5d6bf67d28cf",
+  "edition": 6926,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

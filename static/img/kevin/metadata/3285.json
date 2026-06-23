@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #3285 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "3285.png",
+  "external_url": "https://kevin420.xyz/nft/3285",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:40.796Z",
+  "hash": "dda62351f4e04e585fc1198db887c80c02ea7d52cbd1ae4a56f7d087b0176fab",
+  "dna": "dda62351f4e04e58",
+  "edition": 3285,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

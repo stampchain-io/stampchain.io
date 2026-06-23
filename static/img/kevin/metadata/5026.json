@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #5026 - Viva Enthusiast",
+  "description": "A true Viva fan with 3 Viva traits!",
+  "image": "5026.png",
+  "external_url": "https://kevin420.xyz/nft/5026",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:44.990Z",
+  "hash": "41f9eefb20f6cd92e81ec0d79a0938348e102bb69f45e3408a6ce533eb6a8650",
+  "dna": "41f9eefb20f6cd92",
+  "edition": 5026,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

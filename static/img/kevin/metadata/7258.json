@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #7258 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "7258.png",
+  "external_url": "https://kevin420.xyz/nft/7258",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Fez"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:50.527Z",
+  "hash": "899b2f2d2bd75bc859f8477c7c3a22d332f69afe36416107b9f8eb28a5fbe23d",
+  "dna": "899b2f2d2bd75bc8",
+  "edition": 7258,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

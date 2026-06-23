@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #9777 - Witch Nose",
+  "description": "A mystical Kevin with the rare Witch Nose!",
+  "image": "9777.png",
+  "external_url": "https://kevin420.xyz/nft/9777",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:56.900Z",
+  "hash": "18d9d8af6c5211f77ed1f87004ae7d981a2bab1b90e7ad6829e37e20ed07dd40",
+  "dna": "18d9d8af6c5211f7",
+  "edition": 9777,
+  "special": "Witch Nose",
+  "rarity": "Rare"
+}

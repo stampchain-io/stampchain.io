@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #8675 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "8675.png",
+  "external_url": "https://kevin420.xyz/nft/8675",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:53.976Z",
+  "hash": "b71d23f1f4015299a0253fbdf8fdbbcb26f20dbb1e7d8b1507e66f8cbc632bc3",
+  "dna": "b71d23f1f4015299",
+  "edition": 8675,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

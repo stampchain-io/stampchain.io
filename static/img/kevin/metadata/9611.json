@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #9611 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "9611.png",
+  "external_url": "https://kevin420.xyz/nft/9611",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:56.472Z",
+  "hash": "1a0a0792904621c8fd3cb3725e9a2a10769ee1432678458c2fb93b9133d98bb0",
+  "dna": "1a0a0792904621c8",
+  "edition": 9611,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

@@ -1,0 +1,51 @@
+{
+  "name": "Kevin #9203 - Witch Nose",
+  "description": "A mystical Kevin with the rare Witch Nose!",
+  "image": "9203.png",
+  "external_url": "https://kevin420.xyz/nft/9203",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 8
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Fez"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:55.399Z",
+  "hash": "fece9d162bfc83dfaf606a058d2d5d57cbbafd3a78f65b20862e74b524b3d55a",
+  "dna": "fece9d162bfc83df",
+  "edition": 9203,
+  "special": "Witch Nose",
+  "rarity": "Rare"
+}

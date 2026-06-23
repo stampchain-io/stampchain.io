@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #4810 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "4810.png",
+  "external_url": "https://kevin420.xyz/nft/4810",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:44.492Z",
+  "hash": "810c7ac4429317e51b02b6ba887bf50b46f2c33fca268ea63d3b0fb2a80b4a3b",
+  "dna": "810c7ac4429317e5",
+  "edition": 4810,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

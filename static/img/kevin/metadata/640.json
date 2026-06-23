@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #640 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "640.png",
+  "external_url": "https://kevin420.xyz/nft/640",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.561Z",
+  "hash": "2db247be5d5f2ef345de9b359c226c713d01cb1be156f8ebc54681620226eb02",
+  "dna": "2db247be5d5f2ef3",
+  "edition": 640,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #6210 - Witch Nose",
+  "description": "A mystical Kevin with the rare Witch Nose!",
+  "image": "6210.png",
+  "external_url": "https://kevin420.xyz/nft/6210",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Fez"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:47.935Z",
+  "hash": "056497ba5c65b3114dc299d40d09ca5c6f257bb8b7f3b6b0c230cfcabcb0d40b",
+  "dna": "056497ba5c65b311",
+  "edition": 6210,
+  "special": "Witch Nose",
+  "rarity": "Rare"
+}

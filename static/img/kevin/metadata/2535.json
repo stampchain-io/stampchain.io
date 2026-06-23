@@ -1,0 +1,51 @@
+{
+  "name": "Kevin #2535 - Witch Nose",
+  "description": "A mystical Kevin with the rare Witch Nose!",
+  "image": "2535.png",
+  "external_url": "https://kevin420.xyz/nft/2535",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 8
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:39.009Z",
+  "hash": "6bbcedfdb10564cc1fa8459f36843c438f680862c5b6004e5fa254a848261376",
+  "dna": "6bbcedfdb10564cc",
+  "edition": 2535,
+  "special": "Witch Nose",
+  "rarity": "Rare"
+}

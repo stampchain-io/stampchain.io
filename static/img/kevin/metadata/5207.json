@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #5207 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "5207.png",
+  "external_url": "https://kevin420.xyz/nft/5207",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:45.467Z",
+  "hash": "fbcbe2ac7814636b162f5e8d23bc08c7ec340483807b07e20a614370c135eb0d",
+  "dna": "fbcbe2ac7814636b",
+  "edition": 5207,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

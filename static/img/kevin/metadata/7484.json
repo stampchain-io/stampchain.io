@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #7484 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "7484.png",
+  "external_url": "https://kevin420.xyz/nft/7484",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:51.074Z",
+  "hash": "480527a4b85d3008ebf1c97fa3cbfd4ead9f5c985b3f134b0b32d24d440d5305",
+  "dna": "480527a4b85d3008",
+  "edition": 7484,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

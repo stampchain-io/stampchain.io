@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #805 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "805.png",
+  "external_url": "https://kevin420.xyz/nft/805",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.945Z",
+  "hash": "0c50e6a095dc0d7916fba3752d4bb960737191309223b91def7c3ae3e09839e5",
+  "dna": "0c50e6a095dc0d79",
+  "edition": 805,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

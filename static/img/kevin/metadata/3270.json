@@ -1,0 +1,27 @@
+{
+  "name": "Kevin #3270 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "3270.png",
+  "external_url": "https://kevin420.xyz/nft/3270",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 2
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:40.754Z",
+  "hash": "e39c16c31afc2679a36bda99d30dc714eb4cb83d8ea8ace061883ebc1655ac52",
+  "dna": "e39c16c31afc2679",
+  "edition": 3270,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

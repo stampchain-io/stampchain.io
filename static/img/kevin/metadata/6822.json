@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #6822 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "6822.png",
+  "external_url": "https://kevin420.xyz/nft/6822",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:49.423Z",
+  "hash": "76961c0d36e3296f85065dcb85a5f7659fa48cb38ae820ffa590de875ab2a510",
+  "dna": "76961c0d36e3296f",
+  "edition": 6822,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

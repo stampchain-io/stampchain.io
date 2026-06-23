@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #7779 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "7779.png",
+  "external_url": "https://kevin420.xyz/nft/7779",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:51.757Z",
+  "hash": "da0ad34a4f7fe6f4ef31d88977b49d3e23bbc2cc2adc6fa8a5e7149d2a77b30b",
+  "dna": "da0ad34a4f7fe6f4",
+  "edition": 7779,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

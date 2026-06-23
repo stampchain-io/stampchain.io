@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #2528 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "2528.png",
+  "external_url": "https://kevin420.xyz/nft/2528",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:38.992Z",
+  "hash": "04fecc69279430a11ed29e5142a8fbb1612051f670a3620d4f4f7cb1adeb73b1",
+  "dna": "04fecc69279430a1",
+  "edition": 2528,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

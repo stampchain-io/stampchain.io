@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #2770 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "2770.png",
+  "external_url": "https://kevin420.xyz/nft/2770",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:39.583Z",
+  "hash": "8c090f81486871405fe6a2e1de1289fdfacbd1ca4822fef037927e3debec3f5d",
+  "dna": "8c090f8148687140",
+  "edition": 2770,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #7849 - Vision Master",
+  "description": "Enhanced vision with both glasses and special eyes!",
+  "image": "7849.png",
+  "external_url": "https://kevin420.xyz/nft/7849",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:51.964Z",
+  "hash": "c35844b1d79b3c9135172ad5c0a4bb9c162f4b8ba6a588d098cb27677c9873bf",
+  "dna": "c35844b1d79b3c91",
+  "edition": 7849,
+  "special": "Vision Master",
+  "rarity": "Rare"
+}

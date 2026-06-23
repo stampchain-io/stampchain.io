@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #4377 - Witch Nose",
+  "description": "A mystical Kevin with the rare Witch Nose!",
+  "image": "4377.png",
+  "external_url": "https://kevin420.xyz/nft/4377",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:43.454Z",
+  "hash": "d4935203aff3361982604a9e9e411071500010886db70ed64e57587d7b48c0de",
+  "dna": "d4935203aff33619",
+  "edition": 4377,
+  "special": "Witch Nose",
+  "rarity": "Rare"
+}

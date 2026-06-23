@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #8039 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "8039.png",
+  "external_url": "https://kevin420.xyz/nft/8039",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:52.433Z",
+  "hash": "e98c0e04a4b81e680a682a2746c6601964240536fe43aacf1ec64cd98f35e031",
+  "dna": "e98c0e04a4b81e68",
+  "edition": 8039,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #2608 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "2608.png",
+  "external_url": "https://kevin420.xyz/nft/2608",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:39.180Z",
+  "hash": "e912a8a8e2977c302c9eb5e2d7a1b8d6799a125cf5e7f31a995e80e18555788f",
+  "dna": "e912a8a8e2977c30",
+  "edition": 2608,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

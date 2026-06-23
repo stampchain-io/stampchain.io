@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #8971 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "8971.png",
+  "external_url": "https://kevin420.xyz/nft/8971",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Fez"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:54.806Z",
+  "hash": "d0e862de1a9245fffdb2152a50e2e08cc6afce9a51b2ad306dccb4aa89fbc697",
+  "dna": "d0e862de1a9245ff",
+  "edition": 8971,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

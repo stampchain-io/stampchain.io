@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #9670 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "9670.png",
+  "external_url": "https://kevin420.xyz/nft/9670",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:56.634Z",
+  "hash": "a1be5628ea8e6fe0e181f71af1ec87fa5049a3d6531db1e955761a3c1e9a2f10",
+  "dna": "a1be5628ea8e6fe0",
+  "edition": 9670,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

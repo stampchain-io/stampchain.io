@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #660 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "660.png",
+  "external_url": "https://kevin420.xyz/nft/660",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Fez"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.606Z",
+  "hash": "067a7f21a098bd50dac611c07f878f5e4e08ab22d5213c140dbccc5ee52301cb",
+  "dna": "067a7f21a098bd50",
+  "edition": 660,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

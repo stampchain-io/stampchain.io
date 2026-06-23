@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #2896 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DITA!",
+  "image": "2896.png",
+  "external_url": "https://kevin420.xyz/nft/2896",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:39.903Z",
+  "hash": "c9ffe49689b7d4c1b48b60039d54dbeba0773ccd4d0f893eb827657796974062",
+  "dna": "c9ffe49689b7d4c1",
+  "edition": 2896,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

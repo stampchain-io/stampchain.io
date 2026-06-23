@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #2724 - NEXUS Convergence",
+  "description": "An extremely rare NEXUS convergence - when background and face align in perfect NEXUS harmony.",
+  "image": "2724.png",
+  "external_url": "https://kevin420.xyz/nft/2724",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:39.485Z",
+  "hash": "4808d8831333f3cba2b342159fc0ce9211f8ba41f2d6d8fcad88ef98641edc8e",
+  "dna": "4808d8831333f3cb",
+  "edition": 2724,
+  "special": "Complete NEXUS",
+  "rarity": "Mythic"
+}

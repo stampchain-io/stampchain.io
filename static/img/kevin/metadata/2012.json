@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #2012 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "2012.png",
+  "external_url": "https://kevin420.xyz/nft/2012",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.823Z",
+  "hash": "c587590d05b689401bb670ade02a0d3c508af36e103213cba19c80179e5cd132",
+  "dna": "c587590d05b68940",
+  "edition": 2012,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

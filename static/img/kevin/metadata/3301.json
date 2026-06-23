@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #3301 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "3301.png",
+  "external_url": "https://kevin420.xyz/nft/3301",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:40.844Z",
+  "hash": "0da4a312bfe6be7162581db06eab1f4939a64abd32c6b0f8d944366724342880",
+  "dna": "0da4a312bfe6be71",
+  "edition": 3301,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

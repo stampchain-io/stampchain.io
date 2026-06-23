@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAZY KEVIN Collection - Stampchain.io</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #0a0a0a;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 0;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #333;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: wobble 4s ease-in-out infinite;
+            transform-origin: center;
+        }
+        
+        @keyframes wobble {
+            0%, 100% { transform: rotate(-2deg) scale(1); }
+            25% { transform: rotate(2deg) scale(1.02); }
+            50% { transform: rotate(-1deg) scale(1); }
+            75% { transform: rotate(1deg) scale(1.01); }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #999;
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .subtitle::before, .subtitle::after {
+            content: "✨";
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            animation: sparkle 2s ease-in-out infinite;
+        }
+        
+        .subtitle::before {
+            left: -30px;
+        }
+        
+        .subtitle::after {
+            right: -30px;
+            animation-delay: 1s;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.3; transform: translateY(-50%) scale(0.8) rotate(0deg); }
+            50% { opacity: 1; transform: translateY(-50%) scale(1.2) rotate(180deg); }
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 20px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #8b5cf6;
+            text-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { text-shadow: 0 0 20px rgba(139, 92, 246, 0.5); }
+            50% { text-shadow: 0 0 30px rgba(217, 70, 239, 0.8); }
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        .filter-section {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .search-box::placeholder {
+            color: #666;
+        }
+        
+        .random-selection {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .random-btn {
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid rgba(139, 92, 246, 0.5);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+        
+        .random-btn:hover {
+            background: rgba(139, 92, 246, 0.3);
+            transform: translateY(-1px);
+        }
+        
+        .random-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+        
+        .slider {
+            flex: 1;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #8b5cf6;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #8b5cf6;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+        }
+        
+        #random-count {
+            min-width: 30px;
+            text-align: center;
+            font-weight: bold;
+            color: #8b5cf6;
+        }
+        
+        .apply-random {
+            background: #8b5cf6;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .apply-random:hover {
+            background: #7c3aed;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+            margin-bottom: 40px;
+        }
+
+        .nft-item {
+            position: relative;
+            aspect-ratio: 1;
+            background: #1a1a1a;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .nft-item:hover {
+            transform: translateY(-2px) rotate(5deg) scale(1.1);
+            border-color: rgba(139, 92, 246, 0.5);
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+            z-index: 10;
+        }
+
+        .nft-item.selected {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3);
+        }
+
+        .nft-item.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 20px;
+            height: 20px;
+            background: #8b5cf6;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            animation: pop-in 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        @keyframes pop-in {
+            0% { transform: scale(0) rotate(-180deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        .nft-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+
+        .nft-id {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 2px;
+            font-size: 11px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .sticky-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid #333;
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .selection-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .selection-count {
+            font-size: 1.1rem;
+        }
+
+        .selection-count span {
+            color: #8b5cf6;
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+
+        .clear-selection {
+            background: none;
+            border: 1px solid #666;
+            color: #999;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .clear-selection:hover {
+            border-color: #999;
+            color: white;
+        }
+
+        .stamp-button {
+            background: linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%);
+            border: none;
+            color: white;
+            padding: 15px 40px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stamp-button::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ff00ff, #00ff00, #00ffff, #ff00ff);
+            border-radius: 8px;
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.3s ease;
+            animation: rainbow-border 3s linear infinite;
+        }
+        
+        @keyframes rainbow-border {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .stamp-button:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6);
+        }
+        
+        .stamp-button:hover::before {
+            opacity: 0.7;
+        }
+
+        .stamp-button:active {
+            transform: translateY(0);
+        }
+
+        .stamp-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+                animation: wobble 6s ease-in-out infinite; /* Slower on mobile */
+            }
+            
+            .subtitle::before, .subtitle::after {
+                display: none; /* Hide sparkles on mobile for cleaner look */
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+                gap: 8px;
+            }
+            
+            .nft-item:hover {
+                transform: translateY(-2px) scale(1.05); /* Less rotation on mobile */
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .selection-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .random-selection {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .random-btn {
+                width: 100%;
+            }
+            
+            .random-controls {
+                width: 100%;
+                margin-top: 10px;
+            }
+            
+            .modal-content {
+                margin: 10% 10px;
+                padding: 20px;
+            }
+            
+            .modal-summary {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        /* Loading animation */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .loading-text {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background-color: #1a1a1a;
+            margin: 5% auto;
+            padding: 30px;
+            border: 2px solid rgba(139, 92, 246, 0.5);
+            border-radius: 12px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slide-in 0.3s ease-out;
+        }
+        
+        @keyframes slide-in {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            color: #8b5cf6;
+            font-weight: bold;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 28px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .close-modal:hover {
+            color: #fff;
+        }
+        
+        .modal-body {
+            margin-bottom: 20px;
+        }
+        
+        .selected-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: 10px;
+        }
+        
+        .selected-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(139, 92, 246, 0.1);
+            border: 2px solid rgba(139, 92, 246, 0.5);
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 12px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .selected-item:hover {
+            transform: scale(1.1);
+            background: rgba(139, 92, 246, 0.2);
+            border-color: #8b5cf6;
+        }
+        
+        .selected-item.deselecting {
+            opacity: 0.5;
+            border-color: #ff4444;
+            background: rgba(255, 68, 68, 0.1);
+        }
+        
+        .selected-item.deselecting::after {
+            content: '✕';
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 20px;
+            height: 20px;
+            background: #ff4444;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .selected-item img {
+            width: 40px;
+            height: 40px;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            margin-bottom: 4px;
+        }
+        
+        .selected-item span {
+            color: #999;
+            font-size: 11px;
+        }
+        
+        .modal-summary {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-top: 1px solid rgba(139, 92, 246, 0.2);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+            margin: 20px 0;
+        }
+        
+        .summary-item {
+            text-align: center;
+        }
+        
+        .summary-label {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .summary-value {
+            color: #8b5cf6;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+        
+        .modal-btn {
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .cancel-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #999;
+        }
+        
+        .cancel-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .continue-btn {
+            background: linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%);
+            color: white;
+        }
+        
+        .continue-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Kevin NFT Collection</h1>
+            <p class="subtitle">The Ultimate LAZY KEVIN! Experience</p>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value">10,000</div>
+                    <div class="stat-label">Total Supply</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="selected-count">0</div>
+                    <div class="stat-label">Selected</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="filter-section">
+            <input type="text" class="search-box" placeholder="Search by ID (e.g., 1, 100, 5000)" id="search-input">
+            <div class="random-selection">
+                <button class="random-btn" onclick="showRandomSelector()">🎲 Random Select</button>
+                <div class="random-controls" id="random-controls" style="display: none;">
+                    <input type="range" id="random-slider" min="1" max="100" value="10" class="slider">
+                    <span id="random-count">10</span>
+                    <button class="apply-random" onclick="selectRandomKevins()">Apply</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="gallery" class="gallery-grid">
+            <div class="loading">
+                <p class="loading-text">Loading Kevin NFTs...</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="sticky-footer">
+        <div class="footer-content">
+            <div class="selection-info">
+                <div class="selection-count">
+                    <span id="footer-selected-count">0</span> LAZY KEVINS selected
+                </div>
+                <button class="clear-selection" id="clear-btn" onclick="clearSelection()">Clear Selection</button>
+            </div>
+            <button class="stamp-button" id="stamp-btn" onclick="stampNow()" disabled>
+                Stamp Now
+            </button>
+        </div>
+    </div>
+    
+    <!-- Stamp Confirmation Modal -->
+    <div id="stampModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Confirm Your LAZY KEVIN Selection</h2>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>You've selected the following LAZY KEVINs for stamping:</p>
+                <div class="selected-list" id="modal-selected-list">
+                    <!-- Selected items will be populated here -->
+                </div>
+                <div class="modal-summary">
+                    <div class="summary-item">
+                        <div class="summary-label">Total KEVINs</div>
+                        <div class="summary-value" id="modal-total-count">0</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Price per KEVIN</div>
+                        <div class="summary-value">TBD</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Total Price</div>
+                        <div class="summary-value">TBD BTC</div>
+                    </div>
+                </div>
+                <p style="color: #666; font-size: 14px; margin-top: 10px;">
+                    * Pricing will be calculated based on current network fees
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn cancel-btn" onclick="closeModal()">Cancel</button>
+                <button class="modal-btn continue-btn" onclick="continueToStamp()">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let selectedNFTs = new Set();
+        let allNFTs = [];
+        let currentDisplayedNFTs = [];
+
+        // Constants
+        const BATCH_SIZE = 100;
+        const IMAGE_BASE_PATH = 'static/img/kevin/';
+        const TOTAL_NFTS = 10000;
+
+        // Initialize gallery
+        async function initializeGallery() {
+            // Generate NFT data
+            for (let i = 1; i <= TOTAL_NFTS; i++) {
+                allNFTs.push({
+                    id: i,
+                    image: `${IMAGE_BASE_PATH}${i}.png`,
+                    name: `Kevin #${i}`
+                });
+            }
+
+            // Initial render
+            renderNFTs();
+            
+            // Set up search functionality
+            setupSearch();
+        }
+
+        // Render NFTs in batches
+        function renderNFTs(nfts = allNFTs) {
+            const gallery = document.getElementById('gallery');
+            gallery.innerHTML = '';
+            
+            currentDisplayedNFTs = nfts;
+            let currentIndex = 0;
+
+            function renderBatch() {
+                const fragment = document.createDocumentFragment();
+                const endIndex = Math.min(currentIndex + BATCH_SIZE, nfts.length);
+                
+                for (let i = currentIndex; i < endIndex; i++) {
+                    const nft = nfts[i];
+                    const nftElement = createNFTElement(nft);
+                    fragment.appendChild(nftElement);
+                }
+                
+                gallery.appendChild(fragment);
+                currentIndex = endIndex;
+                
+                // Continue rendering if there are more NFTs
+                if (currentIndex < nfts.length) {
+                    requestAnimationFrame(renderBatch);
+                }
+            }
+            
+            // Start rendering
+            renderBatch();
+        }
+
+        // Create individual NFT element
+        function createNFTElement(nft) {
+            const div = document.createElement('div');
+            div.className = 'nft-item';
+            div.dataset.id = nft.id;
+            
+            if (selectedNFTs.has(nft.id)) {
+                div.classList.add('selected');
+            }
+            
+            div.innerHTML = `
+                <img class="nft-image" src="${nft.image}" alt="${nft.name}" loading="lazy">
+                <div class="nft-id">#${nft.id}</div>
+            `;
+            
+            // Add image error handler to match BTCStampsExplorer pattern
+            const img = div.querySelector('.nft-image');
+            img.onerror = function() {
+                this.style.opacity = '0.5';
+                this.alt = 'Kevin NFT - Image not available';
+            };
+            
+            div.addEventListener('click', () => toggleSelection(nft.id));
+            
+            return div;
+        }
+
+        // Toggle NFT selection
+        function toggleSelection(id) {
+            const element = document.querySelector(`[data-id="${id}"]`);
+            
+            if (selectedNFTs.has(id)) {
+                selectedNFTs.delete(id);
+                element.classList.remove('selected');
+            } else {
+                selectedNFTs.add(id);
+                element.classList.add('selected');
+            }
+            
+            updateSelectionUI();
+        }
+
+        // Update selection UI
+        function updateSelectionUI() {
+            const count = selectedNFTs.size;
+            document.getElementById('selected-count').textContent = count;
+            document.getElementById('footer-selected-count').textContent = count;
+            
+            const stampBtn = document.getElementById('stamp-btn');
+            stampBtn.disabled = count === 0;
+            
+            const clearBtn = document.getElementById('clear-btn');
+            clearBtn.style.display = count === 0 ? 'none' : 'block';
+        }
+
+        // Clear all selections
+        function clearSelection() {
+            selectedNFTs.clear();
+            document.querySelectorAll('.nft-item.selected').forEach(item => {
+                item.classList.remove('selected');
+            });
+            updateSelectionUI();
+        }
+
+        // Setup search functionality
+        function setupSearch() {
+            const searchInput = document.getElementById('search-input');
+            let searchTimeout;
+            
+            searchInput.addEventListener('input', (e) => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    const query = e.target.value.trim();
+                    
+                    if (query === '') {
+                        renderNFTs();
+                    } else {
+                        // Search by ID
+                        const searchIds = query.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id) && id >= 1 && id <= TOTAL_NFTS);
+                        
+                        if (searchIds.length > 0) {
+                            const filteredNFTs = allNFTs.filter(nft => searchIds.includes(nft.id));
+                            renderNFTs(filteredNFTs);
+                        } else {
+                            // Try to match partial IDs
+                            const filteredNFTs = allNFTs.filter(nft => nft.id.toString().includes(query));
+                            renderNFTs(filteredNFTs);
+                        }
+                    }
+                }, 300);
+            });
+        }
+
+
+        // Random selection functions
+        function showRandomSelector() {
+            const controls = document.getElementById('random-controls');
+            controls.style.display = controls.style.display === 'none' ? 'flex' : 'none';
+        }
+        
+        // Update slider display
+        document.addEventListener('DOMContentLoaded', function() {
+            const slider = document.getElementById('random-slider');
+            const countDisplay = document.getElementById('random-count');
+            
+            slider.addEventListener('input', function() {
+                countDisplay.textContent = this.value;
+            });
+        });
+        
+        function selectRandomKevins() {
+            const count = parseInt(document.getElementById('random-slider').value);
+            
+            // Clear current selection
+            clearSelection();
+            
+            // Generate random unique IDs
+            const randomIds = new Set();
+            while (randomIds.size < count) {
+                const randomId = Math.floor(Math.random() * TOTAL_NFTS) + 1;
+                randomIds.add(randomId);
+            }
+            
+            // Select the random NFTs
+            randomIds.forEach(id => {
+                selectedNFTs.add(id);
+                const element = document.querySelector(`[data-id="${id}"]`);
+                if (element) {
+                    element.classList.add('selected');
+                }
+            });
+            
+            updateSelectionUI();
+            
+            // Hide the controls
+            document.getElementById('random-controls').style.display = 'none';
+        }
+        
+        // Modal functions
+        function closeModal() {
+            document.getElementById('stampModal').style.display = 'none';
+        }
+        
+        function continueToStamp() {
+            const selectedIds = Array.from(selectedNFTs).sort((a, b) => a - b);
+            console.log('Continuing to stamp with IDs:', selectedIds);
+            
+            // This is where the stampchain integration would happen
+            // For now, just close the modal
+            closeModal();
+            
+            // Placeholder for actual stamping process
+            alert('Integration with Stampchain wallet coming soon!');
+        }
+        
+        // Function to handle deselection from modal
+        function toggleModalItem(id, element) {
+            if (element.classList.contains('deselecting')) {
+                // Remove deselecting state
+                element.classList.remove('deselecting');
+            } else {
+                // Add deselecting state
+                element.classList.add('deselecting');
+                
+                // Remove from selection after animation
+                setTimeout(() => {
+                    selectedNFTs.delete(id);
+                    
+                    // Update main gallery
+                    const galleryItem = document.querySelector(`[data-id="${id}"]`);
+                    if (galleryItem) {
+                        galleryItem.classList.remove('selected');
+                    }
+                    
+                    // Remove from modal
+                    element.remove();
+                    
+                    // Update counts
+                    updateSelectionUI();
+                    document.getElementById('modal-total-count').textContent = selectedNFTs.size;
+                    
+                    // If no items left, close modal
+                    if (selectedNFTs.size === 0) {
+                        closeModal();
+                    }
+                }, 300);
+            }
+        }
+        
+        // Update the stampNow function to show modal
+        function stampNow() {
+            const selectedIds = Array.from(selectedNFTs).sort((a, b) => a - b);
+            
+            // Always show the modal - payment will be handled by stampchain
+            // Populate modal with selected items
+            const listContainer = document.getElementById('modal-selected-list');
+            listContainer.innerHTML = '';
+            
+            selectedIds.forEach(id => {
+                const item = document.createElement('div');
+                item.className = 'selected-item';
+                item.dataset.id = id;
+                item.onclick = function() { toggleModalItem(id, this); };
+                item.innerHTML = `
+                    <img src="${IMAGE_BASE_PATH}${id}.png" alt="Kevin #${id}" onerror="this.style.opacity='0.5'">
+                    <span>#${id}</span>
+                `;
+                listContainer.appendChild(item);
+            });
+            
+            // Update total count
+            document.getElementById('modal-total-count').textContent = selectedIds.length;
+            
+            // Show modal
+            document.getElementById('stampModal').style.display = 'block';
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('stampModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializeGallery);
+    </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #3024 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "3024.png",
+  "external_url": "https://kevin420.xyz/nft/3024",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:40.195Z",
+  "hash": "46c6181427eac24b3a8898bf8f11ee3a9260fd6612c3612dc38e75b9b72dc81e",
+  "dna": "46c6181427eac24b",
+  "edition": 3024,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

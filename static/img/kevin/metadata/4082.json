@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #4082 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "4082.png",
+  "external_url": "https://kevin420.xyz/nft/4082",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:42.719Z",
+  "hash": "fb42b6e50ef154fdda6db54e21ba589739950c456c7d4de8ce9ce8c7854eb39e",
+  "dna": "fb42b6e50ef154fd",
+  "edition": 4082,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

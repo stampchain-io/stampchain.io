@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #8681 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "8681.png",
+  "external_url": "https://kevin420.xyz/nft/8681",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:53.991Z",
+  "hash": "494e6e23d678f035e37a825c71e2d81d31ea6eac8ea10c3c3569de4b76d15403",
+  "dna": "494e6e23d678f035",
+  "edition": 8681,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

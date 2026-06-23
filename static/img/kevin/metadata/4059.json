@@ -1,0 +1,51 @@
+{
+  "name": "Kevin #4059 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "4059.png",
+  "external_url": "https://kevin420.xyz/nft/4059",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 8
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Fez"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:42.666Z",
+  "hash": "bb3e8b468941447139a7078cc5acbc14d14ef17d44432ac078e675f40f034c7c",
+  "dna": "bb3e8b4689414471",
+  "edition": 4059,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

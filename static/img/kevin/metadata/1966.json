@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #1966 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DITA!",
+  "image": "1966.png",
+  "external_url": "https://kevin420.xyz/nft/1966",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Fez"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.694Z",
+  "hash": "01b606479e8cb1a116f057ce9b667466ae42957a362c7aee5f529e7e08bbf508",
+  "dna": "01b606479e8cb1a1",
+  "edition": 1966,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

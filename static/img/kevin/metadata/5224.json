@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #5224 - Minimal DEDKEV",
+  "description": "The minimalist DEDKEV - pure essence with minimal traits.",
+  "image": "5224.png",
+  "external_url": "https://kevin420.xyz/nft/5224",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:45.510Z",
+  "hash": "3c605a12ad6d2216c25704db1f50089ec49f28d44248ed4703e504e8636aca1b",
+  "dna": "3c605a12ad6d2216",
+  "edition": 5224,
+  "special": "Minimal DEDKEV",
+  "rarity": "Ultra Rare"
+}

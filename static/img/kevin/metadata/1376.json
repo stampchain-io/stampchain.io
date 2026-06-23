@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #1376 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "1376.png",
+  "external_url": "https://kevin420.xyz/nft/1376",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:36.279Z",
+  "hash": "76fe3b4211c5c4000e7b8fbb6d2b92ed0e6dd4cea1e954251fe078df4515da98",
+  "dna": "76fe3b4211c5c400",
+  "edition": 1376,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

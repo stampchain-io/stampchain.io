@@ -1,0 +1,51 @@
+{
+  "name": "Kevin #8931 - Night Mode",
+  "description": "Ready for the night with Blackhat and Cool Shades!",
+  "image": "8931.png",
+  "external_url": "https://kevin420.xyz/nft/8931",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 8
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:54.703Z",
+  "hash": "5a6e1e03aeacef62eaf9a7750af100b856d6d38da092942b42ccd35b2367a219",
+  "dna": "5a6e1e03aeacef62",
+  "edition": 8931,
+  "special": "Night Mode",
+  "rarity": "Rare"
+}

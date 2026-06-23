@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #2004 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "2004.png",
+  "external_url": "https://kevin420.xyz/nft/2004",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.805Z",
+  "hash": "c88b09516df4352207f7e8d45151807c991185114c9916a7b00d3232d01993ac",
+  "dna": "c88b09516df43522",
+  "edition": 2004,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

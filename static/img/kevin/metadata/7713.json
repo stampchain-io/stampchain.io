@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #7713 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "7713.png",
+  "external_url": "https://kevin420.xyz/nft/7713",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Fez"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:51.605Z",
+  "hash": "096dbc2dc720860b27aaabf6459e502314b89d129f3e42efbe9f231fdda5fa99",
+  "dna": "096dbc2dc720860b",
+  "edition": 7713,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

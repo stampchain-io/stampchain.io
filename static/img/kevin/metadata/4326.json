@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #4326 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "4326.png",
+  "external_url": "https://kevin420.xyz/nft/4326",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:43.339Z",
+  "hash": "60514e15e2fca90a6493c405982f7a1177601cefcc1a289fc7b25e2b115c2906",
+  "dna": "60514e15e2fca90a",
+  "edition": 4326,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #330 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "330.png",
+  "external_url": "https://kevin420.xyz/nft/330",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:33.847Z",
+  "hash": "22c2072f8dac1a939df2e52e743720b3c4550fe8bdc904271d321b98d13d3266",
+  "dna": "22c2072f8dac1a93",
+  "edition": 330,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

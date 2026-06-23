@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #1858 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "1858.png",
+  "external_url": "https://kevin420.xyz/nft/1858",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.437Z",
+  "hash": "7901fe753b9ec2a3d547343d707a5ec13122f0676c60c86cfed535d9c602b2fb",
+  "dna": "7901fe753b9ec2a3",
+  "edition": 1858,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

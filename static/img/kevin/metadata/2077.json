@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #2077 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "2077.png",
+  "external_url": "https://kevin420.xyz/nft/2077",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.974Z",
+  "hash": "1b21ba98c67df4723b5a586589eedd863f4d0a9e98f4ac51c2784fe3e6974db5",
+  "dna": "1b21ba98c67df472",
+  "edition": 2077,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

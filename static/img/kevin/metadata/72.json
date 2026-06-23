@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #72 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "72.png",
+  "external_url": "https://kevin420.xyz/nft/72",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:33.248Z",
+  "hash": "cd2d1f3e47cce79a4b5a7d21d8fc5f91fa20b7d4e603b7b216ff8a5f4dd03cf9",
+  "dna": "cd2d1f3e47cce79a",
+  "edition": 72,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

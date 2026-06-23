@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #8144 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "8144.png",
+  "external_url": "https://kevin420.xyz/nft/8144",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:52.706Z",
+  "hash": "e12625700591c266d34d8785ee97b35883343e38889ee0440e5d67536ac30396",
+  "dna": "e12625700591c266",
+  "edition": 8144,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

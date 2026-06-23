@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #3438 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "3438.png",
+  "external_url": "https://kevin420.xyz/nft/3438",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:41.173Z",
+  "hash": "0a1108e8a8f3e6c4e3025bcb74f3a4608355a7c74333d9bbdff58a653c3c305f",
+  "dna": "0a1108e8a8f3e6c4",
+  "edition": 3438,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

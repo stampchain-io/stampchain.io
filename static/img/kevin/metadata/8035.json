@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #8035 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "8035.png",
+  "external_url": "https://kevin420.xyz/nft/8035",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:52.422Z",
+  "hash": "def8cbf443b2c97ea4058eb3bc6ed448529233dbd4022532241ac1ca03ae4ea2",
+  "dna": "def8cbf443b2c97e",
+  "edition": 8035,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

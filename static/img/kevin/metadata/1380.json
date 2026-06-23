@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #1380 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "1380.png",
+  "external_url": "https://kevin420.xyz/nft/1380",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:36.288Z",
+  "hash": "9e932d6df4f993f4dfb32887bb039e69cf70d08104b65c4c5a272e38bd727a98",
+  "dna": "9e932d6df4f993f4",
+  "edition": 1380,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

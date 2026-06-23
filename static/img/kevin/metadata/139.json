@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #139 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "139.png",
+  "external_url": "https://kevin420.xyz/nft/139",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:33.402Z",
+  "hash": "b8af4bf11cc86694f351bf8fb7a6c411e04520f5e7d26f65ea2265a33e04084a",
+  "dna": "b8af4bf11cc86694",
+  "edition": 139,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

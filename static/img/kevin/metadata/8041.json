@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #8041 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "8041.png",
+  "external_url": "https://kevin420.xyz/nft/8041",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:52.437Z",
+  "hash": "5e96100dc22234a1556ec1f0722ab4ca8b3fa1fbf060fb6b964d77f9dc5049fe",
+  "dna": "5e96100dc22234a1",
+  "edition": 8041,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

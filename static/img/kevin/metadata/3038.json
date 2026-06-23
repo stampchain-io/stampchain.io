@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #3038 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "3038.png",
+  "external_url": "https://kevin420.xyz/nft/3038",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:40.224Z",
+  "hash": "e6777b483a9466d2f536b99a7a8bce906dae043ce8104a392e1ad4d18113442b",
+  "dna": "e6777b483a9466d2",
+  "edition": 3038,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

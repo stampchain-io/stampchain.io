@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #3508 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "3508.png",
+  "external_url": "https://kevin420.xyz/nft/3508",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:41.354Z",
+  "hash": "79e3d82cb88c382c4d15b417d1bf604d570a5325b1d999a1e72a0d8cf0f47c41",
+  "dna": "79e3d82cb88c382c",
+  "edition": 3508,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

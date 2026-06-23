@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #3118 - Witch Nose",
+  "description": "A mystical Kevin with the rare Witch Nose!",
+  "image": "3118.png",
+  "external_url": "https://kevin420.xyz/nft/3118",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:40.402Z",
+  "hash": "341a74d99248fe518da313420c0ed9ce1870f816dc398de4f268073d06bdcc82",
+  "dna": "341a74d99248fe51",
+  "edition": 3118,
+  "special": "Witch Nose",
+  "rarity": "Rare"
+}

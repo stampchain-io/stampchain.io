@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #3069 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "3069.png",
+  "external_url": "https://kevin420.xyz/nft/3069",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:40.291Z",
+  "hash": "4390425d22f01c50d7cb860a50d16688ec5f9392bcf72d906f6d4ec354bc2db8",
+  "dna": "4390425d22f01c50",
+  "edition": 3069,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

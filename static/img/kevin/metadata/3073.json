@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #3073 - Witch Nose",
+  "description": "A mystical Kevin with the rare Witch Nose!",
+  "image": "3073.png",
+  "external_url": "https://kevin420.xyz/nft/3073",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:40.301Z",
+  "hash": "6288add56807cc5ca162e46f93deac27fff17f3a61c2b3f7f72bba38439e959a",
+  "dna": "6288add56807cc5c",
+  "edition": 3073,
+  "special": "Witch Nose",
+  "rarity": "Rare"
+}

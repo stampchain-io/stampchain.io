@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #4038 - NEXUS Convergence",
+  "description": "An extremely rare NEXUS convergence - when background and face align in perfect NEXUS harmony.",
+  "image": "4038.png",
+  "external_url": "https://kevin420.xyz/nft/4038",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:42.620Z",
+  "hash": "cc5a4a1f0d15085d8cf4c267173fa97b5b1e8784ff5a67b66eacd7346f70e8ae",
+  "dna": "cc5a4a1f0d15085d",
+  "edition": 4038,
+  "special": "Complete NEXUS",
+  "rarity": "Mythic"
+}

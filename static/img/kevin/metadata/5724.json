@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #5724 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "5724.png",
+  "external_url": "https://kevin420.xyz/nft/5724",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Fez"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:46.724Z",
+  "hash": "430f7ab47fbe725112302f6ba5793b1c2ca30fd6928375359f74d3aae481d196",
+  "dna": "430f7ab47fbe7251",
+  "edition": 5724,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

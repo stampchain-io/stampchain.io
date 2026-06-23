@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #3163 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "3163.png",
+  "external_url": "https://kevin420.xyz/nft/3163",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:40.507Z",
+  "hash": "6d77351f01806687c6a5447c8335195a8779947f125a6932ca6aa489160ab1f9",
+  "dna": "6d77351f01806687",
+  "edition": 3163,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

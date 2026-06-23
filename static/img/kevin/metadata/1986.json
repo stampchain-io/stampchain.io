@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #1986 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "1986.png",
+  "external_url": "https://kevin420.xyz/nft/1986",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.759Z",
+  "hash": "4842792540b4b2d76614ab102ee20d1770bbc590a91aba4bf083160ccae8e15d",
+  "dna": "4842792540b4b2d7",
+  "edition": 1986,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #307 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "307.png",
+  "external_url": "https://kevin420.xyz/nft/307",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:33.795Z",
+  "hash": "17fd8e6d71087830734dd702761ac3902953877ef259c42682e4689bdf54a65e",
+  "dna": "17fd8e6d71087830",
+  "edition": 307,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

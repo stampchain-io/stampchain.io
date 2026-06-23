@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #1988 - Night Mode",
+  "description": "Ready for the night with Blackhat and Cool Shades!",
+  "image": "1988.png",
+  "external_url": "https://kevin420.xyz/nft/1988",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.765Z",
+  "hash": "cac35703fb58df9b7679a3cb44b6298d4d3f44189ede3f7c33baa22b3146a159",
+  "dna": "cac35703fb58df9b",
+  "edition": 1988,
+  "special": "Night Mode",
+  "rarity": "Rare"
+}

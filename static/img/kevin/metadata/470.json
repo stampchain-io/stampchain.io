@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #470 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "470.png",
+  "external_url": "https://kevin420.xyz/nft/470",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.179Z",
+  "hash": "389d36c81a46ccdbc0694bb457b8fdf7ed6ccbeee7eafb8b530aae57e35edce4",
+  "dna": "389d36c81a46ccdb",
+  "edition": 470,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

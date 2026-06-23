@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #255 - Viva Mexico",
+  "description": "Celebrating Mexico with Viva style!",
+  "image": "255.png",
+  "external_url": "https://kevin420.xyz/nft/255",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:33.656Z",
+  "hash": "ff47e2dfec226260b02261cb08bfda20538f37539768a0243555971f25c6faf2",
+  "dna": "ff47e2dfec226260",
+  "edition": 255,
+  "special": "Viva Mexico",
+  "rarity": "Uncommon"
+}

@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #5631 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "5631.png",
+  "external_url": "https://kevin420.xyz/nft/5631",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:46.501Z",
+  "hash": "e392287cc104addffc3e04a1d88b20888da259836ed8dbeb37857623bd544b04",
+  "dna": "e392287cc104addf",
+  "edition": 5631,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

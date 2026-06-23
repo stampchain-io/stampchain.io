@@ -1,0 +1,51 @@
+{
+  "name": "Kevin #6677 - Witch Nose",
+  "description": "A mystical Kevin with the rare Witch Nose!",
+  "image": "6677.png",
+  "external_url": "https://kevin420.xyz/nft/6677",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 8
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:49.046Z",
+  "hash": "96f675a21ec7b4c2f90d2364f820e778d5e120f4c11422d8a3fec8c4d850b218",
+  "dna": "96f675a21ec7b4c2",
+  "edition": 6677,
+  "special": "Witch Nose",
+  "rarity": "Rare"
+}

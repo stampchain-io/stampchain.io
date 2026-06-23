@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #2064 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "2064.png",
+  "external_url": "https://kevin420.xyz/nft/2064",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dc6e16"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.945Z",
+  "hash": "314a07aa6af8aed0fc20f691970fe134e38111da0421946cfde06e4d443d9bae",
+  "dna": "314a07aa6af8aed0",
+  "edition": 2064,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #359 - NEXUS Convergence",
+  "description": "An extremely rare NEXUS convergence - when background and face align in perfect NEXUS harmony.",
+  "image": "359.png",
+  "external_url": "https://kevin420.xyz/nft/359",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:33.914Z",
+  "hash": "94096625efcaf2587b404bf2ea204e78861815ae7a3ae3685c687e0b3dfff2f6",
+  "dna": "94096625efcaf258",
+  "edition": 359,
+  "special": "Complete NEXUS",
+  "rarity": "Mythic"
+}

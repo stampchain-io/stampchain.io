@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #8896 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "8896.png",
+  "external_url": "https://kevin420.xyz/nft/8896",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:54.614Z",
+  "hash": "9c9023ffd5d38f2a665c0228bf74ff03d53cec023332d331614189fd287fe9cd",
+  "dna": "9c9023ffd5d38f2a",
+  "edition": 8896,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

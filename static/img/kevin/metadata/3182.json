@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #3182 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "3182.png",
+  "external_url": "https://kevin420.xyz/nft/3182",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:40.546Z",
+  "hash": "b57dc0d066a796eaeb1253679eb8b9eb551567aad0fca7e5106c692d96cc320d",
+  "dna": "b57dc0d066a796ea",
+  "edition": 3182,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

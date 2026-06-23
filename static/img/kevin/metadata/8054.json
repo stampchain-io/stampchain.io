@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #8054 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "8054.png",
+  "external_url": "https://kevin420.xyz/nft/8054",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:52.466Z",
+  "hash": "ce0471282c28f4dbd4bea50da1450993e18a902c68686980b99324314b77cd23",
+  "dna": "ce0471282c28f4db",
+  "edition": 8054,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

@@ -1,0 +1,51 @@
+{
+  "name": "Kevin #6045 - Witch Nose",
+  "description": "A mystical Kevin with the rare Witch Nose!",
+  "image": "6045.png",
+  "external_url": "https://kevin420.xyz/nft/6045",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 8
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:47.545Z",
+  "hash": "24869cf9ad5a0db8ab39fbc47fcabed799f946a4883e5b8a226a34446cda411a",
+  "dna": "24869cf9ad5a0db8",
+  "edition": 6045,
+  "special": "Witch Nose",
+  "rarity": "Rare"
+}

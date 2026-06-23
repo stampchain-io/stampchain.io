@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #202 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "202.png",
+  "external_url": "https://kevin420.xyz/nft/202",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:33.539Z",
+  "hash": "861485daf15679b860a9ab0ae28d57a4dd1f014050b0e645573a3dd0dafb8afa",
+  "dna": "861485daf15679b8",
+  "edition": 202,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

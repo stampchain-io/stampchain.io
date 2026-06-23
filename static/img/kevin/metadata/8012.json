@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #8012 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "8012.png",
+  "external_url": "https://kevin420.xyz/nft/8012",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:52.362Z",
+  "hash": "3d544da27815a4b7020681fd0e657d07f8ef2f3a5d4b8cf5750c87623acbc8d4",
+  "dna": "3d544da27815a4b7",
+  "edition": 8012,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

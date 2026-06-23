@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #6348 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "6348.png",
+  "external_url": "https://kevin420.xyz/nft/6348",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:48.246Z",
+  "hash": "48e91f618c39ad3c96a81a895769299ad61d822fbff97c8262b12867148ad1b4",
+  "dna": "48e91f618c39ad3c",
+  "edition": 6348,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

@@ -1,0 +1,51 @@
+{
+  "name": "Kevin #1965 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "1965.png",
+  "external_url": "https://kevin420.xyz/nft/1965",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 8
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Referee"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.691Z",
+  "hash": "6eb18be3269c4b3f61d7c04b85b550c29f92defe1507f75a4e40b1b43f82720d",
+  "dna": "6eb18be3269c4b3f",
+  "edition": 1965,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

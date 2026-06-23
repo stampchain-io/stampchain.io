@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #633 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "633.png",
+  "external_url": "https://kevin420.xyz/nft/633",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.544Z",
+  "hash": "feeff664e9b11661d383c138efdc1db1ee441659c3250d1f605d59900f2969b6",
+  "dna": "feeff664e9b11661",
+  "edition": 633,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

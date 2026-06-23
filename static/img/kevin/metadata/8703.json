@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #8703 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "8703.png",
+  "external_url": "https://kevin420.xyz/nft/8703",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:54.045Z",
+  "hash": "fcdef5e666242a999935eef990955255cb6e70e2892ebb6eb1780a01f8803de5",
+  "dna": "fcdef5e666242a99",
+  "edition": 8703,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

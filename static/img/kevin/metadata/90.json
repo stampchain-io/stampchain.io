@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #90 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "90.png",
+  "external_url": "https://kevin420.xyz/nft/90",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pepe"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:33.289Z",
+  "hash": "3ebc980d193e17a4ecd23aae736af8dfc2a90cb5a429a6ec2bbc21a1b13799f1",
+  "dna": "3ebc980d193e17a4",
+  "edition": 90,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

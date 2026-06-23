@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #4569 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "4569.png",
+  "external_url": "https://kevin420.xyz/nft/4569",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Crown"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:43.892Z",
+  "hash": "0f639d9169664eb20e842dd6ab310a48ea1f2352f8cf4fa122fba3587e6156a8",
+  "dna": "0f639d9169664eb2",
+  "edition": 4569,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

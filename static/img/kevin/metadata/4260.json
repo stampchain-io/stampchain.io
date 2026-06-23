@@ -1,0 +1,51 @@
+{
+  "name": "Kevin #4260 - Viva Enthusiast",
+  "description": "A true Viva fan with 3 Viva traits!",
+  "image": "4260.png",
+  "external_url": "https://kevin420.xyz/nft/4260",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 8
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Viva Cap"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:43.162Z",
+  "hash": "a8b0680d9e97946ddc2cd4f243e4d0bb0cc2c237de282922d3de26b9d172f832",
+  "dna": "a8b0680d9e97946d",
+  "edition": 4260,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

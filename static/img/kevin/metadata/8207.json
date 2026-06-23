@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #8207 - Viva Enthusiast",
+  "description": "A true Viva fan with 2 Viva traits!",
+  "image": "8207.png",
+  "external_url": "https://kevin420.xyz/nft/8207",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "NEXUS"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Viva Mouth"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:52.852Z",
+  "hash": "c11cd8cc8ba88fa7164d978c2076d1365ee1989e06cafbc0dfdfae5efa5e7182",
+  "dna": "c11cd8cc8ba88fa7",
+  "edition": 8207,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

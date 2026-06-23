@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #2011 - Witch Nose",
+  "description": "A mystical Kevin with the rare Witch Nose!",
+  "image": "2011.png",
+  "external_url": "https://kevin420.xyz/nft/2011",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Pixel Pals"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Blue Meanie"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.821Z",
+  "hash": "ab77b3588f5307f16b4510937d6e31bf65f6382e2d6dfb3a96f543a291651798",
+  "dna": "ab77b3588f5307f1",
+  "edition": 2011,
+  "special": "Witch Nose",
+  "rarity": "Rare"
+}

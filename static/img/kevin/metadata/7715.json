@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #7715 - Viva Enthusiast",
+  "description": "A true Viva fan with 3 Viva traits!",
+  "image": "7715.png",
+  "external_url": "https://kevin420.xyz/nft/7715",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Viva LAZY Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:51.610Z",
+  "hash": "665031eac45f7fc5723c0a0d0b2132c5eb91014bb227d93f4ace41d48f781f31",
+  "dna": "665031eac45f7fc5",
+  "edition": 7715,
+  "special": "Viva Enthusiast",
+  "rarity": "Rare"
+}

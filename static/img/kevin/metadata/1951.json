@@ -1,0 +1,43 @@
+{
+  "name": "Kevin #1951 - DJ KEVIN",
+  "description": "Spinning beats with the exclusive DJ KEVIN gear!",
+  "image": "1951.png",
+  "external_url": "https://kevin420.xyz/nft/1951",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 6
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "DJ KEVIN"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "Viva-Bling"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.659Z",
+  "hash": "a8edb0f46abba70539eb3ec1d732a03ad200dc82b59f86af34e7feeefcb997e9",
+  "dna": "a8edb0f46abba705",
+  "edition": 1951,
+  "special": "DJ KEVIN",
+  "rarity": "Rare"
+}

@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #9701 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "9701.png",
+  "external_url": "https://kevin420.xyz/nft/9701",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Neon Kevin by DITA"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Fez"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:56.709Z",
+  "hash": "b1edc0676c0e28d597bec71d03760904738a289e2ef9f2c06b03b05b4a82eaec",
+  "dna": "b1edc0676c0e28d5",
+  "edition": 9701,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

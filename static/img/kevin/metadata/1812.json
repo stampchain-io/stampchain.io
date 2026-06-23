@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #1812 - Witch Nose",
+  "description": "A mystical Kevin with the rare Witch Nose!",
+  "image": "1812.png",
+  "external_url": "https://kevin420.xyz/nft/1812",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Nose",
+      "value": "Witch Nose"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "Cool Shades"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:37.317Z",
+  "hash": "99fa247b49daf227b8e90ffeb1e54521ce12f0352626ab5d42d357292f94944c",
+  "dna": "99fa247b49daf227",
+  "edition": 1812,
+  "special": "Witch Nose",
+  "rarity": "Rare"
+}

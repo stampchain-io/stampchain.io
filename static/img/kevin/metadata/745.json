@@ -1,0 +1,37 @@
+{
+  "name": "Kevin #745",
+  "description": "Kevin is a generative PFP collection showcasing unique and fun characters.",
+  "image": "745.png",
+  "external_url": "https://kevin420.xyz/nft/745",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Warrior"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Magic Shirt"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Pepe Vision"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:34.802Z",
+  "hash": "a38a03f20e301d9110e45765a53837ee283608cbac0025e493b29d0ddccde69c",
+  "dna": "a38a03f20e301d91",
+  "edition": 745
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Kevin #9285 - Artist Series",
+  "description": "Part of the exclusive Artist Series by DarkIncStudio!",
+  "image": "9285.png",
+  "external_url": "https://kevin420.xyz/nft/9285",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 5
+    },
+    {
+      "trait_type": "Background",
+      "value": "VIVA BG"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Shirt",
+      "value": "Jacket"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Sleepy Head"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:55.608Z",
+  "hash": "118b0e84e02c97271d07a19eaabce8c64af0080f55d81859cb1a9eeac12255a0",
+  "dna": "118b0e84e02c9727",
+  "edition": 9285,
+  "special": "Artist Series",
+  "rarity": "Uncommon"
+}

@@ -1,0 +1,47 @@
+{
+  "name": "Kevin #7000 - Vision Master",
+  "description": "Enhanced vision with both glasses and special eyes!",
+  "image": "7000.png",
+  "external_url": "https://kevin420.xyz/nft/7000",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 7
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    },
+    {
+      "trait_type": "Hats",
+      "value": "Blackhat"
+    },
+    {
+      "trait_type": "Accessories",
+      "value": "BBleiztz Glasses"
+    },
+    {
+      "trait_type": "Bling",
+      "value": "BLING"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:49.850Z",
+  "hash": "36094258f7e51fe0ce6c7a0de2176fffd3247b32cb5ee69c612121390d0dc5e0",
+  "dna": "36094258f7e51fe0",
+  "edition": 7000,
+  "special": "Vision Master",
+  "rarity": "Rare"
+}

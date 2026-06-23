@@ -1,0 +1,35 @@
+{
+  "name": "Kevin #9560 - Pure Kevin",
+  "description": "Minimalist perfection - no accessories, no bling, just Kevin.",
+  "image": "9560.png",
+  "external_url": "https://kevin420.xyz/nft/9560",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 4
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "DEDKEV by DarkIncStudio"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Mike Vision"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:56.318Z",
+  "hash": "066beb60971861450390ba5a62d2b1da14e2997eab3fdc0a9692c99a259252ff",
+  "dna": "066beb6097186145",
+  "edition": 9560,
+  "special": "Pure Kevin",
+  "rarity": "Rare"
+}

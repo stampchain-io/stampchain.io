@@ -1,0 +1,31 @@
+{
+  "name": "Kevin #3023 - Minimal Smoker",
+  "description": "The minimalist smoker - just the essentials with Yotet Smoke.",
+  "image": "3023.png",
+  "external_url": "https://kevin420.xyz/nft/3023",
+  "attributes": [
+    {
+      "trait_type": "Trait Count",
+      "value": 3
+    },
+    {
+      "trait_type": "Background",
+      "value": "Mexico"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Kevin Base"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Yotet Smoke"
+    }
+  ],
+  "compiler": "Kevin Generator v1.0",
+  "date": "2025-07-28T20:59:40.193Z",
+  "hash": "e117d325718f2eabb1b59de0f00f3eb081c2a51bb87dedacdd5d3e0347b16696",
+  "dna": "e117d325718f2eab",
+  "edition": 3023,
+  "special": "Minimal Yotet",
+  "rarity": "Ultra Rare"
+}
