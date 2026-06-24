@@ -1,9 +1,11 @@
 // routes/api/v2/create/send.ts
-import { TX_CONSTANTS } from "$constants";
 import { Handlers } from "$fresh/server.ts";
 import { ApiResponseUtil } from "$lib/utils/api/responses/apiResponseUtil.ts";
 import { logger } from "$lib/utils/logger.ts";
-import { CounterpartyApiManager } from "$server/services/counterpartyApiService.ts";
+import {
+  CounterpartyApiManager,
+  normalizeFeeRate,
+} from "$server/services/counterpartyApiService.ts";
 import { CommonUTXOService } from "$server/services/utxo/commonUtxoService.ts";
 import type { SendRequestBody, SendResponse } from "$types/api.d.ts";
 import { Buffer } from "node:buffer";
@@ -69,9 +71,14 @@ export const handler: Handlers<SendResponse | { error: string }> = {
         verbose: true,
         // Pass fee info if CounterpartyApiManager.createSend expects it for the CP API call
         // Assuming CounterpartyApiManager.createSend handles conversion if CP API needs fee_per_kb
+        // Convert satsPerVB → fee_per_kb (sat/kB) via the canonical helper so
+        // Counterparty's create_send receives a valid integer. The prior code
+        // multiplied by the nonexistent TX_CONSTANTS.APPROX_VBYTES_PER_KB,
+        // yielding NaN and a 500 whenever satsPerVB was used without an
+        // explicit options.fee_per_kb (#1151).
         fee_per_kb: options.fee_per_kb ||
-          (satsPerVB
-            ? satsPerVB * (TX_CONSTANTS as any).APPROX_VBYTES_PER_KB / 1000
+          (satsPerVB && satsPerVB > 0
+            ? normalizeFeeRate({ satsPerVB }).normalizedSatsPerKB
             : undefined),
       };
       if (options.memo !== undefined) xcpCreateSendOptions.memo = options.memo;
