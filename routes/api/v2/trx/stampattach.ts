@@ -65,7 +65,17 @@ export const handler: Handlers = {
       if (options?.satsPerVB !== undefined) {
         feeArgs.satsPerVB = options.satsPerVB;
       }
-      const normalizedFees = normalizeFeeRate(feeArgs);
+      // normalizeFeeRate throws when no fee was supplied (empty options) or the
+      // rate is non-positive — map both to a structured 400 instead of letting
+      // the throw escape to the outer catch as an opaque 500 (#1155 class).
+      let normalizedFees;
+      try {
+        normalizedFees = normalizeFeeRate(feeArgs);
+      } catch (_feeErr) {
+        return ApiResponseUtil.badRequest(
+          "Invalid or missing fee rate. Provide options.satsPerVB or options.fee_per_kb.",
+        );
+      }
 
       if (!normalizedFees || normalizedFees.normalizedSatsPerVB <= 0) {
         return ApiResponseUtil.badRequest("Invalid fee rate.");
