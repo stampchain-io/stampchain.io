@@ -1,18 +1,12 @@
 import { TX_CONSTANTS } from "$constants";
 import { Handlers } from "$fresh/server.ts";
-import type {
-  InputTypeForSizeEstimation,
-  OutputTypeForSizeEstimation,
-  ScriptTypeInfo,
-} from "$lib/types/transaction.d.ts";
 import { ApiResponseUtil } from "$lib/utils/api/responses/apiResponseUtil.ts";
 import { logger } from "$lib/utils/logger.ts";
-import { estimateMintingTransactionSize } from "$lib/utils/bitcoin/minting/transactionSizes.ts";
-import { getScriptTypeInfo } from "$lib/utils/bitcoin/scripts/scriptTypeUtils.ts";
 import {
   buildCpPsbtInput,
   buildCpPsbtInputsFromRawTx,
 } from "$lib/utils/bitcoin/psbt/cpRawTxInputs.ts";
+import { buildServiceFeeOutputs } from "$lib/utils/bitcoin/psbt/serviceFeeOutputs.ts";
 import { serverConfig } from "$server/config/config.ts"; // Import serverConfig
 import { StampController } from "$server/controller/stampController.ts";
 import {
@@ -164,176 +158,63 @@ export const handler: Handlers = {
         inputsToSign.push(...cpInputsToSign);
       }
 
-      let cpOutputsTotalValue = BigInt(0);
-      const essentialCpOutputs: { script: Buffer; value: bigint }[] = [];
-      for (const output of cpTx.outs) {
-        try {
-          bjsAddress.fromOutputScript(
-            output.script,
-            network,
-          );
-        } catch (_e: any) { /* Not a simple address output, _e is now used */ }
-        essentialCpOutputs.push({
-          script: Buffer.from(output.script),
-          value: BigInt(output.value),
-        });
-        cpOutputsTotalValue += BigInt(output.value);
-      }
-      essentialCpOutputs.forEach((out) => psbt.addOutput(out));
+      // Trust Counterparty's composed outputs: CP has already deducted its
+      // network fee and computed the change back to the source. We add them
+      // as-is (same approach as create/send, #1137) and only optionally splice
+      // an operator service fee out of CP's change via the shared helper. The
+      // prior code copied CP's change AND re-derived its own network fee + a
+      // second change output, double-counting the fee (change = cpFee - ourFee
+      // -> a constant ~279 sat deficit on every wallet, #959).
+      const cpOutputs = cpTx.outs.map((output) => ({
+        script: new Uint8Array(output.script),
+        value: BigInt(output.value),
+      }));
 
-      let totalValueToOutputsExcludingChange = cpOutputsTotalValue;
       const feeService = body.service_fee ?? options?.service_fee ??
         parseInt(serverConfig.MINTING_SERVICE_FEE_FIXED_SATS, 10);
       const feeServiceAddress = body.service_fee_address ??
         options?.service_fee_address ??
         serverConfig.MINTING_SERVICE_FEE_ADDRESS;
-      let actualServiceFeeAdded = BigInt(0);
 
-      if (feeService > 0 && feeServiceAddress) {
-        psbt.addOutput({
-          address: feeServiceAddress,
-          value: BigInt(feeService),
-        });
-        totalValueToOutputsExcludingChange += BigInt(feeService);
-        actualServiceFeeAdded = BigInt(feeService);
-        logger.info("api", {
-          message: "Added service fee output",
-          fee: feeService,
-          to: feeServiceAddress,
-        });
-      }
-
-      // Estimate size and calculate final network fee and change
-      const tempPsbtForSize = psbt.clone();
-      tempPsbtForSize.addOutput({
-        address: address,
-        value: BigInt(TX_CONSTANTS.DUST_SIZE),
-      });
-
-      const inputsForSizeEst: InputTypeForSizeEstimation[] = psbt.data.inputs
-        .map((input, idx) => {
-          let scriptHex = "";
-          if (input.witnessUtxo?.script) {
-            scriptHex = input.witnessUtxo.script.toString();
-          } else if (input.nonWitnessUtxo) {
+      const { outputs: finalOutputs, cpNetworkFee, serviceFeeAdded, totalFee } =
+        buildServiceFeeOutputs({
+          cpOutputs,
+          sumOfUserInputs,
+          sourceAddress: address,
+          serviceFeeSats: BigInt(feeService > 0 ? feeService : 0),
+          serviceFeeAddress: feeServiceAddress,
+          dustSize: BigInt(TX_CONSTANTS.DUST_SIZE),
+          decodeAddress: (script) => {
             try {
-              scriptHex = Buffer.from(
-                Transaction.fromBuffer(input.nonWitnessUtxo)
-                  .outs[psbt.txInputs[idx].index].script,
-              ).toString("hex");
-            } catch (e: any) {
-              logger.warn("api", {
-                message:
-                  `Error parsing nonWitnessUtxo for size est input ${idx}: ${e.message}`,
-              });
+              return bjsAddress.fromOutputScript(Buffer.from(script), network);
+            } catch {
+              return undefined;
             }
-          }
-          const scriptInfo: ScriptTypeInfo = getScriptTypeInfo(scriptHex || "");
-
-          const estInput: InputTypeForSizeEstimation = {
-            type: scriptInfo.type,
-            isWitness: scriptInfo.isWitness,
-          };
-          if (scriptInfo.redeemScriptType?.type !== undefined) {
-            estInput.redeemScriptType = scriptInfo.redeemScriptType.type;
-          }
-          return estInput;
+          },
+          encodeAddress: (addr) =>
+            new Uint8Array(bjsAddress.toOutputScript(addr, network)),
         });
 
-      const outputsForSizeEst: OutputTypeForSizeEstimation[] = tempPsbtForSize
-        .txOutputs.map((out) => {
-          const scriptInfo: ScriptTypeInfo = getScriptTypeInfo(
-            Buffer.from(out.script).toString("hex"),
-          );
-          return { type: scriptInfo.type };
-        });
+      for (const out of finalOutputs) {
+        psbt.addOutput({ script: Buffer.from(out.script), value: out.value });
+      }
 
-      const estimatedVsize = estimateMintingTransactionSize({
-        inputs: inputsForSizeEst,
-        outputs: outputsForSizeEst,
-        includeChangeOutput: false,
+      logger.info("api", {
+        message: "Assembled stampattach outputs (trust-CP + service fee)",
+        cpNetworkFee: cpNetworkFee.toString(),
+        serviceFeeAdded: serviceFeeAdded.toString(),
+        totalFee: totalFee.toString(),
+        outputCount: finalOutputs.length,
       });
-      const networkFee = BigInt(
-        Math.ceil(estimatedVsize * normalizedFees.normalizedSatsPerVB),
-      );
-      const finalUserChangeConst = sumOfUserInputs -
-        totalValueToOutputsExcludingChange - networkFee;
-      const finalUserChangeValue = finalUserChangeConst;
 
-      if (actualServiceFeeAdded > BigInt(0)) {
-        let cpChangeOutputIndex = -1;
-        for (let i = psbt.txOutputs.length - 1; i >= 0; i--) {
-          let outputAddr;
-          try {
-            outputAddr = bjsAddress.fromOutputScript(
-              psbt.txOutputs[i].script,
-              network,
-            );
-          } catch (_e: any) { // Intentionally empty
-          }
-          if (outputAddr === address && outputAddr !== feeServiceAddress) {
-            cpChangeOutputIndex = i;
-            break;
-          }
-        }
-        if (
-          cpChangeOutputIndex !== -1 &&
-          psbt.txOutputs[cpChangeOutputIndex].value !== actualServiceFeeAdded
-        ) {
-          logger.info("api", {
-            message:
-              `Removing potential CP change output at index ${cpChangeOutputIndex} before adding new change.`,
-          });
-          psbt.txOutputs.splice(cpChangeOutputIndex, 1);
-          if (psbt.data.globalMap.unsignedTx) {
-            (psbt.data.globalMap.unsignedTx as any).outs.splice(
-              cpChangeOutputIndex,
-              1,
-            );
-          }
-        } else {
-          while (psbt.txOutputs.length > 0) psbt.txOutputs.pop();
-          if (psbt.data.globalMap.unsignedTx) {
-            (psbt.data.globalMap.unsignedTx as any).outs = [];
-          }
-          essentialCpOutputs.forEach((out) => psbt.addOutput(out));
-          if (feeService > 0 && feeServiceAddress) {
-            psbt.addOutput({
-              address: feeServiceAddress,
-              value: BigInt(feeService),
-            });
-          }
-        }
-      }
-      if (finalUserChangeValue >= BigInt(TX_CONSTANTS.DUST_SIZE)) {
-        psbt.addOutput({ address: address, value: finalUserChangeValue });
-      } else if (
-        finalUserChangeValue > BigInt(0) &&
-        finalUserChangeValue < BigInt(TX_CONSTANTS.DUST_SIZE)
-      ) {
-        logger.info("api", {
-          message: "Change is dust, adding to fee for stampattach",
-          change: finalUserChangeValue.toString(),
-        });
-      } else if (finalUserChangeValue < BigInt(0)) {
-        throw new Error(
-          `Insufficient funds after all calculations for attach. Deficit: ${-finalUserChangeValue}`,
-        );
-      }
       // Return unsigned PSBT for the wallet to sign (do NOT finalize —
-      // finalizeAllInputs() requires signatures which the wallet provides)
+      // finalizeAllInputs() requires signatures which the wallet provides).
       const finalPsbtHex = psbt.toHex();
       return ApiResponseUtil.success({
         psbtHex: finalPsbtHex,
         inputsToSign,
-        estimatedFee: Number(
-          networkFee +
-            (finalUserChangeValue < BigInt(TX_CONSTANTS.DUST_SIZE) &&
-                finalUserChangeValue > 0
-              ? finalUserChangeValue
-              : BigInt(0)),
-        ),
-        estimatedVsize: Number(estimatedVsize),
+        estimatedFee: Number(totalFee),
+        estimatedVsize: cpTx.virtualSize(),
       }, { forceNoCache: true });
     } catch (error: unknown) {
       const errorMessage = error instanceof Error
