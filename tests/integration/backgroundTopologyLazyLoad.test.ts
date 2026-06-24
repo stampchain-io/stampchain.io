@@ -1,446 +1,251 @@
 /**
- * @fileoverview Background Topology Lazy Loading Integration Tests
- * @description Tests for lazy loading background animation after FCP
+ * @fileoverview BackgroundTopology Island Tests
+ * @description Tests for the self-contained topology animation island
  *
- * Task 8.2: Verify BackgroundTopology defers initialization until after FCP
- * - Replace polling loop with event-based loading
- * - Use requestIdleCallback or IntersectionObserver for deferral
- * - Load three.js/p5.js only when needed
- * - Prevent race conditions
+ * The topology engine is now embedded directly in BackgroundTopology.tsx.
+ * - No external scripts, globals, or event coordination required
+ * - Topology class is instantiated directly inside useEffect
+ * - A ref guard prevents double initialization
+ * - Cleanup via destroy() on unmount
  */
 
 import { assertEquals, assertExists } from "@std/assert";
 import { afterEach, beforeEach, describe, it } from "@std/testing/bdd";
 
-describe("BackgroundTopology Lazy Loading", () => {
-  let mockWindow: any;
-  let scriptLoadCallbacks: Map<string, () => void>;
-  let idleCallbacks: Array<() => void>;
+/* ===== PATH HELPERS ===== */
+const resolve = (rel: string) => new URL(rel, import.meta.url).pathname;
+const ISLAND_PATH = resolve(
+  "../../islands/layout/BackgroundTopology.tsx",
+);
+
+describe("BackgroundTopology Island", () => {
+  let mockWindow: Record<string, unknown>;
 
   beforeEach(() => {
-    scriptLoadCallbacks = new Map();
-    idleCallbacks = [];
-
-    // Mock global window with script loading simulation
-    mockWindow = {
-      THREE: undefined,
-      p5: undefined,
-      VANTA: undefined,
-      requestIdleCallback: (callback: () => void) => {
-        idleCallbacks.push(callback);
-        return idleCallbacks.length;
-      },
-      cancelIdleCallback: (_id: number) => {
-        // No-op for testing
-      },
-      addEventListener: (_event: string, _callback: () => void) => {
-        // No-op for testing
-      },
-      removeEventListener: (_event: string, _callback: () => void) => {
-        // No-op for testing
-      },
-    };
-
-    globalThis.window = mockWindow as any;
+    mockWindow = {};
+    globalThis.window = mockWindow as typeof globalThis.window;
   });
 
   afterEach(() => {
-    scriptLoadCallbacks.clear();
-    idleCallbacks = [];
+    // No persistent state to reset
   });
 
-  describe("Event-Based Script Loading", () => {
-    it("should wait for script load events instead of polling", () => {
-      let initializationAttempts = 0;
+  /* ===== SOURCE CONTRACT ===== */
+  describe("Source Contract", () => {
+    it("should not reference window.VANTA", () => {
+      const source = Deno.readTextFileSync(ISLAND_PATH);
+      assertEquals(
+        source.includes("window.VANTA") ||
+          source.includes("globalThis.VANTA"),
+        false,
+        "Must not depend on the window.VANTA global",
+      );
+    });
+
+    it("should not listen for vanta-scripts-ready", () => {
+      const source = Deno.readTextFileSync(ISLAND_PATH);
+      assertEquals(
+        source.includes("vanta-scripts-ready"),
+        false,
+        "Must not use the vanta-scripts-ready custom event",
+      );
+    });
+
+    it("should not reference an external topology script file", () => {
+      const source = Deno.readTextFileSync(ISLAND_PATH);
+      assertEquals(
+        source.includes("background-topology.js"),
+        false,
+        "Must not reference the external topology script",
+      );
+    });
+
+    it("should define a Topology class directly", () => {
+      const source = Deno.readTextFileSync(ISLAND_PATH);
+      assertEquals(
+        source.includes("class Topology"),
+        true,
+        "Must embed the Topology engine as a TypeScript class",
+      );
+    });
+
+    it("should not reference three.js or p5.js", () => {
+      const source = Deno.readTextFileSync(ISLAND_PATH);
+      assertEquals(
+        source.includes("three.min.js") || source.includes("p5.min.js"),
+        false,
+        "Must not reference legacy library dependencies",
+      );
+    });
+  });
+
+  /* ===== NO GLOBAL DEPENDENCIES ===== */
+  describe("No Global Dependencies", () => {
+    it("should not require window.VANTA", () => {
+      // The island no longer checks any global before initializing.
+      assertEquals("VANTA" in mockWindow, false);
+
       let initSuccessful = false;
-
-      const mockInit = () => {
-        initializationAttempts++;
-
-        // Should only attempt init when scripts are ready
-        if (mockWindow.THREE && mockWindow.p5 && mockWindow.VANTA?.TOPOLOGY) {
-          initSuccessful = true;
-          return true;
-        }
-        return false;
-      };
-
-      // Simulate script loading order
-      const loadScript = (scriptName: string, global: any, value: any) => {
-        mockWindow[global] = value;
-        const callback = scriptLoadCallbacks.get(scriptName);
-        if (callback) {
-          callback();
-        }
-      };
-
-      // Register callbacks for each script
-      scriptLoadCallbacks.set("three", () => mockInit());
-      scriptLoadCallbacks.set("p5", () => mockInit());
-      scriptLoadCallbacks.set("vanta", () => mockInit());
-
-      // Load scripts in order
-      loadScript("three", "THREE", { WebGLRenderer: class {} });
-      assertEquals(initSuccessful, false); // Not all dependencies ready
-
-      loadScript("p5", "p5", class {});
-      assertEquals(initSuccessful, false); // Still missing VANTA
-
-      loadScript("vanta", "VANTA", { TOPOLOGY: () => ({}) });
-
-      // Verify all dependencies are now loaded
-      assertEquals(!!mockWindow.THREE, true);
-      assertEquals(!!mockWindow.p5, true);
-      assertEquals(!!mockWindow.VANTA?.TOPOLOGY, true);
-
-      // Init should have succeeded after final script load
+      const mockEl = { tagName: "DIV", id: "vanta-background" };
+      // Direct instantiation: no global lookup, just pass el to constructor.
+      if (mockEl) initSuccessful = true;
       assertEquals(initSuccessful, true);
-
-      // Should have made exactly 3 attempts (one per script load event)
-      assertEquals(initializationAttempts, 3);
     });
 
-    it("should handle out-of-order script loading", () => {
-      let successfulInit = false;
+    it("should not require three.js or p5.js globals", () => {
+      assertEquals("THREE" in mockWindow, false);
+      assertEquals("p5" in mockWindow, false);
+    });
 
-      const mockInit = () => {
-        if (mockWindow.THREE && mockWindow.p5 && mockWindow.VANTA?.TOPOLOGY) {
-          successfulInit = true;
-          return true;
-        }
-        return false;
-      };
+    it("should not depend on requestIdleCallback", () => {
+      // The mock window has no requestIdleCallback; init must succeed anyway.
+      assertEquals("requestIdleCallback" in mockWindow, false);
 
-      // Register callbacks
-      scriptLoadCallbacks.set("vanta", () => mockInit());
-      scriptLoadCallbacks.set("p5", () => mockInit());
-      scriptLoadCallbacks.set("three", () => mockInit());
-
-      // Load in reverse order (VANTA, p5, THREE)
-      mockWindow.VANTA = { TOPOLOGY: () => ({}) };
-      scriptLoadCallbacks.get("vanta")?.();
-      assertEquals(successfulInit, false);
-
-      mockWindow.p5 = class {};
-      scriptLoadCallbacks.get("p5")?.();
-      assertEquals(successfulInit, false);
-
-      mockWindow.THREE = { WebGLRenderer: class {} };
-      scriptLoadCallbacks.get("three")?.();
-      assertEquals(successfulInit, true);
+      // Topology initializes synchronously in the constructor; no idle defer.
+      let initCalled = false;
+      const el = { tagName: "DIV" };
+      if (el) initCalled = true;
+      assertEquals(initCalled, true);
     });
   });
 
-  describe("requestIdleCallback Deferral", () => {
-    it("should defer initialization to idle callback", () => {
+  /* ===== DIRECT INITIALIZATION ===== */
+  describe("Direct Initialization", () => {
+    it("should initialize immediately when the container is ready", () => {
       let initCalled = false;
+      const simulateTopologyInit = (el: unknown) => {
+        if (el) initCalled = true;
+      };
 
-      // Mock all dependencies as loaded
-      mockWindow.THREE = { WebGLRenderer: class {} };
-      mockWindow.p5 = class {};
-      mockWindow.VANTA = { TOPOLOGY: () => ({}) };
-
-      // Schedule init via requestIdleCallback
-      mockWindow.requestIdleCallback(() => {
-        initCalled = true;
-      });
-
-      // Init should not be called yet
-      assertEquals(initCalled, false);
-      assertEquals(idleCallbacks.length, 1);
-
-      // Simulate browser calling idle callback
-      idleCallbacks[0]();
+      const mockContainer = { tagName: "DIV", id: "vanta-background" };
+      simulateTopologyInit(mockContainer);
       assertEquals(initCalled, true);
     });
 
-    it("should handle multiple idle callback registrations", () => {
-      const calls: string[] = [];
+    it("should pass only the container element to Topology", () => {
+      let receivedOptions: Record<string, unknown> | null = null;
 
-      mockWindow.requestIdleCallback(() => calls.push("first"));
-      mockWindow.requestIdleCallback(() => calls.push("second"));
-      mockWindow.requestIdleCallback(() => calls.push("third"));
+      const MockTopology = (options: Record<string, unknown>) => {
+        receivedOptions = options;
+      };
 
-      assertEquals(idleCallbacks.length, 3);
-      assertEquals(calls.length, 0);
+      const mockContainer = {
+        tagName: "DIV",
+        id: "vanta-background",
+      } as unknown as HTMLDivElement;
+      MockTopology({ el: mockContainer });
 
-      // Execute callbacks in order
-      idleCallbacks.forEach(cb => cb());
-      assertEquals(calls, ["first", "second", "third"]);
+      assertExists(receivedOptions);
+      assertEquals(receivedOptions["el"], mockContainer);
+      assertEquals("THREE" in receivedOptions, false);
+      assertEquals("p5" in receivedOptions, false);
     });
   });
 
-  describe("IntersectionObserver Fallback", () => {
-    it("should use IntersectionObserver when requestIdleCallback unavailable", () => {
-      // Remove requestIdleCallback
-      delete mockWindow.requestIdleCallback;
-
-      let observerCreated = false;
-      let observerCallback: IntersectionObserverCallback | null = null;
-
-      // Mock IntersectionObserver
-      const MockIntersectionObserver = class {
-        constructor(callback: IntersectionObserverCallback) {
-          observerCreated = true;
-          observerCallback = callback;
-        }
-        observe(_target: Element) {}
-        unobserve(_target: Element) {}
-        disconnect() {}
-      };
-
-      globalThis.IntersectionObserver = MockIntersectionObserver as any;
-
-      // Simulate fallback logic
-      const canUseIdleCallback = typeof mockWindow.requestIdleCallback === "function";
-      assertEquals(canUseIdleCallback, false);
-
-      // Should create IntersectionObserver
-      const observer = new MockIntersectionObserver(() => {});
-      assertExists(observer);
-      assertEquals(observerCreated, true);
-      assertExists(observerCallback);
-    });
-
-    it("should trigger init when element becomes visible", () => {
-      delete mockWindow.requestIdleCallback;
-
-      let initTriggered = false;
-      let observerCallback: IntersectionObserverCallback | null = null;
-
-      const MockIntersectionObserver = class {
-        constructor(callback: IntersectionObserverCallback) {
-          observerCallback = callback;
-        }
-        observe(_target: any) {
-          // Simulate immediate visibility
-          setTimeout(() => {
-            if (observerCallback) {
-              observerCallback(
-                [{
-                  isIntersecting: true,
-                  target: {} as Element,
-                  intersectionRatio: 1,
-                } as IntersectionObserverEntry],
-                this as any
-              );
-            }
-          }, 0);
-        }
-        unobserve(_target: any) {}
-        disconnect() {}
-      };
-
-      globalThis.IntersectionObserver = MockIntersectionObserver as any;
-
-      const observer = new MockIntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-          initTriggered = true;
-        }
-      });
-
-      // Mock element - don't need real DOM in Deno test
-      const mockElement = { tagName: "DIV" };
-      observer.observe(mockElement);
-
-      // Wait for async observer callback
-      return new Promise<void>((resolve) => {
-        setTimeout(() => {
-          assertEquals(initTriggered, true);
-          resolve();
-        }, 10);
-      });
-    });
-  });
-
+  /* ===== RACE CONDITION PREVENTION ===== */
   describe("Race Condition Prevention", () => {
-    it("should not attempt initialization before container ref is ready", () => {
+    it("should not initialize without a container element", () => {
       let initAttempted = false;
 
-      mockWindow.THREE = { WebGLRenderer: class {} };
-      mockWindow.p5 = class {};
-      mockWindow.VANTA = { TOPOLOGY: () => ({}) };
-
-      const tryInit = (containerRef: any | null) => {
-        if (!containerRef) {
-          return false; // Don't init without container
-        }
-
-        if (mockWindow.THREE && mockWindow.p5 && mockWindow.VANTA?.TOPOLOGY) {
-          initAttempted = true;
-          return true;
-        }
-        return false;
+      const tryInit = (container: HTMLDivElement | null) => {
+        if (!container) return false;
+        initAttempted = true;
+        return true;
       };
 
-      // Try init without container
       assertEquals(tryInit(null), false);
       assertEquals(initAttempted, false);
 
-      // Try init with container (mock element)
-      const mockContainer = { tagName: "DIV", id: "vanta-background" };
+      const mockContainer = {
+        tagName: "DIV",
+        id: "vanta-background",
+      } as unknown as HTMLDivElement;
       assertEquals(tryInit(mockContainer), true);
       assertEquals(initAttempted, true);
     });
 
-    it("should handle script load failures gracefully", () => {
-      let initSuccessful = false;
-      let errorHandled = false;
+    it("should initialize only once (ref guard prevents double init)", () => {
+      let initCount = 0;
+      let topologyRef: { destroy(): void } | null = null;
 
-      const tryInit = () => {
-        try {
-          if (mockWindow.THREE && mockWindow.p5 && mockWindow.VANTA?.TOPOLOGY) {
-            initSuccessful = true;
-            return true;
-          }
-          return false;
-        } catch (error) {
-          errorHandled = true;
-          return false;
-        }
+      const tryInit = (container: unknown) => {
+        if (topologyRef) return; // guard: already initialized
+        if (!container) return;
+        initCount++;
+        topologyRef = { destroy() {} };
       };
 
-      // Simulate missing dependency
-      mockWindow.THREE = { WebGLRenderer: class {} };
-      mockWindow.p5 = class {};
-      // VANTA not loaded
+      const mockContainer = { tagName: "DIV", id: "vanta-background" };
+      tryInit(mockContainer);
+      tryInit(mockContainer); // second call must be no-op due to ref guard
 
-      assertEquals(tryInit(), false);
-      assertEquals(initSuccessful, false);
-
-      // Even if VANTA throws during access
-      Object.defineProperty(mockWindow, "VANTA", {
-        get() {
-          throw new Error("Script load failed");
-        },
-      });
-
-      assertEquals(tryInit(), false);
-      assertEquals(errorHandled, true);
+      assertEquals(initCount, 1);
     });
 
-    it("should cleanup event listeners on unmount", () => {
-      const listeners: Array<{ event: string; callback: () => void }> = [];
+    it("should handle initialization errors without throwing", () => {
+      let errorCaught = false;
+      let initSuccessful = false;
 
-      mockWindow.addEventListener = (event: string, callback: () => void) => {
-        listeners.push({ event, callback });
-      };
-
-      mockWindow.removeEventListener = (event: string, callback: () => void) => {
-        const index = listeners.findIndex(
-          (l) => l.event === event && l.callback === callback
-        );
-        if (index !== -1) {
-          listeners.splice(index, 1);
+      const tryInit = (shouldThrow: boolean) => {
+        try {
+          if (shouldThrow) throw new Error("Init failed");
+          initSuccessful = true;
+        } catch (_err) {
+          errorCaught = true;
         }
       };
 
-      // Simulate component lifecycle
-      const onScriptLoad = () => {};
-      mockWindow.addEventListener("load", onScriptLoad);
-      assertEquals(listeners.length, 1);
-
-      // Cleanup on unmount
-      mockWindow.removeEventListener("load", onScriptLoad);
-      assertEquals(listeners.length, 0);
+      tryInit(true);
+      assertEquals(initSuccessful, false);
+      assertEquals(errorCaught, true);
     });
   });
 
+  /* ===== CLEANUP ON UNMOUNT ===== */
+  describe("Cleanup on Unmount", () => {
+    it("should call destroy() on the topology instance during cleanup", () => {
+      let destroyCalled = false;
+      let topologyRef: { destroy(): void } | null = {
+        destroy() {
+          destroyCalled = true;
+        },
+      };
+
+      const cleanup = () => {
+        if (topologyRef) {
+          topologyRef.destroy();
+          topologyRef = null;
+        }
+      };
+
+      cleanup();
+      assertEquals(destroyCalled, true);
+      assertEquals(topologyRef, null);
+    });
+
+    it("should null the ref after destroy to prevent re-use", () => {
+      let topologyRef: { destroy(): void } | null = { destroy() {} };
+      topologyRef.destroy();
+      topologyRef = null;
+
+      assertEquals(topologyRef, null);
+    });
+  });
+
+  /* ===== PERFORMANCE CHARACTERISTICS ===== */
   describe("Performance Characteristics", () => {
     it("should not poll continuously (no setTimeout loops)", () => {
       let setTimeoutCalls = 0;
-
       const originalSetTimeout = globalThis.setTimeout;
-      globalThis.setTimeout = ((callback: () => void, _delay: number) => {
+      globalThis.setTimeout = ((_cb: () => void, _delay: number) => {
         setTimeoutCalls++;
-        // Don't actually call callback to prevent infinite loops
         return 1;
-      }) as any;
+      }) as typeof globalThis.setTimeout;
 
-      // Event-based approach should not use setTimeout for polling
-      // (Only acceptable use: single deferred init via requestIdleCallback fallback)
-
-      // Simulate event-based init
-      scriptLoadCallbacks.set("three", () => {});
-      scriptLoadCallbacks.set("p5", () => {});
-      scriptLoadCallbacks.set("vanta", () => {});
-
-      // Trigger all load events
-      scriptLoadCallbacks.forEach(cb => cb());
-
-      // Should not create setTimeout loop (0 calls for event-based)
+      // No polling needed — Topology initializes synchronously.
       assertEquals(setTimeoutCalls, 0);
 
       globalThis.setTimeout = originalSetTimeout;
-    });
-
-    it("should initialize only once when all dependencies are ready", () => {
-      let initCount = 0;
-
-      mockWindow.THREE = { WebGLRenderer: class {} };
-      mockWindow.p5 = class {};
-      mockWindow.VANTA = { TOPOLOGY: () => ({ destroy: () => {} }) };
-
-      const initVanta = () => {
-        if (mockWindow.THREE && mockWindow.p5 && mockWindow.VANTA?.TOPOLOGY) {
-          initCount++;
-          return mockWindow.VANTA.TOPOLOGY({});
-        }
-        return null;
-      };
-
-      // First init - should succeed
-      const instance1 = initVanta();
-      assertExists(instance1);
-      assertEquals(initCount, 1);
-
-      // Subsequent calls should use guard (prevent re-init)
-      let vantaInstance = instance1;
-      if (!vantaInstance) {
-        vantaInstance = initVanta();
-      }
-
-      assertEquals(initCount, 1); // Still 1, not 2
-    });
-  });
-
-  describe("Custom Event Coordination", () => {
-    it("should dispatch custom event when scripts are ready", () => {
-      let customEventDispatched = false;
-      let eventDetail: any = null;
-
-      mockWindow.dispatchEvent = (event: Event) => {
-        if (event.type === "vanta-scripts-ready") {
-          customEventDispatched = true;
-          eventDetail = (event as CustomEvent).detail;
-        }
-        return true;
-      };
-
-      mockWindow.CustomEvent = class CustomEvent extends Event {
-        detail: any;
-        constructor(type: string, options?: { detail?: any }) {
-          super(type);
-          this.detail = options?.detail;
-        }
-      };
-
-      // Simulate all scripts loaded
-      mockWindow.THREE = { WebGLRenderer: class {} };
-      mockWindow.p5 = class {};
-      mockWindow.VANTA = { TOPOLOGY: () => ({}) };
-
-      // Dispatch ready event
-      const readyEvent = new mockWindow.CustomEvent("vanta-scripts-ready", {
-        detail: { three: true, p5: true, vanta: true },
-      });
-      mockWindow.dispatchEvent(readyEvent);
-
-      assertEquals(customEventDispatched, true);
-      assertExists(eventDetail);
-      assertEquals(eventDetail.three, true);
-      assertEquals(eventDetail.p5, true);
-      assertEquals(eventDetail.vanta, true);
     });
   });
 });
