@@ -1,6 +1,5 @@
 import type { CommonUTXOFetchOptions } from "$types/base.d.ts";
 import type {UTXO} from "$lib/types/base.d.ts";
-import { BLOCKSTREAM_API_BASE_URL, MEMPOOL_API_BASE_URL } from "$constants";
 import { logger } from "$lib/utils/logger.ts";
 import { detectScriptType } from "$lib/utils/bitcoin/scripts/scriptTypeUtils.ts";
 import {
@@ -8,10 +7,22 @@ import {
 } from "$lib/utils/bitcoin/utxo/utxoUtils.ts";
 import { serverConfig } from "$server/config/config.ts";
 import { FetchHttpClient } from "$server/interfaces/httpClient.ts";
+import { dbManager } from "$server/database/databaseManager.ts";
+import { fetchFromEsplora } from "$server/services/utxo/esploraFetch.ts";
 import { UTXOOptions as QuicknodeInternalUTXOOptions, QuicknodeUTXOService } from "$server/services/quicknode/quicknodeUTXOService.ts";
 import type {ICommonUTXOService, UTXOFetchOptions} from "$server/services/utxo/utxoServiceInterface.d.ts";
 
 const httpClient = new FetchHttpClient();
+
+/**
+ * Raw tx hex and a transaction's outputs (value + scriptPubKey) are immutable
+ * for a given txid — the txid is the hash of the serialized transaction — so
+ * these lookups are safe to cache for a long time. A 30-day TTL bounds Redis
+ * growth; a miss after expiry is just one cheap API call. Address UTXO *sets*
+ * are deliberately NOT cached (they change whenever the address transacts and a
+ * stale set could underfund a transaction).
+ */
+const IMMUTABLE_TX_CACHE_TTL = 30 * 24 * 60 * 60; // 30 days, in seconds
 
 
 // Added interface for mempool.space transaction response
@@ -60,14 +71,12 @@ interface MempoolTransaction {
 export class CommonUTXOService implements ICommonUTXOService {
   private static instance: CommonUTXOService;
   protected isQuickNodeConfigured: boolean;
-  protected rawTxHexCache: Map<string, string | null>; // Cache for raw tx hex
 
   constructor() {
     // Initialize QuickNode configuration check
     this.isQuickNodeConfigured = !!(
       serverConfig.QUICKNODE_ENDPOINT && serverConfig.QUICKNODE_API_KEY
     );
-    this.rawTxHexCache = new Map();
     logger.info("common-utxo-service", { message: "CommonUTXOService initialized", isQuickNodeConfigured: this.isQuickNodeConfigured });
   }
 
@@ -79,51 +88,48 @@ export class CommonUTXOService implements ICommonUTXOService {
   }
 
   async getRawTransactionHex(txid: string): Promise<string | null> {
-    if (this.rawTxHexCache.has(txid)) {
-      const cachedHex = this.rawTxHexCache.get(txid);
-      logger.debug("common-utxo-service", { message: "Cache hit for rawTxHex", txid, found: cachedHex !== null });
-      return cachedHex || null;
-    }
-    logger.debug("common-utxo-service", { message: "Cache miss for rawTxHex", txid });
+    // Raw tx hex is immutable for a given txid, so cache it in Redis (shared
+    // across service instances + ECS tasks; handleCache falls back to an
+    // in-memory cache automatically if Redis is unavailable).
+    return await dbManager.handleCache<string | null>(
+      `btc:rawtxhex:${txid}`,
+      () => this.fetchRawTransactionHexUncached(txid),
+      IMMUTABLE_TX_CACHE_TTL,
+    );
+  }
 
-    let hex: string | null = null;
+  private async fetchRawTransactionHexUncached(
+    txid: string,
+  ): Promise<string | null> {
+    // QuickNode first when configured (gated; the QUICKNODE_* env vars are unset
+    // in prod, so this branch is inert there and the public esplora providers
+    // serve all traffic).
     if (this.isQuickNodeConfigured) {
       try {
-        // Call the actual method from QuicknodeUTXOService
         const qnResponse = await QuicknodeUTXOService.getRawTransactionHex(txid);
-
         if (qnResponse.data) {
-          hex = qnResponse.data;
           logger.info("common-utxo-service", { message: "Successfully fetched rawTxHex from QuickNode", txid });
-        } else if (qnResponse.error) {
-          logger.warn("common-utxo-service", { message: "QuickNode returned error for getRawTransactionHex", txid, error: qnResponse.error });
-          // Fall through to public APIs
-        } else {
-          logger.warn("common-utxo-service", { message: "QuickNode did not return data or error for getRawTransactionHex", txid, response: qnResponse });
-          // Fall through to public APIs
+          return qnResponse.data;
         }
+        logger.warn("common-utxo-service", { message: "QuickNode returned no rawTxHex, falling back to public esplora APIs", txid, error: qnResponse.error });
       } catch (error) {
-        logger.error("common-utxo-service", { message: "Error during QuickNode getRawTransactionHex call", txid, error: error instanceof Error ? error.message : String(error), stack: error instanceof Error ? error.stack : undefined });
-        // Fall through to public APIs on error
+        logger.error("common-utxo-service", { message: "Error during QuickNode getRawTransactionHex call, falling back to public esplora APIs", txid, error: error instanceof Error ? error.message : String(error) });
       }
     }
 
-    if (!hex) {
-      logger.debug("common-utxo-service", { message: "Falling back to public APIs for getRawTransactionHex", txid });
-      try {
-        const response = await httpClient.get(`${BLOCKSTREAM_API_BASE_URL}/tx/${txid}/hex`);
-        if (response.ok) {
-          hex = response.data;
-          logger.info("common-utxo-service", { message: "Successfully fetched rawTxHex from public API (Blockstream)", txid });
-        } else {
-          logger.warn("common-utxo-service", { message: `Public API (Blockstream) failed to fetch raw tx hex ${txid}`, status: response.statusText, code: response.status });
-        }
-      } catch (error) {
-        logger.error("common-utxo-service", { message: "Error fetching rawTxHex from public APIs", txid, error: error instanceof Error ? error.message : String(error), stack: error instanceof Error ? error.stack : undefined });
-      }
-    }
-
-    return hex;
+    // Public esplora providers (mempool.space -> blockstream.info). Both expose
+    // GET /tx/:txid/hex returning the raw transaction as a hex string; the
+    // shared helper tries each in order so a single provider outage doesn't
+    // break tx construction.
+    return await fetchFromEsplora<string>(
+      `/tx/${txid}/hex`,
+      httpClient,
+      (data) => {
+        const hex = typeof data === "string" ? data.trim() : "";
+        return hex.length > 0 && /^[0-9a-fA-F]+$/.test(hex) ? hex : null;
+      },
+      { txid, op: "getRawTransactionHex" },
+    );
   }
 
   async getSpendableUTXOs(
@@ -237,85 +243,46 @@ export class CommonUTXOService implements ICommonUTXOService {
       }
     }
 
-    logger.debug("common-utxo-service", {
-        message: (this.isQuickNodeConfigured && options?.forcePublicAPI)
-            ? "FORCING public APIs for getSpecificUTXO due to option"
-            : "Falling back/using public APIs for getSpecificUTXO",
-        txid, vout
-    });
+    // Public esplora providers (mempool.space -> blockstream.info), cached.
+    // A transaction's output (value + scriptPubKey) is immutable for a given
+    // txid:vout (the txid commits to the outputs), so the result is safe to
+    // cache long-term. `forcePublicAPI` only changes which source is queried,
+    // not the resulting output, so it shares the same cache entry.
+    return await dbManager.handleCache<UTXO | null>(
+      `btc:txout:${txid}:${vout}`,
+      () => this.fetchSpecificUTXOFromEsplora(txid, vout),
+      IMMUTABLE_TX_CACHE_TTL,
+    );
+  }
 
-    // Try mempool.space first as it's often faster and more reliable
-    try {
-      logger.debug("common-utxo-service", { message: "Attempting mempool.space for getSpecificUTXO", txid, vout });
-      const response = await httpClient.get(`${MEMPOOL_API_BASE_URL}/tx/${txid}`);
-
-      if (response.ok && response.data) {
-        const txData = response.data as MempoolTransaction;
-
-        if (txData && Array.isArray(txData.vout) && txData.vout[vout]) {
-          const output = txData.vout[vout];
-          if (output.value !== undefined && output.scriptpubkey) {
-            const scriptFromMempool = output.scriptpubkey; // hex string
-            const formattedUtxo: UTXO = {
-              txid: txid,
-              vout: vout,
-              value: output.value,
-              script: scriptFromMempool,
-              vsize: txData.weight ? Math.ceil(txData.weight / 4) : 0,
-              weight: txData.weight,
-              scriptType: detectScriptType(scriptFromMempool),
-            };
-            logger.info("common-utxo-service", { message: "Successfully fetched and formatted specific UTXO from public API (Mempool.space)", txid, vout });
-            return formattedUtxo;
-          } else {
-            logger.warn("common-utxo-service", { message: "Mempool.space output missing value or scriptpubkey", txid, vout, output });
-            // Return null without fallback - if mempool has the tx but output is malformed,
-            // other APIs likely won't have better data
-            return null;
-          }
-        } else {
-          logger.warn("common-utxo-service", { message: "Specific output not found in tx from mempool.space", txid, vout, receivedVoutLength: txData?.vout?.length });
-          // Continue to fallback APIs
+  private async fetchSpecificUTXOFromEsplora(
+    txid: string,
+    vout: number,
+  ): Promise<UTXO | null> {
+    // mempool.space and blockstream.info both return the esplora tx JSON shape
+    // (vout[].value / vout[].scriptpubkey / weight), so one extractor handles
+    // both; the shared helper tries each provider in order.
+    return await fetchFromEsplora<UTXO>(
+      `/tx/${txid}`,
+      httpClient,
+      (data) => {
+        const txData = data as MempoolTransaction;
+        const output = txData?.vout?.[vout];
+        if (!output || output.value === undefined || !output.scriptpubkey) {
+          return null;
         }
-      } else {
-        logger.warn("common-utxo-service", { message: `Mempool.space failed to fetch tx ${txid}`, status: response.statusText, code: response.status });
-      }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      logger.warn("common-utxo-service", { message: "Error fetching specific UTXO from mempool.space, trying Blockstream", txid, vout, error: errorMessage });
-    }
-
-    // Fallback to Blockstream API
-    try {
-        const response = await httpClient.get(`${BLOCKSTREAM_API_BASE_URL}/tx/${txid}`);
-        if (!response.ok) {
-            logger.warn("common-utxo-service", { message: `Public API (Blockstream) failed to fetch tx ${txid}`, status: response.statusText, code: response.status });
-            return null;
-        }
-        const txData = response.data;
-        if (txData && Array.isArray(txData.vout) && txData.vout[vout]) {
-            const output = txData.vout[vout];
-            if (output.value === undefined || !output.scriptpubkey) {
-                 logger.warn("common-utxo-service", { message: "Blockstream output missing value or scriptpubkey", txid, vout, output });
-                 return null;
-            }
-
-            const scriptFromBlockstream = output.scriptpubkey; // hex string
-            const formattedUtxo: UTXO = {
-                txid: txid, vout: vout, value: output.value, script: scriptFromBlockstream,
-                vsize: txData.weight ? Math.ceil(txData.weight / 4) : 0,
-                weight: txData.weight,
-                scriptType: detectScriptType(scriptFromBlockstream),
-            };
-            logger.info("common-utxo-service", { message: "Successfully fetched and formatted specific UTXO from public API (Blockstream)", txid, vout });
-            return formattedUtxo;
-        } else {
-            logger.warn("common-utxo-service", { message: "Specific output not found in tx from public API (Blockstream)", txid, vout, receivedVoutLength: txData?.vout?.length });
-            return null;
-        }
-    } catch (error) {
-      logger.error("common-utxo-service", { message: "Error fetching specific UTXO from all fallback APIs", txid, vout, error: error instanceof Error ? error.message : String(error), stack: error instanceof Error ? error.stack : undefined });
-      return null;
-    }
+        const script = output.scriptpubkey; // hex string
+        return {
+          txid,
+          vout,
+          value: output.value,
+          script,
+          vsize: txData.weight ? Math.ceil(txData.weight / 4) : 0,
+          weight: txData.weight,
+          scriptType: detectScriptType(script),
+        };
+      },
+      { txid, vout, op: "getSpecificUTXO" },
+    );
   }
 }
