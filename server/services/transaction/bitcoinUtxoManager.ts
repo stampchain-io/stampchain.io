@@ -134,7 +134,12 @@ export class BitcoinUtxoManager {
 
     if (!basicUtxos || basicUtxos.length === 0) {
       logger.warn("transaction-utxo-service", { message: "No basic UTXOs available for transaction after fetching/filtering", address, optionsReceived: options });
-      throw new Error("No UTXOs available for transaction after filtering (selectUTXOsForTransaction entry)");
+      // Phrase the message so every create/* route's error classifier (which
+      // matches the lowercase substring "insufficient funds", some case-
+      // sensitively) maps an empty/unfunded wallet to HTTP 400 instead of an
+      // opaque 500 — an empty wallet is a client condition, not a server bug
+      // (#1155).
+      throw new Error("No spendable UTXOs available for this address (insufficient funds)");
     }
 
     return this.selectUTXOsLogic(basicUtxos, vouts, feeRate, !!options.includeAncestors);
