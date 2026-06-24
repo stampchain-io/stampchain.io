@@ -12,6 +12,7 @@ import {
   CounterpartyApiManager,
   normalizeFeeRate,
 } from "$server/services/counterpartyApiService.ts";
+import { getProductionFeeService } from "$server/services/fee/feeServiceFactory.ts";
 import type {
   CreateStampIssuanceParams,
   NormalizedMintResponse,
@@ -92,6 +93,35 @@ export const handler: Handlers<NormalizedMintResponse | { error: string }> = {
           ? parseFloat(body.feeRate)
           : body.feeRate;
       }
+
+      // No fee rate supplied by the caller — fetch the live mempool recommended
+      // rate as a dynamic default. The website always sends an explicit rate
+      // (from its own fee selection), so this only affects direct API callers,
+      // who previously got a 400 here. FeeService has its own static fallbacks,
+      // so this rarely throws; if it does, normalizeFeeRate below still raises a
+      // clear 400.
+      if (
+        feeInputArgs.satsPerKB === undefined &&
+        feeInputArgs.satsPerVB === undefined
+      ) {
+        try {
+          const feeData = await getProductionFeeService().getFeeData();
+          if (feeData?.recommendedFee && feeData.recommendedFee > 0) {
+            feeInputArgs.satsPerVB = feeData.recommendedFee;
+            logger.info("api", {
+              message: "olga/mint: applied dynamic mempool fee default",
+              recommendedFee: feeData.recommendedFee,
+              source: feeData.source,
+            });
+          }
+        } catch (feeErr) {
+          logger.warn("api", {
+            message: "olga/mint: dynamic mempool fee default unavailable",
+            error: feeErr instanceof Error ? feeErr.message : String(feeErr),
+          });
+        }
+      }
+
       normalizedFees = normalizeFeeRate(feeInputArgs);
 
       // Override with MARA fee rate if in MARA mode and rate provided
