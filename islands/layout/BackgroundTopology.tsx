@@ -155,7 +155,7 @@ function hexToRgba(hex: string, alpha: number): string {
 /* colorPalette: symmetric fuchsia gradient interspersed with black;        */
 /* each particle is randomly assigned one color at creation.               */
 const DEFAULTS = {
-  color: "#D946EF",
+  color: "#E879F9",
   backgroundColor: "#000000",
   colorPalette: [
     "#F5D0FE", /* primary-200 */
@@ -172,13 +172,17 @@ const DEFAULTS = {
     "#86198F", /* primary-800 */
     "#701A75", /* primary-900 */
     "#000000", /* neutral-1000 */
-    "#000000", /* neutral-1000 */
-    "#000000", /* neutral-1000 */
+    "#000000",
+    "#000000",
+    "#000000",
+    "#000000",
+    "#000000",
+    "#000000",
   ],
 };
 
 /* ===== ANIMATION TUNING ===== */
-const PARTICLE_COUNT = 1200; // adjust particle count
+const PARTICLE_COUNT = 1000; // how many particles to render
 const PARTICLE_SPEED = 6.4; // how fast particles move through the field
 const FLOW_STRENGTH = 5.9; // how strongly particles respond to the field
 const LINE_WEIGHT = 0.7; // connecting line thickness
