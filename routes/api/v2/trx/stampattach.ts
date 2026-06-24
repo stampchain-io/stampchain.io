@@ -59,10 +59,10 @@ export const handler: Handlers = {
 
       // Prepare args for normalizeFeeRate carefully due to exactOptionalPropertyTypes
       const feeArgs: { satsPerKB?: number; satsPerVB?: number } = {};
-      if (options.fee_per_kb !== undefined) {
+      if (options?.fee_per_kb !== undefined) {
         feeArgs.satsPerKB = options.fee_per_kb;
       }
-      if (options.satsPerVB !== undefined) {
+      if (options?.satsPerVB !== undefined) {
         feeArgs.satsPerVB = options.satsPerVB;
       }
       const normalizedFees = normalizeFeeRate(feeArgs);
