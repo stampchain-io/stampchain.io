@@ -135,8 +135,11 @@ async function renderWithCloudflare(params: {
   viewport?: { width: number; height: number };
   delay?: number;
   timeout?: number;
-}): Promise<Uint8Array | null> {
-  if (!isCfWorkerConfigured) return null;
+}, diag?: RenderDiagnostics): Promise<Uint8Array | null> {
+  if (!isCfWorkerConfigured) {
+    if (diag) diag.reason = "cf-worker-not-configured";
+    return null;
+  }
 
   // Use caller's timeout (default 30s). The handler-level Promise.race at 55s
   // is the safety net — if render exceeds that, the handler returns fallback.
@@ -181,6 +184,13 @@ async function renderWithCloudflare(params: {
         continue;
       }
 
+      if (diag) {
+        diag.reason = response.status >= 500
+          ? "cf-worker-5xx"
+          : (response.status === 401 || response.status === 403)
+          ? "cf-worker-401"
+          : "cf-worker-4xx";
+      }
       console.error(
         `[Preview] CF Worker returned ${response.status}: ${errorBody}`,
       );
@@ -209,6 +219,9 @@ async function renderWithCloudflare(params: {
         continue;
       }
 
+      if (diag) {
+        diag.reason = isAbort ? "cf-worker-timeout" : "cf-worker-network";
+      }
       console.error(
         `[Preview] CF Worker request failed (final): ${errName}: ${msg}`,
       );
@@ -305,6 +318,8 @@ interface CachedPreview {
 interface FailedRenderSentinel {
   failed: true;
   timestamp: number;
+  /** Why the render failed — only permanent reasons are served from the sentinel (#1031) */
+  reason?: FallbackReason;
 }
 
 /** Type guard for the failure sentinel */
@@ -316,6 +331,63 @@ function isFailedSentinel(
 }
 
 const FAILED_RENDER_TTL = 3600; // 1 hour — retry after this
+
+/**
+ * Specific reason a preview render fell back to the logo. Surfaced as the
+ * `X-Fallback` response header so recurrences self-diagnose from headers/logs
+ * alone instead of collapsing to one opaque value (issue #1031).
+ */
+type FallbackReason =
+  | "cf-worker-timeout" // abort/timeout reaching the Worker — transient
+  | "cf-worker-5xx" // Worker 5xx after retries — transient
+  | "cf-worker-401" // Worker auth rejected (401/403) — transient (config self-heals)
+  | "cf-worker-4xx" // Worker rejected the request (other 4xx) — permanent for this content
+  | "cf-worker-network" // network error reaching the Worker — transient
+  | "cf-worker-not-configured" // CF Worker env unset — transient (config self-heals)
+  | "content-fetch-failed" // could not fetch the stamp content — transient
+  | "blank-png" // Worker returned a blank/too-small render after retry — permanent
+  | "unsupported-mime" // mimetype has no preview renderer — permanent
+  | "no-stamp-url" // stamp not found / has no content URL — permanent
+  | "render-failed"; // unclassified failure — treated as transient
+
+/**
+ * Out-parameter threaded through the render chain so the caller can tell WHY a
+ * render returned null and decide whether to cache the fallback.
+ */
+interface RenderDiagnostics {
+  reason?: FallbackReason;
+}
+
+/**
+ * Permanent failures are safe to cache (the same request fails the same way
+ * until the stamp content or supported-format set changes). Everything else —
+ * CF Worker 5xx/timeout/auth/network, content-fetch failures, missing config,
+ * or an unclassified null — is TRANSIENT and must NOT be cached, so the next
+ * request retries. This stops a transient Worker blip from pinning the fallback
+ * logo into the CDN cache for 24h (#1031 root cause).
+ */
+const PERMANENT_FALLBACK_REASONS: ReadonlySet<FallbackReason> = new Set([
+  "unsupported-mime",
+  "blank-png",
+  "no-stamp-url",
+  "cf-worker-4xx",
+]);
+
+function isPermanentFallback(reason: FallbackReason | undefined): boolean {
+  return reason !== undefined && PERMANENT_FALLBACK_REASONS.has(reason);
+}
+
+/**
+ * Cache headers for a fallback 302: permanent failures keep the 1-day redirect
+ * cache; transient failures use no-cache so the next request retries.
+ */
+function fallbackCacheHeaders(
+  reason: FallbackReason | undefined,
+): Record<string, string> {
+  return isPermanentFallback(reason)
+    ? CACHE_HEADERS.redirect
+    : CACHE_HEADERS.error;
+}
 
 /** Encode Uint8Array to base64 string */
 function toBase64(data: Uint8Array): string {
@@ -343,9 +415,11 @@ function fromBase64(b64: string): Uint8Array {
  */
 async function renderPreview(
   stampIdentifier: string,
+  diag?: RenderDiagnostics,
 ): Promise<CachedPreview | null> {
   const stampData = await StampController.getSpecificStamp(stampIdentifier);
   if (!stampData?.stamp_url) {
+    if (diag) diag.reason = "no-stamp-url";
     return null;
   }
 
@@ -368,17 +442,23 @@ async function renderPreview(
       stamp_url,
       stamp_mimetype,
       stampNumber,
+      diag,
     );
   }
 
   // SVG — convert with resvg-wasm (or Chrome for foreignObject SVGs)
   if (stamp_mimetype === "image/svg+xml") {
-    return await renderSvgPreview(stamp_url, stamp_mimetype, stampNumber);
+    return await renderSvgPreview(stamp_url, stamp_mimetype, stampNumber, diag);
   }
 
   // HTML — render with local Chrome
   if (stamp_mimetype === "text/html") {
-    return await renderHtmlPreview(stamp_url, stamp_mimetype, stampNumber);
+    return await renderHtmlPreview(
+      stamp_url,
+      stamp_mimetype,
+      stampNumber,
+      diag,
+    );
   }
 
   // Audio — generate waveform visualization
@@ -388,10 +468,16 @@ async function renderPreview(
 
   // Video — extract first frame via Chrome
   if (stamp_mimetype?.startsWith("video/")) {
-    return await renderVideoPreview(stamp_url, stamp_mimetype, stampNumber);
+    return await renderVideoPreview(
+      stamp_url,
+      stamp_mimetype,
+      stampNumber,
+      diag,
+    );
   }
 
   // Unsupported content type
+  if (diag) diag.reason = "unsupported-mime";
   return null;
 }
 
@@ -494,9 +580,11 @@ async function renderSvgPreview(
   stamp_url: string,
   stamp_mimetype: string,
   stampNumber: number | undefined,
+  diag?: RenderDiagnostics,
 ): Promise<CachedPreview | null> {
   const svgResponse = await fetch(stamp_url);
   if (!svgResponse.ok) {
+    if (diag) diag.reason = "content-fetch-failed";
     console.error(`Failed to fetch SVG: ${svgResponse.status}`);
     return null;
   }
@@ -513,6 +601,7 @@ async function renderSvgPreview(
       stamp_url,
       stamp_mimetype,
       stampNumber,
+      diag,
     );
   }
 
@@ -610,11 +699,12 @@ async function renderSvgWithChrome(
   stamp_url: string,
   stamp_mimetype: string,
   stampNumber: number | undefined,
+  diag?: RenderDiagnostics,
 ): Promise<CachedPreview | null> {
   const cfBuffer = await renderWithCloudflare({
     url: stamp_url,
     viewport: { width: 1200, height: 1200 },
-  });
+  }, diag);
 
   if (cfBuffer) {
     console.log(
@@ -641,8 +731,10 @@ async function renderHtmlPreview(
   stamp_url: string,
   stamp_mimetype: string,
   stampNumber: number | undefined,
+  diag?: RenderDiagnostics,
 ): Promise<CachedPreview | null> {
   if (!isCfWorkerConfigured) {
+    if (diag) diag.reason = "cf-worker-not-configured";
     console.error(
       "[HTML Preview] CF Worker not configured",
       { stamp: stampNumber },
@@ -655,6 +747,7 @@ async function renderHtmlPreview(
 
     const htmlResponse = await fetch(stamp_url);
     if (!htmlResponse.ok) {
+      if (diag) diag.reason = "content-fetch-failed";
       console.error(
         `[HTML Preview] Failed to fetch HTML: ${htmlResponse.status}`,
         { stamp: stampNumber },
@@ -744,7 +837,7 @@ async function renderHtmlPreview(
         viewport: { width: 1200, height: 1200 },
         delay,
         timeout: 45000,
-      });
+      }, diag);
     } else {
       // Simple static HTML: clean Rocket Loader artifacts, render inline.
       // Timeout of 40s accounts for CF Worker tiered fallback (15s networkidle0
@@ -755,7 +848,7 @@ async function renderHtmlPreview(
         viewport: { width: 1200, height: 1200 },
         delay,
         timeout: 40000,
-      });
+      }, diag);
     }
 
     // If inline mode produced a suspiciously small image (blank render),
@@ -776,7 +869,7 @@ async function renderHtmlPreview(
         viewport: { width: 1200, height: 1200 },
         delay: 8000,
         timeout: 45000,
-      });
+      }, diag);
     } else if (
       cfBuffer && cfBuffer.length < MIN_VALID_PNG_SIZE && !isRecursive
     ) {
@@ -803,6 +896,7 @@ async function renderHtmlPreview(
     }
 
     if (cfBuffer) {
+      if (diag) diag.reason = "blank-png";
       console.warn(
         `[HTML Preview] Stamp ${stampNumber} render too small after retry (${cfBuffer.length}B) — treating as failed`,
       );
@@ -828,6 +922,7 @@ async function renderImageWithChrome(
   stamp_url: string,
   stamp_mimetype: string,
   stampNumber: number | undefined,
+  diag?: RenderDiagnostics,
 ): Promise<CachedPreview | null> {
   // Wrap image in HTML for proper centering and scaling
   // (raw URL causes Chrome to show default image viewer with grey background)
@@ -844,7 +939,7 @@ async function renderImageWithChrome(
     html: imageHtml,
     viewport: { width: 1200, height: 1200 },
     delay: 2000,
-  });
+  }, diag);
 
   if (cfBuffer) {
     console.log(
@@ -972,6 +1067,7 @@ async function renderVideoPreview(
   stamp_url: string,
   stamp_mimetype: string,
   stampNumber: number | undefined,
+  diag?: RenderDiagnostics,
 ): Promise<CachedPreview | null> {
   const videoHtml = `<!DOCTYPE html>
 <html><head><style>
@@ -989,7 +1085,7 @@ async function renderVideoPreview(
     html: videoHtml,
     viewport: { width: 1200, height: 1200 },
     delay: 3000,
-  });
+  }, diag);
 
   if (cfBuffer) {
     console.log(
@@ -1075,12 +1171,18 @@ async function handleS3Preview(
   }
 
   // Render the preview
-  const rendered = await renderPreview(stamp);
+  const diag: RenderDiagnostics = {};
+  const rendered = await renderPreview(stamp, diag);
   if (!rendered?.png) {
+    const reason = diag.reason ?? "render-failed";
+    // Transient failures (CF Worker 5xx/timeout/auth/network, content-fetch
+    // errors, missing config, or an unclassified null) must NOT be cached —
+    // caching the 302-to-logo for 24h is the #1031 pinning symptom. Only
+    // permanent failures keep the redirect cache so they aren't re-rendered.
     return WebResponseUtil.redirect(FALLBACK_LOGO, 302, {
       headers: {
-        "X-Fallback": "render-failed-or-unsupported",
-        ...CACHE_HEADERS.redirect,
+        "X-Fallback": reason,
+        ...fallbackCacheHeaders(reason),
       },
     });
   }
@@ -1115,28 +1217,47 @@ async function handleRedisPreview(
 
   // Check cache first — may contain a CachedPreview, a FailedRenderSentinel, or nothing
   let wasRendered = false;
+  const renderDiag: RenderDiagnostics = {};
   const cached = await dbManager.handleCache<
     CachedPreview | FailedRenderSentinel | null
   >(
     cacheKey,
     async () => {
       wasRendered = true;
-      const result = await renderPreview(stamp);
+      const result = await renderPreview(stamp, renderDiag);
       if (result) return result;
-      // Store a sentinel so we don't re-render on every request
-      return { failed: true, timestamp: Date.now() } as FailedRenderSentinel;
+      // Store a sentinel so we don't re-render on every request. The reason is
+      // recorded so transient failures aren't served from the sentinel (#1031).
+      return {
+        failed: true,
+        timestamp: Date.now(),
+        reason: renderDiag.reason,
+      } as FailedRenderSentinel;
     },
     604800,
   );
 
   // Cache hit: check if it's a failure sentinel
   if (isFailedSentinel(cached)) {
-    const age = Date.now() - cached.timestamp;
-    if (age < FAILED_RENDER_TTL * 1000) {
-      // Still within the failure TTL — return fallback without re-rendering
+    const reason = cached.reason ?? "render-failed";
+    // Transient failures must never be served from the sentinel — drop it and
+    // return an uncached fallback so the next request re-renders (#1031). This
+    // also covers a just-written transient sentinel (wasRendered) above.
+    if (!isPermanentFallback(reason)) {
+      await dbManager.invalidateCacheByPattern(cacheKey);
       return WebResponseUtil.redirect(FALLBACK_LOGO, 302, {
         headers: {
-          "X-Fallback": "cached-render-failure",
+          "X-Fallback": reason,
+          ...CACHE_HEADERS.error,
+        },
+      });
+    }
+    const age = Date.now() - cached.timestamp;
+    if (age < FAILED_RENDER_TTL * 1000) {
+      // Permanent failure still within TTL — return fallback without re-rendering
+      return WebResponseUtil.redirect(FALLBACK_LOGO, 302, {
+        headers: {
+          "X-Fallback": reason,
           "X-Failure-Age": `${Math.round(age / 1000)}s`,
           ...CACHE_HEADERS.redirect,
         },
@@ -1144,7 +1265,8 @@ async function handleRedisPreview(
     }
     // Failure sentinel has expired — invalidate and re-render
     await dbManager.invalidateCacheByPattern(cacheKey);
-    const freshResult = await renderPreview(stamp);
+    const retryDiag: RenderDiagnostics = {};
+    const freshResult = await renderPreview(stamp, retryDiag);
     if (freshResult?.png) {
       await dbManager.handleCache(
         cacheKey,
@@ -1161,16 +1283,31 @@ async function handleRedisPreview(
         },
       });
     }
-    // Still failing — cache a new sentinel
-    await dbManager.handleCache(
-      cacheKey,
-      () => Promise.resolve({ failed: true, timestamp: Date.now() }),
-      604800,
-    );
+    // Still failing — only persist a sentinel for permanent failures; transient
+    // ones return an uncached fallback so the next request retries (#1031).
+    const retryReason = retryDiag.reason ?? "render-failed";
+    if (isPermanentFallback(retryReason)) {
+      await dbManager.handleCache(
+        cacheKey,
+        () =>
+          Promise.resolve({
+            failed: true,
+            timestamp: Date.now(),
+            reason: retryReason,
+          }),
+        604800,
+      );
+      return WebResponseUtil.redirect(FALLBACK_LOGO, 302, {
+        headers: {
+          "X-Fallback": retryReason,
+          ...CACHE_HEADERS.redirect,
+        },
+      });
+    }
     return WebResponseUtil.redirect(FALLBACK_LOGO, 302, {
       headers: {
-        "X-Fallback": "render-failed-retry",
-        ...CACHE_HEADERS.redirect,
+        "X-Fallback": retryReason,
+        ...CACHE_HEADERS.error,
       },
     });
   }
@@ -1187,10 +1324,11 @@ async function handleRedisPreview(
     });
   }
 
+  const finalReason = renderDiag.reason ?? "render-failed";
   return WebResponseUtil.redirect(FALLBACK_LOGO, 302, {
     headers: {
-      "X-Fallback": "render-failed-or-unsupported",
-      ...CACHE_HEADERS.redirect,
+      "X-Fallback": finalReason,
+      ...fallbackCacheHeaders(finalReason),
     },
   });
 }
