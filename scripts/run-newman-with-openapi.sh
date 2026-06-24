@@ -67,7 +67,12 @@ if [ "$USE_OPENAPI_VALIDATOR" = "true" ] && [ -f "./static/swagger/openapi.yml" 
   [ -n "$NEWMAN_FOLDER" ] && NEWMAN_CMD="$NEWMAN_CMD --folder '$NEWMAN_FOLDER'"
   [ -n "$NEWMAN_ITERATIONS" ] && [ "$NEWMAN_ITERATIONS" -gt 0 ] && NEWMAN_CMD="$NEWMAN_CMD --iteration-count $NEWMAN_ITERATIONS"
   [ -n "$NEWMAN_DELAY_REQUEST" ] && [ "$NEWMAN_DELAY_REQUEST" -gt 0 ] && NEWMAN_CMD="$NEWMAN_CMD --delay-request $NEWMAN_DELAY_REQUEST"
-  [ -n "$NEWMAN_TIMEOUT" ] && [ "$NEWMAN_TIMEOUT" -gt 0 ] && NEWMAN_CMD="$NEWMAN_CMD --timeout $NEWMAN_TIMEOUT"
+  # Use --timeout-request (per request), NOT --timeout (whole collection run).
+  # newman's --timeout aborts the ENTIRE run after N ms with "callback timed
+  # out", which prevents the JSON reporter from flushing. As the suite grew past
+  # ~30s the nightly run was aborted mid-flight, leaving no report for the gate
+  # to read — the perpetual-red root cause (#1138).
+  [ -n "$NEWMAN_TIMEOUT" ] && [ "$NEWMAN_TIMEOUT" -gt 0 ] && NEWMAN_CMD="$NEWMAN_CMD --timeout-request $NEWMAN_TIMEOUT"
   [ "$NEWMAN_BAIL" = "true" ] && NEWMAN_CMD="$NEWMAN_CMD --bail"
   [ "$NEWMAN_VERBOSE" = "true" ] && NEWMAN_CMD="$NEWMAN_CMD --verbose"
   [ -n "$DEV_BASE_URL" ] && NEWMAN_CMD="$NEWMAN_CMD --env-var 'dev_base_url=$DEV_BASE_URL'"
@@ -87,7 +92,12 @@ else
   [ -n "$NEWMAN_FOLDER" ] && NEWMAN_CMD="$NEWMAN_CMD --folder '$NEWMAN_FOLDER'"
   [ -n "$NEWMAN_ITERATIONS" ] && [ "$NEWMAN_ITERATIONS" -gt 0 ] && NEWMAN_CMD="$NEWMAN_CMD --iteration-count $NEWMAN_ITERATIONS"
   [ -n "$NEWMAN_DELAY_REQUEST" ] && [ "$NEWMAN_DELAY_REQUEST" -gt 0 ] && NEWMAN_CMD="$NEWMAN_CMD --delay-request $NEWMAN_DELAY_REQUEST"
-  [ -n "$NEWMAN_TIMEOUT" ] && [ "$NEWMAN_TIMEOUT" -gt 0 ] && NEWMAN_CMD="$NEWMAN_CMD --timeout $NEWMAN_TIMEOUT"
+  # Use --timeout-request (per request), NOT --timeout (whole collection run).
+  # newman's --timeout aborts the ENTIRE run after N ms with "callback timed
+  # out", which prevents the JSON reporter from flushing. As the suite grew past
+  # ~30s the nightly run was aborted mid-flight, leaving no report for the gate
+  # to read — the perpetual-red root cause (#1138).
+  [ -n "$NEWMAN_TIMEOUT" ] && [ "$NEWMAN_TIMEOUT" -gt 0 ] && NEWMAN_CMD="$NEWMAN_CMD --timeout-request $NEWMAN_TIMEOUT"
   [ "$NEWMAN_BAIL" = "true" ] && NEWMAN_CMD="$NEWMAN_CMD --bail"
   [ "$NEWMAN_VERBOSE" = "true" ] && NEWMAN_CMD="$NEWMAN_CMD --verbose"
   [ -n "$DEV_BASE_URL" ] && NEWMAN_CMD="$NEWMAN_CMD --env-var 'dev_base_url=$DEV_BASE_URL'"
@@ -99,6 +109,39 @@ else
 fi
 
 echo "=== Test Execution Complete ==="
+
+# --- Authoritative pass/fail marker (read by the CI scheduled-regression gate) ---
+# newman's CLI exit code is non-zero on ANY non-2xx response even when every
+# assertion passes, so it cannot gate on its own. The host-side gate needs a
+# trustworthy signal that (a) survives the bind mount (shell-redirected files do)
+# and (b) distinguishes "API regression" (assertion failures) from "infra failure"
+# (no report written at all). We derive it here, inside the container, from the
+# actual Newman results JSON. See #1138.
+RESULTS_JSON="$REPORT_DIR/$TIMESTAMP-results.json"
+STATUS_FILE="$REPORT_DIR/$TIMESTAMP-STATUS.txt"
+if [ -f "$RESULTS_JSON" ]; then
+  ASSERTION_FAILURES=$(node -e "
+    const fs = require('fs');
+    try {
+      const r = JSON.parse(fs.readFileSync('$RESULTS_JSON', 'utf8'));
+      process.stdout.write(String(r.run?.stats?.assertions?.failed ?? -1));
+    } catch (e) { process.stdout.write('-1'); }
+  " 2>/dev/null || echo "-1")
+  if [ "$ASSERTION_FAILURES" = "0" ]; then
+    echo "PASS 0" > "$STATUS_FILE"
+    echo "✅ STATUS: PASS (0 assertion failures)"
+  elif [ "$ASSERTION_FAILURES" = "-1" ]; then
+    echo "NOREPORT unparseable" > "$STATUS_FILE"
+    echo "⚠️  STATUS: NOREPORT (results JSON present but unparseable)"
+  else
+    echo "REGRESSION $ASSERTION_FAILURES" > "$STATUS_FILE"
+    echo "❌ STATUS: REGRESSION ($ASSERTION_FAILURES assertion failure(s))"
+  fi
+else
+  # Newman never wrote a report — an infrastructure failure, NOT an API regression.
+  echo "NOREPORT missing" > "$STATUS_FILE"
+  echo "⚠️  STATUS: NOREPORT (Newman produced no results JSON — infra failure, not a regression)"
+fi
 
 # Check for validation headers in responses
 if [ -f "$REPORT_DIR/$TIMESTAMP-results.json" ]; then
@@ -126,11 +169,16 @@ if [ -f "$REPORT_DIR/$TIMESTAMP-results.json" ]; then
   " || echo "Could not check validation headers"
 fi
 
-# Generate summary report
+# Generate summary report (report files only claimed when they actually exist)
 echo "=== Summary ==="
-echo "📁 Reports saved to: $REPORT_DIR/"
-echo "📄 HTML Report: $REPORT_DIR/$TIMESTAMP-report.html"
-echo "📊 JSON Results: $REPORT_DIR/$TIMESTAMP-results.json"
+echo "📁 Reports directory: $REPORT_DIR/"
+if [ -f "$REPORT_DIR/$TIMESTAMP-results.json" ]; then
+  echo "📊 JSON Results: $REPORT_DIR/$TIMESTAMP-results.json"
+else
+  echo "⚠️  JSON Results: NOT written (Newman produced no report)"
+fi
+[ -f "$REPORT_DIR/$TIMESTAMP-report.html" ] && echo "📄 HTML Report: $REPORT_DIR/$TIMESTAMP-report.html"
 [ -f "$REPORT_DIR/$TIMESTAMP-openapi-validation.log" ] && echo "🔍 OpenAPI Validation: $REPORT_DIR/$TIMESTAMP-openapi-validation.log"
+[ -f "$STATUS_FILE" ] && echo "🚦 Status marker: $(cat "$STATUS_FILE")"
 
 exit $NEWMAN_EXIT_CODE
