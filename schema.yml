@@ -2226,6 +2226,54 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
+  /api/v2/stamps/dispensers/{address}:
+    get:
+      operationId: getAddressDispensers
+      tags:
+        - Stamps
+        - Dispensers
+      summary: Get all dispensers opened by a wallet address
+      description: Retrieve all dispensers (open and closed) opened by a wallet address, each enriched with its stamp metadata.
+      parameters:
+        - in: path
+          name: address
+          required: true
+          example: "bc1q20d2cdvy2x83h3ssrz5lgryy4c9wqxsgc749ej"
+          schema:
+            type: string
+          description: Bitcoin wallet address
+        - in: query
+          name: status
+          required: false
+          schema:
+            type: string
+            enum:
+              - open
+              - closed
+          description: Filter by dispenser status (omit for all)
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/Page"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Pagination"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/DispenserRow"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
   /api/v2/stamps/{id}/sends:
     get:
       operationId: getStampSends
