@@ -6,6 +6,7 @@ import {
   CounterpartyApiManager,
   normalizeFeeRate,
 } from "$server/services/counterpartyApiService.ts";
+import { getProductionFeeService } from "$server/services/fee/feeServiceFactory.ts";
 import { CommonUTXOService } from "$server/services/utxo/commonUtxoService.ts";
 import type { SendRequestBody, SendResponse } from "$types/api.d.ts";
 import { Buffer } from "node:buffer";
@@ -61,6 +62,46 @@ export const handler: Handlers<SendResponse | { error: string }> = {
         });
       }
 
+      // Resolve fee_per_kb (sat/kB) with a clear precedence:
+      //   1. explicit options.fee_per_kb (caller-supplied, already sat/kB)
+      //   2. explicit satsPerVB (what the frontend sends after its own fee
+      //      selection) — converted via the canonical normalizeFeeRate helper.
+      //      The prior code multiplied by the nonexistent
+      //      TX_CONSTANTS.APPROX_VBYTES_PER_KB, yielding NaN → 500 (#1151).
+      //   3. neither supplied → fetch the live mempool recommended rate as a
+      //      dynamic default so direct API callers (not just the website, which
+      //      always sends an explicit rate) build at a current network fee
+      //      instead of relying on Counterparty's internal default.
+      let resolvedFeePerKb: number | undefined = options.fee_per_kb;
+      if (resolvedFeePerKb === undefined) {
+        if (satsPerVB && satsPerVB > 0) {
+          resolvedFeePerKb =
+            normalizeFeeRate({ satsPerVB }).normalizedSatsPerKB;
+        } else {
+          try {
+            const feeData = await getProductionFeeService().getFeeData();
+            if (feeData?.recommendedFee && feeData.recommendedFee > 0) {
+              resolvedFeePerKb = normalizeFeeRate({
+                satsPerVB: feeData.recommendedFee,
+              }).normalizedSatsPerKB;
+              logger.info("api", {
+                message: "send: applied dynamic mempool fee default",
+                recommendedFee: feeData.recommendedFee,
+                source: feeData.source,
+              });
+            }
+          } catch (feeErr) {
+            // Mempool/FeeService unavailable — leave fee_per_kb undefined and let
+            // Counterparty fall back to its own default (prior behaviour).
+            logger.warn("api", {
+              message:
+                "send: dynamic mempool fee default unavailable, deferring to Counterparty default",
+              error: feeErr instanceof Error ? feeErr.message : String(feeErr),
+            });
+          }
+        }
+      }
+
       // Options for CounterpartyApiManager.createSend to get the raw transaction
       // Counterparty's create_send might require a fee parameter.
       // We pass satsPerVB (converted to fee_per_kb if needed by createSend options) so CP can build its tx.
@@ -69,17 +110,7 @@ export const handler: Handlers<SendResponse | { error: string }> = {
         encoding: options.encoding || "opreturn",
         return_psbt: false, // Explicitly ask for raw tx, not PSBT from CP
         verbose: true,
-        // Pass fee info if CounterpartyApiManager.createSend expects it for the CP API call
-        // Assuming CounterpartyApiManager.createSend handles conversion if CP API needs fee_per_kb
-        // Convert satsPerVB → fee_per_kb (sat/kB) via the canonical helper so
-        // Counterparty's create_send receives a valid integer. The prior code
-        // multiplied by the nonexistent TX_CONSTANTS.APPROX_VBYTES_PER_KB,
-        // yielding NaN and a 500 whenever satsPerVB was used without an
-        // explicit options.fee_per_kb (#1151).
-        fee_per_kb: options.fee_per_kb ||
-          (satsPerVB && satsPerVB > 0
-            ? normalizeFeeRate({ satsPerVB }).normalizedSatsPerKB
-            : undefined),
+        fee_per_kb: resolvedFeePerKb,
       };
       if (options.memo !== undefined) xcpCreateSendOptions.memo = options.memo;
       if (options.memo_is_hex !== undefined) {
