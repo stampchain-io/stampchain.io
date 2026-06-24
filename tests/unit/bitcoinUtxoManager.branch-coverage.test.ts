@@ -267,7 +267,7 @@ class MockUTXOService {
 
     if (!basicUtxos || basicUtxos.length === 0) {
       throw new Error(
-        "No UTXOs available for transaction after filtering (selectUTXOsForTransaction entry)",
+        "No spendable UTXOs available for this address (insufficient funds)",
       );
     }
 
@@ -579,7 +579,7 @@ Deno.test("UTXOService - Comprehensive Branch Coverage", async (t) => {
     await assertRejects(
       () => service.selectUTXOsForTransaction("empty_address", vouts, 10),
       Error,
-      "No UTXOs available for transaction after filtering",
+      "No spendable UTXOs available for this address (insufficient funds)",
     );
   });
 
