@@ -37,8 +37,6 @@ export const DUMMY_STAMP_CLASSIC = {
   stamp_hash: "A6074625865641549156",
   file_hash: "",
   file_size_bytes: 420,
-  floorPrice: "priceless" as const,
-  floorPriceUSD: null,
   marketData: null,
 };
 
@@ -84,8 +82,6 @@ export const DUMMY_STAMP_POSH = {
   stamp_hash: "KEVINA",
   file_hash: "",
   file_size_bytes: 1843, // 1.8 KB
-  floorPrice: "priceless" as const,
-  floorPriceUSD: null,
   marketData: null,
 };
 
@@ -130,8 +126,6 @@ export const DUMMY_STAMP_SRC721 = {
   stamp_hash: "A863311966656466479",
   file_hash: "",
   file_size_bytes: 2700,
-  floorPrice: "priceless" as const,
-  floorPriceUSD: null,
   marketData: null,
 };
 
@@ -152,11 +146,23 @@ export const DUMMY_STAMP_SRC721_DISPENSER = {
 /* 6-entry cycle: each type once without price, once with listing price */
 const _stampBases = [
   DUMMY_STAMP_CLASSIC,
-  { ...DUMMY_STAMP_CLASSIC, floorPrice: 0.00042, lowestPriceDispenser: DUMMY_STAMP_CLASSIC_DISPENSER },
+  {
+    ...DUMMY_STAMP_CLASSIC,
+    marketData: { floorPriceBTC: 0.00042, recentSalePriceBTC: null },
+    lowestPriceDispenser: DUMMY_STAMP_CLASSIC_DISPENSER,
+  },
   DUMMY_STAMP_POSH,
-  { ...DUMMY_STAMP_POSH, floorPrice: 0.0069, lowestPriceDispenser: DUMMY_STAMP_POSH_DISPENSER },
+  {
+    ...DUMMY_STAMP_POSH,
+    marketData: { floorPriceBTC: 0.0069, recentSalePriceBTC: null },
+    lowestPriceDispenser: DUMMY_STAMP_POSH_DISPENSER,
+  },
   DUMMY_STAMP_SRC721,
-  { ...DUMMY_STAMP_SRC721, floorPrice: 0.000021, lowestPriceDispenser: DUMMY_STAMP_SRC721_DISPENSER },
+  {
+    ...DUMMY_STAMP_SRC721,
+    marketData: { floorPriceBTC: 0.000021, recentSalePriceBTC: null },
+    lowestPriceDispenser: DUMMY_STAMP_SRC721_DISPENSER,
+  },
 ];
 
 /* ===== HELPER: reject after ms milliseconds ===== */
@@ -179,7 +185,10 @@ export function withDummySaleData<T extends Record<string, any>>(
     (i + 1) % 3 === 0
       ? {
         ...s,
-        floorPrice: dispenser.satoshirate / 100000000,
+        marketData: {
+          floorPriceBTC: dispenser.satoshirate / 100000000,
+          recentSalePriceBTC: null,
+        },
         lowestPriceDispenser: dispenser,
       }
       : s
@@ -654,7 +663,6 @@ export const DUMMY_RECENT_SALES = _timeLabels.map((timeLabel, i) => {
     _saleBase[i % _saleBase.length];
   return {
     ...stamp,
-    floorPrice: price,
     activity_level: "HOT" as const,
     last_activity_time: Date.now() - i * 3600000,
     sale_data: {
@@ -681,7 +689,10 @@ export const DUMMY_RECENT_SALES = _timeLabels.map((timeLabel, i) => {
 export const DUMMY_LANDING_PAGE = {
   carouselStamps: [],
   stamps_art: shuffle(
-    Array.from({ length: 24 }, (_, i) => ({ ..._stampBases[i % _stampBases.length] })),
+    Array.from(
+      { length: 24 },
+      (_, i) => ({ ..._stampBases[i % _stampBases.length] }),
+    ),
   ),
   collectionData: [],
 };
@@ -692,7 +703,10 @@ export const DUMMY_LANDING_PAGE = {
  * Desktop grid: 6 cols × 4 rows = 24 visible stamps.
  */
 const _overviewStamps = shuffle(
-  Array.from({ length: 24 }, (_, i) => ({ ..._stampBases[i % _stampBases.length] })),
+  Array.from(
+    { length: 24 },
+    (_, i) => ({ ..._stampBases[i % _stampBases.length] }),
+  ),
 );
 export const DUMMY_STAMP_OVERVIEW_PAGE = {
   data: _overviewStamps,

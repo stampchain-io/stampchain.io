@@ -131,6 +131,7 @@ import * as $howto_template_index from "./routes/howto/template/index.tsx";
 import * as $howto_transferbitname_index from "./routes/howto/transferbitname/index.tsx";
 import * as $howto_transfertoken_index from "./routes/howto/transfertoken/index.tsx";
 import * as $index from "./routes/index.tsx";
+import * as $marketplace_index from "./routes/marketplace/index.tsx";
 import * as $media_index from "./routes/media/index.tsx";
 import * as $presskit_index from "./routes/presskit/index.tsx";
 import * as $s_id_ from "./routes/s/[...id].tsx";
@@ -184,6 +185,7 @@ import * as $card_WalletStampCard from "./islands/card/WalletStampCard.tsx";
 import * as $card_index from "./islands/card/index.ts";
 import * as $content_CollectionDetailContent from "./islands/content/CollectionDetailContent.tsx";
 import * as $content_ExplorerContent from "./islands/content/ExplorerContent.tsx";
+import * as $content_MarketplaceContent from "./islands/content/MarketplaceContent.tsx";
 import * as $content_SRC20OverviewContent from "./islands/content/SRC20OverviewContent.tsx";
 import * as $content_StampOverviewContent from "./islands/content/StampOverviewContent.tsx";
 import * as $content_WalletDashboardContent from "./islands/content/WalletDashboardContent.tsx";
@@ -203,11 +205,13 @@ import * as $content_stampDetailContent_StampTextContent from "./islands/content
 import * as $error_ErrorDisplay from "./islands/error/ErrorDisplay.tsx";
 import * as $filter_FilterComponents from "./islands/filter/FilterComponents.tsx";
 import * as $filter_FilterContentExplorer from "./islands/filter/FilterContentExplorer.tsx";
+import * as $filter_FilterContentMarketplace from "./islands/filter/FilterContentMarketplace.tsx";
 import * as $filter_FilterContentSRC20 from "./islands/filter/FilterContentSRC20.tsx";
 import * as $filter_FilterContentStamps from "./islands/filter/FilterContentStamps.tsx";
 import * as $filter_FilterContentTokens from "./islands/filter/FilterContentTokens.tsx";
 import * as $filter_FilterDrawer from "./islands/filter/FilterDrawer.tsx";
 import * as $filter_FilterOptionsExplorer from "./islands/filter/FilterOptionsExplorer.tsx";
+import * as $filter_FilterOptionsMarketplace from "./islands/filter/FilterOptionsMarketplace.tsx";
 import * as $filter_FilterOptionsSRC20 from "./islands/filter/FilterOptionsSRC20.tsx";
 import * as $filter_FilterOptionsStamps from "./islands/filter/FilterOptionsStamps.tsx";
 import * as $filter_FilterOptionsTokens from "./islands/filter/FilterOptionsTokens.tsx";
@@ -224,6 +228,7 @@ import * as $header_CollectionDetailHeader from "./islands/header/CollectionDeta
 import * as $header_CollectionOverviewHeader from "./islands/header/CollectionOverviewHeader.tsx";
 import * as $header_ExplorerHeader from "./islands/header/ExplorerHeader.tsx";
 import * as $header_Header from "./islands/header/Header.tsx";
+import * as $header_MarketplaceHeader from "./islands/header/MarketplaceHeader.tsx";
 import * as $header_SRC20DetailHeader from "./islands/header/SRC20DetailHeader.tsx";
 import * as $header_SRC20OverviewHeader from "./islands/header/SRC20OverviewHeader.tsx";
 import * as $header_StampOverviewHeader from "./islands/header/StampOverviewHeader.tsx";
@@ -482,6 +487,7 @@ const manifest = {
     "./routes/howto/transferbitname/index.tsx": $howto_transferbitname_index,
     "./routes/howto/transfertoken/index.tsx": $howto_transfertoken_index,
     "./routes/index.tsx": $index,
+    "./routes/marketplace/index.tsx": $marketplace_index,
     "./routes/media/index.tsx": $media_index,
     "./routes/presskit/index.tsx": $presskit_index,
     "./routes/s/[...id].tsx": $s_id_,
@@ -539,6 +545,7 @@ const manifest = {
     "./islands/content/CollectionDetailContent.tsx":
       $content_CollectionDetailContent,
     "./islands/content/ExplorerContent.tsx": $content_ExplorerContent,
+    "./islands/content/MarketplaceContent.tsx": $content_MarketplaceContent,
     "./islands/content/SRC20OverviewContent.tsx": $content_SRC20OverviewContent,
     "./islands/content/StampOverviewContent.tsx": $content_StampOverviewContent,
     "./islands/content/WalletDashboardContent.tsx":
@@ -568,11 +575,15 @@ const manifest = {
     "./islands/error/ErrorDisplay.tsx": $error_ErrorDisplay,
     "./islands/filter/FilterComponents.tsx": $filter_FilterComponents,
     "./islands/filter/FilterContentExplorer.tsx": $filter_FilterContentExplorer,
+    "./islands/filter/FilterContentMarketplace.tsx":
+      $filter_FilterContentMarketplace,
     "./islands/filter/FilterContentSRC20.tsx": $filter_FilterContentSRC20,
     "./islands/filter/FilterContentStamps.tsx": $filter_FilterContentStamps,
     "./islands/filter/FilterContentTokens.tsx": $filter_FilterContentTokens,
     "./islands/filter/FilterDrawer.tsx": $filter_FilterDrawer,
     "./islands/filter/FilterOptionsExplorer.tsx": $filter_FilterOptionsExplorer,
+    "./islands/filter/FilterOptionsMarketplace.tsx":
+      $filter_FilterOptionsMarketplace,
     "./islands/filter/FilterOptionsSRC20.tsx": $filter_FilterOptionsSRC20,
     "./islands/filter/FilterOptionsStamps.tsx": $filter_FilterOptionsStamps,
     "./islands/filter/FilterOptionsTokens.tsx": $filter_FilterOptionsTokens,
@@ -591,6 +602,7 @@ const manifest = {
       $header_CollectionOverviewHeader,
     "./islands/header/ExplorerHeader.tsx": $header_ExplorerHeader,
     "./islands/header/Header.tsx": $header_Header,
+    "./islands/header/MarketplaceHeader.tsx": $header_MarketplaceHeader,
     "./islands/header/SRC20DetailHeader.tsx": $header_SRC20DetailHeader,
     "./islands/header/SRC20OverviewHeader.tsx": $header_SRC20OverviewHeader,
     "./islands/header/StampOverviewHeader.tsx": $header_StampOverviewHeader,

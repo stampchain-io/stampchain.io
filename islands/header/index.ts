@@ -8,6 +8,9 @@ export * from "$components/header/HomeHeader.tsx";
 /* ===== STAMP ===== */
 export * from "$islands/header/StampOverviewHeader.tsx";
 
+/* ===== MARKETPLACE ===== */
+export * from "$islands/header/MarketplaceHeader.tsx";
+
 /* ===== SRC20 ===== */
 export * from "$islands/header/SRC20OverviewHeader.tsx";
 export * from "$islands/header/SRC20DetailHeader.tsx";

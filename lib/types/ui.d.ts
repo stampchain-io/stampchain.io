@@ -3158,6 +3158,31 @@ export type StampOverviewHeaderProps = {
 };
 
 /**
+ * MarketplaceHeaderProps - Props for the MarketplaceHeader island
+ */
+export type MarketplaceHeaderProps = {
+  currentFilters?: StampFilters;
+  viewMode?: "detail" | "minimal";
+  isSalesMode?: boolean;
+};
+
+/**
+ * MarketplaceContentProps - Props for the MarketplaceContent island
+ */
+export interface MarketplaceContentProps {
+  stamps?: StampRow[];
+  isRecentSales?: boolean;
+  pagination?: {
+    page: number;
+    totalPages: number;
+    onPageChange?: (newPage: number) => void;
+    prefix?: string;
+  };
+  fromPage?: string;
+  viewMode?: "detail" | "minimal";
+}
+
+/**
  * GlobalModalState - Migrated from states.ts
  */
 export interface GlobalModalState {
