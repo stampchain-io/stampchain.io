@@ -1,4 +1,4 @@
-import { RangeSliderDual, ToggleButton } from "$button";
+import { RangeSliderDual, SelectorButtons } from "$button";
 import type {
   FrontendStampType,
   StampEdition,
@@ -8,7 +8,7 @@ import type {
 } from "$constants";
 import { inputCheckbox } from "$form";
 import { Checkbox } from "$islands/filter/FilterComponents.tsx";
-import { StampFilters } from "$islands/filter/FilterOptionsStamps.tsx";
+import { StampFilters } from "$islands/filter/FilterOptionsMarketplace.tsx";
 import { CollapsibleSection } from "$islands/layout/CollapsibleSection.tsx";
 import {
   eyebrowPositionFilter,
@@ -537,7 +537,7 @@ function hasActiveFilters(section: string, filters: StampFilters): boolean {
   }
 }
 
-export const FilterContentStamps = ({
+export const FilterContentMarketplace = ({
   initialFilters,
   onFiltersChange,
 }: {
@@ -546,7 +546,7 @@ export const FilterContentStamps = ({
 }) => {
   const [filters, setFilters] = useState(initialFilters);
   const [expandedSections, setExpandedSections] = useState({
-    stampType: true, // Always show stamp type filter
+    stampType: false,
     fileType: hasActiveFilters("fileType", filters),
     fileSize: hasActiveFilters("fileSize", filters),
     editions: hasActiveFilters("editions", filters),
@@ -743,7 +743,7 @@ export const FilterContentStamps = ({
   };
 
   // Helper function to toggle main market type (LISTINGS vs SALES)
-  const toggleMarketType = (type: "listings" | "sales") => {
+  const _toggleMarketType = (type: "listings" | "sales") => {
     setFilters((prevFilters) => {
       const newFilters: StampFilters = {
         ...prevFilters,
@@ -766,7 +766,7 @@ export const FilterContentStamps = ({
   };
 
   // Helper function to toggle dispensers/atomics
-  const toggleListingOption = (option: "dispensers" | "atomics") => {
+  const _toggleListingOption = (option: "dispensers" | "atomics") => {
     setFilters((prevFilters) => {
       const newValue = !prevFilters[option];
       const newFilters: StampFilters = {
@@ -933,53 +933,63 @@ export const FilterContentStamps = ({
     });
   };
 
+  // Handler for the top-level market selector buttons (LISTINGS / SALES)
+  const handleMarketSelectorChange = (value: string) => {
+    setFilters((prevFilters) => {
+      // Clicking the active value deselects (clears market)
+      if (prevFilters.market === value) {
+        const newFilters: StampFilters = {
+          ...prevFilters,
+          market: "",
+          dispensers: false,
+          atomics: false,
+          listings: "",
+          sales: "",
+          listingsMin: "",
+          listingsMax: "",
+          salesMin: "",
+          salesMax: "",
+          volume: "",
+        };
+        onFiltersChange(newFilters);
+        return newFilters;
+      }
+
+      const type = value as "listings" | "sales";
+      const newFilters: StampFilters = {
+        ...prevFilters,
+        market: type,
+        dispensers: true,
+        atomics: false,
+        listings: type === "listings" ? "all" : "",
+        sales: type === "sales" ? "recent" : "",
+        listingsMin: "",
+        listingsMax: "",
+        salesMin: "",
+        salesMax: "",
+        volume: "",
+      };
+      onFiltersChange(newFilters);
+      return newFilters;
+    });
+  };
+
   return (
     <div ref={drawerRef}>
-      {/* 🎯 STAMP TYPE FILTER */}
-      <CollapsibleSection
-        title="STAMP TYPE"
-        section="stampType"
-        expanded={expandedSections.stampType}
-        toggle={() => toggleSection("stampType")}
-        variant="collapsibleTitle"
-      >
-        <Radio
-          label="ALL"
-          value="all"
-          name="stampType"
-          checked={filters.stampType === "all"}
-          onChange={() => handleStampTypeChange("all")}
+      {/* ===== MARKET SELECTOR ===== */}
+      <div class="pb-5 tablet:pb-4">
+        <SelectorButtons
+          options={[
+            { value: "listings", label: "LISTINGS" },
+            { value: "sales", label: "SALES" },
+          ]}
+          value={filters.market || "listings"}
+          onChange={handleMarketSelectorChange}
+          size="xsR"
+          color="purple"
+          className="w-full"
         />
-        <Radio
-          label="CLASSIC"
-          value="classic"
-          name="stampType"
-          checked={filters.stampType === "classic"}
-          onChange={() => handleStampTypeChange("classic")}
-        />
-        <Radio
-          label="POSH"
-          value="posh"
-          name="stampType"
-          checked={filters.stampType === "posh"}
-          onChange={() => handleStampTypeChange("posh")}
-        />
-        <Radio
-          label="RECURSIVE"
-          value="src-721"
-          name="stampType"
-          checked={filters.stampType === "src-721"}
-          onChange={() => handleStampTypeChange("src-721")}
-        />
-        <Radio
-          label="CURSED"
-          value="cursed"
-          name="stampType"
-          checked={filters.stampType === "cursed"}
-          onChange={() => handleStampTypeChange("cursed")}
-        />
-      </CollapsibleSection>
-
+      </div>
       <CollapsibleSection
         title="MARKET PLACE"
         section="market"
@@ -987,148 +997,66 @@ export const FilterContentStamps = ({
         toggle={() => toggleSection("market")}
         variant="collapsibleTitle"
       >
-        {/* Top Level: LISTINGS vs SALES */}
-        <div class="my-2">
-          <ToggleButton
-            options={["listings", "sales"]}
-            selected={filters.market}
-            onChange={(value) =>
-              toggleMarketType(value as "listings" | "sales")}
-            mode="single"
-            size="xsR"
-            color="primary"
-            spacing="evenFullwidth"
-          />
-        </div>
-
         {/* LISTINGS Section */}
-        {filters.market === "listings" && (
+        {(filters.market === "listings" || filters.market === "") && (
           <div>
-            {/* Dispensers and Atomics buttons */}
-            <div class="my-4">
-              <ToggleButton
-                options={["dispensers", "atomics"]}
-                selected={[
-                  ...(filters.dispensers ? ["dispensers"] : []),
-                  ...(filters.atomics ? ["atomics"] : []),
-                ]}
-                onChange={(values) => {
-                  const selectedArray = Array.isArray(values) ? values : [];
-                  const newDispensers = selectedArray.includes("dispensers");
-                  const newAtomics = selectedArray.includes("atomics");
-
-                  // Prevent deselecting dispensers - it should always stay selected
-                  if (
-                    newDispensers !== filters.dispensers &&
-                    newDispensers === true
-                  ) {
-                    toggleListingOption("dispensers");
-                  }
-                  if (newAtomics !== filters.atomics) {
-                    toggleListingOption("atomics");
-                  }
-                }}
-                mode="multi"
-                size="xsR"
-                spacing="evenFullwidth"
-                disabledOptions={["atomics"]}
-                alwaysSelectedOptions={["dispensers"]}
-                color="primary"
-              />
-            </div>
-
             {/* Price options */}
-            {(filters.dispensers || filters.atomics) && (
-              <div>
-                <Radio
-                  label="ALL"
-                  value="all"
-                  name="listingPrice"
-                  checked={filters.listings === "all"}
-                  onChange={() => handleListingPriceType("all")}
-                />
-                <div class={`${eyebrowPrimary} ${eyebrowPositionFilter}`}>
-                  PRICE RANGE
-                </div>
-                <Radio
-                  label="BARGAIN"
-                  value="bargain"
-                  name="listingPrice"
-                  checked={filters.listings === "bargain"}
-                  onChange={() => handleListingPriceType("bargain")}
-                />
-                <Radio
-                  label="AFFORDABLE"
-                  value="affordable"
-                  name="listingPrice"
-                  checked={filters.listings === "affordable"}
-                  onChange={() => handleListingPriceType("affordable")}
-                />
-                <Radio
-                  label="PREMIUM"
-                  value="premium"
-                  name="listingPrice"
-                  checked={filters.listings === "premium"}
-                  onChange={() => handleListingPriceType("premium")}
-                />
-                <Radio
-                  label="CUSTOM PRICE"
-                  value="custom"
-                  name="listingPrice"
-                  checked={filters.listings === "custom"}
-                  onChange={() => handleListingPriceType("custom")}
-                />
-
-                {/* Custom price range slider */}
-                {filters.listings === "custom" && (
-                  <div class="mt-3 pl-0.5">
-                    <RangeSliderDual
-                      variant="price"
-                      onChange={handlePriceRangeChange}
-                    />
-                  </div>
-                )}
+            <div>
+              <Radio
+                label="ALL"
+                value="all"
+                name="listingPrice"
+                checked={filters.listings === "all"}
+                onChange={() => handleListingPriceType("all")}
+              />
+              <div class={`${eyebrowPrimary} ${eyebrowPositionFilter}`}>
+                PRICE RANGE
               </div>
-            )}
+              <Radio
+                label="BARGAIN"
+                value="bargain"
+                name="listingPrice"
+                checked={filters.listings === "bargain"}
+                onChange={() => handleListingPriceType("bargain")}
+              />
+              <Radio
+                label="AFFORDABLE"
+                value="affordable"
+                name="listingPrice"
+                checked={filters.listings === "affordable"}
+                onChange={() => handleListingPriceType("affordable")}
+              />
+              <Radio
+                label="PREMIUM"
+                value="premium"
+                name="listingPrice"
+                checked={filters.listings === "premium"}
+                onChange={() => handleListingPriceType("premium")}
+              />
+              <Radio
+                label="CUSTOM PRICE"
+                value="custom"
+                name="listingPrice"
+                checked={filters.listings === "custom"}
+                onChange={() => handleListingPriceType("custom")}
+              />
+
+              {/* Custom price range slider */}
+              {filters.listings === "custom" && (
+                <div class="mt-3 pl-0.5">
+                  <RangeSliderDual
+                    variant="price"
+                    onChange={handlePriceRangeChange}
+                  />
+                </div>
+              )}
+            </div>
           </div>
         )}
 
         {/* SALES Section */}
         {filters.market === "sales" && (
           <div>
-            {/* Dispensers and Atomics buttons */}
-            <div class="my-4">
-              <ToggleButton
-                options={["dispensers", "atomics"]}
-                selected={[
-                  ...(filters.dispensers ? ["dispensers"] : []),
-                  ...(filters.atomics ? ["atomics"] : []),
-                ]}
-                onChange={(values) => {
-                  const selectedArray = Array.isArray(values) ? values : [];
-                  const newDispensers = selectedArray.includes("dispensers");
-                  const newAtomics = selectedArray.includes("atomics");
-
-                  // Prevent deselecting dispensers - it should always stay selected
-                  if (
-                    newDispensers !== filters.dispensers &&
-                    newDispensers === true
-                  ) {
-                    toggleListingOption("dispensers");
-                  }
-                  if (newAtomics !== filters.atomics) {
-                    toggleListingOption("atomics");
-                  }
-                }}
-                mode="multi"
-                size="xsR"
-                spacing="evenFullwidth"
-                disabledOptions={["atomics"]}
-                alwaysSelectedOptions={["dispensers"]}
-                color="primary"
-              />
-            </div>
-
             <Radio
               label="RECENT"
               value="recent"
@@ -1193,6 +1121,50 @@ export const FilterContentStamps = ({
             }
           </div>
         )}
+      </CollapsibleSection>
+
+      <CollapsibleSection
+        title="STAMP TYPE"
+        section="stampType"
+        expanded={expandedSections.stampType}
+        toggle={() => toggleSection("stampType")}
+        variant="collapsibleTitle"
+      >
+        <Radio
+          label="ALL"
+          value="all"
+          name="stampType"
+          checked={filters.stampType === "all"}
+          onChange={() => handleStampTypeChange("all")}
+        />
+        <Radio
+          label="CLASSIC"
+          value="classic"
+          name="stampType"
+          checked={filters.stampType === "classic"}
+          onChange={() => handleStampTypeChange("classic")}
+        />
+        <Radio
+          label="POSH"
+          value="posh"
+          name="stampType"
+          checked={filters.stampType === "posh"}
+          onChange={() => handleStampTypeChange("posh")}
+        />
+        <Radio
+          label="RECURSIVE"
+          value="src-721"
+          name="stampType"
+          checked={filters.stampType === "src-721"}
+          onChange={() => handleStampTypeChange("src-721")}
+        />
+        <Radio
+          label="CURSED"
+          value="cursed"
+          name="stampType"
+          checked={filters.stampType === "cursed"}
+          onChange={() => handleStampTypeChange("cursed")}
+        />
       </CollapsibleSection>
 
       {filters.stampType !== "src-721" && (
@@ -1448,4 +1420,4 @@ export const FilterContentStamps = ({
   );
 };
 
-export default FilterContentStamps;
+export default FilterContentMarketplace;

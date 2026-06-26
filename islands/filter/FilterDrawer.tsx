@@ -1,4 +1,11 @@
+import { FilterContentMarketplace } from "$islands/filter/FilterContentMarketplace.tsx";
 import { FilterContentStamps } from "$islands/filter/FilterContentStamps.tsx";
+import {
+  defaultFilters as marketplaceDefaultFilters,
+  filtersToQueryParams as marketplaceFiltersToQueryParams,
+  queryParamsToFilters as marketplaceQueryParamsToFilters,
+  StampFilters as MarketplaceFilters,
+} from "$islands/filter/FilterOptionsMarketplace.tsx";
 import {
   defaultFilters as stampDefaultFilters,
   filtersToQueryParams as stampFiltersToQueryParams,
@@ -46,7 +53,11 @@ const Tooltip = ({ visible, text }: { visible: boolean; text: string }) => (
 );
 
 // Define a type for all possible filter types
-type AllFilters = StampFilters | SRC20Filters | ExplorerFilters;
+type AllFilters =
+  | StampFilters
+  | SRC20Filters
+  | ExplorerFilters
+  | MarketplaceFilters;
 
 const FilterDrawer = (
   { open, setOpen, type = "stamp" }: {
@@ -75,6 +86,10 @@ const FilterDrawer = (
         filters = explorerQueryParamsToFilters(searchString);
         break;
       }
+      case "marketplace": {
+        filters = marketplaceQueryParamsToFilters(searchString);
+        break;
+      }
       default: {
         filters = stampQueryParamsToFilters(searchString);
         break;
@@ -90,6 +105,8 @@ const FilterDrawer = (
         return { ...src20DefaultFilters };
       case "explorer":
         return { ...explorerDefaultFilters };
+      case "marketplace":
+        return { ...marketplaceDefaultFilters };
       default:
         return { ...stampDefaultFilters };
     }
@@ -300,6 +317,11 @@ const FilterDrawer = (
         baseParams,
         currentFilters as StampFilters,
       );
+    } else if (type === "marketplace") {
+      queryParams = marketplaceFiltersToQueryParams(
+        baseParams,
+        currentFilters as MarketplaceFilters,
+      );
     } else if (type === "src20") {
       queryParams = src20FiltersToQueryParams(
         baseParams,
@@ -424,6 +446,14 @@ const FilterDrawer = (
             {type === "stamp" && (
               <FilterContentStamps
                 initialFilters={currentFilters as StampFilters}
+                onFiltersChange={(filters) => {
+                  setCurrentFilters(filters);
+                }}
+              />
+            )}
+            {type === "marketplace" && (
+              <FilterContentMarketplace
+                initialFilters={currentFilters as MarketplaceFilters}
                 onFiltersChange={(filters) => {
                   setCurrentFilters(filters);
                 }}
