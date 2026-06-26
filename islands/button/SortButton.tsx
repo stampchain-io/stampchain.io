@@ -1,4 +1,5 @@
-import { Icon } from "$components/icon/IconBase.tsx";
+import { buttonHover } from "$button";
+import { Icon } from "$icon";
 import { useSSRSafeNavigation } from "$lib/hooks/useSSRSafeNavigation.ts";
 import { tooltipIcon } from "$notification";
 import type { SortProps } from "$types/ui.d.ts";
@@ -86,24 +87,22 @@ export function SortButton(
   }, []);
 
   return (
-    <div class="relative">
-      <a
+    <div
+      class="relative flex items-center"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <Icon
+        type="iconButton"
+        name={sort === "DESC" ? "sortDesc" : "sortAsc"}
+        weight="bold"
+        size="lgR"
+        color="greyLight"
+        className={buttonHover}
         href={getSortUrl()}
         f-partial={getSortUrl()}
-        class="inline-block"
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      >
-        <Icon
-          type="iconButton"
-          name={sort === "DESC" ? "sortDesc" : "sortAsc"}
-          weight="bold"
-          size="custom"
-          color="greyLight"
-          className="w-[26px] h-[26px] tablet:w-[22px] tablet:h-[22px] p-1 bg-transparent group-hover:stroke-color-hover"
-          ariaLabel={`Sorted ${sort === "DESC" ? "descending" : "ascending"}`}
-        />
-      </a>
+        ariaLabel={`Sorted ${sort === "DESC" ? "descending" : "ascending"}`}
+      />
       <div
         className={`${tooltipIcon} ${
           isTooltipVisible ? "opacity-100" : "opacity-0"

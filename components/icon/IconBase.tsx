@@ -20,10 +20,10 @@ export function Icon(props: IconVariants) {
     ariaLabel,
     colorAccent,
     colorAccentHover,
-    isOpen: _isOpen,
-    onClick,
-    ["f-partial"]: _fPartial,
-    ...rest
+  isOpen: _isOpen,
+  onClick,
+  ["f-partial"]: fPartial,
+  ...rest
   } = props;
 
   /* ===== STYLES ===== */
@@ -245,7 +245,13 @@ export function Icon(props: IconVariants) {
   if (type === "iconButton") {
     const { href, target, rel } = props;
     return (
-      <a href={href} target={target} rel={rel}>
+      <a
+        href={href}
+        target={target}
+        rel={rel}
+        {...(fPartial !== undefined ? { "f-partial": fPartial } : {})}
+        class="inline-flex items-center"
+      >
         {svgElement}
       </a>
     );

@@ -1,4 +1,4 @@
-import { buttonStyles, color, state } from "$button";
+import { buttonHover, buttonStyles, color, state } from "$button";
 import { container2, transitionColors } from "$layout";
 import type { SelectorButtonsProps } from "$types/ui.d.ts";
 import { useCallback, useEffect, useRef, useState } from "preact/hooks";
@@ -127,7 +127,7 @@ export const SelectorButtons = ({
           ? `mx-0.5 text-color-neutral-1000 ${transitionColors}`
           : `mx-0.5 bg-transparent text-color-neutral-500 ${
             isMounted
-              ? `${transitionColors} hover:!text-color-hover hover:bg-gradient-to-b hover:from-color-neutral-800 hover:via-color-neutral-800 hover:to-color-neutral-900`
+              ? `${transitionColors} hover:!text-color-hover ${buttonHover}`
               : "transition-none"
           }`;
 

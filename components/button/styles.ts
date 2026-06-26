@@ -33,6 +33,8 @@ export interface ButtonVariants {
   color: Record<
     | "grey"
     | "purple"
+    | "primary"
+    | "secondary"
     | "test"
     | "custom",
     string
@@ -104,16 +106,12 @@ export const buttonStyles: ButtonVariants = {
     flatOutline: `
       ${baseFlat}
       !items-center !justify-center
-      hover:!bg-[linear-gradient(to_bottom_right,var(--color-background),var(--color-background),var(--color-background),var(--color-background),var(--color-background))]
-      hover:!border-[var(--color-button-semidark)]
-      hover:!text-[var(--color-button-semidark)] hover:!opacity-90
-    `,
+      hover:!bg-[linear-gradient(to_bottom,transparent,transparent,transparent)] hover:!text-[var(--color-button)]
+      `,
     outlineFlat: `
       ${baseOutline}
       !items-center !justify-center
-      hover:!bg-[linear-gradient(to_bottom_right,var(--color-button-light),var(--color-button-semilight),var(--color-button),var(--color-button-semidark),var(--color-button-dark))]
-      hover:!border-[var(--color-button-dark)]
-      hover:!text-color-background hover:!opacity-90
+      hover:!bg-[linear-gradient(to_bottom,var(--color-button),var(--color-button),var(--color-button-dark))] hover:!text-[var(--color-background)]
     `,
     custom: ``,
   },
@@ -136,6 +134,16 @@ export const buttonStyles: ButtonVariants = {
 
       [--color-button-semilight:var(--color-primary-400)]
       [--color-button-semidark:var(--color-primary-600)]
+    `,
+    primary: `
+      [--color-button-light:var(--color-primary-300)]
+      [--color-button:var(--color-primary-400)]
+      [--color-button-dark:var(--color-primary-500)]
+    `,
+    secondary: `
+      [--color-button-light:var(--color-secondary-300)]
+      [--color-button:var(--color-secondary-400)]
+      [--color-button-dark:var(--color-secondary-500)]
     `,
     test: `
       [--color-button-dark:var(--color-red-dark)]
@@ -200,6 +208,9 @@ export const buttonStyles: ButtonVariants = {
 };
 
 /* ===== ADDITIONAL STYLES ===== */
+/* ===== SELECTOR BUTTON AND ICON BUTTON BACKGROUND STYLES ===== */
+export const buttonHover = `px-1.5 py-0.5 bg-transparent rounded-full
+  hover:bg-gradient-to-b hover:from-color-neutral-700 hover:via-color-neutral-800 hover:to-color-neutral-800 hover:stroke-color-hover`;
 /* ===== TOGGLE SWITCH BUTTON STYLES ===== */
 export const toggleButton = `flex items-center relative w-10 h-5 !rounded-full
   ${container2Hover} group focus:outline-none focus-visible:outline-none transition duration-50`;

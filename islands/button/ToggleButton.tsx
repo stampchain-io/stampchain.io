@@ -10,7 +10,7 @@ export const ToggleButton = ({
   spacing = "normal",
   disabledOptions = [],
   alwaysSelectedOptions = [],
-  color = "grey",
+  color = "primary",
   className = "",
 }: {
   options: string[];
@@ -35,6 +35,8 @@ export const ToggleButton = ({
   color?:
     | "grey"
     | "purple"
+    | "primary"
+    | "secondary"
     | "test"
     | "custom";
   className?: string;
@@ -92,12 +94,12 @@ export const ToggleButton = ({
     const canHover = canHoverSelected[option];
 
     if (isAlwaysSelected) {
-      return `${button("flat", color, size)} !opacity-90 !cursor-default`;
+      return `${button("flat", color, size)} !cursor-default`;
     }
 
     if (isDisabled) {
       return `${
-        button("outline", "grey", size, {
+        button("outline", color, size, {
           disabled: true,
         })
       }`;
@@ -107,19 +109,19 @@ export const ToggleButton = ({
       // Selected state (flatOutline)
       if (canHover) {
         // With hover - use flatOutline (flat base, outline hover)
-        return button("flatOutline", color, size);
+        return button("flat", color, size);
       } else {
-        // Without hover - use flat (flat base, no color-change hover, but force opacity 80%)
-        return `${button("flat", color, size)} !opacity-90`;
+        // Without hover - use flat
+        return `${button("flat", color, size)}`;
       }
     } else {
       // Unselected state (outlineFlat)
       if (canHover) {
         // With hover - use outlineFlat (outline base, flat hover)
-        return button("outlineFlat", "grey", size);
+        return button("outline", color, size);
       } else {
-        // Without hover - use outline (outline base, no color-change hover, but force opacity 80%)
-        return `${button("outline", "grey", size)} !opacity-90`;
+        // Without hover - use outline
+        return `${button("outline", color, size)}`;
       }
     }
   };

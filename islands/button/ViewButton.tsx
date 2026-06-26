@@ -1,5 +1,6 @@
 /* ===== VIEW MODE TOGGLE BUTTON COMPONENT ===== */
-import { Icon } from "$components/icon/IconBase.tsx";
+import { buttonHover } from "$button";
+import { Icon } from "$icon";
 import {
   getCurrentPathname,
   safeNavigate,
@@ -75,7 +76,7 @@ export function ViewButton(
 
   return (
     <div
-      class="relative"
+      class="relative flex items-center"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
@@ -83,9 +84,9 @@ export function ViewButton(
         type="iconButton"
         name={iconName}
         weight="bold"
-        size="custom"
+        size="lgR"
         color="greyLight"
-        className="w-[26px] h-[26px] tablet:w-[22px] tablet:h-[22px] p-1 bg-transparent group-hover:stroke-color-hover"
+        className={buttonHover}
         onClick={() => handleViewModeChange(nextMode)}
         ariaLabel={ariaLabel}
       />
@@ -94,7 +95,7 @@ export function ViewButton(
           isTooltipVisible ? "opacity-100" : "opacity-0"
         }`}
       >
-        VIEW MODE
+        VIEW
       </div>
     </div>
   );
