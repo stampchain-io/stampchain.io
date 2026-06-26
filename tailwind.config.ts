@@ -225,11 +225,6 @@ export default {
         "calc-12": "calc(100% - 12px)",
         "calc-24": "calc(100% - 24px)",
         "calc-36": "calc(100% - 36px)",
-        // STAMP CARD AND MISC OTHER DIMENSIONS
-        "stamp-card": "6px",
-        "stamp-card-lg": "max(6px,min(12px,calc(6px+((100vw-360px)*0.029))))",
-        "search-icon": "12px",
-        "stroke-width": "2px",
       },
       aspectRatio: {
         "stamp": "1",

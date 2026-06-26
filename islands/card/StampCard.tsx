@@ -1,14 +1,10 @@
 /* ===== STAMP CARD COMPONENT ===== */
 /* @baba-update audio icon size (custom) - 247*/
 /*@baba-check styles+icon*/
+import { Button } from "$button";
 import { Icon, LoadingIcon, PlaceholderImage } from "$icon";
 import StampTextContent from "$islands/content/stampDetailContent/StampTextContent.tsx";
-import {
-  container2Hover,
-  containerPill,
-  shadowGlowPurple,
-  transitionColors,
-} from "$layout";
+import { containerCard, containerPill } from "$layout";
 import {
   abbreviateAddress,
   formatFileSize,
@@ -48,10 +44,12 @@ export function StampCard({
   stamp,
   isRecentSale = false,
   variant = "imageDetail",
+  fromPage,
 }: {
   stamp: StampWithSaleData;
   isRecentSale?: boolean;
   variant?: StampCardVariant;
+  fromPage?: string;
 }) {
   /* ===== STATE ===== */
   const [loading, setLoading] = useState<boolean>(true);
@@ -359,22 +357,6 @@ export function StampCard({
       }
     }
 
-    // Legacy fallback for v2.2 or older data structures
-    // @deprecated - Remove once all data migrated to v2.3 marketData structure
-    const legacyPrice = stamp.floorPrice !== "priceless"
-      ? stamp.floorPrice
-      : stamp.recentSalePrice;
-    if (
-      legacyPrice !== "priceless" && legacyPrice !== null &&
-      !isNaN(Number(legacyPrice)) && Number(legacyPrice) > 0
-    ) {
-      return {
-        text: `${stripTrailingZeros(Number(legacyPrice).toFixed(8))} BTC`,
-        style: cardPrice,
-      };
-    }
-
-    // Default to mime type if no valid price
     return {
       text: stamp.stamp_mimetype?.split("/")[1]?.toUpperCase() || "UNKNOWN",
       style: cardFileType,
@@ -407,8 +389,7 @@ export function StampCard({
     return stringValue.length > 6;
   };
 
-  const priceData = renderPrice();
-  const isListed = priceData.style === cardPrice;
+  const isListed = renderPrice().style === cardPrice;
 
   /* ===== RENDER ===== */
   return (
@@ -418,13 +399,7 @@ export function StampCard({
         target="_top"
         f-partial={`/stamp/${stamp.tx_hash}`}
         data-long-number={isLongNumber(stampValue)}
-        class={`
-          group relative z-0 flex flex-col
-          p-stamp-card mobileLg:p-3
-          w-full h-full
-          ${shadowGlowPurple}
-          ${container2Hover} ${transitionColors}
-        `}
+        class={containerCard}
       >
         {/* ===== ATOM ICON ===== */}
         {/* Note: Atomic icon is only shown on WalletStampCard for stamps with UTXO attachments */}
@@ -437,9 +412,28 @@ export function StampCard({
           </div>
           {/* ===== IMAGE PILL OVERLAY ===== */}
           {variant === "imagePill" && (
-            <div class="absolute bottom-2 right-2 z-20">
-              <div class={`${containerPill} ${cardSupply}`}>
+            <div class="absolute bottom-1 left-1 z-20">
+              <div class={`${containerPill} ${cardSupply} cursor-pointer`}>
                 {supplyDisplay}
+              </div>
+            </div>
+          )}
+          {/* ===== BTC PRICE OVERLAY (imageDetail, if listed, explorer page only) ===== */}
+          {isListed && variant === "imageDetail" &&
+            fromPage !== "marketplace" && (
+            <div class="absolute bottom-1 right-1 z-20">
+              <div
+                class={`${containerPill} ${cardPrice} !p-0.5 cursor-pointer`}
+              >
+                <Icon
+                  type="icon"
+                  name="bitcoin"
+                  weight="bold"
+                  size="xxs"
+                  color="custom"
+                  className="stroke-color-secondary-400"
+                  ariaLabel="BTC"
+                />
               </div>
             </div>
           )}
@@ -447,10 +441,10 @@ export function StampCard({
 
         {/* ===== DETAILS SECTION (imageDetail) ===== */}
         {variant === "imageDetail" && (
-          <div class="flex flex-col items-center mt-3">
+          <div class="flex flex-col items-center p-0.5">
             {/* Stamp Number with container */}
             <div
-              class={`flex items-center justify-center max-w-[90%]
+              class={`flex items-center justify-center max-w-[90%] mt-1
               ${cardStampNumber}`}
             >
               {displayStampHash && <span class="font-light">#</span>}
@@ -458,18 +452,18 @@ export function StampCard({
             </div>
 
             {/* Creator Name or Abbreviated Address */}
-            <div class={`${cardCreator} mt-1`}>
+            <div class={`${cardCreator} mt-0.5`}>
               {creatorDisplay}
             </div>
 
             {/* Row 1: Supply (left) + Status Icons (right) */}
-            <div class="flex justify-between items-center mt-3 w-full">
+            <div class="flex justify-between items-center mt-2 w-full">
               {/* Supply aligned left */}
               <div class={`${containerPill} ${cardSupply}`}>
                 {supplyDisplay}
               </div>
               {/* Locked/Keyburn/Divisible/Recursive Icons */}
-              <div class="flex items-center gap-1.5">
+              <div class="flex items-center gap-1.5 mr-1">
                 {stamp.ident === "SRC-721" && (
                   <Icon
                     type="icon"
@@ -524,41 +518,48 @@ export function StampCard({
               </div>
             </div>
 
-            {/* Row 2: Price pill (if listed) OR File type + File size pills */}
-            <div
-              class={`flex items-center mt-3 w-full ${
-                isListed ? "justify-center" : "justify-between"
-              }`}
-            >
-              {isListed
-                ? (
-                  <div
-                    class={`${containerPill} ${cardPrice}`}
-                  >
-                    {priceData.text}
-                  </div>
-                )
-                : (
-                  <>
-                    <div
-                      class={`${containerPill} ${cardFileType}`}
-                    >
-                      {stamp.stamp_mimetype?.split("/")[1]?.toUpperCase() ||
-                        "UNKNOWN"}
-                    </div>
-                    {stamp.file_size_bytes != null && (
-                      <div
-                        class={`${containerPill} ${cardFileSize}`}
-                      >
-                        {formatFileSize(
-                          stamp.file_size_bytes,
-                          stamp.stamp_mimetype === "text/plain",
-                        )}
-                      </div>
-                    )}
-                  </>
-                )}
+            {/* Row 2: File type + File size pills */}
+            <div class="flex items-center justify-between mt-2 w-full">
+              <div class={`${containerPill} ${cardFileType}`}>
+                {stamp.stamp_mimetype?.split("/")[1]?.toUpperCase() ||
+                  "UNKNOWN"}
+              </div>
+              {stamp.file_size_bytes != null && (
+                <div class={`${containerPill} ${cardFileSize}`}>
+                  {formatFileSize(
+                    stamp.file_size_bytes,
+                    stamp.stamp_mimetype === "text/plain",
+                  )}
+                </div>
+              )}
             </div>
+
+            {/* Row 3: Buy button (marketplace + listed only) */}
+            {fromPage === "marketplace" && isListed && (
+              <div class="flex justify-center mt-2 w-full">
+                <Button
+                  variant="outline"
+                  color="custom"
+                  size="xs"
+                  class="w-full rounded-xl
+                  bg-gradient-to-b from-color-neutral-800/80 via-color-neutral-900/90 to-color-neutral-900
+                  [--color-button-light:var(--color-neutral-700)]
+                  [--color-button:var(--color-neutral-800)] [--color-button-dark:var(--color-neutral-900)]
+                  group-hover:from-transparent group-hover:via-transparent group-hover:to-transparent
+                  group-hover:[--color-button-light:var(--color-primary-300)]
+                  group-hover:[--color-button:var(--color-primary-400)] group-hover:[--color-button-dark:var(--color-primary-500)]"
+                >
+                  <span class="relative inline-flex items-center justify-center">
+                    <span class="group-hover:opacity-0 transition-opacity duration-200 tracking-wide text-[var(--color-secondary-400)]">
+                      {renderPrice().text}
+                    </span>
+                    <span class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      BUY
+                    </span>
+                  </span>
+                </Button>
+              </div>
+            )}
           </div>
         )}
 

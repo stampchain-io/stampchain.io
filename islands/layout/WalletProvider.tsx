@@ -9,7 +9,7 @@ import { checkWalletAvailability } from "$client/wallet/wallet.ts";
 import { xverseProvider } from "$client/wallet/xverse.ts";
 import { WALLET_PROVIDERS } from "$constants";
 import { closeForegroundModal, closeModal } from "$islands/modal/states.ts";
-import { containerCardL2 } from "$layout";
+import { container2Hover, shadowGlowPurple, transitionColors } from "$layout";
 import type { WalletProviderKey } from "$lib/constants/walletProviders.ts";
 import { handleUnknownError } from "$lib/utils/errorHandling.ts";
 import type { BaseToast } from "$lib/utils/ui/notifications/toastSignal.ts";
@@ -117,7 +117,9 @@ export function WalletProvider(
       onClick={handleConnect}
       role="button"
       aria-label={`Connect to ${providerInfo.name}`}
-      class={`flex justify-between items-center px-6 py-4 ${containerCardL2}`}
+      class={`flex justify-between items-center group relative
+      z-0 w-full h-full pl-3 p-1 ${container2Hover}
+      ${shadowGlowPurple} ${transitionColors}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -125,7 +127,7 @@ export function WalletProvider(
       <h6
         class={`font-extrabold text-lg uppercase tracking-wide ${
           isHovered
-            ? "text-color-purple-light"
+            ? "text-color-hover"
             : "bg-gradient-to-r color-neutral-gradient"
         }`}
       >
@@ -136,7 +138,7 @@ export function WalletProvider(
       <img
         src={providerInfo.logo}
         alt={providerInfo.name}
-        class="w-8 h-8 object-contain"
+        class="w-10 h-10 object-contain rounded-xl"
       />
     </div>
   );

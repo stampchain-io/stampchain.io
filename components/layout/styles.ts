@@ -25,19 +25,26 @@ export const shadowGlowGrey =
 /* ===== CONTAINER LAYER STYLES ===== */
 // Overlay layer styles - used for drawer and modal containers, border defined locally
 export const container0 =
-  `bg-gradient-to-b from-color-neutral-950/95 via-color-neutral-900/90 to-neutral-1000/95 backdrop-blur-lg`;
+  `bg-gradient-to-b from-color-neutral-950/95 via-color-neutral-900/90 to-neutral-1000 backdrop-blur-lg`;
 // 1st layer styles
 export const container1 =
   `bg-gradient-to-b from-color-neutral-800/40 via-color-neutral-900/60 to-neutral-950/80 border border-color-neutral-800 rounded-3xl backdrop-blur-sm`;
 // 2nd layer styles - register tool tld dropdown uses same hardcoded values
 export const container2 =
-  `bg-gradient-to-b from-color-neutral-800/40 via-color-neutral-900/60 to-neutral-950/80 border border-color-neutral-700 rounded-2xl`;
+  `bg-gradient-to-b from-color-neutral-800/40 via-color-neutral-900/60 to-neutral-900/80
+  border border-color-neutral-700 rounded-2xl`;
 export const container2Hover =
   `${container2} hover:border-color-hover ${transitionColors}`;
-export const container3 = `border border-color-neutral-800 rounded-xl
-  bg-gradient-to-b from-color-neutral-800/80 via-color-neutral-900/90 to-color-neutral-950 cursor-default select-none`;
-export const containerPill = `flex items-center py-1 px-3 rounded-full
-  bg-gradient-to-b from-color-neutral-700 via-color-neutral-800 to-color-neutral-900 cursor-default select-none`;
+// Card container styles - used for all cards
+export const containerCard = `group relative z-0 flex flex-col
+w-full h-full p-1 ${container2Hover}
+${shadowGlowPurple} ${transitionColors}`;
+// 3rd layer styles - mainly used in cards
+export const container3 =
+  `bg-gradient-to-b from-color-neutral-800/80 via-color-neutral-900/90 to-color-neutral-900
+  border border-color-neutral-800 rounded-xl cursor-default select-none`;
+export const containerPill = `flex items-center py-1 px-2.5 rounded-full
+  bg-gradient-to-b from-color-neutral-700/80 via-color-neutral-800/90 to-color-neutral-800 cursor-pointer select-none`;
 
 /* ===== BODY STYLES ===== */
 // Main body styles
@@ -55,13 +62,6 @@ export const containerBackground = `${body} p-5 ${container1}`;
 export const containerGap = "gap-5 mobileLg:gap-7.5";
 export const containerDetailImage = `relative p-5 ${container1}`;
 export const containerStickyBottom = `sticky bottom-0 mt-auto py-9 tablet:py-6`;
-
-// Stamp Card styles
-export const containerCard = `${container1} ${shadowGlowPurple}
-  hover:border-color-purple-light`; // check if used
-
-export const containerCardL2 = `${container2} ${shadowGlowPurple}
-  hover:border-color-purple-light`;
 
 // Table card container styles - check if used
 export const containerCardTable = `rounded-3xl ${container1} ${shadowGlowPurple}
@@ -169,7 +169,6 @@ export type LayoutStyles = {
   containerDetailImage: string;
   containerStickyBottom: string;
   containerCard: string;
-  containerCardL2: string;
   containerCardTable: string;
   containerColData: string;
   containerColForm: string;

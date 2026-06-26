@@ -2,7 +2,7 @@
 /* Specialized version of StampCard for wallet pages showing user-specific details */
 import { Icon, LoadingIcon, PlaceholderImage } from "$icon";
 import StampTextContent from "$islands/content/stampDetailContent/StampTextContent.tsx";
-import { container2, shadowGlowPurple } from "$layout";
+import { containerCard } from "$layout";
 import type { WalletStampCardProps } from "$types/ui.d.ts";
 import { VNode } from "preact";
 import { memo } from "preact/compat";
@@ -394,14 +394,7 @@ const WalletStampCardComponent = (
         target="_top"
         f-partial={`/stamp/${stamp.tx_hash}`}
         data-long-number={isLongNumber(stampValue)}
-        class={`
-          text-white group relative z-0 flex flex-col
-          p-stamp-card mobileLg:p-3
-          rounded-2xl transition-all
-          w-full h-full
-          hover:border-color-purple-light ${shadowGlowPurple} hover:border-solid border-2 border-transparent
-           ${container2}
-        `}
+        class={containerCard}
       >
         {/* ===== WALLET INDICATOR (ATOMIC ICON) ===== */}
         {fromPage && fromPage === "wallet" && isAtomicIconVisible(stamp) && (
