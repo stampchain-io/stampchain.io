@@ -1,5 +1,5 @@
 /* ===== SRC20 TRANSACTION CARD COMPONENT ===== */
-import { Icon, PlaceholderImage } from "$icon";
+import { PlaceholderImage } from "$icon";
 import { container3, containerCard, containerPill } from "$layout";
 import { unicodeEscapeToEmoji } from "$lib/utils/ui/formatting/emojiUtils.ts";
 import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
@@ -98,19 +98,16 @@ export function SRC20Card({ src20, variant = "detail" }: SRC20CardProps) {
       {/* From → To */}
       <div class="flex flex-1 min-h-2" />
       <div
-        class={`flex flex-col items-center justify-center px-3 py-2 ${container3}`}
+        class={`flex flex-col items-center justify-center px-3 py-2 gap-1 ${container3} cursor-pointer`}
       >
         <div class={cardFileType}>
           {src20.creator_name ?? abbreviateAddress(src20.creator, 5)}
         </div>
-        <Icon
-          type="icon"
-          name="caretDown"
-          weight="bold"
-          size="sm"
-          color="greyLight"
-          className="hidden min-[420px]:block"
-        />
+        <div
+          class={`hidden min-[420px]:flex text-[11px] bg-gradient-to-b from-color-neutral-200 to-color-neutral-400 bg-clip-text text-transparent`}
+        >
+          TO
+        </div>
         <div class={`hidden min-[420px]:flex ${cardFileSize}`}>
           {src20.destination_name ??
             (src20.destination ? abbreviateAddress(src20.destination, 5) : "—")}
@@ -141,7 +138,7 @@ export function SRC20Card({ src20, variant = "detail" }: SRC20CardProps) {
       {/* Creator */}
       <div class="flex flex-1 min-h-2" />
       <div
-        class={`flex flex-col items-center justify-center px-3 py-2 ${container3}`}
+        class={`flex flex-col items-center justify-center px-3 py-2 ${container3} cursor-pointer`}
       >
         <div class={cardFileType}>
           {src20.creator_name ?? abbreviateAddress(src20.creator, 5)}
@@ -183,7 +180,7 @@ export function SRC20Card({ src20, variant = "detail" }: SRC20CardProps) {
         {/* Recipient (destination) */}
         <div class="flex flex-1 min-h-2" />
         <div
-          class={`flex flex-col items-center justify-center px-3 py-2 gap-2 ${container3}`}
+          class={`flex flex-col items-center justify-center px-3 py-2 gap-2 ${container3} cursor-pointer`}
         >
           <div class={cardFileType}>
             {src20.destination_name ??
@@ -194,7 +191,7 @@ export function SRC20Card({ src20, variant = "detail" }: SRC20CardProps) {
 
           {/* Mint progress */}
           {progress !== null && (
-            <div class="hidden min-[420px]:flex w-full">
+            <div class="hidden min-[420px]:flex flex-col w-full">
               <div class="w-full h-1 rounded-full bg-color-neutral-800 overflow-hidden">
                 <div
                   class="h-full rounded-full bg-gradient-to-r from-color-primary-500 via-color-primary-400 to-color-primary-300 transition-all duration-300"

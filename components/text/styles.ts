@@ -215,7 +215,7 @@ export const cardCreator =
 export const cardSupply =
   `font-semibold text-xs text-color-primary-400 ${select}`;
 export const cardFileType =
-  `font-medium text-xs text-color-neutral-300 text-nowrap ${select}`;
+  `font-medium text-xs text-color-neutral-200 text-nowrap ${select}`;
 export const cardFileSize =
   `font-normal text-xs text-color-neutral-400 text-nowrap ${select}`;
 export const cardPrice =

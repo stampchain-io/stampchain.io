@@ -4,7 +4,7 @@
 import { Button } from "$button";
 import { Icon, LoadingIcon, PlaceholderImage } from "$icon";
 import StampTextContent from "$islands/content/stampDetailContent/StampTextContent.tsx";
-import { containerCard, containerPill } from "$layout";
+import { container3, containerCard, containerPill } from "$layout";
 import {
   abbreviateAddress,
   formatFileSize,
@@ -35,6 +35,10 @@ interface StampWithSaleData extends Omit<StampRow, "stamp_base64"> {
     btc_amount: number;
     block_index: number;
     tx_hash: string;
+    buyer_address?: string;
+    dispenser_address?: string;
+    time_ago?: string;
+    dispense_quantity?: number;
   };
   stamp_base64?: string;
 }
@@ -43,13 +47,11 @@ interface StampWithSaleData extends Omit<StampRow, "stamp_base64"> {
 export function StampCard({
   stamp,
   isRecentSale = false,
-  variant = "imageDetail",
-  fromPage,
+  variant = "imageDetailExplorer",
 }: {
   stamp: StampWithSaleData;
   isRecentSale?: boolean;
   variant?: StampCardVariant;
-  fromPage?: string;
 }) {
   /* ===== STATE ===== */
   const [loading, setLoading] = useState<boolean>(true);
@@ -418,9 +420,8 @@ export function StampCard({
               </div>
             </div>
           )}
-          {/* ===== BTC PRICE OVERLAY (imageDetail, if listed, explorer page only) ===== */}
-          {isListed && variant === "imageDetail" &&
-            fromPage !== "marketplace" && (
+          {/* ===== BTC PRICE OVERLAY (explorer only, if listed) ===== */}
+          {variant === "imageDetailExplorer" && isListed && (
             <div class="absolute bottom-1 right-1 z-20">
               <div
                 class={`${containerPill} ${cardPrice} !p-0.5 cursor-pointer`}
@@ -439,10 +440,11 @@ export function StampCard({
           )}
         </div>
 
-        {/* ===== DETAILS SECTION (imageDetail) ===== */}
-        {variant === "imageDetail" && (
+        {/* ===== FULL DETAILS SECTION (explorer / marketplace listings) ===== */}
+        {(variant === "imageDetailExplorer" ||
+          variant === "imageDetailMarketplaceListings") && (
           <div class="flex flex-col items-center p-0.5">
-            {/* Stamp Number with container */}
+            {/* Stamp Number */}
             <div
               class={`flex items-center justify-center max-w-[90%] mt-1
               ${cardStampNumber}`}
@@ -451,18 +453,28 @@ export function StampCard({
               {stampValue}
             </div>
 
+            {/* CPID (marketplace listings only) */}
+            {variant === "imageDetailMarketplaceListings" && stamp.cpid && (
+              <div class="font-mono text-xs text-color-neutral-500 truncate max-w-[90%] mt-0.5">
+                {stamp.cpid}
+              </div>
+            )}
+
             {/* Creator Name or Abbreviated Address */}
-            <div class={`${cardCreator} mt-0.5`}>
+            <div class={`${cardCreator} mt-1`}>
               {creatorDisplay}
             </div>
 
             {/* Row 1: Supply (left) + Status Icons (right) */}
             <div class="flex justify-between items-center mt-2 w-full">
-              {/* Supply aligned left */}
               <div class={`${containerPill} ${cardSupply}`}>
-                {supplyDisplay}
+                {variant === "imageDetailMarketplaceListings"
+                  ? `${
+                    (stamp as any).lowestPriceDispenser?.give_remaining ??
+                      stamp.supply ?? 1
+                  }/${stamp.supply ?? 1}`
+                  : supplyDisplay}
               </div>
-              {/* Locked/Keyburn/Divisible/Recursive Icons */}
               <div class="flex items-center gap-1.5 mr-1">
                 {stamp.ident === "SRC-721" && (
                   <Icon
@@ -534,8 +546,8 @@ export function StampCard({
               )}
             </div>
 
-            {/* Row 3: Buy button (marketplace + listed only) */}
-            {fromPage === "marketplace" && isListed && (
+            {/* Row 3: Buy button (marketplace listings only) */}
+            {variant === "imageDetailMarketplaceListings" && isListed && (
               <div class="flex justify-center mt-2 w-full">
                 <Button
                   variant="outline"
@@ -563,8 +575,74 @@ export function StampCard({
           </div>
         )}
 
-        {/* ===== MINIMAL DETAILS SECTION (imageMinimal) ===== */}
-        {variant === "imageMinimal" && (
+        {/* ===== SALE DETAILS SECTION (marketplace sales) ===== */}
+        {variant === "imageDetailMarketplaceSales" && (
+          <div class="flex flex-col items-center p-0.5">
+            {/* Stamp Number */}
+            <div
+              class={`flex items-center justify-center max-w-[90%] mt-1
+              ${cardStampNumber}`}
+            >
+              {displayStampHash && <span class="font-light">#</span>}
+              {stampValue}
+            </div>
+
+            {/* CPID */}
+            {stamp.cpid && (
+              <div class="font-mono text-xs text-color-neutral-500 truncate max-w-[90%] mt-0.5">
+                {stamp.cpid}
+              </div>
+            )}
+
+            {/* Creator Name or Abbreviated Address */}
+            <div class={`${cardCreator} mt-1`}>
+              {creatorDisplay}
+            </div>
+
+            {/* Row B: amount pill (left) + time_ago pill (right) */}
+            {stamp.sale_data && (
+              <div class="flex items-center justify-between mt-2 w-full">
+                <div class={`${containerPill} ${cardSupply}`}>
+                  {stamp.sale_data.dispense_quantity ?? 1}/{stamp.supply ?? 1}
+                </div>
+                {stamp.sale_data.time_ago && (
+                  <div class={`${containerPill} ${cardFileSize}`}>
+                    {stamp.sale_data.time_ago}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Sale info container: sale price BTC (left) + buyer address (right) */}
+            {stamp.sale_data && (
+              <div
+                class={`flex flex-col w-full mt-2 items-center justify-center px-3 py-2 gap-1 ${container3} cursor-pointer`}
+              >
+                <div class={`${cardPrice}`}>
+                  {renderPrice().text}
+                </div>
+                <div
+                  class={`hidden min-[420px]:flex text-[11px] bg-gradient-to-b from-color-secondary-400 to-color-neutral-400 bg-clip-text text-transparent`}
+                >
+                  BY
+                </div>
+                {(stamp.sale_data.buyer_address ||
+                  stamp.sale_data.dispenser_address) && (
+                  <div class={`${cardFileSize}`}>
+                    {abbreviateAddress(
+                      stamp.sale_data.buyer_address ||
+                        stamp.sale_data.dispenser_address || "",
+                      abbreviationLength,
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ===== MINIMAL DETAILS SECTION (home / sales pages) ===== */}
+        {variant === "imageDetailHomeSales" && (
           <div class="flex flex-col items-center px-1.5 mobileLg:px-3 pt-1.5 mobileLg:pt-3">
             <div
               class={`flex items-center justify-center

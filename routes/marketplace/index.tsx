@@ -50,8 +50,10 @@ export const handler: Handlers = {
       };
 
       const stampsByCurrentType = stampsByType[typeParam] ?? all;
-      const cardView: "detail" | "minimal" = viewParam === "minimal"
+      const cardView: "detail" | "minimal" | "row" = viewParam === "minimal"
         ? "minimal"
+        : viewParam === "row"
+        ? "row"
         : "detail";
 
       // Show listed-only stamps when in listings mode (no market param OR market=listings)
@@ -61,8 +63,21 @@ export const handler: Handlers = {
         !isSalesView;
 
       // In listings mode: only show stamps that have an open dispenser (lowestPriceDispenser set)
+      // In sales mode: attach stub sale_data so imageDetailMarketplaceSales Row 3 renders
       const stamps = isDummyDefaultMarket
         ? stampsByCurrentType.filter((s: any) => s.lowestPriceDispenser)
+        : isSalesView
+        ? stampsByCurrentType.map((s: any) => ({
+          ...s,
+          sale_data: s.sale_data ?? {
+            btc_amount: 0.00069,
+            block_index: 958500,
+            tx_hash: s.tx_hash,
+            buyer_address: "1A1zP1eP5QGefi2DMPTfTL5SLmv7Divf0Na",
+            time_ago: "2h ago",
+            dispense_quantity: 1,
+          },
+        }))
         : stampsByCurrentType;
 
       const dummyFilters = isDummyDefaultMarket
@@ -354,8 +369,10 @@ export const handler: Handlers = {
 
           /* ===== RENDER PAGE ===== */
           const viewParam = url.searchParams.get("view");
-          const cardView: "detail" | "minimal" = viewParam === "minimal"
+          const cardView: "detail" | "minimal" | "row" = viewParam === "minimal"
             ? "minimal"
+            : viewParam === "row"
+            ? "row"
             : "detail";
 
           const effectiveFilters = isDefaultMarketState
@@ -412,7 +429,11 @@ export const handler: Handlers = {
         sortBy: "DESC",
         selectedTab: "all",
         totalPages: 1,
-        cardView: viewParamFallback === "minimal" ? "minimal" : "detail",
+        cardView: viewParamFallback === "minimal"
+          ? "minimal"
+          : viewParamFallback === "row"
+          ? "row"
+          : "detail",
       });
     }
   },
@@ -430,8 +451,10 @@ export function MarketplacePage(props: MarketplacePageProps) {
     search: _search,
     cardView: cardViewRaw,
   } = props.data;
-  const cardView: "detail" | "minimal" = cardViewRaw === "minimal"
+  const cardView: "detail" | "minimal" | "row" = cardViewRaw === "minimal"
     ? "minimal"
+    : cardViewRaw === "row"
+    ? "row"
     : "detail";
   const stampsArray = Array.isArray(stamps) ? stamps : [];
   const isRecentSales = selectedTab === "recent_sales";

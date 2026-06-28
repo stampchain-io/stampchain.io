@@ -6,6 +6,7 @@ import type { SUBPROTOCOLS } from "$types/base.d.ts";
 
 import type { StampFilterType, StampType } from "$constants";
 import { ExplorerHeader } from "$header";
+import { queryParamsToServicePayload } from "$islands/filter/FilterOptionsStamps.tsx";
 import {
   DEV_DUMMY_MODE,
   DUMMY_EXPLORER_OVERVIEW_PAGE,
@@ -83,16 +84,92 @@ export const handler: Handlers = {
         cursed: all.filter((s) => s.stamp < 0),
         "src-721": all.filter((s) => s.ident === "SRC-721"),
       };
-      const stamps = section === "tokens"
+
+      let stamps = section === "tokens"
         ? []
         : (stampsByType[selectedTab] ?? all);
+
+      // DEV: apply stamp range filter (covers ALL and STAMPS sections)
+      const rangeParam = url.searchParams.get("range");
+      const rangeMinParam = url.searchParams.get("rangeMin");
+      const rangeMaxParam = url.searchParams.get("rangeMax");
+
+      if (rangeParam && rangeParam !== "custom") {
+        stamps = stamps.filter((s) => s.stamp < parseInt(rangeParam));
+      } else if (rangeMinParam || rangeMaxParam) {
+        const lo = rangeMinParam ? parseInt(rangeMinParam) : -Infinity;
+        const hi = rangeMaxParam ? parseInt(rangeMaxParam) : Infinity;
+        stamps = stamps.filter((s) => s.stamp >= lo && s.stamp <= hi);
+      }
+
+      let src20Data = section === "stamps"
+        ? null
+        : DUMMY_EXPLORER_OVERVIEW_PAGE;
+
+      if (src20Data) {
+        // DEV: apply token op filter
+        const tokenOpParam = url.searchParams.get("token[op]");
+        if (tokenOpParam) {
+          src20Data = {
+            ...src20Data,
+            data: src20Data.data.filter(
+              (s) => s.op?.toLowerCase() === tokenOpParam,
+            ),
+          };
+        }
+
+        // DEV: apply token range filter (st.stamp)
+        const tokenRangePreset = url.searchParams.get("token[range]");
+        const tokenRangeMin = url.searchParams.get("token[rangeMin]");
+        const tokenRangeMax = url.searchParams.get("token[rangeMax]");
+
+        if (tokenRangePreset && tokenRangePreset !== "custom") {
+          const max = parseInt(tokenRangePreset);
+          src20Data = {
+            ...src20Data,
+            data: src20Data.data.filter(
+              (s) =>
+                ((s as unknown as Record<string, unknown>).stamp as number ??
+                  Infinity) < max,
+            ),
+          };
+        } else if (tokenRangeMin || tokenRangeMax) {
+          const lo = tokenRangeMin ? parseInt(tokenRangeMin) : -Infinity;
+          const hi = tokenRangeMax ? parseInt(tokenRangeMax) : Infinity;
+          src20Data = {
+            ...src20Data,
+            data: src20Data.data.filter((s) => {
+              const stamp =
+                (s as unknown as Record<string, unknown>).stamp as number ?? 0;
+              return stamp >= lo && stamp <= hi;
+            }),
+          };
+        }
+
+        // DEV: apply token amount filter
+        const tokenAmountParam = url.searchParams.get("token[amount]");
+        if (tokenAmountParam) {
+          const maxAmt = parseInt(tokenAmountParam.replace("<", ""));
+          src20Data = {
+            ...src20Data,
+            data: src20Data.data.filter(
+              (s) =>
+                parseFloat(
+                  (s as unknown as Record<string, unknown>).amt as string ??
+                    "0",
+                ) <= maxAmt,
+            ),
+          };
+        }
+      }
+
       return ctx.render({
         stamps,
         pagination: {
           ...DUMMY_STAMP_OVERVIEW_PAGE.pagination,
           total: stamps.length,
         },
-        src20DataCard: section === "stamps" ? null : DUMMY_EXPLORER_OVERVIEW_PAGE,
+        src20DataCard: src20Data,
         page: 1,
         limit: 60,
         totalPages: 1,
@@ -125,6 +202,29 @@ export const handler: Handlers = {
       // Fetch stamps and SRC-20 transactions in parallel.
       // Stamps explicitly exclude SRC-20 ident so those appear only as SRC20Card.
       const NON_SRC20_IDENTS: SUBPROTOCOLS[] = ["STAMP", "SRC-721", "SRC-101"];
+
+      // Build full stamp filter payload from URL (reads range, filetype,
+      // editions, market, listings, sales, type, etc.)
+      const stampFiltersPayload = queryParamsToServicePayload(url.search);
+      const cleanStampFilters = Object.fromEntries(
+        Object.entries(stampFiltersPayload).filter(([, v]) => v !== undefined),
+      );
+
+      // Token filter params from URL
+      const tokenOp = url.searchParams.get("token[op]") || undefined;
+      const tokenRangeParam = url.searchParams.get("token[range]");
+      const tokenRangeMin = url.searchParams.get("token[rangeMin]");
+      const tokenRangeMax = url.searchParams.get("token[rangeMax]");
+      const stampMax = tokenRangeParam && tokenRangeParam !== "custom"
+        ? parseInt(tokenRangeParam)
+        : tokenRangeMax
+        ? parseInt(tokenRangeMax)
+        : undefined;
+      const stampMin = tokenRangeMin ? parseInt(tokenRangeMin) : undefined;
+      const tokenAmountParam = url.searchParams.get("token[amount]");
+      const amtMax = tokenAmountParam
+        ? tokenAmountParam.replace("<", "")
+        : undefined;
 
       let stampResult;
       let src20Result: {
@@ -166,12 +266,13 @@ export const handler: Handlers = {
           ? Promise.resolve({ data: [], total: 0, page: 1, totalPages: 1 })
           : withTimeout(
             StampController.getStamps({
+              ...cleanStampFilters, // filter payload from URL (range, fileType, etc.)
               page,
               limit: page_size,
               sortBy: sortBy as "DESC" | "ASC",
               type: selectedTab,
               filterBy,
-              ident: NON_SRC20_IDENTS,
+              ident: NON_SRC20_IDENTS, // always exclude SRC-20 ident
               collectionId,
               url: url.origin,
             }),
@@ -181,13 +282,15 @@ export const handler: Handlers = {
         const src20Fetch = section === "stamps"
           ? Promise.resolve({ data: [], total: 0, page: 1, totalPages: 1 })
           : withTimeout(
-            SRC20Service.QueryService.fetchBasicSrc20Data(
-              {
-                limit: page_size,
-                page,
-                sortBy: { field: "block_index", direction: "desc" },
-              },
-            ).then(extractSrc20Rows),
+            SRC20Service.QueryService.fetchBasicSrc20Data({
+              limit: page_size,
+              page,
+              sortBy: { field: "block_index", direction: "desc" },
+              ...(tokenOp && { op: tokenOp.toUpperCase() }),
+              ...(stampMax != null && { stampMax }),
+              ...(stampMin != null && { stampMin }),
+              ...(amtMax && { amtMax }),
+            }).then(extractSrc20Rows),
             15000,
           );
 

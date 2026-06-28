@@ -13,7 +13,6 @@ export function ExplorerContent({
   stamps,
   isRecentSales = false,
   pagination,
-  fromPage,
   src20DataCard,
   section = "all",
   viewMode = "detail",
@@ -62,8 +61,9 @@ export function ExplorerContent({
                   <StampCard
                     stamp={entry.item}
                     isRecentSale={isRecentSales}
-                    variant={viewMode === "minimal" ? "image" : "imageDetail"}
-                    {...(fromPage && { fromPage })}
+                    variant={viewMode === "minimal"
+                      ? "image"
+                      : "imageDetailExplorer"}
                   />
                 )
                 : (

@@ -1408,45 +1408,6 @@ export interface ReceiveAddyModalProps {
   title?: string;
 }
 
-export interface RecentSaleCardProps {
-  sale: any;
-  onClick?: () => void;
-  className?: string;
-  showFullDetails?: boolean;
-  btc_price_usd?: number;
-}
-
-export interface RecentSalesGalleryProps {
-  title?: string;
-  subTitle?: string;
-  sales: Array<any>;
-  layout?: "grid" | "list";
-  showFullDetails?: boolean;
-  displayCounts?: {
-    mobileSm?: number;
-    mobileMd?: number;
-    mobileLg?: number;
-    tablet?: number;
-    desktop?: number;
-  };
-  pagination?: {
-    page: number;
-    totalPages: number;
-    onPageChange?: (newPage: number) => void;
-    prefix?: string;
-  };
-  isLoading?: boolean;
-  btc_price_usd?: number;
-  autoRefresh?: boolean;
-  refreshIntervalMs?: number;
-  onRefresh?: () => void;
-  gridClass?: string;
-  maxItems?: number;
-  loading?: boolean;
-  error?: string;
-  onLoadMore?: () => void;
-}
-
 export interface ResponsiveProps {
   mobile?: any;
   tablet?: any;
@@ -3162,7 +3123,7 @@ export type StampOverviewHeaderProps = {
  */
 export type MarketplaceHeaderProps = {
   currentFilters?: StampFilters;
-  viewMode?: "detail" | "minimal";
+  viewMode?: "detail" | "minimal" | "row";
   isSalesMode?: boolean;
 };
 
@@ -3179,7 +3140,7 @@ export interface MarketplaceContentProps {
     prefix?: string;
   };
   fromPage?: string;
-  viewMode?: "detail" | "minimal";
+  viewMode?: "detail" | "minimal" | "row";
 }
 
 /**

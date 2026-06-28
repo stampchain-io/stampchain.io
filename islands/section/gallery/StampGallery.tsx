@@ -218,7 +218,6 @@ export default function StampGallery({
                       stamp={stamp}
                       isRecentSale={isRecentSales}
                       variant={variant}
-                      {...(fromPage && { fromPage })}
                     />
                   </div>
                 ))
@@ -258,7 +257,6 @@ export default function StampGallery({
                       stamp={stamp}
                       isRecentSale={isRecentSales}
                       variant={variant}
-                      {...(fromPage && { fromPage })}
                     />
                   </div>
                 ))

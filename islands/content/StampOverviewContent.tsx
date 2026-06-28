@@ -13,12 +13,11 @@ export function StampOverviewContent({
   stamps,
   isRecentSales = false,
   pagination,
-  fromPage,
   viewMode = "detail",
 }: StampOverviewContentProps) {
   const cardVariant: StampCardVariant = viewMode === "minimal"
     ? "image"
-    : "imageDetail";
+    : "imageDetailExplorer";
 
   /* ===== RENDER ===== */
   return (
@@ -34,7 +33,6 @@ export function StampOverviewContent({
                 stamp={stamp}
                 isRecentSale={isRecentSales}
                 variant={cardVariant}
-                {...(fromPage && { fromPage })}
               />
             ))}
           </div>

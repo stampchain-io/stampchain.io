@@ -178,7 +178,6 @@ import * as $button_ToolsButton from "./islands/button/ToolsButton.tsx";
 import * as $button_ViewButton from "./islands/button/ViewButton.tsx";
 import * as $button_WalletButton from "./islands/button/WalletButton.tsx";
 import * as $button_buttonActions from "./islands/button/buttonActions.tsx";
-import * as $card_RecentSaleCard from "./islands/card/RecentSaleCard.tsx";
 import * as $card_SRC20Card from "./islands/card/SRC20Card.tsx";
 import * as $card_StampCard from "./islands/card/StampCard.tsx";
 import * as $card_WalletStampCard from "./islands/card/WalletStampCard.tsx";
@@ -272,7 +271,6 @@ import * as $section_gallery_Carousel from "./islands/section/gallery/Carousel.t
 import * as $section_gallery_CollectionDetailGallery from "./islands/section/gallery/CollectionDetailGallery.tsx";
 import * as $section_gallery_CollectionGallery from "./islands/section/gallery/CollectionGallery.tsx";
 import * as $section_gallery_PartnersBanner from "./islands/section/gallery/PartnersBanner.tsx";
-import * as $section_gallery_RecentSalesGallery from "./islands/section/gallery/RecentSalesGallery.tsx";
 import * as $section_gallery_SRC20Deploys from "./islands/section/gallery/SRC20Deploys.tsx";
 import * as $section_gallery_SRC20Gallery from "./islands/section/gallery/SRC20Gallery.tsx";
 import * as $section_gallery_SRC20GalleryWallet from "./islands/section/gallery/SRC20GalleryWallet.tsx";
@@ -537,7 +535,6 @@ const manifest = {
     "./islands/button/ViewButton.tsx": $button_ViewButton,
     "./islands/button/WalletButton.tsx": $button_WalletButton,
     "./islands/button/buttonActions.tsx": $button_buttonActions,
-    "./islands/card/RecentSaleCard.tsx": $card_RecentSaleCard,
     "./islands/card/SRC20Card.tsx": $card_SRC20Card,
     "./islands/card/StampCard.tsx": $card_StampCard,
     "./islands/card/WalletStampCard.tsx": $card_WalletStampCard,
@@ -653,8 +650,6 @@ const manifest = {
       $section_gallery_CollectionGallery,
     "./islands/section/gallery/PartnersBanner.tsx":
       $section_gallery_PartnersBanner,
-    "./islands/section/gallery/RecentSalesGallery.tsx":
-      $section_gallery_RecentSalesGallery,
     "./islands/section/gallery/SRC20Deploys.tsx": $section_gallery_SRC20Deploys,
     "./islands/section/gallery/SRC20Gallery.tsx": $section_gallery_SRC20Gallery,
     "./islands/section/gallery/SRC20GalleryWallet.tsx":
