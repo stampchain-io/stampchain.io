@@ -1,6 +1,7 @@
 /* ===== MARKETPLACE CONTENT COMPONENT ===== */
 import { PaginationButtons } from "$button";
 import { StampCard } from "$card";
+import { MarketplaceTableBase } from "$components/table/marketplaceTable/MarketplaceTableBase.tsx";
 import { containerBackground } from "$layout";
 import { valueDark } from "$text";
 import type { StampCardVariant, StampRow } from "$types/stamp.d.ts";
@@ -15,13 +16,24 @@ export function MarketplaceContent({
 }: MarketplaceContentProps) {
   const cardVariant: StampCardVariant = viewMode === "minimal"
     ? "image"
-    : "imageDetail";
+    : isRecentSales
+    ? "imageDetailMarketplaceSales"
+    : "imageDetailMarketplaceListings";
 
   /* ===== RENDER ===== */
   return (
     <div class="w-full pt-3 mobileMd:pt-6">
-      {stamps?.length
+      {viewMode === "row"
         ? (
+          /* ===== ROW TABLE VIEW ===== */
+          <MarketplaceTableBase
+            stamps={stamps ?? []}
+            isRecentSales={isRecentSales}
+          />
+        )
+        : stamps?.length
+        ? (
+          /* ===== CARD GRID VIEW ===== */
           <div class="grid grid-cols-2 mobileMd:grid-cols-3 mobileLg:grid-cols-4 tablet:grid-cols-5 desktop:grid-cols-6 gap-3 mobileMd:gap-6 w-full auto-rows-fr">
             {stamps.map((stamp: StampRow, index: number) => (
               <StampCard
@@ -31,7 +43,6 @@ export function MarketplaceContent({
                 stamp={stamp}
                 isRecentSale={isRecentSales}
                 variant={cardVariant}
-                fromPage="marketplace"
               />
             ))}
           </div>
