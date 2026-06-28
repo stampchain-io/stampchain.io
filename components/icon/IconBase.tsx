@@ -20,10 +20,10 @@ export function Icon(props: IconVariants) {
     ariaLabel,
     colorAccent,
     colorAccentHover,
-  isOpen: _isOpen,
-  onClick,
-  ["f-partial"]: fPartial,
-  ...rest
+    isOpen: _isOpen,
+    onClick,
+    ["f-partial"]: fPartial,
+    ...rest
   } = props;
 
   /* ===== STYLES ===== */
@@ -70,8 +70,9 @@ export function Icon(props: IconVariants) {
 
       // View Mode Icons
       viewRow: "gridRow",
-      viewCardDetail: "gridCard",
-      viewCardMinimal: "gridSquare4",
+      viewCardDetail: "gridVertical",
+      viewCardMinimal: "gridSquare",
+      viewGridHorizontal: "gridHorizontal",
 
       // Caret Icons
       caretUp: "caretUp",
