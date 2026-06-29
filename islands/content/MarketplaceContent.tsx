@@ -22,7 +22,7 @@ export function MarketplaceContent({
 
   /* ===== RENDER ===== */
   return (
-    <div class="w-full pt-3 mobileMd:pt-6">
+    <div class={`w-full ${viewMode !== "row" ? "pt-3 mobileMd:pt-6" : "pt-3"}`}>
       {viewMode === "row"
         ? (
           /* ===== ROW TABLE VIEW ===== */
