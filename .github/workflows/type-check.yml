@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           # Fetch more history for better diff analysis
           fetch-depth: 0
@@ -31,7 +31,7 @@ jobs:
           deno-version: v2.6.9
 
       - name: Cache Deno dependencies
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: |
             ~/.deno
