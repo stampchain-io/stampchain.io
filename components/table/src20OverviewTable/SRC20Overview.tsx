@@ -14,7 +14,10 @@ import {
   isBrowser,
   safeNavigate,
 } from "$lib/utils/navigation/freshNavigationUtils.ts";
-import { unicodeEscapeToEmoji } from "$lib/utils/ui/formatting/emojiUtils.ts";
+import {
+  splitTextAndEmojis,
+  unicodeEscapeToEmoji,
+} from "$lib/utils/ui/formatting/emojiUtils.ts";
 import { formatDate } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { getSRC20ImageSrc } from "$lib/utils/ui/media/imageUtils.ts";
 import {
@@ -64,7 +67,7 @@ function getVolume24h(src20: any): number {
 }
 
 interface SRC20OverviewProps {
-  data: any;
+  data: SRC20Row[];
   fromPage?: string;
   timeframe?: string;
   onImageClick?: (ticker: string) => void;
@@ -198,22 +201,6 @@ export function SRC20Overview({
       </span>
     );
   };
-
-  function splitTextAndEmojis(text: string): { text: string; emoji: string } {
-    if (typeof text !== "string") {
-      return { text: String(text || ""), emoji: "" };
-    }
-
-    const emojiRegex =
-      /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F000}-\u{1F02F}\u{1F0A0}-\u{1F0FF}\u{1F100}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{1F900}-\u{1F9FF}]/gu;
-    const match = text.match(emojiRegex);
-    if (!match || !match[0]) return { text, emoji: "" };
-    const emojiIndex = text.indexOf(match[0]);
-    return {
-      text: text.slice(0, emojiIndex),
-      emoji: text.slice(emojiIndex),
-    };
-  }
 
   return (
     <div class="overflow-x-auto tablet:overflow-x-visible scrollbar-hide">
@@ -427,7 +414,9 @@ export function SRC20Overview({
                     </td>
                     {/* CHANGE */}
                     <td
-                      class={`${cellCenterL2Card} text-center`}
+                      class={`${
+                        cellAlign(2, headers?.length ?? 0)
+                      } ${cellCenterL2Card} text-center`}
                     >
                       {(() => {
                         const change = src20.market_data?.change_24h_percent;

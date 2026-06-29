@@ -9,6 +9,7 @@
  * @reference https://github.com/mikeinspace/stamps/blob/main/spec.md
  */
 
+import type { StampDispenserActivityLevel } from "$constants";
 import type {
   BasicUTXO,
   BlockRow,
@@ -33,7 +34,6 @@ import type { SortKey, SortMetrics } from "$types/sorting.d.ts";
 import type { DetailedUTXO } from "$types/transaction.d.ts";
 import type { PaginationState } from "$types/ui.d.ts";
 import type {
-  ActivityLevel,
   AlertDashboardData,
   CompilationDashboardData,
   CompilationMetrics,
@@ -633,6 +633,9 @@ export interface StampRow {
   is_btc_stamp?: number | null;
   is_reissue?: number | null;
   is_valid_base64?: number | null;
+
+  // Activity tracking (marketplace context)
+  activity_level?: StampDispenserActivityLevel | null;
 }
 
 /**
@@ -1329,7 +1332,7 @@ export interface StampMarketDataRow {
   last_sale_dispenser_tx_hash: string | null;
   last_sale_block_index: number | null;
   // Activity tracking fields
-  activity_level: ActivityLevel | null;
+  activity_level: StampDispenserActivityLevel | null;
   last_activity_time: number | null; // Unix timestamp
 }
 
@@ -1389,7 +1392,7 @@ export interface StampMarketData {
   lastSaleDispenserTxHash: string | null;
   lastSaleBlockIndex: number | null;
   // Activity tracking fields
-  activityLevel: ActivityLevel | null;
+  activityLevel: StampDispenserActivityLevel | null;
   lastActivityTime: number | null; // Unix timestamp
 }
 
@@ -1500,7 +1503,7 @@ export interface StampWithEnhancedSaleData extends StampRow {
     dispenser_tx_hash?: string;
   };
   marketData?: StampMarketData;
-  activity_level?: ActivityLevel;
+  activity_level?: StampDispenserActivityLevel | null;
   last_activity_time?: number;
 }
 

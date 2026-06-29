@@ -1,6 +1,7 @@
 /* reinamora - update Trending calculations */
 import { Button } from "$button";
 import { cellAlign, colGroup } from "$components/layout/types.ts";
+import { SSRSafeUrlBuilder } from "$components/navigation/SSRSafeUrlBuilder.tsx";
 import { Icon, PlaceholderImage } from "$icon";
 import {
   cellCenterL2Card,
@@ -14,13 +15,23 @@ import {
   isBrowser,
   safeNavigate,
 } from "$lib/utils/navigation/freshNavigationUtils.ts";
-import { unicodeEscapeToEmoji } from "$lib/utils/ui/formatting/emojiUtils.ts";
+import {
+  splitTextAndEmojis,
+  unicodeEscapeToEmoji,
+} from "$lib/utils/ui/formatting/emojiUtils.ts";
 import { formatDate } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { getSRC20ImageSrc } from "$lib/utils/ui/media/imageUtils.ts";
 import { labelXxs, textXs, valueDarkSm } from "$text";
 import type { SRC20Row } from "$types/src20.d.ts";
 import type { SRC20MintingProps } from "$types/ui.d.ts";
-import type { TargetedEvent } from "preact/compat";
+
+const SORT_MAPPING: Record<string, string> = {
+  "TOKEN": "TOKEN",
+  "MINTS": "MINTS",
+  "PROGRESS": "PROGRESS",
+  "DEPLOY": "DEPLOY",
+  "HOLDERS": "HOLDERS",
+};
 
 export function SRC20Minting({
   data,
@@ -40,19 +51,7 @@ export function SRC20Minting({
   ];
 
   const handleHeaderClick = (headerName: string) => {
-    if (headerName === "" || headerName === "TRENDING") {
-      return;
-    }
-
-    const sortMapping: Record<string, string> = {
-      "TOKEN": "TOKEN",
-      "MINTS": "MINTS",
-      "PROGRESS": "PROGRESS",
-      "DEPLOY": "DEPLOY",
-      "HOLDERS": "HOLDERS",
-    };
-
-    const apiSortKey = sortMapping[headerName];
+    const apiSortKey = SORT_MAPPING[headerName];
     if (!apiSortKey) return;
 
     const isCurrentSort = currentSort?.filter === apiSortKey;
@@ -60,23 +59,20 @@ export function SRC20Minting({
       ? "asc"
       : "desc";
 
-    if (typeof globalThis !== "undefined" && globalThis?.location) {
-      const currentHref = globalThis.location?.href;
-      if (!currentHref) return;
-
-      const url = new URL(currentHref);
-      url.searchParams.set("sortBy", apiSortKey);
-      url.searchParams.set("sortDirection", newDirection);
-      url.searchParams.set("page", "1");
+    if (isBrowser()) {
+      const url = SSRSafeUrlBuilder.fromCurrent()
+        .setParam("sortBy", apiSortKey)
+        .setParam("sortDirection", newDirection)
+        .setParam("page", "1")
+        .toString();
 
       const link = document.createElement("a");
-      link.href = url.toString();
+      link.href = url;
       link.setAttribute("f-partial", "");
       link.style.display = "none";
-      const bodyElement = document.body;
-      bodyElement.appendChild(link as Node);
+      document.body.appendChild(link as Node);
       link.click();
-      bodyElement.removeChild(link as Node);
+      document.body.removeChild(link as Node);
     }
   };
 
@@ -88,16 +84,14 @@ export function SRC20Minting({
     isClickable: boolean,
   ) => {
     const baseClass = `${labelXxs} ${
-      cellAlign(index, headers?.length ?? 0)
-    } py-1.5 !px-5`;
+      cellAlign(index, headers.length)
+    } py-1.5 !px-3`;
 
     const rowClass = isFirst
       ? cellLeftL2Card
       : isLast
       ? cellRightL2Card
       : cellCenterL2Card;
-
-    const selectedClass = isSelected ? "text-color-primary-400" : "";
 
     const colorClass = isSelected
       ? "text-color-primary-400"
@@ -111,20 +105,12 @@ export function SRC20Minting({
 
     const sortIndicator = isSelected ? "relative" : "";
 
-    return `${baseClass} ${rowClass} ${selectedClass} ${colorClass} ${clickableClass} ${sortIndicator}`
+    return `${baseClass} ${rowClass} ${colorClass} ${clickableClass} ${sortIndicator}`
       .trim();
   };
 
   const renderSortIndicator = (headerName: string) => {
-    const sortMapping: Record<string, string> = {
-      "TOKEN": "TOKEN",
-      "MINTS": "MINTS",
-      "PROGRESS": "PROGRESS",
-      "DEPLOY": "DEPLOY",
-      "HOLDERS": "HOLDERS",
-    };
-
-    const apiSortKey = sortMapping[headerName];
+    const apiSortKey = SORT_MAPPING[headerName];
     const isCurrentSort = currentSort?.filter === apiSortKey;
 
     if (!isCurrentSort) return null;
@@ -144,19 +130,6 @@ export function SRC20Minting({
       </span>
     );
   };
-
-  function splitTextAndEmojis(text: string): { text: string; emoji: string } {
-    const emojiRegex =
-      /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F000}-\u{1F02F}\u{1F0A0}-\u{1F0FF}\u{1F100}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{1F900}-\u{1F9FF}]/gu;
-    const match = text.match(emojiRegex);
-    if (!match) return { text, emoji: "" };
-    if (!match || !match[0]) return { text, emoji: "" };
-    const emojiIndex = text.indexOf(match[0]);
-    return {
-      text: text.slice(0, emojiIndex),
-      emoji: text.slice(emojiIndex),
-    };
-  }
 
   return (
     <div class="overflow-x-auto tablet:overflow-x-visible scrollbar-hide">
@@ -179,18 +152,9 @@ export function SRC20Minting({
           <tr class={`${container2}`}>
             {headers.map((header, i) => {
               const isFirst = i === 0;
-              const isLast = i === (headers?.length ?? 0) - 1;
-              const isClickable = header !== "" && header !== "TRENDING";
-
-              const sortMapping: Record<string, string> = {
-                "TOKEN": "TOKEN",
-                "MINTS": "MINTS",
-                "PROGRESS": "PROGRESS",
-                "DEPLOY": "DEPLOY",
-                "HOLDERS": "HOLDERS",
-              };
-              const apiSortKey = sortMapping[header];
-              const isSelected = currentSort?.filter === apiSortKey;
+              const isLast = i === headers.length - 1;
+              const isClickable = !!SORT_MAPPING[header];
+              const isSelected = currentSort?.filter === SORT_MAPPING[header];
 
               return (
                 <th
@@ -228,20 +192,6 @@ export function SRC20Minting({
                   encodeURIComponent(src20.tick ?? "")
                 }&trxType=olga`;
 
-                const handleMintClick = (
-                  event: TargetedEvent<HTMLButtonElement>,
-                ) => {
-                  event.preventDefault();
-
-                  if (
-                    typeof globalThis === "undefined" || !globalThis?.location
-                  ) {
-                    return;
-                  }
-
-                  globalThis.location.href = mintHref;
-                };
-
                 return (
                   <tr
                     key={src20.tx_hash}
@@ -249,7 +199,7 @@ export function SRC20Minting({
                     onClick={(e) => {
                       const target = e.target as HTMLElement;
                       const isImage = target.tagName === "IMG";
-                      const isButton = target.closest("button");
+                      const isButton = target.closest("button, a");
                       if (
                         !isImage && !isButton && !e.ctrlKey && !e.metaKey &&
                         e.button !== 1
@@ -269,7 +219,7 @@ export function SRC20Minting({
                     {/* TOKEN */}
                     <td
                       class={`${
-                        cellAlign(0, headers?.length ?? 0)
+                        cellAlign(0, headers.length)
                       } ${cellLeftL2Card} ${cellStickyLeft}`}
                     >
                       <div class="flex items-center gap-4">
@@ -326,7 +276,7 @@ export function SRC20Minting({
                     {/* MINTS */}
                     <td
                       class={`${
-                        cellAlign(1, headers?.length ?? 0)
+                        cellAlign(1, headers.length)
                       } ${cellCenterL2Card}`}
                     >
                       {src20.mint_progress?.total_mints || "N/A"}
@@ -334,7 +284,7 @@ export function SRC20Minting({
                     {/* PROGRESS */}
                     <td
                       class={`${
-                        cellAlign(2, headers?.length ?? 0)
+                        cellAlign(2, headers.length)
                       } ${cellCenterL2Card}`}
                     >
                       <div class="flex items-center justify-center w-full">
@@ -380,7 +330,7 @@ export function SRC20Minting({
                     {/* TRENDING */}
                     <td
                       class={`${
-                        cellAlign(3, headers?.length ?? 0)
+                        cellAlign(3, headers.length)
                       } ${cellCenterL2Card}`}
                     >
                       {"N/A"}
@@ -388,7 +338,7 @@ export function SRC20Minting({
                     {/* DEPLOY */}
                     <td
                       class={`${
-                        cellAlign(4, headers?.length ?? 0)
+                        cellAlign(4, headers.length)
                       } ${cellCenterL2Card}`}
                     >
                       {formatDate(new Date(src20.block_time), {
@@ -400,12 +350,12 @@ export function SRC20Minting({
                     {/* HOLDERS */}
                     <td
                       class={`${
-                        cellAlign(5, headers?.length ?? 0)
+                        cellAlign(5, headers.length)
                       } ${cellCenterL2Card}`}
                     >
                       {Number(
-                        (src20 as any)?.market_data?.holder_count ||
-                          (src20 as any)?.holders || 0,
+                        src20.market_data?.holder_count ??
+                          src20.holders ?? 0,
                       ).toLocaleString()}
                     </td>
                     {/* MINT BUTTON */}
@@ -415,9 +365,8 @@ export function SRC20Minting({
                       <Button
                         variant="outlineFlat"
                         color="purple"
-                        size="xxsR"
+                        size="xxs"
                         href={mintHref}
-                        onClick={handleMintClick}
                       >
                         MINT
                       </Button>
@@ -429,7 +378,7 @@ export function SRC20Minting({
             : (
               <tr>
                 <td
-                  colSpan={headers?.length ?? 0}
+                  colSpan={headers.length}
                   class={`w-full h-[46px] ${container2}`}
                 >
                   <h6 class={`${valueDarkSm} text-center`}>

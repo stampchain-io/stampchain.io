@@ -5,6 +5,8 @@ import {
   cellCenterL2Card,
   cellLeftL2Card,
   cellRightL2Card,
+  cellStickyLeft,
+  cellStickyLeft2,
   container2,
   shadowGlowPurple,
 } from "$layout";
@@ -12,21 +14,24 @@ import {
   isBrowser,
   safeNavigate,
 } from "$lib/utils/navigation/freshNavigationUtils.ts";
-import { unicodeEscapeToEmoji } from "$lib/utils/ui/formatting/emojiUtils.ts";
+import {
+  splitTextAndEmojis,
+  unicodeEscapeToEmoji,
+} from "$lib/utils/ui/formatting/emojiUtils.ts";
 import {
   abbreviateAddress,
   formatDate,
 } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { getSRC20ImageSrc } from "$lib/utils/ui/media/imageUtils.ts";
-import { labelXxs, textXs } from "$text";
+import { labelXxs, textXs, valueDarkSm } from "$text";
 import type { SRC20Row } from "$types/src20.d.ts";
 
 /* ===== CONSTANTS ===== */
 const HEADERS = [
   "IMAGE",
   "STAMP #",
-  "TYPE",
   "TICK",
+  "TYPE",
   "ADDRESS",
   "AMOUNT",
   "TX HASH",
@@ -40,16 +45,6 @@ function formatAmount(amt: string | bigint | undefined): string {
   const n = Number(amt);
   if (isNaN(n)) return String(amt);
   return n.toLocaleString();
-}
-
-function splitTextAndEmojis(text: string): { text: string; emoji: string } {
-  if (typeof text !== "string") return { text: String(text || ""), emoji: "" };
-  const emojiRegex =
-    /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F000}-\u{1F02F}\u{1F0A0}-\u{1F0FF}\u{1F100}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{1F900}-\u{1F9FF}]/gu;
-  const match = text.match(emojiRegex);
-  if (!match || !match[0]) return { text, emoji: "" };
-  const emojiIndex = text.indexOf(match[0]);
-  return { text: text.slice(0, emojiIndex), emoji: text.slice(emojiIndex) };
 }
 
 /* ===== ROW COMPONENT ===== */
@@ -73,10 +68,10 @@ export function SRC20OverviewRow({ src20 }: SRC20OverviewRowProps) {
   /* ===== RENDER ===== */
   return (
     <tr
-      class={`group ${container2} ${shadowGlowPurple} cursor-pointer`}
+      class={`${container2} ${shadowGlowPurple}`}
       onClick={(e) => {
         const target = e.target as HTMLElement;
-        if (target.tagName === "A" || target.tagName === "IMG") return;
+        if (target.closest("button, a")) return;
         if (!e.ctrlKey && !e.metaKey && e.button !== 1) {
           e.preventDefault();
           if (!isBrowser()) return;
@@ -86,7 +81,9 @@ export function SRC20OverviewRow({ src20 }: SRC20OverviewRowProps) {
     >
       {/* IMAGE */}
       <td
-        class={`${cellAlign(0, HEADERS.length)} ${cellLeftL2Card}`}
+        class={`${
+          cellAlign(0, HEADERS.length)
+        } ${cellLeftL2Card} ${cellStickyLeft}`}
       >
         <a
           href={href}
@@ -107,7 +104,11 @@ export function SRC20OverviewRow({ src20 }: SRC20OverviewRowProps) {
       </td>
 
       {/* STAMP # */}
-      <td class={`${cellAlign(1, HEADERS.length)} ${cellCenterL2Card}`}>
+      <td
+        class={`${
+          cellAlign(1, HEADERS.length)
+        } ${cellCenterL2Card} ${cellStickyLeft2}`}
+      >
         {src20.stamp != null
           ? (
             <a
@@ -123,9 +124,22 @@ export function SRC20OverviewRow({ src20 }: SRC20OverviewRowProps) {
           : <span class="text-color-neutral-500">—</span>}
       </td>
 
+      {/* TICK */}
+      <td class={`${cellAlign(2, HEADERS.length)} ${cellCenterL2Card}`}>
+        <a
+          href={href}
+          f-partial={href}
+          target="_top"
+          class="font-mono text-color-neutral-400"
+        >
+          {tickText && tickText.toUpperCase()}
+          {tickEmoji && <span class="emoji-ticker">{tickEmoji}</span>}
+        </a>
+      </td>
+
       {/* TYPE */}
       <td
-        class={`${cellAlign(2, HEADERS.length)} ${cellCenterL2Card}`}
+        class={`${cellAlign(3, HEADERS.length)} ${cellCenterL2Card}`}
       >
         <div class="flex items-center justify-center gap-2">
           <Icon
@@ -141,26 +155,18 @@ export function SRC20OverviewRow({ src20 }: SRC20OverviewRowProps) {
         </div>
       </td>
 
-      {/* TICK */}
-      <td class={`${cellAlign(3, HEADERS.length)} ${cellCenterL2Card}`}>
-        <a
-          href={href}
-          f-partial={href}
-          target="_top"
-          class="text-color-neutral-200"
-        >
-          {tickText && tickText.toUpperCase()}
-          {tickEmoji && <span class="emoji-ticker">{tickEmoji}</span>}
-        </a>
-      </td>
-
       {/* ADDRESS */}
       <td
         class={`${
           cellAlign(4, HEADERS.length)
         } ${cellCenterL2Card} text-color-neutral-200`}
       >
-        {src20.creator_name ?? abbreviateAddress(src20.creator, 5)}
+        <a
+          href={`/wallet/${src20.creator}`}
+          class="link-neutral-200-cell"
+        >
+          {src20.creator_name ?? abbreviateAddress(src20.creator, 5)}
+        </a>
       </td>
 
       {/* AMOUNT */}
@@ -178,7 +184,14 @@ export function SRC20OverviewRow({ src20 }: SRC20OverviewRowProps) {
           cellAlign(6, HEADERS.length)
         } ${cellCenterL2Card} text-color-neutral-400`}
       >
-        {abbreviateAddress(src20.tx_hash, 6)}
+        <a
+          href={`https://mempool.space/tx/${src20.tx_hash}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="link-neutral-400-cell"
+        >
+          {abbreviateAddress(src20.tx_hash, 6)}
+        </a>
       </td>
 
       {/* BLOCK */}
@@ -194,7 +207,7 @@ export function SRC20OverviewRow({ src20 }: SRC20OverviewRowProps) {
       <td
         class={`${
           cellAlign(8, HEADERS.length)
-        } ${cellRightL2Card} text-color-neutral-400 pr-3`}
+        } ${cellRightL2Card} text-color-neutral-200 pr-3`}
       >
         {formatDate(new Date(src20.block_time), {
           month: "numeric",
@@ -219,10 +232,10 @@ export function SRC20OverviewTable({ src20s }: SRC20OverviewTableProps) {
       >
         <colgroup>
           {colGroup([
-            { width: "min-w-[30px] w-auto" }, // IMAGE
+            { width: "w-10" }, // IMAGE (fixed for sticky left-0 anchor)
             { width: "min-w-[100px] w-auto" }, // STAMP #
-            { width: "min-w-[120px] w-auto" }, // TYPE
             { width: "min-w-[170px] w-auto" }, // TICK
+            { width: "min-w-[120px] w-auto" }, // TYPE
             { width: "min-w-[110px] w-auto" }, // ADDRESS
             { width: "min-w-[90px] w-auto" }, // AMOUNT
             { width: "min-w-[110px] w-auto" }, // TX HASH
@@ -240,12 +253,17 @@ export function SRC20OverviewTable({ src20s }: SRC20OverviewTableProps) {
                 : isLast
                 ? cellRightL2Card
                 : cellCenterL2Card;
+              const stickyClass = isFirst
+                ? cellStickyLeft
+                : i === 1
+                ? cellStickyLeft2
+                : "";
               return (
                 <th
                   key={header}
                   class={`${labelXxs} ${
                     cellAlign(i, HEADERS.length)
-                  } py-1.5 !px-3 ${rowClass} text-color-neutral-500`}
+                  } py-1.5 !px-3 ${rowClass} ${stickyClass} text-color-neutral-500`}
                 >
                   {header}
                 </th>
@@ -267,9 +285,9 @@ export function SRC20OverviewTable({ src20s }: SRC20OverviewTableProps) {
                   colSpan={HEADERS.length}
                   class={`w-full h-[46px] ${container2}`}
                 >
-                  <p class="text-center text-color-neutral-500 text-xs">
+                  <h6 class={`${valueDarkSm} text-center`}>
                     NO TOKENS TO DISPLAY
-                  </p>
+                  </h6>
                 </td>
               </tr>
             )}

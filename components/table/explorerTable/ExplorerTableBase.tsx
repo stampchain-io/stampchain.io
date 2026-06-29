@@ -22,8 +22,8 @@ export type MixedItem =
 const HEADERS = [
   "IMAGE",
   "STAMP #",
-  "TYPE",
   "TICK / CPID",
+  "TYPE",
   "ADDRESS",
   "AMOUNT",
   "TX HASH",
@@ -46,8 +46,8 @@ export function ExplorerTableBase({ items }: ExplorerTableBaseProps) {
           {colGroup([
             { width: "w-12" }, // IMAGE
             { width: "min-w-[90px] w-auto" }, // STAMP #
-            { width: "min-w-[110px] w-auto" }, // TYPE
             { width: "min-w-[100px] w-auto" }, // TICK / CPID
+            { width: "min-w-[110px] w-auto" }, // TYPE
             { width: "min-w-[110px] w-auto" }, // ADDRESS
             { width: "min-w-[90px] w-auto" }, // AMOUNT / SUPPLY
             { width: "min-w-[110px] w-auto" }, // TX HASH

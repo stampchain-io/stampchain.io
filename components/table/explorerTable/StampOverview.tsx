@@ -5,6 +5,8 @@ import {
   cellCenterL2Card,
   cellLeftL2Card,
   cellRightL2Card,
+  cellStickyLeft,
+  cellStickyLeft2,
   container2,
   shadowGlowPurple,
 } from "$layout";
@@ -18,15 +20,15 @@ import {
   formatSupplyValue,
 } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { getStampImageSrc } from "$lib/utils/ui/media/imageUtils.ts";
-import { labelXxs, textXs } from "$text";
+import { labelXxs, textXs, valueDarkSm } from "$text";
 import type { StampRow } from "$types/stamp.d.ts";
 
 /* ===== CONSTANTS ===== */
 const HEADERS = [
   "IMAGE",
   "STAMP #",
-  "TYPE",
   "CPID",
+  "TYPE",
   "ADDRESS",
   "EDITIONS",
   "TX HASH",
@@ -69,10 +71,10 @@ export function StampOverviewRow({ stamp }: StampOverviewRowProps) {
   /* ===== RENDER ===== */
   return (
     <tr
-      class={`group ${container2} ${shadowGlowPurple} cursor-pointer`}
+      class={`${container2} ${shadowGlowPurple}`}
       onClick={(e) => {
         const target = e.target as HTMLElement;
-        if (target.tagName === "A") return;
+        if (target.closest("button, a")) return;
         if (!e.ctrlKey && !e.metaKey && e.button !== 1) {
           e.preventDefault();
           if (!isBrowser()) return;
@@ -82,7 +84,9 @@ export function StampOverviewRow({ stamp }: StampOverviewRowProps) {
     >
       {/* IMAGE */}
       <td
-        class={`${cellAlign(0, HEADERS.length)} ${cellLeftL2Card}`}
+        class={`${
+          cellAlign(0, HEADERS.length)
+        } ${cellLeftL2Card} ${cellStickyLeft}`}
       >
         <a
           href={href}
@@ -103,7 +107,11 @@ export function StampOverviewRow({ stamp }: StampOverviewRowProps) {
       </td>
 
       {/* STAMP # */}
-      <td class={`${cellAlign(1, HEADERS.length)} ${cellCenterL2Card}`}>
+      <td
+        class={`${
+          cellAlign(1, HEADERS.length)
+        } ${cellCenterL2Card} ${cellStickyLeft2}`}
+      >
         <a
           href={href}
           f-partial={href}
@@ -121,9 +129,18 @@ export function StampOverviewRow({ stamp }: StampOverviewRowProps) {
         </a>
       </td>
 
+      {/* CPID */}
+      <td
+        class={`${
+          cellAlign(2, HEADERS.length)
+        } ${cellCenterL2Card} font-mono text-color-neutral-400`}
+      >
+        {stamp.cpid ?? "—"}
+      </td>
+
       {/* TYPE */}
       <td
-        class={`${cellAlign(2, HEADERS.length)} ${cellCenterL2Card}`}
+        class={`${cellAlign(3, HEADERS.length)} ${cellCenterL2Card}`}
       >
         <div class="flex items-center justify-center gap-2">
           <Icon
@@ -139,22 +156,18 @@ export function StampOverviewRow({ stamp }: StampOverviewRowProps) {
         </div>
       </td>
 
-      {/* CPID */}
-      <td
-        class={`${
-          cellAlign(3, HEADERS.length)
-        } ${cellCenterL2Card} text-color-neutral-300`}
-      >
-        {stamp.cpid ?? "—"}
-      </td>
-
       {/* CREATOR */}
       <td
         class={`${
           cellAlign(4, HEADERS.length)
         } ${cellCenterL2Card} text-color-neutral-200`}
       >
-        {creatorDisplay}
+        <a
+          href={`/wallet/${stamp.creator}`}
+          class="link-neutral-200-cell"
+        >
+          {creatorDisplay}
+        </a>
       </td>
 
       {/* SUPPLY */}
@@ -170,9 +183,16 @@ export function StampOverviewRow({ stamp }: StampOverviewRowProps) {
       <td
         class={`${
           cellAlign(6, HEADERS.length)
-        } ${cellCenterL2Card} text-color-neutral-400`}
+        } ${cellCenterL2Card} text-color-neutral-200`}
       >
-        {abbreviateAddress(stamp.tx_hash, 6)}
+        <a
+          href={`https://mempool.space/tx/${stamp.tx_hash}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="link-neutral-400-cell"
+        >
+          {abbreviateAddress(stamp.tx_hash, 6)}
+        </a>
       </td>
 
       {/* BLOCK */}
@@ -188,7 +208,7 @@ export function StampOverviewRow({ stamp }: StampOverviewRowProps) {
       <td
         class={`${
           cellAlign(8, HEADERS.length)
-        } ${cellRightL2Card} text-color-neutral-400 pr-3`}
+        } ${cellRightL2Card} text-color-neutral-200 pr-3`}
       >
         {formatDate(new Date(stamp.block_time), {
           month: "numeric",
@@ -213,10 +233,10 @@ export function StampOverviewTable({ stamps }: StampOverviewTableProps) {
       >
         <colgroup>
           {colGroup([
-            { width: "min-w-[30px] w-auto" }, // IMAGE
+            { width: "w-10" }, // IMAGE (fixed for sticky left-0 anchor)
             { width: "min-w-[100px] w-auto" }, // STAMP #
-            { width: "min-w-[120px] w-auto" }, // TYPE
             { width: "min-w-[170px] w-auto" }, // CPID
+            { width: "min-w-[120px] w-auto" }, // TYPE
             { width: "min-w-[110px] w-auto" }, // CREATOR
             { width: "min-w-[90px] w-auto" }, // SUPPLY
             { width: "min-w-[110px] w-auto" }, // TX HASH
@@ -234,12 +254,17 @@ export function StampOverviewTable({ stamps }: StampOverviewTableProps) {
                 : isLast
                 ? cellRightL2Card
                 : cellCenterL2Card;
+              const stickyClass = isFirst
+                ? cellStickyLeft
+                : i === 1
+                ? cellStickyLeft2
+                : "";
               return (
                 <th
                   key={header}
                   class={`${labelXxs} ${
                     cellAlign(i, HEADERS.length)
-                  } py-1.5 !px-3 ${rowClass} text-color-neutral-500`}
+                  } py-1.5 !px-3 ${rowClass} ${stickyClass} text-color-neutral-500`}
                 >
                   {header}
                 </th>
@@ -261,9 +286,9 @@ export function StampOverviewTable({ stamps }: StampOverviewTableProps) {
                   colSpan={HEADERS.length}
                   class={`w-full h-[46px] ${container2}`}
                 >
-                  <p class="text-center text-color-neutral-500 text-xs">
+                  <h6 class={`${valueDarkSm} text-center`}>
                     NO STAMPS TO DISPLAY
-                  </p>
+                  </h6>
                 </td>
               </tr>
             )}

@@ -56,6 +56,29 @@ export function emojiToUnicodeEscape(emoji: string): string {
  * @param unicodeStr The Unicode escape sequence to convert
  * @returns The emoji character representation
  */
+/**
+ * Splits a string into its plain-text prefix and trailing emoji suffix.
+ * Returns { text: "BTC", emoji: "🔥" } or { text: fullString, emoji: "" }
+ * when no emoji is found.
+ */
+export function splitTextAndEmojis(
+  text: string,
+): { text: string; emoji: string } {
+  if (typeof text !== "string") {
+    return { text: String(text || ""), emoji: "" };
+  }
+
+  const emojiRegex =
+    /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F000}-\u{1F02F}\u{1F0A0}-\u{1F0FF}\u{1F100}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{1F900}-\u{1F9FF}]/gu;
+  const match = text.match(emojiRegex);
+  if (!match || !match[0]) return { text, emoji: "" };
+  const emojiIndex = text.indexOf(match[0]);
+  return {
+    text: text.slice(0, emojiIndex),
+    emoji: text.slice(emojiIndex),
+  };
+}
+
 export function unicodeEscapeToEmoji(unicodeStr: string): string {
   // Check if the string is already a supported emoji
   if (SUPPORTED_EMOJI_PATTERN.test(unicodeStr)) {

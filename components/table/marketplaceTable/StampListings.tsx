@@ -1,5 +1,5 @@
 /* ===== MARKETPLACE LISTINGS TABLE COMPONENT ===== */
-import { button } from "$button";
+import { Button } from "$button";
 import { ActivityLevelIndicator } from "$components/indicators/ActivityLevelIndicator.tsx";
 import { cellAlign, colGroup } from "$components/layout/types.ts";
 import { PlaceholderImage } from "$icon";
@@ -22,7 +22,7 @@ import {
   formatSupplyValue,
 } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { getStampImageSrc } from "$lib/utils/ui/media/imageUtils.ts";
-import { labelXxs, textXs } from "$text";
+import { labelXxs, textXs, valueDarkSm } from "$text";
 import type { StampRow } from "$types/stamp.d.ts";
 
 /* ===== CONSTANTS ===== */
@@ -89,10 +89,10 @@ export function StampListingsRow({ stamp }: StampListingsRowProps) {
   /* ===== RENDER ===== */
   return (
     <tr
-      class={`group ${container2} ${shadowGlowPurple}`}
+      class={`${container2} ${shadowGlowPurple}`}
       onClick={(e) => {
         const target = e.target as HTMLElement;
-        if (target.tagName === "A") return;
+        if (target.closest("button, a")) return;
         if (!e.ctrlKey && !e.metaKey && e.button !== 1) {
           e.preventDefault();
           if (!isBrowser()) return;
@@ -189,16 +189,10 @@ export function StampListingsRow({ stamp }: StampListingsRowProps) {
           cellAlign(6, HEADERS.length)
         } ${cellCenterL2Card} text-center`}
       >
-        {(stamp as unknown as Record<string, unknown>).activity_level
+        {stamp.activity_level
           ? (
             <ActivityLevelIndicator
-              level={(stamp as unknown as Record<string, unknown>)
-                .activity_level as
-                  | "HOT"
-                  | "WARM"
-                  | "COOL"
-                  | "DORMANT"
-                  | "COLD"}
+              level={stamp.activity_level}
               className="mx-auto"
             />
           )
@@ -248,16 +242,16 @@ export function StampListingsRow({ stamp }: StampListingsRowProps) {
       <td
         class={`${cellAlign(9, HEADERS.length)} ${cellRightL2Card}`}
       >
-        <a
+        <Button
+          variant="outline"
+          color="primary"
+          size="xs"
           href={href}
-          f-partial={href}
           target="_top"
-          class={`${
-            button("outline", "primary", "xs")
-          } !text-[10px] rounded-xl`}
+          class="!text-[10px] rounded-xl"
         >
           BUY
-        </a>
+        </Button>
       </td>
     </tr>
   );
@@ -330,9 +324,9 @@ export function StampListingsTable({ stamps }: StampListingsTableProps) {
                   colSpan={HEADERS.length}
                   class={`w-full h-[46px] ${container2}`}
                 >
-                  <p class="text-center text-color-neutral-500 text-xs">
+                  <h6 class={`${valueDarkSm} text-center`}>
                     NO LISTINGS TO DISPLAY
-                  </p>
+                  </h6>
                 </td>
               </tr>
             )}
