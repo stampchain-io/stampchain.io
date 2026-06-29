@@ -1,29 +1,29 @@
 /* ===== ACTIVITY BADGE COMPONENT ===== */
-import { ActivityLevel } from "$constants";
+import { STAMP_DISPENSER_ACTIVITY_LEVEL } from "$constants";
 import type { ActivityBadgeProps } from "$types/ui.d.ts";
 
 const activityConfig = {
-  [ActivityLevel.HOT]: {
+  [STAMP_DISPENSER_ACTIVITY_LEVEL.HOT]: {
     emoji: "🔥",
     label: "Hot",
     className: "bg-red-500/20 text-red-400 border-red-500/50",
   },
-  [ActivityLevel.WARM]: {
+  [STAMP_DISPENSER_ACTIVITY_LEVEL.WARM]: {
     emoji: "🟡",
     label: "Warm",
     className: "bg-yellow-500/20 text-yellow-400 border-yellow-500/50",
   },
-  [ActivityLevel.COOL]: {
+  [STAMP_DISPENSER_ACTIVITY_LEVEL.COOL]: {
     emoji: "🔵",
     label: "Cool",
     className: "bg-blue-500/20 text-blue-400 border-blue-500/50",
   },
-  [ActivityLevel.DORMANT]: {
+  [STAMP_DISPENSER_ACTIVITY_LEVEL.DORMANT]: {
     emoji: "⚪",
     label: "Dormant",
     className: "bg-gray-500/20 text-gray-400 border-gray-500/50",
   },
-  [ActivityLevel.COLD]: {
+  [STAMP_DISPENSER_ACTIVITY_LEVEL.COLD]: {
     emoji: "❄️",
     label: "Cold",
     className: "bg-cyan-500/20 text-cyan-400 border-cyan-500/50",

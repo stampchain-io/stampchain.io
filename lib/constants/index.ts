@@ -1,5 +1,4 @@
 // Re-export all constants for clean imports
-export * from "./activityLevels.ts";
 export * from "./apiConstants.ts";
 export * from "./apiOpenAPIConstants.ts";
 export * from "./apiUrls.ts";

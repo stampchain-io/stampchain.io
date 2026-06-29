@@ -17,6 +17,8 @@ import type { StampRow, StampSaleRow } from "$types/stamp.d.ts";
 import {
   DEV_DUMMY_MODE,
   DUMMY_STAMP_OVERVIEW_PAGE,
+  withDummyActivityLevels,
+  withDummySalesData,
   withTimeout,
 } from "$lib/utils/devDummyData.ts";
 import { StampController } from "$server/controller/stampController.ts";
@@ -63,21 +65,14 @@ export const handler: Handlers = {
         !isSalesView;
 
       // In listings mode: only show stamps that have an open dispenser (lowestPriceDispenser set)
-      // In sales mode: attach stub sale_data so imageDetailMarketplaceSales Row 3 renders
+      // In sales mode: attach stub sale_data + cycling activity levels
       const stamps = isDummyDefaultMarket
-        ? stampsByCurrentType.filter((s: any) => s.lowestPriceDispenser)
+        ? withDummyActivityLevels(
+          stampsByCurrentType.filter((s: any) => s.lowestPriceDispenser),
+          ["HOT", "WARM", "COOL", "DORMANT"], // COLD impossible — dispenser is open
+        )
         : isSalesView
-        ? stampsByCurrentType.map((s: any) => ({
-          ...s,
-          sale_data: s.sale_data ?? {
-            btc_amount: 0.00069,
-            block_index: 958500,
-            tx_hash: s.tx_hash,
-            buyer_address: "1A1zP1eP5QGefi2DMPTfTL5SLmv7Divf0Na",
-            time_ago: "2h ago",
-            dispense_quantity: 1,
-          },
-        }))
+        ? withDummyActivityLevels(withDummySalesData(stampsByCurrentType))
         : stampsByCurrentType;
 
       const dummyFilters = isDummyDefaultMarket

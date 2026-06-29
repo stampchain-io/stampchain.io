@@ -1,4 +1,6 @@
 /* ===== MARKETPLACE LISTINGS TABLE COMPONENT ===== */
+import { button } from "$button";
+import { ActivityLevelIndicator } from "$components/indicators/ActivityLevelIndicator.tsx";
 import { cellAlign, colGroup } from "$components/layout/types.ts";
 import { PlaceholderImage } from "$icon";
 import {
@@ -31,9 +33,10 @@ const HEADERS = [
   "CREATOR",
   "LISTED",
   "PRICE",
-  "SELLER",
+  "ACTIVITY",
   "DISPENSER",
-  "TX HASH",
+  "SELLER",
+  "BUY",
 ];
 
 /* ===== HELPERS ===== */
@@ -45,16 +48,18 @@ function formatPrice(floorPrice: number | "priceless" | undefined): string {
 function getDispenser(stamp: StampRow): {
   txHash: string | null;
   source: string | null;
+  origin: string | null;
   giveRemaining: number | null;
 } {
   const d = (stamp as unknown as Record<string, unknown>).lowestPriceDispenser;
   if (!d || typeof d !== "object") {
-    return { txHash: null, source: null, giveRemaining: null };
+    return { txHash: null, source: null, origin: null, giveRemaining: null };
   }
   const dispenser = d as Record<string, unknown>;
   return {
     txHash: typeof dispenser.tx_hash === "string" ? dispenser.tx_hash : null,
     source: typeof dispenser.source === "string" ? dispenser.source : null,
+    origin: typeof dispenser.origin === "string" ? dispenser.origin : null,
     giveRemaining: typeof dispenser.give_remaining === "number"
       ? dispenser.give_remaining
       : null,
@@ -138,7 +143,7 @@ export function StampListingsRow({ stamp }: StampListingsRowProps) {
                 {stamp.stamp}
               </>
             )
-            : "—"}
+            : "N/A"}
         </a>
       </td>
 
@@ -146,9 +151,9 @@ export function StampListingsRow({ stamp }: StampListingsRowProps) {
       <td
         class={`${
           cellAlign(2, HEADERS.length)
-        } ${cellCenterL2Card} text-color-neutral-400`}
+        } ${cellCenterL2Card} font-mono text-color-neutral-400`}
       >
-        {stamp.cpid ?? "—"}
+        {stamp.cpid ?? "N/A"}
       </td>
 
       {/* CREATOR */}
@@ -173,44 +178,86 @@ export function StampListingsRow({ stamp }: StampListingsRowProps) {
       <td
         class={`${
           cellAlign(5, HEADERS.length)
-        } ${cellCenterL2Card} text-color-neutral-200`}
+        } ${cellCenterL2Card} text-color-secondary-400`}
       >
         {formatPrice(stamp.floorPrice)}
       </td>
 
-      {/* SELLER */}
+      {/* ACTIVITY */}
       <td
         class={`${
           cellAlign(6, HEADERS.length)
-        } ${cellCenterL2Card} text-color-neutral-400 underline hover:text-color-hover hover:no-underline transition-all`}
+        } ${cellCenterL2Card} text-center`}
+      >
+        {(stamp as unknown as Record<string, unknown>).activity_level
+          ? (
+            <ActivityLevelIndicator
+              level={(stamp as unknown as Record<string, unknown>)
+                .activity_level as
+                  | "HOT"
+                  | "WARM"
+                  | "COOL"
+                  | "DORMANT"
+                  | "COLD"}
+              className="mx-auto"
+            />
+          )
+          : <span class="text-color-neutral-400">N/A</span>}
+      </td>
+
+      {/* DISPENSER ADDY */}
+      <td
+        class={`${
+          cellAlign(7, HEADERS.length)
+        } ${cellCenterL2Card} text-color-neutral-200`}
       >
         {dispenser.source
           ? (
             <a
               href={`/wallet/${dispenser.source}`}
+              class="link-neutral-200-cell"
             >
               {abbreviateAddress(dispenser.source, 5)}
             </a>
           )
-          : "—"}
+          : "N/A"}
       </td>
 
-      {/* DISPENSER TX */}
-      <td
-        class={`${
-          cellAlign(7, HEADERS.length)
-        } ${cellCenterL2Card} text-color-neutral-400 underline hover:text-color-hover hover:no-underline transition-all`}
-      >
-        {dispenser.txHash ? abbreviateAddress(dispenser.txHash, 6) : "—"}
-      </td>
-
-      {/* TX HASH */}
+      {/* SELLER ADDY */}
       <td
         class={`${
           cellAlign(8, HEADERS.length)
-        } ${cellRightL2Card} text-color-neutral-400 underline hover:text-color-hover hover:no-underline transition-all pr-3`}
+        } ${cellCenterL2Card} text-color-neutral-400`}
       >
-        {abbreviateAddress(stamp.tx_hash, 6)}
+        {(dispenser.origin ?? dispenser.source)
+          ? (
+            <a
+              href={`/wallet/${dispenser.origin ?? dispenser.source}`}
+              class="link-neutral-400-cell"
+            >
+              {abbreviateAddress(
+                (dispenser.origin ?? dispenser.source)!,
+                5,
+              )}
+            </a>
+          )
+          : "N/A"}
+      </td>
+
+      {/* BUY */}
+      <td
+        class={`${cellAlign(9, HEADERS.length)} ${cellRightL2Card}`}
+      >
+        <a
+          href={href}
+          f-partial={href}
+          target="_top"
+          class={`${
+            button("outline", "primary", "xs")
+          } !text-[10px] rounded-xl`}
+        >
+          BUY
+        </a>
       </td>
     </tr>
   );
@@ -229,15 +276,16 @@ export function StampListingsTable({ stamps }: StampListingsTableProps) {
       >
         <colgroup>
           {colGroup([
-            { width: "w-12" }, // IMAGE
-            { width: "min-w-[90px] w-auto" }, // STAMP #
-            { width: "min-w-[110px] w-auto" }, // CPID
-            { width: "min-w-[120px] w-auto" }, // CREATOR
-            { width: "min-w-[90px] w-auto" }, // LISTED
-            { width: "min-w-[120px] w-auto" }, // PRICE
-            { width: "min-w-[110px] w-auto" }, // SELLER
-            { width: "min-w-[110px] w-auto" }, // DISPENSER
-            { width: "min-w-[110px] w-auto" }, // TX HASH
+            { width: "w-10" }, // IMAGE
+            { width: "min-w-[100px] w-auto" }, // STAMP #
+            { width: "min-w-[170px] w-auto" }, // CPID
+            { width: "min-w-[110px] w-auto" }, // CREATOR
+            { width: "min-w-[70px] w-auto" }, // LISTED
+            { width: "min-w-[110px] w-auto" }, // PRICE
+            { width: "min-w-[60px] w-auto" }, // ACTIVITY
+            { width: "min-w-[110px] w-auto" }, // DISPENSER ADDY
+            { width: "min-w-[110px] w-auto" }, // SELLER ADDY
+            { width: "min-w-[50px] w-auto" }, // BUY
           ]).map((col) => <col key={col.key} class={col.className} />)}
         </colgroup>
         <thead>

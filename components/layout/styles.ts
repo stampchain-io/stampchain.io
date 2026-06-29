@@ -116,7 +116,7 @@ export const cellCenterL2Detail =
   `p-1.5 border-y-[1px] border-x-0 border-color-neutral-700 group-hover:bg-black/20 group-hover:border-color-border ${transitionColors} whitespace-nowrap`;
 /* refactor to base style and rename */
 export const cellStickyLeft = `sticky left-0 ${cell} z-10`;
-export const cellStickyLeft2 = `sticky left-12 ${cell} z-10`;
+export const cellStickyLeft2 = `sticky left-10 ${cell} z-10`;
 
 /* ===== IMAGE STYLES ===== */
 export const imagePreviewTool =

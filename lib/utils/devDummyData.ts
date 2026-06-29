@@ -44,6 +44,7 @@ export const DUMMY_STAMP_CLASSIC = {
 export const DUMMY_STAMP_CLASSIC_DISPENSER = {
   tx_hash: "aaaa1111bbbb2222cccc3333dddd4444eeee5555ffff6666aaaa1111bbbb2222",
   source: "1GZsmqM5PFBytkC81JxcSWDU5QzNwaCs2M",
+  origin: "bc1qm34lsc65zpw79lxes69zkqmk6ee3ewf0j77s3h",
   cpid: "A6074625865641549156",
   give_quantity: 1,
   escrow_quantity: 1,
@@ -89,6 +90,7 @@ export const DUMMY_STAMP_POSH = {
 export const DUMMY_STAMP_POSH_DISPENSER = {
   tx_hash: "bbbb2222cccc3333dddd4444eeee5555ffff6666aaaa1111bbbb2222cccc3333",
   source: "bc1qr9nkqgzc6vzxjslqgxck3z480yq85aa98wu3fa",
+  origin: "1BpEi6DfDAUFd153wiGrvkiKW1BCTe4pEc",
   cpid: "KEVINA",
   give_quantity: 1,
   escrow_quantity: 10,
@@ -133,6 +135,7 @@ export const DUMMY_STAMP_SRC721 = {
 export const DUMMY_STAMP_SRC721_DISPENSER = {
   tx_hash: "cccc3333dddd4444eeee5555ffff6666aaaa1111bbbb2222cccc3333dddd4444",
   source: "bc1qefhvcqwuz6g6qy6nck5dq2el2r37pky73tqxkc",
+  origin: "1A1zP1eP5QGefi2DMPTfTL5SLmv7Divf4a",
   cpid: "A863311966656466479",
   give_quantity: 1,
   escrow_quantity: 1,
@@ -148,18 +151,21 @@ const _stampBases = [
   DUMMY_STAMP_CLASSIC,
   {
     ...DUMMY_STAMP_CLASSIC,
+    floorPrice: 0.00042,
     marketData: { floorPriceBTC: 0.00042, recentSalePriceBTC: null },
     lowestPriceDispenser: DUMMY_STAMP_CLASSIC_DISPENSER,
   },
   DUMMY_STAMP_POSH,
   {
     ...DUMMY_STAMP_POSH,
+    floorPrice: 0.0069,
     marketData: { floorPriceBTC: 0.0069, recentSalePriceBTC: null },
     lowestPriceDispenser: DUMMY_STAMP_POSH_DISPENSER,
   },
   DUMMY_STAMP_SRC721,
   {
     ...DUMMY_STAMP_SRC721,
+    floorPrice: 0.000021,
     marketData: { floorPriceBTC: 0.000021, recentSalePriceBTC: null },
     lowestPriceDispenser: DUMMY_STAMP_SRC721_DISPENSER,
   },
@@ -175,9 +181,9 @@ export function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   ]);
 }
 
-/* ===== HELPER: mark every 3rd stamp as for sale ===== */
+/* ===== HELPER: mark every 3rd stamp as listed (listings view) ===== */
 /* Pass a custom dispenser to override the default (e.g. DUMMY_POSH_DISPENSER). */
-export function withDummySaleData<T extends Record<string, any>>(
+export function withDummyListingsData<T extends Record<string, any>>(
   stamps: T[],
   dispenser: Record<string, any> = DUMMY_STAMP_CLASSIC_DISPENSER,
 ): T[] {
@@ -185,6 +191,7 @@ export function withDummySaleData<T extends Record<string, any>>(
     (i + 1) % 3 === 0
       ? {
         ...s,
+        floorPrice: dispenser.satoshirate / 100000000,
         marketData: {
           floorPriceBTC: dispenser.satoshirate / 100000000,
           recentSalePriceBTC: null,
@@ -193,6 +200,43 @@ export function withDummySaleData<T extends Record<string, any>>(
       }
       : s
   );
+}
+
+/* ===== HELPER: add stub sale_data to every stamp (sales view) ===== */
+export function withDummySalesData<T extends Record<string, any>>(
+  stamps: T[],
+): T[] {
+  return stamps.map((s) => ({
+    ...s,
+    sale_data: (s as any).sale_data ?? {
+      btc_amount: 0.00069,
+      block_index: 958500,
+      tx_hash: (s as any).tx_hash,
+      dispenser_address: (s as any).creator,
+      buyer_address: "1A1zP1eP5QGefi2DMPTfTL5SLmv7Divf0Na",
+      time_ago: "2h ago",
+      dispense_quantity: 1,
+    },
+  }));
+}
+
+/* ===== HELPER: add cycling activity levels to any stamp array ===== */
+const _ACTIVITY_CYCLE = ["HOT", "WARM", "COOL", "DORMANT", "COLD"] as const;
+
+/**
+ * Applies cycling activity levels and a staggered last_activity_time.
+ * Pass a custom `levels` array to restrict which levels are cycled —
+ * e.g. listings must exclude "COLD" because they always have an open dispenser.
+ */
+export function withDummyActivityLevels<T extends Record<string, unknown>>(
+  stamps: T[],
+  levels: readonly string[] = _ACTIVITY_CYCLE,
+): T[] {
+  return stamps.map((s, i) => ({
+    ...s,
+    activity_level: levels[i % levels.length],
+    last_activity_time: Date.now() - i * 3_600_000,
+  }));
 }
 
 /* ===== HELPER: Fisher-Yates shuffle (runs once at module load) ===== */
@@ -657,14 +701,14 @@ const _timeLabels = [
   "8 hrs ago",
 ];
 
-/** Recent Sales — 7 entries cycling CLASSIC → POSH → SRC721, all HOT */
+/** Recent Sales — 7 entries cycling CLASSIC → POSH → SRC721 with all 5 activity levels */
 export const DUMMY_RECENT_SALES = _timeLabels.map((timeLabel, i) => {
   const { stamp, dispenser, price, sats, buyer } =
     _saleBase[i % _saleBase.length];
   return {
     ...stamp,
-    activity_level: "HOT" as const,
-    last_activity_time: Date.now() - i * 3600000,
+    activity_level: _ACTIVITY_CYCLE[i % _ACTIVITY_CYCLE.length],
+    last_activity_time: Date.now() - i * 3_600_000,
     sale_data: {
       btc_amount: price,
       btc_amount_satoshis: sats,
@@ -684,7 +728,7 @@ export const DUMMY_RECENT_SALES = _timeLabels.map((timeLabel, i) => {
  *   stamps_art   → 24 (desktop: 24, 6 cols × 4 rows)
  *   stamps_posh  → 14 (desktop: 14, 7 cols × 2 rows)
  *   stamps_src721→ 12 (desktop: 12, 6 cols × 2 rows)
- * Every 3rd POSH stamp is marked for sale via withDummySaleData.
+ * Every 3rd POSH stamp is marked for sale via withDummyListingsData.
  */
 export const DUMMY_LANDING_PAGE = {
   carouselStamps: [],
@@ -849,7 +893,7 @@ export const DUMMY_STAMP_DETAIL_PAGE = {
   holders: [],
   vaults: [],
   last_block: 0,
-  stamps_recent: withDummySaleData(
+  stamps_recent: withDummyListingsData(
     Array.from({ length: 6 }, () => ({ ...DUMMY_STAMP_CLASSIC })),
   ),
   lowestPriceDispenser: DUMMY_STAMP_CLASSIC_DISPENSER,

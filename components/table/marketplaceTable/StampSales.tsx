@@ -31,10 +31,32 @@ const HEADERS = [
   "CREATOR",
   "SOLD",
   "PRICE",
-  "SELLER",
+  "DISPENSER",
   "BUYER",
   "TX HASH",
+  "DATE",
 ];
+
+/* ===== HELPERS ===== */
+function formatSaleDate(blockTime: Date, timeAgo?: string): string {
+  try {
+    const blockMs = new Date(blockTime).getTime();
+    if (isNaN(blockMs)) return "N/A";
+    const ageMs = Date.now() - blockMs;
+    if (ageMs < 86_400_000) {
+      if (timeAgo) return timeAgo;
+      const hours = Math.floor(ageMs / 3_600_000);
+      const mins = Math.floor((ageMs % 3_600_000) / 60_000);
+      if (hours > 0) return `${hours}H AGO`;
+      if (mins > 0) return `${mins}M AGO`;
+      return "JUST NOW";
+    }
+    const d = new Date(blockTime);
+    return `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
+  } catch {
+    return "N/A";
+  }
+}
 
 /* ===== ROW COMPONENT ===== */
 interface MarketplaceSalesRowProps {
@@ -60,7 +82,11 @@ export function MarketplaceSalesRow({ stamp }: MarketplaceSalesRowProps) {
 
   const priceDisplay = sale?.btc_amount != null
     ? formatBTCAmount(sale.btc_amount, { includeSymbol: true, decimals: 8 })
-    : "—";
+    : "N/A";
+
+  const timeAgo = (sale as Record<string, unknown> | undefined)
+    ?.time_ago as string | undefined;
+  const dateDisplay = formatSaleDate(stamp.block_time, timeAgo);
 
   /* ===== RENDER ===== */
   return (
@@ -119,7 +145,7 @@ export function MarketplaceSalesRow({ stamp }: MarketplaceSalesRowProps) {
                 {stamp.stamp}
               </>
             )
-            : "—"}
+            : "N/A"}
         </a>
       </td>
 
@@ -127,9 +153,9 @@ export function MarketplaceSalesRow({ stamp }: MarketplaceSalesRowProps) {
       <td
         class={`${
           cellAlign(2, HEADERS.length)
-        } ${cellCenterL2Card} text-color-neutral-400`}
+        } ${cellCenterL2Card} font-mono text-color-neutral-400`}
       >
-        {stamp.cpid ?? "—"}
+        {stamp.cpid ?? "N/A"}
       </td>
 
       {/* CREATOR */}
@@ -154,54 +180,74 @@ export function MarketplaceSalesRow({ stamp }: MarketplaceSalesRowProps) {
       <td
         class={`${
           cellAlign(5, HEADERS.length)
-        } ${cellCenterL2Card} text-color-neutral-200`}
+        } ${cellCenterL2Card} text-color-secondary-400`}
       >
         {priceDisplay}
       </td>
 
-      {/* SELLER */}
+      {/* DISPENSER ADDY */}
       <td
         class={`${
           cellAlign(6, HEADERS.length)
-        } ${cellCenterL2Card} text-color-neutral-400 underline hover:text-color-hover hover:no-underline transition-all`}
+        } ${cellCenterL2Card} text-color-neutral-200`}
       >
         {sale?.dispenser_address
           ? (
             <a
               href={`/wallet/${sale.dispenser_address}`}
+              class="link-neutral-200-cell"
             >
               {abbreviateAddress(sale.dispenser_address, 5)}
             </a>
           )
-          : "—"}
+          : "N/A"}
       </td>
 
-      {/* BUYER */}
+      {/* BUYER ADDY */}
       <td
         class={`${
           cellAlign(7, HEADERS.length)
-        } ${cellCenterL2Card} text-color-neutral-400 underline hover:text-color-hover hover:no-underline transition-all`}
+        } ${cellCenterL2Card} text-color-neutral-400`}
       >
         {sale?.buyer_address
           ? (
             <a
               href={`/wallet/${sale.buyer_address}`}
+              class="link-neutral-400-cell"
             >
               {abbreviateAddress(sale.buyer_address, 5)}
             </a>
           )
-          : "—"}
+          : "N/A"}
       </td>
 
       {/* TX HASH */}
       <td
         class={`${
           cellAlign(8, HEADERS.length)
-        } ${cellRightL2Card} text-color-neutral-400 underline hover:text-color-hover hover:no-underline transition-all pr-3`}
+        } ${cellCenterL2Card} text-color-neutral-400`}
       >
         {sale?.tx_hash
-          ? abbreviateAddress(sale.tx_hash, 6)
-          : abbreviateAddress(stamp.tx_hash, 6)}
+          ? (
+            <a
+              href={`https://mempool.space/tx/${sale.tx_hash}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="link-neutral-400-cell"
+            >
+              {abbreviateAddress(sale.tx_hash, 6)}
+            </a>
+          )
+          : "N/A"}
+      </td>
+
+      {/* DATE */}
+      <td
+        class={`${
+          cellAlign(9, HEADERS.length)
+        } ${cellRightL2Card} pr-3 text-color-neutral-200`}
+      >
+        {dateDisplay}
       </td>
     </tr>
   );
@@ -220,14 +266,14 @@ export function MarketplaceSalesTable({ stamps }: MarketplaceSalesTableProps) {
       >
         <colgroup>
           {colGroup([
-            { width: "w-12" }, // IMAGE
-            { width: "min-w-[90px] w-auto" }, // STAMP #
-            { width: "min-w-[110px] w-auto" }, // CPID
-            { width: "min-w-[120px] w-auto" }, // CREATOR
-            { width: "min-w-[80px] w-auto" }, // SOLD
-            { width: "min-w-[120px] w-auto" }, // PRICE
-            { width: "min-w-[110px] w-auto" }, // SELLER
-            { width: "min-w-[110px] w-auto" }, // BUYER
+            { width: "w-10" }, // IMAGE
+            { width: "min-w-[100px] w-auto" }, // STAMP #
+            { width: "min-w-[170px] w-auto" }, // CPID
+            { width: "min-w-[110px] w-auto" }, // CREATOR
+            { width: "min-w-[70px] w-auto" }, // SOLD
+            { width: "min-w-[110px] w-auto" }, // PRICE
+            { width: "min-w-[110px] w-auto" }, // DISPENSER ADDY
+            { width: "min-w-[110px] w-auto" }, // BUYER ADDY
             { width: "min-w-[110px] w-auto" }, // TX HASH
           ]).map((col) => <col key={col.key} class={col.className} />)}
         </colgroup>

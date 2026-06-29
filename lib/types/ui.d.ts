@@ -874,6 +874,16 @@ export interface ActivityBadgeProps extends BaseComponentProps {
 }
 
 /**
+ * Activity Level Indicator component props.
+ * Renders three cumulative dots (HOT/WARM/COOL), neutral dots for DORMANT,
+ * or "none" text for COLD.
+ */
+export interface ActivityLevelIndicatorProps {
+  level?: "HOT" | "WARM" | "COOL" | "DORMANT" | "COLD" | null;
+  className?: string;
+}
+
+/**
  * Transaction badge component props
  */
 export interface TransactionBadgeProps extends BaseComponentProps {

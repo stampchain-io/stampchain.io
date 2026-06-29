@@ -1,3 +1,4 @@
+import type { StampDispenserActivityLevel } from "$constants";
 import type { CollectionRow } from "$server/types/collection.d.ts";
 import type { SRC20Row } from "$types/src20.d.ts";
 import type { StampRow } from "$types/stamp.d.ts";
@@ -86,11 +87,6 @@ export interface MarketListingAggregated {
 }
 
 /**
- * Activity level type for stamps
- */
-export type ActivityLevel = "HOT" | "WARM" | "COOL" | "DORMANT" | "COLD";
-
-/**
  * Standardized market data status for fetch operations
  */
 export type MarketDataStatusValue = "loading" | "success" | "error" | "stale";
@@ -135,7 +131,7 @@ export interface StampMarketDataRow {
   last_sale_dispenser_tx_hash: string | null;
   last_sale_block_index: number | null;
   // Activity tracking fields
-  activity_level: ActivityLevel | null;
+  activity_level: StampDispenserActivityLevel | null;
   last_activity_time: number | null; // Unix timestamp
 }
 
@@ -224,7 +220,7 @@ export interface StampMarketData {
   lastSaleDispenserTxHash: string | null;
   lastSaleBlockIndex: number | null;
   // Activity tracking fields
-  activityLevel: ActivityLevel | null;
+  activityLevel: StampDispenserActivityLevel | null;
   lastActivityTime: number | null; // Unix timestamp
 }
 
@@ -529,6 +525,6 @@ export interface StampWithEnhancedSaleData extends StampRow {
     dispenser_tx_hash?: string;
   };
   marketData?: StampMarketData;
-  activity_level?: ActivityLevel;
+  activity_level?: StampDispenserActivityLevel;
   last_activity_time?: number;
 }

@@ -175,6 +175,23 @@ export type StampMarketplace =
   typeof STAMP_MARKETPLACE[keyof typeof STAMP_MARKETPLACE];
 
 /**
+ * Stamp trading activity levels, computed by the btc_stamps indexer.
+ * Thresholds: HOT <24h, WARM <7d, COOL <30d,
+ * DORMANT = no recent sales but has open dispensers, COLD = no activity.
+ */
+export const STAMP_DISPENSER_ACTIVITY_LEVEL = {
+  HOT: "HOT",
+  WARM: "WARM",
+  COOL: "COOL",
+  DORMANT: "DORMANT",
+  COLD: "COLD",
+} as const;
+
+export type StampDispenserActivityLevel = typeof STAMP_DISPENSER_ACTIVITY_LEVEL[
+  keyof typeof STAMP_DISPENSER_ACTIVITY_LEVEL
+];
+
+/**
  * File type classifications for stamp content
  * Maps to StampTableV4.stamp_mimetype database field
  */

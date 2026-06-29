@@ -422,6 +422,35 @@ b, strong {
   color: var(--color-purple-light);
 }
 
+/* Animated underline for inline links inside table cells */
+/* No text-shadow — gradient cell backgrounds make knockout shadows unnecessary */
+.link-neutral-200-cell {
+  text-decoration: none;
+  background-image: linear-gradient(var(--color-neutral-200), var(--color-neutral-200));
+    background-position: 0% 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+  transition: background-size .2s, color .4s;
+  padding-bottom: 1px;
+}
+
+.link-neutral-400-cell {
+  text-decoration: none;
+  background-image: linear-gradient(var(--color-neutral-400), var(--color-neutral-400));
+  background-position: 0% 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+  transition: background-size .2s, color .4s;
+  padding-bottom: 1px;
+}
+.link-neutral-200-cell:hover,
+.link-neutral-200-cell:focus,
+.link-neutral-400-cell:hover,
+.link-neutral-400-cell:focus {
+  background-size: 0% 1px;
+  color: var(--color-primary-400);
+}
+
 /* ========================================================================== */
 
 
