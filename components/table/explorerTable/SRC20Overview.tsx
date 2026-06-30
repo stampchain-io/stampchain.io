@@ -89,14 +89,14 @@ export function SRC20OverviewRow({ src20 }: SRC20OverviewRowProps) {
           href={href}
           f-partial={href}
           target="_top"
-          class="flex items-center justify-center w-8 h-8 rounded-xl overflow-hidden"
+          class="flex items-center justify-center w-6.5 h-6.5 rounded-xl overflow-hidden"
         >
           {imageUrl
             ? (
               <img
                 src={imageUrl}
                 alt={tick}
-                class="w-8 h-8 object-contain rounded-xl"
+                class="w-6.5 h-6.5 object-contain rounded-xl"
               />
             )
             : <PlaceholderImage variant="no-image" className="!rounded-xl" />}
@@ -141,17 +141,15 @@ export function SRC20OverviewRow({ src20 }: SRC20OverviewRowProps) {
       <td
         class={`${cellAlign(3, HEADERS.length)} ${cellCenterL2Card}`}
       >
-        <div class="flex items-center justify-center gap-2">
+        <div class="flex items-center justify-center gap-2 text-color-primary-400">
           <Icon
             type="icon"
             name="src20Token"
             weight="bold"
             size="xxs"
-            color="greyLight"
+            color="purpleLight"
           />
-          <span class="bg-gradient-to-r from-color-neutral-400 via-color-neutral-300 to-color-neutral-200 inline-block text-transparent bg-clip-text w-fit">
-            {op}
-          </span>
+          {op}
         </div>
       </td>
 

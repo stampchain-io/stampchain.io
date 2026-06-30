@@ -227,7 +227,7 @@ export function SRC20Minting({
                           ? (
                             <img
                               src={imageUrl}
-                              class="w-8 h-8 rounded-xl cursor-pointer"
+                              class="w-6.5 h-6.5 rounded-xl cursor-pointer"
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
@@ -238,7 +238,7 @@ export function SRC20Minting({
                           )
                           : (
                             <div
-                              class="w-8 h-8 rounded-xl overflow-hidden"
+                              class="w-6.5 h-6.5 rounded-xl overflow-hidden"
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
@@ -363,10 +363,11 @@ export function SRC20Minting({
                       class={`text-right ${cellRightL2Card}`}
                     >
                       <Button
-                        variant="outlineFlat"
-                        color="purple"
+                        variant="outline"
+                        color="primary"
                         size="xxs"
                         href={mintHref}
+                        class="rounded-xl"
                       >
                         MINT
                       </Button>

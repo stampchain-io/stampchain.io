@@ -308,7 +308,7 @@ export function SRC20Overview({
                           ? (
                             <img
                               src={imageUrl}
-                              class="w-8 h-8 rounded-xl cursor-pointer"
+                              class="w-6.5 h-6.5 rounded-xl cursor-pointer"
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
@@ -319,7 +319,7 @@ export function SRC20Overview({
                           )
                           : (
                             <div
-                              class="w-8 h-8 rounded-xl cursor-pointer overflow-hidden"
+                              class="w-6.5 h-6.5 rounded-xl cursor-pointer overflow-hidden"
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();

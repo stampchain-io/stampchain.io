@@ -92,14 +92,14 @@ export function StampOverviewRow({ stamp }: StampOverviewRowProps) {
           href={href}
           f-partial={href}
           target="_top"
-          class="flex items-center justify-center w-8 h-8 rounded-xl overflow-hidden"
+          class="flex items-center justify-center w-6.5 h-6.5 rounded-xl overflow-hidden"
         >
           {imgSrc
             ? (
               <img
                 src={imgSrc}
                 alt={`Stamp ${stamp.stamp ?? stamp.cpid ?? ""}`}
-                class="w-8 h-8 object-contain rounded-xl pixelart"
+                class="w-6.5 h-6.5 object-contain rounded-xl pixelart"
               />
             )
             : <PlaceholderImage variant="no-image" />}
@@ -142,17 +142,15 @@ export function StampOverviewRow({ stamp }: StampOverviewRowProps) {
       <td
         class={`${cellAlign(3, HEADERS.length)} ${cellCenterL2Card}`}
       >
-        <div class="flex items-center justify-center gap-2">
+        <div class="flex items-center justify-center gap-2 text-color-primary-400">
           <Icon
             type="icon"
             name="artStamp"
             weight="bold"
             size="xxs"
-            color="greyLight"
+            color="purpleLight"
           />
-          <span class="bg-gradient-to-r from-color-neutral-400 via-color-neutral-300 to-color-neutral-200 inline-block text-transparent bg-clip-text w-fit">
-            {getStampType(stamp)}
-          </span>
+          {getStampType(stamp)}
         </div>
       </td>
 

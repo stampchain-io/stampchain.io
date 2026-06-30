@@ -112,14 +112,14 @@ export function MarketplaceSalesRow({ stamp }: MarketplaceSalesRowProps) {
           href={href}
           f-partial={href}
           target="_top"
-          class="flex items-center justify-center w-8 h-8 rounded-xl overflow-hidden"
+          class="flex items-center justify-center w-6.5 h-6.5 rounded-xl overflow-hidden"
         >
           {imgSrc
             ? (
               <img
                 src={imgSrc}
                 alt={`Stamp ${stamp.stamp ?? stamp.cpid ?? ""}`}
-                class="w-8 h-8 object-contain rounded-xl pixelart"
+                class="w-6.5 h-6.5 object-contain rounded-xl pixelart"
               />
             )
             : <PlaceholderImage variant="no-image" />}
