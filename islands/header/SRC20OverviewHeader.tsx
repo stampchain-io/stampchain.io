@@ -74,7 +74,7 @@ export const SRC20OverviewHeader = ({
             mode="single"
             size="xsR"
             color="secondary"
-            className="mt-[3px] !text-[9px]"
+            className="mt-[3px] !text-xs tablet:!text-[10px]"
           />
         </div>
 

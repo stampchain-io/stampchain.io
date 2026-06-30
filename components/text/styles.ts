@@ -28,7 +28,7 @@ export const logoPrimaryHover =
 // Header Navigation - Desktop
 export const navLinkDesktop =
   `mt-0.5 font-normal tablet:font-normal text-sm tablet:text-xs uppercase
-  bg-gradient-to-b from-color-neutral-400 to-color-neutral-500 bg-clip-text text-transparent group-hover:from-color-primary-300 group-hover:via-color-primary-400 group-hover:to-color-primary-400 tracking-[0.01rem] ${transitionColors} cursor-pointer ${select}`;
+  bg-gradient-to-b from-color-neutral-400 via-color-neutral-400 to-color-neutral-500 bg-clip-text text-transparent group-hover:from-color-primary-400 group-hover:via-color-primary-400 group-hover:to-color-primary-400 tracking-[0.01rem] ${transitionColors} cursor-pointer ${select}`;
 export const navLinkActiveDesktop =
   `${navLinkDesktop} !text-color-hover !cursor-default`;
 export const navSublinkDesktop =
