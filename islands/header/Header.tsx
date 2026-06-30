@@ -23,19 +23,19 @@ interface NavLink {
 /* ===== DESKTOP NAVIGATION CONFIGURATION ===== */
 const desktopNavLinks: NavLink[] = [
   {
-    title: "Stamps",
-    href: "/stamp",
+    title: "Marketplace",
+    href: "/marketplace",
     icon: "artStamp",
-  },
-  {
-    title: "Tokens",
-    href: "/src20",
-    icon: "src20Token",
   },
   {
     title: "Collections",
     href: "/collection",
     icon: "artStamps",
+  },
+  {
+    title: "Tokens",
+    href: "/src20",
+    icon: "src20Token",
   },
   {
     title: "Explorer",

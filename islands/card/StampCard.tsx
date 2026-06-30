@@ -15,6 +15,7 @@ import {
   getStampImageSrc,
   getStampPreviewUrl,
 } from "$lib/utils/ui/media/imageUtils.ts";
+import { tooltipIcon } from "$notification";
 import {
   cardCreator,
   cardFileSize,
@@ -66,6 +67,32 @@ export function StampCard({
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
+  // Tooltip visibility state
+  const [isRecursiveTooltipVisible, setIsRecursiveTooltipVisible] = useState(
+    false,
+  );
+  const [isDivisibleTooltipVisible, setIsDivisibleTooltipVisible] = useState(
+    false,
+  );
+  const [isKeyburnTooltipVisible, setIsKeyburnTooltipVisible] = useState(false);
+  const [isLockedTooltipVisible, setIsLockedTooltipVisible] = useState(false);
+  const [isUnlockedTooltipVisible, setIsUnlockedTooltipVisible] = useState(
+    false,
+  );
+  const [allowRecursiveTooltip, setAllowRecursiveTooltip] = useState(true);
+  const [allowDivisibleTooltip, setAllowDivisibleTooltip] = useState(true);
+  const [allowKeyburnTooltip, setAllowKeyburnTooltip] = useState(true);
+  const [allowLockedTooltip, setAllowLockedTooltip] = useState(true);
+  const [allowUnlockedTooltip, setAllowUnlockedTooltip] = useState(true);
+  const [isBtcTooltipVisible, setIsBtcTooltipVisible] = useState(false);
+  const [allowBtcTooltip, setAllowBtcTooltip] = useState(true);
+  const recursiveTooltipTimeoutRef = useRef<number | null>(null);
+  const divisibleTooltipTimeoutRef = useRef<number | null>(null);
+  const keyburnTooltipTimeoutRef = useRef<number | null>(null);
+  const lockedTooltipTimeoutRef = useRef<number | null>(null);
+  const unlockedTooltipTimeoutRef = useRef<number | null>(null);
+  const btcTooltipTimeoutRef = useRef<number | null>(null);
+
   // Library file detection (CSS, JS, GZIP, JSON)
   const isLibraryFile = stamp.stamp_mimetype === "text/css" ||
     stamp.stamp_mimetype === "text/javascript" ||
@@ -73,6 +100,121 @@ export function StampCard({
     stamp.stamp_mimetype === "application/gzip" ||
     stamp.stamp_mimetype === "application/json" ||
     stamp.stamp_mimetype === "text/json";
+
+  /* ===== TOOLTIP HANDLERS ===== */
+  const handleRecursiveMouseEnter = () => {
+    if (allowRecursiveTooltip) {
+      if (recursiveTooltipTimeoutRef.current) {
+        globalThis.clearTimeout(recursiveTooltipTimeoutRef.current);
+      }
+      recursiveTooltipTimeoutRef.current = globalThis.setTimeout(() => {
+        setIsRecursiveTooltipVisible(true);
+      }, 500);
+    }
+  };
+
+  const handleRecursiveMouseLeave = () => {
+    if (recursiveTooltipTimeoutRef.current) {
+      globalThis.clearTimeout(recursiveTooltipTimeoutRef.current);
+    }
+    setIsRecursiveTooltipVisible(false);
+    setAllowRecursiveTooltip(true);
+  };
+
+  const handleDivisibleMouseEnter = () => {
+    if (allowDivisibleTooltip) {
+      if (divisibleTooltipTimeoutRef.current) {
+        globalThis.clearTimeout(divisibleTooltipTimeoutRef.current);
+      }
+      divisibleTooltipTimeoutRef.current = globalThis.setTimeout(() => {
+        setIsDivisibleTooltipVisible(true);
+      }, 500);
+    }
+  };
+
+  const handleDivisibleMouseLeave = () => {
+    if (divisibleTooltipTimeoutRef.current) {
+      globalThis.clearTimeout(divisibleTooltipTimeoutRef.current);
+    }
+    setIsDivisibleTooltipVisible(false);
+    setAllowDivisibleTooltip(true);
+  };
+
+  const handleKeyburnMouseEnter = () => {
+    if (allowKeyburnTooltip) {
+      if (keyburnTooltipTimeoutRef.current) {
+        globalThis.clearTimeout(keyburnTooltipTimeoutRef.current);
+      }
+      keyburnTooltipTimeoutRef.current = globalThis.setTimeout(() => {
+        setIsKeyburnTooltipVisible(true);
+      }, 500);
+    }
+  };
+
+  const handleKeyburnMouseLeave = () => {
+    if (keyburnTooltipTimeoutRef.current) {
+      globalThis.clearTimeout(keyburnTooltipTimeoutRef.current);
+    }
+    setIsKeyburnTooltipVisible(false);
+    setAllowKeyburnTooltip(true);
+  };
+
+  const handleLockedMouseEnter = () => {
+    if (allowLockedTooltip) {
+      if (lockedTooltipTimeoutRef.current) {
+        globalThis.clearTimeout(lockedTooltipTimeoutRef.current);
+      }
+      lockedTooltipTimeoutRef.current = globalThis.setTimeout(() => {
+        setIsLockedTooltipVisible(true);
+      }, 500);
+    }
+  };
+
+  const handleLockedMouseLeave = () => {
+    if (lockedTooltipTimeoutRef.current) {
+      globalThis.clearTimeout(lockedTooltipTimeoutRef.current);
+    }
+    setIsLockedTooltipVisible(false);
+    setAllowLockedTooltip(true);
+  };
+
+  const handleUnlockedMouseEnter = () => {
+    if (allowUnlockedTooltip) {
+      if (unlockedTooltipTimeoutRef.current) {
+        globalThis.clearTimeout(unlockedTooltipTimeoutRef.current);
+      }
+      unlockedTooltipTimeoutRef.current = globalThis.setTimeout(() => {
+        setIsUnlockedTooltipVisible(true);
+      }, 500);
+    }
+  };
+
+  const handleUnlockedMouseLeave = () => {
+    if (unlockedTooltipTimeoutRef.current) {
+      globalThis.clearTimeout(unlockedTooltipTimeoutRef.current);
+    }
+    setIsUnlockedTooltipVisible(false);
+    setAllowUnlockedTooltip(true);
+  };
+
+  const handleBtcMouseEnter = () => {
+    if (allowBtcTooltip) {
+      if (btcTooltipTimeoutRef.current) {
+        globalThis.clearTimeout(btcTooltipTimeoutRef.current);
+      }
+      btcTooltipTimeoutRef.current = globalThis.setTimeout(() => {
+        setIsBtcTooltipVisible(true);
+      }, 500);
+    }
+  };
+
+  const handleBtcMouseLeave = () => {
+    if (btcTooltipTimeoutRef.current) {
+      globalThis.clearTimeout(btcTooltipTimeoutRef.current);
+    }
+    setIsBtcTooltipVisible(false);
+    setAllowBtcTooltip(true);
+  };
 
   /* ===== HANDLERS ===== */
   const handleImageError = (e: Event) => {
@@ -102,6 +244,24 @@ export function StampCard({
   };
 
   /* ===== EFFECTS ===== */
+  // Cleanup tooltip timeouts on unmount
+  useEffect(() => {
+    return () => {
+      [
+        recursiveTooltipTimeoutRef,
+        divisibleTooltipTimeoutRef,
+        keyburnTooltipTimeoutRef,
+        lockedTooltipTimeoutRef,
+        unlockedTooltipTimeoutRef,
+        btcTooltipTimeoutRef,
+      ].forEach((ref) => {
+        if (ref.current) {
+          globalThis.clearTimeout(ref.current);
+        }
+      });
+    };
+  }, []);
+
   // Update abbreviation length on window resize
   useEffect(() => {
     const handleResize = () => setWindowWidth(globalThis.innerWidth ?? 0);
@@ -420,24 +580,6 @@ export function StampCard({
               </div>
             </div>
           )}
-          {/* ===== BTC PRICE OVERLAY (explorer only, if listed) ===== */}
-          {variant === "imageDetailExplorer" && isListed && (
-            <div class="absolute bottom-1 right-1 z-20">
-              <div
-                class={`${containerPill} ${cardPrice} !p-0.5 cursor-pointer`}
-              >
-                <Icon
-                  type="icon"
-                  name="bitcoin"
-                  weight="bold"
-                  size="xxs"
-                  color="custom"
-                  className="stroke-color-secondary-400"
-                  ariaLabel="BTC"
-                />
-              </div>
-            </div>
-          )}
         </div>
 
         {/* ===== FULL DETAILS SECTION (explorer / marketplace listings) ===== */}
@@ -475,57 +617,146 @@ export function StampCard({
                   }/${stamp.supply ?? 1}`
                   : supplyDisplay}
               </div>
-              <div class="flex items-center gap-1.5 mr-1">
+              <div class="flex items-center gap-1.5 mr-0.5">
+                {variant === "imageDetailExplorer" && isListed && (
+                  <div
+                    class="relative"
+                    onMouseEnter={handleBtcMouseEnter}
+                    onMouseLeave={handleBtcMouseLeave}
+                  >
+                    <Icon
+                      type="icon"
+                      name="bitcoin"
+                      weight="bold"
+                      size="xxs"
+                      color="custom"
+                      className="stroke-color-secondary-400"
+                      ariaLabel="BTC"
+                    />
+                    <div
+                      class={`${tooltipIcon} ${
+                        isBtcTooltipVisible ? "opacity-100" : "opacity-0"
+                      }`}
+                    >
+                      {renderPrice().text}
+                    </div>
+                  </div>
+                )}
                 {stamp.ident === "SRC-721" && (
-                  <Icon
-                    type="icon"
-                    name="recursive"
-                    weight="bold"
-                    size="xxs"
-                    color="greyLight"
-                    ariaLabel="Recursive"
-                  />
+                  <div
+                    class="relative"
+                    onMouseEnter={handleRecursiveMouseEnter}
+                    onMouseLeave={handleRecursiveMouseLeave}
+                  >
+                    <Icon
+                      type="icon"
+                      name="recursive"
+                      weight="bold"
+                      size="xxs"
+                      color="greyLight"
+                      ariaLabel="Recursive"
+                    />
+                    <div
+                      class={`${tooltipIcon} ${
+                        isRecursiveTooltipVisible ? "opacity-100" : "opacity-0"
+                      }`}
+                    >
+                      RECURSIVE
+                    </div>
+                  </div>
                 )}
                 {stamp.divisible && (
-                  <Icon
-                    type="icon"
-                    name="divisible"
-                    weight="bold"
-                    size="xxs"
-                    color="greyLight"
-                    ariaLabel="Divisible"
-                  />
+                  <div
+                    class="relative"
+                    onMouseEnter={handleDivisibleMouseEnter}
+                    onMouseLeave={handleDivisibleMouseLeave}
+                  >
+                    <Icon
+                      type="icon"
+                      name="divisible"
+                      weight="bold"
+                      size="xxs"
+                      color="greyLight"
+                      ariaLabel="Divisible"
+                    />
+                    <div
+                      class={`${tooltipIcon} ${
+                        isDivisibleTooltipVisible ? "opacity-100" : "opacity-0"
+                      }`}
+                    >
+                      DIVISIBLE
+                    </div>
+                  </div>
                 )}
                 {stamp.keyburn != null && (
-                  <Icon
-                    type="icon"
-                    name="keyburned"
-                    weight="bold"
-                    size="xxs"
-                    color="greyLight"
-                    ariaLabel="Keyburned"
-                  />
+                  <div
+                    class="relative"
+                    onMouseEnter={handleKeyburnMouseEnter}
+                    onMouseLeave={handleKeyburnMouseLeave}
+                  >
+                    <Icon
+                      type="icon"
+                      name="keyburned"
+                      weight="bold"
+                      size="xxs"
+                      color="greyLight"
+                      ariaLabel="Keyburned"
+                    />
+                    <div
+                      class={`${tooltipIcon} ${
+                        isKeyburnTooltipVisible ? "opacity-100" : "opacity-0"
+                      }`}
+                    >
+                      KEYBURNED
+                    </div>
+                  </div>
                 )}
                 {stamp.locked
                   ? (
-                    <Icon
-                      type="icon"
-                      name="locked"
-                      weight="bold"
-                      size="xxs"
-                      color="greyLight"
-                      ariaLabel="Locked"
-                    />
+                    <div
+                      class="relative"
+                      onMouseEnter={handleLockedMouseEnter}
+                      onMouseLeave={handleLockedMouseLeave}
+                    >
+                      <Icon
+                        type="icon"
+                        name="locked"
+                        weight="bold"
+                        size="xxs"
+                        color="greyLight"
+                        ariaLabel="Locked"
+                      />
+                      <div
+                        class={`${tooltipIcon} ${
+                          isLockedTooltipVisible ? "opacity-100" : "opacity-0"
+                        }`}
+                      >
+                        LOCKED
+                      </div>
+                    </div>
                   )
                   : (
-                    <Icon
-                      type="icon"
-                      name="unlocked"
-                      weight="bold"
-                      size="xxs"
-                      color="greyLight"
-                      ariaLabel="Unlocked"
-                    />
+                    <div
+                      class="relative"
+                      onMouseEnter={handleUnlockedMouseEnter}
+                      onMouseLeave={handleUnlockedMouseLeave}
+                    >
+                      <Icon
+                        type="icon"
+                        name="unlocked"
+                        weight="bold"
+                        size="xxs"
+                        color="greyLight"
+                        ariaLabel="Unlocked"
+                      />
+                      <div
+                        class={`${tooltipIcon} ${
+                          isUnlockedTooltipVisible ? "opacity-100" : "opacity-0"
+                        }`}
+                      >
+                        UNLOCKED
+                      </div>
+                    </div>
                   )}
               </div>
             </div>

@@ -26,8 +26,8 @@ const NAV_ICONS = false;
 /* ===== MOBILE NAVIGATION CONFIGURATION ===== */
 const navLinks: NavLink[] = [
   {
-    title: "Stamps",
-    href: "/stamp?type=classic",
+    title: "Marketplace",
+    href: "/marketplace",
     icon: "artStamp",
   },
   {

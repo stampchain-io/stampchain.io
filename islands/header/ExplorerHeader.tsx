@@ -67,7 +67,7 @@ export const ExplorerHeader = (
       </div>
 
       {/* Section Selector + Controls */}
-      <div class="flex flex-col mobileMd:flex-row justify-between w-full">
+      <div class="flex flex-col mobileMd:flex-row justify-between mobileMd:items-center w-full">
         {/* Section Selector - Left */}
         <div class="flex gap-3 w-full mobileMd:w-auto">
           <SelectorButtons

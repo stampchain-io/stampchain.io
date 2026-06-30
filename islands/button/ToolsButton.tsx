@@ -274,7 +274,7 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
     // colorAccent="var(--color-orange-400)"
     // colorAccentHover="var(--color-hover)"
     icon: (
-      <div class="relative">
+      <div class="relative flex items-center">
         <Icon
           type="iconButton"
           name="tools"

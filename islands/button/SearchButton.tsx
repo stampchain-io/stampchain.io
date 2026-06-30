@@ -29,7 +29,7 @@ export function SearchButton() {
   }, []);
 
   return (
-    <div class="relative">
+    <div class="relative flex items-center">
       <Icon
         type="iconButton"
         name="search"

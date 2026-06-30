@@ -188,7 +188,7 @@ export const WalletButton = (
   return {
     // The wallet icon component
     icon: (
-      <div class="relative z-10">
+      <div class="relative z-10 flex items-center">
         {/* ===== CONNECT WALLET BUTTON ===== */}
         {!(isConnected && address) && (
           <Icon
