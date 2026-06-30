@@ -1,14 +1,17 @@
 // routes/api/v2/dispense.ts
+import { TX_CONSTANTS } from "$constants";
 import { Handlers } from "$fresh/server.ts";
-// FeeDetails import removed - not used in this file
 import { ApiResponseUtil } from "$lib/utils/api/responses/apiResponseUtil.ts";
 import { logger } from "$lib/utils/logger.ts";
-import { serverConfig } from "$server/config/config.ts";
+import { buildCpPsbtInputsFromRawTx } from "$lib/utils/bitcoin/psbt/cpRawTxInputs.ts";
+import { buildServiceFeeOutputs } from "$lib/utils/bitcoin/psbt/serviceFeeOutputs.ts";
+import { getServiceFeeConfig } from "$server/config/config.ts";
 import {
   CounterpartyApiManager,
   normalizeFeeRate,
 } from "$server/services/counterpartyApiService.ts";
-import { BitcoinTransactionBuilder } from "$server/services/transaction/bitcoinTransactionBuilder.ts";
+import { CommonUTXOService } from "$server/services/utxo/commonUtxoService.ts";
+import { Buffer } from "node:buffer";
 
 interface DispenseInput {
   address: string;
@@ -27,6 +30,7 @@ interface DispenseInput {
 
 export const handler: Handlers = {
   async POST(req) {
+    const commonUtxoService = new CommonUTXOService();
     try {
       const input: DispenseInput = await req.json();
       // console.log("Received dispense input:", input);
@@ -39,7 +43,10 @@ export const handler: Handlers = {
         options: clientOptions,
       } = input;
 
-      // For dryRun, return fee estimates without creating actual PSBT
+      // For dryRun, return fee estimates without creating actual PSBT. This is a
+      // PURE NUMERIC ESTIMATOR — buildServiceFeeOutputs() returns PSBT outputs
+      // (the wrong shape here) and requires CP outputs + codecs, so the existing
+      // numeric estimation is intentionally left untouched.
       if (dryRun === true) {
         // Dispense transactions are simple Bitcoin transfers - typically 1 input, 2 outputs
         const estimatedTxSize = 200; // bytes (typical for dispense transaction)
@@ -114,10 +121,6 @@ export const handler: Handlers = {
           dispenserPaymentAmountSat, // BTC quantity buyer pays TO dispenser
           xcpDispenseCallOpts,
         );
-        console.log(
-          "[Dispense Route] Response from CounterpartyApiManager:",
-          JSON.stringify(xcpResponse, null, 2),
-        );
 
         if (!xcpResponse || xcpResponse.error) {
           console.error(
@@ -137,23 +140,6 @@ export const handler: Handlers = {
 
         const counterpartyTxHex = xcpResponse.result?.tx_hex ||
           xcpResponse.result?.rawtransaction;
-        const dispenserActualPayToAddress = xcpResponse.result?.params
-          ?.destination;
-        const dispenserPaymentAmount = xcpResponse.result?.params?.quantity; // BTC quantity for dispenser
-
-        // DETAILED LOGGING OF THE COUNTERPARTY TX HEX
-        console.log("[Dispense Route] FULL counterpartyTxHex received:");
-        console.log(counterpartyTxHex);
-        // END DETAILED LOGGING
-
-        console.log(
-          `[Dispense Route] Extracted counterpartyTxHex (first 60): ${
-            counterpartyTxHex?.substring(0, 60)
-          }...`,
-        );
-        console.log(
-          `[Dispense Route] Extracted dispenserActualPayToAddress: ${dispenserActualPayToAddress}`,
-        );
 
         if (!counterpartyTxHex) {
           console.error(
@@ -164,68 +150,117 @@ export const handler: Handlers = {
             { result: xcpResponse.result },
           );
         }
-        if (!dispenserActualPayToAddress) {
-          console.error(
-            "[Dispense Route] dispenserActualPayToAddress is missing from XCP response params.",
-          );
-          return ApiResponseUtil.badRequest(
-            "Counterparty response missing dispenser destination address for payment.",
-            { result: xcpResponse.result },
-          );
-        }
-        if (dispenserPaymentAmount === undefined) {
-          console.error(
-            "[Dispense Route] dispenserPaymentAmount is missing from XCP response params.",
-          );
-          return ApiResponseUtil.badRequest(
-            "Counterparty response missing dispenser payment amount.",
-            { result: xcpResponse.result },
-          );
-        }
 
-        const serviceFeeSats = parseInt(
-          serverConfig.MINTING_SERVICE_FEE_FIXED_SATS,
-          10,
-        );
-        const serviceFeeAddress = serverConfig.MINTING_SERVICE_FEE_ADDRESS;
+        // Dynamic import of bitcoinjs-lib to exclude from build-time static
+        // analysis (same approach as trx/stampattach.ts).
+        const {
+          address: bjsAddress,
+          networks,
+          Psbt,
+          Transaction,
+        } = await import("bitcoinjs-lib");
+        const network = networks.bitcoin;
 
-        const psbtOptions: {
-          dispenserDestinationAddress: string;
-          dispenserPaymentAmount: number;
-          serviceFeeDetails?: { fee: number; address: string };
-        } = {
-          dispenserDestinationAddress: dispenserActualPayToAddress,
-          dispenserPaymentAmount: Number(dispenserPaymentAmount),
-        };
+        const cpTx = Transaction.fromHex(counterpartyTxHex);
 
-        if (serviceFeeSats > 0 && serviceFeeAddress) {
-          psbtOptions.serviceFeeDetails = {
-            fee: serviceFeeSats,
-            address: serviceFeeAddress,
-          };
+        const psbt = new Psbt({ network });
+
+        // Counterparty selected & funded the input(s). Use ALL of them, in order,
+        // so vin[0] stays the input the CP payload is ARC4-keyed against (#1137).
+        const { builtInputs, inputsToSign, totalInputValue } =
+          await buildCpPsbtInputsFromRawTx(
+            commonUtxoService,
+            cpTx.ins,
+            buyerAddress,
+            [Transaction.SIGHASH_ALL],
+          );
+        const sumOfUserInputs = totalInputValue;
+        for (const { inputData } of builtInputs) {
+          psbt.addInput(inputData as any);
         }
 
-        console.log(
-          "[Dispense Route] About to call BitcoinTransactionBuilder.buildPsbtFromUserFundedRawHex",
-        );
-        const builtPsbtData = await BitcoinTransactionBuilder
-          .buildPsbtFromUserFundedRawHex(
-            counterpartyTxHex,
-            buyerAddress, // This is the userAddress
-            normalizedFees.normalizedSatsPerVB,
-            psbtOptions,
-          );
-        console.log(
-          "[Dispense Route] Result from BitcoinTransactionBuilder.buildPsbtFromUserFundedRawHex:",
-          JSON.stringify(builtPsbtData, null, 2),
-        );
+        // Trust Counterparty's composed dispense outputs verbatim. CP's dispense
+        // rawtx (return_psbt:false) already contains the complete output set:
+        //   [0] dispenser-payment (to the dispenser destination)
+        //   [1] OP_RETURN (Counterparty dispense data)
+        //   [2] change back to the buyer (sourceAddress)
+        // CP has already deducted its network fee. We only optionally splice an
+        // operator service fee out of CP's change via the shared helper, which
+        // locates the change output by matching `buyerAddress` — so the
+        // dispenser-payment output (a different address) is preserved untouched.
+        // The prior BitcoinTransactionBuilder.buildPsbtFromUserFundedRawHex path
+        // discarded CP's outputs, synthesized the dispenser payment, and
+        // re-derived a miner fee + change (the #959 double-count class).
+        const cpOutputs = cpTx.outs.map((output) => ({
+          script: new Uint8Array(output.script),
+          value: BigInt(output.value),
+        }));
 
+        // Service-fee precedence for dispense is ENV-ONLY (the route has no
+        // body/options service-fee override today — preserve that behavior).
+        const { serviceFeeSats, serviceFeeAddress } = getServiceFeeConfig();
+
+        const {
+          outputs: finalOutputs,
+          cpNetworkFee,
+          serviceFeeAdded,
+          totalFee,
+        } = buildServiceFeeOutputs({
+          cpOutputs,
+          sumOfUserInputs,
+          sourceAddress: buyerAddress,
+          serviceFeeSats,
+          serviceFeeAddress: serviceFeeAddress || undefined,
+          dustSize: BigInt(TX_CONSTANTS.DUST_SIZE),
+          decodeAddress: (script) => {
+            try {
+              return bjsAddress.fromOutputScript(Buffer.from(script), network);
+            } catch {
+              return undefined;
+            }
+          },
+          encodeAddress: (addr) =>
+            new Uint8Array(bjsAddress.toOutputScript(addr, network)),
+        });
+
+        for (const out of finalOutputs) {
+          psbt.addOutput({ script: Buffer.from(out.script), value: out.value });
+        }
+
+        // The buyer's change is the (possibly fee-reduced) CP change output that
+        // still pays back to the buyer address; 0 if it was dropped as dust.
+        let finalBuyerChange = 0n;
+        for (let i = finalOutputs.length - 1; i >= 0; i--) {
+          let decoded: string | undefined;
+          try {
+            decoded = bjsAddress.fromOutputScript(
+              Buffer.from(finalOutputs[i].script),
+              network,
+            );
+          } catch {
+            decoded = undefined;
+          }
+          if (decoded === buyerAddress) {
+            finalBuyerChange = finalOutputs[i].value;
+            break;
+          }
+        }
+
+        logger.info("api", {
+          message: "Assembled dispense outputs (trust-CP + service fee)",
+          cpNetworkFee: cpNetworkFee.toString(),
+          serviceFeeAdded: serviceFeeAdded.toString(),
+          totalFee: totalFee.toString(),
+          outputCount: finalOutputs.length,
+        });
+
+        // Return unsigned PSBT for the wallet to sign (do NOT finalize).
         return ApiResponseUtil.success({
-          psbt: builtPsbtData.psbtHex,
-          inputsToSign: builtPsbtData.inputsToSign,
-          estimatedFee: builtPsbtData.estimatedFee,
-          estimatedVsize: builtPsbtData.estimatedVsize,
-          finalBuyerChange: builtPsbtData.finalBuyerChange,
+          psbt: psbt.toHex(),
+          inputsToSign,
+          estimatedFee: Number(totalFee),
+          estimatedVsize: cpTx.virtualSize(),
+          finalBuyerChange: Number(finalBuyerChange),
         }, { forceNoCache: true });
       } catch (error: unknown) {
         const errorMessage = error instanceof Error
