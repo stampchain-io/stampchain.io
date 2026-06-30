@@ -7,7 +7,7 @@ import {
   buildCpPsbtInputsFromRawTx,
 } from "$lib/utils/bitcoin/psbt/cpRawTxInputs.ts";
 import { buildServiceFeeOutputs } from "$lib/utils/bitcoin/psbt/serviceFeeOutputs.ts";
-import { serverConfig } from "$server/config/config.ts"; // Import serverConfig
+import { getServiceFeeConfig } from "$server/config/config.ts";
 import { StampController } from "$server/controller/stampController.ts";
 import {
   ComposeAttachOptions,
@@ -180,11 +180,19 @@ export const handler: Handlers = {
         value: BigInt(output.value),
       }));
 
+      // Service-fee precedence (defined once; see also getServiceFeeConfig() in
+      // server/config/config.ts):
+      //   1. request body field  — caller explicitly overrides for this request
+      //   2. options field       — caller-supplied option (same precedence as body)
+      //   3. env default         — operator-configured MINTING_SERVICE_FEE_FIXED_SATS /
+      //                           MINTING_SERVICE_FEE_ADDRESS (via getServiceFeeConfig)
+      const { serviceFeeSats: envFeeSats, serviceFeeAddress: envFeeAddress } =
+        getServiceFeeConfig();
       const feeService = body.service_fee ?? options?.service_fee ??
-        parseInt(serverConfig.MINTING_SERVICE_FEE_FIXED_SATS, 10);
+        Number(envFeeSats);
       const feeServiceAddress = body.service_fee_address ??
         options?.service_fee_address ??
-        serverConfig.MINTING_SERVICE_FEE_ADDRESS;
+        envFeeAddress;
 
       const { outputs: finalOutputs, cpNetworkFee, serviceFeeAdded, totalFee } =
         buildServiceFeeOutputs({
