@@ -106,18 +106,18 @@ export const ToggleButton = ({
     }
 
     if (isSelected) {
-      // Selected state (flatOutline)
+      // Selected state (flat)
       if (canHover) {
-        // With hover - use flatOutline (flat base, outline hover)
+        // With hover - use flat
         return button("flat", color, size);
       } else {
         // Without hover - use flat
         return `${button("flat", color, size)}`;
       }
     } else {
-      // Unselected state (outlineFlat)
+      // Unselected state (outline)
       if (canHover) {
-        // With hover - use outlineFlat (outline base, flat hover)
+        // With hover - use outline
         return button("outline", color, size);
       } else {
         // Without hover - use outline

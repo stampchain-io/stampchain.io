@@ -54,7 +54,7 @@ export const SRC20OverviewHeader = ({
       {/* ===== MINTED/MINTING, TRENDING AND TIMEFRAME BUTTONS ===== */}
       <div class="flex flex-col mobileLg:flex-row justify-between w-full">
         {/* Minting/Minted */}
-        <div class="flex gap-3 w-full mobileMd:w-auto">
+        <div class="flex justify-between gap-3 w-full mobileMd:w-auto">
           <SelectorButtons
             options={[
               { value: "minted", label: "MINTED" },
@@ -66,22 +66,20 @@ export const SRC20OverviewHeader = ({
             color="purple"
             className="w-full mobileMd:w-auto"
           />
+          {/* Trending Toggle */}
+          <ToggleButton
+            options={["TRENDING"]}
+            selected={sortBy === "TRENDING" ? "TRENDING" : ""}
+            onChange={handleTrendingClick}
+            mode="single"
+            size="xsR"
+            color="secondary"
+            className="mt-[3px] !text-[9px]"
+          />
         </div>
 
         {/* Trending and Timeframes - Right */}
-        <div class="flex justify-between pt-3 mobileLg:pt-0 gap-3">
-          {/* Trending Toggle */}
-          <div class="mt-[3px]">
-            <ToggleButton
-              options={["TRENDING"]}
-              selected={sortBy === "TRENDING" ? "TRENDING" : ""}
-              onChange={handleTrendingClick}
-              mode="single"
-              size="xsR"
-              color="purple"
-            />
-          </div>
-
+        <div class="flex justify-start mobileMd:justify-end pt-3 mobileLg:pt-0 gap-3">
           {/* Timeframe Buttons */}
           <SelectorButtons
             options={[
