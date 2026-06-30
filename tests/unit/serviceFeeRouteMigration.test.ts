@@ -6,6 +6,66 @@ import {
   type TxOutput,
 } from "$lib/utils/bitcoin/psbt/serviceFeeOutputs.ts";
 
+// ---------------------------------------------------------------------------
+// Shared helpers used by the stampattach synthetic-fixture tests below.
+// ---------------------------------------------------------------------------
+
+const ATTACH_NETWORK = bitcoin.networks.bitcoin;
+const ATTACH_SOURCE = "bc1q20d2cdvy2x83h3ssrz5lgryy4c9wqxsgc749ej";
+const ATTACH_DUST = 546n;
+
+function attachDecodeAddress(script: Uint8Array): string | undefined {
+  try {
+    return bitcoin.address.fromOutputScript(Buffer.from(script), ATTACH_NETWORK);
+  } catch {
+    return undefined;
+  }
+}
+function attachEncodeAddress(addr: string): Uint8Array {
+  return new Uint8Array(
+    bitcoin.address.toOutputScript(addr, ATTACH_NETWORK),
+  );
+}
+
+/**
+ * Build a synthetic Counterparty-composed attach rawtransaction:
+ *   outputs[0]  — OP_RETURN (attach payload, not address-like)
+ *   outputs[1]  — dust pay-to-destination (the stamp recipient)
+ *   outputs[2]  — change back to source
+ *
+ * CP has already deducted its miner fee so
+ *   inputValue - (opReturnValue + dustValue + changeValue) = cpImplicitFee
+ */
+function buildSyntheticCpAttachTx(opts: {
+  inputValue: number;
+  changeValue: number;
+  dustValue?: number;
+}): string {
+  const tx = new bitcoin.Transaction();
+  tx.version = 2;
+  tx.addInput(Buffer.alloc(32, 2), 0, 0xfffffffd);
+
+  // OP_RETURN attach payload (value 0).
+  const opReturn = Buffer.from([0x6a, 0x04, 0xca, 0xfe, 0xba, 0xbe]);
+  tx.addOutput(opReturn, 0n);
+
+  // Dust output to a distinct destination address (not the source).
+  const destScript = bitcoin.address.toOutputScript(
+    "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+    ATTACH_NETWORK,
+  );
+  tx.addOutput(destScript, BigInt(opts.dustValue ?? 330));
+
+  // Change back to source.
+  const changeScript = bitcoin.address.toOutputScript(
+    ATTACH_SOURCE,
+    ATTACH_NETWORK,
+  );
+  tx.addOutput(changeScript, BigInt(opts.changeValue));
+
+  return tx.toHex();
+}
+
 /**
  * Route-migration verification for task 1171.5 (fairmint/compose, dispense).
  *
@@ -212,3 +272,121 @@ Deno.test("dispense: service fee enabled splices from buyer change, dispenser-pa
   assertEquals(DISPENSE_INPUT_VALUE - outputsTotal >= 0n, true);
   assertEquals(result.totalFee, DISPENSE_CP_FEE + SERVICE_FEE);
 });
+
+// ---------------------------------------------------------------------------
+// stampattach route — synthetic-fixture tests (#959 regression guard).
+//
+// The attach route (routes/api/v2/trx/stampattach.ts) was the ORIGIN of the
+// double-fee bug: it re-derived a network fee on top of CP's outputs, producing
+// a constant ~279-sat deficit on every wallet (#959). These tests mirror the
+// route's output-assembly (parse synthetic CP rawtx → buildServiceFeeOutputs
+// with the bitcoinjs codecs → build PSBT) and assert the money invariants.
+// Covered paths: service fee disabled + service fee enabled (splice from change).
+// ---------------------------------------------------------------------------
+
+Deno.test(
+  "stampattach: service fee disabled trusts CP outputs verbatim, no deficit (#959 regression guard)",
+  () => {
+    const INPUT_VALUE = 20_000n;
+    // CP implicit miner fee = 20000 - (0 + 330 + 19000) = 670 sat
+    const rawTx = buildSyntheticCpAttachTx({
+      inputValue: Number(INPUT_VALUE),
+      changeValue: 19_000,
+      dustValue: 330,
+    });
+
+    const cpTx = bitcoin.Transaction.fromHex(rawTx);
+    const cpOutputs: TxOutput[] = cpTx.outs.map((o) => ({
+      script: new Uint8Array(o.script),
+      value: BigInt(o.value),
+    }));
+    const cpExpectedFee =
+      INPUT_VALUE - cpOutputs.reduce((s, o) => s + o.value, 0n);
+
+    const result = buildServiceFeeOutputs({
+      cpOutputs,
+      sumOfUserInputs: INPUT_VALUE,
+      sourceAddress: ATTACH_SOURCE,
+      serviceFeeSats: 0n,
+      dustSize: ATTACH_DUST,
+      decodeAddress: attachDecodeAddress,
+      encodeAddress: attachEncodeAddress,
+    });
+
+    // Outputs match CP verbatim: 3 outputs, no extra service-fee output.
+    assertEquals(result.outputs.length, cpOutputs.length);
+    assertEquals(result.serviceFeeAdded, 0n);
+
+    // The key regression guard: miner fee equals CP's own implicit fee —
+    // NOT less (the old double-count produced cpFee - ourFee ≈ −279 sat here).
+    assertEquals(result.cpNetworkFee, cpExpectedFee);
+    const minerFee =
+      INPUT_VALUE - result.outputs.reduce((s, o) => s + o.value, 0n);
+    assertEquals(minerFee, cpExpectedFee);
+    assertEquals(minerFee >= 0n, true); // no deficit
+    assertEquals(result.totalFee, cpExpectedFee);
+  },
+);
+
+Deno.test(
+  "stampattach: service fee enabled is spliced from change, dust-destination output and OP_RETURN survive untouched",
+  () => {
+    const INPUT_VALUE = 20_000n;
+    const CP_FEE = 670n; // 20000 - (0 + 330 + 19000)
+    const rawTx = buildSyntheticCpAttachTx({
+      inputValue: Number(INPUT_VALUE),
+      changeValue: 19_000,
+      dustValue: 330,
+    });
+
+    const SERVICE_FEE = 1_500n;
+    const SERVICE_ADDR = "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4";
+
+    const cpTx = bitcoin.Transaction.fromHex(rawTx);
+    const cpOutputs: TxOutput[] = cpTx.outs.map((o) => ({
+      script: new Uint8Array(o.script),
+      value: BigInt(o.value),
+    }));
+
+    const result = buildServiceFeeOutputs({
+      cpOutputs,
+      sumOfUserInputs: INPUT_VALUE,
+      sourceAddress: ATTACH_SOURCE,
+      serviceFeeSats: SERVICE_FEE,
+      serviceFeeAddress: SERVICE_ADDR,
+      dustSize: ATTACH_DUST,
+      decodeAddress: attachDecodeAddress,
+      encodeAddress: attachEncodeAddress,
+    });
+
+    // One extra output appended: service-fee output at configured address.
+    assertEquals(result.outputs.length, cpOutputs.length + 1);
+    assertEquals(result.serviceFeeAdded, SERVICE_FEE);
+
+    // Service-fee output pays exactly serviceFeeSats to the configured address.
+    const svc = result.outputs.find(
+      (o) => attachDecodeAddress(o.script) === SERVICE_ADDR,
+    );
+    assertEquals(svc?.value, SERVICE_FEE);
+
+    // OP_RETURN output (index 0) is untouched (value still 0).
+    assertEquals(result.outputs[0].value, 0n);
+
+    // Dust-destination output (index 1) is untouched.
+    assertEquals(result.outputs[1].value, 330n);
+
+    // Change reduced by exactly the service fee.
+    const change = result.outputs.find(
+      (o) => attachDecodeAddress(o.script) === ATTACH_SOURCE,
+    );
+    assertEquals(change?.value, 19_000n - SERVICE_FEE);
+
+    // Miner fee is unchanged (still equals CP's implicit fee — service fee comes
+    // out of change, not the miner fee).  No deficit at any step.
+    const minerFee =
+      INPUT_VALUE - result.outputs.reduce((s, o) => s + o.value, 0n);
+    assertEquals(minerFee, CP_FEE);
+    assertEquals(minerFee >= 0n, true);
+    assertEquals(result.totalFee, CP_FEE + SERVICE_FEE);
+  },
+);
