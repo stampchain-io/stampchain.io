@@ -16,7 +16,10 @@ const ATTACH_DUST = 546n;
 
 function attachDecodeAddress(script: Uint8Array): string | undefined {
   try {
-    return bitcoin.address.fromOutputScript(Buffer.from(script), ATTACH_NETWORK);
+    return bitcoin.address.fromOutputScript(
+      Buffer.from(script),
+      ATTACH_NETWORK,
+    );
   } catch {
     return undefined;
   }
@@ -300,8 +303,8 @@ Deno.test(
       script: new Uint8Array(o.script),
       value: BigInt(o.value),
     }));
-    const cpExpectedFee =
-      INPUT_VALUE - cpOutputs.reduce((s, o) => s + o.value, 0n);
+    const cpExpectedFee = INPUT_VALUE -
+      cpOutputs.reduce((s, o) => s + o.value, 0n);
 
     const result = buildServiceFeeOutputs({
       cpOutputs,
@@ -320,8 +323,8 @@ Deno.test(
     // The key regression guard: miner fee equals CP's own implicit fee —
     // NOT less (the old double-count produced cpFee - ourFee ≈ −279 sat here).
     assertEquals(result.cpNetworkFee, cpExpectedFee);
-    const minerFee =
-      INPUT_VALUE - result.outputs.reduce((s, o) => s + o.value, 0n);
+    const minerFee = INPUT_VALUE -
+      result.outputs.reduce((s, o) => s + o.value, 0n);
     assertEquals(minerFee, cpExpectedFee);
     assertEquals(minerFee >= 0n, true); // no deficit
     assertEquals(result.totalFee, cpExpectedFee);
@@ -383,8 +386,8 @@ Deno.test(
 
     // Miner fee is unchanged (still equals CP's implicit fee — service fee comes
     // out of change, not the miner fee).  No deficit at any step.
-    const minerFee =
-      INPUT_VALUE - result.outputs.reduce((s, o) => s + o.value, 0n);
+    const minerFee = INPUT_VALUE -
+      result.outputs.reduce((s, o) => s + o.value, 0n);
     assertEquals(minerFee, CP_FEE);
     assertEquals(minerFee >= 0n, true);
     assertEquals(result.totalFee, CP_FEE + SERVICE_FEE);
