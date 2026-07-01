@@ -1,16 +1,31 @@
+import { TX_CONSTANTS } from "$constants";
 import { Handlers } from "$fresh/server.ts";
 import { ApiResponseUtil } from "$lib/utils/api/responses/apiResponseUtil.ts";
-import { serverConfig } from "$server/config/config.ts";
+import { buildCpPsbtInputsFromRawTx } from "$lib/utils/bitcoin/psbt/cpRawTxInputs.ts";
+import { buildServiceFeeOutputs } from "$lib/utils/bitcoin/psbt/serviceFeeOutputs.ts";
+import { getServiceFeeConfig } from "$server/config/config.ts";
 import type { ComposeDetachOptions } from "$server/services/counterparty/xcpManagerDI.ts";
 import {
   CounterpartyApiManager,
   normalizeFeeRate,
 } from "$server/services/counterpartyApiService.ts";
-import { GeneralBitcoinTransactionBuilder } from "$server/services/transaction/generalBitcoinTransactionBuilder.ts";
+import { CommonUTXOService } from "$server/services/utxo/commonUtxoService.ts";
+import { Buffer } from "node:buffer";
 
 export const handler: Handlers = {
   async POST(req) {
+    const commonUtxoService = new CommonUTXOService();
     try {
+      // Dynamic import of bitcoinjs-lib to exclude from build-time static
+      // analysis (same approach as stampattach.ts).
+      const {
+        address: bjsAddress,
+        networks,
+        Psbt,
+        Transaction,
+      } = await import("bitcoinjs-lib");
+      const network = networks.bitcoin;
+
       const body = await req.json();
       const { utxo, destination, options = {} } = body;
 
@@ -49,19 +64,21 @@ export const handler: Handlers = {
         delete xcpApiOptions.service_fee; // Not for XCP API
         delete xcpApiOptions.service_fee_address; // Not for XCP API
 
-        // ✅ NEW CLEAN PATTERN: Get raw hex instead of PSBT
+        // Get the raw composed transaction from Counterparty (not a PSBT): CP
+        // selects the input(s) from the supplied utxo and computes its own
+        // network fee + change back to the source.
         const response = await CounterpartyApiManager.composeDetach(
           utxo,
           destination || "",
           {
             ...xcpApiOptions,
             fee_per_kb: normalizedFees.normalizedSatsPerKB,
-            return_psbt: false, // ✅ CHANGED: Get raw hex, not PSBT
-            verbose: true, // ✅ ADDED: Get detailed response
+            return_psbt: false, // Get raw hex, not PSBT
+            verbose: true, // Get detailed response
           } as ComposeDetachOptions,
         );
 
-        // ✅ NEW: Check for raw transaction instead of PSBT
+        // Check for raw transaction (not a PSBT)
         if (!response?.result?.rawtransaction) {
           if (response?.error) {
             // Check for specific error messages and return appropriate status codes
@@ -86,53 +103,92 @@ export const handler: Handlers = {
           );
         }
 
-        // ✅ NEW: Use GeneralBitcoinTransactionBuilder instead of deprecated processCounterpartyPSBT
-        const serviceFeeInput = options.service_fee !== undefined
-          ? options.service_fee
-          : parseInt(serverConfig.MINTING_SERVICE_FEE_FIXED_SATS, 10);
-        const serviceFeeAddrInput = options.service_fee_address !== undefined
-          ? options.service_fee_address
-          : serverConfig.MINTING_SERVICE_FEE_ADDRESS;
-
-        // Determine user address for change (same logic as before)
-        const userAddressForPsbtProcessing = destination || "";
-        if (!userAddressForPsbtProcessing) {
-          // TODO(@stampchain): We need a reliable way to get the source address of the UTXO if destination is not provided for change.
-          // This is a critical point for detach if change needs to go back to original owner.
-          // For now, this path might lead to issues if change is generated and destination is empty.
-          // Warning: User address for PSBT processing (change) is empty
+        // Source/change address for the detach. Counterparty sends change back
+        // to the owner of the spent UTXO; the existing route uses `destination`
+        // for this (resolving the actual UTXO-owner address is out of scope —
+        // preserved behavior, including the original TODO below).
+        const sourceAddress = destination || "";
+        if (!sourceAddress) {
+          // TODO(@stampchain): We need a reliable way to get the source address
+          // of the UTXO if destination is not provided for change. This is a
+          // critical point for detach if change needs to go back to the
+          // original owner.
         }
 
-        const psbtResult = await GeneralBitcoinTransactionBuilder.generatePSBT(
-          response.result.rawtransaction, // ✅ Use raw hex from Counterparty
-          {
-            address: userAddressForPsbtProcessing,
-            satsPerVB: normalizedFees.normalizedSatsPerVB,
-            serviceFee: serviceFeeInput > 0 ? serviceFeeInput : undefined,
-            serviceFeeAddress: serviceFeeInput > 0
-              ? serviceFeeAddrInput
-              : undefined,
-            operationType: "detach", // ✅ Specify operation type
-            customOutputs: [], // ✅ No custom outputs needed for detach
+        // Parse Counterparty's composed raw transaction.
+        const cpTx = Transaction.fromHex(response.result.rawtransaction);
+
+        // Reconstruct PSBT inputs from ALL of CP's inputs, in order, so vin[0]
+        // stays the input the CP payload is ARC4-keyed against (#1137). Detach
+        // has no user-supplied inputs_set — CP chose the input(s).
+        const { builtInputs, inputsToSign, totalInputValue } =
+          await buildCpPsbtInputsFromRawTx(
+            commonUtxoService,
+            cpTx.ins,
+            sourceAddress,
+            [Transaction.SIGHASH_ALL],
+          );
+        const sumOfUserInputs = totalInputValue;
+
+        const psbt = new Psbt({ network });
+        for (const { inputData } of builtInputs) {
+          psbt.addInput(inputData as any);
+        }
+
+        // Trust Counterparty's composed outputs verbatim: CP has already
+        // deducted its network fee and computed the change. We add them as-is
+        // and only optionally splice an operator service fee out of CP's change
+        // via the shared helper. The prior code re-derived its own network fee
+        // and added a second change output, double-counting the fee (a constant
+        // ~279-sat deficit on every wallet, #959).
+        const cpOutputs = cpTx.outs.map((output) => ({
+          script: new Uint8Array(output.script),
+          value: BigInt(output.value),
+        }));
+
+        // Service-fee precedence (see getServiceFeeConfig() in
+        // server/config/config.ts and the matching block in stampattach.ts):
+        //   1. request body field  (body.service_fee)
+        //   2. options field       (options.service_fee)
+        //   3. env default         (MINTING_SERVICE_FEE_FIXED_SATS / _ADDRESS,
+        //                           via getServiceFeeConfig)
+        const { serviceFeeSats: envFeeSats, serviceFeeAddress: envFeeAddress } =
+          getServiceFeeConfig();
+        const feeService = body.service_fee ?? options?.service_fee ??
+          Number(envFeeSats);
+        const feeServiceAddress = body.service_fee_address ??
+          options?.service_fee_address ??
+          envFeeAddress;
+
+        const { outputs: finalOutputs, totalFee } = buildServiceFeeOutputs({
+          cpOutputs,
+          sumOfUserInputs,
+          sourceAddress,
+          serviceFeeSats: BigInt(feeService > 0 ? feeService : 0),
+          serviceFeeAddress: feeServiceAddress,
+          dustSize: BigInt(TX_CONSTANTS.DUST_SIZE),
+          decodeAddress: (script) => {
+            try {
+              return bjsAddress.fromOutputScript(Buffer.from(script), network);
+            } catch {
+              return undefined;
+            }
           },
-        );
+          encodeAddress: (addr) =>
+            new Uint8Array(bjsAddress.toOutputScript(addr, network)),
+        });
 
-        // ✅ NEW: Return the same format as the deprecated method
-        const processedPSBT = {
-          psbtHex: psbtResult.psbt.toHex(),
-          inputsToSign: psbtResult.psbt.txInputs.map((_, index) => ({
-            index,
-            address: userAddressForPsbtProcessing,
-            sighashTypes: [1], // SIGHASH_ALL
-          })),
-          estimatedFee: psbtResult.estMinerFee,
-          estimatedVsize: psbtResult.estimatedTxSize,
-          totalInputValue: BigInt(psbtResult.totalInputValue),
-          totalOutputValue: BigInt(psbtResult.totalOutputValue),
-          finalUserChange: BigInt(psbtResult.totalChangeOutput),
-        };
+        for (const out of finalOutputs) {
+          psbt.addOutput({ script: Buffer.from(out.script), value: out.value });
+        }
 
-        return ApiResponseUtil.success(processedPSBT, { forceNoCache: true });
+        // Return the unsigned PSBT for the wallet to sign (do NOT finalize).
+        return ApiResponseUtil.success({
+          psbtHex: psbt.toHex(),
+          inputsToSign,
+          estimatedFee: Number(totalFee),
+          estimatedVsize: cpTx.virtualSize(),
+        }, { forceNoCache: true });
       } catch (error) {
         if (error instanceof Error) {
           const errorMessage = error.message.toLowerCase();

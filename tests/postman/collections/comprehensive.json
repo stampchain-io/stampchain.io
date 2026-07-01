@@ -11463,6 +11463,15 @@
                   "        const json = pm.response.json();",
                   "        pm.expect(json.psbtHex.length).to.be.above(100, 'PSBT hex should be substantial');",
                   "    }",
+                  "});",
+                  "",
+                  "pm.test(\"compose invariant: no deficit (estimatedFee >= 0)\", function () {",
+                  "    if (pm.response.code === 200) {",
+                  "        const json = pm.response.json();",
+                  "        if (json.estimatedFee !== undefined) {",
+                  "            pm.expect(Number(json.estimatedFee)).to.be.at.least(0, \"no-deficit invariant\");",
+                  "        }",
+                  "    }",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -11535,6 +11544,15 @@
                   "    if (pm.response.code === 200) {",
                   "        const json = pm.response.json();",
                   "        pm.expect(json.psbtHex.length).to.be.above(100, 'PSBT hex should be substantial');",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"compose invariant: no deficit (estimatedFee >= 0)\", function () {",
+                  "    if (pm.response.code === 200) {",
+                  "        const json = pm.response.json();",
+                  "        if (json.estimatedFee !== undefined) {",
+                  "            pm.expect(Number(json.estimatedFee)).to.be.at.least(0, \"no-deficit invariant\");",
+                  "        }",
                   "    }",
                   "});"
                 ],
@@ -11727,6 +11745,15 @@
                   "    if (pm.response.code === 200) {",
                   "        const json = pm.response.json();",
                   "        pm.expect(json.hex.length).to.be.above(100, 'PSBT hex should be substantial');",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"compose invariant: no deficit (estimatedFee >= 0)\", function () {",
+                  "    if (pm.response.code === 200) {",
+                  "        const json = pm.response.json();",
+                  "        if (json.estimatedFee !== undefined) {",
+                  "            pm.expect(Number(json.estimatedFee)).to.be.at.least(0, \"no-deficit invariant\");",
+                  "        }",
                   "    }",
                   "});"
                 ],
@@ -11999,6 +12026,142 @@
               ]
             }
           }
+        },
+        {
+          "name": "Fairmint Compose - Dev",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"address\": \"{{test_address}}\",\n  \"asset\": \"TESTFAIRMINT\",\n  \"quantity\": 1,\n  \"satsPerVB\": 10\n}"
+            },
+            "url": {
+              "raw": "{{dev_base_url}}/api/v2/fairmint/compose",
+              "host": [
+                "{{dev_base_url}}"
+              ],
+              "path": [
+                "api",
+                "v2",
+                "fairmint",
+                "compose"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// POST Test for Fairmint Compose - Success and Error Paths",
+                  "pm.test(\"Status code is 200 (success) or 400/500 (error)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 400, 500]);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has valid structure for status code\", function () {",
+                  "    const json = pm.response.json();",
+                  "    if (pm.response.code === 200) {",
+                  "        pm.expect(json).to.have.property('psbtHex');",
+                  "        pm.expect(json.psbtHex).to.be.a('string');",
+                  "        pm.expect(json).to.have.property('estimatedFee');",
+                  "        pm.expect(json).to.have.property('inputsToSign');",
+                  "    } else {",
+                  "        pm.expect(json).to.have.property('error');",
+                  "        pm.expect(json.error).to.be.a('string').and.not.be.empty;",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"compose invariant: no deficit (estimatedFee >= 0)\", function () {",
+                  "    if (pm.response.code === 200) {",
+                  "        const json = pm.response.json();",
+                  "        if (json.estimatedFee !== undefined) {",
+                  "            pm.expect(Number(json.estimatedFee)).to.be.at.least(0, \"no-deficit invariant\");",
+                  "        }",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Dispense Compose - Dev",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"address\": \"{{test_address}}\",\n  \"dispenser\": \"{{test_dispenser_address}}\",\n  \"quantity\": 10000,\n  \"options\": {\n    \"satsPerVB\": 10\n  }\n}"
+            },
+            "url": {
+              "raw": "{{dev_base_url}}/api/v2/create/dispense",
+              "host": [
+                "{{dev_base_url}}"
+              ],
+              "path": [
+                "api",
+                "v2",
+                "create",
+                "dispense"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// POST Test for Dispense Compose - Success and Error Paths",
+                  "pm.test(\"Status code is 200 (success) or 400/500 (error)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 400, 500]);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has valid structure for status code\", function () {",
+                  "    const json = pm.response.json();",
+                  "    if (pm.response.code === 200) {",
+                  "        pm.expect(json).to.have.property('psbt');",
+                  "        pm.expect(json.psbt).to.be.a('string');",
+                  "        pm.expect(json).to.have.property('estimatedFee');",
+                  "        pm.expect(json).to.have.property('inputsToSign');",
+                  "    } else {",
+                  "        pm.expect(json).to.have.property('error');",
+                  "        pm.expect(json.error).to.be.a('string').and.not.be.empty;",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"compose invariant: no deficit (estimatedFee >= 0)\", function () {",
+                  "    if (pm.response.code === 200) {",
+                  "        const json = pm.response.json();",
+                  "        if (json.estimatedFee !== undefined) {",
+                  "            pm.expect(Number(json.estimatedFee)).to.be.at.least(0, \"no-deficit invariant\");",
+                  "        }",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
         },
         {
           "name": "Create SRC-101 Token - Dev",
