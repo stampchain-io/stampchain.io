@@ -1,0 +1,243 @@
+#animation-modal-container {
+  /* Common variables */
+  /*  --animation-duration-modal: 0s;
+--animation-delay-background: 0s;
+--animation-delay-modal: 0s;
+defined individually
+  */
+  --animation-timing: cubic-bezier(0.46,0.03,0.52,0.96);
+  --animation-bg: #17171780; /* color-neutral-900/50 */
+  --animation-duration-background: .5s;
+
+  /* Base modal container styles */
+  position: fixed;
+  display: table;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  transform: scale(0);
+  z-index: 50;
+
+  /* Common styles for all slide/zoom animations */
+  &.slideUpDown,
+  &.slideDownUp,
+  &.zoomInOut {
+    transform: scale(1);
+
+    .animation-modal-background {
+      animation: fadeModalIn var(--animation-duration-background) var(--animation-timing) forwards;
+
+      .animation-modal {
+        opacity: 0;
+      }
+    }
+
+    +.content {
+      animation: scaleContentBack var(--animation-duration-background) var(--animation-timing) forwards;
+    }
+
+    &.out {
+      .animation-modal-background {
+        animation: fadeModalOut var(--animation-duration-background) var(--animation-timing) forwards;
+      }
+
+      +.content {
+        animation: scaleContentForward var(--animation-duration-background) var(--animation-timing) forwards;
+      }
+    }
+  }
+
+  /* Specific animation variants */
+  &.slideUpDown {
+    .animation-modal {
+      animation: slideBottomUp 0.3s var(--animation-timing) forwards;
+    }
+
+    &.out {
+      animation: slideBottomDown 0.3s var(--animation-timing) forwards;
+
+      .animation-modal {
+        animation: slideBottomDown 0.3s var(--animation-timing) forwards;
+      }
+    }
+  }
+
+  &.slideDownUp {
+    .animation-modal-background {
+      vertical-align: top;
+    }
+
+    .animation-modal {
+      animation: slideTopDown 0.3s var(--animation-timing) forwards;
+    }
+
+    &.out {
+      animation: slideTopUp 0.3s var(--animation-timing) forwards;
+
+      .animation-modal {
+        animation: slideTopUp 0.3s var(--animation-timing) forwards;
+      }
+    }
+  }
+
+  &.zoomInOut {
+    .animation-modal {
+      animation: zoomCenterIn 0.3s var(--animation-timing) forwards;
+    }
+
+    &.out {
+      animation: zoomCenterOut 0.3s var(--animation-timing) forwards;
+
+      .animation-modal {
+        animation: zoomCenterOut 0.3s var(--animation-timing) forwards;
+      }
+    }
+  }
+
+  .animation-modal-background {
+    display: table-cell;
+    background: var(--animation-bg);
+    /* backdrop-filter will be animated in keyframes */
+    text-align: center;
+    vertical-align: middle;
+
+    .animation-modal {
+      display: inline-block;
+      position: relative;
+      text-align: left;
+    }
+  }
+}
+
+@keyframes slideBottomUp {
+  0% {
+    transform: scale(1) translateY(100vh);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideBottomDown {
+  0% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1) translateY(100vh);
+    opacity: 0;
+  }
+}
+
+@keyframes slideTopDown {
+  0% {
+    transform: scale(1) translateY(-100vh);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideTopUp {
+  0% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1) translateY(-100vh);
+    opacity: 0;
+  }
+}
+
+@keyframes zoomCenterIn {
+  0% {
+    transform: scale(.1);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes zoomCenterOut {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(.1);
+    opacity: 0;
+  }
+}
+
+@keyframes fadeModalIn {
+  0% {
+    background: rgba(0, 0, 0, 0);
+    -webkit-backdrop-filter: blur(0px);
+    backdrop-filter: blur(0px);
+  }
+
+  70% {
+    background: var(--animation-bg);
+    -webkit-backdrop-filter: blur(0px);
+    backdrop-filter: blur(16px);
+  }
+
+  100% {
+    background: var(--animation-bg);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+  }
+}
+
+@keyframes fadeModalOut {
+  0% {
+    background: var(--animation-bg);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+  }
+
+  30% {
+    background: var(--animation-bg);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+  }
+
+  100% {
+    background: rgba(0, 0, 0, 0);
+    -webkit-backdrop-filter: blur(0px);
+    backdrop-filter: blur(0px);
+  }
+}
+
+@keyframes scaleContentBack {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(0.99);
+  }
+}
+
+@keyframes scaleContentForward {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(0.99);
+  }
+}

@@ -398,7 +398,7 @@ export interface SRC20TrxRequestParams {
     direction: "asc" | "desc"; // Sort direction
   }; // Unified sorting parameter with object support for consistency
   filterBy?: string | string[] | null;
-  tx_hash?: string | null;
+  tx_hash?: string | string[] | null;
   address?: string | null;
   includePagination?: boolean; // Replaces noPagination for consistent naming
   singleResult?: boolean;
@@ -777,6 +777,14 @@ export interface StampsAndSrc20 {
 export type StampPageProps = {
   data: {
     stamps: StampRow[];
+    // Pre-ordered, pre-paginated stamp+token feed for the explorer "all"
+    // section (built server-side by ExplorerFeedRepository). When present,
+    // ExplorerContent renders it directly instead of merging/sorting
+    // `stamps` and `src20DataCard.data` client-side.
+    mixedItems?: (
+      | { kind: "stamp"; item: StampRow }
+      | { kind: "src20"; item: import("./src20.d.ts").SRC20Row }
+    )[];
     page: number;
     totalPages: number;
     // Total stamp count for the current filters/section — used by

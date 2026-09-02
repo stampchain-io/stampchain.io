@@ -31,6 +31,11 @@ export const FilterContentExplorer = ({
 
   const isDraggingRange = useRef(false);
 
+  // Bumping this forces RangeSliderDual (variant="range") to remount so its
+  // internal handle positions reset instead of staying at the last dragged
+  // spot after the custom range is cleared/deselected.
+  const [rangeResetKey, setRangeResetKey] = useState(0);
+
   useEffect(() => {
     setFilters(initialFilters);
     if (
@@ -38,6 +43,7 @@ export const FilterContentExplorer = ({
       !initialFilters.rangeMax
     ) {
       setCustomRangeExpanded(false);
+      setRangeResetKey((k) => k + 1);
     } else {
       setCustomRangeExpanded(
         !initialFilters.range &&
@@ -187,8 +193,13 @@ export const FilterContentExplorer = ({
               variant="collapsibleLabel"
             >
               <RangeSliderDual
+                key={rangeResetKey}
                 variant="range"
                 onChange={handleRangeSliderChange}
+                initialMin={filters.rangeMin ? parseInt(filters.rangeMin) : 0}
+                initialMax={filters.rangeMax
+                  ? parseInt(filters.rangeMax)
+                  : Infinity}
               />
             </CollapsibleSection>
           </CollapsibleSection>

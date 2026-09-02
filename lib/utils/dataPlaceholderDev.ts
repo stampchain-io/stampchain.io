@@ -289,8 +289,10 @@ const _ACTIVITY_CYCLE = ["HOT", "WARM", "COOL", "DORMANT", "COLD"] as const;
 
 /**
  * Applies cycling activity levels and a staggered last_activity_time.
- * Pass a custom `levels` array to restrict which levels are cycled —
- * e.g. listings must exclude "COLD" because they always have an open dispenser.
+ * Pass a custom `levels` array to restrict which levels are cycled.
+ * Note: activity_level reflects sales recency only, not dispenser state —
+ * a stamp can be "COLD" (no sales yet) while still having an open dispenser,
+ * so listings views should NOT exclude "COLD" from the cycle.
  */
 export function withDummyActivityLevels<T extends Record<string, unknown>>(
   stamps: T[],
@@ -821,8 +823,8 @@ export const DATA_PLACEHOLDER_DEV_RECENT_SALES = _timeLabels.map(
  * New Listings — 10 entries cycling CLASSIC → POSH → SRC721, all currently
  * listed (i.e. carrying an open dispenser + floorPriceBTC) so every card
  * renders with a price and BUY button, matching a real "listings" query.
- * Activity levels cycle HOT/WARM/COOL/DORMANT — "COLD" is excluded since
- * every entry here always has an open dispenser.
+ * Activity levels cycle through all five states, including "COLD" — a
+ * listed stamp can still have zero sales, which is common in production.
  * Count matches the desktop displayCounts in StampListingsGallery:
  *   newListingsData → 10 (desktop: 10, 5 cols × 2 rows)
  */
@@ -832,7 +834,6 @@ export const DATA_PLACEHOLDER_DEV_NEW_LISTINGS = withDummyActivityLevels(
     { length: 10 },
     (_, i) => ({ ..._listingBase[i % _listingBase.length] }),
   ),
-  ["HOT", "WARM", "COOL", "DORMANT"],
 );
 
 /**
@@ -1004,6 +1005,30 @@ export const DATA_PLACEHOLDER_DEV_EXPLORER_OVERVIEW_PAGE = {
 /** Backward-compat alias — routes/index.tsx and routes/src20/index.tsx keep working */
 export const DATA_PLACEHOLDER_DEV_TOKEN_OVERVIEW_PAGE =
   DATA_PLACEHOLDER_DEV_EXPLORER_OVERVIEW_PAGE;
+
+/**
+ * Explorer "all" section unified feed — merges the (already filtered)
+ * dummy stamps + SRC-20 rows into a single block_index-descending list,
+ * mirroring `ExplorerFeedRepository`'s `ORDER BY block_index DESC, tx_index
+ * DESC` so the DATA_PLACEHOLDER_DEV preview exercises the same `mixedItems`
+ * rendering path as production (see routes/explorer/index.tsx) instead of
+ * falling back to ExplorerContent's client-side merge.
+ */
+export function getDummyExplorerFeedItems(
+  stamps: Record<string, unknown>[],
+  tokens: Record<string, unknown>[],
+): (
+  | { kind: "stamp"; item: Record<string, unknown> }
+  | { kind: "src20"; item: Record<string, unknown> }
+)[] {
+  const stampItems = stamps.map((item) => ({ kind: "stamp" as const, item }));
+  const tokenItems = tokens.map((item) => ({ kind: "src20" as const, item }));
+  return [...stampItems, ...tokenItems].sort((a, b) => {
+    const blockDiff = Number(b.item.block_index) - Number(a.item.block_index);
+    if (blockDiff !== 0) return blockDiff;
+    return Number(b.item.tx_index ?? 0) - Number(a.item.tx_index ?? 0);
+  });
+}
 
 /**
  * Home page SRC-20 tables — DEPLOY rows only, split by mint status.

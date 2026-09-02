@@ -69,7 +69,7 @@ export function StampGalleryHome({
 
         {/* ===== NEW LISTINGS ===== */}
         <StampListingsGallery
-          subTitle="New Listings"
+          subTitle="LISTINGS"
           initialData={newListingsData}
         />
 

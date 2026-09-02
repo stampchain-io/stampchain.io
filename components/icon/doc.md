@@ -58,7 +58,7 @@ Both `iconHover` and `iconButton` render the `<svg>` wrapped in an `<a>` element
 
 Color values come from CSS variables defined in `tailwind.config.ts`, using the `neutral`/`primary` numbered scale directly (the old `grey`/`purple` legacy aliases, marked "refactor and delete" in `tailwind.config.ts`, are no longer referenced by the Icon system). Unlike older revisions, interactive icons of every color transition to a single shared `color-hover` value (`#E879F9`, aliasing `primary-400`) rather than a same-hue "light" variant. See [Layout System Documentation](mdc:components/layout/doc.md#tailwind-color-system) for the complete color palette.
 
-Colors are listed light → dark. `fill-stroke` paths (see [Fill-Stroke Paths](#fill-stroke-paths-two-tone-icons)) don't need a dedicated CSS selector — `IconBase.tsx`'s `renderPaths()` derives the matching `fill-color-*` (and `group-hover:fill-color-*`) classes straight from the active `stroke-color-*` class and applies them directly to the path, for every color below.
+Colors are listed light → dark. `fill-stroke` paths (see [Fill-Stroke Paths](#fill-stroke-paths-two-tone-icons)) are filled by complete Tailwind class literals on the parent SVG in `iconStyles` (`[&_path[class*='fill-stroke']]:fill-color-*`, plus `hover:` / `group-hover:` variants on interactive types). `IconBase.tsx`'s `renderPaths()` also copies stroke color onto the path as `fill-color-*`, but those strings are built at runtime so JIT will not emit them unless the same class appears as a literal (as it does in `styles.ts`).
 
 #### neutral400
 ```css
@@ -758,19 +758,21 @@ if (isLast && colorAccent) {
 
 ### Fill-Stroke Path Handling
 
-Some icons need filled elements that match the stroke color:
+Some icons need filled elements that match the stroke color. `fill-stroke` is a
+marker class, not a fill utility. The parent SVG must include complete Tailwind
+literals so JIT emits CSS (SVG `fill-none` is inherited otherwise):
 
 ```typescript
-// Path object with style="fill-stroke"
+// Path object — marker only
 {
   path: "M12 13C12.5523 13...",
   style: "stroke-none fill-stroke"
 }
 
-// Component extracts stroke color and applies as fill
-const iconStyleClass = iconStyles[type][color];
-const strokeColor = iconStyleClass.match(/stroke-([^\s]+)/)?.[1];
-const fillClass = `fill-${strokeColor} stroke-none`;
+// iconStyles.icon / iconStyles.iconButton — these strings must stay literal
+"[&_path[class*='fill-stroke']]:fill-color-neutral-400"
+"hover:[&_path[class*='fill-stroke']]:fill-color-hover"
+"group-hover:[&_path[class*='fill-stroke']]:fill-color-hover"
 ```
 
 ### Import Flow
@@ -936,7 +938,7 @@ All icons share these SVG attributes:
 **Solution**: When using `color="custom"`, all color styling must be in `className`. No default colors are applied.
 
 ### Issue: Fill-stroke path not colored
-**Solution**: Ensure path object has `style: "stroke-none fill-stroke"` and component will auto-apply stroke color as fill.
+**Solution**: Path objects need `style: "stroke-none fill-stroke"`. The matching `[&_path[class*='fill-stroke']]:fill-color-*` class must remain a complete literal on the SVG in `iconStyles` (`styles.ts`). Runtime `fill-*` strings in `IconBase` are not enough for Tailwind JIT.
 
 ### Issue: Icon too thick/thin
 **Solution**: Adjust `weight` prop. Use `bold` for thicker, `light` for thinner, or `custom` with `[stroke-width:X]` in className.

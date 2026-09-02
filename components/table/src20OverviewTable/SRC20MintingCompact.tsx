@@ -47,15 +47,15 @@ export function SRC20MintingCompact({
           {colGroup([
             {
               width:
-                "min-w-[140px] max-w-[160px] w-auto sticky left-0 mobileLg:static tablet:min-w-[130px] min-[1090px]:min-w-[140px]",
+                "min-w-[130px] max-w-[130px] w-auto sticky left-0 mobileLg:static tablet:min-w-[130px] min-[1090px]:min-w-[140px]",
             }, // TOKEN
             {
               width:
-                "min-w-[90px] w-auto tablet:hidden min-[1280px]:table-cell min-[1280px]:min-w-[80px]",
+                "min-w-[100px] w-auto tablet:hidden min-[1280px]:table-cell min-[1280px]:min-w-[80px]",
             }, // MINTS
             {
               width:
-                "min-w-[120px] w-auto tablet:min-w-[110px] min-[1090px]:min-w-[120px]",
+                "min-w-[150px] w-auto tablet:min-w-[110px] min-[1090px]:min-w-[120px]",
             }, // PROGRESS
             {
               width:
@@ -96,9 +96,7 @@ export function SRC20MintingCompact({
           {data?.length
             ? (
               data.map((src20: SRC20Row) => {
-                const imageUrl = src20.deploy_img ||
-                  getSRC20ImageSrc(src20) ||
-                  null;
+                const imageUrl = getSRC20ImageSrc(src20) || null;
 
                 const href = `/src20/${
                   encodeURIComponent(unicodeEscapeToEmoji(src20.tick ?? ""))

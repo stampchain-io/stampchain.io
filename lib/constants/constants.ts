@@ -41,4 +41,7 @@ export const HIDDEN_COLLECTION_NAMES = [
   "posh",
   "hnft pepe cash",
   "alpha_pxllabs",
+  "chain legends by masteronchain",
+  "infinity seed",
+  "recursivefake",
 ];

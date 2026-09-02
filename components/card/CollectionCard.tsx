@@ -14,7 +14,6 @@ import { tooltipButtonInCollapsible } from "$notification";
 import {
   cardCreator,
   cardFileSize,
-  cardFileType,
   cardPrice,
   cardStampNumber,
   cardSupply,
@@ -332,7 +331,6 @@ export function CollectionCardVertical(
   const stampCount = collection.stamp_count ?? 0;
   const holderCount = collection.marketData?.uniqueHolders ?? null;
   const floorPriceBTC = collection.marketData?.floorPriceBTC ?? null;
-  const marketCapBTC = collection.marketData?.totalValueBTC ?? null;
 
   const creatorDisplay = collection.creators && collection.creators.length > 0
     ? (collection.creator_names && collection.creator_names.length > 0
@@ -389,19 +387,13 @@ export function CollectionCardVertical(
             </PillWithTooltip>
           </div>
 
-          {/* Row 2: Floor price (left) + Market cap (right) */}
-          <div class="flex items-center justify-between gap-2 mt-2 w-full">
+          {/* Row 2: Floor price (centered) */}
+          <div class="flex items-center justify-center gap-2 mt-2 w-full">
             <PillWithTooltip
               label="FLOOR PRICE"
               className={`${containerPill} ${cardPrice}`}
             >
               {floorPriceBTC ? formatBTC(floorPriceBTC) : "N/A"} BTC
-            </PillWithTooltip>
-            <PillWithTooltip
-              label="MARKET CAP"
-              className={`${containerPill} ${cardFileType}`}
-            >
-              {marketCapBTC ? formatBTC(marketCapBTC) : "N/A"} BTC
             </PillWithTooltip>
           </div>
         </div>

@@ -10,8 +10,8 @@ import {
 import type { SRC20BalanceRequestParams } from "$lib/types/src20.d.ts";
 import { emojiToUnicodeEscape, unicodeEscapeToEmoji } from "$lib/utils/ui/formatting/emojiUtils.ts";
 import { bigFloatToString } from "$lib/utils/ui/formatting/formatUtils.ts";
-import { serverConfig } from "$server/config/config.ts";
 import { dbManager } from "$server/database/databaseManager.ts";
+import { buildSrc20StampUrl } from "$server/utils/src20ImageUrl.ts";
 import type { SRC20SnapshotRequestParams, SRC20TrxRequestParams } from "$types/src20.d.ts";
 import { BigFloat } from "bigfloat/mod.ts";
 
@@ -73,6 +73,83 @@ export class SRC20Repository {
     queryParams.push(address, address);
   }
 
+  /**
+   * Builds a minimal, ordering-only SELECT fragment (tx_hash, block_index,
+   * tx_index, kind) over SRC20Valid for the unified explorer feed. Used by
+   * `ExplorerFeedRepository` as one branch of a `UNION ALL` with the
+   * equivalent stamp-side fragment (`StampRepository.buildFeedFragment`) so
+   * the two tables can be ordered and paginated together in a single query,
+   * instead of merging two independently-paginated result sets client-side.
+   */
+  static buildFeedFragment(options: {
+    op?: string | string[] | undefined;
+    tick?: string | string[] | undefined;
+    stampMin?: number | string | undefined;
+    stampMax?: number | string | undefined;
+    amtMax?: number | string | undefined;
+  }): { subquery: string; params: (string | number)[] } {
+    const { op, tick, stampMin, stampMax, amtMax } = options;
+    const whereConditions: string[] = [];
+    const queryParams: (string | number)[] = [];
+    let needsStampJoin = false;
+
+    if (op != null) {
+      if (Array.isArray(op)) {
+        whereConditions.push(`src20.op IN (${op.map(() => "?").join(", ")})`);
+        queryParams.push(...op.map((o) => this.ensureUnicodeEscape(o)));
+      } else {
+        whereConditions.push(`src20.op = ?`);
+        queryParams.push(this.ensureUnicodeEscape(op));
+      }
+    }
+
+    if (tick != null) {
+      if (Array.isArray(tick)) {
+        whereConditions.push(
+          `src20.tick IN (${tick.map(() => "?").join(", ")})`,
+        );
+        queryParams.push(...tick.map((t) => this.ensureUnicodeEscape(t)));
+      } else {
+        whereConditions.push(`src20.tick = ?`);
+        queryParams.push(this.ensureUnicodeEscape(tick));
+      }
+    }
+
+    if (stampMax != null) {
+      whereConditions.push(`st.stamp < ?`);
+      queryParams.push(stampMax);
+      needsStampJoin = true;
+    }
+
+    if (stampMin != null) {
+      whereConditions.push(`st.stamp >= ?`);
+      queryParams.push(stampMin);
+      needsStampJoin = true;
+    }
+
+    if (amtMax != null) {
+      whereConditions.push(`CAST(src20.amt AS DECIMAL) <= ?`);
+      queryParams.push(amtMax);
+    }
+
+    const joinClause = needsStampJoin
+      ? `LEFT JOIN ${STAMP_TABLE} st ON st.tx_hash = src20.tx_hash`
+      : "";
+
+    const whereClause = whereConditions.length > 0
+      ? `WHERE ${whereConditions.join(" AND ")}`
+      : "";
+
+    const subquery = `
+      SELECT src20.tx_hash AS tx_hash, src20.block_index AS block_index, src20.tx_index AS tx_index, 'src20' AS kind
+      FROM ${SRC20_TABLE} src20
+      ${joinClause}
+      ${whereClause}
+    `;
+
+    return { subquery, params: queryParams };
+  }
+
   static async getTotalCountValidSrc20TxFromDb(
     params: SRC20TrxRequestParams,
     excludeFullyMinted: boolean = false,
@@ -125,8 +202,19 @@ export class SRC20Repository {
     }
 
     if (tx_hash !== null) {
-      whereConditions.push(`tx_hash = ?`);
-      queryParams.push(tx_hash);
+      if (Array.isArray(tx_hash)) {
+        if (tx_hash.length === 0) {
+          whereConditions.push("1 = 0");
+        } else {
+          whereConditions.push(
+            `tx_hash IN (${tx_hash.map(() => "?").join(", ")})`,
+          );
+          queryParams.push(...tx_hash);
+        }
+      } else {
+        whereConditions.push(`tx_hash = ?`);
+        queryParams.push(tx_hash);
+      }
     }
 
     if (stampMax != null) {
@@ -231,8 +319,19 @@ export class SRC20Repository {
     }
 
     if (tx_hash != null) {
-      whereClauses.push(`src20.tx_hash = ?`);
-      queryParams.push(tx_hash);
+      if (Array.isArray(tx_hash)) {
+        if (tx_hash.length === 0) {
+          whereClauses.push("1 = 0");
+        } else {
+          whereClauses.push(
+            `src20.tx_hash IN (${tx_hash.map(() => "?").join(", ")})`,
+          );
+          queryParams.push(...tx_hash);
+        }
+      } else {
+        whereClauses.push(`src20.tx_hash = ?`);
+        queryParams.push(tx_hash);
+      }
     }
 
     if (address != null) {
@@ -622,9 +721,7 @@ export class SRC20Repository {
     ) => ({
       ...result,
       deploy_tx: tx_hashes_map[result.tick],
-      deploy_img: tx_hashes_map[result.tick]
-        ? `https://stampchain.io/stamps/${tx_hashes_map[result.tick]}.svg`
-        : null,
+      deploy_img: buildSrc20StampUrl(tx_hashes_map[result.tick]) ?? null,
     }));
 
     return resultsWithDeployImg;
@@ -910,11 +1007,6 @@ export class SRC20Repository {
 
     const row = (result as any).rows[0];
 
-    // ✅ ENHANCED IMAGE FIELDS: Add stamp_url and deploy_img for SRC-20 detail pages
-    const baseUrl = serverConfig.IS_DEVELOPMENT
-      ? serverConfig.DEV_BASE_URL
-      : "https://stampchain.io";
-
     const deployment = this.convertSingleResponseToEmoji({
       tick: row.tick,
       tx_hash: row.tx_hash,
@@ -929,9 +1021,10 @@ export class SRC20Repository {
       max: row.max,
       destination: row.destination,
       block_time: row.block_time,
-      // ✅ Add enhanced image fields
-      stamp_url: row.tx_hash ? `${baseUrl}/stamps/${row.tx_hash}.svg` : null,
-      deploy_img: row.tx_hash ? `${baseUrl}/stamps/${row.tx_hash}.svg` : null,
+      // ✅ Add enhanced image fields — this is a DEPLOY row, so tx_hash
+      // doubles as its own deploy_tx.
+      stamp_url: buildSrc20StampUrl(row.tx_hash) ?? null,
+      deploy_img: buildSrc20StampUrl(row.tx_hash) ?? null,
     });
 
     return {

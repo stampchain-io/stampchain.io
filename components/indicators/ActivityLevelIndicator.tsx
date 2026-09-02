@@ -8,7 +8,8 @@ import { VNode } from "preact";
  * Dot colors match ProgressiveEstimationIndicator's primary scale.
  * Dots are cumulative — HOT lights all three, WARM lights two, COOL lights one.
  * DORMANT shows the pill with all-neutral dots.
- * COLD shows "none" text with no dots.
+ * COLD (no sales yet) renders nothing — the indicator is hidden entirely
+ * rather than shown as an empty/"none" state.
  */
 const DOT_ON = [
   "bg-color-secondary-300",
@@ -21,8 +22,7 @@ const TOOLTIP_LABEL: Record<string, string> = {
   HOT: "24H SALES",
   WARM: "7D SALES",
   COOL: "30D SALES",
-  DORMANT: "NO SALES",
-  COLD: "NO DISPENSERS",
+  DORMANT: "NO RECENT SALES",
 };
 
 const DOTS_BY_LEVEL: Record<string, [string, string, string]> = {
@@ -36,33 +36,24 @@ export function ActivityLevelIndicator({
   level,
   className = "",
 }: ActivityLevelIndicatorProps): VNode<any> | null {
-  if (!level) return null;
+  if (!level || level === "COLD") return null;
 
-  const isCold = level === "COLD";
   const dots = DOTS_BY_LEVEL[level];
 
   return (
     <div class={`relative w-fit group/pill ${className}`}>
       <div className={containerPill}>
-        {isCold
-          ? (
-            <span className="text-[10px] text-color-neutral-600 tracking-wide select-none">
-              none
-            </span>
-          )
-          : (
-            <div className="flex items-center gap-1">
-              <div
-                className={`size-1.5 rounded-full ${dots[0]}`}
-              />
-              <div
-                className={`size-1.5 rounded-full ${dots[1]}`}
-              />
-              <div
-                className={`size-1.5 rounded-full ${dots[2]}`}
-              />
-            </div>
-          )}
+        <div className="flex items-center gap-1">
+          <div
+            className={`size-1.5 rounded-full ${dots[0]}`}
+          />
+          <div
+            className={`size-1.5 rounded-full ${dots[1]}`}
+          />
+          <div
+            className={`size-1.5 rounded-full ${dots[2]}`}
+          />
+        </div>
       </div>
       <div
         className={`${tooltipButton} opacity-0 group-hover/pill:opacity-100 transition-opacity duration-150`}

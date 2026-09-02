@@ -43,7 +43,7 @@ export function ModalSearchBase({ children, onClose }: ModalSearchBaseProps) {
 
   return (
     <div
-      class="w-[90vw] mobileMd:w-[480px] my-16 mobileLg:my-[76px]"
+      class="w-[90vw] mobileMd:w-[480px] my-5 tablet:my-7.5"
       onClick={(e) => e.stopPropagation()}
     >
       <div class={`relative ${container1}`}>

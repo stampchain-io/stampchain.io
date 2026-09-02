@@ -117,6 +117,68 @@ describe("StampRepository Unit Tests", () => {
       });
     });
 
+    it("should exclude SRC-721 (recursive) stamps from cursed/classic/posh filters", async () => {
+      // Skip if in RUN_DB_TESTS mode
+      if (!mockDb) return;
+
+      // Regression test: cursed/classic/posh conditions only excluded
+      // ident != 'SRC-20', not SRC-721/SRC-101 — so any SRC-721 stamp whose
+      // CPID happened to match the classic/cursed cpid LIKE 'A%' pattern
+      // (common for Counterparty-issued recursive stamps) leaked into
+      // those tabs. Verified live on stampchain.io/explorer: page 3 of
+      // type=cursed showed several RECURSIVE-tagged (SRC-721) entries, and
+      // type=classic likewise. Assert ident is always "STAMP" here.
+      const cursedResult = await StampRepository.getStamps({
+        type: "cursed",
+        limit: 50,
+        page: 1,
+      });
+      cursedResult.stamps.forEach((stamp: any) => {
+        assertEquals(stamp.ident, "STAMP");
+      });
+
+      const classicResult = await StampRepository.getStamps({
+        type: "classic",
+        limit: 50,
+        page: 1,
+      });
+      classicResult.stamps.forEach((stamp: any) => {
+        assertEquals(stamp.ident, "STAMP");
+      });
+
+      const poshResult = await StampRepository.getStamps({
+        type: "posh",
+        limit: 50,
+        page: 1,
+      });
+      poshResult.stamps.forEach((stamp: any) => {
+        assertEquals(stamp.ident, "STAMP");
+      });
+    });
+
+    it("should return only SRC-721 stamps when filtered by type='src-721'", async () => {
+      // Skip if in RUN_DB_TESTS mode
+      if (!mockDb) return;
+
+      // Regression test: type="src-721" previously fell through every
+      // branch in buildIdentifierConditions with no matching condition,
+      // so the query applied no type filter at all and returned stamps of
+      // every ident. Verify the SRC-721 filter is actually applied now.
+      const result = await StampRepository.getStamps({
+        type: "src-721",
+        limit: 20,
+        page: 1,
+      });
+
+      assertExists(result);
+      assertEquals(Array.isArray(result.stamps), true);
+      assertEquals(result.stamps.length > 0, true);
+
+      result.stamps.forEach((stamp: any) => {
+        assertEquals(stamp.ident, "SRC-721");
+      });
+    });
+
     it("should handle empty results", async () => {
       // Skip if in RUN_DB_TESTS mode
       if (!mockDb) return;

@@ -181,6 +181,24 @@
       "ident": "STAMP",
       "stamp_hash": "TMEs8EOKYT2XzjORWk0a",
       "file_hash": "dad2ba39e3f04c93ef1ab191909f4b41"
+    },
+    {
+      "stamp": -6,
+      "block_index": 844155,
+      "cpid": "A5040405140001130102",
+      "creator": "bc1qx3748mgund0q0y4auw9u6favayw3gvg35hk3gj",
+      "divisible": 0,
+      "keyburn": null,
+      "locked": 1,
+      "stamp_url": "https://stampchain.io/stamps/negativesrc721example.svg",
+      "stamp_mimetype": "image/svg+xml",
+      "supply": 1,
+      "block_time": "2024-05-19T20:52:44.000Z",
+      "tx_hash": "negativesrc721examplenegativesrc721examplenegativesrc721example",
+      "tx_index": 464505,
+      "ident": "SRC-721",
+      "stamp_hash": "negativeSrc721Hash0",
+      "file_hash": "negativesrc721examplehash0000000"
     }
   ],
   "src20Stamps": [

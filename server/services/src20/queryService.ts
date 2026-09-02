@@ -17,7 +17,7 @@ import { SRC20Repository } from "$server/database/src20Repository.ts";
 import { BlockService } from "$server/services/core/blockService.ts";
 import { Big } from "big";
 import { SRC20UtilityService } from "$server/services/src20/utilityService.ts";
-import { serverConfig } from "$server/config/config.ts";
+import { buildSrc20StampUrl } from "$server/utils/src20ImageUrl.ts";
 
 // Define missing types
 interface PerformanceMetrics {
@@ -95,7 +95,9 @@ export class SRC20QueryService {
           ? params.op.replace(/[^\w-]/g, "")
           : undefined,
         tx_hash: params.tx_hash
-          ? params.tx_hash.replace(/[^\w-]/g, "")
+          ? (Array.isArray(params.tx_hash)
+            ? params.tx_hash.map((h) => h.replace(/[^\w-]/g, ""))
+            : params.tx_hash.replace(/[^\w-]/g, ""))
           : null,
       };
 
@@ -115,7 +117,7 @@ export class SRC20QueryService {
           ? sanitizedParams.tick[0]
           : (sanitizedParams.tick || null),
         op: sanitizedParams.op || null,
-        tx_hash: sanitizedParams.tx_hash || null,
+        tx_hash: sanitizedParams.tx_hash ?? null,
         limit,
         page,
         sortBy: sanitizedParams.sortBy || { field: "amt", direction: "asc" },
@@ -610,7 +612,9 @@ export class SRC20QueryService {
           ? params.op.replace(/[^\w-]/g, "")
           : undefined,
         tx_hash: params.tx_hash
-          ? params.tx_hash.replace(/[^\w-]/g, "")
+          ? (Array.isArray(params.tx_hash)
+            ? params.tx_hash.map((h) => h.replace(/[^\w-]/g, ""))
+            : params.tx_hash.replace(/[^\w-]/g, ""))
           : null,
       };
 
@@ -1050,19 +1054,17 @@ export class SRC20QueryService {
 
         // 🚀 V2.3 CLEAN STRUCTURE: Create nested objects and remove root duplicates
         enriched.forEach((row: any) => {
-          // Get base URL (same logic as used in other parts of the app)
-          const baseUrl = serverConfig.IS_DEVELOPMENT
-            ? serverConfig.DEV_BASE_URL
-            : "https://stampchain.io";
-
-          // ✅ STAMP_URL: Use transaction hash for the actual stamp content
+          // ✅ IMAGE URLS: `formatSRC20Row` (called earlier via
+          // `mapTransactionData`) already attaches these when tx_hash/
+          // deploy_tx are present — this is a defensive re-assert using the
+          // same shared helper, kept in case a future row shape reaches
+          // here without going through that path.
           if (row.tx_hash) {
-            row.stamp_url = `${baseUrl}/stamps/${row.tx_hash}.svg`;
+            row.stamp_url = buildSrc20StampUrl(row.tx_hash);
           }
 
-          // ✅ DEPLOY_IMG: Use deploy transaction hash for the deploy image
           if (row.deploy_tx) {
-            row.deploy_img = `${baseUrl}/stamps/${row.deploy_tx}.svg`;
+            row.deploy_img = buildSrc20StampUrl(row.deploy_tx);
           }
 
           // ✅ CLEAN MARKET DATA STRUCTURE

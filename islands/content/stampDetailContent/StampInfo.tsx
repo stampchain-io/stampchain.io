@@ -842,6 +842,7 @@ export function StampInfo(
                 className="stroke-color-neutral-200 translate-y-0.5"
                 wrapperClassName="mt-1"
                 link
+                href={stamp.creator ? `/wallet/${stamp.creator}` : undefined}
               >
                 <span className="font-normal text-sm text-color-neutral-200 link-neutral-200 group-hover:text-color-hover transition-colors duration-200">
                   <span className="min-[420px]:hidden">{creatorDisplaySm}</span>
