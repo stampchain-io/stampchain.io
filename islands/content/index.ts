@@ -24,6 +24,9 @@ export * from "$islands/content/faqContent/FaqAccordion.tsx";
 
 /* ===== EXPLORER ===== */
 export * from "$islands/content/ExplorerContent.tsx";
+
+/* ===== CREATE ===== */
+export * from "$islands/content/createContent/StampRecursiveContent.tsx";
 /*@baba-refactor block content (page is WIP) */
 export { default as BlockSelector } from "$islands/content/blockContent/BlockSelector.tsx";
 export { default as BlockTransactions } from "$islands/content/blockContent/BlockTransactions.tsx";
