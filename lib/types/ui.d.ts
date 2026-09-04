@@ -4249,6 +4249,69 @@ export interface NumberedHowToStepProps extends HowToStepProps {
 }
 
 /**
+ * Recursive stamp builder — CSS filter values for a canvas layer
+ */
+export interface RecursiveStampFilters {
+  brightness: number;
+  contrast: number;
+  saturate: number;
+  hue: number;
+  grayscale: number;
+}
+
+/**
+ * Recursive stamp builder — stamp or text layer on the canvas
+ */
+export interface RecursiveStampLayer {
+  id: string;
+  name: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  r: number;
+  flipH: boolean;
+  flipV: boolean;
+  op: number;
+  vis: boolean;
+  filters: RecursiveStampFilters;
+  locked?: boolean;
+  group?: string;
+  type?: "text";
+  text?: string;
+  font?: string;
+  fontSize?: number;
+  color?: string;
+  bold?: boolean;
+  italic?: boolean;
+  align?: "left" | "center" | "right";
+  num?: number;
+  hash?: string;
+  cpid?: string | null;
+  url?: string;
+  mime?: string;
+  ident?: string | null;
+  b64?: string | null;
+}
+
+/**
+ * Recursive stamp builder — user-placed canvas guide
+ */
+export interface RecursiveStampGuide {
+  id: string;
+  type: "h" | "v";
+  pos: number;
+}
+
+export type RecursiveStampMode = "edit" | "preview";
+
+export type CreateStampHeaderProps = BaseComponentProps;
+
+export type CreateStampRecursiveHeaderProps = BaseComponentProps;
+
+export type RecursiveStampContentProps = BaseComponentProps;
+
+/**
  * JSX Extension for f-partial attribute support
  * Extends HTML elements to support Fresh framework's f-partial attribute
  */

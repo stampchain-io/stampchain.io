@@ -29,3 +29,7 @@ export * from "$components/header/FaqHeader.tsx";
 /* ===== EXPLORER ===== */
 export { default as BlockHeader } from "$islands/header/BlockHeader.tsx";
 export * from "$islands/header/ExplorerHeader.tsx";
+
+/* ===== CREATE ===== */
+export * from "$islands/header/CreateStampHeader.tsx";
+export * from "$islands/header/CreateStampRecursiveHeader.tsx";

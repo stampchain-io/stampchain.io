@@ -114,6 +114,7 @@ import * as $collection_id_ from "./routes/collection/[id].tsx";
 import * as $collection_index from "./routes/collection/index.tsx";
 import * as $config from "./routes/config.ts";
 import * as $content_imgpath_ from "./routes/content/[...imgpath].tsx";
+import * as $create_recursivestamp from "./routes/create/recursivestamp.tsx";
 import * as $dashboard_address_ from "./routes/dashboard/[address].tsx";
 import * as $docs_index from "./routes/docs/index.tsx";
 import * as $explorer_index from "./routes/explorer/index.tsx";
@@ -192,6 +193,9 @@ import * as $content_WalletDashboardContent from "./islands/content/WalletDashbo
 import * as $content_WalletDashboardDetails from "./islands/content/WalletDashboardDetails.tsx";
 import * as $content_blockContent_BlockSelector from "./islands/content/blockContent/BlockSelector.tsx";
 import * as $content_blockContent_BlockTransactions from "./islands/content/blockContent/BlockTransactions.tsx";
+import * as $content_createContent_CreateStampClassicContent from "./islands/content/createContent/CreateStampClassicContent.tsx";
+import * as $content_createContent_CreateStampPoshContent from "./islands/content/createContent/CreateStampPoshContent.tsx";
+import * as $content_createContent_StampRecursiveContent from "./islands/content/createContent/StampRecursiveContent.tsx";
 import * as $content_faqContent_AccordionBase from "./islands/content/faqContent/AccordionBase.tsx";
 import * as $content_faqContent_FaqAccordion from "./islands/content/faqContent/FaqAccordion.tsx";
 import * as $content_index from "./islands/content/index.ts";
@@ -223,6 +227,8 @@ import * as $header_BlockHeader from "./islands/header/BlockHeader.tsx";
 import * as $header_CollectionDetailHeader_v2 from "./islands/header/CollectionDetailHeader-v2.tsx";
 import * as $header_CollectionDetailHeader from "./islands/header/CollectionDetailHeader.tsx";
 import * as $header_CollectionOverviewHeader from "./islands/header/CollectionOverviewHeader.tsx";
+import * as $header_CreateStampHeader from "./islands/header/CreateStampHeader.tsx";
+import * as $header_CreateStampRecursiveHeader from "./islands/header/CreateStampRecursiveHeader.tsx";
 import * as $header_ExplorerHeader from "./islands/header/ExplorerHeader.tsx";
 import * as $header_Header from "./islands/header/Header.tsx";
 import * as $header_MarketplaceHeader from "./islands/header/MarketplaceHeader.tsx";
@@ -467,6 +473,7 @@ const manifest = {
     "./routes/collection/index.tsx": $collection_index,
     "./routes/config.ts": $config,
     "./routes/content/[...imgpath].tsx": $content_imgpath_,
+    "./routes/create/recursivestamp.tsx": $create_recursivestamp,
     "./routes/dashboard/[address].tsx": $dashboard_address_,
     "./routes/docs/index.tsx": $docs_index,
     "./routes/explorer/index.tsx": $explorer_index,
@@ -557,6 +564,12 @@ const manifest = {
       $content_blockContent_BlockSelector,
     "./islands/content/blockContent/BlockTransactions.tsx":
       $content_blockContent_BlockTransactions,
+    "./islands/content/createContent/CreateStampClassicContent.tsx":
+      $content_createContent_CreateStampClassicContent,
+    "./islands/content/createContent/CreateStampPoshContent.tsx":
+      $content_createContent_CreateStampPoshContent,
+    "./islands/content/createContent/StampRecursiveContent.tsx":
+      $content_createContent_StampRecursiveContent,
     "./islands/content/faqContent/AccordionBase.tsx":
       $content_faqContent_AccordionBase,
     "./islands/content/faqContent/FaqAccordion.tsx":
@@ -602,6 +615,9 @@ const manifest = {
       $header_CollectionDetailHeader,
     "./islands/header/CollectionOverviewHeader.tsx":
       $header_CollectionOverviewHeader,
+    "./islands/header/CreateStampHeader.tsx": $header_CreateStampHeader,
+    "./islands/header/CreateStampRecursiveHeader.tsx":
+      $header_CreateStampRecursiveHeader,
     "./islands/header/ExplorerHeader.tsx": $header_ExplorerHeader,
     "./islands/header/Header.tsx": $header_Header,
     "./islands/header/MarketplaceHeader.tsx": $header_MarketplaceHeader,
