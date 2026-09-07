@@ -74,12 +74,14 @@ export class WebResponseUtil {
     mimeType: string,
     options: StampResponseOptions = {},
   ): Response {
-    const baseHeaders = this.getContentTypeHeaders(mimeType, options);
-    const headers = new Headers({
-      ...baseHeaders,
-      ...options.headers,
-      "X-API-Version": API_RESPONSE_VERSION,
-    });
+    // Merge through a Headers object (never spread a Headers instance — it
+    // has no own enumerable properties, so `{ ...headers }` is `{}`).
+    // Caller-supplied headers override the stamp-content defaults.
+    const headers = new Headers(getStampContentHeaders(mimeType, options));
+    for (const [key, value] of Object.entries(options.headers || {})) {
+      headers.set(key, value);
+    }
+    headers.set("X-API-Version", API_RESPONSE_VERSION);
 
     // Binary content handling
     if (options.binary && content) {
@@ -90,16 +92,10 @@ export class WebResponseUtil {
           bytes[i] = binaryString.charCodeAt(i);
         }
 
+        headers.set("Vary", "Accept-Encoding, X-API-Version, Origin");
+        headers.set("Content-Length", bytes.length.toString());
         return new Response(bytes, {
-          headers: normalizeHeaders(
-            new Headers({
-              ...headers,
-              ...getBinaryContentHeaders(mimeType, options),
-              "X-API-Version": API_RESPONSE_VERSION,
-              "Vary": "Accept-Encoding, X-API-Version, Origin",
-              "Content-Length": bytes.length.toString(),
-            }),
-          ),
+          headers: normalizeHeaders(headers),
         });
       } catch (error) {
         console.error("Failed to convert base64 to binary:", error);
@@ -114,15 +110,10 @@ export class WebResponseUtil {
       mimeType.includes("xml");
 
     if (isTextBased) {
+      headers.set("Vary", "Accept-Encoding, X-API-Version, Origin");
+      headers.set("Content-Type", `${mimeType}; charset=utf-8`);
       return new Response(content, {
-        headers: normalizeHeaders(
-          new Headers({
-            ...headers,
-            "X-API-Version": API_RESPONSE_VERSION,
-            "Vary": "Accept-Encoding, X-API-Version, Origin",
-            "Content-Type": `${mimeType}; charset=utf-8`,
-          }),
-        ),
+        headers: normalizeHeaders(headers),
       });
     }
 
