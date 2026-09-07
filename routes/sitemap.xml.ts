@@ -1,6 +1,12 @@
 import { Handlers } from "$fresh/server.ts";
+import { WebResponseUtil } from "$lib/utils/api/responses/webResponseUtil.ts";
 
 const SITE_URL = "https://stampchain.io";
+
+// Sitemap is regenerated on every request (lastmod = today), so cap all
+// cache layers at one hour instead of the 1-year immutable default.
+const SITEMAP_CACHE_SECONDS = 3600;
+const SITEMAP_CACHE_CONTROL = `public, max-age=${SITEMAP_CACHE_SECONDS}`;
 
 // Static pages with their priorities and change frequencies
 const STATIC_PAGES: Array<{
@@ -58,10 +64,13 @@ ${urls}
 export const handler: Handlers = {
   GET(_req, _ctx) {
     const xml = generateSitemapXml();
-    return new Response(xml, {
+    return WebResponseUtil.xmlResponse(xml, {
       headers: {
-        "Content-Type": "application/xml; charset=utf-8",
-        "Cache-Control": "public, max-age=3600",
+        "Cache-Control": SITEMAP_CACHE_CONTROL,
+        "CDN-Cache-Control": SITEMAP_CACHE_CONTROL,
+        "Cloudflare-CDN-Cache-Control": SITEMAP_CACHE_CONTROL,
+        "Surrogate-Control": `max-age=${SITEMAP_CACHE_SECONDS}`,
+        "Edge-Control": `cache-maxage=${SITEMAP_CACHE_SECONDS}`,
       },
     });
   },
