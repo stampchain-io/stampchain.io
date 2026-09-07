@@ -34,30 +34,44 @@ Deno.test("OpenAPI Validator", async (t) => {
   await t.step(
     "should validate SRC-20 response with v2.3 nested structure",
     async () => {
+      // /api/v2/src20/{op} (schema.yml) returns PaginatedSrc20ResponseBody:
+      // pagination fields + data[] of Src20Detail with the v2.3 nested
+      // mint_progress / market_data objects. Before that path was documented
+      // this step matched no schema and passed vacuously.
       const mockResponse = {
-        data: {
-          tick: "STAMP",
-          p: "src-20",
-          op: "deploy",
-          max: "1000000",
-          lim: "1000",
-          dec: "18",
-          market_data: {
-            price_usd: 0.5,
-            price_btc: 0.00001,
-            market_cap_usd: 500000,
+        page: 1,
+        limit: 50,
+        totalPages: 1,
+        total: 1,
+        last_block: 965984,
+        data: [
+          {
+            tx_hash: "abc123",
+            block_index: 100,
+            tick: "STAMP",
+            p: "SRC-20",
+            op: "DEPLOY",
+            max: "1000000",
+            lim: "1000",
+            deci: 18,
+            market_data: {
+              price_usd: "0.5",
+              price_btc: "0.00001",
+              market_cap_usd: "500000",
+            },
+            mint_progress: {
+              progress: "75.00",
+              current: "750000",
+              max: "1000000",
+              total_mints: 750,
+            },
           },
-          mint_progress: {
-            progress: 0.75,
-            current: 750000,
-            total_mints: 750,
-          },
-        },
+        ],
       };
 
       const result = await validateAgainstSchema(
         "GET",
-        "/api/v2/src20/STAMP",
+        "/api/v2/src20/deploy",
         200,
         mockResponse,
       );

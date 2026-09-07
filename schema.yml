@@ -346,6 +346,38 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
+  /api/v2/counterparty/version:
+    get:
+      operationId: getCounterpartyVersion
+      tags:
+        - System
+      summary: Get the Counterparty node version
+      description: |
+        Queries the configured Counterparty v2 API nodes in order and returns the
+        version string reported by the first reachable node. The response is never cached.
+      responses:
+        "200":
+          description: Version of the first reachable Counterparty node
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - version
+                properties:
+                  version:
+                    type: string
+                    description: Counterparty node version string
+                    example: "11.3.0"
+        "503":
+          description: No Counterparty node could be reached
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: "Unable to fetch Counterparty version"
+
   /api/v2/error:
     get:
       operationId: testErrorResponse
@@ -571,6 +603,50 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
+  /api/v2/balance/getStampsBalance:
+    get:
+      operationId: getStampsBalanceByQuery
+      tags:
+        - Balance
+      summary: Get raw Counterparty stamp balances for an address
+      description: |
+        Returns the Counterparty asset balances (stamps) held by an address, as reported by
+        the Counterparty v2 API. Unlike /api/v2/stamps/balance/{address} the result is not
+        enriched with stamp metadata and is not paginated.
+      parameters:
+        - in: query
+          name: address
+          required: true
+          schema:
+            type: string
+          example: "bc1qhy8y5hajwqz56nzuqyqe9ghsvsxjkl3akmdrqp"
+          description: The Bitcoin address to query
+        - in: query
+          name: utxoOnly
+          required: false
+          schema:
+            type: boolean
+            default: false
+          description: When "true", only balances attached to UTXOs are returned
+      responses:
+        "200":
+          description: Counterparty balances for the address
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - stampBalance
+                properties:
+                  stampBalance:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/XcpBalance"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
   /api/v2/block/{block_index}:
     get:
       operationId: getBlockInfo
@@ -770,6 +846,58 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
+  /api/v2/collections/by-name/{name}:
+    get:
+      operationId: getCollectionByName
+      tags:
+        - Collections
+      summary: Get collection summary by name
+      description: |
+        Looks up a single collection by its exact collection name and returns its
+        aggregate summary (creators, stamp count, total editions). Use
+        /api/v2/collections/{id} for the paginated stamp list and market data.
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+          example: "KEVIN"
+          description: Exact collection name
+      responses:
+        "200":
+          description: Collection summary
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  collection_id:
+                    type: string
+                    description: Collection UUID (32 hex characters)
+                  collection_name:
+                    type: string
+                  collection_description:
+                    type: string
+                    nullable: true
+                  creators:
+                    type: array
+                    items:
+                      type: string
+                    description: Creator addresses
+                  stamp_count:
+                    type: integer
+                    description: Number of distinct stamps in the collection
+                  total_editions:
+                    type: number
+                    description: Sum of editions across all stamps in the collection
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
   /api/v2/cursed:
     get:
       operationId: getCursedStamps
@@ -826,6 +954,29 @@ paths:
           $ref: "#/components/responses/Gone"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /api/v2/cursed/block:
+    get:
+      operationId: getCursedStampsByLatestBlock
+      deprecated: true
+      tags:
+        - Cursed Stamps
+      summary: Get cursed stamps in the latest block
+      description: |
+        Returns block info and the cursed stamps created in the most recent indexed block.
+        Deprecated in API v2.3 (the default version): requests return 410 Gone unless a
+        legacy API-Version header (2.2 or lower) is sent.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StampBlockResponseBody"
+        "410":
+          $ref: "#/components/responses/Gone"
         "500":
           $ref: "#/components/responses/InternalServerError"
 
@@ -1082,6 +1233,82 @@ paths:
                 $ref: "#/components/schemas/PaginatedSrc20ResponseBody"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /api/v2/src20/search:
+    get:
+      operationId: searchSrc20Tokens
+      tags:
+        - SRC-20
+      summary: Search SRC-20 tokens
+      description: |
+        Searches deployed SRC-20 tokens by tick (partial match) or by deploy tx_hash.
+        Returns at most 10 results, with exact-prefix tick matches first. An empty or
+        unrecognised query returns an empty list.
+      parameters:
+        - in: query
+          name: q
+          required: true
+          schema:
+            type: string
+          example: "KEVIN"
+          description: Search term (tick or tx_hash)
+        - in: query
+          name: mintable_only
+          required: false
+          schema:
+            type: boolean
+            default: false
+          description: When "true", only tokens that are not yet fully minted are returned
+      responses:
+        "200":
+          description: Matching SRC-20 tokens
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Src20SearchResult"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /api/v2/src20/{op}:
+    get:
+      operationId: getSrc20TransactionsByOp
+      tags:
+        - SRC-20
+      summary: Get paginated SRC-20 transactions filtered by operation
+      description: |
+        Returns valid SRC-20 transactions for a single operation type. The op segment is
+        case-insensitive (deploy, mint, transfer). This is the basic transaction listing
+        without the market-data enrichment of /api/v2/src20.
+      parameters:
+        - in: path
+          name: op
+          required: true
+          schema:
+            type: string
+            enum: [deploy, mint, transfer]
+          example: "mint"
+          description: SRC-20 operation type (case-insensitive)
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/Sort"
+      responses:
+        "200":
+          description: Paginated SRC-20 transactions for the operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedSrc20ResponseBody"
+        "400":
+          $ref: "#/components/responses/BadRequest"
         "500":
           $ref: "#/components/responses/InternalServerError"
 
@@ -1387,6 +1614,45 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /api/v2/src20/tick/{tick}/mintData:
+    get:
+      operationId: getSrc20TickMintData
+      tags:
+        - SRC-20
+      summary: Get mint progress and holder count for a tick
+      description: |
+        Returns the minting progress of an SRC-20 token together with the number of
+        holders. mintStatus is null when the tick has no DEPLOY record.
+      parameters:
+        - in: path
+          name: tick
+          required: true
+          schema:
+            type: string
+          example: "KEVIN"
+          description: Tick value (URL-encoded if it contains emoji)
+      responses:
+        "200":
+          description: Mint progress and holder count
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - mintStatus
+                  - holders
+                properties:
+                  mintStatus:
+                    $ref: "#/components/schemas/SRC20MintProgress"
+                    nullable: true
+                  holders:
+                    type: integer
+                    description: Number of addresses holding the token
+        "400":
+          $ref: "#/components/responses/BadRequest"
         "500":
           $ref: "#/components/responses/InternalServerError"
 
@@ -2438,6 +2704,23 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
+  /api/v2/stamps/block:
+    get:
+      operationId: getStampsByLatestBlock
+      tags:
+        - Stamps
+      summary: Get stamps in the latest block
+      description: Returns block info and the stamps created in the most recent indexed block.
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StampBlockResponseBody"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
   /api/v2/stamps/block/{block_index}:
     get:
       operationId: getStampsByBlock
@@ -2575,6 +2858,81 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
+  /api/v2/stamp/{stamp}/preview:
+    get:
+      operationId: getStampPreview
+      tags:
+        - Stamps
+      summary: Get a 1200x1200 social-media preview image for a stamp
+      description: |
+        Renders (and caches) a 1200x1200 PNG preview of the stamp content. Depending on the
+        storage backend the image is either returned inline (image/png) or served via a 302
+        redirect to the CDN copy. When rendering fails the endpoint 302-redirects to the
+        generic Stampchain logo, or returns 404 when placeholderOnFail=true. With
+        format=gif an animated GIF is generated for animated HTML stamps; non-animated
+        stamps redirect to the PNG preview instead.
+      parameters:
+        - in: path
+          name: stamp
+          required: true
+          schema:
+            type: string
+          example: "1"
+          description: Stamp number, cpid, or tx_hash
+        - in: query
+          name: format
+          required: false
+          schema:
+            type: string
+            enum: [png, gif]
+            default: png
+          description: Preview format
+        - in: query
+          name: refresh
+          required: false
+          schema:
+            type: boolean
+            default: false
+          description: When "true", discards any cached preview and re-renders
+        - in: query
+          name: placeholderOnFail
+          required: false
+          schema:
+            type: boolean
+            default: false
+          description: When "true", return 404 instead of redirecting to the fallback logo on render failure
+      responses:
+        "200":
+          description: Rendered PNG preview
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+        "302":
+          description: Redirect to the CDN-hosted preview image or to the fallback logo
+          headers:
+            Location:
+              schema:
+                type: string
+              description: URL of the preview image (or the fallback logo)
+            X-Fallback:
+              schema:
+                type: string
+              description: Present only on fallback redirects; reason the render failed
+        "400":
+          description: Unsupported format parameter
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Preview unavailable (only when placeholderOnFail=true)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
   /api/v2/src20/create:
     post:
       operationId: createSrc20Token
@@ -2675,6 +3033,81 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /api/v2/src20/multisig/{operation}:
+    post:
+      operationId: createSrc20MultisigTransaction
+      tags:
+        - Minting
+        - SRC-20
+      summary: Build a multisig-encoded SRC-20 deploy, mint, or transfer PSBT
+      description: |
+        Builds an unsigned PSBT that encodes the SRC-20 operation using bare multisig
+        outputs (legacy encoding) instead of the OLGA/P2WSH encoding used by
+        /api/v2/src20/create. The operation-specific fields are validated by the
+        operation (mint checks minted-out, transfer checks the sender balance).
+      parameters:
+        - in: path
+          name: operation
+          required: true
+          schema:
+            type: string
+            enum: [deploy, mint, transfer]
+          description: SRC-20 operation (case-insensitive)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: "#/components/schemas/SRC20MultisigDeployRequest"
+                - $ref: "#/components/schemas/SRC20MultisigMintRequest"
+                - $ref: "#/components/schemas/SRC20MultisigTransferRequest"
+            examples:
+              mint:
+                summary: Mint example
+                value:
+                  network: "mainnet"
+                  toAddress: "bc1ql49ydapnjafl5t2cp9zqpjwe6pdgmxy98859v2"
+                  changeAddress: "bc1ql49ydapnjafl5t2cp9zqpjwe6pdgmxy98859v2"
+                  feeRate: 20
+                  tick: "KEVIN"
+                  amt: "1000"
+      responses:
+        "200":
+          description: Unsigned multisig PSBT
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  hex:
+                    type: string
+                    description: Hex-encoded PSBT
+                  base64:
+                    type: string
+                    description: Base64-encoded PSBT
+                  inputsToSign:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        index:
+                          type: integer
+                          description: PSBT input index to sign
+                  est_tx_size:
+                    type: integer
+                    description: Estimated transaction size in vbytes
+                  est_miner_fee:
+                    type: string
+                    description: Estimated miner fee in satoshis (stringified)
+                  change_value:
+                    type: string
+                    description: Change returned to changeAddress in satoshis (stringified)
+        "400":
+          $ref: "#/components/responses/BadRequest"
         "500":
           $ref: "#/components/responses/InternalServerError"
 
@@ -2787,6 +3220,35 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
+  /api/v2/olga/estimate:
+    post:
+      operationId: estimateStampMintFee
+      tags:
+        - Minting
+        - Stamps
+      summary: Estimate the cost of minting a stamp
+      description: |
+        Estimates transaction size, miner fee, dust, and total cost for minting the given
+        file as a stamp, using dummy UTXOs instead of the caller's wallet. No transaction
+        is built.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EstimateRequest"
+      responses:
+        "200":
+          description: Fee estimate
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EstimateResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
   /api/v2/trx/stampdetach:
     post:
       operationId: detachStampFromUtxo
@@ -2846,6 +3308,445 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /api/v2/trx/create_psbt:
+    post:
+      operationId: createSellerPsbt
+      tags:
+        - Stamps
+      summary: Create a seller-side PSBT for a UTXO sale
+      description: |
+        Builds a partially signed transaction offering the given UTXO for salePrice
+        satoshis payable to sellerAddress. The buyer completes it via /api/v2/trx/complete_psbt.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - utxo
+                - salePrice
+                - sellerAddress
+              properties:
+                utxo:
+                  type: string
+                  description: UTXO to sell in txid:vout format
+                  example: "10f8e495a5088dd90a731f4b2657bfb4e94b1f59d3961cbc960900d4e5ba44e5:0"
+                salePrice:
+                  type: number
+                  description: Sale price in satoshis (must be > 0)
+                  example: 100000
+                sellerAddress:
+                  type: string
+                  description: Address that receives the sale proceeds
+      responses:
+        "200":
+          description: Seller PSBT
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - psbt
+                properties:
+                  psbt:
+                    type: string
+                    description: Hex-encoded PSBT
+                  fee:
+                    type: number
+                    description: Fee in satoshis (currently a placeholder value)
+                  inputCount:
+                    type: integer
+                  outputCount:
+                    type: integer
+                  estimatedSize:
+                    type: integer
+                    description: Estimated size in bytes (currently a placeholder value)
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /api/v2/trx/complete_psbt:
+    post:
+      operationId: completeSellerPsbt
+      tags:
+        - Stamps
+      summary: Complete a seller PSBT with the buyer's funding input
+      description: |
+        Adds the buyer's UTXO and change output to a seller PSBT produced by
+        /api/v2/trx/create_psbt, at the requested fee rate.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - sellerPsbtHex
+                - buyerUtxo
+                - buyerAddress
+                - feeRate
+              properties:
+                sellerPsbtHex:
+                  type: string
+                  description: Hex-encoded seller PSBT
+                buyerUtxo:
+                  type: string
+                  description: Buyer funding UTXO in txid:vout format
+                buyerAddress:
+                  type: string
+                  description: Buyer address (receives change)
+                feeRate:
+                  type: number
+                  description: Fee rate in satoshis per vbyte
+      responses:
+        "200":
+          description: Completed PSBT
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - completedPsbt
+                properties:
+                  completedPsbt:
+                    type: string
+                    description: Hex-encoded completed PSBT
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /api/v2/create/send:
+    post:
+      operationId: createSendTransaction
+      tags:
+        - Stamps
+      summary: Build a Counterparty asset send PSBT
+      description: |
+        Composes a Counterparty send of the given asset via the Counterparty API and
+        reconstructs it as an unsigned PSBT for the wallet to sign. Fee precedence:
+        options.fee_per_kb, then satsPerVB, then the live mempool recommended rate.
+        With dryRun=true only the Counterparty-estimated fee is returned.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - address
+                - destination
+                - asset
+                - quantity
+              properties:
+                address:
+                  type: string
+                  description: Sender address (funds the transaction)
+                destination:
+                  type: string
+                  description: Recipient address
+                asset:
+                  type: string
+                  description: Counterparty asset name (cpid)
+                quantity:
+                  type: number
+                  description: Quantity to send in the asset's base units (must be > 0)
+                satsPerVB:
+                  type: number
+                  description: Fee rate in satoshis per vbyte
+                dryRun:
+                  type: boolean
+                  default: false
+                  description: When true, return only the fee estimate without a PSBT
+                options:
+                  type: object
+                  properties:
+                    fee_per_kb:
+                      type: number
+                      description: Explicit fee rate in satoshis per kilobyte (overrides satsPerVB)
+                    encoding:
+                      type: string
+                      default: opreturn
+                      description: Counterparty data encoding
+                    memo:
+                      type: string
+                    memo_is_hex:
+                      type: boolean
+      responses:
+        "200":
+          description: Unsigned send PSBT, or fee estimate when dryRun=true
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    title: SendPsbt
+                    properties:
+                      psbtHex:
+                        type: string
+                        description: Hex-encoded unsigned PSBT
+                      inputsToSign:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/InputToSign"
+                      estimatedFee:
+                        type: number
+                        description: Fee estimated by Counterparty in satoshis
+                  - type: object
+                    title: SendDryRun
+                    properties:
+                      estimatedFee:
+                        type: number
+                        description: Fee estimated by Counterparty in satoshis
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /api/v2/create/dispense:
+    post:
+      operationId: createDispenseTransaction
+      tags:
+        - Dispensers
+      summary: Build a PSBT that buys from a dispenser
+      description: |
+        Composes a Counterparty dispense (BTC payment to a dispenser) and reconstructs it
+        as an unsigned PSBT for the buyer's wallet to sign, optionally splicing the
+        operator service fee out of the change output. With dryRun=true a fixed-size
+        numeric fee estimate is returned instead. All handled failures, including
+        Counterparty compose errors and malformed bodies, return 400.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - address
+                - dispenser
+                - quantity
+                - options
+              properties:
+                address:
+                  type: string
+                  description: Buyer address (funds the transaction and receives change)
+                dispenser:
+                  type: string
+                  description: Dispenser address
+                quantity:
+                  type: number
+                  description: BTC amount to pay to the dispenser, in satoshis
+                dryRun:
+                  type: boolean
+                  default: false
+                  description: When true, return a numeric estimate without composing a PSBT
+                options:
+                  type: object
+                  description: Fee and Counterparty compose options; satsPerVB or fee_per_kb is required unless dryRun=true
+                  properties:
+                    satsPerVB:
+                      type: number
+                      description: Fee rate in satoshis per vbyte
+                    fee_per_kb:
+                      type: number
+                      description: Fee rate in satoshis per kilobyte
+                    allow_unconfirmed_inputs:
+                      type: boolean
+                      default: true
+                    validate:
+                      type: boolean
+                      default: true
+                    verbose:
+                      type: boolean
+                      default: true
+      responses:
+        "200":
+          description: Unsigned dispense PSBT, or fee estimate when dryRun=true
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    title: DispensePsbt
+                    properties:
+                      psbt:
+                        type: string
+                        description: Hex-encoded unsigned PSBT
+                      inputsToSign:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/InputToSign"
+                      estimatedFee:
+                        type: number
+                        description: Total fee (Counterparty network fee plus service fee) in satoshis
+                      estimatedVsize:
+                        type: number
+                        description: Virtual size of the Counterparty-composed transaction
+                      finalBuyerChange:
+                        type: number
+                        description: Change returned to the buyer in satoshis (0 if dropped as dust)
+                  - allOf:
+                      - $ref: "#/components/schemas/DryRunFeeEstimate"
+                      - type: object
+                        title: DispenseDryRun
+                        properties:
+                          dispenser_payment:
+                            type: number
+                            description: Amount paid to the dispenser in satoshis
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /api/v2/fairmint:
+    get:
+      operationId: getFairminters
+      tags:
+        - Minting
+      summary: List all Counterparty fairminters
+      description: |
+        Returns every fairminter known to the Counterparty API (all pages are fetched
+        server-side). The response is a bare array and can be large.
+      responses:
+        "200":
+          description: Fairminter list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Fairminter"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /api/v2/fairmint/compose:
+    post:
+      operationId: composeFairmint
+      tags:
+        - Minting
+      summary: Build a fairmint PSBT
+      description: |
+        Composes a Counterparty fairmint for the given asset and reconstructs it as an
+        unsigned PSBT, optionally splicing a service fee out of the change output.
+        quantity is required for paid fairminters and ignored for free ones. Any
+        additional body fields are forwarded to the Counterparty compose call. With
+        dryRun=true a fixed-size numeric fee estimate is returned instead.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - address
+                - asset
+              properties:
+                address:
+                  type: string
+                  description: Minter address (funds the transaction and receives the minted asset)
+                asset:
+                  type: string
+                  description: Fairminter asset name
+                quantity:
+                  type: number
+                  description: Quantity to mint; required for paid fairminters, must be omitted for free ones
+                satsPerVB:
+                  type: number
+                  description: Fee rate in satoshis per vbyte (satsPerVB or satsPerKB is required)
+                satsPerKB:
+                  type: number
+                  description: Fee rate in satoshis per kilobyte
+                service_fee:
+                  type: number
+                  description: Service fee in satoshis; defaults to the server-configured fee
+                service_fee_address:
+                  type: string
+                  description: Service fee recipient; defaults to the server-configured address
+                dryRun:
+                  type: boolean
+                  default: false
+      responses:
+        "200":
+          description: Unsigned fairmint PSBT, or fee estimate when dryRun=true
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    title: FairmintPsbt
+                    properties:
+                      psbtHex:
+                        type: string
+                        description: Hex-encoded unsigned PSBT
+                      inputsToSign:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/InputToSign"
+                      estimatedFee:
+                        type: number
+                        description: Total fee (Counterparty network fee plus service fee) in satoshis
+                      estimatedVsize:
+                        type: number
+                        description: Virtual size of the Counterparty-composed transaction
+                      totalInputValue:
+                        type: string
+                        description: Sum of the user's inputs in satoshis (stringified)
+                      totalOutputValue:
+                        type: string
+                        description: Sum of all outputs in satoshis (stringified)
+                      finalUserChange:
+                        type: string
+                        description: Change returned to the minter in satoshis (stringified, "0" if dropped as dust)
+                  - $ref: "#/components/schemas/DryRunFeeEstimate"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /api/v2/utxo/ancestors/{address}:
+    get:
+      operationId: getUtxoAncestors
+      tags:
+        - UTXO
+      summary: Get unconfirmed ancestor data for an address's UTXOs
+      description: |
+        Lists the mempool ancestor fee/size data for each spendable (non-stamp) UTXO of
+        the address that has unconfirmed ancestors. UTXOs without ancestors are omitted.
+      parameters:
+        - in: path
+          name: address
+          required: true
+          schema:
+            type: string
+          example: "bc1qhy8y5hajwqz56nzuqyqe9ghsvsxjkl3akmdrqp"
+          description: Bitcoin address
+      responses:
+        "200":
+          description: Ancestor data per UTXO with unconfirmed ancestors
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - ancestors
+                properties:
+                  ancestors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        fees:
+                          type: number
+                          description: Total ancestor fees in satoshis
+                        vsize:
+                          type: number
+                          description: Total ancestor virtual size
+                        weight:
+                          type: number
+                          description: Total ancestor weight (vsize * 4)
         "500":
           $ref: "#/components/responses/InternalServerError"
 
@@ -4268,6 +5169,373 @@ components:
           $ref: "#/components/schemas/CollectionMarketData"
           nullable: true
           description: Aggregated market data for the collection from collection_market_data table
+
+    XcpBalance:
+      type: object
+      description: Counterparty asset balance as returned by the Counterparty v2 API
+      properties:
+        address:
+          type: string
+          nullable: true
+          description: Owning address, or the UTXO's address for UTXO-attached balances
+        cpid:
+          type: string
+          description: Counterparty asset name
+        quantity:
+          type: number
+          description: Balance quantity in the asset's base units
+        utxo:
+          type: string
+          description: txid:vout the balance is attached to, or empty string
+        utxo_address:
+          type: string
+          description: Address of the attached UTXO, or empty string
+        divisible:
+          type: boolean
+        assetName:
+          type: string
+          description: Same as cpid
+        balance:
+          type: number
+          description: Same as quantity
+
+    Src20SearchResult:
+      type: object
+      description: SRC-20 deploy matched by /api/v2/src20/search
+      properties:
+        tick:
+          type: string
+        tx_hash:
+          type: string
+          description: Deploy transaction hash
+        max_supply:
+          type: number
+        lim:
+          type: string
+          nullable: true
+          description: Per-mint limit
+        decimals:
+          type: number
+        total_mints:
+          type: number
+        total_minted:
+          type: number
+        progress:
+          type: number
+          description: Mint progress percentage
+        holders:
+          type: number
+        max:
+          type: string
+          nullable: true
+        amt:
+          type: string
+          nullable: true
+        stamp_url:
+          type: string
+          description: URL of the deploy stamp image
+
+    SRC20MintProgress:
+      type: object
+      description: Mint progress for an SRC-20 token, as returned inside /api/v2/src20/tick/{tick}/mintData
+      properties:
+        max_supply:
+          type: string
+        total_minted:
+          type: string
+        limit:
+          type: string
+          description: Per-mint limit
+        total_mints:
+          type: number
+          description: Number of MINT transactions
+        progress:
+          type: string
+          description: Mint progress percentage (3 decimal places)
+        decimals:
+          type: number
+        holders:
+          type: number
+        tx_hash:
+          type: string
+          description: Deploy transaction hash
+        tick:
+          type: string
+        stamp_url:
+          type: string
+          nullable: true
+          description: URL of the deploy stamp image
+
+    Fairminter:
+      type: object
+      description: Counterparty fairminter record
+      properties:
+        tx_hash:
+          type: string
+        tx_index:
+          type: integer
+        block_index:
+          type: integer
+        source:
+          type: string
+        asset:
+          type: string
+        asset_parent:
+          type: string
+          nullable: true
+        asset_longname:
+          type: string
+          nullable: true
+        description:
+          type: string
+        price:
+          type: number
+        quantity_by_price:
+          type: number
+        hard_cap:
+          type: number
+        burn_payment:
+          type: boolean
+        max_mint_per_tx:
+          type: number
+        premint_quantity:
+          type: number
+        start_block:
+          type: integer
+        end_block:
+          type: integer
+        minted_asset_commission_int:
+          type: number
+        soft_cap:
+          type: number
+        soft_cap_deadline_block:
+          type: integer
+        lock_description:
+          type: boolean
+        lock_quantity:
+          type: boolean
+        divisible:
+          type: boolean
+        pre_minted:
+          type: boolean
+        status:
+          type: string
+        paid_quantity:
+          type: number
+          nullable: true
+        confirmed:
+          type: boolean
+
+    InputToSign:
+      type: object
+      description: PSBT input the wallet must sign
+      properties:
+        index:
+          type: integer
+          description: PSBT input index
+        address:
+          type: string
+          description: Address that owns the input
+        sighashTypes:
+          type: array
+          items:
+            type: integer
+
+    DryRunFeeEstimate:
+      type: object
+      description: Numeric fee estimate returned by compose endpoints when dryRun=true
+      properties:
+        est_miner_fee:
+          type: number
+          description: Estimated miner fee in satoshis
+        total_dust_value:
+          type: number
+          description: Total dust value in satoshis
+        total_cost:
+          type: number
+          description: Estimated total cost in satoshis
+        est_tx_size:
+          type: number
+          description: Assumed transaction size in bytes
+        service_fee:
+          type: number
+          description: Service fee in satoshis
+        feeDetails:
+          type: object
+          properties:
+            total:
+              type: number
+            effectiveFeeRate:
+              type: number
+            estimatedSize:
+              type: number
+        is_estimate:
+          type: boolean
+        estimation_method:
+          type: string
+          example: dryRun_calculation
+
+    EstimateRequest:
+      type: object
+      required:
+        - filename
+        - file
+      properties:
+        filename:
+          type: string
+        file:
+          type: string
+          description: Base64-encoded file content
+        qty:
+          oneOf:
+            - type: number
+            - type: string
+        satsPerVB:
+          oneOf:
+            - type: number
+            - type: string
+          description: Fee rate in satoshis per vbyte
+        satsPerKB:
+          oneOf:
+            - type: number
+            - type: string
+          description: Fee rate in satoshis per kilobyte
+        feeRate:
+          oneOf:
+            - type: number
+            - type: string
+          description: Legacy alias for satsPerKB, used only when neither satsPerVB nor satsPerKB is set
+        service_fee:
+          oneOf:
+            - type: number
+            - type: string
+          description: Service fee in satoshis (non-numeric values are treated as 0)
+        isPoshStamp:
+          type: boolean
+
+    EstimateResponse:
+      type: object
+      properties:
+        est_tx_size:
+          type: number
+          description: Estimated transaction size in vbytes
+        total_dust_value:
+          type: number
+          description: Dust across all CIP33 data outputs in satoshis
+        est_miner_fee:
+          type: number
+          description: Estimated miner fee in satoshis
+        total_cost:
+          type: number
+          description: Miner fee plus dust plus service fee in satoshis
+        fee_breakdown:
+          type: object
+          properties:
+            miner_fee:
+              type: number
+            dust_value:
+              type: number
+            service_fee:
+              type: number
+        file_info:
+          type: object
+          properties:
+            size_bytes:
+              type: number
+            cip33_addresses_count:
+              type: number
+        is_estimate:
+          type: boolean
+        estimation_method:
+          type: string
+          example: dummy_utxos
+        dummy_utxo_value:
+          type: number
+          description: Value of the dummy UTXOs assumed for the estimate, in satoshis
+
+    SRC20MultisigBaseRequest:
+      type: object
+      required:
+        - network
+        - changeAddress
+        - toAddress
+        - feeRate
+        - tick
+      properties:
+        network:
+          type: string
+          description: "\"testnet\" selects the Bitcoin testnet; any other value selects mainnet"
+          example: mainnet
+        changeAddress:
+          type: string
+        toAddress:
+          type: string
+          description: Recipient of the SRC-20 operation output
+        feeRate:
+          type: number
+          description: Fee rate in satoshis per vbyte
+        enableRBF:
+          type: boolean
+          default: true
+        tick:
+          type: string
+
+    SRC20MultisigDeployRequest:
+      allOf:
+        - $ref: "#/components/schemas/SRC20MultisigBaseRequest"
+        - type: object
+          required:
+            - max
+            - lim
+          properties:
+            max:
+              type: string
+            lim:
+              type: string
+            dec:
+              type: integer
+              description: Decimals (0-17); omitted from the payload when outside this range
+            x:
+              type: string
+            web:
+              type: string
+            email:
+              type: string
+            tg:
+              type: string
+            description:
+              type: string
+            desc:
+              type: string
+              description: Alias for description
+            img:
+              type: string
+            icon:
+              type: string
+
+    SRC20MultisigMintRequest:
+      allOf:
+        - $ref: "#/components/schemas/SRC20MultisigBaseRequest"
+        - type: object
+          required:
+            - amt
+          properties:
+            amt:
+              type: string
+
+    SRC20MultisigTransferRequest:
+      allOf:
+        - $ref: "#/components/schemas/SRC20MultisigBaseRequest"
+        - type: object
+          required:
+            - fromAddress
+            - amt
+          properties:
+            fromAddress:
+              type: string
+              description: Sender address (its balance is checked)
+            amt:
+              type: string
 
     ErrorResponseBody:
       type: object
