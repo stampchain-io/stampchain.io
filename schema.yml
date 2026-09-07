@@ -788,6 +788,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PaginatedStampResponseBody"
+        "410":
+          $ref: "#/components/responses/Gone"
         "404":
           $ref: "#/components/responses/NotFound"
         "500":
@@ -820,6 +822,8 @@ paths:
                 $ref: "#/components/schemas/StampResponseBody"
         "400":
           $ref: "#/components/responses/BadRequest"
+        "410":
+          $ref: "#/components/responses/Gone"
         "404":
           $ref: "#/components/responses/NotFound"
         "500":
@@ -850,6 +854,8 @@ paths:
                 $ref: "#/components/schemas/StampBlockResponseBody"
         "400":
           $ref: "#/components/responses/BadRequest"
+        "410":
+          $ref: "#/components/responses/Gone"
         "404":
           $ref: "#/components/responses/NotFound"
         "500":
@@ -2107,6 +2113,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PaginatedStampResponseBody"
+        "400":
+          $ref: "#/components/responses/BadRequest"
         "404":
           $ref: "#/components/responses/NotFound"
         "500":
@@ -5282,6 +5290,16 @@ components:
             $ref: "#/components/schemas/ErrorResponse"
           example:
             error: "Invalid request parameters"
+    Gone:
+      description: Gone - the endpoint is deprecated and has been removed from the API
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            error: "Endpoint /api/v2/cursed is deprecated in API v2.3"
+            status: "error"
+            code: "GONE"
     InternalServerError:
       description: Internal Server Error
       content:
