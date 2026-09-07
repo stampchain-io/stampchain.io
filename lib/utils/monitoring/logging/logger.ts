@@ -126,6 +126,24 @@ class Logger {
     });
   }
 
+  // In-flight file writes. Log calls are synchronous for callers, so the
+  // writes are fire-and-forget; tracking them lets flush() await completion
+  // (tests, graceful shutdown) instead of guessing with timers.
+  private pendingWrites: Set<Promise<void>> = new Set();
+
+  private queueFileWrite(logEntry: string): void {
+    const write = this.writeToFile(logEntry);
+    this.pendingWrites.add(write);
+    write.finally(() => this.pendingWrites.delete(write));
+  }
+
+  /** Resolves once every file write issued so far has settled. */
+  async flush(): Promise<void> {
+    while (this.pendingWrites.size > 0) {
+      await Promise.allSettled([...this.pendingWrites]);
+    }
+  }
+
   private async writeToFile(logEntry: string): Promise<void> {
     if (!this.shouldWriteToFile()) {
       return;
@@ -170,7 +188,7 @@ class Logger {
       if (this.isServerSide) {
         const logEntry = this.formatForConsole(logData);
         console.debug(logEntry);
-        this.writeToFile(logEntry);
+        this.queueFileWrite(logEntry);
       } else {
         // Client-side: log the object directly
         console.debug(logData);
@@ -186,7 +204,7 @@ class Logger {
       if (this.isServerSide) {
         const logEntry = this.formatForConsole(logData);
         console.info(logEntry);
-        this.writeToFile(logEntry);
+        this.queueFileWrite(logEntry);
       } else {
         // Client-side: log the object directly
         console.info(logData);
@@ -201,7 +219,7 @@ class Logger {
     if (this.isServerSide) {
       const logEntry = this.formatForConsole(logData);
       console.warn(logEntry);
-      this.writeToFile(logEntry);
+      this.queueFileWrite(logEntry);
     } else {
       // Client-side: log the object directly
       console.warn(logData);
@@ -215,7 +233,7 @@ class Logger {
     if (this.isServerSide) {
       const logEntry = this.formatForConsole(logData);
       console.error(logEntry);
-      this.writeToFile(logEntry);
+      this.queueFileWrite(logEntry);
     } else {
       // Client-side: log the object directly
       console.error(logData);
