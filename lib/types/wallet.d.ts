@@ -531,7 +531,8 @@ export type StandardWalletProvider =
   | "xverse"
   | "hiro"
   | "leather"
-  | "phantom";
+  | "phantom"
+  | "wonder";
 
 /**
  * Base wallet provider interface that all providers must implement
@@ -738,11 +739,41 @@ export interface LeatherWalletAPI extends BaseWalletProvider {
 /**
  * Union type of all specific wallet APIs
  */
+/**
+ * Wonder Wallet injected provider (window.wonderWallet)
+ *
+ * requestAccounts resolves { accounts, proof } on a first-time grant and a
+ * bare string[] on a repeat connect. broadcastTransaction resolves { txid }.
+ * signPsbt returns { txhex, txid } when autoFinalized, else { psbt } (base64).
+ */
+export interface WonderWalletAPI {
+  isWonderWallet?: boolean;
+  requestAccounts(): Promise<
+    string[] | { accounts?: string[]; proof?: unknown }
+  >;
+  getAccounts(): Promise<string[]>;
+  getPublicKey(): Promise<string | null>;
+  getBalances(): Promise<
+    { confirmed?: number; unconfirmed?: number; total?: number }
+  >;
+  signMessage(message: string, address?: string): Promise<string>;
+  signPsbt(
+    psbtHex: string,
+    options?: any,
+  ): Promise<{ txhex?: string; txid?: string; psbt?: string }>;
+  broadcastTransaction(
+    hex: string,
+  ): Promise<string | { txid?: string }>;
+  on(event: string, handler: (payload?: unknown) => void): void;
+  removeListener?(event: string, handler: (payload?: unknown) => void): void;
+}
+
 export type WalletAPI =
   | UnisatWalletAPI
   | XverseWalletAPI
   | HiroWalletAPI
-  | LeatherWalletAPI;
+  | LeatherWalletAPI
+  | WonderWalletAPI;
 
 /**
  * Wallet provider factory interface
@@ -778,6 +809,9 @@ declare global {
 
     // Existing Horizon wallet (already defined above)
     HorizonWalletProvider?: HorizonWalletAPI;
+
+    // Wonder Wallet
+    wonderWallet?: WonderWalletAPI;
   }
 }
 

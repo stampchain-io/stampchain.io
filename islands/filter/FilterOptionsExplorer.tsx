@@ -106,7 +106,7 @@ export function filtersToQueryParams(
     STAMP_FILTER_KEYS.forEach((k) => queryParams.delete(k));
     ALL_RANGE_KEYS.forEach((k) => queryParams.delete(k));
 
-    // Serialize token filters (writes token[*] namespaced params)
+    // Serialize token filters (writes flat tokenXxx-prefixed params)
     const tokenQuery = tokenFiltersToQueryParams("", filters.tokenFilters);
     const tokenParams = new URLSearchParams(tokenQuery);
     tokenParams.forEach((value, key) => queryParams.set(key, value));

@@ -317,24 +317,50 @@ export class MockDatabaseManager {
 
     // Filter by stamp type based on WHERE clause
     if (normalizedQuery.includes("where")) {
-      // Regular stamps filter: (st.stamp >= 0 AND st.ident != 'SRC-20')
+      // Cursed stamps filter: (st.stamp < 0 AND cpid LIKE 'A%' AND ident = 'STAMP')
+      // — checked before the posh/classic checks below because the SQL
+      // still nests "st.cpid NOT LIKE 'A%'" and "st.ident != 'SRC-20'"
+      // inside its NOT(...) clause, so it would otherwise also match the
+      // posh substring check. The "ident != 'src-20'" fragment only
+      // appears in the cursed/stamps conditions, not posh/classic (which
+      // pin ident = 'STAMP' directly) — use it as the distinguishing marker.
       if (
+        normalizedQuery.includes("st.stamp < 0") &&
+        normalizedQuery.includes("st.ident != 'src-20'")
+      ) {
+        stamps = stamps.filter((s) =>
+          s.stamp < 0 && s.cpid?.startsWith("A") && s.ident === "STAMP"
+        );
+      } // Posh stamps filter: (st.stamp < 0 AND cpid NOT LIKE 'A%' AND ident = 'STAMP')
+      else if (
+        normalizedQuery.includes("st.cpid not like 'a%'") &&
+        normalizedQuery.includes("st.ident = 'stamp'")
+      ) {
+        stamps = stamps.filter((s) =>
+          s.stamp < 0 && s.cpid && !s.cpid.startsWith("A") &&
+          s.ident === "STAMP"
+        );
+      } // Classic stamps filter: (st.stamp >= 0 AND cpid LIKE 'A%' AND ident = 'STAMP')
+      else if (
+        normalizedQuery.includes("st.cpid like 'a%'") &&
+        normalizedQuery.includes("st.ident = 'stamp'")
+      ) {
+        stamps = stamps.filter((s) =>
+          s.stamp >= 0 && s.cpid?.startsWith("A") && s.ident === "STAMP"
+        );
+      } // Regular "stamps" type filter: (st.stamp >= 0 AND st.ident != 'SRC-20')
+      else if (
         normalizedQuery.includes("st.stamp >= 0") &&
         normalizedQuery.includes("st.ident != 'src-20'")
       ) {
         stamps = stamps.filter((s) => s.stamp >= 0 && s.ident !== "SRC-20");
-      } // Cursed stamps filter: excludes posh (cpid NOT LIKE 'A%' AND ident != 'SRC-20')
-      else if (
-        normalizedQuery.includes("st.stamp < 0") &&
-        normalizedQuery.includes("not")
-      ) {
-        stamps = stamps.filter((s) =>
-          s.stamp < 0 &&
-          !(s.cpid && !s.cpid.startsWith("A") && s.ident !== "SRC-20")
-        );
-      } // Posh stamps filter: (st.stamp < 0 AND cpid NOT LIKE 'A%')
+      } // Fallback stamp<0 match (shouldn't be reachable given the checks
+      // above, kept as a safety net for any other stamp<0 condition shape)
       else if (normalizedQuery.includes("st.stamp < 0")) {
         stamps = stamps.filter((s) => s.stamp < 0);
+      } // SRC-721 (recursive) stamps filter: (st.ident = 'SRC-721')
+      else if (normalizedQuery.includes("st.ident = 'src-721'")) {
+        stamps = stamps.filter((s) => s.ident === "SRC-721");
       } // Filter by CPID if present
       else if (normalizedQuery.includes("cpid")) {
         const cpidIndex = params.findIndex((p) =>

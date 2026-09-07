@@ -24,33 +24,33 @@ export function filtersToQueryParams(
   const queryParams = new URLSearchParams(search);
 
   if (filters.range) {
-    queryParams.set("token[range]", filters.range);
+    queryParams.set("tokenRange", filters.range);
   } else {
-    queryParams.delete("token[range]");
+    queryParams.delete("tokenRange");
   }
 
   if (filters.rangeMin) {
-    queryParams.set("token[rangeMin]", filters.rangeMin);
+    queryParams.set("tokenRangeMin", filters.rangeMin);
   } else {
-    queryParams.delete("token[rangeMin]");
+    queryParams.delete("tokenRangeMin");
   }
 
   if (filters.rangeMax) {
-    queryParams.set("token[rangeMax]", filters.rangeMax);
+    queryParams.set("tokenRangeMax", filters.rangeMax);
   } else {
-    queryParams.delete("token[rangeMax]");
+    queryParams.delete("tokenRangeMax");
   }
 
   if (filters.op) {
-    queryParams.set("token[op]", filters.op);
+    queryParams.set("tokenOp", filters.op);
   } else {
-    queryParams.delete("token[op]");
+    queryParams.delete("tokenOp");
   }
 
   if (filters.amount) {
-    queryParams.set("token[amount]", filters.amount);
+    queryParams.set("tokenAmount", filters.amount);
   } else {
-    queryParams.delete("token[amount]");
+    queryParams.delete("tokenAmount");
   }
 
   return queryParams.toString();
@@ -60,27 +60,27 @@ export function queryParamsToFilters(query: string): ExplorerSRC20Filters {
   const params = new URLSearchParams(query);
   const filters: ExplorerSRC20Filters = { ...defaultFilters };
 
-  const range = params.get("token[range]");
+  const range = params.get("tokenRange");
   if (range) {
     filters.range = range as StampRange;
   }
 
-  const rangeMin = params.get("token[rangeMin]");
+  const rangeMin = params.get("tokenRangeMin");
   if (rangeMin) {
     filters.rangeMin = rangeMin;
   }
 
-  const rangeMax = params.get("token[rangeMax]");
+  const rangeMax = params.get("tokenRangeMax");
   if (rangeMax) {
     filters.rangeMax = rangeMax;
   }
 
-  const op = params.get("token[op]");
+  const op = params.get("tokenOp");
   if (op && ["deploy", "mint", "transfer"].includes(op)) {
     filters.op = op as ExplorerSRC20Filters["op"];
   }
 
-  const amount = params.get("token[amount]");
+  const amount = params.get("tokenAmount");
   if (
     amount &&
     ["<50000", "<100000", "<250000", "<500000", "<1000000"].includes(amount)
@@ -92,9 +92,9 @@ export function queryParamsToFilters(query: string): ExplorerSRC20Filters {
 }
 
 export const allQueryKeysFromFiltersExplorerSRC20 = [
-  "token[range]",
-  "token[rangeMin]",
-  "token[rangeMax]",
-  "token[op]",
-  "token[amount]",
+  "tokenRange",
+  "tokenRangeMin",
+  "tokenRangeMax",
+  "tokenOp",
+  "tokenAmount",
 ];

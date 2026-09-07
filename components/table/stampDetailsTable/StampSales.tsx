@@ -8,8 +8,8 @@ import {
 } from "$layout";
 import {
   abbreviateAddress,
+  formatBTCAmount,
   formatDate,
-  formatSatoshisToBTC,
 } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { labelXxs, textXs, valueDarkSm } from "$text";
 import type { StampSalesProps } from "$types/ui.d.ts";
@@ -112,7 +112,7 @@ export function StampSalesTable(
                 <td
                   class={`${cellCenterL2Detail} text-color-orange-400`}
                 >
-                  {formatSatoshisToBTC(dispense.satoshirate, {
+                  {formatBTCAmount(Number(dispense.btc_amount) || 0, {
                     includeSymbol: true,
                     decimals: 8,
                     stripZeros: true,

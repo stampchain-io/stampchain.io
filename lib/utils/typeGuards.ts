@@ -1090,7 +1090,9 @@ export function isValidWalletProvider(
 ): provider is WalletProviderKey {
   return (
     typeof provider === "string" &&
-    ["unisat", "xverse", "hiro", "leather", "horizon"].includes(provider)
+    ["unisat", "xverse", "hiro", "leather", "horizon", "wonder"].includes(
+      provider,
+    )
   );
 }
 

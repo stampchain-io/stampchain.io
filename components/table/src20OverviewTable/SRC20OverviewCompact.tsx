@@ -89,23 +89,23 @@ export function SRC20OverviewCompact({
               ? [
                 {
                   width:
-                    "min-w-[140px] max-w-[160px] w-auto sticky left-0 mobileLg:static",
+                    "min-w-[130px] max-w-[130px] w-auto sticky left-0 mobileLg:static",
                 }, // TOKEN
                 {
-                  width: "min-w-[120px] w-auto",
+                  width: "min-w-[100px] w-auto",
                 }, // BALANCE
                 {
-                  width: "min-w-[120px] w-auto",
+                  width: "min-w-[100px] w-auto",
                 }, // PRICE
                 {
                   width: "min-w-[100px] w-auto",
                 }, // CHANGE
                 {
-                  width: "min-w-[120px] w-auto",
+                  width: "min-w-[100px] w-auto",
                 }, // VOLUME
                 {
                   width:
-                    "min-w-[110px] w-auto tablet:hidden desktop:table-cell",
+                    "min-w-[100px] w-auto tablet:hidden desktop:table-cell",
                 }, // MARKETCAP
               ]
               : [

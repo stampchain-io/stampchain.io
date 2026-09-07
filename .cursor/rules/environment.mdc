@@ -1,9 +1,8 @@
 ---
 description: "Information on environment variables (e.g., DENO_ENV, SKIP_REDIS_CONNECTION) and different runtime environments (development, production)."
-globs: ["deno.json", "main.ts", "dev.ts", "Dockerfile", "*.yml"]
+globs: ["deno.json", "main.ts", "dev.ts", "Dockerfile", "*.yml", "fresh.config.ts", "lib/utils/dataPlaceholderProd.ts"]
 alwaysApply: true
 ---
-
 
 # Environment and configuration
 environment:
@@ -17,3 +16,49 @@ environment:
     - DENO_ENV
     - DEV_BASE_URL
     - SKIP_REDIS_CONNECTION
+
+# Local HTTPS toggle (wallet testing)
+
+`LOCAL_HTTPS` in [dataPlaceholderProd.ts](mdc:lib/utils/dataPlaceholderProd.ts)
+turns Fresh TLS on for `https://localhost:8000`. Wired in
+[fresh.config.ts](mdc:fresh.config.ts). Cert files are gitignored.
+
+**Committed default must be `false`.** Production and other developers use
+plain HTTP locally; AWS terminates TLS. Never commit `LOCAL_HTTPS = true`
+or `localhost-cert.pem` / `localhost-key.pem`.
+
+## Crash if left `true` without certs
+
+`deno task dev` / `deno task start` fails immediately with:
+
+```
+LOCAL_HTTPS is true but localhost-cert.pem / localhost-key.pem are missing.
+```
+
+**Fix for other developers (restore HTTP):** set `LOCAL_HTTPS = false` in
+`lib/utils/dataPlaceholderProd.ts`. Do not generate certs unless they asked
+for local HTTPS.
+
+Same sibling flag: `DATA_PLACEHOLDER_DEV` in that file must also stay
+`false` in committed code (dummy UI data, not a crash).
+
+## Opt-in local HTTPS (Wonder Wallet and similar)
+
+Wonder Wallet rejects `http://localhost`. To serve HTTPS locally:
+
+1. Generate an X.509 **v3** cert (Deno rejects v1:
+   `UnsupportedCertVersion`):
+
+```bash
+openssl req -x509 -newkey rsa:2048 -nodes -sha256 \
+  -keyout localhost-key.pem -out localhost-cert.pem \
+  -days 365 -subj "/CN=localhost" \
+  -addext "subjectAltName=DNS:localhost,IP:127.0.0.1" \
+  -addext "keyUsage=digitalSignature,keyEncipherment" \
+  -addext "extendedKeyUsage=serverAuth" \
+  -addext "basicConstraints=CA:FALSE"
+```
+
+2. Set `LOCAL_HTTPS = true` in `lib/utils/dataPlaceholderProd.ts`.
+3. Open `https://localhost:8000` (browser will warn on the self-signed cert).
+4. Set the flag back to `false` before committing.

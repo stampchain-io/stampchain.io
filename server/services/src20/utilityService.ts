@@ -8,16 +8,35 @@ import { ApiResponseUtil } from "$lib/utils/api/responses/apiResponseUtil.ts";
 import type { InputData } from "$types/src20.d.ts";
 import { logger } from "$lib/utils/logger.ts";
 import { validateImageReference } from "$lib/utils/data/protocols/imageProtocolUtils.ts";
+import { buildSrc20StampUrl } from "$server/utils/src20ImageUrl.ts";
 
 export class SRC20UtilityService {
   static formatSRC20Row(row: Src20Detail) {
-    return {
+    // deno-lint-ignore no-explicit-any
+    const formatted: any = {
       ...row,
       tick: unicodeEscapeToEmoji(row.tick),
       max: row.max ? row.max.toString() : null,
       lim: row.lim ? row.lim.toString() : null,
       amt: row.amt ? row.amt.toString() : null,
     };
+
+    // Attach ready-to-render image URLs whenever the underlying query
+    // already surfaced a tx_hash/deploy_tx but didn't build the URL itself
+    // (e.g. `getValidSrc20TxFromDb`, which powers `fetchBasicSrc20Data`).
+    // This is the single place every SRC20Row-producing query path routes
+    // through (`mapTransactionData`), so every consumer — Explorer, the
+    // Wallet "Created" tab, and the basic `/api/v2/src20/*` endpoints —
+    // ends up with a consistent `stamp_url`/`deploy_img`, matching what
+    // `fetchEnhancedSrc20Data` already provides for `/src20`.
+    if (!formatted.stamp_url && formatted.tx_hash) {
+      formatted.stamp_url = buildSrc20StampUrl(formatted.tx_hash);
+    }
+    if (!formatted.deploy_img && formatted.deploy_tx) {
+      formatted.deploy_img = buildSrc20StampUrl(formatted.deploy_tx);
+    }
+
+    return formatted;
   }
 
   static calculateTickHash(tick: string): string {

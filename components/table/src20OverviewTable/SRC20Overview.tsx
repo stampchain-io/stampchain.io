@@ -212,15 +212,15 @@ export function SRC20Overview({
           {colGroup([
             {
               width:
-                "min-w-[120px] max-w-[150px] w-auto sticky left-0 tablet:static",
+                "min-w-[130px] max-w-[150px] w-auto sticky left-0 tablet:static",
             }, // TOKEN
             { width: "min-w-[100px] w-auto" }, // PRICE
             { width: "min-w-[90px] w-auto" }, // CHANGE
-            { width: "min-w-[110px] w-auto" }, // VOLUME
-            { width: "min-w-[110px] w-auto" }, // MARKETCAP
+            { width: "min-w-[100px] w-auto" }, // VOLUME
+            { width: "min-w-[100px] w-auto" }, // MARKETCAP
             { width: "min-w-[90px] w-auto" }, // HOLDERS
-            { width: "min-w-[110px] w-auto" }, // CREATOR
-            { width: "min-w-[110px] w-auto" }, // DEPLOY
+            { width: "min-w-[140px] w-auto" }, // CREATOR
+            { width: "min-w-[100px] w-auto" }, // DEPLOY
             { width: "min-w-[100px] w-auto" }, // TRADE
           ]).map((col) => <col key={col.key} class={col.className} />)}
         </colgroup>
@@ -271,9 +271,7 @@ export function SRC20Overview({
           {data?.length
             ? (
               data.map((src20: SRC20Row) => {
-                const imageUrl = src20.deploy_img ||
-                  getSRC20ImageSrc(src20) ||
-                  null;
+                const imageUrl = getSRC20ImageSrc(src20) || null;
 
                 return (
                   <tr

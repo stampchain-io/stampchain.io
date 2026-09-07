@@ -23,8 +23,9 @@ declare global {
   }
 }
 
-// Move interfaces and variables to the top
-interface WalletProviders {
+// Injected extension providers on window. Named separately from the
+// WalletProviders alias (WalletProviderKey string union) in $types.
+export interface GlobalWalletProviders {
   LeatherProvider?: any;
   okxwallet?: any;
   unisat?: any;
@@ -32,6 +33,7 @@ interface WalletProviders {
   phantom?: any;
   HorizonWalletProvider?: any;
   XverseProviders?: { BitcoinProvider?: any };
+  wonderWallet?: any;
 }
 
 // Initialize wallet state
@@ -185,7 +187,7 @@ if (typeof globalThis !== "undefined" && "addEventListener" in globalThis) {
 }
 
 // Provider checking functions
-export function getGlobalWallets(): WalletProviders {
+export function getGlobalWallets(): GlobalWalletProviders {
   // Skip provider checks if we're not in a browser context
   if (typeof globalThis === "undefined" || !("document" in globalThis)) {
     return {};
@@ -200,6 +202,7 @@ export function getGlobalWallets(): WalletProviders {
       tapwallet?: unknown;
       phantom?: { bitcoin?: { isPhantom?: boolean } };
       HorizonWalletProvider?: unknown;
+      wonderWallet?: unknown;
     };
 
     logger.debug("ui", {
@@ -211,6 +214,7 @@ export function getGlobalWallets(): WalletProviders {
         hasTapWallet: Boolean(global.tapwallet),
         hasPhantom: Boolean(global.phantom?.bitcoin?.isPhantom),
         hasHorizon: Boolean(global.HorizonWalletProvider),
+        hasWonder: Boolean(global.wonderWallet),
         timestamp: new Date().toISOString(),
       },
     });
@@ -222,6 +226,7 @@ export function getGlobalWallets(): WalletProviders {
       tapwallet: global.tapwallet,
       phantom: global.phantom,
       HorizonWalletProvider: global.HorizonWalletProvider,
+      wonderWallet: global.wonderWallet,
     };
   } catch (_error) {
     // Silently handle wallet detection errors to prevent console spam
@@ -254,6 +259,8 @@ export function checkWalletAvailability(provider: string): boolean {
       return !!wallets.HorizonWalletProvider;
     case "xverse":
       return !!wallets.XverseProviders?.BitcoinProvider;
+    case "wonder":
+      return !!wallets.wonderWallet;
     default:
       return false;
   }

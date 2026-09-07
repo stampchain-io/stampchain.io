@@ -551,6 +551,11 @@ export const FilterContentExplorerStamp = ({
     customRange: filters.rangeMin !== "" || filters.rangeMax !== "",
   });
 
+  // Bumping this forces RangeSliderDual (variant="range") to remount so its
+  // internal handle positions reset instead of staying at the last dragged
+  // spot after the custom range is cleared/deselected.
+  const [rangeResetKey, setRangeResetKey] = useState(0);
+
   // Watch for changes to initialFilters
   useEffect(() => {
     setFilters(initialFilters);
@@ -565,6 +570,7 @@ export const FilterContentExplorerStamp = ({
         ...prev,
         customRange: false, // Close the custom range section
       }));
+      setRangeResetKey((k) => k + 1);
     } else {
       setExpandedSections((prev) => ({
         ...prev,
@@ -729,12 +735,14 @@ export const FilterContentExplorerStamp = ({
 
   const handleFileSizeChange = (sizeType: StampFilesize | null) => {
     setFilters((prevFilters) => {
+      const newFileSize = prevFilters.fileSize === sizeType ? null : sizeType;
       const newFilters = {
         ...prevFilters,
-        fileSize: prevFilters.fileSize === sizeType ? null : sizeType,
-        // Clear custom range if switching to preset
-        fileSizeMin: sizeType !== "custom" ? "" : prevFilters.fileSizeMin,
-        fileSizeMax: sizeType !== "custom" ? "" : prevFilters.fileSizeMax,
+        fileSize: newFileSize,
+        // Clear custom range whenever the result isn't "custom" - this
+        // covers both switching to a preset AND deselecting custom itself
+        fileSizeMin: newFileSize === "custom" ? prevFilters.fileSizeMin : "",
+        fileSizeMax: newFileSize === "custom" ? prevFilters.fileSizeMax : "",
       };
       onFiltersChange(newFilters);
       return newFilters;
@@ -1067,8 +1075,13 @@ export const FilterContentExplorerStamp = ({
             variant="collapsibleLabel"
           >
             <RangeSliderDual
+              key={rangeResetKey}
               variant="range"
               onChange={handleRangeSliderChange}
+              initialMin={filters.rangeMin ? parseInt(filters.rangeMin) : 0}
+              initialMax={filters.rangeMax
+                ? parseInt(filters.rangeMax)
+                : Infinity}
             />
           </CollapsibleSection>
         </CollapsibleSection>

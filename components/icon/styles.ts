@@ -105,31 +105,38 @@ export const iconStyles = {
   //   - the gradient defs have to be included in the file, since creating a global gradient file for them requires moving them up in the DOM tree (I abandoned this approach)
 
   icon: {
-    neutral400: "stroke-color-neutral-400 fill-none",
-    neutral500: "stroke-color-neutral-500 fill-none",
-    neutral600: "stroke-color-neutral-600 fill-none",
+    // fill-stroke fills must be complete class literals (Tailwind JIT).
+    neutral400:
+      "stroke-color-neutral-400 fill-none [&_path[class*='fill-stroke']]:fill-color-neutral-400",
+    neutral500:
+      "stroke-color-neutral-500 fill-none [&_path[class*='fill-stroke']]:fill-color-neutral-500",
+    neutral600:
+      "stroke-color-neutral-600 fill-none [&_path[class*='fill-stroke']]:fill-color-neutral-600",
 
-    primary400: "stroke-color-primary-400 fill-none",
-    primary500: "stroke-color-primary-500 fill-none",
-    primary600: "stroke-color-primary-600 fill-none",
+    primary400:
+      "stroke-color-primary-400 fill-none [&_path[class*='fill-stroke']]:fill-color-primary-400",
+    primary500:
+      "stroke-color-primary-500 fill-none [&_path[class*='fill-stroke']]:fill-color-primary-500",
+    primary600:
+      "stroke-color-primary-600 fill-none [&_path[class*='fill-stroke']]:fill-color-primary-600",
 
     custom: "fill-none",
   },
 
   iconButton: {
     neutral400:
-      "stroke-color-neutral-400 hover:stroke-color-hover group-hover:stroke-color-hover fill-none hover:fill-none group-hover:fill-none cursor-pointer",
+      "stroke-color-neutral-400 hover:stroke-color-hover group-hover:stroke-color-hover fill-none hover:fill-none group-hover:fill-none cursor-pointer [&_path[class*='fill-stroke']]:fill-color-neutral-400 hover:[&_path[class*='fill-stroke']]:fill-color-hover group-hover:[&_path[class*='fill-stroke']]:fill-color-hover",
     neutral500:
-      "stroke-color-neutral-500 hover:stroke-color-hover group-hover:stroke-color-hover fill-none hover:fill-none group-hover:fill-none cursor-pointer",
+      "stroke-color-neutral-500 hover:stroke-color-hover group-hover:stroke-color-hover fill-none hover:fill-none group-hover:fill-none cursor-pointer [&_path[class*='fill-stroke']]:fill-color-neutral-500 hover:[&_path[class*='fill-stroke']]:fill-color-hover group-hover:[&_path[class*='fill-stroke']]:fill-color-hover",
     neutral600:
-      "stroke-color-neutral-600 hover:stroke-color-hover group-hover:stroke-color-hover fill-none hover:fill-none group-hover:fill-none cursor-pointer",
+      "stroke-color-neutral-600 hover:stroke-color-hover group-hover:stroke-color-hover fill-none hover:fill-none group-hover:fill-none cursor-pointer [&_path[class*='fill-stroke']]:fill-color-neutral-600 hover:[&_path[class*='fill-stroke']]:fill-color-hover group-hover:[&_path[class*='fill-stroke']]:fill-color-hover",
 
     primary400:
-      "stroke-color-primary-400 hover:stroke-color-hover group-hover:stroke-color-hover fill-none hover:fill-none group-hover:fill-none cursor-pointer",
+      "stroke-color-primary-400 hover:stroke-color-hover group-hover:stroke-color-hover fill-none hover:fill-none group-hover:fill-none cursor-pointer [&_path[class*='fill-stroke']]:fill-color-primary-400 hover:[&_path[class*='fill-stroke']]:fill-color-hover group-hover:[&_path[class*='fill-stroke']]:fill-color-hover",
     primary500:
-      "stroke-color-primary-500 hover:stroke-color-hover group-hover:stroke-color-hover fill-none hover:fill-none group-hover:fill-none cursor-pointer",
+      "stroke-color-primary-500 hover:stroke-color-hover group-hover:stroke-color-hover fill-none hover:fill-none group-hover:fill-none cursor-pointer [&_path[class*='fill-stroke']]:fill-color-primary-500 hover:[&_path[class*='fill-stroke']]:fill-color-hover group-hover:[&_path[class*='fill-stroke']]:fill-color-hover",
     primary600:
-      "stroke-color-primary-600 hover:stroke-color-hover group-hover:stroke-color-hover fill-none hover:fill-none group-hover:fill-none cursor-pointer",
+      "stroke-color-primary-600 hover:stroke-color-hover group-hover:stroke-color-hover fill-none hover:fill-none group-hover:fill-none cursor-pointer [&_path[class*='fill-stroke']]:fill-color-primary-600 hover:[&_path[class*='fill-stroke']]:fill-color-hover group-hover:[&_path[class*='fill-stroke']]:fill-color-hover",
 
     custom: "fill-none cursor-pointer",
   },

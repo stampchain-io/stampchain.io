@@ -14,6 +14,12 @@
  * StampInfo, CollectionDetailHeader) - this adds the `group` + cursor-pointer
  * classes needed for the icon/text group-hover transitions, so call sites
  * don't need to repeat them.
+ *
+ * Pass `href` to make `link` a *real* link - the icon+children wrapper
+ * renders as an `<a>` pointing there (e.g. `/wallet/{address}`) instead of
+ * just looking clickable. Without `href`, `link` remains styling-only, so
+ * callers that need a click handler instead of navigation can still use
+ * `link` alone and wrap/handle clicks themselves.
  */
 import { Icon, IconVariants } from "$icon";
 import type { ComponentChildren } from "preact";
@@ -24,6 +30,8 @@ interface UserProfileIconProps {
   className?: string;
   wrapperClassName?: string;
   link?: boolean;
+  href?: string | undefined;
+  target?: string;
   children?: ComponentChildren;
 }
 
@@ -33,6 +41,8 @@ export function UserProfileIcon({
   className = "w-[14px] h-[14px] stroke-[2] stroke-color-neutral-200 shrink-0",
   wrapperClassName = "",
   link = false,
+  href,
+  target = "_self",
   children,
 }: UserProfileIconProps) {
   const icon = (
@@ -52,12 +62,21 @@ export function UserProfileIcon({
 
   if (children === undefined) return icon;
 
+  const wrapperClass = `inline-flex items-center gap-1.5 ${
+    link ? "group cursor-pointer" : ""
+  } ${wrapperClassName}`;
+
+  if (href) {
+    return (
+      <a href={href} target={target} class={wrapperClass}>
+        {icon}
+        {children}
+      </a>
+    );
+  }
+
   return (
-    <span
-      class={`inline-flex items-center gap-1.5 ${
-        link ? "group cursor-pointer" : ""
-      } ${wrapperClassName}`}
-    >
+    <span class={wrapperClass}>
       {icon}
       {children}
     </span>

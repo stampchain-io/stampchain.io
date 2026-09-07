@@ -54,6 +54,16 @@ Use `deno task dev:safe` to clean up before running the dev server.
   `REDIS_SETUP.md`.
 - Development defaults to `https://dev.stampchain.io`; production to
   `https://stampchain.io`.
+- **Local HTTPS (`LOCAL_HTTPS`)** in
+  `lib/utils/dataPlaceholderProd.ts`, applied by `fresh.config.ts`.
+  Committed value **must be `false`**. If `deno task dev` crashes with
+  `LOCAL_HTTPS is true but localhost-cert.pem / localhost-key.pem are
+  missing`, set the flag back to `false` (certs are gitignored; other
+  developers should not need them). Only set `true` locally for wallets
+  that reject `http://localhost` (e.g. Wonder Wallet); generate an
+  X.509 v3 cert (see `.cursor/rules/environment.mdc`) and never commit
+  the flag or the `.pem` files. `DATA_PLACEHOLDER_DEV` in the same file
+  must likewise stay `false` in committed code.
 
 ## 5. Import Conventions
 - Use import maps defined in `deno.json`.

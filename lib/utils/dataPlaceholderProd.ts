@@ -10,6 +10,12 @@ import type { StampRow } from "$types/stamp.d.ts";
  *
  * Flip to true when developing UI without a database connection.
  *
+ * LOCAL_HTTPS (default: false)
+ *   false → Fresh listens on http://localhost:8000
+ *   true  → Fresh listens on https://localhost:8000 using
+ *           ./localhost-cert.pem and ./localhost-key.pem
+ *           (generate once with openssl; do not commit the pem files)
+ *
  * Everything in this file is small, dependency-free, and always loaded —
  * safe to statically import from any route. The rich dev-only dataset
  * lives in dataPlaceholderDev.ts and must only ever be reached via a
@@ -22,6 +28,7 @@ import type { StampRow } from "$types/stamp.d.ts";
  * strings, not fake stamp or token content.
  */
 export const DATA_PLACEHOLDER_DEV = false;
+export const LOCAL_HTTPS = false;
 
 /* ===== HOME PAGE (routes/index.tsx) ===== */
 export const DATA_PLACEHOLDER_PROD_HOME = {

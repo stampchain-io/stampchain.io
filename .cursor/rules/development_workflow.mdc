@@ -8,6 +8,11 @@ development_workflow:
     development:
       command: "deno task dev"
       options: "--inspect --allow-all --watch --no-clear-screen"
+      local_https:
+        flag: "LOCAL_HTTPS in lib/utils/dataPlaceholderProd.ts"
+        committed_default: false
+        crash: "LOCAL_HTTPS is true but localhost-cert.pem / localhost-key.pem are missing."
+        fix: "Set LOCAL_HTTPS = false unless the developer generated gitignored localhost-*.pem and wants https://localhost:8000"
       excludes:
         - "dist/"
         - "node_modules/"

@@ -10,7 +10,8 @@ export type WalletProviderKey =
   | "tapwallet"
   | "phantom"
   | "horizon"
-  | "xverse";
+  | "xverse"
+  | "wonder";
 
 /**
  * Default wallet connectors available in the application
@@ -23,6 +24,7 @@ export const DEFAULT_WALLET_CONNECTORS: WalletProviderKey[] = [
   "phantom",
   "horizon",
   "xverse",
+  "wonder",
 ];
 
 /**
@@ -104,6 +106,21 @@ export const WALLET_PROVIDERS: Record<WalletProviderKey, WalletProviderConfig> =
       installUrl:
         "https://chromewebstore.google.com/detail/xverse-wallet/idnnbdplmphpflfnlkomgpfbpcgelopg",
       capabilities: ["p2tr", "p2wpkh", "psbt", "message-signing", "send-btc"],
+      addressTypes: ["payment", "ordinals"],
+    },
+    wonder: {
+      name: "Wonder",
+      logo: "/img/wallet/wonder/logo_wonder.svg",
+      installUrl: "https://wonder-wallet.com",
+      capabilities: [
+        "p2tr",
+        "p2wpkh",
+        "p2sh",
+        "p2pkh",
+        "psbt",
+        "message-signing",
+        "send-btc",
+      ],
       addressTypes: ["payment", "ordinals"],
     },
   };

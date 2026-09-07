@@ -84,6 +84,43 @@ export function extractRawTransactionFromPSBT(psbtHex: string): string | null {
 }
 
 /**
+ * Extracts the previous transactions embedded on a PSBT's inputs as
+ * `nonWitnessUtxo`, keyed by their (display) txid.
+ *
+ * Legacy (non-witness / P2PKH, P2SH) inputs require the full previous
+ * transaction to be signed. stampchain's transaction builders already embed it
+ * as `nonWitnessUtxo` on each such input, but wallets that want it as a separate
+ * `prevTxs` map (e.g. Wonder Wallet's `signPsbt({ prevTxs })`) can't read it off
+ * the PSBT directly. This pulls it out so it can be handed to them, with no
+ * extra round-trip. SegWit inputs carry `witnessUtxo` instead and are skipped.
+ *
+ * @param psbtHex - The PSBT in hex format
+ * @returns A map of `{ [txid]: rawTxHex }` for every non-witness input; empty
+ *          when the PSBT is SegWit-only or cannot be parsed.
+ */
+export function extractPrevTxsFromPSBT(
+  psbtHex: string,
+): Record<string, string> {
+  const prevTxs: Record<string, string> = {};
+  try {
+    const psbt = bitcoin.Psbt.fromHex(psbtHex);
+    for (const input of psbt.data.inputs) {
+      if (!input.nonWitnessUtxo) continue;
+      const prevTx = bitcoin.Transaction.fromBuffer(input.nonWitnessUtxo);
+      // getId() is the display (big-endian) txid, which is the key wallets and
+      // block explorers use.
+      prevTxs[prevTx.getId()] = prevTx.toHex();
+    }
+  } catch (error) {
+    logger.warn("psbt", {
+      message: "Failed to extract prevTxs from PSBT",
+      error: error instanceof Error ? error.message : String(error),
+    });
+  }
+  return prevTxs;
+}
+
+/**
  * Checks if a hex string is a PSBT by looking for magic bytes
  *
  * @param hex - The hex string to check

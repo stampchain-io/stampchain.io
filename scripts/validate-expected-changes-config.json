@@ -2,7 +2,7 @@
   "expectedChanges": {
     "allowedNewFields": [
       "marketData",
-      "dispenserInfo", 
+      "dispenserInfo",
       "cacheStatus",
       "cacheInfo",
       "timestamp",
@@ -39,8 +39,16 @@
     "enforceTypes": true,
     "allowAdditionalProperties": true,
     "ignoreEndpoints": [
-      "/api/v2/error"
-    ]
+      "/api/v2/error",
+      "/api/internal/",
+      "/api/v2/create/dispense",
+      "/api/v2/fairmint/compose"
+    ],
+    "ignoreEndpointsNotes": {
+      "/api/internal/": "Frontend-only endpoints behind InternalApiFrontendGuard; intentionally undocumented, return 403 to non-browser callers.",
+      "/api/v2/create/dispense": "POST compose endpoint not yet documented in schema.yml (tracked in TaskMaster stampchain-io).",
+      "/api/v2/fairmint/compose": "POST compose endpoint not yet documented in schema.yml; prod currently 500s after ~27s for unknown assets (tracked as 1174@stampchain-io)."
+    }
   },
   "performance": {
     "warningThreshold": 2000,

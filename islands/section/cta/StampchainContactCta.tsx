@@ -15,7 +15,10 @@ export const StampchainContactCta = () => {
         {/* ===== HEADER SECTION ===== */}
         <h3 class={titleNeutral}>STAMPCHAIN</h3>
         <h4 class={subtitleNeutral}>
-          THE CREATORS OF BITCOIN STAMPS
+          <span class="hidden min-[420px]:inline">THE&nbsp;</span>
+          CREATORS OF{" "}
+          <span class="hidden min-[520px]:inline">BITCOIN&nbsp;</span>
+          STAMPS
         </h4>
         {/* ===== CONTENT SECTION ===== */}
         <div class={`flex flex-col ${text}`}>

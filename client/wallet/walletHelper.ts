@@ -4,6 +4,7 @@ import { okxProvider } from "$client/wallet/okx.ts";
 import { phantomProvider } from "$client/wallet/phantom.ts";
 import { tapWalletProvider } from "$client/wallet/tapwallet.ts";
 import { unisatProvider } from "$client/wallet/unisat.ts";
+import { wonderProvider } from "$client/wallet/wonder.ts";
 import { xverseProvider } from "$client/wallet/xverse.ts";
 import { logger } from "$lib/utils/logger.ts";
 import type { SignPSBTResult, Wallet } from "$types/index.d.ts";
@@ -181,6 +182,8 @@ export const getWalletProvider = (
       return horizonProvider;
     case "xverse":
       return xverseProvider;
+    case "wonder":
+      return wonderProvider;
     default:
       throw new Error(`Unsupported wallet provider: ${provider}`);
   }

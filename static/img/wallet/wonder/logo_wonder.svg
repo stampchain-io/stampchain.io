@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Wonder Wallet">
+  <rect width="128" height="128" rx="30" fill="#0a0a0f"/>
+  <defs>
+    <radialGradient id="wonderGold" cx="50%" cy="34%" r="72%">
+      <stop offset="0%" stop-color="#F4D58D"/>
+      <stop offset="55%" stop-color="#E0B453"/>
+      <stop offset="100%" stop-color="#9a6f1f"/>
+    </radialGradient>
+  </defs>
+  <circle cx="64" cy="64" r="45" fill="url(#wonderGold)"/>
+  <circle cx="64" cy="64" r="45" fill="none" stroke="#000" stroke-opacity="0.18" stroke-width="2"/>
+  <path d="M40 46 L52 84 L64 58 L76 84 L88 46" fill="none" stroke="#3a2606" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+</svg>

@@ -129,6 +129,9 @@ sample-data/
 *.bak
 *.test.json
 *.sample.json
+# Local self-signed HTTPS for wallet testing (LOCAL_HTTPS flag)
+localhost-cert.pem
+localhost-key.pem
 # Personal/local files
 TODO.md
 NOTES.md

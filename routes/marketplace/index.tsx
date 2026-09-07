@@ -72,7 +72,9 @@ export const handler: Handlers = {
       const stamps = isDummyDefaultMarket
         ? withDummyActivityLevels(
           stampsByCurrentType.filter((s: any) => s.lowestPriceDispenser),
-          ["HOT", "WARM", "COOL", "DORMANT"], // COLD impossible — dispenser is open
+          // activity_level reflects sales recency only, not dispenser state —
+          // a listed stamp can legitimately be COLD (no sales yet), so it's
+          // included here to match real-world data.
         )
         : isSalesView
         ? withDummyActivityLevels(withDummySalesData(stampsByCurrentType))
@@ -456,7 +458,7 @@ export function MarketplacePage(props: MarketplacePageProps) {
     page,
     totalPages,
     pagination,
-    sortBy: _sortBy,
+    sortBy,
     selectedTab,
     filters,
     search: _search,
@@ -485,6 +487,7 @@ export function MarketplacePage(props: MarketplacePageProps) {
         viewMode={cardView}
         isSalesMode={isSalesMode}
         currentTotal={pagination?.total ?? 0}
+        sortBy={sortBy as "ASC" | "DESC"}
       />
 
       {/* Main Content with Pagination */}

@@ -138,6 +138,7 @@ Deno.test("constants - wallet providers", () => {
     "phantom",
     "horizon",
     "xverse",
+    "wonder",
   ];
 
   assertEquals(

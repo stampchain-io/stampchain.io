@@ -55,7 +55,9 @@ export const SRC20OverviewHeader = ({
     <div class="flex flex-col w-full gap-1.5">
       <div class="relative flex flex-row justify-between items-start w-full">
         {/* ===== TITLE ===== */}
-        <h1 class={titlePrimary}>SRC-20 TOKENS</h1>
+        <h1 class={titlePrimary}>
+          <span class="hidden min-[420px]:inline">SRC-20&nbsp;</span>TOKENS
+        </h1>
         <PillContentCount value={countPill} />
       </div>
 

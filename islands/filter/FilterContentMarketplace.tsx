@@ -557,6 +557,11 @@ export const FilterContentMarketplace = ({
     priceRange: hasActiveFilters("priceRange", filters),
   });
 
+  // Bumping this forces RangeSliderDual (variant="range") to remount so its
+  // internal handle positions reset instead of staying at the last dragged
+  // spot after the custom range is cleared/deselected.
+  const [rangeResetKey, setRangeResetKey] = useState(0);
+
   // Watch for changes to initialFilters
   useEffect(() => {
     setFilters(initialFilters);
@@ -571,6 +576,7 @@ export const FilterContentMarketplace = ({
         ...prev,
         customRange: false, // Close the custom range section
       }));
+      setRangeResetKey((k) => k + 1);
     } else {
       setExpandedSections((prev) => ({
         ...prev,
@@ -748,25 +754,28 @@ export const FilterContentMarketplace = ({
     type: "all" | "bargain" | "affordable" | "premium" | "custom",
   ) => {
     setFilters((prevFilters) => {
+      // "all" cannot be deselected - clicking it again keeps it selected
+      const newListings = type === "all"
+        ? "all"
+        : (prevFilters.listings === type ? "all" : type);
+
       const newFilters = {
         ...prevFilters,
-        // "all" cannot be deselected - clicking it again keeps it selected
-        listings: type === "all"
-          ? "all"
-          : (prevFilters.listings === type ? "all" : type),
-        // Clear custom price range if switching away from custom
-        listingsMin: type === "custom" ? prevFilters.listingsMin : "",
-        listingsMax: type === "custom" ? prevFilters.listingsMax : "",
+        listings: newListings,
+        // Clear custom price range whenever the result isn't "custom" -
+        // this covers both switching away AND deselecting custom itself
+        listingsMin: newListings === "custom" ? prevFilters.listingsMin : "",
+        listingsMax: newListings === "custom" ? prevFilters.listingsMax : "",
       } as StampFilters;
 
-      // Set predefined price ranges
-      if (type === "bargain") {
+      // Set predefined price ranges (only when actually selecting a preset)
+      if (newListings === "bargain" && type === "bargain") {
         newFilters.listingsMin = "0";
         newFilters.listingsMax = "0.0025";
-      } else if (type === "affordable") {
+      } else if (newListings === "affordable" && type === "affordable") {
         newFilters.listingsMin = "0.005";
         newFilters.listingsMax = "0.01";
-      } else if (type === "premium") {
+      } else if (newListings === "premium" && type === "premium") {
         newFilters.listingsMin = "0.1";
         newFilters.listingsMax = "";
       }
@@ -790,12 +799,14 @@ export const FilterContentMarketplace = ({
 
   const handleFileSizeChange = (sizeType: StampFilesize | null) => {
     setFilters((prevFilters) => {
+      const newFileSize = prevFilters.fileSize === sizeType ? null : sizeType;
       const newFilters = {
         ...prevFilters,
-        fileSize: prevFilters.fileSize === sizeType ? null : sizeType,
-        // Clear custom range if switching to preset
-        fileSizeMin: sizeType !== "custom" ? "" : prevFilters.fileSizeMin,
-        fileSizeMax: sizeType !== "custom" ? "" : prevFilters.fileSizeMax,
+        fileSize: newFileSize,
+        // Clear custom range whenever the result isn't "custom" - this
+        // covers both switching to a preset AND deselecting custom itself
+        fileSizeMin: newFileSize === "custom" ? prevFilters.fileSizeMin : "",
+        fileSizeMax: newFileSize === "custom" ? prevFilters.fileSizeMax : "",
       };
       onFiltersChange(newFilters);
       return newFilters;
@@ -972,6 +983,12 @@ export const FilterContentMarketplace = ({
                   <RangeSliderDual
                     variant="price"
                     onChange={handlePriceRangeChange}
+                    initialMin={filters.listingsMin
+                      ? parseFloat(filters.listingsMin)
+                      : 0}
+                    initialMax={filters.listingsMax
+                      ? parseFloat(filters.listingsMax)
+                      : Infinity}
                   />
                 </div>
               )}
@@ -1313,8 +1330,13 @@ export const FilterContentMarketplace = ({
             variant="collapsibleLabel"
           >
             <RangeSliderDual
+              key={rangeResetKey}
               variant="range"
               onChange={handleRangeSliderChange}
+              initialMin={filters.rangeMin ? parseInt(filters.rangeMin) : 0}
+              initialMax={filters.rangeMax
+                ? parseInt(filters.rangeMax)
+                : Infinity}
             />
           </CollapsibleSection>
         </CollapsibleSection>

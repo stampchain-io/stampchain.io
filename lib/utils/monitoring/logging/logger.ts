@@ -47,20 +47,17 @@ class Logger {
     }
   }
 
+  // Decided once at construction (setupFileLogging) or explicitly via
+  // setConfig(). It deliberately does NOT re-read DENO_ENV per call: real
+  // processes never flip DENO_ENV at runtime, but unit tests do (to exercise
+  // production branches of other modules), and re-reading it here made every
+  // logger.warn/error in those tests start an un-awaited real file write that
+  // then leaked into unrelated test files sharing the worker.
   private shouldWriteToFile(): boolean {
     if (!this.isServerSide || !globalThis.Deno) {
       return false;
     }
-
-    const env = globalThis.Deno?.env.get("DENO_ENV") || "production";
-
-    // If explicitly enabled via config, allow it
-    if (this.enableFileLogging) {
-      return true;
-    }
-
-    // Enable file logging in development and production by default
-    return env === "development" || env === "production";
+    return this.enableFileLogging;
   }
 
   private updateEnabledNamespaces(): void {
@@ -126,6 +123,24 @@ class Logger {
     });
   }
 
+  // In-flight file writes. Log calls are synchronous for callers, so the
+  // writes are fire-and-forget; tracking them lets flush() await completion
+  // (tests, graceful shutdown) instead of guessing with timers.
+  private pendingWrites: Set<Promise<void>> = new Set();
+
+  private queueFileWrite(logEntry: string): void {
+    const write = this.writeToFile(logEntry);
+    this.pendingWrites.add(write);
+    write.finally(() => this.pendingWrites.delete(write));
+  }
+
+  /** Resolves once every file write issued so far has settled. */
+  async flush(): Promise<void> {
+    while (this.pendingWrites.size > 0) {
+      await Promise.allSettled([...this.pendingWrites]);
+    }
+  }
+
   private async writeToFile(logEntry: string): Promise<void> {
     if (!this.shouldWriteToFile()) {
       return;
@@ -170,7 +185,7 @@ class Logger {
       if (this.isServerSide) {
         const logEntry = this.formatForConsole(logData);
         console.debug(logEntry);
-        this.writeToFile(logEntry);
+        this.queueFileWrite(logEntry);
       } else {
         // Client-side: log the object directly
         console.debug(logData);
@@ -186,7 +201,7 @@ class Logger {
       if (this.isServerSide) {
         const logEntry = this.formatForConsole(logData);
         console.info(logEntry);
-        this.writeToFile(logEntry);
+        this.queueFileWrite(logEntry);
       } else {
         // Client-side: log the object directly
         console.info(logData);
@@ -201,7 +216,7 @@ class Logger {
     if (this.isServerSide) {
       const logEntry = this.formatForConsole(logData);
       console.warn(logEntry);
-      this.writeToFile(logEntry);
+      this.queueFileWrite(logEntry);
     } else {
       // Client-side: log the object directly
       console.warn(logData);
@@ -215,7 +230,7 @@ class Logger {
     if (this.isServerSide) {
       const logEntry = this.formatForConsole(logData);
       console.error(logEntry);
-      this.writeToFile(logEntry);
+      this.queueFileWrite(logEntry);
     } else {
       // Client-side: log the object directly
       console.error(logData);

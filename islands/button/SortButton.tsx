@@ -1,5 +1,5 @@
+import { IS_BROWSER } from "$fresh/runtime.ts";
 import { Icon } from "$icon";
-import { useSSRSafeNavigation } from "$lib/hooks/useSSRSafeNavigation.ts";
 import { tooltipIcon } from "$notification";
 import type { SortProps } from "$types/ui.d.ts";
 import { useEffect, useRef, useState } from "preact/hooks";
@@ -7,20 +7,22 @@ import { useEffect, useRef, useState } from "preact/hooks";
 export function SortButton(
   { searchParams, initSort, sortParam = "sortBy" }: SortProps,
 ) {
-  const { getSearchParam, isClient, getUrl } = useSSRSafeNavigation();
-
-  // Initialize sort based on URL parameter or initSort prop
+  // Determine the current sort direction. `initSort` (the server-derived
+  // value passed down as a prop) is preferred over reading the URL on the
+  // client: Fresh's `f-partial` navigation updates the address bar via
+  // `history.pushState` but never fires `popstate`, so any state cached
+  // from those listeners (as this component previously relied on via
+  // `useSSRSafeNavigation`) goes stale after the very first click and the
+  // button stops responding. Reading `location.search` fresh on every
+  // render (rather than through a cached hook) avoids that trap for callers
+  // that don't pass `initSort` yet.
   const sort = (() => {
-    // Use initSort prop if provided
-    if (initSort) {
-      return initSort;
-    }
-    // Use SSR-safe navigation for client-side URL parameters
-    if (isClient) {
-      const currentSort = getSearchParam(sortParam);
+    if (initSort) return initSort;
+    if (IS_BROWSER && globalThis.location) {
+      const currentSort = new URLSearchParams(globalThis.location.search)
+        .get(sortParam);
       return currentSort === "ASC" ? "ASC" : "DESC";
     }
-    // Fallback to server-side searchParams during SSR
     return searchParams?.get(sortParam) === "ASC" ? "ASC" : "DESC";
   })();
 
@@ -31,19 +33,19 @@ export function SortButton(
 
   // Generate the sort URL for Fresh.js partial navigation
   const getSortUrl = (): string => {
-    // Get current URL in an SSR-safe way
-    const url = new URL(getUrl());
-    // Fall back to `initSort` (rather than a hardcoded "DESC") so pages that
-    // default to ascending sort still toggle correctly before any `sortBy`
-    // param exists in the URL.
-    const defaultSort = initSort || "DESC";
-    const currentSort = isClient
-      ? getSearchParam(sortParam) || defaultSort
-      : defaultSort;
-    const newSort = currentSort === "ASC" ? "DESC" : "ASC";
+    const newSort = sort === "ASC" ? "DESC" : "ASC";
 
+    if (IS_BROWSER && globalThis.location) {
+      const url = new URL(globalThis.location.href);
+      url.searchParams.set(sortParam, newSort);
+      return url.toString();
+    }
+
+    // SSR fallback - pathname isn't known here; carry over whatever
+    // `searchParams` was provided and let hydration correct the href.
+    const url = new URL("/", "http://localhost");
+    searchParams?.forEach((value, key) => url.searchParams.set(key, value));
     url.searchParams.set(sortParam, newSort);
-
     return url.toString();
   };
 

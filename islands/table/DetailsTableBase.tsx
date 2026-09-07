@@ -46,19 +46,6 @@ export default function DetailsTableBase({
   const [totalCounts, setTotalCounts] = useState(initialCounts);
 
   /* ===== DATA HANDLERS ===== */
-  const mapDispensesWithRates = (dispenses: any[], dispensers: any[]) => {
-    if (!dispenses || !dispensers) return [];
-
-    const dispenserRates = new Map(
-      dispensers?.map((d) => [d.tx_hash, d.satoshirate]) ?? [],
-    );
-
-    return dispenses?.map((dispense) => ({
-      ...dispense,
-      satoshirate: dispenserRates.get(dispense.dispenser_tx_hash) || 0,
-    })) ?? [];
-  };
-
   const fetchData = async (
     pageNum: number,
     tabId: string,
@@ -157,18 +144,17 @@ export default function DetailsTableBase({
               isLoading={isLoading}
             />
           );
-        case "sales": {
-          const dispensesWithRates = mapDispensesWithRates(
-            tabData.dispenses || [],
-            tabData.dispensers || [],
-          );
+        case "sales":
+          // Dispenses already include the real per-transaction `btc_amount`
+          // from Counterparty, so no client-side rate-joining is needed
+          // (that previously depended on the "listings" tab having been
+          // fetched first, and silently showed 0 BTC otherwise).
           return (
             <StampSalesTable
-              dispenses={dispensesWithRates}
+              dispenses={tabData.dispenses || []}
               isLoading={isLoading}
             />
           );
-        }
         case "transfers":
           return (
             <StampTransfersTable

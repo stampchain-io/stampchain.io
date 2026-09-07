@@ -198,7 +198,19 @@ export const getStampImageSrc = (stamp: StampRow): string | undefined => {
 };
 
 export const getSRC20ImageSrc = (src20: SRC20Row): string | undefined => {
-  // If there's no stamp_url, return undefined
+  // Deploy-derived image takes priority: it's the token's canonical icon,
+  // and it's the *only* image available for balance-style rows that don't
+  // carry their own transaction hash (see SRC20Repository.getSrc20BalanceFromDb).
+  // It's already a fully-qualified URL built server-side, so no further
+  // munging is needed. Mirrors the `deploy_img || getSRC20ImageSrc(...)`
+  // fallback previously duplicated across SRC20Overview/SRC20Minting* —
+  // centralizing it here means every consumer (including SRC20Card) gets
+  // it for free.
+  if (src20.deploy_img) {
+    return src20.deploy_img;
+  }
+
+  // If there's no stamp_url either, return undefined
   if (!src20.stamp_url) {
     return undefined;
   }

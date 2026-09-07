@@ -12,25 +12,37 @@ import type { ExplorerContentProps } from "$types/ui.d.ts";
 /* ===== COMPONENT ===== */
 export function ExplorerContent({
   stamps,
+  mixedItems,
   isRecentSales = false,
   pagination,
   src20DataCard,
   section = "all",
   viewMode = "cardVertical",
 }: ExplorerContentProps) {
-  /* ===== MERGE + SORT by block_index DESC ===== */
-  const stampItems: MixedItem[] = (stamps ?? []).map((s) => ({
-    kind: "stamp",
-    item: s,
-  }));
-  const src20Items: MixedItem[] = (src20DataCard?.data ?? []).map((s) => ({
-    kind: "src20",
-    item: s,
-  }));
+  // `mixedItems` (when provided) is a pre-ordered, pre-paginated feed built
+  // server-side by ExplorerFeedRepository — a single DB-level UNION ALL of
+  // stamps and SRC-20 transactions ordered by block_index/tx_index, so it's
+  // already correctly interwoven and safe to render as-is. Falling back to
+  // a client-side merge below is only for callers that haven't switched to
+  // the unified feed yet (e.g. dev placeholder data, or filter combinations
+  // that still use two independently-paginated queries) — in that case the
+  // two datasets aren't guaranteed to share the same time window, so this
+  // sort can only make the *contents already fetched* look ordered, not
+  // guarantee correct interleaving across pages.
+  const mixed: MixedItem[] = mixedItems ?? (() => {
+    const stampItems: MixedItem[] = (stamps ?? []).map((s) => ({
+      kind: "stamp",
+      item: s,
+    }));
+    const src20Items: MixedItem[] = (src20DataCard?.data ?? []).map((s) => ({
+      kind: "src20",
+      item: s,
+    }));
 
-  const mixed: MixedItem[] = [...stampItems, ...src20Items].sort(
-    (a, b) => Number(b.item.block_index) - Number(a.item.block_index),
-  );
+    return [...stampItems, ...src20Items].sort(
+      (a, b) => Number(b.item.block_index) - Number(a.item.block_index),
+    );
+  })();
 
   /* ===== FILTER by section ===== */
   const visible: MixedItem[] = section === "stamps"

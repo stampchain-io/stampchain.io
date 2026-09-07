@@ -14,7 +14,8 @@ import { VNode } from "preact";
  * path[3] is the bitcoin symbol — always displayed, colored the same as the
  * highest active tier: path[0] for COOL (30d), path[1] for WARM (7d), path[2]
  * for HOT (24h).
- * COLD shows "none" text with no icon.
+ * COLD (no sales yet) renders nothing — the indicator is hidden entirely
+ * rather than shown as an empty/"none" state.
  */
 const STROKE_ON = [
   "stroke-color-secondary-300",
@@ -27,8 +28,7 @@ const TOOLTIP_LABEL: Record<string, string> = {
   HOT: "24H SALES",
   WARM: "7D SALES",
   COOL: "30D SALES",
-  DORMANT: "NO SALES",
-  COLD: "NO DISPENSERS",
+  DORMANT: "NO RECENT SALES",
 };
 
 const STROKES_BY_LEVEL: Record<string, [string, string, string]> = {
@@ -50,9 +50,8 @@ export function ActivityLevelIcon({
   level,
   className = "",
 }: ActivityLevelIndicatorProps): VNode<any> | null {
-  if (!level) return null;
+  if (!level || level === "COLD") return null;
 
-  const isCold = level === "COLD";
   const strokes = STROKES_BY_LEVEL[level] ??
     [STROKE_OFF, STROKE_OFF, STROKE_OFF];
   const lastPathStroke = LAST_PATH_STROKE_BY_LEVEL[level] ?? STROKE_OFF;
@@ -60,27 +59,19 @@ export function ActivityLevelIcon({
   return (
     <div class={`relative w-fit group/pill ${className}`}>
       <div className={containerPill}>
-        {isCold
-          ? (
-            <span className="text-[10px] text-color-neutral-600 tracking-wide select-none">
-              none
-            </span>
-          )
-          : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              fill="none"
-              className="w-4 h-4 [stroke-width:1.5]"
-            >
-              <path d={bitcoinGraph[0]} className={strokes[0]} />
-              <path d={bitcoinGraph[1]} className={strokes[1]} />
-              <path d={bitcoinGraph[2]} className={strokes[2]} />
-              <path d={bitcoinGraph[3]} className={lastPathStroke} />
-            </svg>
-          )}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          fill="none"
+          className="w-4 h-4 [stroke-width:1.5]"
+        >
+          <path d={bitcoinGraph[0]} className={strokes[0]} />
+          <path d={bitcoinGraph[1]} className={strokes[1]} />
+          <path d={bitcoinGraph[2]} className={strokes[2]} />
+          <path d={bitcoinGraph[3]} className={lastPathStroke} />
+        </svg>
       </div>
       <div
         className={`${tooltipButton} opacity-0 group-hover/pill:opacity-100 transition-opacity duration-150`}

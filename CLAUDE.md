@@ -47,7 +47,7 @@ stampchain.io is the **official Bitcoin Stamps block explorer and API**. This is
 
 **Production Build Artifacts**:
 - `dist/` directory - Build output
-- `coverage/` - Test coverage reports  
+- `coverage/` - Test coverage reports
 - `reports/` - Newman test reports
 - `tmp/` - Temporary files
 
@@ -56,7 +56,7 @@ stampchain.io is the **official Bitcoin Stamps block explorer and API**. This is
 Adapted for Deno Fresh development:
 
 - **QPLAN**: "Analyze deno.json tasks, existing route patterns, and database models before implementing. Check Fresh islands architecture and SSR considerations."
-- **QCODE**: "Implement with proper TypeScript types, run `deno task check`, validate OpenAPI schema, test both SSR and client-side functionality"  
+- **QCODE**: "Implement with proper TypeScript types, run `deno task check`, validate OpenAPI schema, test both SSR and client-side functionality"
 - **QCHECK**: "Perform security review focusing on data integrity, caching correctness, API response validation, and Fresh architecture patterns"
 
 ### Extended Thinking Triggers
@@ -174,7 +174,7 @@ const stamp = await repo.getStampById("1"); // Returns fixture data
 
 **Security Headers** (configured in `server/middleware/securityHeaders.ts`):
 - Content Security Policy for XSS protection
-- HSTS for HTTPS enforcement  
+- HSTS for HTTPS enforcement
 - CORS configured for API access
 - Rate limiting on API endpoints
 
@@ -202,7 +202,7 @@ export const handler: Handlers = {
   async GET(req, ctx) {
     const { id } = ctx.params;
     const stampData = await getCachedStampData(id);
-    
+
     return Response.json({
       success: true,
       data: stampData,
@@ -221,7 +221,7 @@ import { StampData } from "$types/stamps.ts";
 export default function StampViewer({ stampId }: { stampId: string }) {
   const loading = useSignal(false);
   // Client-side functionality only
-  
+
   return <div>...</div>;
 }
 ```
@@ -231,11 +231,11 @@ export default function StampViewer({ stampId }: { stampId: string }) {
 // lib/database/stampQueries.ts
 export async function getStampById(id: string): Promise<StampData | null> {
   const query = `
-    SELECT * FROM stamps 
-    WHERE stamp_id = ? 
+    SELECT * FROM stamps
+    WHERE stamp_id = ?
     AND block_index IS NOT NULL
   `;
-  
+
   const [rows] = await db.execute(query, [id]);
   return rows[0] || null;
 }
@@ -268,7 +268,7 @@ export async function getStampById(id: string): Promise<StampData | null> {
 # Memory monitoring
 deno task monitor:memory --url=http://localhost:8000
 
-# Performance monitoring  
+# Performance monitoring
 deno task deploy:benchmark
 
 # Health checks
@@ -295,6 +295,9 @@ curl http://localhost:8000/api/health
 - SSR hydration mismatches - validate with `deno task check:ssr`
 - Route parameter extraction - use `ctx.params` correctly
 - Static file serving from `static/` directory
+- `LOCAL_HTTPS = true` in `lib/utils/dataPlaceholderProd.ts` makes Fresh require
+  gitignored `localhost-*.pem` files and will crash `deno task dev` for anyone
+  who does not have them. Committed default is `false`.
 
 **Bitcoin Stamps Specific**:
 - Transaction validation requires proper secp256k1 handling
@@ -304,6 +307,13 @@ curl http://localhost:8000/api/health
 - `client/bitcoinInit.ts` is orphaned (no imports) - not in client build graph, no crypto bundle bloat
 
 ### Troubleshooting Commands
+
+**`LOCAL_HTTPS is true but localhost-cert.pem / localhost-key.pem are missing`:**
+Someone left the local-HTTPS toggle on in `lib/utils/dataPlaceholderProd.ts`.
+Set `LOCAL_HTTPS = false` and restart. Do not generate certs unless the
+developer asked for `https://localhost:8000` (Wonder Wallet and similar
+reject plain `http://localhost`). Never commit `LOCAL_HTTPS = true` or
+the gitignored `.pem` files. Full steps: `.cursor/rules/environment.mdc`.
 
 **Development Issues**:
 ```bash

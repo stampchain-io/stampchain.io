@@ -1052,7 +1052,7 @@ export interface StampSalesProps {
     source: string;
     destination: string;
     dispense_quantity: number;
-    satoshirate: number;
+    btc_amount: number;
     tx_hash: string;
     block_time: number | null;
   }>;
@@ -2195,6 +2195,22 @@ export interface ExplorerContentProps extends BaseComponentProps {
   loading?: boolean;
   error?: string;
   stamps?: import("./stamp.d.ts").StampRow[];
+  // Pre-ordered, pre-paginated stamp+token feed for the "all" section
+  // (built server-side by ExplorerFeedRepository). When provided,
+  // ExplorerContent renders it directly instead of merging/sorting
+  // `stamps` and `src20DataCard.data` client-side.
+  mixedItems?:
+    | (
+      | {
+        kind: "stamp";
+        item: import("./stamp.d.ts").StampRow;
+      }
+      | {
+        kind: "src20";
+        item: import("./src20.d.ts").SRC20Row;
+      }
+    )[]
+    | undefined;
   isRecentSales?: boolean;
   pagination?: {
     page: number;
@@ -2223,6 +2239,10 @@ export interface ExplorerHeaderProps extends BaseComponentProps {
   // for "all", stamps-only for "stamps", tokens-only for "tokens"
   stampsTotal?: number;
   tokensTotal?: number;
+  // Current sort direction from the URL — passed down so SortButton stays
+  // in sync across Fresh partial navigations instead of relying on
+  // client-only URL tracking
+  sortBy?: "ASC" | "DESC";
 }
 
 /**
@@ -3195,6 +3215,10 @@ export type MarketplaceHeaderProps = {
   // Total count for the current market mode + stamp-type combo - used by
   // the count pill
   currentTotal?: number;
+  // Current sort direction from the URL — passed down so SortButton stays
+  // in sync across Fresh partial navigations instead of relying on
+  // client-only URL tracking
+  sortBy?: "ASC" | "DESC";
 };
 
 /**

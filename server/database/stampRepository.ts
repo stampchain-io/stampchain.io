@@ -145,17 +145,26 @@ export class StampRepository {
     let stampCondition = "";
     if (type !== "all") {
       if (type === "cursed") {
+        // "cursed"/"classic"/"posh" are all sub-classifications of the base
+        // STAMP protocol (see stampConstants.ts doc comments) — restrict to
+        // ident = 'STAMP' explicitly, not just "!= 'SRC-20'". Otherwise
+        // SRC-721 (recursive) stamps whose CPID happens to match the
+        // cpid-based LIKE 'A%' pattern (common for Counterparty-issued
+        // recursive stamps) leak through, since callers like the explorer
+        // route pass ident: ["STAMP", "SRC-721", "SRC-101"] alongside type.
         stampCondition =
-          "st.stamp < 0 AND NOT (st.cpid NOT LIKE 'A%' AND st.ident != 'SRC-20')";
+          "st.stamp < 0 AND NOT (st.cpid NOT LIKE 'A%' AND st.ident != 'SRC-20') AND st.ident = 'STAMP'";
       } else if (type === "stamps" && !identifier) {
         if (!isSearchQuery)
           stampCondition = "st.stamp >= 0 AND st.ident != 'SRC-20'";
       } else if (type === "posh") {
         stampCondition =
-          "st.stamp < 0 AND st.cpid NOT LIKE 'A%' AND st.ident != 'SRC-20'";
+          "st.stamp < 0 AND st.cpid NOT LIKE 'A%' AND st.ident = 'STAMP'";
       } else if (type === "classic") {
         stampCondition =
-          "st.stamp >= 0 AND st.cpid LIKE 'A%' AND st.ident != 'SRC-20'";
+          "st.stamp >= 0 AND st.cpid LIKE 'A%' AND st.ident = 'STAMP'";
+      } else if (type === "src-721") {
+        stampCondition = "st.ident = 'SRC-721'";
       } else if (type === "src20") {
         stampCondition = "st.ident = 'SRC-20'";
       }
@@ -343,6 +352,73 @@ export class StampRepository {
         volumeMax
       );
     }
+  }
+
+  /**
+   * Builds a minimal, ordering-only SELECT fragment (tx_hash, block_index,
+   * tx_index, kind) over StampTableV4 for the unified explorer feed. Used by
+   * `ExplorerFeedRepository` as one branch of a `UNION ALL` with the
+   * equivalent SRC-20 fragment (`SRC20Repository.buildFeedFragment`) so the
+   * two tables can be ordered and paginated together in a single query,
+   * instead of merging two independently-paginated result sets client-side.
+   *
+   * Reuses `buildIdentifierConditions` so this fragment's filtering stays in
+   * sync with `getStamps`. Only covers the filter surface meaningful for the
+   * mixed "all" feed (type/ident, range, fileType, editions, filterBy,
+   * collection) — marketplace filters that need `stamp_market_data` /
+   * `stamp_sales_history` joins (market, dispensers, atomics, listings,
+   * sales, volume, Task 42 market-data filters) are intentionally out of
+   * scope here; callers should fall back to the existing per-source queries
+   * when any of those are active.
+   */
+  static buildFeedFragment(options: {
+    type?: StampType | undefined;
+    ident?: SUBPROTOCOLS | SUBPROTOCOLS[] | string | undefined;
+    collectionId?: string | string[] | undefined;
+    filterBy?: StampFilterType[] | undefined;
+    fileType?: StampFiletype[] | undefined;
+    editions?: StampEdition[] | undefined;
+    range?: StampRange | undefined;
+    rangeMin?: string | undefined;
+    rangeMax?: string | undefined;
+  }): { subquery: string; params: (string | number)[] } {
+    const whereConditions: string[] = [];
+    const queryParams: (string | number)[] = [];
+
+    this.buildIdentifierConditions(
+      whereConditions,
+      queryParams,
+      undefined, // identifier
+      options.type,
+      options.ident,
+      undefined, // blockIdentifier
+      options.collectionId,
+      options.filterBy,
+      options.fileType, // combinedFilters
+      false, // isSearchQuery
+      undefined, // filters (Task 42 market-data filters — out of scope)
+      options.editions,
+      options.range,
+      options.rangeMin,
+      options.rangeMax,
+    );
+
+    const joinClause = options.collectionId
+      ? "JOIN collection_stamps cs1 ON st.stamp = cs1.stamp"
+      : "";
+
+    const whereClause = whereConditions.length > 0
+      ? `WHERE ${whereConditions.join(" AND ")}`
+      : "";
+
+    const subquery = `
+      SELECT st.tx_hash AS tx_hash, st.block_index AS block_index, st.tx_index AS tx_index, 'stamp' AS kind
+      FROM ${STAMP_TABLE} st
+      ${joinClause}
+      ${whereClause}
+    `;
+
+    return { subquery, params: queryParams };
   }
 
   static async getTotalStampCountFromDb(options: {
@@ -1533,14 +1609,18 @@ export class StampRepository {
     let typeCondition = "";
     if (type !== STAMP_TYPE_CONSTANTS.ALL) {
       if (type === STAMP_TYPE_CONSTANTS.CURSED) {
+        // See matching comment in buildIdentifierConditions above — must
+        // pin ident = 'STAMP' or SRC-721 items leak into cursed/classic/posh.
         typeCondition =
-          "AND s.stamp < 0 AND NOT (s.cpid NOT LIKE 'A%' AND s.ident != 'SRC-20')";
+          "AND s.stamp < 0 AND NOT (s.cpid NOT LIKE 'A%' AND s.ident != 'SRC-20') AND s.ident = 'STAMP'";
       } else if (type === STAMP_TYPE_CONSTANTS.CLASSIC) {
-        typeCondition = "AND s.stamp >= 0 AND s.cpid LIKE 'A%' AND s.ident != 'SRC-20'";
+        typeCondition = "AND s.stamp >= 0 AND s.cpid LIKE 'A%' AND s.ident = 'STAMP'";
       } else if (type === STAMP_TYPE_CONSTANTS.STAMPS) {
         typeCondition = "AND s.stamp >= 0 AND s.ident != 'SRC-20'";
       } else if (type === STAMP_TYPE_CONSTANTS.POSH) {
-        typeCondition = "AND s.stamp < 0 AND s.cpid NOT LIKE 'A%' AND s.ident != 'SRC-20'";
+        typeCondition = "AND s.stamp < 0 AND s.cpid NOT LIKE 'A%' AND s.ident = 'STAMP'";
+      } else if (type === STAMP_TYPE_CONSTANTS.SRC721) {
+        typeCondition = "AND s.ident = 'SRC-721'";
       } else if (type === STAMP_TYPE_CONSTANTS.SRC20) {
         typeCondition = "AND s.ident = 'SRC-20'";
       }
