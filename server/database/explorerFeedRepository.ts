@@ -63,8 +63,11 @@ export class ExplorerFeedRepository {
     stampMin?: number | string | undefined;
     stampMax?: number | string | undefined;
     amtMax?: number | string | undefined;
+    // Feed ordering by (block_index, tx_index); DESC = newest first (default).
+    sortDirection?: "ASC" | "DESC" | undefined;
   }): Promise<ExplorerFeedPage> {
     const { page = 1, limit = 60 } = options;
+    const direction = options.sortDirection === "ASC" ? "ASC" : "DESC";
 
     const stampFragment = StampRepository.buildFeedFragment({
       type: options.type,
@@ -95,7 +98,7 @@ export class ExplorerFeedRepository {
         UNION ALL
         ${tokenFragment.subquery}
       ) AS combined_feed
-      ORDER BY block_index DESC, tx_index DESC
+      ORDER BY block_index ${direction}, tx_index ${direction}
       LIMIT ? OFFSET ?
     `;
     const dataParams = [

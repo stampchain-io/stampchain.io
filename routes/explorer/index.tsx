@@ -370,6 +370,7 @@ export const handler: Handlers = {
             ExplorerFeedRepository.getFeedPage({
               page,
               limit: page_size,
+              sortDirection: sortBy === "ASC" ? "ASC" : "DESC",
               type: selectedTab,
               ident: NON_SRC20_IDENTS,
               collectionId,
