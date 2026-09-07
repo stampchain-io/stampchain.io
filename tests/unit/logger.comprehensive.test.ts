@@ -43,6 +43,24 @@ function mockConsole() {
     consoleOutput.push({ level: "warn", args });
 }
 
+// Real file-system functions, captured once so teardown can put them back.
+// Without this the mocks (and, on an assertion failure, the enabled file
+// logging on the shared `logger` singleton) leaked into whichever test file
+// ran next in the same worker, producing intermittent op-sanitizer failures
+// in unrelated suites.
+const originalMkdir = originalDeno?.mkdir;
+const originalWriteTextFile = originalDeno?.writeTextFile;
+const originalLoggerConfig = logger.getConfig();
+
+function restoreFileSystem() {
+  if (globalThis.Deno) {
+    if (originalMkdir) globalThis.Deno.mkdir = originalMkdir;
+    if (originalWriteTextFile) {
+      globalThis.Deno.writeTextFile = originalWriteTextFile;
+    }
+  }
+}
+
 function mockFileSystem() {
   if (globalThis.Deno) {
     // Mock Deno.mkdir
@@ -113,8 +131,9 @@ function setup() {
 function teardown() {
   restoreConsole();
   restoreEnvironment();
-  // Reset logger configuration to defaults
-  logger.setConfig({ enableFileLogging: false });
+  restoreFileSystem();
+  // Reset the shared logger singleton to what it was before this file ran
+  logger.setConfig(originalLoggerConfig);
 }
 
 // Create an isolated test wrapper that preserves environment
@@ -135,6 +154,11 @@ function isolatedTest(
       // Run the test
       await fn();
     } finally {
+      // Let in-flight file writes settle so none leaks into the next test,
+      // then undo mocks and singleton mutations even when an assertion failed
+      // before the test body reached its own teardown() call.
+      await logger.flush();
+      teardown();
       // Always restore environment
       if (originalDebug !== undefined) {
         Deno.env.set("DEBUG", originalDebug);
@@ -166,8 +190,7 @@ isolatedTest("logger - file writing in development mode", async () => {
 
   logger.debug("stamps", { message: "Test file writing", data: "test" });
 
-  // Wait a bit for async file operations
-  await new Promise((resolve) => setTimeout(resolve, 10));
+  await logger.flush();
 
   // Check that mkdir was called
   assertEquals(mockFileOperations.mkdir.length, 1);
@@ -231,7 +254,7 @@ isolatedTest(
     logger.setConfig({ enableFileLogging: true });
 
     logger.debug("stamps", { message: "Test existing directory" });
-    await new Promise((resolve) => setTimeout(resolve, 10));
+    await logger.flush();
 
     // Should still write to file even if directory exists
     assertEquals(mockFileOperations.writeTextFile.length, 1);
@@ -255,7 +278,7 @@ isolatedTest("logger - file writing with mkdir error", async () => {
   logger.setConfig({ enableFileLogging: true });
 
   logger.debug("stamps", { message: "Test mkdir error" });
-  await new Promise((resolve) => setTimeout(resolve, 10));
+  await logger.flush();
 
   // Should log error to console
   const errorLogs = consoleOutput.filter((o) => o.level === "error");
@@ -280,7 +303,7 @@ isolatedTest("logger - file writing with writeTextFile error", async () => {
   logger.setConfig({ enableFileLogging: true });
 
   logger.debug("stamps", { message: "Test write error" });
-  await new Promise((resolve) => setTimeout(resolve, 10));
+  await logger.flush();
 
   // Should log error to console
   const errorLogs = consoleOutput.filter((o) => o.level === "error");
