@@ -178,16 +178,14 @@ export async function handler(
         method: req.method,
         error: error.message,
       });
-      return new Response(
-        JSON.stringify({
+      return ApiResponseUtil.custom(
+        {
           status: "error",
           message: "Request timeout - the operation took too long to complete",
           error: "GATEWAY_TIMEOUT",
-        }),
-        {
-          status: 504,
-          headers: { "Content-Type": "application/json" },
         },
+        504,
+        { forceNoCache: true },
       );
     }
 

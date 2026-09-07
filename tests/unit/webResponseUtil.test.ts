@@ -243,3 +243,77 @@ Deno.test("WebResponseUtil - cache headers with routeType", () => {
   assertExists(response.headers.get("Cache-Control"));
   assertExists(response.headers.get("Vary"));
 });
+
+Deno.test("WebResponseUtil - modifiedResponse overrides upstream headers case-insensitively", async () => {
+  const upstream = new Response("old", {
+    status: 200,
+    headers: {
+      "content-type": "text/html; charset=utf-8",
+      "vary": "Accept-Encoding, X-API-Version, Origin",
+      "cache-control": "public, max-age=31536000, immutable",
+      "x-upstream": "kept",
+    },
+  });
+
+  const response = WebResponseUtil.modifiedResponse("new", upstream, {
+    headers: {
+      "Cache-Control": "public, max-age=3600, no-transform",
+      "Vary": "Accept-Encoding",
+    },
+  });
+
+  assertEquals(response.status, 200);
+  assertEquals(await response.text(), "new");
+  assertEquals(
+    response.headers.get("cache-control"),
+    "public, max-age=3600, no-transform",
+  );
+  assertEquals(response.headers.get("x-upstream"), "kept");
+  // Default normalisation still appends the API-version vary keys.
+  assertEquals(
+    response.headers.get("vary"),
+    "Accept-Encoding, X-API-Version, Origin",
+  );
+});
+
+Deno.test("WebResponseUtil - modifiedResponse immutableBinary keeps Vary CDN-safe", () => {
+  const upstream = new Response("x", {
+    headers: { "vary": "Accept-Encoding, X-API-Version, Origin" },
+  });
+
+  const response = WebResponseUtil.modifiedResponse("y", upstream, {
+    headers: { "Vary": "Accept-Encoding" },
+    immutableBinary: true,
+  });
+
+  assertEquals(response.headers.get("vary"), "Accept-Encoding");
+});
+
+Deno.test("WebResponseUtil - xmlResponse sets XML content type and honours cache overrides", async () => {
+  const xml = '<?xml version="1.0"?><root/>';
+  const response = WebResponseUtil.xmlResponse(xml, {
+    headers: {
+      "Cache-Control": "public, max-age=3600",
+      "CDN-Cache-Control": "public, max-age=3600",
+    },
+  });
+
+  assertEquals(response.status, 200);
+  assertEquals(
+    response.headers.get("content-type"),
+    "application/xml; charset=utf-8",
+  );
+  assertEquals(response.headers.get("cache-control"), "public, max-age=3600");
+  assertEquals(
+    response.headers.get("cdn-cache-control"),
+    "public, max-age=3600",
+  );
+  assertExists(response.headers.get("x-api-version"));
+  assertExists(response.headers.get("content-security-policy"));
+  assertEquals(await response.text(), xml);
+});
+
+Deno.test("WebResponseUtil - xmlResponse defaults to security-header cache policy", () => {
+  const response = WebResponseUtil.xmlResponse("<a/>", { forceNoCache: true });
+  assertEquals(response.headers.get("cache-control"), "no-store, must-revalidate");
+});

@@ -6,6 +6,7 @@ import {
   formatDate,
 } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { getSRC20ImageSrc } from "$lib/utils/ui/media/imageUtils.ts";
+import { walletOwnsAddress } from "$lib/utils/wallet/ownership.ts";
 import { textLg } from "$text";
 import type { WalletDataTypes } from "$types/base.d.ts";
 import type { SRC20Row } from "$types/src20.d.ts";
@@ -39,6 +40,11 @@ export const UploadImageTable = (props: SRC20BalanceTableProps) => {
   // PERFORMANCE OPTIMIZATION: Use wallet signal instead of polling localStorage
   // This eliminates the 1-second polling that was consuming CPU resources
   const wallet = walletSignal.value as WalletDataTypes;
+  // Tokens deployed by any of the connected wallet's addresses (payment or
+  // ordinals) — see lib/utils/wallet/ownership.ts.
+  const ownedRows = data.filter((row) =>
+    walletOwnsAddress(walletSignal.value, row.creator)
+  );
 
   /* ===== EVENT HANDLERS ===== */
   const handleCloseModal = () => {
@@ -80,7 +86,7 @@ export const UploadImageTable = (props: SRC20BalanceTableProps) => {
                 </tr>
               </thead>
               <tbody>
-                {data.filter((row) => row.creator === wallet.address).map(
+                {ownedRows.map(
                   // data.map(
                   (src20: SRC20Row) => {
                     const href = `/upload/${unicodeEscapeToEmoji(src20.tick)}`;

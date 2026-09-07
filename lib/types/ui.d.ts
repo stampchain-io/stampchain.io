@@ -4112,7 +4112,7 @@ export interface WalletContext {
   updateWallet: (wallet: Wallet) => void;
   getBasicStampInfo: (address: string) => Promise<any>;
   disconnect: () => void;
-  signMessage: (message: string) => Promise<any>;
+  signMessage: (message: string, address?: string) => Promise<any>;
   signPSBT: (
     wallet: Wallet,
     psbt: string,

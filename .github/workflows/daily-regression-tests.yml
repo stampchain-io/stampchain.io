@@ -272,95 +272,107 @@ jobs:
             echo "✅ All regression checks passed"
           fi
 
-      - name: Create GitHub issue for critical regressions
+      - name: Open or update the rolling regression issue
         if: steps.check-regressions.outputs.status == 'critical' && env.SEND_NOTIFICATIONS == 'true'
         uses: actions/github-script@v9
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            // One rolling issue per regression episode: the first failing run
+            // opens it, every later failing run appends a comment, and the
+            // next passing run closes it (see the step below). Previously the
+            // lookup was keyed on today's date, so every failing day opened a
+            // brand-new issue (31 of them accumulated between July and
+            // September 2026).
             const criticalIssues = '${{ steps.check-regressions.outputs.critical_issues }}';
             const warningIssues = '${{ steps.check-regressions.outputs.warning_issues }}';
-            const timestamp = '${{ env.TIMESTAMP }}';
-            
-            // Check if there's already an open regression issue today
-            const today = new Date().toISOString().split('T')[0];
-            const { data: existingIssues } = await github.rest.issues.listForRepo({
+            const runUrl = '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}';
+            const now = new Date().toUTCString();
+            const labels = ['api-regression', 'automated', 'critical'];
+
+            const { data: openIssues } = await github.rest.issues.listForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
               state: 'open',
-              labels: 'regression,automated',
+              labels: 'api-regression,automated',
               sort: 'created',
               direction: 'desc',
-              per_page: 5
+              per_page: 5,
             });
-            
-            const todayIssue = existingIssues.find(issue => 
-              issue.title.includes(today) || 
-              new Date(issue.created_at).toDateString() === new Date().toDateString()
-            );
-            
-            if (todayIssue) {
-              // Update existing issue
-              const updateBody = `
-            ## Update: ${new Date().toUTCString()}
-            
-            **Status**: 🔴 Critical regressions still detected  
-            **Critical Issues**: ${criticalIssues}  
-            **Warning Issues**: ${warningIssues}  
-            **Run ID**: ${{ github.run_id }}  
-            
-            ### Actions Required
-            - [ ] Review regression analysis in [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-            - [ ] Check unexpected API changes
-            - [ ] Verify endpoint availability
-            - [ ] Update expected changes configuration if changes are intentional
-            
-            ---
+            const rolling = openIssues.find((issue) => !issue.pull_request);
+
+            const details = `
+            **Run**: ${now}
+            **Critical issues**: ${criticalIssues}
+            **Warning issues**: ${warningIssues}
+            **Workflow run**: [${{ github.run_id }}](${runUrl})
+
+            Review \`expected-changes-validation.json\` in the run artifacts: \`schemaViolations\` lists responses that do not match \`schema.yml\`; entries with \`performanceIssue: "critical"\` exceeded the 5 s threshold.
             `;
-              
+
+            if (rolling) {
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                issue_number: todayIssue.number,
-                body: updateBody
+                issue_number: rolling.number,
+                body: `## 🔴 Still failing\n${details}`,
               });
+              core.info(`Updated rolling regression issue #${rolling.number}`);
             } else {
-              // Create new issue
-              const issueBody = `
-            # 🚨 Daily Regression Test Failures - ${today}
-            
-            Critical API regressions detected during automated daily testing.
-            
-            ## Summary
-            - **Date**: ${new Date().toUTCString()}
-            - **Critical Issues**: ${criticalIssues}
-            - **Warning Issues**: ${warningIssues}
-            - **Workflow Run**: [View Details](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-            
-            ## Investigation Required
-            - [ ] Review detailed regression analysis
-            - [ ] Check for unexpected API changes
-            - [ ] Verify production endpoint availability
-            - [ ] Determine if changes are intentional
-            - [ ] Update expected changes configuration if needed
-            
-            ## Next Steps
-            1. Download test artifacts from the workflow run
-            2. Review \`expected-changes-validation.json\` for details
-            3. Check HTML reports for specific failures
-            4. Update \`scripts/validate-expected-changes.cjs\` if changes are expected
-            
-            ---
-            *This issue was automatically created by the daily regression testing workflow.*
-            `;
-              
-              await github.rest.issues.create({
+              const { data: created } = await github.rest.issues.create({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                title: `🚨 API Regression Detected - ${today}`,
-                body: issueBody,
-                labels: ['regression', 'automated', 'critical']
+                title: '🚨 API regression detected by the daily regression run',
+                body: `# 🚨 Daily regression run is failing
+
+            Critical API regressions were detected against production. This issue stays open and collects one comment per failing run; it is closed automatically by the next passing run.
+
+            ## First failing run
+            ${details}
+
+            ## Investigation
+            - [ ] Download the run artifacts and read \`expected-changes-validation.json\`
+            - [ ] Decide whether each violation is a real regression, an intentional change (then update \`schema.yml\`), or validator noise (then fix \`scripts/validate-expected-changes.cjs\`)
+            - [ ] For performance-critical entries, check the endpoint's cold-hit latency against production directly
+
+            ---
+            *Opened automatically by the daily regression testing workflow.*
+            `,
+                labels,
               });
+              core.info(`Opened rolling regression issue #${created.number}`);
+            }
+
+      - name: Close the rolling regression issue on a passing run
+        if: steps.check-regressions.outputs.status == 'success' && env.SEND_NOTIFICATIONS == 'true'
+        uses: actions/github-script@v9
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const runUrl = '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}';
+            const { data: openIssues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'api-regression,automated',
+              per_page: 20,
+            });
+            for (const issue of openIssues) {
+              if (issue.pull_request) continue;
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                body: `## ✅ Resolved\n\nThe daily regression run passed on ${new Date().toUTCString()} ([run ${{ github.run_id }}](${runUrl})). Closing automatically.`,
+              });
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                state: 'closed',
+                state_reason: 'completed',
+              });
+              core.info(`Closed regression issue #${issue.number}`);
             }
 
       - name: Upload comprehensive reports

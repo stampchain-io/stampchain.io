@@ -294,6 +294,12 @@ export interface BTCBalanceInfoOptions {
   minConfirmations?: number;
   address?: string;
   includeUSD?: boolean;
+  /**
+   * Total wall-clock budget (ms) for the whole BTC-balance provider chain —
+   * every provider, retry and body read combined. Defaults to
+   * `DEFAULT_BTC_BALANCE_TIMEOUT_MS` in balanceUtils.
+   */
+  timeoutMs?: number;
 }
 
 /**
