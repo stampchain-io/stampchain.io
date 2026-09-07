@@ -1,7 +1,10 @@
 import { Handlers } from "$fresh/server.ts";
 import type { AddressHandlerContext } from "$types/api.d.ts";
 import { ApiResponseUtil } from "$lib/utils/api/responses/apiResponseUtil.ts";
-import { getBTCBalanceInfo } from "$lib/utils/data/processing/balanceUtils.ts";
+import {
+  BTC_BALANCE_LEG_CEILING_MS,
+  getBTCBalanceInfoBounded,
+} from "$lib/utils/data/processing/balanceUtils.ts";
 import { getPaginationParams } from "$lib/utils/data/pagination/paginationUtils.ts";
 import { isValidBitcoinAddress } from "$lib/utils/typeGuards.ts";
 import { Src20Controller } from "$server/controller/src20Controller.ts";
@@ -52,8 +55,14 @@ export const handler: Handlers<AddressHandlerContext> = {
         page = DEFAULT_PAGINATION.page,
       } = pagination;
 
-      // Call controllers directly instead of making HTTP requests to avoid DNS issues
-      const [stamps, src20, btcInfo] = await Promise.all([
+      // Call controllers directly instead of making HTTP requests to avoid DNS issues.
+      //
+      // The BTC leg talks to third-party providers (mempool.space / BlockCypher)
+      // and is the only leg that can be slow; it is hard-capped so that a slow
+      // or rate-limiting provider degrades the `btc` block instead of stalling
+      // the stamps + SRC-20 data behind it (#1198). `btcLeg.status` is surfaced
+      // via the `X-BTC-Balance-Status` header; the response schema is unchanged.
+      const [stamps, src20, btcLeg] = await Promise.all([
         StampController.getStampBalancesByAddress(address, limit, page),
         Src20Controller.handleSrc20BalanceRequest({
           address,
@@ -61,8 +70,9 @@ export const handler: Handlers<AddressHandlerContext> = {
           page,
           includePagination: true,
         }),
-        getBTCBalanceInfo(address),
+        getBTCBalanceInfoBounded(address, BTC_BALANCE_LEG_CEILING_MS),
       ]);
+      const btcInfo = btcLeg.info;
 
       // NOTE: deliberately NO 404 for "valid address, zero holdings".
       //
@@ -114,6 +124,8 @@ export const handler: Handlers<AddressHandlerContext> = {
             "/api/v2/stamps/balance/[address], /api/v2/src20/balance/[address]",
           "X-Info":
             "Consider using dedicated endpoints for better performance and pagination control",
+          // ok | unavailable | timeout — when not "ok" the btc block is zeros.
+          "X-BTC-Balance-Status": btcLeg.status,
         },
       });
     } catch (error) {
