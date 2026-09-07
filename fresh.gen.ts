@@ -216,6 +216,7 @@ import * as $filter_FilterOptionsExplorerStamp from "./islands/filter/FilterOpti
 import * as $filter_FilterOptionsMarketplace from "./islands/filter/FilterOptionsMarketplace.tsx";
 import * as $filter_FilterOptionsSRC20 from "./islands/filter/FilterOptionsSRC20.tsx";
 import * as $form_Checkbox from "./islands/form/Checkbox.tsx";
+import * as $form_ColorPicker from "./islands/form/ColorPicker.tsx";
 import * as $form_InputField from "./islands/form/InputField.tsx";
 import * as $form_SRC20InputField from "./islands/form/SRC20InputField.tsx";
 import * as $form_SearchErrorDisplay from "./islands/form/SearchErrorDisplay.tsx";
@@ -601,6 +602,7 @@ const manifest = {
       $filter_FilterOptionsMarketplace,
     "./islands/filter/FilterOptionsSRC20.tsx": $filter_FilterOptionsSRC20,
     "./islands/form/Checkbox.tsx": $form_Checkbox,
+    "./islands/form/ColorPicker.tsx": $form_ColorPicker,
     "./islands/form/InputField.tsx": $form_InputField,
     "./islands/form/SRC20InputField.tsx": $form_SRC20InputField,
     "./islands/form/SearchErrorDisplay.tsx": $form_SearchErrorDisplay,

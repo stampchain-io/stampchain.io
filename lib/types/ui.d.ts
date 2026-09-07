@@ -753,6 +753,17 @@ export interface SelectFieldProps extends FormControlProps {
   onClick?: (event: JSX.TargetedEvent<HTMLSelectElement, Event>) => void;
 }
 
+/**
+ * Dark-themed popover color picker (hex default).
+ */
+export interface ColorPickerProps {
+  value: string;
+  onChange: (hex: string) => void;
+  ariaLabel?: string;
+  showValue?: boolean;
+  class?: string;
+}
+
 // =============================================================================
 // MODAL COMPONENT PROPS
 // =============================================================================
