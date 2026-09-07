@@ -47,20 +47,17 @@ class Logger {
     }
   }
 
+  // Decided once at construction (setupFileLogging) or explicitly via
+  // setConfig(). It deliberately does NOT re-read DENO_ENV per call: real
+  // processes never flip DENO_ENV at runtime, but unit tests do (to exercise
+  // production branches of other modules), and re-reading it here made every
+  // logger.warn/error in those tests start an un-awaited real file write that
+  // then leaked into unrelated test files sharing the worker.
   private shouldWriteToFile(): boolean {
     if (!this.isServerSide || !globalThis.Deno) {
       return false;
     }
-
-    const env = globalThis.Deno?.env.get("DENO_ENV") || "production";
-
-    // If explicitly enabled via config, allow it
-    if (this.enableFileLogging) {
-      return true;
-    }
-
-    // Enable file logging in development and production by default
-    return env === "development" || env === "production";
+    return this.enableFileLogging;
   }
 
   private updateEnabledNamespaces(): void {
