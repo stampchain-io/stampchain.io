@@ -1182,6 +1182,39 @@ class DatabaseManager {
     }
   }
 
+  /**
+   * Read a raw cache entry without fetching on a miss. Uses the same
+   * Redis -> in-memory fallback as `handleCache`, and returns `null` on a
+   * miss, an expired entry, or a cache-layer error. Intended for callers
+   * that keep their own marker entries (e.g. short negative-cache markers)
+   * next to the `handleCache`-managed values.
+   */
+  public async getCacheValue<T = unknown>(key: string): Promise<T | null> {
+    try {
+      return (await this.getCachedData(key)) as T | null;
+    } catch (error) {
+      console.log(`[CACHE GET ERROR] ${key.substring(0, 12)}...: ${error instanceof Error ? error.message : error}`);
+      return null;
+    }
+  }
+
+  /**
+   * Write a raw cache entry with a TTL (seconds). Same Redis -> in-memory
+   * fallback and expiry semantics as the values `handleCache` stores; a
+   * non-positive TTL is a no-op in Redis. Never throws.
+   */
+  public async setCacheValue(
+    key: string,
+    value: unknown,
+    ttlSeconds: number | "never",
+  ): Promise<void> {
+    try {
+      await this.setCachedData(key, value, ttlSeconds);
+    } catch (error) {
+      console.log(`[CACHE SET ERROR] ${key.substring(0, 12)}...: ${error instanceof Error ? error.message : error}`);
+    }
+  }
+
   private async getCachedData(key: string): Promise<unknown | null> {
     const REDIS_DEBUG = serverConfig.REDIS_DEBUG;
 
