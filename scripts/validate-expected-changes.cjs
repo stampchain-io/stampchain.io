@@ -156,8 +156,71 @@ class SchemaValidator {
     return files;
   }
 
+  /**
+   * Resolve a concrete request path (e.g. /api/v2/balance/bc1q...) to its
+   * OpenAPI path item. Exact keys win; otherwise templated keys such as
+   * /api/v2/balance/{address} are matched segment-by-segment, preferring the
+   * candidate with the most literal (non-template) segments so that
+   * /api/v2/stamps/balance/{address} beats /api/v2/stamps/{id} for a
+   * /api/v2/stamps/balance/... request.
+   */
+  findPathDef(endpoint) {
+    const paths = this.schema.paths || {};
+    if (paths[endpoint]) return paths[endpoint];
+
+    const requestSegments = endpoint.split("/");
+    let best = null;
+    let bestLiterals = -1;
+
+    for (const [template, pathDef] of Object.entries(paths)) {
+      const templateSegments = template.split("/");
+      if (templateSegments.length !== requestSegments.length) continue;
+
+      let literals = 0;
+      let matches = true;
+      for (let i = 0; i < templateSegments.length; i++) {
+        const seg = templateSegments[i];
+        if (/^\{[^}]+\}$/.test(seg)) continue;
+        if (seg !== requestSegments[i]) {
+          matches = false;
+          break;
+        }
+        literals++;
+      }
+
+      if (matches && literals > bestLiterals) {
+        best = pathDef;
+        bestLiterals = literals;
+      }
+    }
+
+    return best;
+  }
+
+  /**
+   * Newman's JSON reporter serialises response.stream as a Buffer JSON object
+   * ({ type: "Buffer", data: [...] }); String(stream) on that yields
+   * "[object Object]", which is not the body.
+   */
+  decodeResponseBody(stream) {
+    if (stream === undefined || stream === null) return "{}";
+    if (typeof stream === "string") return stream;
+    if (Buffer.isBuffer(stream)) return stream.toString("utf8");
+    if (Array.isArray(stream.data)) {
+      return Buffer.from(stream.data).toString("utf8");
+    }
+    return String(stream);
+  }
+
+  isIgnoredEndpoint(endpoint) {
+    const ignored = this.config.schemaValidation.ignoreEndpoints || [];
+    return ignored.some((entry) =>
+      entry.endsWith("/") ? endpoint.startsWith(entry) : endpoint === entry
+    );
+  }
+
   validateSchemaResponse(endpoint, method, statusCode, responseBody) {
-    const pathDef = this.schema.paths?.[endpoint];
+    const pathDef = this.findPathDef(endpoint);
     if (!pathDef) {
       return {
         valid: false,
@@ -299,8 +362,9 @@ class SchemaValidator {
       const statusCode = response.code;
       const responseTime = response.responseTime;
 
-      // Skip ignored endpoints
-      if (this.config.schemaValidation.ignoreEndpoints.includes(endpoint)) {
+      // Skip ignored endpoints (exact match, or prefix match for entries
+      // ending in "/", e.g. "/api/internal/").
+      if (this.isIgnoredEndpoint(endpoint)) {
         continue;
       }
 
@@ -311,7 +375,7 @@ class SchemaValidator {
         endpoint,
         method,
         statusCode,
-        response.stream?.toString() || "{}",
+        this.decodeResponseBody(response.stream),
       );
 
       const validationResult = {
@@ -368,8 +432,11 @@ class SchemaValidator {
     // Extract path from Newman URL object or string
     let urlString = url;
     if (typeof url === "object") {
+      // Newman serialises `path` without a leading slash; without the "/"
+      // separator the first path segment was glued onto the host
+      // ("stampchain.ioapi/v2/...") and every endpoint lost its first segment.
       urlString = url.raw ||
-        url.protocol + "://" + url.host.join(".") + url.path.join("/");
+        url.protocol + "://" + url.host.join(".") + "/" + url.path.join("/");
     }
 
     try {
