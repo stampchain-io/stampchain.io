@@ -119,17 +119,18 @@ export async function handleContentRequest(
     const contentType = response.headers.get("content-type") || "";
     if (response.ok && contentType.includes("text/html")) {
       const body = await response.text();
-      const headers = new Headers(response.headers);
-      headers.set("Cache-Control", "public, max-age=3600, no-transform");
-      headers.set("CDN-Cache-Control", "public, max-age=86400");
-      // Override Vary to only include CF-supported values.
-      // Default "X-API-Version" in Vary causes CF to skip caching.
-      headers.set("Vary", "Accept-Encoding");
-      headers.set("X-Frame-Options", "SAMEORIGIN");
-      headers.set("X-Content-Type-Options", "nosniff");
-      return new Response(body, {
-        status: response.status,
-        headers,
+      return WebResponseUtil.modifiedResponse(body, response, {
+        headers: {
+          "Cache-Control": "public, max-age=3600, no-transform",
+          "CDN-Cache-Control": "public, max-age=86400",
+          // Override Vary to only include CF-supported values.
+          // Default "X-API-Version" in Vary causes CF to skip caching.
+          "Vary": "Accept-Encoding",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Content-Type-Options": "nosniff",
+        },
+        // Keep normalizeHeaders from re-adding X-API-Version/Origin to Vary.
+        immutableBinary: true,
       });
     }
 

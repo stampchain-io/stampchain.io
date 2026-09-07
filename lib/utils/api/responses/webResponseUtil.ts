@@ -287,16 +287,52 @@ export class WebResponseUtil {
     });
   }
 
+  /**
+   * Re-emit an upstream response with a replaced body and optional header
+   * overrides. Headers are merged case-insensitively so an override such as
+   * `Vary` or `Cache-Control` replaces the upstream value regardless of key
+   * casing. Pass `immutableBinary: true` to keep `Vary` limited to
+   * `Accept-Encoding` (plus any caller-supplied values) so Cloudflare can
+   * cache the response at the edge.
+   */
   static modifiedResponse(
     content: string,
     originalResponse: Response,
     options: WebResponseOptions = {},
   ): Response {
+    const merged = new Headers(originalResponse.headers);
+    for (const [key, value] of Object.entries(options.headers || {})) {
+      merged.set(key, value);
+    }
     return new Response(content, {
-      status: originalResponse.status,
+      status: options.status ?? originalResponse.status,
       statusText: originalResponse.statusText,
+      headers: normalizeHeaders(
+        merged,
+        options.immutableBinary ? { immutableBinary: true } : {},
+      ),
+    });
+  }
+
+  /**
+   * XML document response (sitemaps, feeds). Mirrors `htmlResponse` but with
+   * an XML content type. Caller-supplied headers override the defaults, so
+   * pass explicit `Cache-Control` / CDN cache headers when the document must
+   * not inherit the 1-year immutable default from `getSecurityHeaders`.
+   */
+  static xmlResponse(
+    xmlContent: string,
+    options: WebResponseOptions = {},
+  ): Response {
+    return new Response(xmlContent, {
+      status: options.status || 200,
       headers: normalizeHeaders({
-        ...Object.fromEntries(originalResponse.headers.entries()),
+        ...getSecurityHeaders({
+          forceNoCache: options.forceNoCache ?? false,
+          context: "web",
+        }),
+        "Content-Type": "application/xml; charset=utf-8",
+        "X-API-Version": API_RESPONSE_VERSION,
         ...(options.headers || {}),
       }),
     });

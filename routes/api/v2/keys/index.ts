@@ -74,15 +74,15 @@ export const handler: Handlers = {
         await redis.pexpire(signupKey, 60 * 60 * 1000);
       }
       if (signupCount > 3) {
-        return new Response(
-          JSON.stringify({
+        return ApiResponseUtil.custom(
+          {
             error: "Too many signup attempts. Limit: 3 per hour per IP.",
             retryAfter: 3600,
-          }),
+          },
+          429,
           {
-            status: 429,
+            ...noCache,
             headers: {
-              "Content-Type": "application/json",
               "Retry-After": "3600",
               "Cache-Control": "no-store",
             },
@@ -108,18 +108,13 @@ export const handler: Handlers = {
       if (
         msg.includes("Duplicate entry") || msg.includes("unique constraint")
       ) {
-        return new Response(
-          JSON.stringify({
+        return ApiResponseUtil.custom(
+          {
             error: "An API key already exists for this email address.",
             code: "DUPLICATE_EMAIL",
-          }),
-          {
-            status: 409,
-            headers: {
-              "Content-Type": "application/json",
-              "Cache-Control": "no-store",
-            },
           },
+          409,
+          { ...noCache, headers: { "Cache-Control": "no-store" } },
         );
       }
 
