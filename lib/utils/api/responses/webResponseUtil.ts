@@ -1,8 +1,8 @@
 import {
   getBinaryContentHeaders,
   getHtmlHeaders,
-  getRecursiveHeaders,
   getSecurityHeaders,
+  getStampContentHeaders,
 } from "$lib/utils/security/securityHeaders.ts";
 import { normalizeHeaders } from "$lib/utils/api/headers/headerUtils.ts";
 import {
