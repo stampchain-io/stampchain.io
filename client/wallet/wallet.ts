@@ -120,8 +120,8 @@ export const walletContext: WalletContext = {
   updateWallet,
   disconnect,
   getBasicStampInfo,
-  signMessage: async (message: string) => {
-    return await signMessage(walletContext.wallet, message);
+  signMessage: async (message: string, address?: string) => {
+    return await signMessage(walletContext.wallet, message, address);
   },
   signPSBT: async (
     wallet: Wallet,

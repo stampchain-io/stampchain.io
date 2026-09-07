@@ -7,11 +7,18 @@ import { unisatProvider } from "$client/wallet/unisat.ts";
 import { wonderProvider } from "$client/wallet/wonder.ts";
 import { xverseProvider } from "$client/wallet/xverse.ts";
 import { logger } from "$lib/utils/logger.ts";
+import { walletOwnsAddress } from "$lib/utils/wallet/ownership.ts";
 import type { SignPSBTResult, Wallet } from "$types/index.d.ts";
 import type { PSBTInputToSign } from "$types/wallet.d.ts";
 
 interface WalletProvider {
-  signMessage: (message: string) => Promise<string>;
+  /**
+   * Sign `message`. `address` (optional) selects which of the wallet's own
+   * addresses signs; providers that expose a single address may ignore it —
+   * `signMessage()` below already guarantees it is one of the wallet's
+   * addresses before the provider is called.
+   */
+  signMessage: (message: string, address?: string) => Promise<string>;
   signPSBT: (
     psbtHex: string,
     inputsToSign: PSBTInputToSign[],
@@ -189,12 +196,30 @@ export const getWalletProvider = (
   }
 };
 
-export const signMessage = async (wallet: Wallet, message: string) => {
+/**
+ * Sign `message` with the connected wallet.
+ *
+ * @param address - Optional address that must produce the signature. Used when
+ *   an owner action targets a resource keyed by one of the wallet's secondary
+ *   addresses (e.g. the Xverse ordinals address). It MUST be an address the
+ *   wallet controls (see `walletOwnsAddress`); anything else is rejected here
+ *   so a provider is never asked to sign for a foreign address.
+ */
+export const signMessage = async (
+  wallet: Wallet,
+  message: string,
+  address?: string,
+) => {
   console.log("Signing message for wallet:", wallet.provider);
   console.log("Message to sign:", message);
   if (!wallet.provider) throw new Error("No wallet provider specified");
+  if (address !== undefined && !walletOwnsAddress(wallet, address)) {
+    throw new Error(
+      "Signing address is not controlled by the connected wallet",
+    );
+  }
   const provider = getWalletProvider(wallet.provider);
-  return await provider.signMessage(message);
+  return await provider.signMessage(message, address);
 };
 
 export const signPSBT = async (

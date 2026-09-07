@@ -7,7 +7,7 @@
  * Capabilities:
  *   - Provider detection (checkXverse)
  *   - Wallet connection with payment (P2WPKH) and ordinals (P2TR) addresses (connectXverse)
- *   - Message signing via ECDSA (signMessage)
+ *   - Message signing via ECDSA, or BIP-322 for the ordinals address (signMessage)
  *   - PSBT signing with automatic hex/base64 conversion (signPSBT)
  *
  * PSBT format: stampchain.io uses hex internally; Xverse requires base64.
@@ -16,6 +16,10 @@
 
 import { walletContext } from "$client/wallet/wallet.ts";
 import { parseConnectionError } from "$client/wallet/walletHelper.ts";
+import {
+  resolveXverseSigningAddress,
+  xverseSigningProtocolFor,
+} from "$client/wallet/xverseSigning.ts";
 import { getBTCBalanceInfo } from "$lib/utils/data/processing/balanceUtils.ts";
 import { logger } from "$lib/utils/logger.ts";
 import type { BaseToast } from "$lib/utils/ui/notifications/toastSignal.ts";
@@ -381,40 +385,51 @@ export const signPSBT = async (
 /**
  * Sign an arbitrary message with the connected Xverse wallet.
  *
- * Uses ECDSA signing via the Xverse BitcoinProvider.signMessage() API.
- * The wallet address is automatically retrieved from the walletContext signal.
+ * Signs with the payment address (ECDSA) by default. When `address` is the
+ * wallet's ordinals address the message is signed with that address using
+ * BIP-322 instead, so owner actions on resources keyed by the ordinals
+ * address can be verified against that address.
  *
  * Error codes:
  *   - USER_REJECTION (-32000 / 4001): re-thrown as-is for caller to handle
  *   - INVALID_PARAMS (-32602): re-thrown as-is for caller to handle
  *
  * @param message - Arbitrary UTF-8 message string to sign
+ * @param address - Optional address that must sign; must be one of the
+ *   connected wallet's addresses
  * @returns Base64-encoded signature string
  * @throws {Error} "Xverse wallet not installed" if extension is absent
  * @throws {Error} "Wallet not connected" if no address is in walletContext
+ * @throws {Error} if `address` is not controlled by the connected wallet
  * @throws {Error} "Unexpected response format from Xverse signMessage" for unknown responses
  */
-export const signMessage = async (message: string): Promise<string> => {
+export const signMessage = async (
+  message: string,
+  address?: string,
+): Promise<string> => {
   const provider = getXverseProvider();
   if (!provider) {
     throw new Error("Xverse wallet not installed");
   }
 
-  const walletAddress = walletContext.wallet.address;
-  if (!walletAddress) {
+  const wallet = walletContext.wallet;
+  if (!wallet.address) {
     throw new Error("Wallet not connected");
   }
+
+  const signingAddress = resolveXverseSigningAddress(wallet, address);
+  const protocol = xverseSigningProtocolFor(signingAddress);
 
   try {
     logger.debug("ui", {
       message: "Signing message with Xverse",
-      data: { messageLength: message.length },
+      data: { messageLength: message.length, protocol },
     });
 
     const response = await provider.signMessage({
-      address: walletAddress,
+      address: signingAddress,
       message,
-      protocol: "ECDSA",
+      protocol,
     });
 
     if (typeof response === "string") {
@@ -449,7 +464,7 @@ export const signMessage = async (message: string): Promise<string> => {
  * functions directly.
  *
  * Compatible with WalletProvider interface:
- *   - signMessage(message: string): Promise<string>
+ *   - signMessage(message: string, address?: string): Promise<string>
  *   - signPSBT(psbtHex, inputsToSign, enableRBF?, sighashTypes?, autoBroadcast?): Promise<SignPSBTResult>
  *   - broadcastRawTX?(rawTx: string): Promise<string>  [not supported]
  *   - broadcastPSBT?(psbtHex: string): Promise<string>  [not supported]
