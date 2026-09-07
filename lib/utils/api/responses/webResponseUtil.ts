@@ -348,46 +348,4 @@ export class WebResponseUtil {
     });
   }
 
-  private static getContentTypeHeaders(
-    mimeType: string,
-    options: StampResponseOptions,
-  ): HeadersInit {
-    if (mimeType.includes("html")) {
-      return {
-        ...getHtmlHeaders(options),
-        "Content-Type": `${mimeType}; charset=utf-8`,
-      };
-    }
-
-    if (mimeType.includes("javascript")) {
-      return {
-        ...getRecursiveHeaders(options),
-        "Content-Type": `${mimeType}; charset=utf-8`,
-      };
-    }
-
-    if (mimeType.includes("image/")) {
-      return {
-        ...getSecurityHeaders(options),
-        "Content-Type": mimeType,
-        "Cache-Control": "public, max-age=31536000, immutable",
-      };
-    }
-
-    if (
-      mimeType.includes("text/") ||
-      mimeType.includes("application/json") ||
-      mimeType.includes("xml")
-    ) {
-      return {
-        ...getSecurityHeaders(options),
-        "Content-Type": `${mimeType}; charset=utf-8`,
-      };
-    }
-
-    return {
-      ...getSecurityHeaders(options),
-      "Content-Type": mimeType,
-    };
-  }
 }
