@@ -15,7 +15,12 @@ import { ExplorerFeedRepository } from "$server/database/explorerFeedRepository.
 import { SRC20Repository } from "$server/database/src20Repository.ts";
 import { StampRepository } from "$server/database/stampRepository.ts";
 import { assertEquals, assertMatch } from "@std/assert";
-import { afterEach, beforeEach, describe, it } from "jsr:@std/testing@1.0.14/bdd";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  it,
+} from "jsr:@std/testing@1.0.14/bdd";
 
 describe("StampRepository.buildFeedFragment", () => {
   it("selects the ordering-only columns tagged as 'stamp' and excludes SRC-20 by default", () => {
@@ -41,12 +46,18 @@ describe("StampRepository.buildFeedFragment", () => {
 
   it("joins collection_stamps only when a collectionId is supplied", () => {
     const withoutCollection = StampRepository.buildFeedFragment({});
-    assertEquals(/JOIN collection_stamps/i.test(withoutCollection.subquery), false);
+    assertEquals(
+      /JOIN collection_stamps/i.test(withoutCollection.subquery),
+      false,
+    );
 
     const withCollection = StampRepository.buildFeedFragment({
       collectionId: "abc123",
     });
-    assertMatch(withCollection.subquery, /JOIN collection_stamps cs1 ON st\.stamp = cs1\.stamp/i);
+    assertMatch(
+      withCollection.subquery,
+      /JOIN collection_stamps cs1 ON st\.stamp = cs1\.stamp/i,
+    );
   });
 
   it("applies a custom stamp-number range and pushes rangeMin/rangeMax as params", () => {
@@ -101,7 +112,10 @@ describe("SRC20Repository.buildFeedFragment", () => {
       stampMin: 10,
       stampMax: 500,
     });
-    assertMatch(withRange.subquery, /LEFT JOIN StampTableV4 st ON st\.tx_hash = src20\.tx_hash/i);
+    assertMatch(
+      withRange.subquery,
+      /LEFT JOIN StampTableV4 st ON st\.tx_hash = src20\.tx_hash/i,
+    );
     assertMatch(withRange.subquery, /st\.stamp\s*<\s*\?/i);
     assertMatch(withRange.subquery, /st\.stamp\s*>=\s*\?/i);
     assertEquals(withRange.params, [500, 10]);
@@ -139,7 +153,12 @@ describe("ExplorerFeedRepository.getFeedPage", () => {
    * back canned rows, then assert on the captured SQL/params.
    */
   function installFakeDb(options: {
-    dataRows: { tx_hash: string; block_index: number; tx_index: number; kind: "stamp" | "src20" }[];
+    dataRows: {
+      tx_hash: string;
+      block_index: number;
+      tx_index: number;
+      kind: "stamp" | "src20";
+    }[];
     stampTotal: number;
     tokenTotal: number;
   }) {
@@ -148,7 +167,10 @@ describe("ExplorerFeedRepository.getFeedPage", () => {
         capturedQueries.push({ query, params });
         if (/stamp_total/i.test(query)) {
           return Promise.resolve({
-            rows: [{ stamp_total: options.stampTotal, token_total: options.tokenTotal }],
+            rows: [{
+              stamp_total: options.stampTotal,
+              token_total: options.tokenTotal,
+            }],
           });
         }
         return Promise.resolve({ rows: options.dataRows });
@@ -162,9 +184,14 @@ describe("ExplorerFeedRepository.getFeedPage", () => {
 
     await ExplorerFeedRepository.getFeedPage({ page: 2, limit: 60 });
 
-    const dataQuery = capturedQueries.find((q) => !/stamp_total/i.test(q.query));
+    const dataQuery = capturedQueries.find((q) =>
+      !/stamp_total/i.test(q.query)
+    );
     assertMatch(dataQuery!.query, /UNION ALL/i);
-    assertMatch(dataQuery!.query, /ORDER BY\s+block_index\s+DESC,\s*tx_index\s+DESC/i);
+    assertMatch(
+      dataQuery!.query,
+      /ORDER BY\s+block_index\s+DESC,\s*tx_index\s+DESC/i,
+    );
     assertMatch(dataQuery!.query, /LIMIT\s+\?\s+OFFSET\s+\?/i);
 
     // page 2, limit 60 -> offset 60, as the last two bound params.
@@ -172,24 +199,76 @@ describe("ExplorerFeedRepository.getFeedPage", () => {
     assertEquals(boundParams.slice(-2), [60, 60]);
   });
 
+  it("orders ascending when sortDirection is ASC and defaults to DESC otherwise", async () => {
+    installFakeDb({ dataRows: [], stampTotal: 0, tokenTotal: 0 });
+
+    await ExplorerFeedRepository.getFeedPage({
+      page: 1,
+      limit: 60,
+      sortDirection: "ASC",
+    });
+    let dataQuery = capturedQueries.find((q) => !/stamp_total/i.test(q.query));
+    assertMatch(
+      dataQuery!.query,
+      /ORDER BY\s+block_index\s+ASC,\s*tx_index\s+ASC/i,
+    );
+
+    capturedQueries.length = 0;
+    await ExplorerFeedRepository.getFeedPage({
+      page: 1,
+      limit: 60,
+      sortDirection: "drop table" as unknown as "DESC",
+    });
+    dataQuery = capturedQueries.find((q) => !/stamp_total/i.test(q.query));
+    assertMatch(
+      dataQuery!.query,
+      /ORDER BY\s+block_index\s+DESC,\s*tx_index\s+DESC/i,
+    );
+  });
+
   it("interweaves stamp and token rows purely based on what the DB returns (order is a DB-level guarantee)", async () => {
     const dataRows = [
-      { tx_hash: "tokenA", block_index: 900002, tx_index: 50, kind: "src20" as const },
-      { tx_hash: "stampA", block_index: 900001, tx_index: 40, kind: "stamp" as const },
-      { tx_hash: "tokenB", block_index: 900000, tx_index: 30, kind: "src20" as const },
+      {
+        tx_hash: "tokenA",
+        block_index: 900002,
+        tx_index: 50,
+        kind: "src20" as const,
+      },
+      {
+        tx_hash: "stampA",
+        block_index: 900001,
+        tx_index: 40,
+        kind: "stamp" as const,
+      },
+      {
+        tx_hash: "tokenB",
+        block_index: 900000,
+        tx_index: 30,
+        kind: "src20" as const,
+      },
     ];
     installFakeDb({ dataRows, stampTotal: 1, tokenTotal: 2 });
 
-    const feed = await ExplorerFeedRepository.getFeedPage({ page: 1, limit: 60 });
+    const feed = await ExplorerFeedRepository.getFeedPage({
+      page: 1,
+      limit: 60,
+    });
 
     assertEquals(feed.data.map((r) => r.kind), ["src20", "stamp", "src20"]);
-    assertEquals(feed.data.map((r) => r.tx_hash), ["tokenA", "stampA", "tokenB"]);
+    assertEquals(feed.data.map((r) => r.tx_hash), [
+      "tokenA",
+      "stampA",
+      "tokenB",
+    ]);
   });
 
   it("combines the per-table counts into total/totalPages", async () => {
     installFakeDb({ dataRows: [], stampTotal: 37, tokenTotal: 148 });
 
-    const feed = await ExplorerFeedRepository.getFeedPage({ page: 1, limit: 60 });
+    const feed = await ExplorerFeedRepository.getFeedPage({
+      page: 1,
+      limit: 60,
+    });
 
     assertEquals(feed.totalStamps, 37);
     assertEquals(feed.totalTokens, 148);
@@ -200,7 +279,10 @@ describe("ExplorerFeedRepository.getFeedPage", () => {
   it("always returns at least 1 total page even when both sources are empty", async () => {
     installFakeDb({ dataRows: [], stampTotal: 0, tokenTotal: 0 });
 
-    const feed = await ExplorerFeedRepository.getFeedPage({ page: 1, limit: 60 });
+    const feed = await ExplorerFeedRepository.getFeedPage({
+      page: 1,
+      limit: 60,
+    });
 
     assertEquals(feed.total, 0);
     assertEquals(feed.totalPages, 1);
@@ -216,7 +298,9 @@ describe("ExplorerFeedRepository.getFeedPage", () => {
       tokenOp: "MINT",
     });
 
-    const dataQuery = capturedQueries.find((q) => !/stamp_total/i.test(q.query));
+    const dataQuery = capturedQueries.find((q) =>
+      !/stamp_total/i.test(q.query)
+    );
     // ident param, then op param, then limit(20) + offset((3-1)*20=40)
     assertEquals(dataQuery!.params, ["STAMP", "MINT", 20, 40]);
   });
