@@ -7,6 +7,7 @@ import { ModalBase } from "$layout";
 import { logger } from "$lib/utils/logger.ts";
 import { getCSRFToken } from "$lib/utils/security/clientSecurityUtils.ts";
 import { showToast } from "$lib/utils/ui/notifications/toastSignal.ts";
+import { walletOwnsAddress } from "$lib/utils/wallet/ownership.ts";
 import { labelSm } from "$text";
 import { useState } from "preact/hooks";
 
@@ -17,6 +18,12 @@ const CREATOR_NAME_PATTERN = /^[a-zA-Z0-9 .\-_']+$/;
 
 /* ===== TYPES ===== */
 export interface EditCreatorNameModalProps {
+  /**
+   * Address whose creator name is being edited (the profile being viewed).
+   * Must be one of the connected wallet's addresses — payment or ordinals —
+   * and is the address that signs the update and that the server verifies.
+   */
+  address: string;
   currentName?: string;
   onSuccess?: (newName: string) => void;
 }
@@ -52,6 +59,7 @@ export function validateCreatorName(
 
 /* ===== COMPONENT ===== */
 function EditCreatorNameModal({
+  address,
   currentName,
   onSuccess,
 }: EditCreatorNameModalProps) {
@@ -94,6 +102,16 @@ function EditCreatorNameModal({
       return;
     }
 
+    // Guard: the profile address must belong to the connected wallet
+    // (payment or ordinals address). Never sign/submit for a foreign address.
+    if (!walletOwnsAddress(wallet, address)) {
+      showToast(
+        "The connected wallet does not control this address",
+        "error",
+      );
+      return;
+    }
+
     // Client-side validation
     const validation = validateCreatorName(newName);
     if (!validation.valid) {
@@ -130,9 +148,12 @@ function EditCreatorNameModal({
         component: "EditCreatorNameModal",
       });
 
+      // Sign with the profile address itself, so the server-side check
+      // (signature must verify against the address being updated) holds for
+      // secondary addresses such as the Xverse ordinals address.
       let signature: string;
       try {
-        const rawSignature = await walletContext.signMessage(message);
+        const rawSignature = await walletContext.signMessage(message, address);
         console.log(
           "[EditCreatorName] signMessage returned:",
           typeof rawSignature,
@@ -169,7 +190,7 @@ function EditCreatorNameModal({
       // Step 3: POST to API
       logger.debug("ui", {
         message: "Submitting creator name update",
-        address: wallet.address,
+        address,
         newName: trimmedName,
         component: "EditCreatorNameModal",
       });
@@ -181,7 +202,7 @@ function EditCreatorNameModal({
           "X-CSRF-Token": csrfToken,
         },
         body: JSON.stringify({
-          address: wallet.address,
+          address,
           newName: trimmedName,
           signature,
           timestamp,

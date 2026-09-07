@@ -15,6 +15,7 @@ import {
   formatBTCAmount,
 } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { showToast } from "$lib/utils/ui/notifications/toastSignal.ts";
+import { walletOwnsAddress } from "$lib/utils/wallet/ownership.ts";
 import { tooltipIcon } from "$notification";
 import { subtitlePrimary, text, titlePrimary, valueSm } from "$text";
 import type { WalletHeaderProps } from "$types/ui.d.ts";
@@ -95,6 +96,7 @@ function WalletOverview({ walletData }: { walletData: WalletOverviewInfo }) {
   const handleEditClick = () => {
     openModal(
       <EditCreatorNameModal
+        address={walletData.address}
         currentName={walletData.creatorName || ""}
         onSuccess={(newName) => {
           setDisplayName(newName);
@@ -120,9 +122,10 @@ function WalletOverview({ walletData }: { walletData: WalletOverviewInfo }) {
     walletData.creatorName !== `${name}.btc`
   );
 
-  // Check if the connected wallet owns this profile
-  const isOwner = wallet?.address &&
-    wallet.address.toLowerCase() === walletData.address.toLowerCase();
+  // Check if the connected wallet owns this profile. Goes through the
+  // canonical helper so secondary addresses (e.g. the Xverse ordinals
+  // address) are recognised as well as the primary payment address.
+  const isOwner = walletOwnsAddress(wallet, walletData.address);
 
   /* ===== RENDER ===== */
   return (
