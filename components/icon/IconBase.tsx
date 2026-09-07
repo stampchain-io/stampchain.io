@@ -80,11 +80,24 @@ export function Icon(props: IconVariants) {
       speedMedium: "time30",
       speedFast: "time60",
 
+      // Artboard Icons
+      undo: "undo",
+      redo: "redo",
+      dropper: "dropper",
+      grid: "grid",
+      gridsnap: "magnet",
+      ruler: "ruler",
+      horizontalGuide: "arrowHorizontal",
+      verticalGuide: "arrowVertical",
+      clearGuides: "trashcan",
+
       // View Mode Icons
       viewCardRow: "gridRow",
       viewCardVertical: "gridVertical",
       viewCardSquare: "gridSquare",
       viewCardHorizontal: "gridHorizontal",
+      viewCardSingle: "gridSingle",
+      viewCardMixed: "gridMixed",
 
       // Caret Icons
       caretUp: "caretUp",

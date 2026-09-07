@@ -1,6 +1,7 @@
 /* ===== CREATE STAMP RECURSIVE HEADER ===== */
 import { Icon } from "$icon";
 import { openModal } from "$islands/modal/states.ts";
+import { container2Icon, ModalBase, ScrollFadeRow } from "$layout";
 import {
   addGuide,
   clearGuides,
@@ -11,12 +12,12 @@ import {
   undo,
   useRecursiveStampState,
 } from "$lib/hooks/useRecursiveStampState.ts";
-import { container2Icon, ModalBase, ScrollFadeRow } from "$layout";
 import { textSm } from "$text";
 import type { CreateStampRecursiveHeaderProps } from "$types/ui.d.ts";
 
 function PlaceholderIcon(props: {
   label: string;
+  name?: string;
   onClick?: (e: MouseEvent) => void;
   active?: boolean;
   disabled?: boolean;
@@ -24,12 +25,12 @@ function PlaceholderIcon(props: {
   return (
     <Icon
       type="iconButton"
-      name="website"
+      name={props.name ?? "website"}
       weight="normal"
       size="xsR"
       color={props.active ? "primary400" : "neutral400"}
       ariaLabel={props.label}
-      className={props.disabled ? "opacity-35 pointer-events-none" : ""}
+      className={props.disabled ? "opacity-100 pointer-events-none" : ""}
       onClick={props.disabled ? undefined : (e) => {
         e.preventDefault();
         props.onClick?.(e);
@@ -86,11 +87,13 @@ export function CreateStampRecursiveHeader(
       <ScrollFadeRow>
         <div class={`${container2Icon} shrink-0`}>
           <PlaceholderIcon
+            name="undo"
             label="Undo"
             disabled={!canUndo}
             onClick={() => undo()}
           />
           <PlaceholderIcon
+            name="redo"
             label="Redo"
             disabled={!canRedo}
             onClick={() => redo()}
@@ -100,14 +103,17 @@ export function CreateStampRecursiveHeader(
         <div class="flex shrink-0 ml-auto gap-3">
           <div class={container2Icon}>
             <PlaceholderIcon
+              name="horizontalGuide"
               label="Horizontal guide"
               onClick={() => addGuide("h")}
             />
             <PlaceholderIcon
+              name="verticalGuide"
               label="Vertical guide"
               onClick={() => addGuide("v")}
             />
             <PlaceholderIcon
+              name="clearGuides"
               label="Clear guides"
               onClick={() => clearGuides()}
             />
@@ -115,6 +121,7 @@ export function CreateStampRecursiveHeader(
 
           <div class={`${container2Icon} gap-1.5 tablet:gap-1`}>
             <PlaceholderIcon
+              name="ruler"
               label="Rulers"
               active={rulers}
               onClick={() => {
@@ -122,6 +129,7 @@ export function CreateStampRecursiveHeader(
               }}
             />
             <PlaceholderIcon
+              name="grid"
               label="Grid"
               active={grid}
               onClick={() => {
@@ -129,6 +137,7 @@ export function CreateStampRecursiveHeader(
               }}
             />
             <PlaceholderIcon
+              name="gridsnap"
               label="Snap"
               active={snap}
               onClick={() => {

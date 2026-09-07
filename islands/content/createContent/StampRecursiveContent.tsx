@@ -4,7 +4,9 @@ import { inputField, inputFieldSquare } from "$form";
 import { CreateStampRecursiveHeader } from "$header";
 import { Icon } from "$icon";
 import { RangeSlider } from "$islands/button/RangeSlider.tsx";
+import { ColorPicker } from "$islands/form/ColorPicker.tsx";
 import { InputField } from "$islands/form/InputField.tsx";
+import { CollapsibleSection } from "$islands/layout/CollapsibleSection.tsx";
 import PreviewCodeModal from "$islands/modal/PreviewCodeModal.tsx";
 import { closeModal, openModal } from "$islands/modal/states.ts";
 import { container2, container3, loaderSpinSmGrey, ModalBase } from "$layout";
@@ -78,12 +80,28 @@ import type {
   RecursiveStampContentProps,
   RecursiveStampLayer,
 } from "$types/ui.d.ts";
-import type { JSX } from "preact";
+import type { ComponentChildren, JSX } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
 
-const SECTION = `${labelXs} uppercase tracking-wide mb-2`;
+type RsbPanel =
+  | "background"
+  | "stamp"
+  | "more"
+  | "recent"
+  | "text"
+  | "layers"
+  | "properties"
+  | "selected";
+
+/** Offsets CollapsibleSection's `-mt-2 tablet:-mt-1` so overflow-hidden does not clip the first row. */
+function SectionBody(
+  { children }: { children: ComponentChildren },
+): JSX.Element {
+  return <div class="pt-2 tablet:pt-1">{children}</div>;
+}
+
 const CANVAS_CSS = `
-.rsb-wrap{position:relative;width:100%;height:100%;min-height:600px;
+.rsb-wrap{position:relative;width:100%;height:100%;
   overflow:hidden;
   background:repeating-conic-gradient(#191919 0% 25%,#141414 0% 50%) 0 0/20px 20px}
 .rsb-wrap.preview{background:var(--rsb-bg,#000)}
@@ -548,6 +566,12 @@ export function StampRecursiveContent(
   const [creatorMore, setCreatorMore] = useState<StampRow[]>([]);
   const [recent, setRecent] = useState<RecentItem[]>([]);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [openSection, setOpenSection] = useState<RsbPanel | null>(
+    "stamp",
+  );
+  const toggleSection = (id: RsbPanel) => {
+    setOpenSection((cur) => (cur === id ? null : id));
+  };
   const [ctxOpen, setCtxOpen] = useState<
     { x: number; y: number } | null
   >(null);
@@ -1015,555 +1039,584 @@ export function StampRecursiveContent(
     <div class="flex flex-col w-full pt-5">
       <style>{CANVAS_CSS}</style>
       <CreateStampRecursiveHeader />
-      <div class="flex flex-col-reverse min-[680px]:flex-row w-full gap-5 pt-5">
+      <div class="flex flex-col-reverse min-[720px]:flex-row w-full gap-5 pt-5">
         <div
-          class={`w-full min-[680px]:w-1/3 tablet:w-1/4 h-[600px] flex flex-col
-            overflow-hidden p-3 ${container2}`}
+          class={`w-full min-[720px]:w-1/3 min-[1080px]:w-1/4
+            h-[800px] min-[720px]:h-[480px] min-[1080px]:h-[560px]
+            desktop:h-[640px] flex flex-col overflow-hidden p-3
+            ${container2}`}
         >
-          <div class="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto
-            pr-1">
-            {/* BACKGROUND */}
-            <section>
-              <h3 class={SECTION}>BACKGROUND</h3>
-              <label
-                class={`flex items-center ${container3} !rounded-full
-                    px-2 py-1.5`}
-              >
-                <input
-                  type="color"
+          <div class="flex min-h-0 flex-1 flex-col overflow-y-auto pr-1">
+            <CollapsibleSection
+              title="BACKGROUND"
+              variant="collapsibleTitle"
+              expanded={openSection === "background"}
+              toggle={() => toggleSection("background")}
+            >
+              <SectionBody>
+                <ColorPicker
                   value={bg}
-                  onInput={(e) => {
-                    rsbBg.value = (e.target as HTMLInputElement).value;
+                  onChange={(hex) => {
+                    rsbBg.value = hex;
                   }}
-                  class="w-7 h-7 rounded-full shrink-0 cursor-pointer
-                      border-0 p-0 bg-transparent appearance-none
-                      [&::-webkit-color-swatch-wrapper]:p-0
-                      [&::-webkit-color-swatch]:rounded-full
-                      [&::-webkit-color-swatch]:border-0
-                      [&::-moz-color-swatch]:rounded-full
-                      [&::-moz-color-swatch]:border-0"
+                  showValue
+                  ariaLabel="Background color"
                 />
-                <span class={`${textXs} font-mono ml-auto pr-1`}>
-                  {bg}
-                </span>
-              </label>
-            </section>
+              </SectionBody>
+            </CollapsibleSection>
 
-            {/* STAMP */}
-            <section>
-              <h3 class={SECTION}>STAMP</h3>
-              <div class="flex flex-col gap-1.5">
-                <div class="flex items-center gap-1.5">
-                  <div
-                    class={`relative flex items-center justify-center
+            <CollapsibleSection
+              title="STAMP"
+              variant="collapsibleTitle"
+              expanded={openSection === "stamp"}
+              toggle={() => toggleSection("stamp")}
+            >
+              <SectionBody>
+                <div class="flex flex-col gap-1.5">
+                  <div class="flex items-center gap-1.5">
+                    <div
+                      class={`relative flex items-center justify-center
                         shrink-0 ${container3} !rounded-full p-0.5`}
-                  >
-                    <Icon
-                      type="iconButton"
-                      name="search"
-                      weight="normal"
-                      size="xsR"
-                      color="neutral400"
-                      ariaLabel="Browse stamps"
-                      onClick={(e) => {
+                    >
+                      <Icon
+                        type="iconButton"
+                        name="search"
+                        weight="normal"
+                        size="xsR"
+                        color="neutral400"
+                        ariaLabel="Browse stamps"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          openBrowse();
+                        }}
+                      />
+                    </div>
+                    <form
+                      class="flex-1 min-w-0"
+                      onSubmit={(e) => {
                         e.preventDefault();
-                        openBrowse();
+                        doFetch();
                       }}
-                    />
+                    >
+                      <InputField
+                        type="text"
+                        placeholder="STAMP # OR TX HASH"
+                        value={query}
+                        onInput={(e) =>
+                          setQuery(
+                            (e.currentTarget as HTMLInputElement).value,
+                          )}
+                      />
+                    </form>
                   </div>
-                  <form
-                    class="flex-1 min-w-0"
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      doFetch();
-                    }}
+                  <Button
+                    variant="flat"
+                    color="primary"
+                    size="smR"
+                    class="w-full"
+                    disabled={fetching}
+                    onClick={() => doFetch()}
                   >
-                    <InputField
-                      type="text"
-                      placeholder="STAMP # OR TX HASH"
-                      value={query}
-                      onInput={(e) =>
-                        setQuery(
-                          (e.currentTarget as HTMLInputElement).value,
-                        )}
-                    />
-                  </form>
+                    {fetching ? "…" : "FETCH"}
+                  </Button>
                 </div>
+                {status && (
+                  <p class={`${textXs} mt-2 text-color-primary-400`}>
+                    {status}
+                  </p>
+                )}
+                <div
+                  class={`flex items-center justify-center mt-3 w-full
+                    h-[140px] ${container3}`}
+                >
+                  {fetched
+                    ? fetched.stamp_mimetype === "text/html"
+                      ? (
+                        <iframe
+                          src={fetched.stamp_url}
+                          class="w-full h-full"
+                          sandbox="allow-scripts allow-same-origin"
+                        />
+                      )
+                      : (
+                        <img
+                          src={previewSrc}
+                          alt={`Stamp #${fetched.stamp}`}
+                          class="max-w-full max-h-full object-contain"
+                        />
+                      )
+                    : (
+                      <span class="text-color-neutral-500 text-xs">
+                        FETCH A STAMP
+                      </span>
+                    )}
+                </div>
+                {fetched && (
+                  <p class={`${textXs} mt-2 text-color-neutral-400`}>
+                    #{fetched.stamp}
+                    {fetched.cpid ? ` · ${fetched.cpid}` : ""}
+                    {fetched.creator_name ? ` · ${fetched.creator_name}` : ""}
+                  </p>
+                )}
                 <Button
                   variant="flat"
                   color="primary"
-                  size="smR"
-                  class="w-full"
-                  disabled={fetching}
-                  onClick={() => doFetch()}
+                  size="xsR"
+                  class="w-full mt-3"
+                  disabled={!fetched || mode !== "edit"}
+                  onClick={() => {
+                    if (!fetched) return;
+                    addStampLayer(fetched);
+                    showToast(`Added Stamp #${fetched.stamp}`, "success");
+                  }}
                 >
-                  {fetching ? "…" : "FETCH"}
+                  ADD TO CANVAS
                 </Button>
-              </div>
-              {status && (
-                <p class={`${textXs} mt-2 text-color-primary-400`}>
-                  {status}
-                </p>
-              )}
-              <div
-                class={`flex items-center justify-center mt-3 w-full
-                    h-[140px] ${container3}`}
-              >
-                {fetched
-                  ? fetched.stamp_mimetype === "text/html"
-                    ? (
-                      <iframe
-                        src={fetched.stamp_url}
-                        class="w-full h-full"
-                        sandbox="allow-scripts allow-same-origin"
-                      />
-                    )
-                    : (
-                      <img
-                        src={previewSrc}
-                        alt={`Stamp #${fetched.stamp}`}
-                        class="max-w-full max-h-full object-contain"
-                      />
-                    )
-                  : (
-                    <span class="text-color-neutral-500 text-xs">
-                      FETCH A STAMP
-                    </span>
-                  )}
-              </div>
-              {fetched && (
-                <p class={`${textXs} mt-2 text-color-neutral-400`}>
-                  #{fetched.stamp}
-                  {fetched.cpid ? ` · ${fetched.cpid}` : ""}
-                  {fetched.creator_name ? ` · ${fetched.creator_name}` : ""}
-                </p>
-              )}
-              <Button
-                variant="flat"
-                color="primary"
-                size="xsR"
-                class="w-full mt-3"
-                disabled={!fetched || mode !== "edit"}
-                onClick={() => {
-                  if (!fetched) return;
-                  addStampLayer(fetched);
-                  showToast(`Added Stamp #${fetched.stamp}`, "success");
-                }}
-              >
-                ADD TO CANVAS
-              </Button>
-            </section>
+              </SectionBody>
+            </CollapsibleSection>
 
             {creatorMore.length > 0 && fetched && (
-              <section>
-                <h3 class={SECTION}>
-                  MORE BY {fetched.creator_name ||
-                    `${fetched.creator.slice(0, 6)}…`}
-                </h3>
-                <div class="flex flex-wrap gap-1.5">
-                  {creatorMore.map((s) => (
-                    <button
-                      type="button"
-                      key={s.tx_hash}
-                      class={`${container3} w-11 overflow-hidden`}
-                      onClick={() => {
-                        setQuery(String(s.stamp));
-                        doFetch(String(s.stamp));
-                      }}
-                    >
-                      <img
-                        src={s.stamp_url}
-                        alt={`#${s.stamp}`}
-                        class="w-full h-8 object-cover"
-                      />
-                      <div class="text-[0.5rem] text-center font-mono
+              <CollapsibleSection
+                title={`MORE BY ${
+                  fetched.creator_name ||
+                  `${fetched.creator.slice(0, 6)}…`
+                }`}
+                variant="collapsibleTitle"
+                expanded={openSection === "more"}
+                toggle={() => toggleSection("more")}
+              >
+                <SectionBody>
+                  <div class="flex flex-wrap gap-1.5">
+                    {creatorMore.map((s) => (
+                      <button
+                        type="button"
+                        key={s.tx_hash}
+                        class={`${container3} w-11 overflow-hidden`}
+                        onClick={() => {
+                          setQuery(String(s.stamp));
+                          doFetch(String(s.stamp));
+                        }}
+                      >
+                        <img
+                          src={s.stamp_url}
+                          alt={`#${s.stamp}`}
+                          class="w-full h-8 object-cover"
+                        />
+                        <div class="text-[0.5rem] text-center font-mono
                     text-color-neutral-500">
-                        #{s.stamp}
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </section>
+                          #{s.stamp}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </SectionBody>
+              </CollapsibleSection>
             )}
 
             {recent.length > 0 && (
-              <section>
-                <h3 class={SECTION}>RECENT</h3>
-                <div class="flex flex-wrap gap-1.5">
-                  {recent.map((r) => (
-                    <Button
-                      key={r.num}
-                      variant="outline"
-                      color="neutral"
-                      size="xxsR"
-                      onClick={() => {
-                        setQuery(String(r.num));
-                        doFetch(String(r.num));
-                      }}
-                    >
-                      #{r.num}
-                    </Button>
-                  ))}
-                </div>
-              </section>
+              <CollapsibleSection
+                title="RECENT"
+                variant="collapsibleTitle"
+                expanded={openSection === "recent"}
+                toggle={() => toggleSection("recent")}
+              >
+                <SectionBody>
+                  <div class="flex flex-wrap gap-1.5">
+                    {recent.map((r) => (
+                      <Button
+                        key={r.num}
+                        variant="outline"
+                        color="neutral"
+                        size="xxsR"
+                        onClick={() => {
+                          setQuery(String(r.num));
+                          doFetch(String(r.num));
+                        }}
+                      >
+                        #{r.num}
+                      </Button>
+                    ))}
+                  </div>
+                </SectionBody>
+              </CollapsibleSection>
             )}
 
-            <section>
-              <h3 class={SECTION}>TEXT TOOL</h3>
-              <Button
-                variant="flat"
-                color="primary"
-                size="xsR"
-                class="w-full"
-                disabled={mode !== "edit"}
-                onClick={() => {
-                  addTextLayer();
-                  showToast(
-                    "Text layer added — double-click to edit",
-                    "info",
-                  );
-                }}
-              >
-                + ADD TEXT LAYER
-              </Button>
-            </section>
+            <CollapsibleSection
+              title="TEXT TOOL"
+              variant="collapsibleTitle"
+              expanded={openSection === "text"}
+              toggle={() => toggleSection("text")}
+            >
+              <SectionBody>
+                <Button
+                  variant="flat"
+                  color="primary"
+                  size="xsR"
+                  class="w-full"
+                  disabled={mode !== "edit"}
+                  onClick={() => {
+                    addTextLayer();
+                    showToast(
+                      "Text layer added — double-click to edit",
+                      "info",
+                    );
+                  }}
+                >
+                  + ADD TEXT LAYER
+                </Button>
+              </SectionBody>
+            </CollapsibleSection>
 
-            <section>
-              <h3 class={SECTION}>
-                LAYERS {layers.length ? `(${layers.length})` : ""}
-              </h3>
-              <div class="flex flex-col gap-1">
-                {layers.length === 0 && (
-                  <p class={`${textXs} text-color-neutral-500`}>
-                    Fetch a stamp and add it to begin.
-                  </p>
-                )}
-                {[...layers].reverse().map((l) => (
-                  <div
-                    key={l.id}
-                    class={`flex items-center gap-1.5 ${container3} p-1
+            <CollapsibleSection
+              title={`LAYERS${layers.length ? ` (${layers.length})` : ""}`}
+              variant="collapsibleTitle"
+              expanded={openSection === "layers"}
+              toggle={() => toggleSection("layers")}
+            >
+              <SectionBody>
+                <div class="flex flex-col gap-1">
+                  {layers.length === 0 && (
+                    <p class={`${textXs} text-color-neutral-500`}>
+                      Fetch a stamp and add it to begin.
+                    </p>
+                  )}
+                  {[...layers].reverse().map((l) => (
+                    <div
+                      key={l.id}
+                      class={`flex items-center gap-1.5 ${container3} p-1
                   ${l.id === selId ? "border-color-primary-400" : ""}
                   ${!l.vis ? "opacity-50" : ""}`}
-                    onClick={(e) =>
-                      selectLayer(l.id, (e as MouseEvent).shiftKey)}
-                    draggable={!l.locked}
-                    onDragStart={(e) => {
-                      e.dataTransfer?.setData("text/plain", l.id);
-                    }}
-                    onDragOver={(e) => e.preventDefault()}
-                    onDrop={(e) => {
-                      e.preventDefault();
-                      const src = e.dataTransfer?.getData("text/plain");
-                      if (src) reorderLayers(src, l.id);
-                    }}
-                  >
-                    <div class="w-7 h-7 overflow-hidden shrink-0 flex
+                      onClick={(e) =>
+                        selectLayer(l.id, (e as MouseEvent).shiftKey)}
+                      draggable={!l.locked}
+                      onDragStart={(e) => {
+                        e.dataTransfer?.setData("text/plain", l.id);
+                      }}
+                      onDragOver={(e) => e.preventDefault()}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        const src = e.dataTransfer?.getData("text/plain");
+                        if (src) reorderLayers(src, l.id);
+                      }}
+                    >
+                      <div class="w-7 h-7 overflow-hidden shrink-0 flex
                   items-center justify-center bg-color-neutral-900">
-                      {l.type === "text"
-                        ? (
-                          <span class="text-color-primary-400 font-bold text-xs">
-                            T
-                          </span>
-                        )
-                        : l.mime?.startsWith("image/")
-                        ? (
-                          <img
-                            src={layerDisplaySrc(l)}
-                            alt={l.name}
-                            class="w-full h-full object-cover"
-                          />
-                        )
-                        : <span class={`${textXs}`}>HTML</span>}
-                    </div>
-                    <span class={`${textXs} flex-1 truncate`}>{l.name}</span>
-                    <Icon
-                      type="iconButton"
-                      name={l.locked ? "locked" : "unlocked"}
-                      weight="normal"
-                      size="xxxs"
-                      color="neutral400"
-                      ariaLabel="Lock layer"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        toggleLayerLock(l.id);
-                      }}
-                    />
-                    <Icon
-                      type="iconButton"
-                      name="caretUp"
-                      weight="normal"
-                      size="xxxs"
-                      color="neutral400"
-                      ariaLabel="Move up"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        moveLayer(l.id, 1);
-                      }}
-                    />
-                    <Icon
-                      type="iconButton"
-                      name="caretDown"
-                      weight="normal"
-                      size="xxxs"
-                      color="neutral400"
-                      ariaLabel="Move down"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        moveLayer(l.id, -1);
-                      }}
-                    />
-                    <Icon
-                      type="iconButton"
-                      name={l.vis ? "view" : "hide"}
-                      weight="normal"
-                      size="xxxs"
-                      color="neutral400"
-                      ariaLabel="Toggle visibility"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        toggleLayerVis(l.id);
-                      }}
-                    />
-                    <Icon
-                      type="iconButton"
-                      name="close"
-                      weight="normal"
-                      size="xxxs"
-                      color="neutral400"
-                      ariaLabel="Delete layer"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        deleteLayer(l.id);
-                      }}
-                    />
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            {primary && (
-              <section>
-                <h3 class={SECTION}>PROPERTIES</h3>
-                <div class="grid grid-cols-2 gap-2">
-                  {([
-                    ["X (%)", "x"],
-                    ["Y (%)", "y"],
-                    ["WIDTH (%)", "w"],
-                    ["HEIGHT (%)", "h"],
-                    ["ROTATION (°)", "r"],
-                  ] as const).map(([label, key]) => (
-                    <label key={key} class="flex flex-col gap-0.5">
-                      <span class={labelXs}>{label}</span>
-                      <input
-                        type="number"
-                        class={inputFieldSquare}
-                        value={Number(primary[key]).toFixed(1)}
-                        step="0.1"
-                        onInput={(e) => {
-                          const v = parseFloat(
-                            (e.target as HTMLInputElement).value,
-                          ) || 0;
-                          patchLayer(primary.id, { [key]: v });
+                        {l.type === "text"
+                          ? (
+                            <span class="text-color-primary-400 font-bold text-xs">
+                              T
+                            </span>
+                          )
+                          : l.mime?.startsWith("image/")
+                          ? (
+                            <img
+                              src={layerDisplaySrc(l)}
+                              alt={l.name}
+                              class="w-full h-full object-cover"
+                            />
+                          )
+                          : <span class={`${textXs}`}>HTML</span>}
+                      </div>
+                      <span class={`${textXs} flex-1 truncate`}>{l.name}</span>
+                      <Icon
+                        type="iconButton"
+                        name={l.locked ? "locked" : "unlocked"}
+                        weight="normal"
+                        size="xxxs"
+                        color="neutral400"
+                        ariaLabel="Lock layer"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          toggleLayerLock(l.id);
                         }}
                       />
-                    </label>
+                      <Icon
+                        type="iconButton"
+                        name="caretUp"
+                        weight="normal"
+                        size="xxxs"
+                        color="neutral400"
+                        ariaLabel="Move up"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          moveLayer(l.id, 1);
+                        }}
+                      />
+                      <Icon
+                        type="iconButton"
+                        name="caretDown"
+                        weight="normal"
+                        size="xxxs"
+                        color="neutral400"
+                        ariaLabel="Move down"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          moveLayer(l.id, -1);
+                        }}
+                      />
+                      <Icon
+                        type="iconButton"
+                        name={l.vis ? "view" : "hide"}
+                        weight="normal"
+                        size="xxxs"
+                        color="neutral400"
+                        ariaLabel="Toggle visibility"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          toggleLayerVis(l.id);
+                        }}
+                      />
+                      <Icon
+                        type="iconButton"
+                        name="close"
+                        weight="normal"
+                        size="xxxs"
+                        color="neutral400"
+                        ariaLabel="Delete layer"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          deleteLayer(l.id);
+                        }}
+                      />
+                    </div>
                   ))}
                 </div>
-                <label class="flex flex-col gap-0.5 mt-2">
-                  <span class={labelXs}>
-                    OPACITY {Math.round(primary.op * 100)}%
-                  </span>
-                  <RangeSlider
-                    value={primary.op}
-                    min={0}
-                    max={1}
-                    onChange={(v) => patchLayer(primary.id, { op: v })}
-                  />
-                </label>
-                <div class="flex gap-2 mt-2">
-                  <Button
-                    variant={primary.flipH ? "flat" : "outline"}
-                    color="neutral"
-                    size="xxsR"
-                    onClick={() => flipSelected("h")}
-                  >
-                    FLIP H
-                  </Button>
-                  <Button
-                    variant={primary.flipV ? "flat" : "outline"}
-                    color="neutral"
-                    size="xxsR"
-                    onClick={() => flipSelected("v")}
-                  >
-                    FLIP V
-                  </Button>
-                </div>
-                {primary.type === "text" && (
-                  <div class="flex flex-col gap-2 mt-3">
-                    <select
-                      class={inputField}
-                      value={primary.font}
-                      onChange={(e) =>
-                        patchLayer(primary.id, {
-                          font: (e.target as HTMLSelectElement).value,
-                        })}
-                    >
-                      {RECURSIVE_STAMP_FONTS.map((f) => (
-                        <option key={f} value={f}>{f}</option>
-                      ))}
-                    </select>
-                    <label class="flex flex-col gap-0.5">
-                      <span class={labelXs}>SIZE (%H)</span>
-                      <input
-                        type="number"
-                        class={inputField}
-                        value={primary.fontSize}
-                        step="0.5"
-                        onInput={(e) =>
-                          patchLayer(primary.id, {
-                            fontSize: Math.max(
-                              0.5,
-                              parseFloat(
-                                (e.target as HTMLInputElement).value,
-                              ) ||
-                                5,
-                            ),
-                          })}
-                      />
-                    </label>
-                    <input
-                      type="color"
-                      value={primary.color}
-                      onInput={(e) =>
-                        patchLayer(primary.id, {
-                          color: (e.target as HTMLInputElement).value,
-                        })}
-                    />
-                    <div class="flex gap-1">
-                      <Button
-                        variant={primary.bold ? "flat" : "outline"}
-                        color="neutral"
-                        size="xxsR"
-                        onClick={() =>
-                          patchLayer(primary.id, { bold: !primary.bold })}
-                      >
-                        B
-                      </Button>
-                      <Button
-                        variant={primary.italic ? "flat" : "outline"}
-                        color="neutral"
-                        size="xxsR"
-                        onClick={() =>
-                          patchLayer(primary.id, { italic: !primary.italic })}
-                      >
-                        I
-                      </Button>
-                      {(["left", "center", "right"] as const).map((a) => (
-                        <Button
-                          key={a}
-                          variant={primary.align === a ? "flat" : "outline"}
-                          color="neutral"
-                          size="xxsR"
-                          onClick={() => patchLayer(primary.id, { align: a })}
-                        >
-                          {a[0]?.toUpperCase()}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                <button
-                  type="button"
-                  class={`${labelXs} mt-3 flex items-center gap-1`}
-                  onClick={() => setFiltersOpen((v) => !v)}
-                >
-                  FILTERS
-                  <Icon
-                    type="icon"
-                    name={filtersOpen ? "caretUp" : "caretDown"}
-                    weight="normal"
-                    size="xxxs"
-                    color="neutral400"
-                  />
-                </button>
-                {filtersOpen && (
-                  <div class="flex flex-col gap-2 mt-2">
+              </SectionBody>
+            </CollapsibleSection>
+
+            {primary && (
+              <CollapsibleSection
+                title="PROPERTIES"
+                variant="collapsibleTitle"
+                expanded={openSection === "properties"}
+                toggle={() => toggleSection("properties")}
+              >
+                <SectionBody>
+                  <div class="grid grid-cols-2 gap-2">
                     {([
-                      ["brightness", "BRIGHTNESS", 0, 200, "%"],
-                      ["contrast", "CONTRAST", 0, 200, "%"],
-                      ["saturate", "SATURATE", 0, 200, "%"],
-                      ["hue", "HUE ROTATE", 0, 360, "°"],
-                      ["grayscale", "GRAYSCALE", 0, 100, "%"],
-                    ] as const).map(([key, label, min, max, unit]) => (
+                      ["X (%)", "x"],
+                      ["Y (%)", "y"],
+                      ["WIDTH (%)", "w"],
+                      ["HEIGHT (%)", "h"],
+                      ["ROTATION (°)", "r"],
+                    ] as const).map(([label, key]) => (
                       <label key={key} class="flex flex-col gap-0.5">
-                        <span class={labelXs}>
-                          {label} {primary.filters[key]}
-                          {unit}
-                        </span>
-                        <RangeSlider
-                          value={primary.filters[key]}
-                          min={min}
-                          max={max}
-                          onChange={(v) => {
-                            patchLayer(primary.id, {
-                              filters: {
-                                ...primary.filters,
-                                [key]: Math.round(v),
-                              },
-                            });
+                        <span class={labelXs}>{label}</span>
+                        <input
+                          type="number"
+                          class={inputFieldSquare}
+                          value={Number(primary[key]).toFixed(1)}
+                          step="0.1"
+                          onInput={(e) => {
+                            const v = parseFloat(
+                              (e.target as HTMLInputElement).value,
+                            ) || 0;
+                            patchLayer(primary.id, { [key]: v });
                           }}
                         />
                       </label>
                     ))}
+                  </div>
+                  <label class="flex flex-col gap-0.5 mt-2">
+                    <span class={labelXs}>
+                      OPACITY {Math.round(primary.op * 100)}%
+                    </span>
+                    <RangeSlider
+                      value={primary.op}
+                      min={0}
+                      max={1}
+                      onChange={(v) => patchLayer(primary.id, { op: v })}
+                    />
+                  </label>
+                  <div class="flex gap-2 mt-2">
                     <Button
-                      variant="outline"
+                      variant={primary.flipH ? "flat" : "outline"}
                       color="neutral"
                       size="xxsR"
-                      onClick={() => {
-                        pushHistory();
-                        patchLayer(primary.id, {
-                          filters: defaultRecursiveFilters(),
-                        });
-                      }}
+                      onClick={() => flipSelected("h")}
                     >
-                      RESET FILTERS
+                      FLIP H
+                    </Button>
+                    <Button
+                      variant={primary.flipV ? "flat" : "outline"}
+                      color="neutral"
+                      size="xxsR"
+                      onClick={() => flipSelected("v")}
+                    >
+                      FLIP V
                     </Button>
                   </div>
-                )}
-              </section>
+                  {primary.type === "text" && (
+                    <div class="flex flex-col gap-2 mt-3">
+                      <select
+                        class={inputField}
+                        value={primary.font}
+                        onChange={(e) =>
+                          patchLayer(primary.id, {
+                            font: (e.target as HTMLSelectElement).value,
+                          })}
+                      >
+                        {RECURSIVE_STAMP_FONTS.map((f) => (
+                          <option key={f} value={f}>{f}</option>
+                        ))}
+                      </select>
+                      <label class="flex flex-col gap-0.5">
+                        <span class={labelXs}>SIZE (%H)</span>
+                        <input
+                          type="number"
+                          class={inputField}
+                          value={primary.fontSize}
+                          step="0.5"
+                          onInput={(e) =>
+                            patchLayer(primary.id, {
+                              fontSize: Math.max(
+                                0.5,
+                                parseFloat(
+                                  (e.target as HTMLInputElement).value,
+                                ) ||
+                                  5,
+                              ),
+                            })}
+                        />
+                      </label>
+                      <ColorPicker
+                        value={primary.color ?? "#ffffff"}
+                        onChange={(hex) =>
+                          patchLayer(primary.id, { color: hex })}
+                        ariaLabel="Text color"
+                      />
+                      <div class="flex gap-1">
+                        <Button
+                          variant={primary.bold ? "flat" : "outline"}
+                          color="neutral"
+                          size="xxsR"
+                          onClick={() =>
+                            patchLayer(primary.id, { bold: !primary.bold })}
+                        >
+                          B
+                        </Button>
+                        <Button
+                          variant={primary.italic ? "flat" : "outline"}
+                          color="neutral"
+                          size="xxsR"
+                          onClick={() =>
+                            patchLayer(primary.id, { italic: !primary.italic })}
+                        >
+                          I
+                        </Button>
+                        {(["left", "center", "right"] as const).map((a) => (
+                          <Button
+                            key={a}
+                            variant={primary.align === a ? "flat" : "outline"}
+                            color="neutral"
+                            size="xxsR"
+                            onClick={() => patchLayer(primary.id, { align: a })}
+                          >
+                            {a[0]?.toUpperCase()}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  <button
+                    type="button"
+                    class={`${labelXs} mt-3 flex items-center gap-1`}
+                    onClick={() => setFiltersOpen((v) => !v)}
+                  >
+                    FILTERS
+                    <Icon
+                      type="icon"
+                      name={filtersOpen ? "caretUp" : "caretDown"}
+                      weight="normal"
+                      size="xxxs"
+                      color="neutral400"
+                    />
+                  </button>
+                  {filtersOpen && (
+                    <div class="flex flex-col gap-2 mt-2">
+                      {([
+                        ["brightness", "BRIGHTNESS", 0, 200, "%"],
+                        ["contrast", "CONTRAST", 0, 200, "%"],
+                        ["saturate", "SATURATE", 0, 200, "%"],
+                        ["hue", "HUE ROTATE", 0, 360, "°"],
+                        ["grayscale", "GRAYSCALE", 0, 100, "%"],
+                      ] as const).map(([key, label, min, max, unit]) => (
+                        <label key={key} class="flex flex-col gap-0.5">
+                          <span class={labelXs}>
+                            {label} {primary.filters[key]}
+                            {unit}
+                          </span>
+                          <RangeSlider
+                            value={primary.filters[key]}
+                            min={min}
+                            max={max}
+                            onChange={(v) => {
+                              patchLayer(primary.id, {
+                                filters: {
+                                  ...primary.filters,
+                                  [key]: Math.round(v),
+                                },
+                              });
+                            }}
+                          />
+                        </label>
+                      ))}
+                      <Button
+                        variant="outline"
+                        color="neutral"
+                        size="xxsR"
+                        onClick={() => {
+                          pushHistory();
+                          patchLayer(primary.id, {
+                            filters: defaultRecursiveFilters(),
+                          });
+                        }}
+                      >
+                        RESET FILTERS
+                      </Button>
+                    </div>
+                  )}
+                </SectionBody>
+              </CollapsibleSection>
             )}
 
             {selIds.length > 1 && (
-              <section>
-                <h3 class={SECTION}>{selIds.length} SELECTED</h3>
-                <div class="grid grid-cols-3 gap-1">
-                  {[
-                    ["left", "⇤"],
-                    ["hcenter", "⇔"],
-                    ["right", "⇥"],
-                    ["top", "⤒"],
-                    ["vcenter", "⇕"],
-                    ["bottom", "⤓"],
-                    ["dh", "↔"],
-                    ["dv", "↕"],
-                  ].map(([modeKey, label]) => (
-                    <Button
-                      key={modeKey}
-                      variant="outline"
-                      color="neutral"
-                      size="xxsR"
-                      onClick={() => alignSelected(modeKey)}
-                    >
-                      {label}
-                    </Button>
-                  ))}
-                </div>
-              </section>
+              <CollapsibleSection
+                title={`${selIds.length} SELECTED`}
+                variant="collapsibleTitle"
+                expanded={openSection === "selected"}
+                toggle={() => toggleSection("selected")}
+              >
+                <SectionBody>
+                  <div class="grid grid-cols-3 gap-1">
+                    {[
+                      ["left", "⇤"],
+                      ["hcenter", "⇔"],
+                      ["right", "⇥"],
+                      ["top", "⤒"],
+                      ["vcenter", "⇕"],
+                      ["bottom", "⤓"],
+                      ["dh", "↔"],
+                      ["dv", "↕"],
+                    ].map(([modeKey, label]) => (
+                      <Button
+                        key={modeKey}
+                        variant="outline"
+                        color="neutral"
+                        size="xxsR"
+                        onClick={() => alignSelected(modeKey)}
+                      >
+                        {label}
+                      </Button>
+                    ))}
+                  </div>
+                </SectionBody>
+              </CollapsibleSection>
             )}
 
             <div class="flex gap-2">
@@ -1642,7 +1695,10 @@ export function StampRecursiveContent(
 
         {/* CANVAS */}
         <div
-          class={`w-full min-[680px]:w-2/3 tablet:w-3/4 min-w-0 h-[600px]
+          class={`w-full min-[720px]:w-2/3 min-[1080px]:w-3/4 min-w-0
+            h-[340px] min-[480px]:h-[400px] mobileMd:h-[480px]
+            min-[720px]:h-[480px] min-[1080px]:h-[560px]
+            desktop:h-[640px]
             flex flex-col overflow-hidden ${container2}`}
         >
           <div

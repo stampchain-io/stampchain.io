@@ -1,5 +1,6 @@
 export * from "$components/form/styles.ts";
 
+export * from "$islands/form/ColorPicker.tsx";
 export * from "$islands/form/InputField.tsx";
 export * from "$islands/form/SearchInputField.tsx";
 export * from "$islands/form/SRC20InputField.tsx";
