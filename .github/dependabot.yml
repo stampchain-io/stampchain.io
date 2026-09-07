@@ -17,11 +17,10 @@ updates:
     schedule:
       interval: "weekly"
       day: "monday"
+    # github-actions has no semver metadata, so only default-days is valid here;
+    # the per-semver cooldown keys are rejected by Dependabot's config validator.
     cooldown:
       default-days: 7
-      semver-major-days: 14
-      semver-minor-days: 7
-      semver-patch-days: 7
     labels:
       - "dependencies"
       - "github-actions"
