@@ -68,48 +68,163 @@ async function getBTCBalanceFromBlockCypher(
   }
 }
 
-// Cached wrapper for getBTCBalanceFromMempool with Redis caching
-async function getCachedBTCBalanceFromMempool(
+/* ===== per-provider caching (positive + short negative) ===== */
+
+type BTCBalanceProvider = "mempool" | "blockcypher";
+
+/** TTL for a successful provider lookup — balances can change frequently. */
+const BTC_BALANCE_CACHE_TTL_S = 60;
+
+/**
+ * TTL for a *failed* provider lookup (`null`: 429 / 5xx / network error /
+ * timeout). `dbManager.handleCache` treats `null` as a cache miss, so without
+ * this a provider that is currently down was re-queried on EVERY cold request,
+ * each one paying up to its full share of the budget (#1198 follow-up) and
+ * hammering the rate-limited providers harder. While the marker is live the
+ * provider is skipped and the chain falls through to the next one (or
+ * degrades) immediately. Kept short so a recovered provider is picked up
+ * again within seconds; a legitimate zero balance is a real `BTCBalance`
+ * object and is never negative-cached.
+ */
+export const BTC_BALANCE_NEGATIVE_CACHE_TTL_S = 20;
+
+/** Sentinel stored under the negative key — never a `BTCBalance` shape. */
+interface BTCBalanceUnavailableMarker {
+  unavailable: true;
+  /** Epoch ms of the failure that created the marker (diagnostics only). */
+  at: number;
+}
+
+function isUnavailableMarker(
+  value: unknown,
+): value is BTCBalanceUnavailableMarker {
+  return typeof value === "object" && value !== null &&
+    (value as BTCBalanceUnavailableMarker).unavailable === true;
+}
+
+/** Positive entries: `btc_balance:{provider}:{address}` (unchanged). */
+function positiveCacheKey(provider: BTCBalanceProvider, address: string) {
+  return `btc_balance:${provider}:${address}`;
+}
+
+/**
+ * Negative entries live in their own namespace so a marker can never be read
+ * back as a balance, and vice versa.
+ */
+export function negativeCacheKey(
+  provider: BTCBalanceProvider,
   address: string,
-  timeoutMs: number,
+) {
+  return `btc_balance:unavailable:${provider}:${address}`;
+}
+
+/**
+ * The slice of `dbManager` the provider cache needs. Injectable so the cache
+ * semantics can be tested against a real (in-memory) `DatabaseManager`
+ * instance; production always uses the shared `dbManager` singleton.
+ */
+export interface BTCBalanceProviderCache {
+  handleCache<T>(
+    key: string,
+    fetchData: () => Promise<T>,
+    cacheDuration: number | "never",
+  ): Promise<T>;
+  getCacheValue<T>(key: string): Promise<T | null>;
+  setCacheValue(
+    key: string,
+    value: unknown,
+    ttlSeconds: number | "never",
+  ): Promise<void>;
+}
+
+/**
+ * Cached wrapper shared by both providers. The positive cache is consulted
+ * first (`handleCache`, 60s); only on a positive miss is the negative marker
+ * checked, so the warm path costs nothing extra. If the provider fails, a
+ * short-lived marker is written so the next requests skip it. Every cache
+ * operation is best-effort: if the cache layer is missing or unavailable the
+ * provider is simply called directly (no caching, negative or positive —
+ * exactly the pre-existing fallback behaviour).
+ */
+export async function getCachedProviderBalance(
+  provider: BTCBalanceProvider,
+  address: string,
+  fetchFresh: () => Promise<BTCBalance | null>,
+  cache: BTCBalanceProviderCache | undefined = dbManager,
 ): Promise<BTCBalance | null> {
-  const cacheKey = `btc_balance:mempool:${address}`;
-  const cacheDuration = 60; // 60 seconds TTL - balances can change frequently
-  const fetchFresh = () =>
-    getBTCBalanceFromMempool(address, 0, Date.now() + timeoutMs);
+  const negativeKey = negativeCacheKey(provider, address);
+
+  const recentlyFailed = async (): Promise<boolean> => {
+    try {
+      return isUnavailableMarker(await cache?.getCacheValue(negativeKey));
+    } catch (error) {
+      console.error(`Negative-cache read failed for ${provider}:`, error);
+      return false;
+    }
+  };
+
+  const recordFailure = async (): Promise<void> => {
+    const marker: BTCBalanceUnavailableMarker = {
+      unavailable: true,
+      at: Date.now(),
+    };
+    try {
+      await cache?.setCacheValue(
+        negativeKey,
+        marker,
+        BTC_BALANCE_NEGATIVE_CACHE_TTL_S,
+      );
+    } catch (error) {
+      console.error(`Negative-cache write failed for ${provider}:`, error);
+    }
+  };
+
+  const fetchUnlessRecentlyFailed = async (): Promise<BTCBalance | null> => {
+    if (await recentlyFailed()) {
+      console.warn(
+        `Skipping ${provider} balance lookup for ${address}: provider failed within the last ${BTC_BALANCE_NEGATIVE_CACHE_TTL_S}s`,
+      );
+      return null;
+    }
+    const balance = await fetchFresh();
+    if (balance === null) await recordFailure();
+    return balance;
+  };
 
   try {
-    return await dbManager.handleCache(
-      cacheKey,
-      fetchFresh,
-      cacheDuration,
+    if (!cache) return await fetchUnlessRecentlyFailed();
+    return await cache.handleCache(
+      positiveCacheKey(provider, address),
+      fetchUnlessRecentlyFailed,
+      BTC_BALANCE_CACHE_TTL_S,
     ) as BTCBalance | null;
   } catch (error) {
-    console.error("Cached balance fetch error:", error);
+    console.error(`Cached ${provider} balance fetch error:`, error);
     // Fallback to direct call if caching fails
-    return fetchFresh();
+    return fetchUnlessRecentlyFailed();
   }
 }
 
-// Cached wrapper for getBTCBalanceFromBlockCypher with Redis caching
-async function getCachedBTCBalanceFromBlockCypher(
+function getCachedBTCBalanceFromMempool(
   address: string,
   timeoutMs: number,
 ): Promise<BTCBalance | null> {
-  const cacheKey = `btc_balance:blockcypher:${address}`;
-  const cacheDuration = 60; // 60 seconds TTL
+  return getCachedProviderBalance(
+    "mempool",
+    address,
+    () => getBTCBalanceFromMempool(address, 0, Date.now() + timeoutMs),
+  );
+}
 
-  try {
-    return await dbManager.handleCache(
-      cacheKey,
-      () => getBTCBalanceFromBlockCypher(address, timeoutMs),
-      cacheDuration,
-    ) as BTCBalance | null;
-  } catch (error) {
-    console.error("Cached BlockCypher balance fetch error:", error);
-    // Fallback to direct call if caching fails
-    return getBTCBalanceFromBlockCypher(address, timeoutMs);
-  }
+function getCachedBTCBalanceFromBlockCypher(
+  address: string,
+  timeoutMs: number,
+): Promise<BTCBalance | null> {
+  return getCachedProviderBalance(
+    "blockcypher",
+    address,
+    () => getBTCBalanceFromBlockCypher(address, timeoutMs),
+  );
 }
 
 export async function getBTCBalanceInfo(

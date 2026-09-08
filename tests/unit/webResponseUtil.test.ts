@@ -189,8 +189,11 @@ Deno.test("WebResponseUtil - stampResponse with binary image", async () => {
     binary: true,
   });
 
-  // Content-Type header is lost during normalization for binary responses
-  assertEquals(response.headers.get("Content-Type"), null);
+  assertEquals(response.headers.get("Content-Type"), "image/png");
+  assertEquals(
+    response.headers.get("Cache-Control"),
+    "public, max-age=31536000, immutable",
+  );
   assertExists(response.headers.get("Content-Length"));
 
   const body = await response.arrayBuffer();
@@ -315,5 +318,230 @@ Deno.test("WebResponseUtil - xmlResponse sets XML content type and honours cache
 
 Deno.test("WebResponseUtil - xmlResponse defaults to security-header cache policy", () => {
   const response = WebResponseUtil.xmlResponse("<a/>", { forceNoCache: true });
-  assertEquals(response.headers.get("cache-control"), "no-store, must-revalidate");
+  assertEquals(
+    response.headers.get("cache-control"),
+    "no-store, must-revalidate",
+  );
+});
+
+// ---------------------------------------------------------------------------
+// Full header-set assertions. The header producers in securityHeaders.ts used
+// to return Headers instances; spreading one into an object literal yields {}
+// and silently dropped every security/cache header (task 1230). These tests
+// pin the complete set so a regression cannot hide behind assertExists.
+// ---------------------------------------------------------------------------
+
+function headerNames(response: Response): string[] {
+  return [...response.headers.keys()].sort();
+}
+
+Deno.test("WebResponseUtil - htmlResponse emits the full web security header set", () => {
+  const response = WebResponseUtil.htmlResponse("<p>x</p>");
+
+  assertEquals(headerNames(response), [
+    "cache-control",
+    "cdn-cache-control",
+    "cloudflare-cdn-cache-control",
+    "content-security-policy",
+    "content-type",
+    "edge-control",
+    "surrogate-control",
+    "vary",
+    "x-api-version",
+  ]);
+  assertEquals(
+    response.headers.get("content-type"),
+    "text/html; charset=utf-8",
+  );
+  assertEquals(
+    response.headers.get("cache-control"),
+    "public, max-age=31536000, immutable",
+  );
+  const csp = response.headers.get("content-security-policy") ?? "";
+  assertEquals(csp.includes("frame-ancestors 'self'"), true);
+  assertEquals(csp.includes("script-src"), true);
+});
+
+Deno.test("WebResponseUtil - htmlResponse forceNoCache + caller overrides", () => {
+  const response = WebResponseUtil.htmlResponse("<p>x</p>", {
+    forceNoCache: true,
+    headers: { "X-Frame-Options": "SAMEORIGIN", "Vary": "Accept-Encoding" },
+  });
+
+  assertEquals(
+    response.headers.get("cache-control"),
+    "no-store, must-revalidate",
+  );
+  assertEquals(response.headers.get("x-frame-options"), "SAMEORIGIN");
+  assertExists(response.headers.get("content-security-policy"));
+});
+
+Deno.test("WebResponseUtil - stampResponse(text/html) emits the stamp-content header set", () => {
+  const response = WebResponseUtil.stampResponse("<p>x</p>", "text/html", {
+    binary: false,
+  });
+
+  assertEquals(headerNames(response), [
+    "cache-control",
+    "content-security-policy",
+    "content-type",
+    "vary",
+    "x-api-version",
+    "x-content-type-options",
+    "x-frame-options",
+  ]);
+  assertEquals(
+    response.headers.get("content-security-policy"),
+    "frame-ancestors 'self'",
+  );
+  assertEquals(response.headers.get("x-frame-options"), "SAMEORIGIN");
+  assertEquals(response.headers.get("x-content-type-options"), "nosniff");
+  assertEquals(
+    response.headers.get("content-type"),
+    "text/html; charset=utf-8",
+  );
+  assertEquals(
+    response.headers.get("cache-control"),
+    "public, max-age=31536000, immutable",
+  );
+  assertEquals(
+    response.headers.get("vary"),
+    "Accept-Encoding, X-API-Version, Origin",
+  );
+});
+
+Deno.test("WebResponseUtil - stampResponse(text/html) never carries the site web CSP", () => {
+  const response = WebResponseUtil.stampResponse("<p>x</p>", "text/html", {
+    binary: false,
+  });
+  const csp = response.headers.get("content-security-policy") ?? "";
+  // Real HTML stamps load scripts/iframes/images from arbitrary hosts and use
+  // blob: workers; a source-list CSP would break them.
+  assertEquals(csp.includes("script-src"), false);
+  assertEquals(csp.includes("default-src"), false);
+  assertEquals(csp.includes("connect-src"), false);
+});
+
+Deno.test("WebResponseUtil - stampResponse caller headers override defaults", () => {
+  const response = WebResponseUtil.stampResponse("<p>x</p>", "text/html", {
+    binary: false,
+    headers: {
+      "Cache-Control": "public, max-age=3600, no-transform",
+      "CDN-Cache-Control": "public, max-age=86400",
+      "CF-No-Transform": "true",
+    },
+  });
+
+  assertEquals(
+    response.headers.get("cache-control"),
+    "public, max-age=3600, no-transform",
+  );
+  assertEquals(
+    response.headers.get("cdn-cache-control"),
+    "public, max-age=86400",
+  );
+  assertEquals(response.headers.get("cf-no-transform"), "true");
+  // Forced trailing headers still win over caller values.
+  assertEquals(
+    response.headers.get("content-type"),
+    "text/html; charset=utf-8",
+  );
+});
+
+Deno.test("WebResponseUtil - stampResponse(image/svg+xml) has cache headers and no CSP", () => {
+  const response = WebResponseUtil.stampResponse("<svg/>", "image/svg+xml", {
+    binary: false,
+  });
+
+  assertEquals(headerNames(response), [
+    "cache-control",
+    "content-type",
+    "vary",
+    "x-api-version",
+  ]);
+  assertEquals(
+    response.headers.get("content-type"),
+    "image/svg+xml; charset=utf-8",
+  );
+  assertEquals(
+    response.headers.get("cache-control"),
+    "public, max-age=31536000, immutable",
+  );
+});
+
+Deno.test("WebResponseUtil - stampResponse(binary) emits the full header set", () => {
+  const base64Image =
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
+  const response = WebResponseUtil.stampResponse(base64Image, "image/png", {
+    binary: true,
+    headers: { "CF-Rocket-Loader": "false" },
+  });
+
+  assertEquals(headerNames(response), [
+    "cache-control",
+    "cf-rocket-loader",
+    "content-length",
+    "content-type",
+    "vary",
+    "x-api-version",
+  ]);
+  assertEquals(response.headers.get("content-type"), "image/png");
+  assertEquals(response.headers.get("content-length"), "70");
+  assertEquals(
+    response.headers.get("vary"),
+    "Accept-Encoding, X-API-Version, Origin",
+  );
+});
+
+Deno.test("WebResponseUtil - stampNotFound carries no-cache security headers", () => {
+  const response = WebResponseUtil.stampNotFound();
+
+  assertEquals(headerNames(response), [
+    "cache-control",
+    "cdn-cache-control",
+    "cloudflare-cdn-cache-control",
+    "content-security-policy",
+    "content-type",
+    "edge-control",
+    "surrogate-control",
+    "vary",
+    "x-api-version",
+  ]);
+  assertEquals(
+    response.headers.get("cache-control"),
+    "no-store, must-revalidate",
+  );
+});
+
+Deno.test("WebResponseUtil - binaryResponse emits recursive security + cache headers", () => {
+  const response = WebResponseUtil.binaryResponse(
+    new Uint8Array([1, 2, 3]),
+    "image/png",
+    { immutableBinary: true, headers: { "X-Cache": "redis-hit" } },
+  );
+
+  assertEquals(headerNames(response), [
+    "cache-control",
+    "cdn-cache-control",
+    "cloudflare-cdn-cache-control",
+    "content-security-policy",
+    "content-type",
+    "cross-origin-embedder-policy",
+    "cross-origin-opener-policy",
+    "cross-origin-resource-policy",
+    "edge-control",
+    "surrogate-control",
+    "vary",
+    "x-api-version",
+    "x-cache",
+  ]);
+  assertEquals(response.headers.get("content-type"), "image/png");
+  assertEquals(
+    response.headers.get("cross-origin-resource-policy"),
+    "cross-origin",
+  );
+  assertEquals(
+    response.headers.get("cache-control"),
+    "public, max-age=31536000, immutable",
+  );
 });

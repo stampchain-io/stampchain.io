@@ -20,7 +20,6 @@ const EXCEPTIONS = [
   // These files are allowed to have manual Response() for specific reasons
   "routes/test/",
   "routes/_middleware.ts", // Complex middleware with custom headers
-  "routes/api/_middleware.ts", // API middleware with transformation
   "routes/api/v2/stamp/[stamp]/preview.ts", // Binary image processing with specialized headers
 ];
 
