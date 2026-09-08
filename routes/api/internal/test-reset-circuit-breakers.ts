@@ -1,9 +1,16 @@
 import { Handlers } from "$fresh/server.ts";
 import { ApiResponseUtil } from "$lib/utils/api/responses/apiResponseUtil.ts";
 import { CircuitBreakerService } from "$server/services/infrastructure/circuitBreaker.ts";
+import { InternalRouteGuard } from "$server/services/security/internalRouteGuard.ts";
 
+// Operational endpoint: resetting every circuit breaker re-opens traffic to
+// upstreams that tripped for a reason, and the metrics expose upstream health.
+// Both methods require the internal API key, like the sibling monitoring and
+// debug-headers routes; this handler shipped without any guard.
 export const handler: Handlers = {
-  POST(_req) {
+  POST(req) {
+    const accessError = InternalRouteGuard.requireAPIKey(req);
+    if (accessError) return accessError;
     try {
       // Reset all circuit breakers
       CircuitBreakerService.resetAllBreakers();
@@ -20,7 +27,9 @@ export const handler: Handlers = {
     }
   },
 
-  GET(_req) {
+  GET(req) {
+    const accessError = InternalRouteGuard.requireAPIKey(req);
+    if (accessError) return accessError;
     try {
       // Get all circuit breaker metrics
       const metrics = CircuitBreakerService.getAllMetrics();
