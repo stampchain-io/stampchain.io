@@ -3,7 +3,7 @@ import { getIdentifierType } from "$lib/utils/data/identifiers/identifierUtils.t
 import { isCpid, isTxHash } from "$lib/utils/typeGuards.ts";
 import { logger } from "$lib/utils/logger.ts";
 import { cleanHtmlForRendering } from "$lib/utils/ui/rendering/htmlCleanup.ts";
-import { getRecursiveHeaders } from "$lib/utils/security/securityHeaders.ts";
+import { getStampContentHeaders } from "$lib/utils/security/securityHeaders.ts";
 import { WebResponseUtil } from "$lib/utils/api/responses/webResponseUtil.ts";
 import { StampController } from "$server/controller/stampController.ts";
 import { RouteType } from "$server/services/infrastructure/cacheService.ts";
@@ -75,11 +75,11 @@ export async function handleContentRequest(
             const rawHtml = await contentResponse.text();
             const htmlContent = cleanHtmlForRendering(rawHtml);
 
-            // Use the standardized HTML response method with headers to prevent CDN modifications
-            const recursiveHeaders = getRecursiveHeaders();
+            // Stamp-content headers (CSP frame-ancestors, nosniff) plus explicit
+            // edge-cache / CDN-transform overrides.
             return WebResponseUtil.htmlResponse(htmlContent, {
               headers: {
-                ...Object.fromEntries(recursiveHeaders),
+                ...getStampContentHeaders("text/html"),
                 // Allow Cloudflare CDN to cache stamp content at the edge.
                 // Stamp data is immutable — once inscribed it never changes.
                 // Edge caching is critical for recursive stamps where the CF
