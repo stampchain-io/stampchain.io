@@ -1,7 +1,7 @@
 import "$/server/config/env.ts";
 
 import { getDatabaseConfig, logDatabaseConfig, validateDatabaseConfig, type DatabaseConfig as DBPoolConfig } from "$/server/config/database.config.ts";
-import { bigIntReviver, bigIntSerializer } from "$lib/utils/ui/formatting/formatUtils.ts";
+import { cacheReviver, cacheSerializer } from "$server/database/cacheSerialization.ts";
 import { DEFAULT_CACHE_DURATION } from "$lib/constants/database.ts";
 import { crypto } from "@std/crypto";
 import { serverConfig } from "$server/config/config.ts";
@@ -1235,7 +1235,7 @@ class DatabaseManager {
 
         if (data) {
           try {
-            const parsedData = JSON.parse(data, bigIntReviver);
+            const parsedData = JSON.parse(data, cacheReviver);
             return parsedData;
           } catch (parseError) {
             console.log(`[REDIS PARSE ERROR] Failed to parse data for key ${key.substring(0, 10)}...: ${parseError instanceof Error ? parseError.message : parseError}`);
@@ -1301,7 +1301,7 @@ class DatabaseManager {
         // Serialize the data
         let value: string;
         try {
-          value = JSON.stringify(data, bigIntSerializer);
+          value = JSON.stringify(data, cacheSerializer);
 
           // Log data size for performance monitoring
           const byteSize = new TextEncoder().encode(value).length;
