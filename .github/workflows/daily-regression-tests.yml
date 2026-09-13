@@ -97,6 +97,11 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.6.9
+
       - name: Install dependencies
         run: |
           npm install
@@ -235,6 +240,47 @@ jobs:
 
           echo "Daily summary generated"
 
+      # The homepage returns HTTP 200 even when it renders nothing: the route
+      # handler catches render errors and serves DATA_PLACEHOLDER_PROD_HOME.
+      # In September 2026 that shipped an empty page to every visitor for two
+      # days without alerting, because status-code monitoring saw 200 OK
+      # throughout. This asserts on content instead. The guard is proven
+      # against saved captures of the real broken and healthy responses in
+      # tests/unit/homepageContentMonitor.test.ts, which runs on every PR.
+      - name: Assert the homepage renders real content
+        id: homepage-content
+        if: always()
+        continue-on-error: true
+        run: |
+          # REPORT_DIR is exported by the "Create timestamped reports directory"
+          # step; fall back so this check still runs if that step was skipped.
+          report_dir="${REPORT_DIR:-reports/daily-regression/adhoc}"
+          mkdir -p "$report_dir/homepage"
+
+          set +e
+          deno run --allow-net --allow-read --allow-write --allow-env --no-check \
+            scripts/monitoring/check-homepage-content.ts \
+            --url "$PROD_BASE_URL" \
+            --out "$report_dir/homepage/homepage.html" \
+            --report reports/homepage-content.json
+          exit_code=$?
+          set -e
+
+          if [ "$exit_code" = "0" ]; then
+            echo "homepage_ok=true" >> $GITHUB_OUTPUT
+            echo "✅ Homepage renders real stamp content" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "homepage_ok=false" >> $GITHUB_OUTPUT
+            {
+              echo "### ❌ Homepage is serving an empty page"
+              echo ""
+              echo "\`$PROD_BASE_URL\` returned HTTP 200 with no stamp content."
+              echo "This is the \`DATA_PLACEHOLDER_PROD_HOME\` empty state; uptime and"
+              echo "status-code monitoring cannot see it. The saved response is in the"
+              echo "run artifacts under \`homepage/\`."
+            } >> $GITHUB_STEP_SUMMARY
+          fi
+
       - name: Check for critical regressions
         id: check-regressions
         if: always()
@@ -255,6 +301,14 @@ jobs:
           if [ "${{ steps.regression-tests.outputs.test_exit_code }}" != "0" ]; then
             warning_issues=$((warning_issues + 1))
             echo "⚠️ Test execution had failures"
+          fi
+
+          # An empty homepage is critical, not a warning: it is a total outage
+          # of the property that earns most of the fleet's search traffic, and
+          # it is invisible to every status-code check.
+          if [ "${{ steps.homepage-content.outputs.homepage_ok }}" = "false" ]; then
+            critical_issues=$((critical_issues + 1))
+            echo "❌ Homepage is serving the empty placeholder with HTTP 200"
           fi
           
           echo "critical_issues=$critical_issues" >> $GITHUB_OUTPUT
@@ -285,6 +339,7 @@ jobs:
             // brand-new issue (31 of them accumulated between July and
             // September 2026).
             const criticalIssues = '${{ steps.check-regressions.outputs.critical_issues }}';
+            const homepageOk = '${{ steps.homepage-content.outputs.homepage_ok }}';
             const warningIssues = '${{ steps.check-regressions.outputs.warning_issues }}';
             const runUrl = '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}';
             const now = new Date().toUTCString();
@@ -307,7 +362,9 @@ jobs:
             **Warning issues**: ${warningIssues}
             **Workflow run**: [${{ github.run_id }}](${runUrl})
 
-            Review \`expected-changes-validation.json\` in the run artifacts: \`schemaViolations\` lists responses that do not match \`schema.yml\`; entries with \`performanceIssue: "critical"\` exceeded the 5 s threshold.
+            **Homepage content**: ${homepageOk === 'false' ? '❌ serving the empty placeholder with HTTP 200' : '✅ rendering real stamps'}
+
+            Review \`expected-changes-validation.json\` in the run artifacts: \`schemaViolations\` lists responses that do not match \`schema.yml\`; entries with \`performanceIssue: "critical"\` exceeded the 5 s threshold. If **Homepage content** above is failing, read \`homepage-content.json\` and the saved response under \`homepage/\` first — that is a live total outage and outranks any schema drift.
             `;
 
             if (rolling) {
@@ -383,6 +440,7 @@ jobs:
           path: |
             reports/daily-regression/
             reports/expected-changes-validation.json
+            reports/homepage-content.json
             reports/trends-analysis.json
             daily_summary.md
           if-no-files-found: warn
