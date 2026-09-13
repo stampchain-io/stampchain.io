@@ -21,7 +21,13 @@ export function MetaTags({
       {/* Essential meta tags */}
       <meta charSet="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>{title}</title>
+      {
+        /* Gated on skipTitle so a route that renders its own <title> in a
+          route-level <Head> (e.g. /stamp/[id], _404) does not end up with two.
+          Fresh collects the route's <Head> BEFORE _app's, so the route wins in
+          the browser, but the duplicate still ships in the HTML. */
+      }
+      {!skipTitle && <title>{title}</title>}
       <meta name="description" content={description} />
       <meta
         name="keywords"
