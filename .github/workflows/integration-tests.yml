@@ -2,7 +2,7 @@ name: Integration Tests
 
 on:
   push:
-    branches: [main, dev]
+    branches: [main]
     paths:
       - "tests/integration/**"
       - "server/**"
@@ -11,7 +11,7 @@ on:
       - "deno.json"
       - ".github/workflows/integration-tests.yml"
   pull_request:
-    branches: [main, dev]
+    branches: [main]
     paths:
       - "tests/integration/**"
       - "server/**"
@@ -25,7 +25,6 @@ on:
       - completed
     branches:
       - main
-      - dev
 
 jobs:
   integration-tests:

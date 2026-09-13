@@ -2,7 +2,7 @@ name: TypeScript Type Checking
 
 on:
   pull_request:
-    branches: [main, dev]
+    branches: [main]
     paths:
       - "**/*.ts"
       - "**/*.tsx"

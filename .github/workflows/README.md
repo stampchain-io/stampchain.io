@@ -7,8 +7,7 @@
 **Purpose**: Run unit tests with mock database and fixture data, no external dependencies.
 
 **Triggers**:
-- Push to main/dev branches when unit tests, fixtures, mocks, or database code changes
-- Pull requests with same file changes
+- Every pull request to `main` (no path filter — this is a required status check)
 
 **Features**:
 - Uses MockDatabaseManager instead of real database
@@ -27,8 +26,8 @@
 **Purpose**: Run integration tests with real MySQL and Redis instances.
 
 **Triggers**:
-- Push to main/dev branches when integration tests or server code changes
-- Pull requests with same file changes
+- Push to `main` when integration tests or server code changes
+- Pull requests to `main` with the same file changes
 - After unit tests pass (via workflow_run)
 
 **Features**:

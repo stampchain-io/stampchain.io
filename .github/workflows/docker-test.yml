@@ -7,7 +7,6 @@ on:
       - completed
     branches:
       - main
-      - dev
 
 jobs:
   docker-build-test:

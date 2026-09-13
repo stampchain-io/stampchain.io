@@ -133,47 +133,56 @@ Follow the established directory structure:
 
 ## Branch Model & Deployment
 
-stampchain.io uses a **staging → production** branch model. There are two
-long-lived branches, each mapped to an environment:
+stampchain.io uses a **single long-lived branch**. `main` is the default branch,
+the production branch, and the only base you ever open a PR against.
 
-| Branch | Role | Default | Deploys to | Protection & merge method |
-|--------|------|---------|-----------|------------|
-| `dev`  | Integration / staging — where all work lands first | ✅ yes | Preview / staging (Deno preview deploys on PRs) | PR + linear history; no force-push or deletion. Feature PRs land via **squash**. |
-| `main` | **Production** — the live site | no | **Production** — `production-deploy.yml` deploys on every push | PR + **1 approving review**; no force-push or deletion. Promotions land via a **merge commit** (the only method enabled on `main`). |
+| Branch | Role | Deploys to | Protection |
+|--------|------|-----------|------------|
+| `main` | The one long-lived branch — default base for every PR, and **production** | **Production** — `production-deploy.yml` deploys on every push | PR required, **1 approving review**, **required status checks**, linear history; no force-push, no deletion. Merge via **squash** or **rebase**. |
 
-### Day-to-day (contributors)
+There is no `dev` branch. It was retired in September 2026: it never deployed
+anywhere, it ran the same CI a pull request already runs, and a "Restrict
+updates" rule on its ruleset silently blocked every merge into it for nearly two
+months while pull requests stacked up. A single gated branch removes the
+promotion step without removing any check.
 
-1. Branch off **`dev`**: `git checkout dev && git pull && git checkout -b feature/description`
-2. Open your PR against **`dev`** (the default base). CI and a preview deploy run on the PR.
-3. Once it's approved and green, **squash-merge** into `dev`. `dev` keeps a clean,
-   linear history; your feature branch collapses to a single commit.
+### Day-to-day
 
-### Promotion to production (maintainers)
+1. Branch off **`main`**: `git checkout main && git pull && git checkout -b feature/description`
+2. Open your PR against **`main`** (the default base). CI runs on the PR.
+3. Get one approving review and wait for the required checks to go green.
+4. **Squash-merge** (or rebase-merge, if the individual commits are each worth
+   keeping). Merge commits are disabled, so `main` stays linear.
 
-Production is released **only** by landing `dev` → `main`:
+Merging to `main` triggers `production-deploy.yml`, which deploys to production
+and runs post-deploy validation. **Your merge is a production release** — treat
+it that way.
 
-1. Open a PR **`dev` → `main`**, e.g. `release: promote dev to production (YYYY-MM-DD)`.
-2. Review the diff — it is exactly what will go live.
-3. **Merge it — do NOT squash.** `main` accepts only the **"Create a merge commit"**
-   method, so the promotion brings `dev`'s actual commits onto `main`. The push to
-   `main` triggers `production-deploy.yml`, which deploys to production and runs
-   post-deploy validation.
+### Required status checks
 
-Because promotions are **merge commits** (not squashes), `main` always stays an
-ancestor of — i.e. fully contained in — `dev`. The two histories never diverge,
-so there are **no phantom conflicts and no manual `main → dev` reconciliation**
-after a release. (Squash promotions used to create a commit on `main` that did
-not exist on `dev`, which forced a reconciliation merge after every release; that
-is why `main`'s ruleset no longer requires linear history and is pinned to
-merge-commit-only.)
+These four must pass before `main` will accept a merge. They are the checks that
+run on **every** pull request, with no path filter — a path-filtered check can
+never be required, because it would never report on a PR that misses its filter
+and would block that PR forever.
+
+| Check | Workflow | What it gates |
+|-------|----------|---------------|
+| `Quality Checks` | `deploy.yml` | Formatting, lint, OpenAPI schema validation, build |
+| `Production Readiness Gates` | `production-validation.yml` | `deno task check` (type check) and `deno task check:imports` |
+| `Security Validation` | `production-validation.yml` | Secret and `.env` scanning — this is a public repository |
+| `actionlint` | `actionlint.yml` | The workflow files themselves, so CI cannot be silently broken |
+
+`Unit Tests with Mock Database` runs unconditionally on every PR as well and is
+required. Other workflows (Lighthouse, Newman, integration tests, schema
+validation, type check) stay path-filtered and advisory: they run when they are
+relevant and should be read before merging, but they do not block.
 
 There are no version tags — this is **continuous deployment**. `main` always
-reflects what is currently live; `dev` is everything staged for the next
-promotion.
+reflects what is currently live.
 
 > ⚠️ **`main` is the production branch.** Never push to it directly (the branch
-> ruleset blocks it) — every production change goes through a reviewed
-> `dev → main` promotion PR, merged as a merge commit.
+> ruleset blocks it) — every production change goes through a reviewed,
+> CI-green pull request.
 
 ## Submitting Changes
 
