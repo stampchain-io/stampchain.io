@@ -5,7 +5,10 @@ import { IS_BROWSER } from "$fresh/runtime.ts";
 import { PlaceholderImage } from "$icon";
 import StampTextContent from "$islands/content/stampDetailContent/StampTextContent.tsx";
 import { container2, shadowGlowPurple } from "$layout";
-import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
+import {
+  abbreviateAddress,
+  formatEditionCount,
+} from "$lib/utils/ui/formatting/formatUtils.ts";
 import {
   getStampImageSrc,
   getStampPreviewUrl,
@@ -315,11 +318,10 @@ export default function CarouselGallery(props: CarouselHomeProps) {
                                     : abbreviateAddress(stamp.creator, 8)}
                                 </h4>
                                 <h5 class="font-bold text-base desktop:text-lg text-color-grey text-right">
-                                  {stamp.divisible
-                                    ? (stamp.supply / 100000000).toFixed(2)
-                                    : stamp.supply > 100000
-                                    ? "+100000"
-                                    : stamp.supply}
+                                  {formatEditionCount(
+                                    stamp.supply,
+                                    stamp.divisible,
+                                  )}
                                 </h5>
                               </div>
                             </div>

@@ -163,8 +163,49 @@ export function bigFloatToString(
   return result.replace(/\.?0+$/, "");
 }
 
+const SUPPLY_BASE_UNITS = 100000000n;
+
+/**
+ * Exact base-unit -> whole-unit rendering for a bigint supply, to two
+ * decimals. Mirrors `(supply / 100000000).toFixed(2)` without going through a
+ * double, so supplies beyond 2^53 keep every digit.
+ */
+function divisibleBigIntToFixed2(baseUnits: bigint): string {
+  const negative = baseUnits < 0n;
+  const abs = negative ? -baseUnits : baseUnits;
+
+  let whole = abs / SUPPLY_BASE_UNITS;
+  const remainder = (abs % SUPPLY_BASE_UNITS) * 100n;
+  let hundredths = remainder / SUPPLY_BASE_UNITS;
+
+  // Round half-up on the hundredths digit, matching Number#toFixed(2).
+  if (remainder % SUPPLY_BASE_UNITS >= SUPPLY_BASE_UNITS / 2n) hundredths += 1n;
+  if (hundredths === 100n) {
+    whole += 1n;
+    hundredths = 0n;
+  }
+
+  return `${negative ? "-" : ""}${whole}.${
+    hundredths.toString().padStart(2, "0")
+  }`;
+}
+
+/**
+ * Renders a stamp's supply for display.
+ *
+ * `supply` arrives here as a bigint whenever the underlying BIGINT column
+ * exceeds Number.MAX_SAFE_INTEGER. The MySQL driver returns those rows as
+ * BigInt (deno mysql v2.12.1 maps MYSQL_TYPE_LONGLONG that way), and the Redis
+ * layer preserves the type across a round-trip via bigIntSerializer /
+ * bigIntReviver, so both a cache hit and a cache miss deliver a bigint.
+ *
+ * Keeping the value a bigint upstream is deliberate: coercing every BIGINT
+ * column to a Number at the database boundary would silently round large
+ * supplies. The narrowing therefore happens here, at the single point where a
+ * supply becomes a display string.
+ */
 export function formatSupply(
-  supply: number | string | undefined,
+  supply: number | string | bigint | undefined,
   divisible: boolean,
 ): string {
   if (supply === undefined) return "0";
@@ -172,7 +213,37 @@ export function formatSupply(
   if (typeof supply === "string") {
     supply = parseInt(supply);
   }
+
+  if (typeof supply === "bigint") {
+    // `supply / 100000000` here would throw
+    // TypeError: Cannot mix BigInt and other types, use explicit conversions.
+    return divisible ? divisibleBigIntToFixed2(supply) : supply.toString();
+  }
+
   return divisible ? (supply / 100000000).toFixed(2) : supply.toString();
+}
+
+/**
+ * Edition count as shown on the stamp detail page, the homepage carousel and
+ * the wallet dispenser view: divisible supplies render as whole units to two
+ * decimals, indivisible supplies above 100000 collapse to "+100000".
+ *
+ * Each of those three views previously inlined its own
+ * `(supply / 100000000).toFixed(2)`, which is the expression that throws on a
+ * bigint supply. They share this one implementation instead.
+ */
+export function formatEditionCount(
+  supply: number | string | bigint | undefined,
+  divisible: boolean,
+): string {
+  if (supply === undefined) return "0";
+  if (divisible) return formatSupply(supply, true);
+
+  const exceedsCap = typeof supply === "bigint"
+    ? supply > 100000n
+    : Number(supply) > 100000;
+
+  return exceedsCap ? "+100000" : formatSupply(supply, false);
 }
 
 export function isIntOr32ByteHex(value: string) {
