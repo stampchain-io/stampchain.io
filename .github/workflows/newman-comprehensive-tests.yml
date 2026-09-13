@@ -6,7 +6,7 @@ name: Newman Comprehensive Tests (Production Validation + Local Dev)
 
 on:
   pull_request:
-    branches: [main, dev]
+    branches: [main]
     paths:
       - 'tests/postman/collections/comprehensive.json'
       - 'tests/postman/collections/pagination-validation.json'

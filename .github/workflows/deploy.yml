@@ -1,7 +1,7 @@
 name: Code Quality
 on:
   pull_request:
-    branches: [main, dev]
+    branches: [main]
     types: [opened, synchronize, reopened]
 
 jobs:

@@ -1,16 +1,11 @@
 name: Unit Tests with Fixtures
 
 on:
+  # No `paths:` filter on purpose: this job is a required status check on `main`,
+  # and a path-filtered required check never reports on PRs that miss the filter,
+  # which blocks them forever. Unit tests run on every PR to `main`.
   pull_request:
-    branches: [main, dev]
-    paths:
-      - "tests/unit/**"
-      - "tests/fixtures/**"
-      - "tests/mocks/**"
-      - "server/database/**"
-      - "lib/**"
-      - "deno.json"
-      - ".github/workflows/unit-tests.yml"
+    branches: [main]
 
 jobs:
   unit-tests:
