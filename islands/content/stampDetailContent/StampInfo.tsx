@@ -17,6 +17,7 @@ import {
   abbreviateAddress,
   formatBTCAmount,
   formatDate,
+  formatEditionCount,
   formatFileSize,
   formatFileType,
 } from "$lib/utils/ui/formatting/formatUtils.ts";
@@ -142,11 +143,7 @@ export function StampInfo(
     });
   })();
 
-  const editionCount = stamp.divisible
-    ? (stamp.supply / 100000000).toFixed(2)
-    : stamp.supply > 100000
-    ? "+100000"
-    : stamp.supply;
+  const editionCount = formatEditionCount(stamp.supply, stamp.divisible);
 
   /* ===== REFS AND UI STATE ===== */
   const [imageDimensions, setImageDimensions] = useState<DimensionsType | null>(

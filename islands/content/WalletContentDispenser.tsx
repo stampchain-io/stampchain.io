@@ -9,6 +9,7 @@ import type { WalletOverviewInfo } from "$lib/types/wallet.d.ts";
 import {
   abbreviateAddress,
   formatBTCAmount,
+  formatEditionCount,
 } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { tooltipIcon } from "$notification";
 import { headingGreyLD, textXs, titleNeutral } from "$text";
@@ -138,11 +139,10 @@ function StampStats({
     </span>
   );
 
-  const editionCount = stampData.divisible
-    ? (stampData.supply / 100000000).toFixed(2)
-    : stampData.supply > 100000
-    ? "+100000"
-    : stampData.supply.toFixed(2);
+  const editionCount = formatEditionCount(
+    stampData.supply,
+    stampData.divisible,
+  );
 
   const editionCountFormatted = stampData.divisible
     ? editionCount.toString()
