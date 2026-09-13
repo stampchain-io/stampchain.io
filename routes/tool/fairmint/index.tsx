@@ -1,7 +1,6 @@
 /* ===== FAIRMINT TOOL PAGE ===== */
 import { Handlers, PageProps } from "$fresh/server.ts";
 import type { ToolFairmintPageProps } from "$types/ui.d.ts";
-import { Head } from "$fresh/runtime.ts";
 import { CounterpartyApiManager } from "$server/services/counterpartyApiService.ts";
 import { FairmintTool } from "$tool";
 
@@ -25,12 +24,8 @@ export default function ToolFairmintPage(
   { data }: PageProps<ToolFairmintPageProps>,
 ) {
   /* ===== RENDER ===== */
-  return (
-    <>
-      <Head>
-        <title>Fairmint Tokens</title>
-      </Head>
-      <FairmintTool fairminters={data.fairminters} />
-    </>
-  );
+  /* Title and description come from $lib/utils/pageMetadata.ts via _app.tsx.
+    A route-level <title> here rendered BEFORE _app's, so the page shipped two
+    of them. */
+  return <FairmintTool fairminters={data.fairminters} />;
 }

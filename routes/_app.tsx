@@ -12,6 +12,7 @@ import { NotificationUpdate } from "$islands/Toast/NotificationUpdate.tsx";
 import { ToastProvider } from "$islands/Toast/ToastProvider.tsx";
 import WebVitalsReporter from "$islands/WebVitalsReporter.tsx";
 import { Footer, NavigatorProvider } from "$layout";
+import { getPageMetadata } from "$lib/utils/pageMetadata.ts";
 
 /* ===== ROOT COMPONENT ===== */
 export default function App({ Component, state, url }: PageProps<unknown>) {
@@ -22,6 +23,11 @@ export default function App({ Component, state, url }: PageProps<unknown>) {
 
   // Check if this is a stamp page that will have its own og:image
   const isStampPage = url.pathname.startsWith("/stamp/");
+
+  /* Per-route <title> and description. Without this every route rendered the
+    MetaTags default ("Bitcoin Stamps"), so all 41 routes shipped an identical
+    title and search results could not tell the FAQ from the explorer. */
+  const pageMeta = getPageMetadata(url.pathname);
 
   /* ===== RENDER ===== */
   return (
@@ -34,6 +40,8 @@ export default function App({ Component, state, url }: PageProps<unknown>) {
       <Head>
         {/* ===== META TAGS ===== */}
         <MetaTags
+          title={pageMeta.title}
+          description={pageMeta.description}
           skipImage={isStampPage}
           skipTitle={isStampPage}
           skipDescription={isStampPage}

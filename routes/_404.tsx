@@ -1,6 +1,5 @@
 /* ===== ERROR 404 PAGE ===== */
 import { Button } from "$button";
-import { Head } from "$fresh/runtime.ts";
 import { containerBackground } from "$layout";
 import { subtitleNeutral, titleNeutral } from "$text";
 
@@ -9,10 +8,6 @@ export default function Error404Page() {
   /* ===== RENDER ===== */
   return (
     <>
-      <Head>
-        <title>404 - Page not found</title>
-      </Head>
-
       <div
         class={`${containerBackground} justify-center items-center`}
       >

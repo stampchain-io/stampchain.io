@@ -1,7 +1,6 @@
 /* ===== WALLET PAGE ===== */
 /*@baba-367*/
 
-import { MetaTags } from "$components/layout/MetaTags.tsx";
 import { WalletContent } from "$content";
 import { Handlers } from "$fresh/server.ts";
 import { body, containerGap } from "$layout";
@@ -694,12 +693,13 @@ export default function WalletPage(props: { data: WalletProfilePageProps }) {
       f-client-nav
       data-partial={`/wallet/${routeData.address}`}
     >
-      <MetaTags
-        title={`BTC Stamps Explorer - ${routeData.address || "Address"}`}
-        description={`Explore Bitcoin stamps and SRC-20 tokens for address ${
-          routeData.address || ""
-        }`}
-      />
+      {
+        /* MetaTags used to render here, inside <body> rather than a Fresh
+          <Head>, which emitted a second <title> (invalid in body, so browsers
+          ignored it) plus a duplicate favicon and JSON-LD block. The wallet
+          title and description now come from $lib/utils/pageMetadata.ts via
+          _app.tsx, which puts them in the real <head>. */
+      }
       {isDispenserOnly
         ? (
           <WalletContentDispenser
