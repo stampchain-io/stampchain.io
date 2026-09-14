@@ -5,13 +5,13 @@ import type {
   StampMarketplace,
   StampRange,
 } from "$constants";
-import type { StampRow } from "$lib/types/stamp.d.ts";
 import {
   API_STAMP_TYPE_VALUES,
   type HandlerStampType,
   MAX_PAGINATION_LIMIT,
 } from "$constants";
 import { Handlers } from "$fresh/server.ts";
+import type { StampRow } from "$lib/types/stamp.d.ts";
 import { ApiResponseUtil } from "$lib/utils/api/responses/apiResponseUtil.ts";
 import { WebResponseUtil } from "$lib/utils/api/responses/webResponseUtil.ts";
 import { getIdentifierType } from "$lib/utils/data/identifiers/identifierUtils.ts";
@@ -138,14 +138,15 @@ export const createStampHandler = (
 
         // Extract type parameter (NEW: Support for stamp type filtering!)
         const typeParam = url.searchParams.get("type");
-        const stampType =
-          (typeParam && API_STAMP_TYPE_VALUES.includes(typeParam as any))
-            ? typeParam as
-              | "classic"
-              | "cursed"
-              | "posh"
-              | "src20"
-            : "classic"; // Default to classic
+        const stampType = typeParam === "all"
+          ? "all"
+          : (typeParam && API_STAMP_TYPE_VALUES.includes(typeParam as any))
+          ? typeParam as
+            | "classic"
+            | "cursed"
+            | "posh"
+            | "src20"
+          : "classic"; // Default to classic
 
         // Extract range filters
         const rangePreset = url.searchParams.get("rangePreset") || "";

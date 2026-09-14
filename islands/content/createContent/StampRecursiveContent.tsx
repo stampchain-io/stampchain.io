@@ -8,13 +8,14 @@ import { ColorPicker } from "$islands/form/ColorPicker.tsx";
 import { InputField } from "$islands/form/InputField.tsx";
 import { CollapsibleSection } from "$islands/layout/CollapsibleSection.tsx";
 import PreviewCodeModal from "$islands/modal/PreviewCodeModal.tsx";
-import { closeModal, openModal } from "$islands/modal/states.ts";
+import { openSearchStampPicker } from "$islands/modal/SearchStampPickerModal.tsx";
+import { openModal } from "$islands/modal/states.ts";
 import {
   container2,
+  container2Hover,
   container3,
   containerPill,
-  loaderSpinSmGrey,
-  ModalBase,
+  shadowGlowPurple,
 } from "$layout";
 import {
   addStampLayer,
@@ -62,10 +63,7 @@ import {
   useRecursiveStampState,
 } from "$lib/hooks/useRecursiveStampState.ts";
 import {
-  fetchCollections,
-  fetchCollectionStamps,
   fetchStampById,
-  fetchStampList,
   fetchStampsByCreator,
 } from "$lib/utils/api/stamps/fetchStamp.ts";
 import {
@@ -91,7 +89,6 @@ import {
   textXs,
   truncate,
 } from "$text";
-import type { Collection } from "$types/api.d.ts";
 import type { StampRow } from "$types/stamp.d.ts";
 import type {
   RecursiveStampContentProps,
@@ -304,248 +301,6 @@ function RulerTicks({ axis }: { axis: "h" | "v" }) {
   return <>{marks}</>;
 }
 
-function BrowseStampsModal(
-  { onPick }: { onPick: (id: string) => void },
-) {
-  const [mode, setMode] = useState<"all" | "collections" | "favorites">(
-    "all",
-  );
-  const [ident, setIdent] = useState("");
-  const [page, setPage] = useState(1);
-  const [stamps, setStamps] = useState<StampRow[]>([]);
-  const [cols, setCols] = useState<Collection[]>([]);
-  const [status, setStatus] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [search, setSearch] = useState("");
-  const [collection, setCollection] = useState<Collection | null>(null);
-  const [favs, setFavs] = useState<RecentItem[]>(() =>
-    lsGet<RecentItem[]>("rsb_favorites", [])
-  );
-
-  const load = async () => {
-    setLoading(true);
-    try {
-      if (mode === "favorites") {
-        const results = await Promise.all(
-          favs.slice(0, 40).map((f) => fetchStampById(String(f.num))),
-        );
-        setStamps(results.filter(Boolean) as StampRow[]);
-        setCols([]);
-        setStatus(`${favs.length} favorites`);
-      } else if (mode === "collections" && !collection) {
-        const list = await fetchCollections(60);
-        setCols(list.filter((c) => c.stamp_count > 0));
-        setStamps([]);
-        setStatus(`${list.length} collections`);
-      } else if (mode === "collections" && collection) {
-        const list = await fetchCollectionStamps(
-          collection.collection_id,
-          20,
-          page,
-        );
-        setStamps(list);
-        setCols([]);
-        setStatus(collection.collection_name);
-      } else if (search.trim()) {
-        const s = await fetchStampById(search.trim().replace(/^#/, ""));
-        setStamps(s ? [s] : []);
-        setCols([]);
-        setStatus(s ? "1 result" : "No stamp found");
-      } else {
-        const list = await fetchStampList({
-          limit: 20,
-          page,
-          ident,
-        });
-        setStamps(list);
-        setCols([]);
-        setStatus(`Page ${page}`);
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    load();
-  }, [mode, ident, page, collection]);
-
-  const toggleFav = (s: StampRow) => {
-    const num = s.stamp;
-    if (num == null) return;
-    const next = favs.some((f) => f.num === num)
-      ? favs.filter((f) => f.num !== num)
-      : [{ num, hash: s.tx_hash }, ...favs];
-    setFavs(next);
-    lsSet("rsb_favorites", next);
-  };
-
-  return (
-    <ModalBase title="BROWSE STAMPS" className="w-[680px] max-w-[96vw]">
-      <div class="flex flex-col gap-3 pt-2">
-        <div class="flex gap-2">
-          {(["all", "collections", "favorites"] as const).map((m) => (
-            <Button
-              key={m}
-              variant={mode === m ? "flat" : "outline"}
-              color="primary"
-              size="xxsR"
-              onClick={() => {
-                setMode(m);
-                setPage(1);
-                setCollection(null);
-              }}
-            >
-              {m.toUpperCase()}
-            </Button>
-          ))}
-        </div>
-        {mode === "all" && (
-          <>
-            <input
-              class={inputField}
-              placeholder="STAMP # OR TX HASH"
-              value={search}
-              onInput={(e) => setSearch((e.target as HTMLInputElement).value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  setPage(1);
-                  load();
-                }
-              }}
-            />
-            <div class="flex gap-2">
-              {[
-                { v: "", label: "ALL" },
-                { v: "STAMP", label: "CLASSIC" },
-                { v: "SRC-721", label: "SRC-721" },
-              ].map((opt) => (
-                <Button
-                  key={opt.v}
-                  variant={ident === opt.v ? "flat" : "outline"}
-                  color="primary"
-                  size="xxsR"
-                  onClick={() => {
-                    setIdent(opt.v);
-                    setPage(1);
-                  }}
-                >
-                  {opt.label}
-                </Button>
-              ))}
-            </div>
-          </>
-        )}
-        <div class="grid grid-cols-5 gap-2 min-h-[200px]">
-          {loading && (
-            <div class={`${loaderSpinSmGrey} col-span-5 mx-auto mt-8`} />
-          )}
-          {!loading && collection && (
-            <button
-              type="button"
-              class={`${container2} aspect-square flex items-center
-                justify-center text-xs text-color-primary-400`}
-              onClick={() => {
-                setCollection(null);
-                setPage(1);
-              }}
-            >
-              ← BACK
-            </button>
-          )}
-          {!loading && cols.map((c) => (
-            <button
-              type="button"
-              key={c.collection_id}
-              class={`${container2} aspect-square p-2 text-center`}
-              onClick={() => {
-                setCollection(c);
-                setPage(1);
-              }}
-            >
-              <div class={`${textXs} text-color-neutral-200 break-words`}>
-                {c.collection_name}
-              </div>
-              <div class="text-[0.625rem] text-color-neutral-500 mt-1">
-                {c.stamp_count} stamps
-              </div>
-            </button>
-          ))}
-          {!loading && stamps.map((s) => (
-            <div key={s.tx_hash} class="relative">
-              <button
-                type="button"
-                class="absolute top-1 right-1 z-10 text-xs"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  toggleFav(s);
-                }}
-              >
-                {favs.some((f) => f.num === s.stamp) ? "★" : "☆"}
-              </button>
-              <button
-                type="button"
-                class={`${container2} aspect-square overflow-hidden w-full`}
-                onClick={() => {
-                  onPick(String(s.stamp ?? s.tx_hash));
-                  closeModal();
-                }}
-              >
-                {s.stamp_mimetype === "text/html"
-                  ? (
-                    <iframe
-                      src={s.stamp_url}
-                      class="w-full h-[80%] pointer-events-none bg-black"
-                      sandbox="allow-scripts allow-same-origin"
-                    />
-                  )
-                  : (
-                    <img
-                      src={s.stamp_url}
-                      alt={`#${s.stamp}`}
-                      class="w-full h-[80%] object-cover"
-                    />
-                  )}
-                <div class="text-[0.625rem] text-center text-color-neutral-500
-                  py-1 font-mono">
-                  #{s.stamp}
-                </div>
-              </button>
-            </div>
-          ))}
-        </div>
-        <div class="flex items-center gap-2">
-          <span class={`${textXs} flex-1 text-color-neutral-500`}>
-            {status}
-          </span>
-          {mode !== "favorites" && (
-            <>
-              <Button
-                variant="outline"
-                color="neutral"
-                size="xxsR"
-                disabled={page <= 1}
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-              >
-                PREV
-              </Button>
-              <Button
-                variant="outline"
-                color="neutral"
-                size="xxsR"
-                onClick={() => setPage((p) => p + 1)}
-              >
-                NEXT
-              </Button>
-            </>
-          )}
-        </div>
-      </div>
-    </ModalBase>
-  );
-}
-
 export function StampRecursiveContent(
   _props: RecursiveStampContentProps = {},
 ) {
@@ -593,10 +348,20 @@ export function StampRecursiveContent(
     selected: false,
   });
   const toggleSection = (section: RsbPanel) => {
-    setExpandedSections((prev) => ({
-      ...prev,
-      [section]: !prev[section],
-    }));
+    setExpandedSections((prev) => {
+      const nextOpen = !prev[section];
+      const next = { ...prev, [section]: nextOpen };
+      if (
+        nextOpen &&
+        (section === "background" || section === "assets" ||
+          section === "text")
+      ) {
+        next.background = section === "background";
+        next.assets = section === "assets";
+        next.text = section === "text";
+      }
+      return next;
+    });
   };
   const [ctxOpen, setCtxOpen] = useState<
     { x: number; y: number } | null
@@ -617,7 +382,7 @@ export function StampRecursiveContent(
       const next = [
         rec,
         ...recent.filter((r) => r.num !== s.stamp),
-      ].slice(0, 10);
+      ].slice(0, 12);
       setRecent(next);
       lsSet("rsb_recent", next);
       if (s.creator) {
@@ -1022,7 +787,7 @@ export function StampRecursiveContent(
 
   const onGenerate = () => {
     if (!layers.length) {
-      showToast("The canvas is empty - add some assets.", "warning");
+      showToast("Canvas is empty - add some assets.", "warning");
       return;
     }
     enterPreview(buildRecursiveStampHtml(layers, bg, false));
@@ -1032,16 +797,13 @@ export function StampRecursiveContent(
     openModal(<PreviewCodeModal src={html} />, "zoomInOut");
   };
 
-  const openBrowse = () => {
-    openModal(
-      <BrowseStampsModal
-        onPick={(id) => {
-          setQuery(id);
-          getPreview(id);
-        }}
-      />,
-      "zoomInOut",
-    );
+  const openSearch = () => {
+    openSearchStampPicker({
+      onPick: (id) => {
+        setQuery(id);
+        getPreview(id);
+      },
+    });
   };
 
   const previewSrc = fetched
@@ -1058,10 +820,10 @@ export function StampRecursiveContent(
     <div class="flex flex-col w-full pt-5">
       <style>{CANVAS_CSS}</style>
       <CreateStampRecursiveHeader />
-      <div class="flex flex-col-reverse min-[720px]:flex-row w-full gap-5 pt-5">
+      <div class="flex flex-col-reverse mobileLg:flex-row w-full gap-5 pt-5">
         <div
-          class={`w-full min-[720px]:w-1/3 min-[1080px]:w-1/4
-            h-[800px] min-[720px]:h-[480px] min-[1080px]:h-[560px]
+          class={`w-full mobileLg:w-1/3 min-[1080px]:w-1/4
+            h-[800px] mobileLg:h-[480px] min-[1080px]:h-[560px]
             desktop:h-[640px] flex flex-col overflow-hidden p-3
             ${container2}`}
         >
@@ -1091,7 +853,7 @@ export function StampRecursiveContent(
               toggle={() => toggleSection("assets")}
             >
               <SectionBody>
-                <div class="flex flex-col gap-1.5">
+                <div class="flex flex-col gap-3">
                   <div class="flex items-center gap-1.5">
                     <form
                       class="flex-1 min-w-0"
@@ -1110,7 +872,6 @@ export function StampRecursiveContent(
                           )}
                       />
                     </form>
-                    ß{" "}
                     <div
                       class={`relative flex items-center justify-center
                         shrink-0 ${container3} !rounded-full p-0.5`}
@@ -1124,7 +885,7 @@ export function StampRecursiveContent(
                         ariaLabel="Browse stamps"
                         onClick={(e) => {
                           e.preventDefault();
-                          openBrowse();
+                          openSearch();
                         }}
                       />
                     </div>
@@ -1147,10 +908,11 @@ export function StampRecursiveContent(
                 )}
                 {fetched && (
                   <>
-                    <div class="flex gap-3 mt-3 items-start">
+                    <hr class="my-3" />
+                    <div class="flex gap-3 items-start">
                       <div
                         class={`flex items-center justify-center shrink-0
-                          w-[84px] h-[84px] overflow-hidden ${container3}`}
+                          w-[80px] h-[80px] overflow-hidden ${container3}`}
                       >
                         {fetched.stamp_mimetype === "text/html"
                           ? (
@@ -1186,7 +948,7 @@ export function StampRecursiveContent(
                           </div>
                         )}
                         {(fetched.creator_name || fetched.creator) && (
-                          <span class={`${cardCreator} !text-left`}>
+                          <span class={`hidden ${cardCreator} !text-left`}>
                             {fetched.creator_name ||
                               abbreviateAddress(fetched.creator, 5)}
                           </span>
@@ -1207,7 +969,7 @@ export function StampRecursiveContent(
                       </div>
                     </div>
                     <Button
-                      variant="outline"
+                      variant="flat"
                       color="neutral"
                       size="xsR"
                       class="w-full mt-3"
@@ -1225,61 +987,75 @@ export function StampRecursiveContent(
                   </>
                 )}
                 {creatorMore.length > 0 && fetched && (
-                  <div class="mt-4 flex flex-col gap-1.5">
-                    <p class={labelXs}>
-                      MORE BY {fetched.creator_name ||
-                        `${fetched.creator.slice(0, 6)}…`}
-                    </p>
-                    <div class="flex flex-wrap gap-1.5">
-                      {creatorMore.map((s) => (
-                        <button
-                          type="button"
-                          key={s.tx_hash}
-                          class={`${container3} w-11 overflow-hidden`}
-                          onClick={() => {
-                            setQuery(String(s.stamp));
-                            getPreview(String(s.stamp));
-                          }}
-                        >
-                          <img
-                            src={s.stamp_url}
-                            alt={`#${s.stamp}`}
-                            class="w-full h-8 object-cover"
-                          />
-                          <div class="text-[0.5rem] text-center font-mono
+                  <>
+                    <hr class="my-3" />
+                    <div class="flex flex-col">
+                      <p class={labelXs}>
+                        MORE BY {fetched.creator_name ||
+                          `${fetched.creator.slice(0, 6)}…`}
+                      </p>
+                      <div class="flex flex-wrap gap-1.5">
+                        {creatorMore.map((s) => (
+                          <button
+                            type="button"
+                            key={s.tx_hash}
+                            class={`${container3} w-11 overflow-hidden`}
+                            onClick={() => {
+                              setQuery(String(s.stamp));
+                              getPreview(String(s.stamp));
+                            }}
+                          >
+                            <img
+                              src={s.stamp_url}
+                              alt={`#${s.stamp}`}
+                              class="w-full h-8 object-cover"
+                            />
+                            <div class="text-[0.5rem] text-center font-mono
                     text-color-neutral-500">
-                            #{s.stamp}
-                          </div>
-                        </button>
-                      ))}
+                              #{s.stamp}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  </>
                 )}
                 {recent.length > 0 && (
-                  <div class="mt-4 flex flex-col gap-1.5">
-                    <p class={labelXs}>RECENT</p>
-                    <div class="grid grid-cols-4 gap-1.5">
-                      {recent.map((r) => (
-                        <button
-                          type="button"
-                          key={r.hash || r.num}
-                          class={`${container3} aspect-square overflow-hidden
-                            p-0`}
-                          onClick={() => {
-                            const id = r.num ? String(r.num) : r.hash;
-                            setQuery(id);
-                            getPreview(id);
-                          }}
-                        >
-                          <img
-                            src={`/api/v2/stamp/${r.num}/preview`}
-                            alt={`#${r.num}`}
-                            class="w-full h-full object-cover"
-                          />
-                        </button>
-                      ))}
+                  <>
+                    <hr class="my-3" />
+                    <div class="flex flex-col">
+                      <p class={labelXs}>RECENT</p>
+                      <div class="grid grid-cols-4 min-[420px]:grid-cols-5
+                      mobileMd:grid-cols-6 mobileLg:grid-cols-4 gap-3">
+                        {recent.map((r, i) => (
+                          <button
+                            type="button"
+                            key={r.hash || r.num}
+                            class={`${container2Hover} ${shadowGlowPurple}
+                            aspect-square overflow-hidden p-0
+                            ${
+                              i >= 10
+                                ? "hidden mobileMd:block mobileLg:hidden"
+                                : i >= 8
+                                ? "hidden min-[420px]:block mobileLg:hidden"
+                                : ""
+                            }`}
+                            onClick={() => {
+                              const id = r.num ? String(r.num) : r.hash;
+                              setQuery(id);
+                              getPreview(id);
+                            }}
+                          >
+                            <img
+                              src={`/api/v2/stamp/${r.num}/preview`}
+                              alt={`#${r.num}`}
+                              class="w-full h-full object-cover"
+                            />
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  </>
                 )}
               </SectionBody>
             </CollapsibleSection>
@@ -1293,8 +1069,8 @@ export function StampRecursiveContent(
               <SectionBody>
                 <Button
                   variant="outline"
-                  color="neutral"
-                  size="xsR"
+                  color="primary"
+                  size="smR"
                   class="w-full"
                   disabled={mode !== "edit"}
                   onClick={() => {
@@ -1310,137 +1086,136 @@ export function StampRecursiveContent(
               </SectionBody>
             </CollapsibleSection>
 
-            <CollapsibleSection
-              title={`LAYERS${layers.length ? ` (${layers.length})` : ""}`}
-              variant="collapsibleTitle"
-              expanded={expandedSections.layers}
-              toggle={() => toggleSection("layers")}
-            >
-              <SectionBody>
-                <div class="flex flex-col gap-1">
-                  {layers.length === 0 && (
-                    <p class={`${textXs} text-color-neutral-500`}>
-                      Fetch a stamp and add it to begin.
-                    </p>
-                  )}
-                  {[...layers].reverse().map((l) => (
-                    <div
-                      key={l.id}
-                      class={`flex items-center gap-1.5 ${container3} p-1
+            {layers.length > 0 && (
+              <CollapsibleSection
+                title={`LAYERS (${layers.length})`}
+                variant="collapsibleTitle"
+                expanded={expandedSections.layers}
+                toggle={() => toggleSection("layers")}
+              >
+                <SectionBody>
+                  <div class="flex flex-col gap-1">
+                    {[...layers].reverse().map((l) => (
+                      <div
+                        key={l.id}
+                        class={`flex items-center gap-1.5 ${container3} p-1
                   ${l.id === selId ? "border-color-primary-400" : ""}
                   ${!l.vis ? "opacity-50" : ""}`}
-                      onClick={(e) =>
-                        selectLayer(l.id, (e as MouseEvent).shiftKey)}
-                      draggable={!l.locked}
-                      onDragStart={(e) => {
-                        e.dataTransfer?.setData("text/plain", l.id);
-                      }}
-                      onDragOver={(e) => e.preventDefault()}
-                      onDrop={(e) => {
-                        e.preventDefault();
-                        const src = e.dataTransfer?.getData("text/plain");
-                        if (src) reorderLayers(src, l.id);
-                      }}
-                    >
-                      <div class="w-7 h-7 overflow-hidden shrink-0 flex
+                        onClick={(e) =>
+                          selectLayer(l.id, (e as MouseEvent).shiftKey)}
+                        draggable={!l.locked}
+                        onDragStart={(e) => {
+                          e.dataTransfer?.setData("text/plain", l.id);
+                        }}
+                        onDragOver={(e) => e.preventDefault()}
+                        onDrop={(e) => {
+                          e.preventDefault();
+                          const src = e.dataTransfer?.getData("text/plain");
+                          if (src) reorderLayers(src, l.id);
+                        }}
+                      >
+                        <div class="w-7 h-7 overflow-hidden shrink-0 flex
                   items-center justify-center bg-color-neutral-900">
-                        {l.type === "text"
-                          ? (
-                            <span class="text-color-primary-400 font-bold text-xs">
-                              T
-                            </span>
-                          )
-                          : l.mime?.startsWith("image/")
-                          ? (
-                            <img
-                              src={layerDisplaySrc(l)}
-                              alt={l.name}
-                              class="w-full h-full object-cover"
-                            />
-                          )
-                          : <span class={`${textXs}`}>HTML</span>}
+                          {l.type === "text"
+                            ? (
+                              <span class="text-color-primary-400 font-bold text-xs">
+                                T
+                              </span>
+                            )
+                            : l.mime?.startsWith("image/")
+                            ? (
+                              <img
+                                src={layerDisplaySrc(l)}
+                                alt={l.name}
+                                class="w-full h-full object-cover"
+                              />
+                            )
+                            : <span class={`${textXs}`}>HTML</span>}
+                        </div>
+                        <span class={`${textXs} flex-1 truncate`}>
+                          {l.name}
+                        </span>
+                        <Icon
+                          type="iconButton"
+                          name={l.locked ? "locked" : "unlocked"}
+                          weight="normal"
+                          size="xxxs"
+                          color="neutral400"
+                          ariaLabel="Lock layer"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            toggleLayerLock(l.id);
+                          }}
+                        />
+                        <Icon
+                          type="iconButton"
+                          name="caretUp"
+                          weight="normal"
+                          size="xxxs"
+                          color="neutral400"
+                          ariaLabel="Move up"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            moveLayer(l.id, 1);
+                          }}
+                        />
+                        <Icon
+                          type="iconButton"
+                          name="caretDown"
+                          weight="normal"
+                          size="xxxs"
+                          color="neutral400"
+                          ariaLabel="Move down"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            moveLayer(l.id, -1);
+                          }}
+                        />
+                        <Icon
+                          type="iconButton"
+                          name={l.vis ? "view" : "hide"}
+                          weight="normal"
+                          size="xxxs"
+                          color="neutral400"
+                          ariaLabel="Toggle visibility"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            toggleLayerVis(l.id);
+                          }}
+                        />
+                        <Icon
+                          type="iconButton"
+                          name="close"
+                          weight="normal"
+                          size="xxxs"
+                          color="neutral400"
+                          ariaLabel="Delete layer"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            deleteLayer(l.id);
+                          }}
+                        />
                       </div>
-                      <span class={`${textXs} flex-1 truncate`}>{l.name}</span>
-                      <Icon
-                        type="iconButton"
-                        name={l.locked ? "locked" : "unlocked"}
-                        weight="normal"
-                        size="xxxs"
-                        color="neutral400"
-                        ariaLabel="Lock layer"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          toggleLayerLock(l.id);
-                        }}
-                      />
-                      <Icon
-                        type="iconButton"
-                        name="caretUp"
-                        weight="normal"
-                        size="xxxs"
-                        color="neutral400"
-                        ariaLabel="Move up"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          moveLayer(l.id, 1);
-                        }}
-                      />
-                      <Icon
-                        type="iconButton"
-                        name="caretDown"
-                        weight="normal"
-                        size="xxxs"
-                        color="neutral400"
-                        ariaLabel="Move down"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          moveLayer(l.id, -1);
-                        }}
-                      />
-                      <Icon
-                        type="iconButton"
-                        name={l.vis ? "view" : "hide"}
-                        weight="normal"
-                        size="xxxs"
-                        color="neutral400"
-                        ariaLabel="Toggle visibility"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          toggleLayerVis(l.id);
-                        }}
-                      />
-                      <Icon
-                        type="iconButton"
-                        name="close"
-                        weight="normal"
-                        size="xxxs"
-                        color="neutral400"
-                        ariaLabel="Delete layer"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          deleteLayer(l.id);
-                        }}
-                      />
-                    </div>
-                  ))}
-                </div>
-                <Button
-                  variant="outline"
-                  color="neutral"
-                  size="xsR"
-                  class="w-full mt-2"
-                  disabled={!primary || mode !== "edit"}
-                  onClick={() => duplicateSelected()}
-                >
-                  DUPLICATE
-                </Button>
-              </SectionBody>
-            </CollapsibleSection>
+                    ))}
+                  </div>
+                  <Button
+                    variant="outline"
+                    color="neutral"
+                    size="xsR"
+                    class="w-full mt-2"
+                    disabled={!primary || mode !== "edit"}
+                    onClick={() => duplicateSelected()}
+                  >
+                    DUPLICATE
+                  </Button>
+                </SectionBody>
+              </CollapsibleSection>
+            )}
 
             {primary && (
               <>
@@ -1477,8 +1252,11 @@ export function StampRecursiveContent(
                       ))}
                     </div>
                     <label class="flex flex-col gap-0.5 mt-2">
-                      <span class={labelXs}>
-                        OPACITY {Math.round(primary.op * 100)}%
+                      <span class={`${labelXs} flex w-full justify-between`}>
+                        <span>OPACITY</span>
+                        <span class="text-color-neutral-400">
+                          {Math.round(primary.op * 100)}%
+                        </span>
                       </span>
                       <RangeSlider
                         value={primary.op}
@@ -1607,9 +1385,14 @@ export function StampRecursiveContent(
                         ["grayscale", "GRAYSCALE", 0, 100, "%"],
                       ] as const).map(([key, label, min, max, unit]) => (
                         <label key={key} class="flex flex-col gap-0.5">
-                          <span class={labelXs}>
-                            {label} {primary.filters[key]}
-                            {unit}
+                          <span
+                            class={`${labelXs} flex w-full justify-between`}
+                          >
+                            <span>{label}</span>
+                            <span class="text-color-neutral-400">
+                              {primary.filters[key]}
+                              {unit}
+                            </span>
                           </span>
                           <RangeSlider
                             value={primary.filters[key]}
@@ -1629,7 +1412,7 @@ export function StampRecursiveContent(
                       <Button
                         variant="outline"
                         color="neutral"
-                        size="xxsR"
+                        size="xsR"
                         onClick={() => {
                           pushHistory();
                           patchLayer(primary.id, {
@@ -1677,64 +1460,51 @@ export function StampRecursiveContent(
                 </SectionBody>
               </CollapsibleSection>
             )}
-
-            <Button
-              variant="outline"
-              color="neutral"
-              size="xsR"
-              class="w-full"
-              disabled={!layers.length || mode !== "edit"}
-              onClick={() => {
-                if (!confirm("Remove all layers from the canvas?")) return;
-                clearAllLayers();
-              }}
-            >
-              CLEAR ALL
-            </Button>
           </div>
-          <div class="flex flex-col gap-2 pt-3 shrink-0">
-            {mode === "preview"
-              ? (
-                <>
-                  <Button
-                    variant="flat"
-                    color="primary"
-                    size="xsR"
-                    class="w-full"
-                    onClick={() => enterEdit()}
-                  >
-                    EDIT
-                  </Button>
-                  <Button
-                    variant="outline"
-                    color="primary"
-                    size="xsR"
-                    class="w-full"
-                    onClick={onViewCode}
-                  >
-                    VIEW CODE
-                  </Button>
-                </>
-              )
-              : (
-                <Button
-                  variant="flat"
-                  color="primary"
-                  size="xsR"
-                  class="w-full"
-                  onClick={onGenerate}
-                >
-                  GENERATE
-                </Button>
-              )}
+          <div class="flex flex-col gap-3 pt-3 shrink-0">
+            <div class="flex justify-between gap-5">
+              <Button
+                variant="outline"
+                color="neutral"
+                size="xsR"
+                class="w-full"
+                disabled={!layers.length || mode !== "edit"}
+                onClick={() => {
+                  if (!confirm("Remove all layers from the canvas?")) return;
+                  clearAllLayers();
+                }}
+              >
+                CLEAR ALL
+              </Button>
+              <Button
+                variant="flat"
+                color="primary"
+                size="xsR"
+                class="w-full"
+                onClick={mode === "preview" ? enterEdit : onGenerate}
+              >
+                {mode === "preview" ? "EDIT" : "GENERATE"}
+              </Button>
+            </div>
+            {mode === "preview" && (
+              <Button
+                variant="outline"
+                color="primary"
+                size="xsR"
+                class="w-full"
+                onClick={onViewCode}
+              >
+                VIEW CODE
+              </Button>
+            )}
           </div>
         </div>
 
         {/* CANVAS */}
         <div
-          class={`w-full min-[720px]:w-2/3 min-[1080px]:w-3/4 min-w-0
+          class={`w-full mobileLg:w-2/3 min-[1080px]:w-3/4 min-w-0
             h-[340px] min-[480px]:h-[400px] mobileMd:h-[480px]
-            min-[720px]:h-[480px] min-[1080px]:h-[560px]
+            mobileLg:h-[480px] min-[1080px]:h-[560px]
             desktop:h-[640px]
             flex flex-col overflow-hidden ${container2}`}
         >

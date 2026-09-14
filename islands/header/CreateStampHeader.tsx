@@ -1,22 +1,60 @@
 /* ===== CREATE STAMP HEADER ===== */
 import { SelectorButtons } from "$button";
 import { Icon } from "$icon";
-import { container2Icon, ScrollFadeRow } from "$layout";
-import { titlePrimary } from "$text";
+import { openModal } from "$islands/modal/states.ts";
+import { container2Icon, ModalBase, ScrollFadeRow } from "$layout";
+import { textSm, titlePrimary } from "$text";
 import type { CreateStampHeaderProps } from "$types/ui.d.ts";
 import { useState } from "preact/hooks";
+
+const SHORTCUTS: Array<{ keys: string; action: string }> = [
+  { keys: "Cmd/Ctrl+Z · ⇧Z", action: "Undo / Redo" },
+  { keys: "Cmd/Ctrl+D", action: "Duplicate selected" },
+  { keys: "Cmd/Ctrl+C · X · V", action: "Copy / Cut / Paste" },
+  { keys: "Cmd/Ctrl+G · ⇧G", action: "Group / Ungroup" },
+  { keys: "Cmd/Ctrl+A", action: "Select all layers" },
+  { keys: "Delete / Backspace", action: "Delete selected" },
+  { keys: "Arrow keys", action: "Nudge selected (0.5%)" },
+  { keys: "Shift+Arrows", action: "Nudge selected (5%)" },
+  { keys: "Shift+H · Shift+V", action: "Flip horizontal / vertical" },
+  { keys: "+ / − · Wheel", action: "Zoom in / out" },
+  { keys: "Space+Drag", action: "Pan canvas" },
+  { keys: "0", action: "Reset zoom & pan" },
+  { keys: "Esc", action: "Deselect / close dialogs" },
+  { keys: "?", action: "Show this help" },
+];
+
+function ShortcutsModal() {
+  return (
+    <ModalBase title="SHORTCUTS">
+      <div class="flex flex-col gap-1.5 pt-5">
+        {SHORTCUTS.map((row) => (
+          <div
+            key={row.action}
+            class="flex justify-between items-center gap-3 py-1
+              border-b border-color-neutral-800 last:border-0"
+          >
+            <span class={textSm}>{row.action}</span>
+            <span class="font-mono text-[0.625rem] text-color-neutral-500">
+              {row.keys}
+            </span>
+          </div>
+        ))}
+      </div>
+    </ModalBase>
+  );
+}
 
 export function CreateStampHeader(
   _props: CreateStampHeaderProps = {},
 ) {
   const [stampType, setStampType] = useState("recursive");
-  const [source, setSource] = useState("stamp");
 
   return (
     <div class="flex flex-col w-full gap-1.5">
       <h1 class={titlePrimary}>CREATE</h1>
 
-      <ScrollFadeRow deps={[stampType, source]}>
+      <ScrollFadeRow deps={[stampType]}>
         {/* Stamp Type Selector - Left */}
         <div class="shrink-0">
           <SelectorButtons
@@ -32,30 +70,7 @@ export function CreateStampHeader(
           />
         </div>
 
-        {/* Source Selector - Center (Recursive only) */}
-        {stampType === "recursive" && (
-          <div class="grow shrink-0 flex justify-center">
-            <SelectorButtons
-              options={[
-                { value: "stamp", label: "STAMP" },
-                { value: "ordinal", label: "ORDINAL" },
-                { value: "kontor", label: "KONTOR" },
-                { value: "arweave", label: "ARWEAVE" },
-                { value: "imgur", label: "IMGUR" },
-              ]}
-              value={source}
-              onChange={setSource}
-              size="xsR"
-              color="primary"
-            />
-          </div>
-        )}
-
         {/* View Mode + Info - Right */}
-        {
-          /* ml-auto: keeps this pinned right even when the source selector
-            (the other flex-grow element) is hidden for Classic/Posh. */
-        }
         <div class="flex shrink-0 ml-auto gap-3">
           <div class={container2Icon}>
             <Icon
@@ -74,7 +89,11 @@ export function CreateStampHeader(
               weight="normal"
               size="xsR"
               color="neutral400"
-              ariaLabel="Info"
+              ariaLabel="Keyboard shortcuts"
+              onClick={(e) => {
+                e.preventDefault();
+                openModal(<ShortcutsModal />, "zoomInOut");
+              }}
             />
           </div>
         </div>

@@ -185,4 +185,6 @@ export interface PaginationProps {
   totalPages: number;
   prefix?: string;
   onPageChange?: (page: number) => void;
+  /** Force a breakpoint layout instead of measuring the viewport. */
+  size?: "mobileSm" | "mobileMd" | "mobileLg" | "tablet";
 }

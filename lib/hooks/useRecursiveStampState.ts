@@ -1,12 +1,12 @@
 /* ===== RECURSIVE STAMP EDITOR STATE ===== */
-import { defaultRecursiveFilters } from "$lib/utils/ui/rendering/recursiveStampHtml.ts";
 import { showToast } from "$lib/utils/ui/notifications/toastSignal.ts";
+import { defaultRecursiveFilters } from "$lib/utils/ui/rendering/recursiveStampHtml.ts";
+import type { StampRow } from "$types/stamp.d.ts";
 import type {
   RecursiveStampGuide,
   RecursiveStampLayer,
   RecursiveStampMode,
 } from "$types/ui.d.ts";
-import type { StampRow } from "$types/stamp.d.ts";
 import { signal } from "@preact/signals";
 
 export const GRID_DIV = 24;
@@ -338,7 +338,12 @@ export function resetZoom(): void {
   rsbPanY.value = 0;
 }
 
+let previewSelId: string | null = null;
+let previewSelIds: string[] = [];
+
 export function enterPreview(html: string): void {
+  previewSelId = rsbSelId.value;
+  previewSelIds = [...rsbSelIds.value];
   rsbHtml.value = html;
   rsbMode.value = "preview";
   selectLayer(null);
@@ -346,6 +351,14 @@ export function enterPreview(html: string): void {
 
 export function enterEdit(): void {
   rsbMode.value = "edit";
+  const validIds = previewSelIds.filter((id) => getLayer(id));
+  const primaryId = previewSelId && getLayer(previewSelId)
+    ? previewSelId
+    : (validIds[validIds.length - 1] ?? null);
+  rsbSelId.value = primaryId;
+  rsbSelIds.value = validIds.length
+    ? validIds
+    : (primaryId ? [primaryId] : []);
 }
 
 export function alignSelected(mode: string): void {

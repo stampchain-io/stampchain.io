@@ -69,6 +69,13 @@ export function layerFilterCss(layer: RecursiveStampLayer): string {
   return parts.join(" ");
 }
 
+/** Nearest-neighbor scaling so pixel-art stamps stay crisp when enlarged. */
+export const PIXELATED_RENDERING_CSS =
+  "-webkit-image-rendering:pixelated;" +
+  "image-rendering:pixelated;" +
+  "image-rendering:-moz-crisp-edges;" +
+  "image-rendering:crisp-edges";
+
 export function layerDisplaySrc(
   layer: RecursiveStampLayer | {
     b64?: string | null;
@@ -154,9 +161,9 @@ export function buildRecursiveStampHtml(
   const css = `html,body{margin:0;width:100%;height:100%;background:${bg}}` +
     `#c{position:relative;width:100%;height:100%;container-type:size;` +
     `overflow:hidden}` +
-    `.s{position:absolute;transform-origin:center center;margin:0}` +
-    `.s img,.s iframe{width:100%;height:100%;object-fit:contain;` +
-    `border:0;display:block}` +
+    `.s{position:absolute;transform-origin:center center;margin:0;` +
+    `${PIXELATED_RENDERING_CSS}}` +
+    `img.s,iframe.s{object-fit:contain;border:0;display:block}` +
     `.t{overflow:hidden;word-break:break-word;white-space:pre-wrap;` +
     `line-height:1.2}`;
 
