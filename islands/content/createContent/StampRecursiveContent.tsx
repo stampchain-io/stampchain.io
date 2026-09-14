@@ -1,6 +1,6 @@
 /* ===== RECURSIVE STAMP CONTENT ===== */
-import { Button } from "$button";
-import { inputField, inputFieldSquare } from "$form";
+import { Button, ButtonProcessing } from "$button";
+import { inputField, inputFieldSquare, messageError } from "$form";
 import { CreateStampRecursiveHeader } from "$header";
 import { Icon } from "$icon";
 import { RangeSlider } from "$islands/button/RangeSlider.tsx";
@@ -9,7 +9,13 @@ import { InputField } from "$islands/form/InputField.tsx";
 import { CollapsibleSection } from "$islands/layout/CollapsibleSection.tsx";
 import PreviewCodeModal from "$islands/modal/PreviewCodeModal.tsx";
 import { closeModal, openModal } from "$islands/modal/states.ts";
-import { container2, container3, loaderSpinSmGrey, ModalBase } from "$layout";
+import {
+  container2,
+  container3,
+  containerPill,
+  loaderSpinSmGrey,
+  ModalBase,
+} from "$layout";
 import {
   addStampLayer,
   addTextLayer,
@@ -62,18 +68,29 @@ import {
   fetchStampList,
   fetchStampsByCreator,
 } from "$lib/utils/api/stamps/fetchStamp.ts";
+import {
+  abbreviateAddress,
+  formatFileSize,
+  formatFileType,
+} from "$lib/utils/ui/formatting/formatUtils.ts";
 import { showToast } from "$lib/utils/ui/notifications/toastSignal.ts";
 import {
   buildRecursiveStampHtml,
   defaultRecursiveFilters,
-  formatStampBytes,
-  formatStampMime,
   layerDisplaySrc,
   layerFilterCss,
   layerTransformCss,
   RECURSIVE_STAMP_FONTS,
 } from "$lib/utils/ui/rendering/recursiveStampHtml.ts";
-import { labelXs, textXs } from "$text";
+import {
+  cardCreator,
+  cardFileSize,
+  cardFileType,
+  cardStampNumber,
+  labelXs,
+  textXs,
+  truncate,
+} from "$text";
 import type { Collection } from "$types/api.d.ts";
 import type { StampRow } from "$types/stamp.d.ts";
 import type {
@@ -85,12 +102,11 @@ import { useEffect, useRef, useState } from "preact/hooks";
 
 type RsbPanel =
   | "background"
-  | "stamp"
-  | "more"
-  | "recent"
+  | "assets"
   | "text"
   | "layers"
   | "properties"
+  | "filters"
   | "selected";
 
 /** Offsets CollapsibleSection's `-mt-2 tablet:-mt-1` so overflow-hidden does not clip the first row. */
@@ -104,7 +120,6 @@ const CANVAS_CSS = `
 .rsb-wrap{position:relative;width:100%;height:100%;
   overflow:hidden;
   background:repeating-conic-gradient(#191919 0% 25%,#141414 0% 50%) 0 0/20px 20px}
-.rsb-wrap.preview{background:var(--rsb-bg,#000)}
 .rsb-wrap.preview .rsb-guide,
 .rsb-wrap.preview .rsb-grid,
 .rsb-wrap.preview .rsb-ruler{display:none!important}
@@ -144,12 +159,13 @@ const CANVAS_CSS = `
   white-space:pre-wrap;pointer-events:none;line-height:1.2}
 .rsb-text.editing{pointer-events:all;cursor:text;outline:none}
 .rsb-guide{position:absolute;pointer-events:all;z-index:8000}
-.rsb-guide-h{left:0;right:0;height:1px;background:rgba(0,200,255,.6);
+.rsb-guide-h{left:0;right:0;height:1px;background:var(--color-neutral-500);
   cursor:ns-resize}
-.rsb-guide-v{top:0;bottom:0;width:1px;background:rgba(0,200,255,.6);
+.rsb-guide-v{top:0;bottom:0;width:1px;background:var(--color-neutral-500);
   cursor:ew-resize}
-.rsb-glabel{position:absolute;font-size:9px;background:rgba(0,200,255,.8);
-  color:#000;padding:1px 4px;white-space:nowrap;font-family:monospace}
+.rsb-glabel{position:absolute;font-size:9px;background:var(--color-neutral-500);
+  color:var(--color-neutral-50);padding:1px 4px;white-space:nowrap;
+  font-family:monospace}
 .rsb-guide-h .rsb-glabel{top:2px;left:4px}
 .rsb-guide-v .rsb-glabel{left:4px;top:4px}
 .rsb-smart{position:absolute;pointer-events:none;z-index:8500}
@@ -565,19 +581,29 @@ export function StampRecursiveContent(
   const [status, setStatus] = useState("");
   const [creatorMore, setCreatorMore] = useState<StampRow[]>([]);
   const [recent, setRecent] = useState<RecentItem[]>([]);
-  const [filtersOpen, setFiltersOpen] = useState(false);
-  const [openSection, setOpenSection] = useState<RsbPanel | null>(
-    "stamp",
-  );
-  const toggleSection = (id: RsbPanel) => {
-    setOpenSection((cur) => (cur === id ? null : id));
+  const [expandedSections, setExpandedSections] = useState<
+    Record<RsbPanel, boolean>
+  >({
+    background: false,
+    assets: true,
+    text: false,
+    layers: false,
+    properties: false,
+    filters: false,
+    selected: false,
+  });
+  const toggleSection = (section: RsbPanel) => {
+    setExpandedSections((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
   };
   const [ctxOpen, setCtxOpen] = useState<
     { x: number; y: number } | null
   >(null);
   const primary = getLayer(selId);
 
-  const doFetch = async (raw?: string) => {
+  const getPreview = async (raw?: string) => {
     const id = (raw ?? query).trim().replace(/^#/, "");
     if (!id) return;
     setFetching(true);
@@ -587,11 +613,6 @@ export function StampRecursiveContent(
       const s = await fetchStampById(id);
       if (!s) throw new Error("Stamp not found");
       setFetched(s);
-      setStatus(
-        `Stamp #${s.stamp} · ${formatStampMime(s.stamp_mimetype)} · ${
-          formatStampBytes(s.file_size_bytes)
-        }`,
-      );
       const rec = { num: s.stamp ?? 0, hash: s.tx_hash };
       const next = [
         rec,
@@ -628,7 +649,7 @@ export function StampRecursiveContent(
     const h = gridCanvas.height;
     ctx.clearRect(0, 0, w, h);
     if (!grid || mode === "preview") return;
-    ctx.strokeStyle = "rgba(255,255,255,0.07)";
+    ctx.strokeStyle = "#262626";
     ctx.lineWidth = 1;
     const step = Math.round(w / GRID_DIV);
     for (let x = step; x < w; x += step) {
@@ -643,8 +664,6 @@ export function StampRecursiveContent(
       ctx.lineTo(w, y + 0.5);
       ctx.stroke();
     }
-    ctx.strokeStyle =
-      "color-mix(in srgb, var(--color-primary-400) 20%, transparent)";
     ctx.beginPath();
     ctx.moveTo(w / 2 + 0.5, 0);
     ctx.lineTo(w / 2 + 0.5, h);
@@ -1003,7 +1022,7 @@ export function StampRecursiveContent(
 
   const onGenerate = () => {
     if (!layers.length) {
-      showToast("Add at least one stamp first.", "warning");
+      showToast("The canvas is empty - add some assets.", "warning");
       return;
     }
     enterPreview(buildRecursiveStampHtml(layers, bg, false));
@@ -1018,7 +1037,7 @@ export function StampRecursiveContent(
       <BrowseStampsModal
         onPick={(id) => {
           setQuery(id);
-          doFetch(id);
+          getPreview(id);
         }}
       />,
       "zoomInOut",
@@ -1050,7 +1069,7 @@ export function StampRecursiveContent(
             <CollapsibleSection
               title="BACKGROUND"
               variant="collapsibleTitle"
-              expanded={openSection === "background"}
+              expanded={expandedSections.background}
               toggle={() => toggleSection("background")}
             >
               <SectionBody>
@@ -1066,14 +1085,32 @@ export function StampRecursiveContent(
             </CollapsibleSection>
 
             <CollapsibleSection
-              title="STAMP"
+              title="ASSETS"
               variant="collapsibleTitle"
-              expanded={openSection === "stamp"}
-              toggle={() => toggleSection("stamp")}
+              expanded={expandedSections.assets}
+              toggle={() => toggleSection("assets")}
             >
               <SectionBody>
                 <div class="flex flex-col gap-1.5">
                   <div class="flex items-center gap-1.5">
+                    <form
+                      class="flex-1 min-w-0"
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        getPreview();
+                      }}
+                    >
+                      <InputField
+                        type="text"
+                        placeholder="STAMP #, CPID OR TX HASH"
+                        value={query}
+                        onInput={(e) =>
+                          setQuery(
+                            (e.currentTarget as HTMLInputElement).value,
+                          )}
+                      />
+                    </form>
+                    ß{" "}
                     <div
                       class={`relative flex items-center justify-center
                         shrink-0 ${container3} !rounded-full p-0.5`}
@@ -1091,178 +1128,184 @@ export function StampRecursiveContent(
                         }}
                       />
                     </div>
-                    <form
-                      class="flex-1 min-w-0"
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        doFetch();
-                      }}
-                    >
-                      <InputField
-                        type="text"
-                        placeholder="STAMP # OR TX HASH"
-                        value={query}
-                        onInput={(e) =>
-                          setQuery(
-                            (e.currentTarget as HTMLInputElement).value,
-                          )}
-                      />
-                    </form>
                   </div>
-                  <Button
-                    variant="flat"
+                  <ButtonProcessing
+                    variant="outline"
                     color="primary"
                     size="smR"
                     class="w-full"
-                    disabled={fetching}
-                    onClick={() => doFetch()}
+                    isSubmitting={fetching}
+                    onClick={() => getPreview()}
                   >
-                    {fetching ? "…" : "FETCH"}
-                  </Button>
+                    PREVIEW
+                  </ButtonProcessing>
                 </div>
-                {status && (
-                  <p class={`${textXs} mt-2 text-color-primary-400`}>
+                {status && !fetched && (
+                  <p class={messageError}>
                     {status}
                   </p>
                 )}
-                <div
-                  class={`flex items-center justify-center mt-3 w-full
-                    h-[140px] ${container3}`}
-                >
-                  {fetched
-                    ? fetched.stamp_mimetype === "text/html"
-                      ? (
-                        <iframe
-                          src={fetched.stamp_url}
-                          class="w-full h-full"
-                          sandbox="allow-scripts allow-same-origin"
-                        />
-                      )
-                      : (
-                        <img
-                          src={previewSrc}
-                          alt={`Stamp #${fetched.stamp}`}
-                          class="max-w-full max-h-full object-contain"
-                        />
-                      )
-                    : (
-                      <span class="text-color-neutral-500 text-xs">
-                        FETCH A STAMP
-                      </span>
-                    )}
-                </div>
                 {fetched && (
-                  <p class={`${textXs} mt-2 text-color-neutral-400`}>
-                    #{fetched.stamp}
-                    {fetched.cpid ? ` · ${fetched.cpid}` : ""}
-                    {fetched.creator_name ? ` · ${fetched.creator_name}` : ""}
-                  </p>
+                  <>
+                    <div class="flex gap-3 mt-3 items-start">
+                      <div
+                        class={`flex items-center justify-center shrink-0
+                          w-[84px] h-[84px] overflow-hidden ${container3}`}
+                      >
+                        {fetched.stamp_mimetype === "text/html"
+                          ? (
+                            <iframe
+                              src={fetched.stamp_url}
+                              class="w-full h-full"
+                              sandbox="allow-scripts allow-same-origin"
+                            />
+                          )
+                          : (
+                            <img
+                              src={previewSrc}
+                              alt={`Stamp #${fetched.stamp}`}
+                              class="max-w-full max-h-full object-contain"
+                            />
+                          )}
+                      </div>
+                      <div class="flex flex-col min-w-0 flex-1 gap-0.5">
+                        <div class={cardStampNumber}>
+                          {fetched.stamp != null && (
+                            <span class="font-light">#</span>
+                          )}
+                          {fetched.stamp != null
+                            ? fetched.stamp.toLocaleString("en-US")
+                            : fetched.cpid}
+                        </div>
+                        {fetched.cpid && (
+                          <div
+                            class={`font-mono text-xs text-color-neutral-500
+                              ${truncate}`}
+                          >
+                            {fetched.cpid}
+                          </div>
+                        )}
+                        {(fetched.creator_name || fetched.creator) && (
+                          <span class={`${cardCreator} !text-left`}>
+                            {fetched.creator_name ||
+                              abbreviateAddress(fetched.creator, 5)}
+                          </span>
+                        )}
+                        <div class="flex items-center gap-1.5 mt-1 flex-wrap">
+                          <div class={`${containerPill} ${cardFileType}`}>
+                            {formatFileType(fetched.stamp_mimetype)}
+                          </div>
+                          {fetched.file_size_bytes != null && (
+                            <div class={`${containerPill} ${cardFileSize}`}>
+                              {formatFileSize(
+                                fetched.file_size_bytes,
+                                fetched.stamp_mimetype === "text/plain",
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    <Button
+                      variant="outline"
+                      color="neutral"
+                      size="xsR"
+                      class="w-full mt-3"
+                      disabled={mode !== "edit"}
+                      onClick={() => {
+                        addStampLayer(fetched);
+                        showToast(
+                          `Stamp #${fetched.stamp} added to canvas.`,
+                          "success",
+                        );
+                      }}
+                    >
+                      ADD TO CANVAS
+                    </Button>
+                  </>
                 )}
-                <Button
-                  variant="flat"
-                  color="primary"
-                  size="xsR"
-                  class="w-full mt-3"
-                  disabled={!fetched || mode !== "edit"}
-                  onClick={() => {
-                    if (!fetched) return;
-                    addStampLayer(fetched);
-                    showToast(`Added Stamp #${fetched.stamp}`, "success");
-                  }}
-                >
-                  ADD TO CANVAS
-                </Button>
+                {creatorMore.length > 0 && fetched && (
+                  <div class="mt-4 flex flex-col gap-1.5">
+                    <p class={labelXs}>
+                      MORE BY {fetched.creator_name ||
+                        `${fetched.creator.slice(0, 6)}…`}
+                    </p>
+                    <div class="flex flex-wrap gap-1.5">
+                      {creatorMore.map((s) => (
+                        <button
+                          type="button"
+                          key={s.tx_hash}
+                          class={`${container3} w-11 overflow-hidden`}
+                          onClick={() => {
+                            setQuery(String(s.stamp));
+                            getPreview(String(s.stamp));
+                          }}
+                        >
+                          <img
+                            src={s.stamp_url}
+                            alt={`#${s.stamp}`}
+                            class="w-full h-8 object-cover"
+                          />
+                          <div class="text-[0.5rem] text-center font-mono
+                    text-color-neutral-500">
+                            #{s.stamp}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {recent.length > 0 && (
+                  <div class="mt-4 flex flex-col gap-1.5">
+                    <p class={labelXs}>RECENT</p>
+                    <div class="grid grid-cols-4 gap-1.5">
+                      {recent.map((r) => (
+                        <button
+                          type="button"
+                          key={r.hash || r.num}
+                          class={`${container3} aspect-square overflow-hidden
+                            p-0`}
+                          onClick={() => {
+                            const id = r.num ? String(r.num) : r.hash;
+                            setQuery(id);
+                            getPreview(id);
+                          }}
+                        >
+                          <img
+                            src={`/api/v2/stamp/${r.num}/preview`}
+                            alt={`#${r.num}`}
+                            class="w-full h-full object-cover"
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </SectionBody>
             </CollapsibleSection>
 
-            {creatorMore.length > 0 && fetched && (
-              <CollapsibleSection
-                title={`MORE BY ${
-                  fetched.creator_name ||
-                  `${fetched.creator.slice(0, 6)}…`
-                }`}
-                variant="collapsibleTitle"
-                expanded={openSection === "more"}
-                toggle={() => toggleSection("more")}
-              >
-                <SectionBody>
-                  <div class="flex flex-wrap gap-1.5">
-                    {creatorMore.map((s) => (
-                      <button
-                        type="button"
-                        key={s.tx_hash}
-                        class={`${container3} w-11 overflow-hidden`}
-                        onClick={() => {
-                          setQuery(String(s.stamp));
-                          doFetch(String(s.stamp));
-                        }}
-                      >
-                        <img
-                          src={s.stamp_url}
-                          alt={`#${s.stamp}`}
-                          class="w-full h-8 object-cover"
-                        />
-                        <div class="text-[0.5rem] text-center font-mono
-                    text-color-neutral-500">
-                          #{s.stamp}
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </SectionBody>
-              </CollapsibleSection>
-            )}
-
-            {recent.length > 0 && (
-              <CollapsibleSection
-                title="RECENT"
-                variant="collapsibleTitle"
-                expanded={openSection === "recent"}
-                toggle={() => toggleSection("recent")}
-              >
-                <SectionBody>
-                  <div class="flex flex-wrap gap-1.5">
-                    {recent.map((r) => (
-                      <Button
-                        key={r.num}
-                        variant="outline"
-                        color="neutral"
-                        size="xxsR"
-                        onClick={() => {
-                          setQuery(String(r.num));
-                          doFetch(String(r.num));
-                        }}
-                      >
-                        #{r.num}
-                      </Button>
-                    ))}
-                  </div>
-                </SectionBody>
-              </CollapsibleSection>
-            )}
-
             <CollapsibleSection
-              title="TEXT TOOL"
+              title="TEXT"
               variant="collapsibleTitle"
-              expanded={openSection === "text"}
+              expanded={expandedSections.text}
               toggle={() => toggleSection("text")}
             >
               <SectionBody>
                 <Button
-                  variant="flat"
-                  color="primary"
+                  variant="outline"
+                  color="neutral"
                   size="xsR"
                   class="w-full"
                   disabled={mode !== "edit"}
                   onClick={() => {
                     addTextLayer();
                     showToast(
-                      "Text layer added — double-click to edit",
+                      "Text added to canvas — double-click to edit.",
                       "info",
                     );
                   }}
                 >
-                  + ADD TEXT LAYER
+                  + ADD TEXT
                 </Button>
               </SectionBody>
             </CollapsibleSection>
@@ -1270,7 +1313,7 @@ export function StampRecursiveContent(
             <CollapsibleSection
               title={`LAYERS${layers.length ? ` (${layers.length})` : ""}`}
               variant="collapsibleTitle"
-              expanded={openSection === "layers"}
+              expanded={expandedSections.layers}
               toggle={() => toggleSection("layers")}
             >
               <SectionBody>
@@ -1386,159 +1429,176 @@ export function StampRecursiveContent(
                     </div>
                   ))}
                 </div>
+                <Button
+                  variant="outline"
+                  color="neutral"
+                  size="xsR"
+                  class="w-full mt-2"
+                  disabled={!primary || mode !== "edit"}
+                  onClick={() => duplicateSelected()}
+                >
+                  DUPLICATE
+                </Button>
               </SectionBody>
             </CollapsibleSection>
 
             {primary && (
-              <CollapsibleSection
-                title="PROPERTIES"
-                variant="collapsibleTitle"
-                expanded={openSection === "properties"}
-                toggle={() => toggleSection("properties")}
-              >
-                <SectionBody>
-                  <div class="grid grid-cols-2 gap-2">
-                    {([
-                      ["X (%)", "x"],
-                      ["Y (%)", "y"],
-                      ["WIDTH (%)", "w"],
-                      ["HEIGHT (%)", "h"],
-                      ["ROTATION (°)", "r"],
-                    ] as const).map(([label, key]) => (
-                      <label key={key} class="flex flex-col gap-0.5">
-                        <span class={labelXs}>{label}</span>
-                        <input
-                          type="number"
-                          class={inputFieldSquare}
-                          value={Number(primary[key]).toFixed(1)}
-                          step="0.1"
-                          onInput={(e) => {
-                            const v = parseFloat(
-                              (e.target as HTMLInputElement).value,
-                            ) || 0;
-                            patchLayer(primary.id, { [key]: v });
-                          }}
-                        />
-                      </label>
-                    ))}
-                  </div>
-                  <label class="flex flex-col gap-0.5 mt-2">
-                    <span class={labelXs}>
-                      OPACITY {Math.round(primary.op * 100)}%
-                    </span>
-                    <RangeSlider
-                      value={primary.op}
-                      min={0}
-                      max={1}
-                      onChange={(v) => patchLayer(primary.id, { op: v })}
-                    />
-                  </label>
-                  <div class="flex gap-2 mt-2">
-                    <Button
-                      variant={primary.flipH ? "flat" : "outline"}
-                      color="neutral"
-                      size="xxsR"
-                      onClick={() => flipSelected("h")}
-                    >
-                      FLIP H
-                    </Button>
-                    <Button
-                      variant={primary.flipV ? "flat" : "outline"}
-                      color="neutral"
-                      size="xxsR"
-                      onClick={() => flipSelected("v")}
-                    >
-                      FLIP V
-                    </Button>
-                  </div>
-                  {primary.type === "text" && (
-                    <div class="flex flex-col gap-2 mt-3">
-                      <select
-                        class={inputField}
-                        value={primary.font}
-                        onChange={(e) =>
-                          patchLayer(primary.id, {
-                            font: (e.target as HTMLSelectElement).value,
-                          })}
-                      >
-                        {RECURSIVE_STAMP_FONTS.map((f) => (
-                          <option key={f} value={f}>{f}</option>
-                        ))}
-                      </select>
-                      <label class="flex flex-col gap-0.5">
-                        <span class={labelXs}>SIZE (%H)</span>
-                        <input
-                          type="number"
-                          class={inputField}
-                          value={primary.fontSize}
-                          step="0.5"
-                          onInput={(e) =>
-                            patchLayer(primary.id, {
-                              fontSize: Math.max(
-                                0.5,
-                                parseFloat(
-                                  (e.target as HTMLInputElement).value,
-                                ) ||
-                                  5,
-                              ),
-                            })}
-                        />
-                      </label>
-                      <ColorPicker
-                        value={primary.color ?? "#ffffff"}
-                        onChange={(hex) =>
-                          patchLayer(primary.id, { color: hex })}
-                        ariaLabel="Text color"
+              <>
+                <CollapsibleSection
+                  title="PROPERTIES"
+                  variant="collapsibleTitle"
+                  expanded={expandedSections.properties}
+                  toggle={() => toggleSection("properties")}
+                >
+                  <SectionBody>
+                    <div class="grid grid-cols-2 gap-2">
+                      {([
+                        ["X (%)", "x"],
+                        ["Y (%)", "y"],
+                        ["WIDTH (%)", "w"],
+                        ["HEIGHT (%)", "h"],
+                        ["ROTATION (°)", "r"],
+                      ] as const).map(([label, key]) => (
+                        <label key={key} class="flex flex-col gap-0.5">
+                          <span class={labelXs}>{label}</span>
+                          <input
+                            type="number"
+                            class={inputFieldSquare}
+                            value={Number(primary[key]).toFixed(1)}
+                            step="0.1"
+                            onInput={(e) => {
+                              const v = parseFloat(
+                                (e.target as HTMLInputElement).value,
+                              ) || 0;
+                              patchLayer(primary.id, { [key]: v });
+                            }}
+                          />
+                        </label>
+                      ))}
+                    </div>
+                    <label class="flex flex-col gap-0.5 mt-2">
+                      <span class={labelXs}>
+                        OPACITY {Math.round(primary.op * 100)}%
+                      </span>
+                      <RangeSlider
+                        value={primary.op}
+                        min={0}
+                        max={1}
+                        onChange={(v) => patchLayer(primary.id, { op: v })}
                       />
-                      <div class="flex gap-1">
-                        <Button
-                          variant={primary.bold ? "flat" : "outline"}
-                          color="neutral"
-                          size="xxsR"
-                          onClick={() =>
-                            patchLayer(primary.id, { bold: !primary.bold })}
+                    </label>
+                    <div class="flex justify-between gap-2 mt-2">
+                      <Button
+                        variant={primary.flipH ? "flat" : "outline"}
+                        color="neutral"
+                        size="xxsR"
+                        onClick={() => flipSelected("h")}
+                      >
+                        FLIP H
+                      </Button>
+                      <Button
+                        variant={primary.flipV ? "flat" : "outline"}
+                        color="neutral"
+                        size="xxsR"
+                        onClick={() => flipSelected("v")}
+                      >
+                        FLIP V
+                      </Button>
+                      <Button
+                        variant="outline"
+                        color="neutral"
+                        size="xxsR"
+                        disabled={mode !== "edit"}
+                        onClick={() => centerSelected()}
+                      >
+                        CENTER
+                      </Button>
+                    </div>
+                    {primary.type === "text" && (
+                      <div class="flex flex-col gap-2 mt-3">
+                        <select
+                          class={inputField}
+                          value={primary.font}
+                          onChange={(e) =>
+                            patchLayer(primary.id, {
+                              font: (e.target as HTMLSelectElement).value,
+                            })}
                         >
-                          B
-                        </Button>
-                        <Button
-                          variant={primary.italic ? "flat" : "outline"}
-                          color="neutral"
-                          size="xxsR"
-                          onClick={() =>
-                            patchLayer(primary.id, { italic: !primary.italic })}
-                        >
-                          I
-                        </Button>
-                        {(["left", "center", "right"] as const).map((a) => (
+                          {RECURSIVE_STAMP_FONTS.map((f) => (
+                            <option key={f} value={f}>{f}</option>
+                          ))}
+                        </select>
+                        <label class="flex flex-col gap-0.5">
+                          <span class={labelXs}>SIZE (%H)</span>
+                          <input
+                            type="number"
+                            class={inputField}
+                            value={primary.fontSize}
+                            step="0.5"
+                            onInput={(e) =>
+                              patchLayer(primary.id, {
+                                fontSize: Math.max(
+                                  0.5,
+                                  parseFloat(
+                                    (e.target as HTMLInputElement).value,
+                                  ) ||
+                                    5,
+                                ),
+                              })}
+                          />
+                        </label>
+                        <ColorPicker
+                          value={primary.color ?? "#ffffff"}
+                          onChange={(hex) =>
+                            patchLayer(primary.id, { color: hex })}
+                          ariaLabel="Text color"
+                        />
+                        <div class="flex gap-1">
                           <Button
-                            key={a}
-                            variant={primary.align === a ? "flat" : "outline"}
+                            variant={primary.bold ? "flat" : "outline"}
                             color="neutral"
                             size="xxsR"
-                            onClick={() => patchLayer(primary.id, { align: a })}
+                            onClick={() =>
+                              patchLayer(primary.id, { bold: !primary.bold })}
                           >
-                            {a[0]?.toUpperCase()}
+                            B
                           </Button>
-                        ))}
+                          <Button
+                            variant={primary.italic ? "flat" : "outline"}
+                            color="neutral"
+                            size="xxsR"
+                            onClick={() =>
+                              patchLayer(primary.id, {
+                                italic: !primary.italic,
+                              })}
+                          >
+                            I
+                          </Button>
+                          {(["left", "center", "right"] as const).map((a) => (
+                            <Button
+                              key={a}
+                              variant={primary.align === a ? "flat" : "outline"}
+                              color="neutral"
+                              size="xxsR"
+                              onClick={() =>
+                                patchLayer(primary.id, { align: a })}
+                            >
+                              {a[0]?.toUpperCase()}
+                            </Button>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
-                  <button
-                    type="button"
-                    class={`${labelXs} mt-3 flex items-center gap-1`}
-                    onClick={() => setFiltersOpen((v) => !v)}
-                  >
-                    FILTERS
-                    <Icon
-                      type="icon"
-                      name={filtersOpen ? "caretUp" : "caretDown"}
-                      weight="normal"
-                      size="xxxs"
-                      color="neutral400"
-                    />
-                  </button>
-                  {filtersOpen && (
-                    <div class="flex flex-col gap-2 mt-2">
+                    )}
+                  </SectionBody>
+                </CollapsibleSection>
+                <CollapsibleSection
+                  title="FILTERS"
+                  variant="collapsibleTitle"
+                  expanded={expandedSections.filters}
+                  toggle={() => toggleSection("filters")}
+                >
+                  <SectionBody>
+                    <div class="flex flex-col gap-2">
                       {([
                         ["brightness", "BRIGHTNESS", 0, 200, "%"],
                         ["contrast", "CONTRAST", 0, 200, "%"],
@@ -1580,16 +1640,15 @@ export function StampRecursiveContent(
                         RESET FILTERS
                       </Button>
                     </div>
-                  )}
-                </SectionBody>
-              </CollapsibleSection>
+                  </SectionBody>
+                </CollapsibleSection>
+              </>
             )}
-
             {selIds.length > 1 && (
               <CollapsibleSection
                 title={`${selIds.length} SELECTED`}
                 variant="collapsibleTitle"
-                expanded={openSection === "selected"}
+                expanded={expandedSections.selected}
                 toggle={() => toggleSection("selected")}
               >
                 <SectionBody>
@@ -1619,28 +1678,6 @@ export function StampRecursiveContent(
               </CollapsibleSection>
             )}
 
-            <div class="flex gap-2">
-              <Button
-                variant="outline"
-                color="neutral"
-                size="xsR"
-                class="flex-1"
-                disabled={!primary || mode !== "edit"}
-                onClick={() => centerSelected()}
-              >
-                CENTER
-              </Button>
-              <Button
-                variant="outline"
-                color="neutral"
-                size="xsR"
-                class="flex-1"
-                disabled={!primary || mode !== "edit"}
-                onClick={() => duplicateSelected()}
-              >
-                DUPLICATE
-              </Button>
-            </div>
             <Button
               variant="outline"
               color="neutral"
@@ -1706,7 +1743,6 @@ export function StampRecursiveContent(
             class={`rsb-wrap h-full ${rulers ? "rulers-on" : ""} ${
               mode === "preview" ? "preview" : ""
             }`}
-            style={{ "--rsb-bg": bg } as JSX.CSSProperties}
             onMouseDown={(e) => {
               if (mode !== "edit") return;
               if (spaceHeld.current || e.button === 1) {
