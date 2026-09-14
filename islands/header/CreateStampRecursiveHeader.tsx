@@ -1,7 +1,6 @@
 /* ===== CREATE STAMP RECURSIVE HEADER ===== */
 import { Icon } from "$icon";
-import { openModal } from "$islands/modal/states.ts";
-import { container2Icon, ModalBase, ScrollFadeRow } from "$layout";
+import { container2Icon, ScrollFadeRow } from "$layout";
 import {
   addGuide,
   clearGuides,
@@ -12,7 +11,6 @@ import {
   undo,
   useRecursiveStampState,
 } from "$lib/hooks/useRecursiveStampState.ts";
-import { textSm } from "$text";
 import type { CreateStampRecursiveHeaderProps } from "$types/ui.d.ts";
 
 function PlaceholderIcon(props: {
@@ -36,44 +34,6 @@ function PlaceholderIcon(props: {
         props.onClick?.(e);
       }}
     />
-  );
-}
-
-const SHORTCUTS: Array<{ keys: string; action: string }> = [
-  { keys: "Cmd/Ctrl+Z · ⇧Z", action: "Undo / Redo" },
-  { keys: "Cmd/Ctrl+D", action: "Duplicate selected" },
-  { keys: "Cmd/Ctrl+C · X · V", action: "Copy / Cut / Paste" },
-  { keys: "Cmd/Ctrl+G · ⇧G", action: "Group / Ungroup" },
-  { keys: "Cmd/Ctrl+A", action: "Select all layers" },
-  { keys: "Delete / Backspace", action: "Delete selected" },
-  { keys: "Arrow keys", action: "Nudge selected (0.5%)" },
-  { keys: "Shift+Arrows", action: "Nudge selected (5%)" },
-  { keys: "Shift+H · Shift+V", action: "Flip horizontal / vertical" },
-  { keys: "+ / − · Wheel", action: "Zoom in / out" },
-  { keys: "Space+Drag", action: "Pan canvas" },
-  { keys: "0", action: "Reset zoom & pan" },
-  { keys: "Esc", action: "Deselect / close dialogs" },
-  { keys: "?", action: "Show this help" },
-];
-
-function ShortcutsModal() {
-  return (
-    <ModalBase title="SHORTCUTS">
-      <div class="flex flex-col gap-1.5 pt-5">
-        {SHORTCUTS.map((row) => (
-          <div
-            key={row.action}
-            class="flex justify-between items-center gap-3 py-1
-              border-b border-color-neutral-800 last:border-0"
-          >
-            <span class={textSm}>{row.action}</span>
-            <span class="font-mono text-[0.625rem] text-color-neutral-500">
-              {row.keys}
-            </span>
-          </div>
-        ))}
-      </div>
-    </ModalBase>
   );
 }
 
@@ -142,21 +102,6 @@ export function CreateStampRecursiveHeader(
               active={snap}
               onClick={() => {
                 rsbSnap.value = !rsbSnap.value;
-              }}
-            />
-          </div>
-
-          <div class={container2Icon}>
-            <Icon
-              type="iconButton"
-              name="info"
-              weight="normal"
-              size="xsR"
-              color="neutral400"
-              ariaLabel="Keyboard shortcuts"
-              onClick={(e) => {
-                e.preventDefault();
-                openModal(<ShortcutsModal />, "zoomInOut");
               }}
             />
           </div>

@@ -27,8 +27,39 @@ function unwrapStampList(json: unknown): StampRow[] {
   if (root.data && typeof root.data === "object") {
     const inner = root.data as Record<string, unknown>;
     if (Array.isArray(inner.stamps)) return inner.stamps as StampRow[];
+    if (Array.isArray(inner.data)) return inner.data as StampRow[];
   }
   return [];
+}
+
+export type StampPickerType = "all" | "classic" | "posh" | "src-721";
+
+export interface StampListPage {
+  stamps: StampRow[];
+  page: number;
+  totalPages: number;
+}
+
+function unwrapStampListPage(
+  json: unknown,
+  fallbackPage: number,
+): StampListPage {
+  const stamps = unwrapStampList(json);
+  if (!json || typeof json !== "object") {
+    return { stamps, page: fallbackPage, totalPages: 0 };
+  }
+  const root = json as Record<string, unknown>;
+  const nested = root.data && typeof root.data === "object" &&
+      !Array.isArray(root.data)
+    ? root.data as Record<string, unknown>
+    : root;
+  const page = Number(root.page ?? nested.page ?? fallbackPage) ||
+    fallbackPage;
+  const totalPages = Number(
+    root.totalPages ?? nested.totalPages ?? root.pages ?? nested.pages ??
+      0,
+  ) || 0;
+  return { stamps, page, totalPages };
 }
 
 export async function fetchStampById(
@@ -49,23 +80,32 @@ export async function fetchStampById(
 export async function fetchStampList(opts: {
   limit?: number;
   page?: number;
-  ident?: string;
-}): Promise<StampRow[]> {
+  type?: StampPickerType;
+}): Promise<StampListPage> {
+  const page = opts.page ?? 1;
+  const empty: StampListPage = { stamps: [], page, totalPages: 0 };
   try {
+    const type = opts.type ?? "all";
     const params = new URLSearchParams({
       limit: String(opts.limit ?? 20),
-      page: String(opts.page ?? 1),
+      page: String(page),
     });
-    const path = opts.ident
-      ? `/api/v2/stamps/ident/${encodeURIComponent(opts.ident)}`
-      : "/api/v2/stamps";
-    const res = await fetch(`${path}?${params}`, {
+    if (type === "src-721") {
+      params.set("type", "all");
+      params.set("ident", "SRC-721");
+    } else if (type === "all") {
+      params.set("type", "all");
+      params.set("ident", "STAMP,SRC-721");
+    } else {
+      params.set("type", type);
+    }
+    const res = await fetch(`/api/v2/stamps?${params}`, {
       headers: API_HEADERS,
     });
-    if (!res.ok) return [];
-    return unwrapStampList(await res.json());
+    if (!res.ok) return empty;
+    return unwrapStampListPage(await res.json(), page);
   } catch {
-    return [];
+    return empty;
   }
 }
 

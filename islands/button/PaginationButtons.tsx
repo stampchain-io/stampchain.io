@@ -62,8 +62,10 @@ export function PaginationButtons({
   totalPages,
   prefix = "",
   onPageChange,
+  size: sizeOverride,
 }: PaginationProps) {
-  const screenSize = useScreenSize();
+  const detectedSize = useScreenSize();
+  const screenSize = sizeOverride ?? detectedSize;
   const { setSearchParam } = useSSRSafeNavigation();
 
   // Update maxPageRange logic based on screen size

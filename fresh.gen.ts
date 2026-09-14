@@ -263,6 +263,7 @@ import * as $modal_PreviewImageModal from "./islands/modal/PreviewImageModal.tsx
 import * as $modal_RecieveAddyModal from "./islands/modal/RecieveAddyModal.tsx";
 import * as $modal_SearchSRC20Modal from "./islands/modal/SearchSRC20Modal.tsx";
 import * as $modal_SearchStampModal from "./islands/modal/SearchStampModal.tsx";
+import * as $modal_SearchStampPickerModal from "./islands/modal/SearchStampPickerModal.tsx";
 import * as $modal_SendBTCModal from "./islands/modal/SendBTCModal.tsx";
 import * as $modal_states from "./islands/modal/states.ts";
 import * as $section_FeeCalculatorBase from "./islands/section/FeeCalculatorBase.tsx";
@@ -654,6 +655,7 @@ const manifest = {
     "./islands/modal/RecieveAddyModal.tsx": $modal_RecieveAddyModal,
     "./islands/modal/SearchSRC20Modal.tsx": $modal_SearchSRC20Modal,
     "./islands/modal/SearchStampModal.tsx": $modal_SearchStampModal,
+    "./islands/modal/SearchStampPickerModal.tsx": $modal_SearchStampPickerModal,
     "./islands/modal/SendBTCModal.tsx": $modal_SendBTCModal,
     "./islands/modal/states.ts": $modal_states,
     "./islands/section/FeeCalculatorBase.tsx": $section_FeeCalculatorBase,
