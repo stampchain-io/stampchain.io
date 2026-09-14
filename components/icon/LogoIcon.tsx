@@ -55,7 +55,7 @@ export function LogoIcon({
            children already provide a perfectly good name, so step aside. */
         ...(children ? {} : { "aria-label": ariaLabel })
       }
-      class={`inline-flex items-center gap-3 group ${className}`.trim()}
+      class={`inline-flex items-center gap-2 group ${className}`.trim()}
       {...(fPartial !== undefined ? { "f-partial": fPartial } : {})}
     >
       {
