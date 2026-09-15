@@ -90,6 +90,11 @@ export function Icon(props: IconVariants) {
       horizontalGuide: "arrowHorizontal",
       verticalGuide: "arrowVertical",
       clearGuides: "trashcan",
+      bold: "bold",
+      italic: "italic",
+      justifyLeft: "justifyLeft",
+      justifyCenter: "justifyCenter",
+      justifyRight: "justifyRight",
 
       // View Mode Icons
       viewCardRow: "gridRow",
