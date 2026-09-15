@@ -28,7 +28,7 @@ function PlaceholderIcon(props: {
       size="xsR"
       color={props.active ? "primary400" : "neutral400"}
       ariaLabel={props.label}
-      className={props.disabled ? "opacity-100 pointer-events-none" : ""}
+      className={props.disabled ? "opacity-80 pointer-events-none" : ""}
       onClick={props.disabled ? undefined : (e) => {
         e.preventDefault();
         props.onClick?.(e);
