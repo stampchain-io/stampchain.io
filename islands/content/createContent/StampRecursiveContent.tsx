@@ -1,5 +1,7 @@
 /* ===== RECURSIVE STAMP CONTENT ===== */
 import { Button, ButtonProcessing } from "$button";
+import { walletContext } from "$client/wallet/wallet.ts";
+import { useFees } from "$fees";
 import { inputField, inputFieldSquare, messageError } from "$form";
 import { CreateStampRecursiveHeader } from "$header";
 import { Icon } from "$icon";
@@ -80,11 +82,13 @@ import {
   layerTransformCss,
   RECURSIVE_STAMP_FONTS,
 } from "$lib/utils/ui/rendering/recursiveStampHtml.ts";
+import { FeeCalculatorBase } from "$section";
 import {
   cardCreator,
   cardFileSize,
   cardFileType,
   cardStampNumber,
+  label,
   labelXs,
   textXs,
   truncate,
@@ -336,6 +340,15 @@ export function StampRecursiveContent(
   const [status, setStatus] = useState("");
   const [creatorMore, setCreatorMore] = useState<StampRow[]>([]);
   const [recent, setRecent] = useState<RecentItem[]>([]);
+  const { isConnected } = walletContext;
+  const { fees } = useFees();
+  const [fee, setFee] = useState(1);
+  const [BTCPrice, setBTCPrice] = useState(60000);
+  const [tosAgreed, setTosAgreed] = useState(false);
+  const [issuance, setIssuance] = useState("1");
+  const [issuanceError, setIssuanceError] = useState("");
+  const [stampName, setStampName] = useState("");
+  const [stampNameError, setStampNameError] = useState("");
   const [expandedSections, setExpandedSections] = useState<
     Record<RsbPanel, boolean>
   >({
@@ -368,6 +381,16 @@ export function StampRecursiveContent(
   >(null);
   const primary = getLayer(selId);
 
+  useEffect(() => {
+    const recommended = fees?.recommendedFee;
+    if (recommended != null && recommended >= 0.1) {
+      setFee(recommended);
+    }
+    if (typeof fees?.btcPrice === "number" && fees.btcPrice > 0) {
+      setBTCPrice(fees.btcPrice);
+    }
+  }, [fees]);
+
   const getPreview = async (raw?: string) => {
     const id = (raw ?? query).trim().replace(/^#/, "");
     if (!id) return;
@@ -382,7 +405,7 @@ export function StampRecursiveContent(
       const next = [
         rec,
         ...recent.filter((r) => r.num !== s.stamp),
-      ].slice(0, 12);
+      ].slice(0, 14);
       setRecent(next);
       lsSet("rsb_recent", next);
       if (s.creator) {
@@ -793,6 +816,51 @@ export function StampRecursiveContent(
     enterPreview(buildRecursiveStampHtml(layers, bg, false));
   };
 
+  const handleStamp = () => {
+    if (!isConnected) {
+      walletContext.showConnectModal();
+    }
+  };
+
+  const handleIssuanceChange = (e: Event) => {
+    const value = (e.target as HTMLInputElement).value;
+    if (/^\d*$/.test(value)) {
+      setIssuance(value === "" ? "1" : value);
+      setIssuanceError("");
+    } else {
+      setIssuanceError("Please enter a valid number.");
+    }
+  };
+
+  const handleStampNameChange = (e: Event) => {
+    const value = (e.target as HTMLInputElement).value;
+    if (value === "" || value === "A") {
+      setStampName(value);
+      setStampNameError("");
+      return;
+    }
+    if (!value.startsWith("A")) {
+      setStampNameError("Custom CPID must start with 'A'");
+      return;
+    }
+    const numStr = value.slice(1);
+    try {
+      const num = BigInt(numStr);
+      const min = BigInt(26) ** BigInt(12) + BigInt(1);
+      const max = BigInt("18446744073709551615");
+      if (num >= min && num <= max) {
+        setStampName(value);
+        setStampNameError("");
+      } else {
+        setStampNameError(
+          `Number must be between ${min.toString()} and ${max.toString()}`,
+        );
+      }
+    } catch (error) {
+      setStampNameError("Invalid number format after 'A', error: " + error);
+    }
+  };
+
   const onViewCode = () => {
     openModal(<PreviewCodeModal src={html} />, "zoomInOut");
   };
@@ -822,12 +890,15 @@ export function StampRecursiveContent(
       <CreateStampRecursiveHeader />
       <div class="flex flex-col-reverse mobileLg:flex-row w-full gap-5 pt-5">
         <div
-          class={`w-full mobileLg:w-1/3 min-[1080px]:w-1/4
+          class={`w-full mobileLg:w-[40%] min-[1080px]:w-[30%]
             h-[800px] mobileLg:h-[480px] min-[1080px]:h-[560px]
-            desktop:h-[640px] flex flex-col overflow-hidden p-3
+            desktop:h-[640px] flex flex-col overflow-hidden p-5
             ${container2}`}
         >
-          <div class="flex min-h-0 flex-1 flex-col overflow-y-auto pr-1">
+          <div
+            class={`flex min-h-0 flex-1 flex-col overflow-y-auto pr-1
+              ${mode === "preview" ? "hidden" : ""}`}
+          >
             <CollapsibleSection
               title="BACKGROUND"
               variant="collapsibleTitle"
@@ -1025,18 +1096,17 @@ export function StampRecursiveContent(
                     <hr class="my-3" />
                     <div class="flex flex-col">
                       <p class={labelXs}>RECENT</p>
-                      <div class="grid grid-cols-4 min-[420px]:grid-cols-5
-                      mobileMd:grid-cols-6 mobileLg:grid-cols-4 gap-3">
+                      <div class="grid grid-cols-5 min-[420px]:grid-cols-6
+                      mobileMd:grid-cols-7 mobileLg:grid-cols-5 gap-3">
                         {recent.map((r, i) => (
                           <button
                             type="button"
                             key={r.hash || r.num}
-                            class={`${container2Hover} ${shadowGlowPurple}
-                            aspect-square overflow-hidden p-0
+                            class={`${container2Hover} ${shadowGlowPurple} !rounded-xl aspect-square overflow-hidden p-0
                             ${
-                              i >= 10
+                              i >= 12
                                 ? "hidden mobileMd:block mobileLg:hidden"
-                                : i >= 8
+                                : i >= 10
                                 ? "hidden min-[420px]:block mobileLg:hidden"
                                 : ""
                             }`}
@@ -1461,48 +1531,124 @@ export function StampRecursiveContent(
               </CollapsibleSection>
             )}
           </div>
-          <div class="flex flex-col gap-3 pt-3 shrink-0">
-            <div class="flex justify-between gap-5">
-              <Button
-                variant="outline"
-                color="neutral"
-                size="xsR"
-                class="w-full"
-                disabled={!layers.length || mode !== "edit"}
-                onClick={() => {
-                  if (!confirm("Remove all layers from the canvas?")) return;
-                  clearAllLayers();
+          <div
+            class={`flex min-h-0 flex-1 flex-col overflow-y-auto pr-1
+              ${mode === "preview" ? "" : "hidden"}`}
+          >
+            <div class="flex flex-col pt-2 tablet:pt-1">
+              <div class="flex flex-col gap-5">
+                <div class="flex items-center justify-between gap-5">
+                  <h5 class={label}>
+                    EDITIONS
+                  </h5>
+                  <div class="w-10 shrink-0">
+                    <InputField
+                      type="text"
+                      value={issuance}
+                      onChange={handleIssuanceChange}
+                      error={issuanceError}
+                      textAlign="center"
+                      class="!w-10 !px-2"
+                    />
+                  </div>
+                </div>
+                <InputField
+                  type="text"
+                  value={stampName}
+                  onChange={handleStampNameChange}
+                  placeholder="Custom CPID"
+                  maxLength={21}
+                  minLength={15}
+                  error={stampNameError}
+                />
+              </div>
+              <hr class="w-full my-5 border-color-neutral-800 border-t-1" />
+              <FeeCalculatorBase
+                fee={fee}
+                handleChangeFee={setFee}
+                type="stamp"
+                fileType="text/html"
+                fileSize={html?.length ?? 0}
+                issuance={parseInt(issuance, 10)}
+                BTCPrice={BTCPrice}
+                showCoinToggle
+                tosAgreed={tosAgreed}
+                onTosChange={setTosAgreed}
+                isSubmitting={false}
+                onSubmit={handleStamp}
+                buttonName={isConnected ? "STAMP" : "CONNECT WALLET"}
+                bitname=""
+                {...(stampName ? { cpid: stampName } : {})}
+                feeDetails={{
+                  minerFee: 0,
+                  dustValue: 0,
+                  totalValue: 0,
+                  hasExactFees: false,
+                  estimatedSize: 300,
                 }}
-              >
-                CLEAR ALL
-              </Button>
-              <Button
-                variant="flat"
-                color="primary"
-                size="xsR"
-                class="w-full"
-                onClick={mode === "preview" ? enterEdit : onGenerate}
-              >
-                {mode === "preview" ? "EDIT" : "GENERATE"}
-              </Button>
+              />
             </div>
-            {mode === "preview" && (
-              <Button
-                variant="outline"
-                color="primary"
-                size="xsR"
-                class="w-full"
-                onClick={onViewCode}
-              >
-                VIEW CODE
-              </Button>
-            )}
+          </div>
+          <div class="flex flex-col gap-3 pt-3 shrink-0">
+            {mode === "preview"
+              ? (
+                <div class="flex justify-between gap-5">
+                  <Button
+                    variant="outline"
+                    color="neutral"
+                    size="xsR"
+                    class="w-full"
+                    onClick={enterEdit}
+                  >
+                    EDIT
+                  </Button>
+                  <Button
+                    variant="outline"
+                    color="primary"
+                    size="xsR"
+                    class="w-full"
+                    onClick={onViewCode}
+                  >
+                    VIEW CODE
+                  </Button>
+                </div>
+              )
+              : (
+                <div class="flex justify-between gap-5">
+                  <Button
+                    variant="outline"
+                    color="neutral"
+                    size="xsR"
+                    class="w-full"
+                    disabled={!layers.length}
+                    onClick={() => {
+                      if (
+                        !confirm("Remove all layers from the canvas?")
+                      ) {
+                        return;
+                      }
+                      clearAllLayers();
+                    }}
+                  >
+                    CLEAR ALL
+                  </Button>
+                  <Button
+                    variant="flat"
+                    color="primary"
+                    size="xsR"
+                    class="w-full"
+                    onClick={onGenerate}
+                  >
+                    GENERATE
+                  </Button>
+                </div>
+              )}
           </div>
         </div>
 
         {/* CANVAS */}
         <div
-          class={`w-full mobileLg:w-2/3 min-[1080px]:w-3/4 min-w-0
+          class={`w-full mobileLg:w-[60%] min-[1080px]:w-[70%] min-w-0
             h-[340px] min-[480px]:h-[400px] mobileMd:h-[480px]
             mobileLg:h-[480px] min-[1080px]:h-[560px]
             desktop:h-[640px]

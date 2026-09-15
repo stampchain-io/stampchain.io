@@ -3,8 +3,8 @@ import { container2Hover } from "$layout";
 
 /* ===== BASE STYLES ===== */
 // Global sizes
-const inputFieldHeight = "h-10";
-const inputFieldWidth = "!w-10";
+const inputFieldHeight = "h-10 tablet:h-9";
+const inputFieldWidth = "!w-10 tablet:!w-9";
 
 export const inputField = `
   ${inputFieldHeight} px-5 w-full bg-transparent
@@ -22,7 +22,7 @@ export const inputFieldSquare = `
 `;
 
 export const inputTextarea = `
-  px-5 pt-3 w-full h-[100px] min-h-[100px] resize-none bg-transparent
+  px-5 pt-3 w-full h-[90px] min-h-[90px] resize-none bg-transparent
   ${container2Hover}
   focus:outline-none focus-visible:outline-none focus:bg-color-neutral-1000
   font-normal text-xs text-color-neutral-200
