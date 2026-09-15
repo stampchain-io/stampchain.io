@@ -18,6 +18,7 @@ import {
   container3,
   containerPill,
   shadowGlowPurple,
+  transitionColors,
 } from "$layout";
 import {
   addStampLayer,
@@ -382,6 +383,16 @@ export function StampRecursiveContent(
   const primary = getLayer(selId);
 
   useEffect(() => {
+    if (primary?.type !== "text") return;
+    setExpandedSections((prev) => ({
+      ...prev,
+      text: true,
+      background: false,
+      assets: false,
+    }));
+  }, [selId]);
+
+  useEffect(() => {
     const recommended = fees?.recommendedFee;
     if (recommended != null && recommended >= 0.1) {
       setFee(recommended);
@@ -411,7 +422,7 @@ export function StampRecursiveContent(
       if (s.creator) {
         const others = (await fetchStampsByCreator(s.creator, 20))
           .filter((o) => o.creator === s.creator && o.stamp !== s.stamp)
-          .slice(0, 8);
+          .slice(0, 14);
         setCreatorMore(others);
       } else {
         setCreatorMore([]);
@@ -890,9 +901,8 @@ export function StampRecursiveContent(
       <CreateStampRecursiveHeader />
       <div class="flex flex-col-reverse mobileLg:flex-row w-full gap-5 pt-5">
         <div
-          class={`w-full mobileLg:w-[40%] min-[1080px]:w-[30%]
-            h-[800px] mobileLg:h-[480px] min-[1080px]:h-[560px]
-            desktop:h-[640px] flex flex-col overflow-hidden p-5
+          class={`w-full mobileLg:w-[320px] mobileLg:shrink-0
+            h-[800px] mobileLg:h-[640px] min-[1080px]:h-[690px] flex flex-col overflow-hidden p-5
             ${container2}`}
         >
           <div
@@ -1065,26 +1075,40 @@ export function StampRecursiveContent(
                         MORE BY {fetched.creator_name ||
                           `${fetched.creator.slice(0, 6)}…`}
                       </p>
-                      <div class="flex flex-wrap gap-1.5">
-                        {creatorMore.map((s) => (
+                      <div class="grid grid-cols-5 min-[420px]:grid-cols-6
+                      mobileMd:grid-cols-7 mobileLg:grid-cols-5 gap-3">
+                        {creatorMore.map((s, i) => (
                           <button
                             type="button"
                             key={s.tx_hash}
-                            class={`${container3} w-11 overflow-hidden`}
+                            class={`${container2Hover} ${shadowGlowPurple} !rounded-xl aspect-square overflow-hidden p-0
+                            ${
+                              i >= 12
+                                ? "hidden mobileMd:block mobileLg:hidden"
+                                : i >= 10
+                                ? "hidden min-[420px]:block mobileLg:hidden"
+                                : ""
+                            }`}
                             onClick={() => {
                               setQuery(String(s.stamp));
                               getPreview(String(s.stamp));
                             }}
                           >
-                            <img
-                              src={s.stamp_url}
-                              alt={`#${s.stamp}`}
-                              class="w-full h-8 object-cover"
-                            />
-                            <div class="text-[0.5rem] text-center font-mono
-                    text-color-neutral-500">
-                              #{s.stamp}
-                            </div>
+                            {s.stamp_mimetype === "text/html"
+                              ? (
+                                <iframe
+                                  src={s.stamp_url}
+                                  class="w-full h-full pointer-events-none"
+                                  sandbox="allow-scripts allow-same-origin"
+                                />
+                              )
+                              : (
+                                <img
+                                  src={s.stamp_url}
+                                  alt={`#${s.stamp}`}
+                                  class="w-full h-full object-cover"
+                                />
+                              )}
                           </button>
                         ))}
                       </div>
@@ -1137,28 +1161,105 @@ export function StampRecursiveContent(
               toggle={() => toggleSection("text")}
             >
               <SectionBody>
-                <Button
-                  variant="outline"
-                  color="primary"
-                  size="smR"
-                  class="w-full"
-                  disabled={mode !== "edit"}
-                  onClick={() => {
-                    addTextLayer();
-                    showToast(
-                      "Text added to canvas — double-click to edit.",
-                      "info",
-                    );
-                  }}
-                >
-                  + ADD TEXT
-                </Button>
+                <div class="flex flex-col gap-3">
+                  {primary?.type === "text" && (
+                    <>
+                      <select
+                        class={inputField}
+                        value={primary.font}
+                        onChange={(e) =>
+                          patchLayer(primary.id, {
+                            font: (e.target as HTMLSelectElement).value,
+                          })}
+                      >
+                        {RECURSIVE_STAMP_FONTS.map((f) => (
+                          <option key={f} value={f}>{f}</option>
+                        ))}
+                      </select>
+                      <label class="flex flex-col gap-0.5">
+                        <span class={labelXs}>SIZE (%H)</span>
+                        <input
+                          type="number"
+                          class={inputField}
+                          value={primary.fontSize}
+                          step="0.5"
+                          onInput={(e) =>
+                            patchLayer(primary.id, {
+                              fontSize: Math.max(
+                                0.5,
+                                parseFloat(
+                                  (e.target as HTMLInputElement).value,
+                                ) ||
+                                  5,
+                              ),
+                            })}
+                        />
+                      </label>
+                      <ColorPicker
+                        value={primary.color ?? "#ffffff"}
+                        onChange={(hex) =>
+                          patchLayer(primary.id, { color: hex })}
+                        ariaLabel="Text color"
+                      />
+                      <div class="flex gap-1">
+                        <Button
+                          variant={primary.bold ? "flat" : "outline"}
+                          color="neutral"
+                          size="xxsR"
+                          onClick={() =>
+                            patchLayer(primary.id, { bold: !primary.bold })}
+                        >
+                          B
+                        </Button>
+                        <Button
+                          variant={primary.italic ? "flat" : "outline"}
+                          color="neutral"
+                          size="xxsR"
+                          onClick={() =>
+                            patchLayer(primary.id, {
+                              italic: !primary.italic,
+                            })}
+                        >
+                          I
+                        </Button>
+                        {(["left", "center", "right"] as const).map((a) => (
+                          <Button
+                            key={a}
+                            variant={primary.align === a ? "flat" : "outline"}
+                            color="neutral"
+                            size="xxsR"
+                            onClick={() =>
+                              patchLayer(primary.id, { align: a })}
+                          >
+                            {a[0]?.toUpperCase()}
+                          </Button>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                  <Button
+                    variant="outline"
+                    color="primary"
+                    size="smR"
+                    class="w-full"
+                    disabled={mode !== "edit"}
+                    onClick={() => {
+                      addTextLayer();
+                      showToast(
+                        "Text added to canvas — double-click to edit.",
+                        "info",
+                      );
+                    }}
+                  >
+                    + ADD TEXT
+                  </Button>
+                </div>
               </SectionBody>
             </CollapsibleSection>
 
             {layers.length > 0 && (
               <CollapsibleSection
-                title={`LAYERS (${layers.length})`}
+                title={`LAYERS - ${layers.length}`}
                 variant="collapsibleTitle"
                 expanded={expandedSections.layers}
                 toggle={() => toggleSection("layers")}
@@ -1169,7 +1270,13 @@ export function StampRecursiveContent(
                       <div
                         key={l.id}
                         class={`flex items-center gap-1.5 ${container3} p-1
-                  ${l.id === selId ? "border-color-primary-400" : ""}
+                  hover:border-color-hover ${transitionColors}
+                  hover:shadow-[0px_0px_16px_color-mix(in_srgb,var(--color-primary-500)_75%,transparent)]
+                  ${
+                          l.id === selId
+                            ? "border-color-primary-400 cursor-default"
+                            : "cursor-pointer"
+                        }
                   ${!l.vis ? "opacity-50" : ""}`}
                         onClick={(e) =>
                           selectLayer(l.id, (e as MouseEvent).shiftKey)}
@@ -1210,7 +1317,7 @@ export function StampRecursiveContent(
                           name={l.locked ? "locked" : "unlocked"}
                           weight="normal"
                           size="xxxs"
-                          color="neutral400"
+                          color={l.locked ? "primary400" : "neutral400"}
                           ariaLabel="Lock layer"
                           onClick={(e) => {
                             e.preventDefault();
@@ -1296,7 +1403,7 @@ export function StampRecursiveContent(
                   toggle={() => toggleSection("properties")}
                 >
                   <SectionBody>
-                    <div class="grid grid-cols-2 gap-2">
+                    <div class="grid grid-cols-2 gap-3">
                       {([
                         ["X (%)", "x"],
                         ["Y (%)", "y"],
@@ -1335,7 +1442,7 @@ export function StampRecursiveContent(
                         onChange={(v) => patchLayer(primary.id, { op: v })}
                       />
                     </label>
-                    <div class="flex justify-between gap-2 mt-2">
+                    <div class="flex justify-between gap-3 mt-2">
                       <Button
                         variant={primary.flipH ? "flat" : "outline"}
                         color="neutral"
@@ -1362,81 +1469,6 @@ export function StampRecursiveContent(
                         CENTER
                       </Button>
                     </div>
-                    {primary.type === "text" && (
-                      <div class="flex flex-col gap-2 mt-3">
-                        <select
-                          class={inputField}
-                          value={primary.font}
-                          onChange={(e) =>
-                            patchLayer(primary.id, {
-                              font: (e.target as HTMLSelectElement).value,
-                            })}
-                        >
-                          {RECURSIVE_STAMP_FONTS.map((f) => (
-                            <option key={f} value={f}>{f}</option>
-                          ))}
-                        </select>
-                        <label class="flex flex-col gap-0.5">
-                          <span class={labelXs}>SIZE (%H)</span>
-                          <input
-                            type="number"
-                            class={inputField}
-                            value={primary.fontSize}
-                            step="0.5"
-                            onInput={(e) =>
-                              patchLayer(primary.id, {
-                                fontSize: Math.max(
-                                  0.5,
-                                  parseFloat(
-                                    (e.target as HTMLInputElement).value,
-                                  ) ||
-                                    5,
-                                ),
-                              })}
-                          />
-                        </label>
-                        <ColorPicker
-                          value={primary.color ?? "#ffffff"}
-                          onChange={(hex) =>
-                            patchLayer(primary.id, { color: hex })}
-                          ariaLabel="Text color"
-                        />
-                        <div class="flex gap-1">
-                          <Button
-                            variant={primary.bold ? "flat" : "outline"}
-                            color="neutral"
-                            size="xxsR"
-                            onClick={() =>
-                              patchLayer(primary.id, { bold: !primary.bold })}
-                          >
-                            B
-                          </Button>
-                          <Button
-                            variant={primary.italic ? "flat" : "outline"}
-                            color="neutral"
-                            size="xxsR"
-                            onClick={() =>
-                              patchLayer(primary.id, {
-                                italic: !primary.italic,
-                              })}
-                          >
-                            I
-                          </Button>
-                          {(["left", "center", "right"] as const).map((a) => (
-                            <Button
-                              key={a}
-                              variant={primary.align === a ? "flat" : "outline"}
-                              color="neutral"
-                              size="xxsR"
-                              onClick={() =>
-                                patchLayer(primary.id, { align: a })}
-                            >
-                              {a[0]?.toUpperCase()}
-                            </Button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
                   </SectionBody>
                 </CollapsibleSection>
                 <CollapsibleSection
@@ -1446,39 +1478,41 @@ export function StampRecursiveContent(
                   toggle={() => toggleSection("filters")}
                 >
                   <SectionBody>
-                    <div class="flex flex-col gap-2">
-                      {([
-                        ["brightness", "BRIGHTNESS", 0, 200, "%"],
-                        ["contrast", "CONTRAST", 0, 200, "%"],
-                        ["saturate", "SATURATE", 0, 200, "%"],
-                        ["hue", "HUE ROTATE", 0, 360, "°"],
-                        ["grayscale", "GRAYSCALE", 0, 100, "%"],
-                      ] as const).map(([key, label, min, max, unit]) => (
-                        <label key={key} class="flex flex-col gap-0.5">
-                          <span
-                            class={`${labelXs} flex w-full justify-between`}
-                          >
-                            <span>{label}</span>
-                            <span class="text-color-neutral-400">
-                              {primary.filters[key]}
-                              {unit}
+                    <div class="flex flex-col gap-5">
+                      <div class="flex flex-col gap-3">
+                        {([
+                          ["brightness", "BRIGHTNESS", 0, 200, "%"],
+                          ["contrast", "CONTRAST", 0, 200, "%"],
+                          ["saturate", "SATURATE", 0, 200, "%"],
+                          ["hue", "HUE ROTATE", 0, 360, "°"],
+                          ["grayscale", "GRAYSCALE", 0, 100, "%"],
+                        ] as const).map(([key, label, min, max, unit]) => (
+                          <label key={key} class="flex flex-col gap-0.5">
+                            <span
+                              class={`${labelXs} flex w-full justify-between`}
+                            >
+                              <span>{label}</span>
+                              <span class="text-color-neutral-400">
+                                {primary.filters[key]}
+                                {unit}
+                              </span>
                             </span>
-                          </span>
-                          <RangeSlider
-                            value={primary.filters[key]}
-                            min={min}
-                            max={max}
-                            onChange={(v) => {
-                              patchLayer(primary.id, {
-                                filters: {
-                                  ...primary.filters,
-                                  [key]: Math.round(v),
-                                },
-                              });
-                            }}
-                          />
-                        </label>
-                      ))}
+                            <RangeSlider
+                              value={primary.filters[key]}
+                              min={min}
+                              max={max}
+                              onChange={(v) => {
+                                patchLayer(primary.id, {
+                                  filters: {
+                                    ...primary.filters,
+                                    [key]: Math.round(v),
+                                  },
+                                });
+                              }}
+                            />
+                          </label>
+                        ))}
+                      </div>
                       <Button
                         variant="outline"
                         color="neutral"
@@ -1630,7 +1664,7 @@ export function StampRecursiveContent(
                       clearAllLayers();
                     }}
                   >
-                    CLEAR ALL
+                    CLEAR
                   </Button>
                   <Button
                     variant="flat"
@@ -1648,10 +1682,9 @@ export function StampRecursiveContent(
 
         {/* CANVAS */}
         <div
-          class={`w-full mobileLg:w-[60%] min-[1080px]:w-[70%] min-w-0
+          class={`w-full mobileLg:flex-1 min-w-0
             h-[340px] min-[480px]:h-[400px] mobileMd:h-[480px]
-            mobileLg:h-[480px] min-[1080px]:h-[560px]
-            desktop:h-[640px]
+            mobileLg:h-[640px] min-[1080px]:h-[690px]
             flex flex-col overflow-hidden ${container2}`}
         >
           <div
