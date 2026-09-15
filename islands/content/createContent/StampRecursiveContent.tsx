@@ -15,6 +15,7 @@ import { openModal } from "$islands/modal/states.ts";
 import {
   container2,
   container2Hover,
+  container2Icon,
   container3,
   containerPill,
   shadowGlowPurple,
@@ -116,6 +117,30 @@ function SectionBody(
   { children }: { children: ComponentChildren },
 ): JSX.Element {
   return <div class="pt-2 tablet:pt-1">{children}</div>;
+}
+
+function PlaceholderIcon(props: {
+  label: string;
+  name?: string;
+  onClick?: (e: MouseEvent) => void;
+  active?: boolean;
+  disabled?: boolean;
+}) {
+  return (
+    <Icon
+      type="iconButton"
+      name={props.name ?? "website"}
+      weight="normal"
+      size="xxsR"
+      color={props.active ? "primary400" : "neutral400"}
+      ariaLabel={props.label}
+      className={props.disabled ? "opacity-80 pointer-events-none" : ""}
+      onClick={props.disabled ? undefined : (e) => {
+        e.preventDefault();
+        props.onClick?.(e);
+      }}
+    />
+  );
 }
 
 const CANVAS_CSS = `
@@ -1195,45 +1220,49 @@ export function StampRecursiveContent(
                             })}
                         />
                       </label>
-                      <ColorPicker
-                        value={primary.color ?? "#ffffff"}
-                        onChange={(hex) =>
-                          patchLayer(primary.id, { color: hex })}
-                        ariaLabel="Text color"
-                      />
-                      <div class="flex gap-1">
-                        <Button
-                          variant={primary.bold ? "flat" : "outline"}
-                          color="neutral"
-                          size="xxsR"
-                          onClick={() =>
-                            patchLayer(primary.id, { bold: !primary.bold })}
-                        >
-                          B
-                        </Button>
-                        <Button
-                          variant={primary.italic ? "flat" : "outline"}
-                          color="neutral"
-                          size="xxsR"
-                          onClick={() =>
-                            patchLayer(primary.id, {
-                              italic: !primary.italic,
-                            })}
-                        >
-                          I
-                        </Button>
-                        {(["left", "center", "right"] as const).map((a) => (
-                          <Button
-                            key={a}
-                            variant={primary.align === a ? "flat" : "outline"}
-                            color="neutral"
-                            size="xxsR"
+                      <div class="flex gap-3 items-center">
+                        <ColorPicker
+                          value={primary.color ?? "#ffffff"}
+                          onChange={(hex) =>
+                            patchLayer(primary.id, { color: hex })}
+                          ariaLabel="Text color"
+                        />
+                        <div class={container2Icon}>
+                          <PlaceholderIcon
+                            name="bold"
+                            label="Bold"
+                            active={!!primary.bold}
                             onClick={() =>
-                              patchLayer(primary.id, { align: a })}
-                          >
-                            {a[0]?.toUpperCase()}
-                          </Button>
-                        ))}
+                              patchLayer(primary.id, { bold: !primary.bold })}
+                          />
+                          <PlaceholderIcon
+                            name="italic"
+                            label="Italic"
+                            active={!!primary.italic}
+                            onClick={() =>
+                              patchLayer(primary.id, {
+                                italic: !primary.italic,
+                              })}
+                          />
+                        </div>
+                        <div class={container2Icon}>
+                          {(
+                            [
+                              ["left", "justifyLeft", "Align left"],
+                              ["center", "justifyCenter", "Align center"],
+                              ["right", "justifyRight", "Align right"],
+                            ] as const
+                          ).map(([a, name, label]) => (
+                            <PlaceholderIcon
+                              key={a}
+                              name={name}
+                              label={label}
+                              active={primary.align === a}
+                              onClick={() =>
+                                patchLayer(primary.id, { align: a })}
+                            />
+                          ))}
+                        </div>
                       </div>
                     </>
                   )}
@@ -1265,7 +1294,7 @@ export function StampRecursiveContent(
                 toggle={() => toggleSection("layers")}
               >
                 <SectionBody>
-                  <div class="flex flex-col gap-1">
+                  <div class="flex flex-col gap-3">
                     {[...layers].reverse().map((l) => (
                       <div
                         key={l.id}
