@@ -119,6 +119,30 @@ function SectionBody(
   return <div class="pt-2 tablet:pt-1">{children}</div>;
 }
 
+type TextAlign = "left" | "center" | "right";
+
+type TextStyleDraft = {
+  font: string;
+  fontSize: number;
+  color: string;
+  bold: boolean;
+  italic: boolean;
+  align: TextAlign;
+};
+
+const DEFAULT_TEXT_STYLE: TextStyleDraft = {
+  font: "Arial",
+  fontSize: 5,
+  color: "#ffffff",
+  bold: false,
+  italic: false,
+  align: "center",
+};
+
+function clampFontSize(n: number): number {
+  return Math.min(100, Math.max(0.5, n));
+}
+
 function PlaceholderIcon(props: {
   label: string;
   name?: string;
@@ -405,16 +429,41 @@ export function StampRecursiveContent(
   const [ctxOpen, setCtxOpen] = useState<
     { x: number; y: number } | null
   >(null);
+  const [textStyle, setTextStyle] = useState<TextStyleDraft>(
+    DEFAULT_TEXT_STYLE,
+  );
+  const [fontSizeInput, setFontSizeInput] = useState(
+    String(DEFAULT_TEXT_STYLE.fontSize),
+  );
   const primary = getLayer(selId);
 
+  const patchTextStyle = (partial: Partial<TextStyleDraft>) => {
+    setTextStyle((prev) => ({ ...prev, ...partial }));
+    if (primary?.type === "text") {
+      patchLayer(primary.id, partial);
+    }
+  };
+
   useEffect(() => {
-    if (primary?.type !== "text") return;
+    const layer = getLayer(selId);
+    if (layer?.type !== "text") return;
     setExpandedSections((prev) => ({
       ...prev,
       text: true,
       background: false,
       assets: false,
     }));
+    setTextStyle({
+      font: layer.font ?? DEFAULT_TEXT_STYLE.font,
+      fontSize: layer.fontSize ?? DEFAULT_TEXT_STYLE.fontSize,
+      color: layer.color ?? DEFAULT_TEXT_STYLE.color,
+      bold: !!layer.bold,
+      italic: !!layer.italic,
+      align: layer.align ?? DEFAULT_TEXT_STYLE.align,
+    });
+    setFontSizeInput(String(
+      layer.fontSize ?? DEFAULT_TEXT_STYLE.fontSize,
+    ));
   }, [selId]);
 
   useEffect(() => {
@@ -997,8 +1046,8 @@ export function StampRecursiveContent(
                     </div>
                   </div>
                   <ButtonProcessing
-                    variant="outline"
-                    color="primary"
+                    variant="flat"
+                    color="neutral"
                     size="smR"
                     class="w-full"
                     isSubmitting={fetching}
@@ -1096,10 +1145,10 @@ export function StampRecursiveContent(
                   <>
                     <hr class="my-3" />
                     <div class="flex flex-col">
-                      <p class={labelXs}>
+                      <h5 class={labelXs}>
                         MORE BY {fetched.creator_name ||
                           `${fetched.creator.slice(0, 6)}…`}
-                      </p>
+                      </h5>
                       <div class="grid grid-cols-5 min-[420px]:grid-cols-6
                       mobileMd:grid-cols-7 mobileLg:grid-cols-5 gap-3">
                         {creatorMore.map((s, i) => (
@@ -1144,7 +1193,7 @@ export function StampRecursiveContent(
                   <>
                     <hr class="my-3" />
                     <div class="flex flex-col">
-                      <p class={labelXs}>RECENT</p>
+                      <h5 class={labelXs}>RECENT</h5>
                       <div class="grid grid-cols-5 min-[420px]:grid-cols-6
                       mobileMd:grid-cols-7 mobileLg:grid-cols-5 gap-3">
                         {recent.map((r, i) => (
@@ -1186,14 +1235,14 @@ export function StampRecursiveContent(
               toggle={() => toggleSection("text")}
             >
               <SectionBody>
-                <div class="flex flex-col gap-3">
-                  {primary?.type === "text" && (
-                    <>
+                <div class="flex flex-col gap-5">
+                  <div class="flex flex-col gap-3">
+                    <div class="flex gap-3 items-end">
                       <select
-                        class={inputField}
-                        value={primary.font}
+                        class={`${inputField} flex-1 min-w-0`}
+                        value={textStyle.font}
                         onChange={(e) =>
-                          patchLayer(primary.id, {
+                          patchTextStyle({
                             font: (e.target as HTMLSelectElement).value,
                           })}
                       >
@@ -1201,79 +1250,100 @@ export function StampRecursiveContent(
                           <option key={f} value={f}>{f}</option>
                         ))}
                       </select>
-                      <label class="flex flex-col gap-0.5">
-                        <span class={labelXs}>SIZE (%H)</span>
+                      <label class="flex flex-col w-[70px] shrink-0">
+                        <span class={labelXs}>SIZE - %H</span>
                         <input
                           type="number"
                           class={inputField}
-                          value={primary.fontSize}
+                          value={fontSizeInput}
                           step="0.5"
-                          onInput={(e) =>
-                            patchLayer(primary.id, {
-                              fontSize: Math.max(
-                                0.5,
-                                parseFloat(
-                                  (e.target as HTMLInputElement).value,
-                                ) ||
-                                  5,
-                              ),
-                            })}
+                          min={0.5}
+                          max={100}
+                          onInput={(e) => {
+                            const raw = (e.target as HTMLInputElement).value;
+                            if (raw.trim() === "") {
+                              setFontSizeInput(raw);
+                              return;
+                            }
+                            const n = parseFloat(raw);
+                            if (!Number.isFinite(n)) {
+                              setFontSizeInput(raw);
+                              return;
+                            }
+                            if (n > 100) {
+                              setFontSizeInput("100");
+                              patchTextStyle({ fontSize: 100 });
+                              return;
+                            }
+                            setFontSizeInput(raw);
+                            patchTextStyle({
+                              fontSize: clampFontSize(n),
+                            });
+                          }}
+                          onBlur={() => {
+                            const n = parseFloat(fontSizeInput);
+                            const next = Number.isFinite(n)
+                              ? clampFontSize(n)
+                              : textStyle.fontSize;
+                            setFontSizeInput(String(next));
+                            patchTextStyle({ fontSize: next });
+                          }}
                         />
                       </label>
-                      <div class="flex gap-3 items-center">
+                    </div>
+                    <div class="flex justify-between">
+                      <div class={container2Icon}>
                         <ColorPicker
-                          value={primary.color ?? "#ffffff"}
-                          onChange={(hex) =>
-                            patchLayer(primary.id, { color: hex })}
+                          value={textStyle.color}
+                          onChange={(hex) => patchTextStyle({ color: hex })}
                           ariaLabel="Text color"
                         />
-                        <div class={container2Icon}>
-                          <PlaceholderIcon
-                            name="bold"
-                            label="Bold"
-                            active={!!primary.bold}
-                            onClick={() =>
-                              patchLayer(primary.id, { bold: !primary.bold })}
-                          />
-                          <PlaceholderIcon
-                            name="italic"
-                            label="Italic"
-                            active={!!primary.italic}
-                            onClick={() =>
-                              patchLayer(primary.id, {
-                                italic: !primary.italic,
-                              })}
-                          />
-                        </div>
-                        <div class={container2Icon}>
-                          {(
-                            [
-                              ["left", "justifyLeft", "Align left"],
-                              ["center", "justifyCenter", "Align center"],
-                              ["right", "justifyRight", "Align right"],
-                            ] as const
-                          ).map(([a, name, label]) => (
-                            <PlaceholderIcon
-                              key={a}
-                              name={name}
-                              label={label}
-                              active={primary.align === a}
-                              onClick={() =>
-                                patchLayer(primary.id, { align: a })}
-                            />
-                          ))}
-                        </div>
                       </div>
-                    </>
-                  )}
+                      <div class={container2Icon}>
+                        <PlaceholderIcon
+                          name="bold"
+                          label="Bold"
+                          active={textStyle.bold}
+                          onClick={() =>
+                            patchTextStyle({ bold: !textStyle.bold })}
+                        />
+                        <PlaceholderIcon
+                          name="italic"
+                          label="Italic"
+                          active={textStyle.italic}
+                          onClick={() =>
+                            patchTextStyle({
+                              italic: !textStyle.italic,
+                            })}
+                        />
+                      </div>
+                      <div class={container2Icon}>
+                        {(
+                          [
+                            ["left", "justifyLeft", "Align left"],
+                            ["center", "justifyCenter", "Align center"],
+                            ["right", "justifyRight", "Align right"],
+                          ] as const
+                        ).map(([a, name, label]) => (
+                          <PlaceholderIcon
+                            key={a}
+                            name={name}
+                            label={label}
+                            active={textStyle.align === a}
+                            onClick={() => patchTextStyle({ align: a })}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                   <Button
-                    variant="outline"
-                    color="primary"
+                    variant="flat"
+                    color="neutral"
                     size="smR"
                     class="w-full"
                     disabled={mode !== "edit"}
                     onClick={() => {
-                      addTextLayer();
+                      addTextLayer(textStyle);
                       showToast(
                         "Text added to canvas — double-click to edit.",
                         "info",
@@ -1320,7 +1390,7 @@ export function StampRecursiveContent(
                           if (src) reorderLayers(src, l.id);
                         }}
                       >
-                        <div class="w-7 h-7 overflow-hidden shrink-0 flex
+                        <div class="w-6 h-6 overflow-hidden shrink-0 flex
                   items-center justify-center bg-color-neutral-900">
                           {l.type === "text"
                             ? (
