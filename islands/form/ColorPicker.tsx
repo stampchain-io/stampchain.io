@@ -107,7 +107,7 @@ function svBackground(h: number): string {
 }
 
 const fieldClass = `h-8 rounded-2xl bg-[#0a0a0a] border border-color-neutral-700
-  text-color-neutral-200 font-mono text-xs px-2
+  text-color-neutral-200 font-mono text-xs px-3
   focus:outline-none focus:border-color-primary-400`;
 
 export function ColorPicker({
@@ -278,20 +278,18 @@ export function ColorPicker({
       }}
       class={showValue
         ? `flex items-center w-full ${container3} !rounded-full
-            px-2 py-1.5 ${extraClass}`
-        : `w-7 h-7 rounded-full shrink-0 border border-color-neutral-700
-            cursor-pointer ${extraClass}`}
+            py-1 pl-1 ${extraClass}`
+        : `w-6 h-6 rounded-full shrink-0 cursor-pointer ${extraClass}`}
       style={showValue ? undefined : { backgroundColor: value }}
     >
       {showValue
         ? (
           <>
             <span
-              class="w-7 h-7 rounded-full shrink-0 border
-                border-color-neutral-700"
+              class="w-6.5 h-6.5 rounded-full shrink-0"
               style={{ backgroundColor: value }}
             />
-            <span class={`${textXs} font-mono ml-auto pr-1`}>
+            <span class={`${textXs} font-mono ml-auto pr-3`}>
               {value}
             </span>
           </>
@@ -336,7 +334,7 @@ export function ColorPicker({
                 type="button"
                 aria-label="Eyedropper"
                 onClick={pickEyeDropper}
-                class="w-7 h-7 shrink-0 flex items-center justify-center
+                class="w-6 h-6 shrink-0 flex items-center justify-center
                   rounded-full hover:bg-color-neutral-800"
               >
                 <Icon
@@ -350,7 +348,7 @@ export function ColorPicker({
               </button>
             )}
             <span
-              class="w-7 h-7 rounded-full shrink-0 border
+              class="w-6 h-6 rounded-full shrink-0 border
                 border-color-neutral-600"
               style={{ backgroundColor: hsvToHex(hsv) }}
             />

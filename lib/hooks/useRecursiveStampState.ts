@@ -170,18 +170,23 @@ export function addStampLayer(s: StampRow): RecursiveStampLayer {
   return layer;
 }
 
-export function addTextLayer(): RecursiveStampLayer {
+export function addTextLayer(
+  style?: Pick<
+    RecursiveStampLayer,
+    "font" | "fontSize" | "color" | "bold" | "italic" | "align"
+  >,
+): RecursiveStampLayer {
   pushHistory();
   const layer: RecursiveStampLayer = {
     id: nextId(),
     type: "text",
     text: "Text",
-    font: "Arial",
-    fontSize: 5,
-    color: "#ffffff",
-    bold: false,
-    italic: false,
-    align: "center",
+    font: style?.font ?? "Arial",
+    fontSize: style?.fontSize ?? 5,
+    color: style?.color ?? "#ffffff",
+    bold: style?.bold ?? false,
+    italic: style?.italic ?? false,
+    align: style?.align ?? "center",
     name: "Text",
     x: 25,
     y: 40,
@@ -356,9 +361,7 @@ export function enterEdit(): void {
     ? previewSelId
     : (validIds[validIds.length - 1] ?? null);
   rsbSelId.value = primaryId;
-  rsbSelIds.value = validIds.length
-    ? validIds
-    : (primaryId ? [primaryId] : []);
+  rsbSelIds.value = validIds.length ? validIds : (primaryId ? [primaryId] : []);
 }
 
 export function alignSelected(mode: string): void {
