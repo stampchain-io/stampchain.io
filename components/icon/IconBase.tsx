@@ -182,7 +182,6 @@ export function Icon(props: IconVariants) {
       externallink: "imageOut",
       loading: "refresh",
       refresh: "refresh",
-      eye: "eye",
     };
 
     const iconName = iconNameMap[name as keyof typeof iconNameMap];

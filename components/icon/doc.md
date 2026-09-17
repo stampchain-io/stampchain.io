@@ -355,7 +355,7 @@ The system includes 80+ icons mapped through `iconNameMap`:
 - `bitcoin`, `bitcoins`, `bitcoinTx`, `bitcoinBlock`, `listings`, `version`, `send`, `receive`, `history`, `wallet`, `donate`, `explorer`
 
 **Tools & Misc**
-- `stamp`, `uploadImage`, `downloadImage`, `loading`, `refresh`, `eye`, `externallink`
+- `stamp`, `uploadImage`, `downloadImage`, `loading`, `refresh`, `externallink`
 
 **Notifications**
 - `info`, `error`, `success`

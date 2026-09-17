@@ -404,14 +404,14 @@ export function SRC20Card(
       <>
         {/* ===== BACKGROUND IMAGE with dark overlay gradient (top -> bottom) ===== */}
         {imageUrl && (
-          <div class="absolute inset-0 z-0 overflow-hidden rounded-xl">
+          <div class="absolute inset-0 z-0 overflow-hidden rounded-2xl">
             <img
               src={imageUrl}
               alt=""
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover rounded-2xl"
               onError={() => setImgError(true)}
             />
-            <div class="absolute inset-0 bg-gradient-to-b from-color-neutral-950/95 via-color-neutral-900/70 to-color-neutral-1000/90" />
+            <div class="absolute inset-0 bg-gradient-to-b from-color-neutral-950/95 via-color-neutral-900/70 to-color-neutral-1000/90 rounded-2xl" />
           </div>
         )}
 
@@ -495,14 +495,14 @@ export function SRC20Card(
     <>
       {/* ===== BACKGROUND IMAGE with dark overlay gradient (top -> bottom) ===== */}
       {imageUrl && (
-        <div class="absolute inset-0 z-0 overflow-hidden rounded-xl">
+        <div class="absolute inset-0 z-0 overflow-hidden rounded-2xl">
           <img
             src={imageUrl}
             alt=""
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover rounded-2xl"
             onError={() => setImgError(true)}
           />
-          <div class="absolute inset-0 bg-gradient-to-b from-color-neutral-950/95 via-color-neutral-900/70 to-color-neutral-1000/90" />
+          <div class="absolute inset-0 bg-gradient-to-b from-color-neutral-950/95 via-color-neutral-900/70 to-color-neutral-1000/90 rounded-2xl" />
         </div>
       )}
 

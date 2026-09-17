@@ -208,7 +208,7 @@ export default function SalesActivityFeed({
                     }}
                   >
                     <Icon
-                      name="eye"
+                      name="view"
                       size="xs"
                       type="icon"
                       weight="normal"
