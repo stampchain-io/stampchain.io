@@ -1,5 +1,5 @@
 /* ===== FORM STYLES MODULE ===== */
-import { container2Hover } from "$layout";
+import { container2Hover, shadowGlowPurpleSm } from "$layout";
 
 /* ===== BASE STYLES ===== */
 // Global sizes
@@ -7,24 +7,27 @@ const inputFieldHeight = "h-10 tablet:h-9";
 const inputFieldWidth = "!w-10 tablet:!w-9";
 
 export const inputField = `
-  ${inputFieldHeight} px-5 w-full bg-transparent
-  ${container2Hover}
-  focus:outline-none focus-visible:outline-none focus:bg-color-neutral-1000
+  ${inputFieldHeight} px-3 w-full bg-transparent
+  ${container2Hover} ${shadowGlowPurpleSm}
+  focus:outline-none focus-visible:outline-none
+  focus:bg-color-neutral-1000 focus:border-color-hover
   font-normal text-xs text-color-neutral-200
   placeholder:font-light placeholder:text-color-neutral-500 placeholder:uppercase
 `;
 
 export const inputFieldSquare = `
-  ${inputFieldHeight} ${inputFieldWidth} bg-transparent
-  ${container2Hover}
-  focus:outline-none focus-visible:outline-none focus:bg-color-neutral-1000
-  font-normal text-xs text-color-neutral-200 text-center px-0.5
+  ${inputFieldHeight} ${inputFieldWidth} px-0.5 bg-transparent
+  ${container2Hover} ${shadowGlowPurpleSm}
+  focus:outline-none focus-visible:outline-none
+  focus:bg-color-neutral-1000 focus:border-color-hover
+  font-normal text-xs text-color-neutral-200 text-center
 `;
 
 export const inputTextarea = `
-  px-5 pt-3 w-full h-[90px] min-h-[90px] resize-none bg-transparent
-  ${container2Hover}
-  focus:outline-none focus-visible:outline-none focus:bg-color-neutral-1000
+  px-3 pt-2 w-full h-[90px] min-h-[90px] resize-none bg-transparent
+  ${container2Hover} ${shadowGlowPurpleSm}
+  focus:outline-none focus-visible:outline-none
+  focus:bg-color-neutral-1000 focus:border-color-hover
   font-normal text-xs text-color-neutral-200
   placeholder:font-light placeholder:text-color-neutral-500 placeholder:uppercase
 `;
