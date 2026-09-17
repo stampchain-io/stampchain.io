@@ -1,8 +1,13 @@
 /* ===== RECURSIVE STAMP CONTENT ===== */
-import { Button, ButtonProcessing } from "$button";
+import { Button } from "$button";
 import { walletContext } from "$client/wallet/wallet.ts";
 import { useFees } from "$fees";
-import { inputField, inputFieldSquare, messageError } from "$form";
+import {
+  inputField,
+  inputFieldSquare,
+  inputNumeric,
+  messageError,
+} from "$form";
 import { CreateStampRecursiveHeader } from "$header";
 import { Icon } from "$icon";
 import { RangeSlider } from "$islands/button/RangeSlider.tsx";
@@ -17,7 +22,6 @@ import {
   container2Hover,
   container2Icon,
   container3,
-  containerPill,
   shadowGlowPurple,
   transitionColors,
 } from "$layout";
@@ -70,11 +74,7 @@ import {
   fetchStampById,
   fetchStampsByCreator,
 } from "$lib/utils/api/stamps/fetchStamp.ts";
-import {
-  abbreviateAddress,
-  formatFileSize,
-  formatFileType,
-} from "$lib/utils/ui/formatting/formatUtils.ts";
+import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { showToast } from "$lib/utils/ui/notifications/toastSignal.ts";
 import {
   buildRecursiveStampHtml,
@@ -87,8 +87,6 @@ import {
 import { FeeCalculatorBase } from "$section";
 import {
   cardCreator,
-  cardFileSize,
-  cardFileType,
   cardStampNumber,
   label,
   labelXs,
@@ -101,7 +99,7 @@ import type {
   RecursiveStampLayer,
 } from "$types/ui.d.ts";
 import type { ComponentChildren, JSX } from "preact";
-import { useEffect, useRef, useState } from "preact/hooks";
+import { useEffect, useLayoutEffect, useRef, useState } from "preact/hooks";
 
 type RsbPanel =
   | "background"
@@ -141,6 +139,143 @@ const DEFAULT_TEXT_STYLE: TextStyleDraft = {
 
 function clampFontSize(n: number): number {
   return Math.min(100, Math.max(0.5, n));
+}
+
+/** Matches Tailwind `top-5` / `left-5` (1.25rem). */
+const PREVIEW_INSET = 20;
+
+function clampPreviewPos(
+  x: number,
+  y: number,
+  wrap: HTMLElement,
+  card: HTMLElement,
+): { x: number; y: number } {
+  const maxX = Math.max(0, wrap.clientWidth - card.offsetWidth);
+  const maxY = Math.max(0, wrap.clientHeight - card.offsetHeight);
+  return {
+    x: Math.min(maxX, Math.max(0, x)),
+    y: Math.min(maxY, Math.max(0, y)),
+  };
+}
+
+function AssetPreviewCard(
+  { stamp, previewSrc, more, onAdd, onHide, onPick }: {
+    stamp: StampRow;
+    previewSrc: string;
+    more: StampRow[];
+    onAdd: () => void;
+    onHide: () => void;
+    onPick: (id: string) => void;
+  },
+): JSX.Element {
+  const moreRow = more.slice(0, 6);
+  return (
+    <>
+      <div class="flex gap-5 items-start">
+        <div
+          class={`flex items-center justify-center shrink-0
+            w-[68px] h-[68px] overflow-hidden ${container3}`}
+        >
+          {stamp.stamp_mimetype === "text/html"
+            ? (
+              <iframe
+                src={stamp.stamp_url}
+                class="w-full h-full pointer-events-none rounded-xl"
+                sandbox="allow-scripts allow-same-origin"
+              />
+            )
+            : (
+              <img
+                src={previewSrc}
+                alt={`Stamp #${stamp.stamp}`}
+                class="w-full h-full object-contain rounded-xl
+                  pointer-events-none"
+                draggable={false}
+              />
+            )}
+        </div>
+        <div class="flex flex-col min-w-0 flex-1 gap-0.5">
+          <div class={cardStampNumber}>
+            {stamp.stamp != null && <span class="font-light">#</span>}
+            {stamp.stamp != null
+              ? stamp.stamp.toLocaleString("en-US")
+              : stamp.cpid}
+          </div>
+          {stamp.cpid && (
+            <div
+              class={`font-mono text-xs text-color-neutral-500
+                ${truncate}`}
+            >
+              {stamp.cpid}
+            </div>
+          )}
+          {(stamp.creator_name || stamp.creator) && (
+            <span class={`${cardCreator} !text-left`}>
+              {stamp.creator_name ||
+                abbreviateAddress(stamp.creator, 5)}
+            </span>
+          )}
+        </div>
+      </div>
+      {moreRow.length > 0 && (
+        <div class="grid grid-cols-6 gap-3 mt-3">
+          {moreRow.map((s) => (
+            <button
+              type="button"
+              key={s.tx_hash}
+              class={`${container3} hover:border-hover ${shadowGlowPurple}
+                !rounded-xl aspect-square overflow-hidden p-0`}
+              onClick={() => onPick(String(s.stamp))}
+            >
+              {s.stamp_mimetype === "text/html"
+                ? (
+                  <iframe
+                    src={s.stamp_url}
+                    class="w-full h-full pointer-events-none rounded-xl"
+                    sandbox="allow-scripts allow-same-origin"
+                  />
+                )
+                : (
+                  <img
+                    src={s.stamp_url}
+                    alt={`#${s.stamp}`}
+                    class="w-full h-full object-cover rounded-xl pixelated"
+                  />
+                )}
+            </button>
+          ))}
+        </div>
+      )}
+      <div class="flex items-center gap-1.5 mt-3">
+        <div
+          class={`${container2Icon}`}
+        >
+          <Icon
+            type="iconButton"
+            name="hide"
+            weight="normal"
+            size="xxsR"
+            color="neutral400"
+            ariaLabel="Hide preview"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onHide();
+            }}
+          />
+        </div>
+        <Button
+          variant="flat"
+          color="neutral"
+          size="xsR"
+          class="flex-1"
+          onClick={onAdd}
+        >
+          + ADD ASSET
+        </Button>
+      </div>
+    </>
+  );
 }
 
 function PlaceholderIcon(props: {
@@ -234,6 +369,9 @@ const CANVAS_CSS = `
 .rsb-rlabel{position:absolute;font-size:8px;color:#777;font-family:monospace}
 .rsb-zoom{position:absolute;bottom:12px;right:12px;z-index:8800;
   display:flex;align-items:center;gap:2px}
+.rsb-preview{position:absolute;z-index:8900;cursor:grab}
+.rsb-preview.dragging{cursor:grabbing}
+.rsb-wrap.preview .rsb-preview{display:none!important}
 .rsb-wrap.panning,.rsb-wrap.panning *{cursor:grabbing!important}
 .rsb-wrap.pan-ready{cursor:grab}
 .rsb-ctx{position:fixed;z-index:9600;display:none;min-width:170px}
@@ -377,15 +515,26 @@ export function StampRecursiveContent(
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLCanvasElement>(null);
+  const previewCardRef = useRef<HTMLDivElement>(null);
   const ixRef = useRef<IX | null>(null);
   const guideDrag = useRef<{ id: string } | null>(null);
   const panIX = useRef<
     { sx: number; sy: number; px: number; py: number } | null
   >(null);
+  const previewDrag = useRef<
+    { sx: number; sy: number; ox: number; oy: number } | null
+  >(null);
+  const previewPosRef = useRef({ x: PREVIEW_INSET, y: PREVIEW_INSET });
   const spaceHeld = useRef(false);
   const clipboard = useRef<RecursiveStampLayer[]>([]);
   const [query, setQuery] = useState("");
   const [fetched, setFetched] = useState<StampRow | null>(null);
+  const [previewVisible, setPreviewVisible] = useState(false);
+  const [previewPos, setPreviewPos] = useState({
+    x: PREVIEW_INSET,
+    y: PREVIEW_INSET,
+  });
+  const [previewDragging, setPreviewDragging] = useState(false);
   const [fetching, setFetching] = useState(false);
   const [status, setStatus] = useState("");
   const [creatorMore, setCreatorMore] = useState<StampRow[]>([]);
@@ -481,11 +630,13 @@ export function StampRecursiveContent(
     if (!id) return;
     setFetching(true);
     setFetched(null);
+    setPreviewVisible(false);
     setStatus("");
     try {
       const s = await fetchStampById(id);
       if (!s) throw new Error("Stamp not found");
       setFetched(s);
+      setPreviewVisible(true);
       const rec = { num: s.stamp ?? 0, hash: s.tx_hash };
       const next = [
         rec,
@@ -563,6 +714,43 @@ export function StampRecursiveContent(
     setRecent(lsGet<RecentItem[]>("rsb_recent", []));
   }, []);
 
+  const applyPreviewPos = (next: { x: number; y: number }) => {
+    if (
+      next.x === previewPosRef.current.x &&
+      next.y === previewPosRef.current.y
+    ) {
+      return;
+    }
+    previewPosRef.current = next;
+    setPreviewPos(next);
+  };
+
+  const snapPreviewIntoWrap = () => {
+    const wrap = wrapRef.current;
+    const card = previewCardRef.current;
+    if (!wrap || !card) return;
+    applyPreviewPos(
+      clampPreviewPos(
+        previewPosRef.current.x,
+        previewPosRef.current.y,
+        wrap,
+        card,
+      ),
+    );
+  };
+
+  useLayoutEffect(() => {
+    snapPreviewIntoWrap();
+  }, [fetched, mode, previewVisible]);
+
+  useEffect(() => {
+    const wrap = wrapRef.current;
+    if (!wrap) return;
+    const ro = new ResizeObserver(() => snapPreviewIntoWrap());
+    ro.observe(wrap);
+    return () => ro.disconnect();
+  }, []);
+
   useEffect(() => {
     const el = wrapRef.current;
     if (!el) return;
@@ -603,6 +791,19 @@ export function StampRecursiveContent(
     shiftKey: boolean,
   ) => {
     const ix = ixRef.current;
+    if (previewDrag.current) {
+      const wrap = wrapRef.current;
+      const card = previewCardRef.current;
+      if (!wrap || !card) return;
+      const next = clampPreviewPos(
+        previewDrag.current.ox + (clientX - previewDrag.current.sx),
+        previewDrag.current.oy + (clientY - previewDrag.current.sy),
+        wrap,
+        card,
+      );
+      applyPreviewPos(next);
+      return;
+    }
     if (guideDrag.current) {
       const g = rsbGuides.value.find((x) => x.id === guideDrag.current?.id);
       if (!g) return;
@@ -697,6 +898,10 @@ export function StampRecursiveContent(
       ixRef.current = null;
       guideDrag.current = null;
       panIX.current = null;
+      if (previewDrag.current) {
+        previewDrag.current = null;
+        setPreviewDragging(false);
+      }
       wrapRef.current?.classList.remove("panning");
     };
     document.addEventListener("mousemove", move);
@@ -959,6 +1164,12 @@ export function StampRecursiveContent(
     });
   };
 
+  const dismissPreview = () => {
+    previewDrag.current = null;
+    setPreviewDragging(false);
+    setPreviewVisible(false);
+  };
+
   const previewSrc = fetched
     ? layerDisplaySrc({
       b64: fetched.stamp_base64,
@@ -1008,8 +1219,25 @@ export function StampRecursiveContent(
               toggle={() => toggleSection("assets")}
             >
               <SectionBody>
-                <div class="flex flex-col gap-3">
+                <div class="flex flex-col gap-1">
+                  <h5 class={labelXs}>STAMP</h5>
                   <div class="flex items-center gap-1.5">
+                    <div
+                      class={`${container2Icon}`}
+                    >
+                      <Icon
+                        type="iconButton"
+                        name="search"
+                        weight="normal"
+                        size="xsR"
+                        color="neutral400"
+                        ariaLabel="Browse stamps"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          openSearch();
+                        }}
+                      />
+                    </div>
                     <form
                       class="flex-1 min-w-0"
                       onSubmit={(e) => {
@@ -1028,171 +1256,33 @@ export function StampRecursiveContent(
                       />
                     </form>
                     <div
-                      class={`relative flex items-center justify-center
-                        shrink-0 ${container3} !rounded-full p-0.5`}
+                      class={`${container2Icon}`}
                     >
                       <Icon
                         type="iconButton"
-                        name="search"
+                        name={fetching ? "loading" : "view"}
                         weight="normal"
                         size="xsR"
                         color="neutral400"
-                        ariaLabel="Browse stamps"
+                        ariaLabel="Preview stamp"
                         onClick={(e) => {
                           e.preventDefault();
-                          openSearch();
+                          if (fetching) return;
+                          getPreview();
                         }}
                       />
                     </div>
                   </div>
-                  <ButtonProcessing
-                    variant="flat"
-                    color="neutral"
-                    size="smR"
-                    class="w-full"
-                    isSubmitting={fetching}
-                    onClick={() => getPreview()}
-                  >
-                    PREVIEW
-                  </ButtonProcessing>
                 </div>
                 {status && !fetched && (
                   <p class={messageError}>
                     {status}
                   </p>
                 )}
-                {fetched && (
-                  <>
-                    <hr class="my-3" />
-                    <div class="flex gap-3 items-start">
-                      <div
-                        class={`flex items-center justify-center shrink-0
-                          w-[80px] h-[80px] overflow-hidden ${container3}`}
-                      >
-                        {fetched.stamp_mimetype === "text/html"
-                          ? (
-                            <iframe
-                              src={fetched.stamp_url}
-                              class="w-full h-full"
-                              sandbox="allow-scripts allow-same-origin"
-                            />
-                          )
-                          : (
-                            <img
-                              src={previewSrc}
-                              alt={`Stamp #${fetched.stamp}`}
-                              class="max-w-full max-h-full object-contain"
-                            />
-                          )}
-                      </div>
-                      <div class="flex flex-col min-w-0 flex-1 gap-0.5">
-                        <div class={cardStampNumber}>
-                          {fetched.stamp != null && (
-                            <span class="font-light">#</span>
-                          )}
-                          {fetched.stamp != null
-                            ? fetched.stamp.toLocaleString("en-US")
-                            : fetched.cpid}
-                        </div>
-                        {fetched.cpid && (
-                          <div
-                            class={`font-mono text-xs text-color-neutral-500
-                              ${truncate}`}
-                          >
-                            {fetched.cpid}
-                          </div>
-                        )}
-                        {(fetched.creator_name || fetched.creator) && (
-                          <span class={`hidden ${cardCreator} !text-left`}>
-                            {fetched.creator_name ||
-                              abbreviateAddress(fetched.creator, 5)}
-                          </span>
-                        )}
-                        <div class="flex items-center gap-1.5 mt-1 flex-wrap">
-                          <div class={`${containerPill} ${cardFileType}`}>
-                            {formatFileType(fetched.stamp_mimetype)}
-                          </div>
-                          {fetched.file_size_bytes != null && (
-                            <div class={`${containerPill} ${cardFileSize}`}>
-                              {formatFileSize(
-                                fetched.file_size_bytes,
-                                fetched.stamp_mimetype === "text/plain",
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    <Button
-                      variant="flat"
-                      color="neutral"
-                      size="xsR"
-                      class="w-full mt-3"
-                      disabled={mode !== "edit"}
-                      onClick={() => {
-                        addStampLayer(fetched);
-                        showToast(
-                          `Stamp #${fetched.stamp} added to canvas.`,
-                          "success",
-                        );
-                      }}
-                    >
-                      ADD TO CANVAS
-                    </Button>
-                  </>
-                )}
-                {creatorMore.length > 0 && fetched && (
-                  <>
-                    <hr class="my-3" />
-                    <div class="flex flex-col">
-                      <h5 class={labelXs}>
-                        MORE BY {fetched.creator_name ||
-                          `${fetched.creator.slice(0, 6)}…`}
-                      </h5>
-                      <div class="grid grid-cols-5 min-[420px]:grid-cols-6
-                      mobileMd:grid-cols-7 mobileLg:grid-cols-5 gap-3">
-                        {creatorMore.map((s, i) => (
-                          <button
-                            type="button"
-                            key={s.tx_hash}
-                            class={`${container2Hover} ${shadowGlowPurple} !rounded-xl aspect-square overflow-hidden p-0
-                            ${
-                              i >= 12
-                                ? "hidden mobileMd:block mobileLg:hidden"
-                                : i >= 10
-                                ? "hidden min-[420px]:block mobileLg:hidden"
-                                : ""
-                            }`}
-                            onClick={() => {
-                              setQuery(String(s.stamp));
-                              getPreview(String(s.stamp));
-                            }}
-                          >
-                            {s.stamp_mimetype === "text/html"
-                              ? (
-                                <iframe
-                                  src={s.stamp_url}
-                                  class="w-full h-full pointer-events-none"
-                                  sandbox="allow-scripts allow-same-origin"
-                                />
-                              )
-                              : (
-                                <img
-                                  src={s.stamp_url}
-                                  alt={`#${s.stamp}`}
-                                  class="w-full h-full object-cover"
-                                />
-                              )}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </>
-                )}
                 {recent.length > 0 && (
                   <>
                     <hr class="my-3" />
-                    <div class="flex flex-col">
+                    <div class="flex flex-col gap-1">
                       <h5 class={labelXs}>RECENT</h5>
                       <div class="grid grid-cols-5 min-[420px]:grid-cols-6
                       mobileMd:grid-cols-7 mobileLg:grid-cols-5 gap-3">
@@ -1237,7 +1327,7 @@ export function StampRecursiveContent(
               <SectionBody>
                 <div class="flex flex-col gap-5">
                   <div class="flex flex-col gap-3">
-                    <div class="flex gap-3 items-end">
+                    <div class="flex justify-between gap-3">
                       <select
                         class={`${inputField} flex-1 min-w-0`}
                         value={textStyle.font}
@@ -1250,15 +1340,15 @@ export function StampRecursiveContent(
                           <option key={f} value={f}>{f}</option>
                         ))}
                       </select>
-                      <label class="flex flex-col w-[70px] shrink-0">
-                        <span class={labelXs}>SIZE - %H</span>
+                      <label class="relative w-18 shrink-0">
                         <input
                           type="number"
-                          class={inputField}
+                          class={`${inputNumeric} !pr-9 text-right`}
                           value={fontSizeInput}
                           step="0.5"
                           min={0.5}
                           max={100}
+                          aria-label="Text size as percent of height"
                           onInput={(e) => {
                             const raw = (e.target as HTMLInputElement).value;
                             if (raw.trim() === "") {
@@ -1289,6 +1379,12 @@ export function StampRecursiveContent(
                             patchTextStyle({ fontSize: next });
                           }}
                         />
+                        <span
+                          class={`${labelXs} absolute right-3 top-1/2
+                            -translate-y-1/2 pointer-events-none`}
+                        >
+                          %H
+                        </span>
                       </label>
                     </div>
                     <div class="flex justify-between">
@@ -1681,7 +1777,6 @@ export function StampRecursiveContent(
                       onChange={handleIssuanceChange}
                       error={issuanceError}
                       textAlign="center"
-                      class="!w-10 !px-2"
                     />
                   </div>
                 </div>
@@ -1841,7 +1936,7 @@ export function StampRecursiveContent(
               {layers.length === 0 && (
                 <div class="absolute inset-0 flex items-center justify-center
                 text-color-neutral-500 text-xs pointer-events-none">
-                  Fetch a stamp and click Add to Canvas
+                  Canvas is empty, add images and/or text
                 </div>
               )}
               {mode === "edit" && guides.map((g) => (
@@ -1961,7 +2056,57 @@ export function StampRecursiveContent(
             <div class="rsb-ruler rsb-ruler-v">
               <RulerTicks axis="v" />
             </div>
-            <div class={`rsb-zoom ${container2} p-0.5`}>
+            {fetched && previewVisible && mode === "edit" && (
+              <div
+                ref={previewCardRef}
+                class={`rsb-preview w-[260px] p-1
+                  select-none ${container3} ${
+                  previewDragging ? "dragging" : ""
+                }`}
+                style={{
+                  left: `${previewPos.x}px`,
+                  top: `${previewPos.y}px`,
+                }}
+                onMouseDown={(e) => {
+                  if (e.button !== 0) return;
+                  const t = e.target as HTMLElement;
+                  if (t.closest("button") || t.closest("a")) return;
+                  e.preventDefault();
+                  e.stopPropagation();
+                  previewDrag.current = {
+                    sx: e.clientX,
+                    sy: e.clientY,
+                    ox: previewPosRef.current.x,
+                    oy: previewPosRef.current.y,
+                  };
+                  setPreviewDragging(true);
+                }}
+                onContextMenu={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
+                <AssetPreviewCard
+                  stamp={fetched}
+                  previewSrc={previewSrc}
+                  more={creatorMore}
+                  onAdd={() => {
+                    addStampLayer(fetched);
+                    dismissPreview();
+                    showToast(
+                      `Stamp #${fetched.stamp} added to canvas.`,
+                      "success",
+                    );
+                  }}
+                  onHide={dismissPreview}
+                  onPick={(id) => {
+                    setQuery(id);
+                    getPreview(id);
+                  }}
+                />
+              </div>
+            )}
+            <div class={`rsb-zoom ${container3} p-0.5`}>
               <Button
                 variant="outline"
                 color="neutral"
