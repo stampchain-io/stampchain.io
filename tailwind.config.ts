@@ -199,6 +199,8 @@ export default {
         "6.5": "26px",
         "7.5": "30px",
         "9.5": "38px",
+        "17": "68px",
+        "18": "72px",
 
         // PAGE SHELL - horizontal gutter and vertical padding from screen edges to header, footer and horisontal gutter for body containers
         "shell-mobile": "20px", // updated breakpoint naming convention
