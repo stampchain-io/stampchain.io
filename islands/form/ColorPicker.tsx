@@ -262,41 +262,77 @@ export function ColorPicker({
   const gi = Math.round(rgb.g);
   const bi = Math.round(rgb.b);
 
-  const trigger = (
+  const toggleOpen = () => {
+    if (!open && triggerRef.current) {
+      const tr = triggerRef.current.getBoundingClientRect();
+      setPos({ top: tr.bottom + 8, left: tr.left });
+      setFormat("hex");
+    }
+    setOpen((v) => !v);
+  };
+
+  const applyHexInput = (raw: string) => {
+    setHexDraft(raw);
+    const digits = raw.replace("#", "").trim();
+    if (digits.length !== 6) return;
+    const parsed = hexToRgb(raw);
+    if (!parsed) return;
+    setHsv(rgbToHsv(parsed.r, parsed.g, parsed.b));
+    onChange(rgbToHex(parsed.r, parsed.g, parsed.b));
+  };
+
+  const onHexFocus = () => {
+    hexFocused.current = true;
+  };
+
+  const onHexBlur = () => {
+    hexFocused.current = false;
+    setHexDraft(hsvToHex(hsvRef.current));
+  };
+
+  const swatch = (
     <button
       ref={triggerRef}
       type="button"
       aria-label={ariaLabel}
       aria-expanded={open}
-      onClick={() => {
-        if (!open && triggerRef.current) {
-          const tr = triggerRef.current.getBoundingClientRect();
-          setPos({ top: tr.bottom + 8, left: tr.left });
-          setFormat("hex");
-        }
-        setOpen((v) => !v);
-      }}
+      onClick={toggleOpen}
       class={showValue
-        ? `flex items-center w-full ${container3} !rounded-full
-            py-1 pl-1 ${extraClass}`
+        ? "w-6.5 h-6.5 rounded-full shrink-0 cursor-pointer"
         : `w-6 h-6 rounded-full shrink-0 cursor-pointer ${extraClass}`}
-      style={showValue ? undefined : { backgroundColor: value }}
-    >
-      {showValue
-        ? (
-          <>
-            <span
-              class="w-6.5 h-6.5 rounded-full shrink-0"
-              style={{ backgroundColor: value }}
-            />
-            <span class={`${textXs} font-mono ml-auto pr-3`}>
-              {value}
-            </span>
-          </>
-        )
-        : null}
-    </button>
+      style={{ backgroundColor: value }}
+    />
   );
+
+  const trigger = showValue
+    ? (
+      <div
+        class={`flex justify-between w-full ${container3} !rounded-full py-1 pl-1 ${extraClass}`}
+      >
+        {swatch}
+        <input
+          type="text"
+          spellcheck={false}
+          value={hexDraft}
+          aria-label={`${ariaLabel} hex`}
+          class={`${textXs} w-20 mr-1 px-3 py-1
+            bg-transparent border-0 outline-none text-right
+            cursor-text select-text`}
+          onFocus={onHexFocus}
+          onBlur={onHexBlur}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              (e.currentTarget as HTMLInputElement).blur();
+            }
+          }}
+          onInput={(e) => {
+            applyHexInput((e.target as HTMLInputElement).value);
+          }}
+        />
+      </div>
+    )
+    : swatch;
 
   const popover = open && typeof document !== "undefined" &&
     createPortal(
@@ -374,22 +410,10 @@ export function ColorPicker({
                 spellcheck={false}
                 value={hexDraft}
                 class={`${fieldClass} w-full uppercase`}
-                onFocus={() => {
-                  hexFocused.current = true;
-                }}
-                onBlur={() => {
-                  hexFocused.current = false;
-                  setHexDraft(hsvToHex(hsv));
-                }}
+                onFocus={onHexFocus}
+                onBlur={onHexBlur}
                 onInput={(e) => {
-                  const raw = (e.target as HTMLInputElement).value;
-                  setHexDraft(raw);
-                  const digits = raw.replace("#", "").trim();
-                  if (digits.length !== 6) return;
-                  const parsed = hexToRgb(raw);
-                  if (!parsed) return;
-                  setHsv(rgbToHsv(parsed.r, parsed.g, parsed.b));
-                  onChange(rgbToHex(parsed.r, parsed.g, parsed.b));
+                  applyHexInput((e.target as HTMLInputElement).value);
                 }}
               />
             )
