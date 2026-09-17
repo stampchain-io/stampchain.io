@@ -97,7 +97,9 @@ export function SRC20Card(
 
   const tick = unicodeEscapeToEmoji(src20.tick ?? "");
   const op = (src20.op ?? "").toUpperCase() as "DEPLOY" | "MINT" | "TRANSFER";
-  const imageUrl = imgError ? null : getSRC20ImageSrc(src20) ?? null;
+  const imageUrl = imgError
+    ? null
+    : (src20.deploy_img || getSRC20ImageSrc(src20) || null);
 
   const href = `/src20/${encodeURIComponent(tick)}`;
 
@@ -407,6 +409,7 @@ export function SRC20Card(
               src={imageUrl}
               alt=""
               className="w-full h-full object-cover"
+              onError={() => setImgError(true)}
             />
             <div class="absolute inset-0 bg-gradient-to-b from-color-neutral-950/95 via-color-neutral-900/70 to-color-neutral-1000/90" />
           </div>
@@ -497,6 +500,7 @@ export function SRC20Card(
             src={imageUrl}
             alt=""
             className="w-full h-full object-cover"
+            onError={() => setImgError(true)}
           />
           <div class="absolute inset-0 bg-gradient-to-b from-color-neutral-950/95 via-color-neutral-900/70 to-color-neutral-1000/90" />
         </div>
