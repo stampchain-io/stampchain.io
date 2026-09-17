@@ -16,12 +16,13 @@ import type { StampRow } from "$types/stamp.d.ts";
  * dynamic `await import(...)` gated behind this flag (enforced by
  * scripts/check-boundary.sh).
  *
- * The shapes below restore the app's original error/empty-state fallback
+ * The shapes below restore
+ * the app's original error/empty-state fallback
  * behavior from before dummy data was introduced (see git commit 97041105
  * and its parent) — genuine empty arrays / zero counts / explicit error
  * strings, not fake stamp or token content.
  */
-export const DATA_PLACEHOLDER_DEV = true;
+export const DATA_PLACEHOLDER_DEV = false;
 
 /* ===== HOME PAGE (routes/index.tsx) ===== */
 export const DATA_PLACEHOLDER_PROD_HOME = {
