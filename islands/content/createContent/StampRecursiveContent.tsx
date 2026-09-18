@@ -1180,6 +1180,10 @@ export function StampRecursiveContent(
     })
     : "";
 
+  const assetPreviewOpen = Boolean(
+    fetched && previewVisible && mode === "edit",
+  );
+
   return (
     <div class="flex flex-col w-full pt-5">
       <style>{CANVAS_CSS}</style>
@@ -1260,14 +1264,24 @@ export function StampRecursiveContent(
                     >
                       <Icon
                         type="iconButton"
-                        name={fetching ? "loading" : "view"}
+                        name={fetching
+                          ? "loading"
+                          : assetPreviewOpen
+                          ? "hide"
+                          : "view"}
                         weight="normal"
                         size="xsR"
                         color="neutral400"
-                        ariaLabel="Preview stamp"
+                        ariaLabel={assetPreviewOpen
+                          ? "Hide preview"
+                          : "Preview stamp"}
                         onClick={(e) => {
                           e.preventDefault();
                           if (fetching) return;
+                          if (assetPreviewOpen) {
+                            dismissPreview();
+                            return;
+                          }
                           getPreview();
                         }}
                       />
@@ -1936,7 +1950,7 @@ export function StampRecursiveContent(
               {layers.length === 0 && (
                 <div class="absolute inset-0 flex items-center justify-center
                 text-color-neutral-500 text-xs pointer-events-none">
-                  Canvas is empty, add images and/or text
+                  Add assets and/or text
                 </div>
               )}
               {mode === "edit" && guides.map((g) => (
