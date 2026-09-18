@@ -362,6 +362,10 @@ export function enterPreview(html: string): void {
   selectLayer(null);
 }
 
+export function setPreviewHtml(html: string): void {
+  rsbHtml.value = html;
+}
+
 export function enterEdit(): void {
   rsbMode.value = "edit";
   const validIds = previewSelIds.filter((id) => getLayer(id));
