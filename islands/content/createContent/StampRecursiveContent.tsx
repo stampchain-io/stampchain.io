@@ -65,6 +65,7 @@ import {
   selectAll,
   selectLayer,
   sendToBack,
+  setPreviewHtml,
   setSelection,
   setZoom,
   toggleLayerLock,
@@ -91,6 +92,7 @@ import {
   layerTransformCss,
   RECURSIVE_STAMP_FONT_GROUPS,
   recursiveStampFontFamily,
+  type RecursiveStampSrcId,
 } from "$lib/utils/ui/rendering/recursiveStampHtml.ts";
 import {
   layerHitsMarquee,
@@ -103,9 +105,9 @@ import { FeeCalculatorBase } from "$section";
 import {
   cardCreator,
   cardStampNumber,
+  labelSm,
   labelXs,
   text,
-  textSm,
   textXs,
   truncate,
 } from "$text";
@@ -949,6 +951,7 @@ export function StampRecursiveContent(
   const [stampName, setStampName] = useState("");
   const [stampNameError, setStampNameError] = useState("");
   const [useTxHashEndpoint, setUseTxHashEndpoint] = useState(false);
+  const srcId: RecursiveStampSrcId = useTxHashEndpoint ? "txHash" : "cpid";
   const [expandedSections, setExpandedSections] = useState<
     Record<RsbPanel, boolean>
   >({
@@ -1639,7 +1642,7 @@ export function StampRecursiveContent(
       return;
     }
     setPreviewView("canvas");
-    enterPreview(buildRecursiveStampHtml(layers, bg, false));
+    enterPreview(buildRecursiveStampHtml(layers, bg, false, srcId));
   };
 
   const handleStamp = () => {
@@ -1721,7 +1724,7 @@ export function StampRecursiveContent(
   );
 
   const generatedPreviewHtml = mode === "preview"
-    ? buildRecursiveStampHtml(layers, bg, true)
+    ? buildRecursiveStampHtml(layers, bg, true, srcId)
     : "";
   const generatedPreviewStamp = mode === "preview"
     ? buildGeneratedStampRow({
@@ -2368,12 +2371,25 @@ export function StampRecursiveContent(
                   error={stampNameError}
                 />
                 <div class="flex items-center justify-between gap-3">
-                  <h5 class={textSm}>
+                  <h5 class={labelSm}>
                     {useTxHashEndpoint ? "TXHASH ENDPOINT" : "CPID ENDPOINT"}
                   </h5>
                   <ToggleSwitchButton
                     isActive={useTxHashEndpoint}
-                    onToggle={() => setUseTxHashEndpoint((prev) => !prev)}
+                    onToggle={() => {
+                      const next = !useTxHashEndpoint;
+                      setUseTxHashEndpoint(next);
+                      if (mode === "preview") {
+                        setPreviewHtml(
+                          buildRecursiveStampHtml(
+                            layers,
+                            bg,
+                            false,
+                            next ? "txHash" : "cpid",
+                          ),
+                        );
+                      }
+                    }}
                     toggleButtonId="switch-toggle-endpoint"
                   />
                 </div>
