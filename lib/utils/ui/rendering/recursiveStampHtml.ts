@@ -19,6 +19,84 @@ export const RECURSIVE_STAMP_FONTS = [
   "Verdana",
 ] as const;
 
+export type RecursiveStampFont = typeof RECURSIVE_STAMP_FONTS[number];
+
+export type RecursiveStampFontGeneric =
+  | "serif"
+  | "sans-serif"
+  | "monospace";
+
+export const RECURSIVE_STAMP_FONT_GENERIC: Record<
+  RecursiveStampFont,
+  RecursiveStampFontGeneric
+> = {
+  Arial: "sans-serif",
+  "Arial Black": "sans-serif",
+  "Comic Sans MS": "sans-serif",
+  "Courier New": "monospace",
+  Georgia: "serif",
+  Impact: "sans-serif",
+  "Lucida Console": "monospace",
+  "Palatino Linotype": "serif",
+  Tahoma: "sans-serif",
+  "Times New Roman": "serif",
+  "Trebuchet MS": "sans-serif",
+  Verdana: "sans-serif",
+};
+
+/** Web-safe aliases between the named face and the CSS generic. */
+const FONT_ALIASES: Partial<
+  Record<RecursiveStampFont, readonly string[]>
+> = {
+  Arial: ["Helvetica"],
+  "Arial Black": ["Gadget"],
+  "Comic Sans MS": ["Comic Sans"],
+  "Courier New": ["Courier"],
+  Impact: ["Charcoal"],
+  "Lucida Console": ["Monaco"],
+  "Palatino Linotype": ["Palatino"],
+  Tahoma: ["Geneva"],
+  "Times New Roman": ["Times"],
+  "Trebuchet MS": ["Helvetica"],
+  Verdana: ["Geneva"],
+};
+
+const GENERIC_LABEL: Record<RecursiveStampFontGeneric, string> = {
+  "sans-serif": "Sans-serif",
+  serif: "Serif",
+  monospace: "Monospace",
+};
+
+const GENERIC_ORDER: RecursiveStampFontGeneric[] = [
+  "sans-serif",
+  "serif",
+  "monospace",
+];
+
+export const RECURSIVE_STAMP_FONT_GROUPS = GENERIC_ORDER.map((generic) => ({
+  label: GENERIC_LABEL[generic],
+  generic,
+  fonts: RECURSIVE_STAMP_FONTS.filter(
+    (f) => RECURSIVE_STAMP_FONT_GENERIC[f] === generic,
+  ),
+}));
+
+function quoteCssFontFamily(name: string): string {
+  if (/^[a-zA-Z][\w-]*$/.test(name)) return name;
+  return `"${name.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`;
+}
+
+/** Named face + aliases + matching generic family. */
+export function recursiveStampFontFamily(font?: string): string {
+  const name = font?.trim() || "Arial";
+  const known = (RECURSIVE_STAMP_FONTS as readonly string[]).includes(name)
+    ? name as RecursiveStampFont
+    : undefined;
+  const generic = known ? RECURSIVE_STAMP_FONT_GENERIC[known] : "sans-serif";
+  const aliases = known ? (FONT_ALIASES[known] ?? []) : [];
+  return [name, ...aliases, generic].map(quoteCssFontFamily).join(",");
+}
+
 export function defaultRecursiveFilters(): RecursiveStampFilters {
   return {
     brightness: 100,
@@ -70,8 +148,7 @@ export function layerFilterCss(layer: RecursiveStampLayer): string {
 }
 
 /** Nearest-neighbor scaling so pixel-art stamps stay crisp when enlarged. */
-export const PIXELATED_RENDERING_CSS =
-  "-webkit-image-rendering:pixelated;" +
+export const PIXELATED_RENDERING_CSS = "-webkit-image-rendering:pixelated;" +
   "image-rendering:pixelated;" +
   "image-rendering:-moz-crisp-edges;" +
   "image-rendering:crisp-edges";
@@ -128,7 +205,7 @@ export function buildRecursiveStampHtml(
     const style = layerInlineStyle(l);
     if (l.type === "text") {
       const textSt = [
-        `font-family:${l.font},sans-serif`,
+        `font-family:${recursiveStampFontFamily(l.font)}`,
         `font-size:${l.fontSize}cqh`,
         `color:${l.color}`,
         l.bold ? "font-weight:bold" : "",
