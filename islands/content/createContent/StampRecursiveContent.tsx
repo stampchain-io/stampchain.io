@@ -82,7 +82,8 @@ import {
   layerDisplaySrc,
   layerFilterCss,
   layerTransformCss,
-  RECURSIVE_STAMP_FONTS,
+  RECURSIVE_STAMP_FONT_GROUPS,
+  recursiveStampFontFamily,
 } from "$lib/utils/ui/rendering/recursiveStampHtml.ts";
 import { FeeCalculatorBase } from "$section";
 import {
@@ -1350,8 +1351,12 @@ export function StampRecursiveContent(
                             font: (e.target as HTMLSelectElement).value,
                           })}
                       >
-                        {RECURSIVE_STAMP_FONTS.map((f) => (
-                          <option key={f} value={f}>{f}</option>
+                        {RECURSIVE_STAMP_FONT_GROUPS.map((g) => (
+                          <optgroup key={g.generic} label={g.label}>
+                            {g.fonts.map((f) => (
+                              <option key={f} value={f}>{f}</option>
+                            ))}
+                          </optgroup>
                         ))}
                       </select>
                       <label class="relative w-18 shrink-0">
@@ -2018,7 +2023,7 @@ export function StampRecursiveContent(
                         <div
                           class="rsb-text"
                           style={{
-                            fontFamily: `${l.font},sans-serif`,
+                            fontFamily: recursiveStampFontFamily(l.font),
                             fontSize: `${l.fontSize}cqh`,
                             color: l.color,
                             fontWeight: l.bold ? "bold" : "normal",
