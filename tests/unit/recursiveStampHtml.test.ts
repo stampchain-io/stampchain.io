@@ -92,3 +92,45 @@ Deno.test("layout CSS script src follows cpid vs txHash", () => {
   assertStringIncludes(txHtml, `src="/s/${RECURSIVE_STAMP_CSS_TX_HASH}"`);
   assertFalse(txHtml.includes(`/s/${RECURSIVE_STAMP_CSS_CPID}`));
 });
+
+Deno.test("omits title when not provided", () => {
+  const html = buildRecursiveStampHtml([stampLayer], "#000");
+  assertFalse(html.includes("<title>"));
+});
+
+Deno.test("omits title when whitespace-only", () => {
+  const html = buildRecursiveStampHtml(
+    [stampLayer],
+    "#000",
+    false,
+    "cpid",
+    "   ",
+  );
+  assertFalse(html.includes("<title>"));
+});
+
+Deno.test("emits title in head when defined", () => {
+  const html = buildRecursiveStampHtml(
+    [stampLayer],
+    "#000",
+    false,
+    "cpid",
+    "Hello",
+  );
+  assertStringIncludes(
+    html,
+    `<head><meta charset="utf-8"><title>Hello</title>`,
+  );
+});
+
+Deno.test("escapes title HTML", () => {
+  const html = buildRecursiveStampHtml(
+    [stampLayer],
+    "#000",
+    false,
+    "cpid",
+    "A <B> & C",
+  );
+  assertStringIncludes(html, "<title>A &lt;B&gt; &amp; C</title>");
+  assertFalse(html.includes("<title>A <B>"));
+});

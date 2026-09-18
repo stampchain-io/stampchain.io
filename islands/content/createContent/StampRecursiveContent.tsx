@@ -850,7 +850,6 @@ export function StampRecursiveContent(
     panX,
     panY,
     mode,
-    html,
   } = useRecursiveStampState();
 
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -893,8 +892,12 @@ export function StampRecursiveContent(
   const [issuanceError, setIssuanceError] = useState("");
   const [stampName, setStampName] = useState("");
   const [stampNameError, setStampNameError] = useState("");
+  const [includeCustomCpid, setIncludeCustomCpid] = useState(false);
   const [useTxHashEndpoint, setUseTxHashEndpoint] = useState(false);
+  const [includeTitle, setIncludeTitle] = useState(false);
+  const [stampTitle, setStampTitle] = useState("");
   const srcId: RecursiveStampSrcId = useTxHashEndpoint ? "txHash" : "cpid";
+  const htmlTitle = includeTitle ? stampTitle.trim() : undefined;
   const [expandedSections, setExpandedSections] = useState<
     Record<RsbPanel, boolean>
   >({
@@ -1567,7 +1570,9 @@ export function StampRecursiveContent(
       return;
     }
     setPreviewView("canvas");
-    enterPreview(buildRecursiveStampHtml(layers, bg, false, srcId));
+    enterPreview(
+      buildRecursiveStampHtml(layers, bg, false, srcId, htmlTitle),
+    );
   };
 
   const handleStamp = () => {
@@ -1615,10 +1620,6 @@ export function StampRecursiveContent(
     }
   };
 
-  const onViewCode = () => {
-    openModal(<PreviewCodeModal src={html} />, "zoomInOut");
-  };
-
   const openSearch = () => {
     openSearchStampPicker({
       onPick: (id) => {
@@ -1648,18 +1649,29 @@ export function StampRecursiveContent(
     fetched && previewVisible && mode === "edit",
   );
 
+  const generatedHtml = buildRecursiveStampHtml(
+    layers,
+    bg,
+    false,
+    srcId,
+    htmlTitle,
+  );
   const generatedPreviewHtml = mode === "preview"
-    ? buildRecursiveStampHtml(layers, bg, true, srcId)
+    ? buildRecursiveStampHtml(layers, bg, true, srcId, htmlTitle)
     : "";
   const generatedPreviewStamp = mode === "preview"
     ? buildGeneratedStampRow({
       html: generatedPreviewHtml,
       issuance,
-      stampName,
+      stampName: includeCustomCpid ? stampName : "",
       creator: isConnected ? walletContext.wallet.address : "",
       creatorName: isConnected ? null : "Connect Wallet",
     })
     : null;
+
+  const onViewCode = () => {
+    openModal(<PreviewCodeModal src={generatedHtml} />, "zoomInOut");
+  };
 
   return (
     <div class="flex flex-col w-full pt-3">
@@ -2276,7 +2288,14 @@ export function StampRecursiveContent(
                   <h5 class={text}>
                     EDITIONS
                   </h5>
-                  <div class="w-10 shrink-0">
+                  <div
+                    class="w-9 tablet:w-10 shrink-0"
+                    style={issuance.length > 1
+                      ? {
+                        width: `calc(${issuance.length}ch + 1.5rem + 2px)`,
+                      }
+                      : undefined}
+                  >
                     <InputField
                       type="text"
                       value={issuance}
@@ -2286,15 +2305,84 @@ export function StampRecursiveContent(
                     />
                   </div>
                 </div>
-                <InputField
-                  type="text"
-                  value={stampName}
-                  onChange={handleStampNameChange}
-                  placeholder="Custom CPID"
-                  maxLength={21}
-                  minLength={15}
-                  error={stampNameError}
-                />
+                <div class="flex items-center justify-between gap-3">
+                  {includeCustomCpid
+                    ? (
+                      <div class="flex-1 min-w-0">
+                        <InputField
+                          type="text"
+                          value={stampName}
+                          onChange={handleStampNameChange}
+                          placeholder="CUSTOM CPID"
+                          maxLength={21}
+                          minLength={15}
+                          error={stampNameError}
+                        />
+                      </div>
+                    )
+                    : <h5 class={labelSm}>AUTO GENERATE CPID</h5>}
+                  <ToggleSwitchButton
+                    isActive={includeCustomCpid}
+                    onToggle={() => {
+                      const next = !includeCustomCpid;
+                      setIncludeCustomCpid(next);
+                      if (!next) {
+                        setStampName("");
+                        setStampNameError("");
+                      }
+                    }}
+                    toggleButtonId="switch-toggle-cpid"
+                  />
+                </div>
+                <div class="flex items-center justify-between gap-3">
+                  {includeTitle
+                    ? (
+                      <div class="flex-1 min-w-0">
+                        <InputField
+                          type="text"
+                          value={stampTitle}
+                          placeholder="TITLE"
+                          onInput={(e) => {
+                            const value =
+                              (e.currentTarget as HTMLInputElement).value;
+                            setStampTitle(value);
+                            if (mode === "preview") {
+                              setPreviewHtml(
+                                buildRecursiveStampHtml(
+                                  layers,
+                                  bg,
+                                  false,
+                                  srcId,
+                                  value.trim() || undefined,
+                                ),
+                              );
+                            }
+                          }}
+                        />
+                      </div>
+                    )
+                    : <h5 class={labelSm}>NO TITLE</h5>}
+                  <ToggleSwitchButton
+                    isActive={includeTitle}
+                    onToggle={() => {
+                      const next = !includeTitle;
+                      setIncludeTitle(next);
+                      if (!next) setStampTitle("");
+                      if (mode === "preview") {
+                        setPreviewHtml(
+                          buildRecursiveStampHtml(
+                            layers,
+                            bg,
+                            false,
+                            srcId,
+                            next ? stampTitle.trim() : undefined,
+                          ),
+                        );
+                      }
+                    }}
+                    toggleButtonId="switch-toggle-title"
+                  />
+                </div>
                 <div class="flex items-center justify-between gap-3">
                   <h5 class={labelSm}>
                     {useTxHashEndpoint ? "TXHASH ENDPOINT" : "CPID ENDPOINT"}
@@ -2311,6 +2399,7 @@ export function StampRecursiveContent(
                             bg,
                             false,
                             next ? "txHash" : "cpid",
+                            htmlTitle,
                           ),
                         );
                       }
@@ -2321,13 +2410,13 @@ export function StampRecursiveContent(
               </div>
             </div>
             <div class="shrink-0">
-              <hr class="w-full my-5 border-color-neutral-800 border-t-1" />
+              <hr class="w-full my-3 border-color-neutral-800 border-t-1" />
               <FeeCalculatorBase
                 fee={fee}
                 handleChangeFee={setFee}
                 type="stamp"
                 fileType="text/html"
-                fileSize={html?.length ?? 0}
+                fileSize={generatedHtml.length}
                 issuance={parseInt(issuance, 10)}
                 BTCPrice={BTCPrice}
                 showCoinToggle
@@ -2337,7 +2426,7 @@ export function StampRecursiveContent(
                 onSubmit={handleStamp}
                 buttonName={isConnected ? "STAMP" : "CONNECT WALLET"}
                 bitname=""
-                {...(stampName ? { cpid: stampName } : {})}
+                {...(includeCustomCpid && stampName ? { cpid: stampName } : {})}
                 feeDetails={{
                   minerFee: 0,
                   dustValue: 0,

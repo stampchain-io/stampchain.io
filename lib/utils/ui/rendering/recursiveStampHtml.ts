@@ -223,12 +223,14 @@ function layerInlineStyle(layer: RecursiveStampLayer): string {
  * Layout CSS comes from `recursiveStampCssSrc(srcId)`; this file only sets
  * background and layer markup. `forPreview` embeds base64 image data when
  * available and prefixes relative `/s/…` URLs with stampchain.io.
+ * A non-empty `title` is emitted as a `<title>` tag in `<head>`.
  */
 export function buildRecursiveStampHtml(
   layers: RecursiveStampLayer[],
   bg: string,
   forPreview = false,
   srcId: RecursiveStampSrcId = "cpid",
+  title?: string,
 ): string {
   const abs = (u: string): string =>
     forPreview && u.charAt(0) === "/" ? `${STAMPCHAIN_ORIGIN}${u}` : u;
@@ -270,8 +272,12 @@ export function buildRecursiveStampHtml(
   const stylesScript = `<script src="${
     abs(recursiveStampCssSrc(srcId))
   }"><\/script>`;
+  const trimmedTitle = title?.trim() ?? "";
+  const titleTag = trimmedTitle
+    ? `<title>${escHtml(trimmedTitle)}</title>`
+    : "";
 
   return `<!DOCTYPE html><html><head><meta charset="utf-8">` +
-    `${stylesScript}<style>body{background:${bg}}</style></head>` +
+    `${titleTag}${stylesScript}<style>body{background:${bg}}</style></head>` +
     `<body><div id="c">${els}</div></body></html>`;
 }
