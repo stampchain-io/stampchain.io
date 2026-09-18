@@ -78,18 +78,8 @@ export function CreateStampHeader(
           />
         </div>
 
-        {/* View Mode + Info - Right */}
-        <div class="flex shrink-0 ml-auto gap-3">
-          <div class={container2Icon}>
-            <Icon
-              type="iconButton"
-              name="viewCardVertical"
-              weight="normal"
-              size="xsR"
-              color="neutral400"
-              ariaLabel="View mode"
-            />
-          </div>
+        {/* Info - Right */}
+        <div class="flex shrink-0 ml-auto">
           <div class={container2Icon}>
             <Icon
               type="iconButton"

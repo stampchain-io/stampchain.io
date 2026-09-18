@@ -24,7 +24,6 @@ import {
   container2Hover,
   container2Icon,
   container3,
-  gridCard,
   shadowGlowPurpleSm,
   transitionColors,
 } from "$layout";
@@ -74,7 +73,6 @@ import {
   ungroupSelection,
   useRecursiveStampState,
 } from "$lib/hooks/useRecursiveStampState.ts";
-import { useWindowSize } from "$lib/hooks/useWindowSize.ts";
 import {
   fetchStampById,
   fetchStampsByCreator,
@@ -247,6 +245,21 @@ function previewCountForWidth(
   return counts.mobileSm;
 }
 
+function previewGridClass(cols: number): string {
+  const colClass = cols === 8
+    ? "grid-cols-8"
+    : cols === 6
+    ? "grid-cols-6"
+    : cols === 5
+    ? "grid-cols-5"
+    : cols === 4
+    ? "grid-cols-4"
+    : cols === 2
+    ? "grid-cols-2"
+    : "grid-cols-3";
+  return `grid ${colClass} min-w-0 gap-3 w-full auto-rows-fr`;
+}
+
 function buildGeneratedStampRow(opts: {
   html: string;
   issuance: string;
@@ -258,7 +271,7 @@ function buildGeneratedStampRow(opts: {
   return {
     stamp: 1234567,
     cpid: opts.stampName || "AUTO GENERATED",
-    ident: "STAMP",
+    ident: "SRC-721",
     block_index: 0,
     block_time: new Date(),
     tx_hash: "preview",
@@ -466,7 +479,7 @@ function AssetPreviewCard(
   const moreRow = more.slice(0, 6);
   return (
     <>
-      <div class="flex gap-5 items-start">
+      <div class="flex gap-3 items-start">
         <div
           class={`flex items-center justify-center shrink-0
             w-[68px] h-[68px] overflow-hidden ${container3}`}
@@ -925,7 +938,6 @@ export function StampRecursiveContent(
   const [previewView, setPreviewView] = useState<"canvas" | "cards">(
     "canvas",
   );
-  const { width: windowWidth } = useWindowSize();
   const [squarePreviewCount, setSquarePreviewCount] = useState<number>(
     PREVIEW_SQUARE_COUNTS.mobileSm,
   );
@@ -1101,13 +1113,22 @@ export function StampRecursiveContent(
   }, []);
 
   useEffect(() => {
-    setSquarePreviewCount(
-      previewCountForWidth(windowWidth || 0, PREVIEW_SQUARE_COUNTS),
-    );
-    setDetailPreviewCount(
-      previewCountForWidth(windowWidth || 0, PREVIEW_DETAIL_COUNTS),
-    );
-  }, [windowWidth]);
+    const el = wrapRef.current;
+    if (!el) return;
+    const update = () => {
+      const width = el.clientWidth;
+      setSquarePreviewCount(
+        previewCountForWidth(width, PREVIEW_SQUARE_COUNTS),
+      );
+      setDetailPreviewCount(
+        previewCountForWidth(width, PREVIEW_DETAIL_COUNTS),
+      );
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   const applyPreviewPos = (next: { x: number; y: number }) => {
     if (
@@ -1713,18 +1734,19 @@ export function StampRecursiveContent(
     : null;
 
   return (
-    <div class="flex flex-col w-full pt-5">
+    <div class="flex flex-col w-full pt-3">
       <style>{CANVAS_CSS}</style>
       <CreateStampRecursiveHeader />
-      <div class="flex flex-col-reverse mobileLg:flex-row w-full gap-5 pt-5">
+      <div class="flex flex-col-reverse mobileLg:flex-row w-full gap-3 pt-3">
         <div
           class={`w-full mobileLg:w-[320px] mobileLg:shrink-0
-            h-auto mobileLg:h-[640px] min-[1080px]:h-[690px]
-            flex flex-col overflow-hidden p-5
+            h-[700px] mobileLg:h-[640px] min-[1080px]:h-[690px]
+            flex flex-col overflow-hidden p-3
             ${container2}`}
         >
           <div
-            class={`flex min-h-0 flex-1 flex-col overflow-y-auto pr-1
+            class={`flex flex-1 flex-col pr-1
+              mobileLg:min-h-0 mobileLg:overflow-y-auto
               ${mode === "preview" ? "hidden" : ""}`}
           >
             <CollapsibleSection
@@ -2387,7 +2409,7 @@ export function StampRecursiveContent(
           </div>
           {mode !== "preview" && (
             <div class="flex flex-col gap-3 pt-3 shrink-0">
-              <div class="flex justify-between gap-5">
+              <div class="flex justify-between gap-3">
                 <Button
                   variant="outline"
                   color="neutral"
@@ -2428,9 +2450,11 @@ export function StampRecursiveContent(
         >
           <div
             ref={wrapRef}
-            class={`rsb-wrap h-full ${rulers ? "rulers-on" : ""} ${
-              mode === "preview"
-                ? "preview bg-gradient-to-b from-color-neutral-800/40 via-color-neutral-900/60 to-neutral-900/80"
+            class={`rsb-wrap h-full rounded-2xl ${rulers ? "rulers-on" : ""} ${
+              mode === "preview" ? "preview" : ""
+            } ${
+              mode === "preview" && previewView === "canvas"
+                ? "bg-gradient-to-b from-color-neutral-800/40 via-color-neutral-900/60 to-neutral-900/80"
                 : ""
             }`}
             onMouseDown={(e) => beginCanvasPointer(e)}
@@ -2672,9 +2696,9 @@ export function StampRecursiveContent(
             )}
             {mode === "preview" && previewView === "cards" &&
               generatedPreviewStamp && (
-              <div class="absolute inset-0 z-[8700] overflow-auto p-3 pt-14
-                flex flex-col gap-5">
-                <div class={gridCard("cardSquare")}>
+              <div class="absolute inset-0 z-[8700] min-w-0 overflow-x-hidden
+                overflow-y-auto p-3 flex flex-col gap-3">
+                <div class={previewGridClass(squarePreviewCount)}>
                   {Array.from(
                     { length: squarePreviewCount },
                     (_, i) => (
@@ -2687,7 +2711,7 @@ export function StampRecursiveContent(
                     ),
                   )}
                 </div>
-                <div class={gridCard("cardVertical")}>
+                <div class={previewGridClass(detailPreviewCount)}>
                   {Array.from(
                     { length: detailPreviewCount },
                     (_, i) => (
