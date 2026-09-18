@@ -22,7 +22,7 @@ import {
   container2Hover,
   container2Icon,
   container3,
-  shadowGlowPurple,
+  shadowGlowPurpleSm,
   transitionColors,
 } from "$layout";
 import {
@@ -220,22 +220,19 @@ function staticLayerThumbSrc(
 ): string | undefined {
   const mime = layer.mime;
   if (isLibraryMime(mime) || isUnrenderableMime(mime)) return undefined;
-  if (isHtmlMime(mime) || isSvgMime(mime)) {
-    return layer.num != null
-      ? getStampPreviewUrl(layerToStampRow(layer), {
-        placeholderOnFail: true,
-      })
-      : undefined;
+  // Layer-list thumbs are always the static preview PNG when we have a
+  // stamp number — never the live file/base64 (GIFs would animate, SVGs
+  // would run, rasters would load the original).
+  if (layer.num != null) {
+    return getStampPreviewUrl(layerToStampRow(layer), {
+      placeholderOnFail: true,
+    });
   }
   if (mime?.startsWith("image/")) {
     return getStampImageSrc(layerToStampRow(layer)) ||
       layerDisplaySrc(layer) || undefined;
   }
-  return layer.num != null
-    ? getStampPreviewUrl(layerToStampRow(layer), {
-      placeholderOnFail: true,
-    })
-    : undefined;
+  return undefined;
 }
 
 function StampThumb(
@@ -428,7 +425,7 @@ function AssetPreviewCard(
             <button
               type="button"
               key={s.tx_hash}
-              class={`${container3} hover:border-hover ${shadowGlowPurple}
+              class={`${container3} hover:border-hover ${shadowGlowPurpleSm}
                 !rounded-xl aspect-square overflow-hidden p-0`}
               onClick={() => onPick(String(s.stamp))}
             >
@@ -1500,7 +1497,7 @@ export function StampRecursiveContent(
                           <button
                             type="button"
                             key={r.hash || r.num}
-                            class={`${container2Hover} ${shadowGlowPurple} !rounded-xl aspect-square overflow-hidden p-0
+                            class={`${container2Hover} ${shadowGlowPurpleSm} !rounded-xl aspect-square overflow-hidden p-0
                             ${
                               i >= 12
                                 ? "hidden mobileMd:block mobileLg:hidden"
@@ -1683,9 +1680,9 @@ export function StampRecursiveContent(
                     {[...layers].reverse().map((l) => (
                       <div
                         key={l.id}
-                        class={`flex items-center gap-1.5 ${container3} p-1
+                        class={`flex items-center gap-1.5 ${container3} p-0.5
                   hover:border-color-hover ${transitionColors}
-                  hover:shadow-[0px_0px_16px_color-mix(in_srgb,var(--color-primary-500)_75%,transparent)]
+                  hover:shadow-[0px_0px_8px_2px_color-mix(in_srgb,var(--color-primary-500)_75%,transparent)]
                   ${
                           l.id === selId
                             ? "border-color-primary-400 cursor-default"
@@ -1705,8 +1702,9 @@ export function StampRecursiveContent(
                           if (src) reorderLayers(src, l.id);
                         }}
                       >
-                        <div class="w-6 h-6 overflow-hidden shrink-0 flex
-                  items-center justify-center bg-color-neutral-900">
+                        <div class="w-6.5 h-6.5 overflow-hidden shrink-0 flex
+                  items-center justify-center bg-color-neutral-900
+                  rounded-lg border border-color-neutral-700">
                           {l.type === "text"
                             ? (
                               <span class="text-color-primary-400 font-bold text-xs">
@@ -1718,7 +1716,8 @@ export function StampRecursiveContent(
                                 src={staticLayerThumbSrc(l)}
                                 alt={l.name}
                                 mime={l.mime}
-                                placeholderClassName="!rounded-none !p-[15%]"
+                                className="w-full h-full object-contain pixelart rounded-lg"
+                                placeholderClassName="!rounded-lg !p-[15%]"
                               />
                             )}
                         </div>
@@ -1728,7 +1727,7 @@ export function StampRecursiveContent(
                         <Icon
                           type="iconButton"
                           name={l.locked ? "locked" : "unlocked"}
-                          weight="normal"
+                          weight="bold"
                           size="xxxs"
                           color={l.locked ? "primary400" : "neutral400"}
                           ariaLabel="Lock layer"
@@ -1741,7 +1740,7 @@ export function StampRecursiveContent(
                         <Icon
                           type="iconButton"
                           name="caretUp"
-                          weight="normal"
+                          weight="bold"
                           size="xxxs"
                           color="neutral400"
                           ariaLabel="Move up"
@@ -1754,7 +1753,7 @@ export function StampRecursiveContent(
                         <Icon
                           type="iconButton"
                           name="caretDown"
-                          weight="normal"
+                          weight="bold"
                           size="xxxs"
                           color="neutral400"
                           ariaLabel="Move down"
@@ -1767,7 +1766,7 @@ export function StampRecursiveContent(
                         <Icon
                           type="iconButton"
                           name={l.vis ? "view" : "hide"}
-                          weight="normal"
+                          weight="bold"
                           size="xxxs"
                           color="neutral400"
                           ariaLabel="Toggle visibility"
@@ -1780,7 +1779,7 @@ export function StampRecursiveContent(
                         <Icon
                           type="iconButton"
                           name="close"
-                          weight="normal"
+                          weight="bold"
                           size="xxxs"
                           color="neutral400"
                           ariaLabel="Delete layer"
@@ -1859,7 +1858,7 @@ export function StampRecursiveContent(
                       <Button
                         variant={primary.flipH ? "flat" : "outline"}
                         color="neutral"
-                        size="xxsR"
+                        size="xsR"
                         onClick={() => flipSelected("h")}
                       >
                         FLIP H
@@ -1867,7 +1866,7 @@ export function StampRecursiveContent(
                       <Button
                         variant={primary.flipV ? "flat" : "outline"}
                         color="neutral"
-                        size="xxsR"
+                        size="xsR"
                         onClick={() => flipSelected("v")}
                       >
                         FLIP V
@@ -1875,7 +1874,7 @@ export function StampRecursiveContent(
                       <Button
                         variant="outline"
                         color="neutral"
-                        size="xxsR"
+                        size="xsR"
                         disabled={mode !== "edit"}
                         onClick={() => centerSelected()}
                       >
@@ -1967,7 +1966,7 @@ export function StampRecursiveContent(
                         key={modeKey}
                         variant="outline"
                         color="neutral"
-                        size="xxsR"
+                        size="xsR"
                         onClick={() => alignSelected(modeKey)}
                       >
                         {label}
@@ -1983,8 +1982,8 @@ export function StampRecursiveContent(
               ${mode === "preview" ? "" : "hidden"}`}
           >
             <div class="flex flex-col pt-2 tablet:pt-1">
-              <div class="flex flex-col gap-5">
-                <div class="flex items-center justify-between gap-5">
+              <div class="flex flex-col gap-3">
+                <div class="flex items-center justify-between gap-3">
                   <h5 class={label}>
                     EDITIONS
                   </h5>

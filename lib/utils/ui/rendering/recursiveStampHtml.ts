@@ -83,7 +83,7 @@ export const RECURSIVE_STAMP_FONT_GROUPS = GENERIC_ORDER.map((generic) => ({
 
 function quoteCssFontFamily(name: string): string {
   if (/^[a-zA-Z][\w-]*$/.test(name)) return name;
-  return `"${name.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`;
+  return `'${name.replace(/\\/g, "\\\\").replace(/'/g, "\\'")}'`;
 }
 
 /** Named face + aliases + matching generic family. */
@@ -147,11 +147,10 @@ export function layerFilterCss(layer: RecursiveStampLayer): string {
   return parts.join(" ");
 }
 
-/** Nearest-neighbor scaling so pixel-art stamps stay crisp when enlarged. */
-export const PIXELATED_RENDERING_CSS = "-webkit-image-rendering:pixelated;" +
-  "image-rendering:pixelated;" +
-  "image-rendering:-moz-crisp-edges;" +
-  "image-rendering:crisp-edges";
+/** Shared recursive layout CSS stamp used by the prototype builder. */
+export const RECURSIVE_STAMP_CSS_SRC = "/s/A15716034302284605000";
+
+const STAMPCHAIN_ORIGIN = "https://stampchain.io";
 
 export function layerDisplaySrc(
   layer: RecursiveStampLayer | {
@@ -191,15 +190,18 @@ function layerInlineStyle(layer: RecursiveStampLayer): string {
 }
 
 /**
- * Compose a self-contained recursive stamp HTML document from canvas layers.
- * `forPreview` embeds base64 image data when available so the live preview
- * does not depend on `/s/{cpid}` for SVG stamps.
+ * Compose a recursive stamp HTML document from canvas layers.
+ * Layout CSS comes from `RECURSIVE_STAMP_CSS_SRC`; this file only sets
+ * background and layer markup. `forPreview` embeds base64 image data when
+ * available and prefixes relative `/s/…` URLs with stampchain.io.
  */
 export function buildRecursiveStampHtml(
   layers: RecursiveStampLayer[],
   bg: string,
   forPreview = false,
 ): string {
+  const abs = (u: string): string =>
+    forPreview && u.charAt(0) === "/" ? `${STAMPCHAIN_ORIGIN}${u}` : u;
   const visible = layers.filter((l) => l.vis);
   const els = visible.map((l) => {
     const style = layerInlineStyle(l);
@@ -224,10 +226,10 @@ export function buildRecursiveStampHtml(
       ) {
         src = `data:${l.mime};base64,${l.b64}`;
       } else {
-        src = l.url || (l.cpid ? `/s/${l.cpid}` : "");
+        src = abs(l.url || (l.cpid ? `/s/${l.cpid}` : ""));
       }
     } else {
-      src = l.cpid ? `/s/${l.cpid}` : (l.url ?? "");
+      src = abs(l.cpid ? `/s/${l.cpid}` : (l.url ?? ""));
     }
     if (l.mime === "text/html") {
       return `<iframe class="s" src="${src}" style="${style}"></iframe>`;
@@ -235,16 +237,11 @@ export function buildRecursiveStampHtml(
     return `<img class="s" src="${src}" style="${style}">`;
   }).join("");
 
-  const css = `html,body{margin:0;width:100%;height:100%;background:${bg}}` +
-    `#c{position:relative;width:100%;height:100%;container-type:size;` +
-    `overflow:hidden}` +
-    `.s{position:absolute;transform-origin:center center;margin:0;` +
-    `${PIXELATED_RENDERING_CSS}}` +
-    `img.s,iframe.s{object-fit:contain;border:0;display:block}` +
-    `.t{overflow:hidden;word-break:break-word;white-space:pre-wrap;` +
-    `line-height:1.2}`;
+  const stylesScript = `<script src="${
+    abs(RECURSIVE_STAMP_CSS_SRC)
+  }"><\/script>`;
 
   return `<!DOCTYPE html><html><head><meta charset="utf-8">` +
-    `<style>${css}</style></head><body><div id="c">${els}</div>` +
-    `</body></html>`;
+    `${stylesScript}<style>body{background:${bg}}</style></head>` +
+    `<body><div id="c">${els}</div></body></html>`;
 }
