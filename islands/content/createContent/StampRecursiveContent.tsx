@@ -1,5 +1,5 @@
 /* ===== RECURSIVE STAMP CONTENT ===== */
-import { Button } from "$button";
+import { Button, ToggleSwitchButton } from "$button";
 import { walletContext } from "$client/wallet/wallet.ts";
 import { useFees } from "$fees";
 import {
@@ -8,7 +8,7 @@ import {
   inputNumeric,
   messageError,
 } from "$form";
-import { CreateStampRecursiveHeader } from "$header";
+import { CreateStampRecursiveHeader, openShortcutsModal } from "$header";
 import { Icon, PlaceholderImage } from "$icon";
 import { RangeSlider } from "$islands/button/RangeSlider.tsx";
 import { ColorPicker } from "$islands/form/ColorPicker.tsx";
@@ -63,6 +63,7 @@ import {
   selectAll,
   selectLayer,
   sendToBack,
+  setSelection,
   setZoom,
   toggleLayerLock,
   toggleLayerVis,
@@ -89,12 +90,20 @@ import {
   RECURSIVE_STAMP_FONT_GROUPS,
   recursiveStampFontFamily,
 } from "$lib/utils/ui/rendering/recursiveStampHtml.ts";
+import {
+  layerHitsMarquee,
+  type MeasureBadge,
+  measureBadges,
+  type SmartGuideLine,
+  snapMove,
+} from "$lib/utils/ui/rendering/recursiveStampSnap.ts";
 import { FeeCalculatorBase } from "$section";
 import {
   cardCreator,
   cardStampNumber,
-  label,
   labelXs,
+  text,
+  textSm,
   textXs,
   truncate,
 } from "$text";
@@ -367,6 +376,7 @@ function CanvasLayerMedia(
     <img
       src={layerDisplaySrc(layer)}
       alt={layer.name}
+      class="pixelart"
       draggable={false}
     />
   );
@@ -497,8 +507,10 @@ function PlaceholderIcon(props: {
 
 const CANVAS_CSS = `
 .rsb-wrap{position:relative;width:100%;height:100%;
-  overflow:hidden;
-  background:repeating-conic-gradient(#191919 0% 25%,#141414 0% 50%) 0 0/20px 20px}
+  overflow:hidden;touch-action:none}
+.rsb-wrap:not(.preview){background:repeating-conic-gradient(#191919 0% 25%,#141414 0% 50%) 0 0/20px 20px}
+.rsb-canvas,.rsb-el{touch-action:none}
+.rsb-zoom,.rsb-preview{touch-action:manipulation}
 .rsb-wrap.preview .rsb-guide,
 .rsb-wrap.preview .rsb-grid,
 .rsb-wrap.preview .rsb-ruler{display:none!important}
@@ -506,12 +518,15 @@ const CANVAS_CSS = `
   max-width:calc(100% - 48px);max-height:calc(100% - 48px);aspect-ratio:1/1;
   overflow:hidden;container-type:size;transform-origin:center center;
   box-shadow:0 8px 60px rgba(0,0,0,.7)}
-.rsb-grid{position:absolute;inset:0;pointer-events:none;z-index:9999}
+.rsb-grid{position:absolute;inset:0;width:100%;height:100%;display:block;
+  pointer-events:none;z-index:9999}
 .rsb-el{position:absolute;cursor:move;transform-origin:center center}
 .rsb-wrap.preview .rsb-el{pointer-events:none}
 .rsb-inner{width:100%;height:100%;overflow:hidden;position:relative;z-index:0}
 .rsb-inner img,.rsb-inner iframe{width:100%;height:100%;object-fit:contain;
   border:none;display:block;pointer-events:none}
+.rsb-inner img{image-rendering:pixelated;image-rendering:-moz-crisp-edges;
+  image-rendering:crisp-edges;-webkit-image-rendering:pixelated}
 .rsb-sel{position:absolute;inset:0;pointer-events:none;z-index:100}
 .rsb-ring{display:none;position:absolute;inset:0;
   border:2px solid var(--color-primary-400)}
@@ -550,6 +565,12 @@ const CANVAS_CSS = `
 .rsb-smart{position:absolute;pointer-events:none;z-index:8500}
 .rsb-smart-v{top:0;bottom:0;width:1px;background:var(--color-primary-400)}
 .rsb-smart-h{left:0;right:0;height:1px;background:var(--color-primary-400)}
+.rsb-measure{position:absolute;z-index:8510;pointer-events:none;
+  transform:translate(-50%,-50%);font-family:monospace;font-size:9px;
+  line-height:1;padding:2px 4px;white-space:nowrap;color:#fff;
+  background:var(--color-primary-400);border-radius:2px}
+.rsb-preview-frame{position:absolute;inset:0;width:100%;height:100%;border:0;
+  pointer-events:none;background:transparent;z-index:1}
 .rsb-marquee{position:absolute;z-index:8600;pointer-events:none;display:none;
   border:1px solid var(--color-primary-400);
   background:color-mix(in srgb,var(--color-primary-400) 12%,transparent)}
@@ -593,6 +614,25 @@ type IX =
     id: string;
   };
 
+type PointerLike = {
+  clientX: number;
+  clientY: number;
+  shiftKey: boolean;
+  button?: number;
+  target: EventTarget | null;
+  stopPropagation: () => void;
+  preventDefault: () => void;
+};
+
+type MarqueeIX = {
+  startX: number;
+  startY: number;
+  wrapSx: number;
+  wrapSy: number;
+  shift: boolean;
+  startIds: string[];
+};
+
 const ANCHOR: Record<string, string> = {
   tl: "br",
   tr: "bl",
@@ -620,6 +660,79 @@ function lsSet(key: string, val: unknown): void {
   } catch {
     /* ignore */
   }
+}
+
+function isEmptyCanvasTarget(target: EventTarget | null): boolean {
+  const el = target instanceof HTMLElement ? target : null;
+  if (!el) return false;
+  return !el.closest(
+    ".rsb-el, .rsb-guide, .rsb-zoom, .rsb-preview, button, a",
+  );
+}
+
+function pointerFromTouch(
+  e: TouchEvent,
+  touch: Touch,
+): PointerLike {
+  return {
+    clientX: touch.clientX,
+    clientY: touch.clientY,
+    shiftKey: e.shiftKey,
+    button: 0,
+    target: e.target,
+    stopPropagation: () => e.stopPropagation(),
+    preventDefault: () => e.preventDefault(),
+  };
+}
+
+function beginLayerRename(
+  e: MouseEvent,
+  layer: RecursiveStampLayer,
+): void {
+  e.stopPropagation();
+  e.preventDefault();
+  if (layer.locked) return;
+  const span = e.currentTarget as HTMLElement;
+  const original = layer.name;
+  span.contentEditable = "true";
+  span.spellcheck = false;
+  span.focus();
+  const selection = globalThis.getSelection();
+  const range = document.createRange();
+  range.selectNodeContents(span);
+  selection?.removeAllRanges();
+  selection?.addRange(range);
+  let cancelled = false;
+  const onBlur = () => {
+    span.removeEventListener("blur", onBlur);
+    span.removeEventListener("keydown", onKey);
+    span.contentEditable = "false";
+    if (cancelled) {
+      span.textContent = original;
+      return;
+    }
+    const name = (span.textContent ?? "").trim() || original;
+    span.textContent = name;
+    if (name !== original) {
+      pushHistory();
+      patchLayer(layer.id, { name });
+    }
+  };
+  const onKey = (ev: KeyboardEvent) => {
+    ev.stopPropagation();
+    if (ev.key === "Enter") {
+      ev.preventDefault();
+      span.blur();
+    }
+    if (ev.key === "Escape") {
+      ev.preventDefault();
+      cancelled = true;
+      span.textContent = original;
+      span.blur();
+    }
+  };
+  span.addEventListener("blur", onBlur);
+  span.addEventListener("keydown", onKey);
 }
 
 function corners(layer: RecursiveStampLayer) {
@@ -711,6 +824,7 @@ export function StampRecursiveContent(
   const previewCardRef = useRef<HTMLDivElement>(null);
   const ixRef = useRef<IX | null>(null);
   const guideDrag = useRef<{ id: string } | null>(null);
+  const marqueeRef = useRef<MarqueeIX | null>(null);
   const panIX = useRef<
     { sx: number; sy: number; px: number; py: number } | null
   >(null);
@@ -741,6 +855,7 @@ export function StampRecursiveContent(
   const [issuanceError, setIssuanceError] = useState("");
   const [stampName, setStampName] = useState("");
   const [stampNameError, setStampNameError] = useState("");
+  const [useTxHashEndpoint, setUseTxHashEndpoint] = useState(false);
   const [expandedSections, setExpandedSections] = useState<
     Record<RsbPanel, boolean>
   >({
@@ -770,6 +885,11 @@ export function StampRecursiveContent(
   };
   const [ctxOpen, setCtxOpen] = useState<
     { x: number; y: number } | null
+  >(null);
+  const [smartLines, setSmartLines] = useState<SmartGuideLine[]>([]);
+  const [measureChips, setMeasureChips] = useState<MeasureBadge[]>([]);
+  const [marqueeRect, setMarqueeRect] = useState<
+    { left: number; top: number; width: number; height: number } | null
   >(null);
   const [textStyle, setTextStyle] = useState<TextStyleDraft>(
     DEFAULT_TEXT_STYLE,
@@ -857,43 +977,35 @@ export function StampRecursiveContent(
     const canvasEl = canvasRef.current;
     const gridCanvas = gridRef.current;
     if (!canvasEl || !gridCanvas) return;
-    const r = canvasEl.getBoundingClientRect();
-    gridCanvas.width = Math.round(r.width);
-    gridCanvas.height = Math.round(r.height);
+    const cssW = canvasEl.clientWidth;
+    const cssH = canvasEl.clientHeight;
+    const dpr = globalThis.devicePixelRatio || 1;
+    gridCanvas.width = Math.max(1, Math.round(cssW * dpr));
+    gridCanvas.height = Math.max(1, Math.round(cssH * dpr));
     const ctx = gridCanvas.getContext("2d");
     if (!ctx) return;
-    const w = gridCanvas.width;
-    const h = gridCanvas.height;
-    ctx.clearRect(0, 0, w, h);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, cssW, cssH);
     if (!grid || mode === "preview") return;
     ctx.strokeStyle = "#262626";
     ctx.lineWidth = 1;
-    const step = Math.round(w / GRID_DIV);
-    for (let x = step; x < w; x += step) {
+    for (let i = 1; i < GRID_DIV; i++) {
+      const x = Math.round(i * cssW / GRID_DIV) + 0.5;
+      const y = Math.round(i * cssH / GRID_DIV) + 0.5;
       ctx.beginPath();
-      ctx.moveTo(x + 0.5, 0);
-      ctx.lineTo(x + 0.5, h);
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, cssH);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(cssW, y);
       ctx.stroke();
     }
-    for (let y = step; y < h; y += step) {
-      ctx.beginPath();
-      ctx.moveTo(0, y + 0.5);
-      ctx.lineTo(w, y + 0.5);
-      ctx.stroke();
-    }
-    ctx.beginPath();
-    ctx.moveTo(w / 2 + 0.5, 0);
-    ctx.lineTo(w / 2 + 0.5, h);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(0, h / 2 + 0.5);
-    ctx.lineTo(w, h / 2 + 0.5);
-    ctx.stroke();
   };
 
   useEffect(() => {
     drawGrid();
-  }, [grid, zoom, mode]);
+  }, [grid, mode]);
 
   useEffect(() => {
     const el = canvasRef.current;
@@ -978,6 +1090,44 @@ export function StampRecursiveContent(
     };
   };
 
+  const clearInteractionDecorations = () => {
+    setSmartLines([]);
+    setMeasureChips([]);
+    setMarqueeRect(null);
+    marqueeRef.current = null;
+  };
+
+  const beginCanvasPointer = (e: PointerLike) => {
+    const button = e.button ?? 0;
+    if (spaceHeld.current || button === 1) {
+      e.preventDefault();
+      panIX.current = {
+        sx: e.clientX,
+        sy: e.clientY,
+        px: panX,
+        py: panY,
+      };
+      wrapRef.current?.classList.add("panning");
+      return;
+    }
+    if (mode !== "edit") return;
+    if (button !== 0) return;
+    if (!isEmptyCanvasTarget(e.target)) return;
+    e.preventDefault();
+    if (!e.shiftKey) selectLayer(null);
+    const wrap = wrapRef.current;
+    if (!wrap) return;
+    const wr = wrap.getBoundingClientRect();
+    marqueeRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      wrapSx: e.clientX - wr.left,
+      wrapSy: e.clientY - wr.top,
+      shift: e.shiftKey,
+      startIds: e.shiftKey ? [...rsbSelIds.value] : [],
+    };
+  };
+
   const onPointerMove = (
     clientX: number,
     clientY: number,
@@ -1009,6 +1159,31 @@ export function StampRecursiveContent(
       rsbPanY.value = panIX.current.py + (clientY - panIX.current.sy);
       return;
     }
+    if (marqueeRef.current) {
+      const m = marqueeRef.current;
+      const dist = Math.hypot(clientX - m.startX, clientY - m.startY);
+      if (dist > 3) {
+        const wrap = wrapRef.current;
+        if (!wrap) return;
+        const wr = wrap.getBoundingClientRect();
+        const x1 = clientX - wr.left;
+        const y1 = clientY - wr.top;
+        setMarqueeRect({
+          left: Math.min(m.wrapSx, x1),
+          top: Math.min(m.wrapSy, y1),
+          width: Math.abs(x1 - m.wrapSx),
+          height: Math.abs(y1 - m.wrapSy),
+        });
+        const a = screenToPct(m.startX, m.startY);
+        const b = screenToPct(clientX, clientY);
+        const hits = rsbLayers.value
+          .filter((l) => layerHitsMarquee(l, a.x, a.y, b.x, b.y))
+          .map((l) => l.id);
+        const ids = m.shift ? [...new Set([...m.startIds, ...hits])] : hits;
+        setSelection(ids);
+      }
+      return;
+    }
     if (!ix) return;
     const layer = getLayer(ix.id);
     if (!layer) {
@@ -1021,15 +1196,48 @@ export function StampRecursiveContent(
       const dx = (clientX - ix.sx) / r.width * 100;
       const dy = (clientY - ix.sy) / r.height * 100;
       const idMap = new Map(ix.layers.map((o) => [o.id, o]));
+      const movingIds = ix.layers.map((o) => o.id);
+      const primary = ix.layers.find((o) => o.id === ix.id);
+      let extraDx = 0;
+      let extraDy = 0;
+      if (snap) {
+        setSmartLines([]);
+        setMeasureChips([]);
+      } else if (!shiftKey && primary) {
+        const snapped = snapMove(
+          primary.ox + dx,
+          primary.oy + dy,
+          layer.w,
+          layer.h,
+          movingIds,
+          rsbLayers.value,
+          rsbGuides.value,
+        );
+        extraDx = snapped.dx;
+        extraDy = snapped.dy;
+        setSmartLines(snapped.lines);
+        if (ix.layers.length === 1) {
+          setMeasureChips(measureBadges({
+            ...layer,
+            x: primary.ox + dx + extraDx,
+            y: primary.oy + dy + extraDy,
+          }, rsbLayers.value));
+        } else {
+          setMeasureChips([]);
+        }
+      } else {
+        setSmartLines([]);
+        setMeasureChips([]);
+      }
       mutateLayers((ls) =>
         ls.map((l) => {
           const o = idMap.get(l.id);
           if (!o) return l;
-          let x = o.ox + dx;
-          let y = o.oy + dy;
+          let x = o.ox + dx + extraDx;
+          let y = o.oy + dy + extraDy;
           if (snap) {
-            x = Math.round(x / GRID_STEP) * GRID_STEP;
-            y = Math.round(y / GRID_STEP) * GRID_STEP;
+            x = Math.round((o.ox + dx) / GRID_STEP) * GRID_STEP;
+            y = Math.round((o.oy + dy) / GRID_STEP) * GRID_STEP;
           }
           return { ...l, x, y };
         })
@@ -1096,12 +1304,30 @@ export function StampRecursiveContent(
         setPreviewDragging(false);
       }
       wrapRef.current?.classList.remove("panning");
+      clearInteractionDecorations();
+    };
+    const touchMove = (e: TouchEvent) => {
+      if (!e.touches.length) return;
+      if (
+        ixRef.current || panIX.current || guideDrag.current ||
+        marqueeRef.current || previewDrag.current
+      ) {
+        e.preventDefault();
+      }
+      const t = e.touches[0];
+      onPointerMove(t.clientX, t.clientY, e.shiftKey);
     };
     document.addEventListener("mousemove", move);
     document.addEventListener("mouseup", up);
+    document.addEventListener("touchmove", touchMove, { passive: false });
+    document.addEventListener("touchend", up);
+    document.addEventListener("touchcancel", up);
     return () => {
       document.removeEventListener("mousemove", move);
       document.removeEventListener("mouseup", up);
+      document.removeEventListener("touchmove", touchMove);
+      document.removeEventListener("touchend", up);
+      document.removeEventListener("touchcancel", up);
     };
   }, [snap, grid]);
 
@@ -1110,6 +1336,11 @@ export function StampRecursiveContent(
       const t = e.target as HTMLElement;
       if (["INPUT", "TEXTAREA", "SELECT"].includes(t.tagName)) return;
       if (t.isContentEditable) return;
+      if (e.key === "?") {
+        e.preventDefault();
+        openShortcutsModal();
+        return;
+      }
       if (e.key === "Escape") {
         if (document.getElementById("animation-modal-container")) {
           return;
@@ -1242,7 +1473,7 @@ export function StampRecursiveContent(
   }, []);
 
   const onElPointer = (
-    e: MouseEvent,
+    e: PointerLike,
     layer: RecursiveStampLayer,
   ) => {
     if (mode !== "edit") return;
@@ -1721,7 +1952,10 @@ export function StampRecursiveContent(
                               />
                             )}
                         </div>
-                        <span class={`${textXs} flex-1 truncate`}>
+                        <span
+                          class={`${textXs} flex-1 truncate`}
+                          onDblClick={(e) => beginLayerRename(e, l)}
+                        >
                           {l.name}
                         </span>
                         <Icon
@@ -1984,7 +2218,7 @@ export function StampRecursiveContent(
             <div class="flex flex-col pt-2 tablet:pt-1">
               <div class="flex flex-col gap-3">
                 <div class="flex items-center justify-between gap-3">
-                  <h5 class={label}>
+                  <h5 class={text}>
                     EDITIONS
                   </h5>
                   <div class="w-10 shrink-0">
@@ -2006,6 +2240,16 @@ export function StampRecursiveContent(
                   minLength={15}
                   error={stampNameError}
                 />
+                <div class="flex items-center justify-between gap-3">
+                  <h5 class={textSm}>
+                    {useTxHashEndpoint ? "TXHASH ENDPOINT" : "CPID ENDPOINT"}
+                  </h5>
+                  <ToggleSwitchButton
+                    isActive={useTxHashEndpoint}
+                    onToggle={() => setUseTxHashEndpoint((prev) => !prev)}
+                    toggleButtonId="switch-toggle-endpoint"
+                  />
+                </div>
               </div>
               <hr class="w-full my-5 border-color-neutral-800 border-t-1" />
               <FeeCalculatorBase
@@ -2034,61 +2278,38 @@ export function StampRecursiveContent(
               />
             </div>
           </div>
-          <div class="flex flex-col gap-3 pt-3 shrink-0">
-            {mode === "preview"
-              ? (
-                <div class="flex justify-between gap-5">
-                  <Button
-                    variant="outline"
-                    color="neutral"
-                    size="xsR"
-                    class="w-full"
-                    onClick={enterEdit}
-                  >
-                    EDIT
-                  </Button>
-                  <Button
-                    variant="outline"
-                    color="primary"
-                    size="xsR"
-                    class="w-full"
-                    onClick={onViewCode}
-                  >
-                    VIEW CODE
-                  </Button>
-                </div>
-              )
-              : (
-                <div class="flex justify-between gap-5">
-                  <Button
-                    variant="outline"
-                    color="neutral"
-                    size="xsR"
-                    class="w-full"
-                    disabled={!layers.length}
-                    onClick={() => {
-                      if (
-                        !confirm("Remove all layers from the canvas?")
-                      ) {
-                        return;
-                      }
-                      clearAllLayers();
-                    }}
-                  >
-                    CLEAR
-                  </Button>
-                  <Button
-                    variant="flat"
-                    color="primary"
-                    size="xsR"
-                    class="w-full"
-                    onClick={onGenerate}
-                  >
-                    GENERATE
-                  </Button>
-                </div>
-              )}
-          </div>
+          {mode !== "preview" && (
+            <div class="flex flex-col gap-3 pt-3 shrink-0">
+              <div class="flex justify-between gap-5">
+                <Button
+                  variant="outline"
+                  color="neutral"
+                  size="xsR"
+                  class="w-full"
+                  disabled={!layers.length}
+                  onClick={() => {
+                    if (
+                      !confirm("Remove all layers from the canvas?")
+                    ) {
+                      return;
+                    }
+                    clearAllLayers();
+                  }}
+                >
+                  CLEAR
+                </Button>
+                <Button
+                  variant="flat"
+                  color="primary"
+                  size="xsR"
+                  class="w-full"
+                  onClick={onGenerate}
+                >
+                  GENERATE
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* CANVAS */}
@@ -2101,24 +2322,14 @@ export function StampRecursiveContent(
           <div
             ref={wrapRef}
             class={`rsb-wrap h-full ${rulers ? "rulers-on" : ""} ${
-              mode === "preview" ? "preview" : ""
+              mode === "preview"
+                ? "preview bg-gradient-to-b from-color-neutral-800/40 via-color-neutral-900/60 to-neutral-900/80"
+                : ""
             }`}
-            onMouseDown={(e) => {
-              if (mode !== "edit") return;
-              if (spaceHeld.current || e.button === 1) {
-                e.preventDefault();
-                panIX.current = {
-                  sx: e.clientX,
-                  sy: e.clientY,
-                  px: panX,
-                  py: panY,
-                };
-                wrapRef.current?.classList.add("panning");
-                return;
-              }
-              if (e.button === 0 && e.target === wrapRef.current) {
-                selectLayer(null);
-              }
+            onMouseDown={(e) => beginCanvasPointer(e)}
+            onTouchStart={(e) => {
+              if (e.touches.length !== 1) return;
+              beginCanvasPointer(pointerFromTouch(e, e.touches[0]));
             }}
             onContextMenu={(e) => {
               e.preventDefault();
@@ -2140,17 +2351,16 @@ export function StampRecursiveContent(
                 background: bg,
                 transform: `translate(${panX}px,${panY}px) scale(${zoom})`,
               }}
-              onMouseDown={(e) => {
-                if (
-                  e.target === canvasRef.current ||
-                  (e.target as HTMLElement).classList.contains("rsb-grid")
-                ) {
-                  selectLayer(null);
-                }
-              }}
             >
               <canvas ref={gridRef} class="rsb-grid" />
-              {layers.length === 0 && (
+              {mode === "preview" && (
+                <iframe
+                  class="rsb-preview-frame"
+                  title="Stamp preview"
+                  srcDoc={buildRecursiveStampHtml(layers, bg, true)}
+                />
+              )}
+              {mode === "edit" && layers.length === 0 && (
                 <div class="absolute inset-0 flex items-center justify-center
                 text-color-neutral-500 text-xs pointer-events-none">
                   Add assets and/or text
@@ -2167,12 +2377,18 @@ export function StampRecursiveContent(
                     e.stopPropagation();
                     guideDrag.current = { id: g.id };
                   }}
+                  onTouchStart={(e) => {
+                    if (e.touches.length !== 1) return;
+                    e.stopPropagation();
+                    e.preventDefault();
+                    guideDrag.current = { id: g.id };
+                  }}
                   onDblClick={() => removeGuide(g.id)}
                 >
                   <div class="rsb-glabel">{g.pos.toFixed(1)}%</div>
                 </div>
               ))}
-              {layers.map((l, z) => {
+              {mode === "edit" && layers.map((l, z) => {
                 const isSel = l.id === selId;
                 const isMulti = selIds.includes(l.id) && !isSel;
                 return (
@@ -2194,6 +2410,11 @@ export function StampRecursiveContent(
                       filter: layerFilterCss(l) || undefined,
                     }}
                     onMouseDown={(e) => onElPointer(e, l)}
+                    onTouchStart={(e) => {
+                      if (e.touches.length !== 1) return;
+                      e.preventDefault();
+                      onElPointer(pointerFromTouch(e, e.touches[0]), l);
+                    }}
                     onDblClick={(e) => {
                       if (l.type !== "text") return;
                       const inner = (e.currentTarget as HTMLElement)
@@ -2253,7 +2474,37 @@ export function StampRecursiveContent(
                   </div>
                 );
               })}
+              {smartLines.map((g, i) => (
+                <div
+                  key={`smart-${g.type}-${g.pos}-${i}`}
+                  class={`rsb-smart rsb-smart-${g.type}`}
+                  style={g.type === "h"
+                    ? { top: `${g.pos}%` }
+                    : { left: `${g.pos}%` }}
+                />
+              ))}
+              {measureChips.map((b, i) => (
+                <div
+                  key={`measure-${i}`}
+                  class="rsb-measure"
+                  style={{ left: `${b.left}%`, top: `${b.top}%` }}
+                >
+                  {b.text}
+                </div>
+              ))}
             </div>
+            {marqueeRect && (
+              <div
+                class="rsb-marquee"
+                style={{
+                  display: "block",
+                  left: marqueeRect.left,
+                  top: marqueeRect.top,
+                  width: marqueeRect.width,
+                  height: marqueeRect.height,
+                }}
+              />
+            )}
             <div class="rsb-ruler rsb-ruler-h">
               <RulerTicks axis="h" />
             </div>
@@ -2308,6 +2559,38 @@ export function StampRecursiveContent(
                     getPreview(id);
                   }}
                 />
+              </div>
+            )}
+            {mode === "preview" && (
+              <div class="absolute top-0 right-0 z-[8800] p-3 flex gap-3">
+                <div class={`${container2Icon}`}>
+                  <Icon
+                    type="iconButton"
+                    name="edit"
+                    weight="normal"
+                    size="xsR"
+                    color="neutral400"
+                    ariaLabel="Edit"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      enterEdit();
+                    }}
+                  />
+                </div>
+                <div class={`${container2Icon}`}>
+                  <Icon
+                    type="iconButton"
+                    name="previewCode"
+                    weight="normal"
+                    size="xsR"
+                    color="neutral400"
+                    ariaLabel="View code"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onViewCode();
+                    }}
+                  />
+                </div>
               </div>
             )}
             <div class={`rsb-zoom ${container3} p-0.5`}>

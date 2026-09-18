@@ -126,6 +126,14 @@ export function selectLayer(id: string | null, addToSel = false): void {
   rsbSelIds.value = id ? expandGroups([id]) : [];
 }
 
+export function setSelection(ids: string[]): void {
+  const expanded = expandGroups(ids);
+  rsbSelIds.value = expanded;
+  rsbSelId.value = expanded.length
+    ? expanded[expanded.length - 1] ?? null
+    : null;
+}
+
 export function mutateLayers(
   fn: (layers: RecursiveStampLayer[]) => RecursiveStampLayer[],
 ): void {
