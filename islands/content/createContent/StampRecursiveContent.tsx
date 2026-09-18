@@ -2,7 +2,6 @@
 import { Button, ToggleSwitchButton } from "$button";
 import { StampCard } from "$card";
 import { walletContext } from "$client/wallet/wallet.ts";
-import { BREAKPOINTS } from "$constants";
 import { useFees } from "$fees";
 import {
   inputField,
@@ -210,56 +209,6 @@ function layerToStampRow(layer: RecursiveStampLayer): StampRow {
     tx_hash: layer.hash ?? "",
     stamp_base64: layer.b64 ?? "",
   } as StampRow;
-}
-
-// One row each — counts match gridCardSm / gridCardMd column breakpoints.
-const PREVIEW_SQUARE_COUNTS = {
-  mobileSm: 3,
-  mobileMd: 4,
-  mobileLg: 5,
-  tablet: 6,
-  desktop: 8,
-} as const;
-const PREVIEW_DETAIL_COUNTS = {
-  mobileSm: 2,
-  mobileMd: 3,
-  mobileLg: 4,
-  tablet: 5,
-  desktop: 6,
-} as const;
-
-interface PreviewDisplayCounts {
-  mobileSm: number;
-  mobileMd: number;
-  mobileLg: number;
-  tablet: number;
-  desktop: number;
-}
-
-function previewCountForWidth(
-  width: number,
-  counts: PreviewDisplayCounts,
-): number {
-  if (width >= BREAKPOINTS.desktop) return counts.desktop;
-  if (width >= BREAKPOINTS.tablet) return counts.tablet;
-  if (width >= BREAKPOINTS.mobileLg) return counts.mobileLg;
-  if (width >= BREAKPOINTS.mobileMd) return counts.mobileMd;
-  return counts.mobileSm;
-}
-
-function previewGridClass(cols: number): string {
-  const colClass = cols === 8
-    ? "grid-cols-8"
-    : cols === 6
-    ? "grid-cols-6"
-    : cols === 5
-    ? "grid-cols-5"
-    : cols === 4
-    ? "grid-cols-4"
-    : cols === 2
-    ? "grid-cols-2"
-    : "grid-cols-3";
-  return `grid ${colClass} min-w-0 gap-3 w-full auto-rows-fr`;
 }
 
 function buildGeneratedStampRow(opts: {
@@ -940,12 +889,6 @@ export function StampRecursiveContent(
   const [previewView, setPreviewView] = useState<"canvas" | "cards">(
     "canvas",
   );
-  const [squarePreviewCount, setSquarePreviewCount] = useState<number>(
-    PREVIEW_SQUARE_COUNTS.mobileSm,
-  );
-  const [detailPreviewCount, setDetailPreviewCount] = useState<number>(
-    PREVIEW_DETAIL_COUNTS.mobileSm,
-  );
   const [issuance, setIssuance] = useState("1");
   const [issuanceError, setIssuanceError] = useState("");
   const [stampName, setStampName] = useState("");
@@ -1113,24 +1056,6 @@ export function StampRecursiveContent(
 
   useEffect(() => {
     setRecent(lsGet<RecentItem[]>("rsb_recent", []));
-  }, []);
-
-  useEffect(() => {
-    const el = wrapRef.current;
-    if (!el) return;
-    const update = () => {
-      const width = el.clientWidth;
-      setSquarePreviewCount(
-        previewCountForWidth(width, PREVIEW_SQUARE_COUNTS),
-      );
-      setDetailPreviewCount(
-        previewCountForWidth(width, PREVIEW_DETAIL_COUNTS),
-      );
-    };
-    update();
-    const ro = new ResizeObserver(update);
-    ro.observe(el);
-    return () => ro.disconnect();
   }, []);
 
   const applyPreviewPos = (next: { x: number; y: number }) => {
@@ -2713,32 +2638,42 @@ export function StampRecursiveContent(
             {mode === "preview" && previewView === "cards" &&
               generatedPreviewStamp && (
               <div class="absolute inset-0 z-[8700] min-w-0 overflow-x-hidden
-                overflow-y-auto p-3 flex flex-col gap-3">
-                <div class={previewGridClass(squarePreviewCount)}>
-                  {Array.from(
-                    { length: squarePreviewCount },
-                    (_, i) => (
+                overflow-y-auto min-[480px]:overflow-hidden p-3 flex
+                items-start min-[480px]:items-center justify-center">
+                <div class="flex flex-col min-[480px]:flex-row gap-3
+                  items-center min-[480px]:items-start">
+                  <div class="flex flex-col gap-3">
+                    <div class="flex gap-3 items-end">
+                      <div class="w-12 h-12 shrink-0">
+                        <StampCard
+                          stamp={generatedPreviewStamp}
+                          variant="cardSquare"
+                          previewHtml={generatedPreviewHtml}
+                        />
+                      </div>
+                      <div class="w-24 h-24 shrink-0">
+                        <StampCard
+                          stamp={generatedPreviewStamp}
+                          variant="cardSquare"
+                          previewHtml={generatedPreviewHtml}
+                        />
+                      </div>
+                    </div>
+                    <div class="w-40 h-40 shrink-0">
                       <StampCard
-                        key={`sq-${i}`}
                         stamp={generatedPreviewStamp}
                         variant="cardSquare"
                         previewHtml={generatedPreviewHtml}
                       />
-                    ),
-                  )}
-                </div>
-                <div class={previewGridClass(detailPreviewCount)}>
-                  {Array.from(
-                    { length: detailPreviewCount },
-                    (_, i) => (
-                      <StampCard
-                        key={`dt-${i}`}
-                        stamp={generatedPreviewStamp}
-                        variant="cardVerticalDetail"
-                        previewHtml={generatedPreviewHtml}
-                      />
-                    ),
-                  )}
+                    </div>
+                  </div>
+                  <div class="w-[180px] shrink-0">
+                    <StampCard
+                      stamp={generatedPreviewStamp}
+                      variant="cardVerticalDetail"
+                      previewHtml={generatedPreviewHtml}
+                    />
+                  </div>
                 </div>
               </div>
             )}
@@ -2777,8 +2712,8 @@ export function StampRecursiveContent(
                   <Icon
                     type="iconButton"
                     name={previewView === "cards"
-                      ? "viewCardSingle"
-                      : "viewCardVertical"}
+                      ? "viewCardMixed"
+                      : "viewCardSingle"}
                     weight="normal"
                     size="xsR"
                     color="neutral400"
