@@ -9,7 +9,7 @@ import {
   messageError,
 } from "$form";
 import { CreateStampRecursiveHeader } from "$header";
-import { Icon } from "$icon";
+import { Icon, PlaceholderImage } from "$icon";
 import { RangeSlider } from "$islands/button/RangeSlider.tsx";
 import { ColorPicker } from "$islands/form/ColorPicker.tsx";
 import { InputField } from "$islands/form/InputField.tsx";
@@ -75,6 +75,10 @@ import {
   fetchStampsByCreator,
 } from "$lib/utils/api/stamps/fetchStamp.ts";
 import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
+import {
+  getStampImageSrc,
+  getStampPreviewUrl,
+} from "$lib/utils/ui/media/imageUtils.ts";
 import { showToast } from "$lib/utils/ui/notifications/toastSignal.ts";
 import {
   buildRecursiveStampHtml,
@@ -159,6 +163,218 @@ function clampPreviewPos(
   };
 }
 
+const LIBRARY_MIMES = new Set([
+  "text/css",
+  "text/javascript",
+  "application/javascript",
+  "application/gzip",
+  "application/json",
+  "text/json",
+]);
+
+function isLibraryMime(mime?: string | null): boolean {
+  return !!mime && LIBRARY_MIMES.has(mime);
+}
+
+function isUnrenderableMime(mime?: string | null): boolean {
+  return mime === "UNKNOWN" || mime === "application/octet-stream";
+}
+
+function isHtmlMime(mime?: string | null): boolean {
+  return mime === "text/html";
+}
+
+function isSvgMime(mime?: string | null): boolean {
+  return mime === "image/svg+xml";
+}
+
+function layerToStampRow(layer: RecursiveStampLayer): StampRow {
+  return {
+    stamp: layer.num ?? 0,
+    stamp_url: layer.url ?? "",
+    stamp_mimetype: layer.mime ?? "",
+    ident: layer.ident ?? "",
+    tx_hash: layer.hash ?? "",
+    stamp_base64: layer.b64 ?? "",
+  } as StampRow;
+}
+
+function liveHtmlSrc(
+  stamp: Pick<StampRow, "stamp_url" | "stamp_mimetype" | "ident">,
+): string | undefined {
+  return getStampImageSrc(stamp as StampRow);
+}
+
+function staticThumbSrc(stamp: StampRow): string | undefined {
+  const mime = stamp.stamp_mimetype;
+  if (isLibraryMime(mime) || isUnrenderableMime(mime)) return undefined;
+  if (isHtmlMime(mime) || isSvgMime(mime)) {
+    if (stamp.stamp == null) return undefined;
+    return getStampPreviewUrl(stamp, { placeholderOnFail: true });
+  }
+  return getStampImageSrc(stamp);
+}
+
+function staticLayerThumbSrc(
+  layer: RecursiveStampLayer,
+): string | undefined {
+  const mime = layer.mime;
+  if (isLibraryMime(mime) || isUnrenderableMime(mime)) return undefined;
+  if (isHtmlMime(mime) || isSvgMime(mime)) {
+    return layer.num != null
+      ? getStampPreviewUrl(layerToStampRow(layer), {
+        placeholderOnFail: true,
+      })
+      : undefined;
+  }
+  if (mime?.startsWith("image/")) {
+    return getStampImageSrc(layerToStampRow(layer)) ||
+      layerDisplaySrc(layer) || undefined;
+  }
+  return layer.num != null
+    ? getStampPreviewUrl(layerToStampRow(layer), {
+      placeholderOnFail: true,
+    })
+    : undefined;
+}
+
+function StampThumb(
+  { src, alt, mime, className, placeholderClassName }: {
+    src?: string | undefined;
+    alt: string;
+    mime?: string | null | undefined;
+    className?: string | undefined;
+    placeholderClassName?: string | undefined;
+  },
+): JSX.Element {
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
+  const placeholderClass = placeholderClassName ?? "";
+  if (isLibraryMime(mime)) {
+    return (
+      <PlaceholderImage
+        variant="library"
+        className={placeholderClass}
+      />
+    );
+  }
+  if (isUnrenderableMime(mime) || mime?.startsWith("audio/")) {
+    return (
+      <PlaceholderImage
+        variant={mime?.startsWith("audio/") ? "audio" : "error"}
+        className={placeholderClass}
+      />
+    );
+  }
+  if (!src || failedSrc === src) {
+    return (
+      <PlaceholderImage
+        variant="no-image"
+        className={placeholderClass}
+      />
+    );
+  }
+  return (
+    <img
+      src={src}
+      alt={alt}
+      class={className ?? "w-full h-full object-contain pixelart"}
+      loading="lazy"
+      onError={() => setFailedSrc(src)}
+    />
+  );
+}
+
+function LiveStampPreview(
+  { stamp, previewSrc }: { stamp: StampRow; previewSrc: string },
+): JSX.Element {
+  const [imgFailed, setImgFailed] = useState(false);
+  const mime = stamp.stamp_mimetype;
+  const placeholderClass = "!rounded-xl";
+
+  if (isLibraryMime(mime)) {
+    return <PlaceholderImage variant="library" className={placeholderClass} />;
+  }
+  if (isUnrenderableMime(mime)) {
+    return <PlaceholderImage variant="error" className={placeholderClass} />;
+  }
+  if (mime?.startsWith("audio/")) {
+    return <PlaceholderImage variant="audio" className={placeholderClass} />;
+  }
+  if (isHtmlMime(mime)) {
+    const src = liveHtmlSrc(stamp);
+    if (!src) {
+      return (
+        <PlaceholderImage variant="no-image" className={placeholderClass} />
+      );
+    }
+    return (
+      <iframe
+        src={src}
+        class="w-full h-full pointer-events-none rounded-xl"
+        sandbox="allow-scripts allow-same-origin"
+      />
+    );
+  }
+  if (!previewSrc || imgFailed) {
+    return <PlaceholderImage variant="no-image" className={placeholderClass} />;
+  }
+  return (
+    <img
+      src={previewSrc}
+      alt={`Stamp #${stamp.stamp}`}
+      class="w-full h-full object-contain rounded-xl pixelart
+        pointer-events-none"
+      draggable={false}
+      onError={() => setImgFailed(true)}
+    />
+  );
+}
+
+function CanvasLayerMedia(
+  { layer }: { layer: RecursiveStampLayer },
+): JSX.Element {
+  if (isHtmlMime(layer.mime)) {
+    const src = liveHtmlSrc(layerToStampRow(layer)) ?? layer.url;
+    if (!src) {
+      return (
+        <PlaceholderImage
+          variant="no-image"
+          className="!rounded-none"
+        />
+      );
+    }
+    return (
+      <iframe
+        src={src}
+        sandbox="allow-scripts allow-same-origin"
+      />
+    );
+  }
+  if (isLibraryMime(layer.mime)) {
+    return (
+      <PlaceholderImage
+        variant="library"
+        className="!rounded-none"
+      />
+    );
+  }
+  if (isUnrenderableMime(layer.mime)) {
+    return (
+      <PlaceholderImage
+        variant="error"
+        className="!rounded-none"
+      />
+    );
+  }
+  return (
+    <img
+      src={layerDisplaySrc(layer)}
+      alt={layer.name}
+      draggable={false}
+    />
+  );
+}
+
 function AssetPreviewCard(
   { stamp, previewSrc, more, onAdd, onHide, onPick }: {
     stamp: StampRow;
@@ -177,23 +393,11 @@ function AssetPreviewCard(
           class={`flex items-center justify-center shrink-0
             w-[68px] h-[68px] overflow-hidden ${container3}`}
         >
-          {stamp.stamp_mimetype === "text/html"
-            ? (
-              <iframe
-                src={stamp.stamp_url}
-                class="w-full h-full pointer-events-none rounded-xl"
-                sandbox="allow-scripts allow-same-origin"
-              />
-            )
-            : (
-              <img
-                src={previewSrc}
-                alt={`Stamp #${stamp.stamp}`}
-                class="w-full h-full object-contain rounded-xl
-                  pointer-events-none"
-                draggable={false}
-              />
-            )}
+          <LiveStampPreview
+            key={stamp.tx_hash}
+            stamp={stamp}
+            previewSrc={previewSrc}
+          />
         </div>
         <div class="flex flex-col min-w-0 flex-1 gap-0.5">
           <div class={cardStampNumber}>
@@ -228,21 +432,12 @@ function AssetPreviewCard(
                 !rounded-xl aspect-square overflow-hidden p-0`}
               onClick={() => onPick(String(s.stamp))}
             >
-              {s.stamp_mimetype === "text/html"
-                ? (
-                  <iframe
-                    src={s.stamp_url}
-                    class="w-full h-full pointer-events-none rounded-xl"
-                    sandbox="allow-scripts allow-same-origin"
-                  />
-                )
-                : (
-                  <img
-                    src={s.stamp_url}
-                    alt={`#${s.stamp}`}
-                    class="w-full h-full object-cover rounded-xl pixelated"
-                  />
-                )}
+              <StampThumb
+                src={staticThumbSrc(s)}
+                alt={`#${s.stamp}`}
+                mime={s.stamp_mimetype}
+                placeholderClassName="!rounded-xl"
+              />
             </button>
           ))}
         </div>
@@ -1319,10 +1514,15 @@ export function StampRecursiveContent(
                               getPreview(id);
                             }}
                           >
-                            <img
-                              src={`/api/v2/stamp/${r.num}/preview`}
+                            <StampThumb
+                              src={r.num != null
+                                ? getStampPreviewUrl(
+                                  { stamp: r.num } as StampRow,
+                                  { placeholderOnFail: true },
+                                )
+                                : undefined}
                               alt={`#${r.num}`}
-                              class="w-full h-full object-cover"
+                              placeholderClassName="!rounded-xl"
                             />
                           </button>
                         ))}
@@ -1513,15 +1713,14 @@ export function StampRecursiveContent(
                                 T
                               </span>
                             )
-                            : l.mime?.startsWith("image/")
-                            ? (
-                              <img
-                                src={layerDisplaySrc(l)}
+                            : (
+                              <StampThumb
+                                src={staticLayerThumbSrc(l)}
                                 alt={l.name}
-                                class="w-full h-full object-cover"
+                                mime={l.mime}
+                                placeholderClassName="!rounded-none !p-[15%]"
                               />
-                            )
-                            : <span class={`${textXs}`}>HTML</span>}
+                            )}
                         </div>
                         <span class={`${textXs} flex-1 truncate`}>
                           {l.name}
@@ -2036,20 +2235,7 @@ export function StampRecursiveContent(
                       )
                       : (
                         <div class="rsb-inner">
-                          {l.mime === "text/html"
-                            ? (
-                              <iframe
-                                src={l.url}
-                                sandbox="allow-scripts allow-same-origin"
-                              />
-                            )
-                            : (
-                              <img
-                                src={layerDisplaySrc(l)}
-                                alt={l.name}
-                                draggable={false}
-                              />
-                            )}
+                          <CanvasLayerMedia layer={l} />
                         </div>
                       )}
                     <div class="rsb-sel">
