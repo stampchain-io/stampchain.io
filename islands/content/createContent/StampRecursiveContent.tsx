@@ -1,6 +1,8 @@
 /* ===== RECURSIVE STAMP CONTENT ===== */
 import { Button, ToggleSwitchButton } from "$button";
+import { StampCard } from "$card";
 import { walletContext } from "$client/wallet/wallet.ts";
+import { BREAKPOINTS } from "$constants";
 import { useFees } from "$fees";
 import {
   inputField,
@@ -22,6 +24,7 @@ import {
   container2Hover,
   container2Icon,
   container3,
+  gridCard,
   shadowGlowPurpleSm,
   transitionColors,
 } from "$layout";
@@ -71,6 +74,7 @@ import {
   ungroupSelection,
   useRecursiveStampState,
 } from "$lib/hooks/useRecursiveStampState.ts";
+import { useWindowSize } from "$lib/hooks/useWindowSize.ts";
 import {
   fetchStampById,
   fetchStampsByCreator,
@@ -206,6 +210,73 @@ function layerToStampRow(layer: RecursiveStampLayer): StampRow {
     tx_hash: layer.hash ?? "",
     stamp_base64: layer.b64 ?? "",
   } as StampRow;
+}
+
+// One row each — counts match gridCardSm / gridCardMd column breakpoints.
+const PREVIEW_SQUARE_COUNTS = {
+  mobileSm: 3,
+  mobileMd: 4,
+  mobileLg: 5,
+  tablet: 6,
+  desktop: 8,
+} as const;
+const PREVIEW_DETAIL_COUNTS = {
+  mobileSm: 2,
+  mobileMd: 3,
+  mobileLg: 4,
+  tablet: 5,
+  desktop: 6,
+} as const;
+
+interface PreviewDisplayCounts {
+  mobileSm: number;
+  mobileMd: number;
+  mobileLg: number;
+  tablet: number;
+  desktop: number;
+}
+
+function previewCountForWidth(
+  width: number,
+  counts: PreviewDisplayCounts,
+): number {
+  if (width >= BREAKPOINTS.desktop) return counts.desktop;
+  if (width >= BREAKPOINTS.tablet) return counts.tablet;
+  if (width >= BREAKPOINTS.mobileLg) return counts.mobileLg;
+  if (width >= BREAKPOINTS.mobileMd) return counts.mobileMd;
+  return counts.mobileSm;
+}
+
+function buildGeneratedStampRow(opts: {
+  html: string;
+  issuance: string;
+  stampName: string;
+  creator: string;
+  creatorName: string | null;
+}): StampRow {
+  const supply = parseInt(opts.issuance, 10);
+  return {
+    stamp: 1234567,
+    cpid: opts.stampName || "AUTO GENERATED",
+    ident: "STAMP",
+    block_index: 0,
+    block_time: new Date(),
+    tx_hash: "preview",
+    tx_index: 0,
+    creator: opts.creator,
+    creator_name: opts.creatorName,
+    divisible: false,
+    keyburn: null,
+    locked: 1,
+    supply: Number.isFinite(supply) && supply > 0 ? supply : 1,
+    stamp_base64: "",
+    stamp_mimetype: "text/html",
+    stamp_url: "",
+    stamp_hash: "",
+    file_hash: "",
+    file_size_bytes: new TextEncoder().encode(opts.html).length,
+    unbound_quantity: 0,
+  };
 }
 
 function liveHtmlSrc(
@@ -851,6 +922,16 @@ export function StampRecursiveContent(
   const [fee, setFee] = useState(1);
   const [BTCPrice, setBTCPrice] = useState(60000);
   const [tosAgreed, setTosAgreed] = useState(false);
+  const [previewView, setPreviewView] = useState<"canvas" | "cards">(
+    "canvas",
+  );
+  const { width: windowWidth } = useWindowSize();
+  const [squarePreviewCount, setSquarePreviewCount] = useState<number>(
+    PREVIEW_SQUARE_COUNTS.mobileSm,
+  );
+  const [detailPreviewCount, setDetailPreviewCount] = useState<number>(
+    PREVIEW_DETAIL_COUNTS.mobileSm,
+  );
   const [issuance, setIssuance] = useState("1");
   const [issuanceError, setIssuanceError] = useState("");
   const [stampName, setStampName] = useState("");
@@ -1018,6 +1099,15 @@ export function StampRecursiveContent(
   useEffect(() => {
     setRecent(lsGet<RecentItem[]>("rsb_recent", []));
   }, []);
+
+  useEffect(() => {
+    setSquarePreviewCount(
+      previewCountForWidth(windowWidth || 0, PREVIEW_SQUARE_COUNTS),
+    );
+    setDetailPreviewCount(
+      previewCountForWidth(windowWidth || 0, PREVIEW_DETAIL_COUNTS),
+    );
+  }, [windowWidth]);
 
   const applyPreviewPos = (next: { x: number; y: number }) => {
     if (
@@ -1527,6 +1617,7 @@ export function StampRecursiveContent(
       showToast("Canvas is empty - add some assets.", "warning");
       return;
     }
+    setPreviewView("canvas");
     enterPreview(buildRecursiveStampHtml(layers, bg, false));
   };
 
@@ -1608,6 +1699,19 @@ export function StampRecursiveContent(
     fetched && previewVisible && mode === "edit",
   );
 
+  const generatedPreviewHtml = mode === "preview"
+    ? buildRecursiveStampHtml(layers, bg, true)
+    : "";
+  const generatedPreviewStamp = mode === "preview"
+    ? buildGeneratedStampRow({
+      html: generatedPreviewHtml,
+      issuance,
+      stampName,
+      creator: isConnected ? walletContext.wallet.address : "",
+      creatorName: isConnected ? null : "Connect Wallet",
+    })
+    : null;
+
   return (
     <div class="flex flex-col w-full pt-5">
       <style>{CANVAS_CSS}</style>
@@ -1615,7 +1719,8 @@ export function StampRecursiveContent(
       <div class="flex flex-col-reverse mobileLg:flex-row w-full gap-5 pt-5">
         <div
           class={`w-full mobileLg:w-[320px] mobileLg:shrink-0
-            h-[800px] mobileLg:h-[640px] min-[1080px]:h-[690px] flex flex-col overflow-hidden p-5
+            h-auto mobileLg:h-[640px] min-[1080px]:h-[690px]
+            flex flex-col overflow-hidden p-5
             ${container2}`}
         >
           <div
@@ -2212,10 +2317,10 @@ export function StampRecursiveContent(
             )}
           </div>
           <div
-            class={`flex min-h-0 flex-1 flex-col overflow-y-auto pr-1
+            class={`flex min-h-0 flex-1 flex-col
               ${mode === "preview" ? "" : "hidden"}`}
           >
-            <div class="flex flex-col pt-2 tablet:pt-1">
+            <div class="flex min-h-0 flex-1 flex-col overflow-hidden">
               <div class="flex flex-col gap-3">
                 <div class="flex items-center justify-between gap-3">
                   <h5 class={text}>
@@ -2251,6 +2356,8 @@ export function StampRecursiveContent(
                   />
                 </div>
               </div>
+            </div>
+            <div class="shrink-0">
               <hr class="w-full my-5 border-color-neutral-800 border-t-1" />
               <FeeCalculatorBase
                 fee={fee}
@@ -2346,18 +2453,20 @@ export function StampRecursiveContent(
           >
             <div
               ref={canvasRef}
-              class="rsb-canvas"
+              class={`rsb-canvas${
+                mode === "preview" && previewView === "cards" ? " hidden" : ""
+              }`}
               style={{
                 background: bg,
                 transform: `translate(${panX}px,${panY}px) scale(${zoom})`,
               }}
             >
               <canvas ref={gridRef} class="rsb-grid" />
-              {mode === "preview" && (
+              {mode === "preview" && previewView === "canvas" && (
                 <iframe
                   class="rsb-preview-frame"
                   title="Stamp preview"
-                  srcDoc={buildRecursiveStampHtml(layers, bg, true)}
+                  srcDoc={generatedPreviewHtml}
                 />
               )}
               {mode === "edit" && layers.length === 0 && (
@@ -2561,6 +2670,38 @@ export function StampRecursiveContent(
                 />
               </div>
             )}
+            {mode === "preview" && previewView === "cards" &&
+              generatedPreviewStamp && (
+              <div class="absolute inset-0 z-[8700] overflow-auto p-3 pt-14
+                flex flex-col gap-5">
+                <div class={gridCard("cardSquare")}>
+                  {Array.from(
+                    { length: squarePreviewCount },
+                    (_, i) => (
+                      <StampCard
+                        key={`sq-${i}`}
+                        stamp={generatedPreviewStamp}
+                        variant="cardSquare"
+                        previewHtml={generatedPreviewHtml}
+                      />
+                    ),
+                  )}
+                </div>
+                <div class={gridCard("cardVertical")}>
+                  {Array.from(
+                    { length: detailPreviewCount },
+                    (_, i) => (
+                      <StampCard
+                        key={`dt-${i}`}
+                        stamp={generatedPreviewStamp}
+                        variant="cardVerticalDetail"
+                        previewHtml={generatedPreviewHtml}
+                      />
+                    ),
+                  )}
+                </div>
+              </div>
+            )}
             {mode === "preview" && (
               <div class="absolute top-0 right-0 z-[8800] p-3 flex gap-3">
                 <div class={`${container2Icon}`}>
@@ -2573,6 +2714,7 @@ export function StampRecursiveContent(
                     ariaLabel="Edit"
                     onClick={(e) => {
                       e.preventDefault();
+                      setPreviewView("canvas");
                       enterEdit();
                     }}
                   />
@@ -2591,34 +2733,57 @@ export function StampRecursiveContent(
                     }}
                   />
                 </div>
+                <div class={`${container2Icon}`}>
+                  <Icon
+                    type="iconButton"
+                    name={previewView === "cards"
+                      ? "viewCardSingle"
+                      : "viewCardVertical"}
+                    weight="normal"
+                    size="xsR"
+                    color="neutral400"
+                    ariaLabel={previewView === "cards"
+                      ? "Switch to canvas preview"
+                      : "Switch to card preview"}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setPreviewView((v) =>
+                        v === "canvas" ? "cards" : "canvas"
+                      );
+                    }}
+                  />
+                </div>
               </div>
             )}
-            <div class={`rsb-zoom ${container3} p-0.5`}>
-              <Button
-                variant="outline"
-                color="neutral"
-                size="xxsR"
-                onClick={() => setZoom(zoom / 1.2)}
-              >
-                −
-              </Button>
-              <button
-                type="button"
-                class="min-w-[42px] text-[0.625rem] font-mono
+            {previewView !== "cards" && (
+              <div class={`rsb-zoom ${container3} p-0.5`}>
+                <Button
+                  variant="outline"
+                  color="neutral"
+                  size="xxsR"
+                  onClick={() =>
+                    setZoom(zoom / 1.2)}
+                >
+                  −
+                </Button>
+                <button
+                  type="button"
+                  class="min-w-[42px] text-[0.625rem] font-mono
                 text-color-neutral-400"
-                onClick={() => resetZoom()}
-              >
-                {Math.round(zoom * 100)}%
-              </button>
-              <Button
-                variant="outline"
-                color="neutral"
-                size="xxsR"
-                onClick={() => setZoom(zoom * 1.2)}
-              >
-                +
-              </Button>
-            </div>
+                  onClick={() => resetZoom()}
+                >
+                  {Math.round(zoom * 100)}%
+                </button>
+                <Button
+                  variant="outline"
+                  color="neutral"
+                  size="xxsR"
+                  onClick={() => setZoom(zoom * 1.2)}
+                >
+                  +
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
 /* ===== BUTTON STYLES MODULE ===== */
-import { container2Hover, transitionColors } from "$layout";
+import { container2Hover, shadowGlowPurpleSm, transitionColors } from "$layout";
 import { JSX } from "preact";
 
 /* ===== TYPE DEFINITIONS ===== */
@@ -154,7 +154,8 @@ export const buttonHover = `px-1.5 py-0.5 bg-transparent rounded-full
   hover:bg-gradient-to-b hover:from-color-neutral-700/80 hover:via-color-neutral-800/90 hover:to-color-neutral-800 hover:stroke-color-hover`;
 /* ===== TOGGLE SWITCH BUTTON STYLES ===== */
 export const toggleButton = `flex items-center relative w-10 h-5 !rounded-full
-  ${container2Hover} group focus:outline-none focus-visible:outline-none transition duration-50`;
+  overflow-hidden ${container2Hover} ${shadowGlowPurpleSm} group focus:outline-none
+  focus-visible:outline-none transition duration-50`;
 export const toggleKnobBackground =
   "flex justify-center items-center relative w-5 h-5 bg-transparent rounded-full cursor-pointer transition ease-in-out transform duration-400";
 export const toggleKnob =
