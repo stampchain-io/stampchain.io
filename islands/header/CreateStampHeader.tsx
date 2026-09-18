@@ -17,8 +17,12 @@ const SHORTCUTS: Array<{ keys: string; action: string }> = [
   { keys: "Arrow keys", action: "Nudge selected (0.5%)" },
   { keys: "Shift+Arrows", action: "Nudge selected (5%)" },
   { keys: "Shift+H · Shift+V", action: "Flip horizontal / vertical" },
+  { keys: "Shift+Drag handle", action: "Constrain aspect ratio" },
+  { keys: "Drag empty canvas", action: "Box-select layers" },
+  { keys: "Shift+Click", action: "Add to / remove from selection" },
+  { keys: "Double-click name", action: "Rename layer" },
   { keys: "+ / − · Wheel", action: "Zoom in / out" },
-  { keys: "Space+Drag", action: "Pan canvas" },
+  { keys: "Space+Drag · Middle-drag", action: "Pan canvas" },
   { keys: "0", action: "Reset zoom & pan" },
   { keys: "Esc", action: "Deselect / close dialogs" },
   { keys: "?", action: "Show this help" },
@@ -43,6 +47,10 @@ function ShortcutsModal() {
       </div>
     </ModalBase>
   );
+}
+
+export function openShortcutsModal(): void {
+  openModal(<ShortcutsModal />, "zoomInOut");
 }
 
 export function CreateStampHeader(
@@ -92,7 +100,7 @@ export function CreateStampHeader(
               ariaLabel="Keyboard shortcuts"
               onClick={(e) => {
                 e.preventDefault();
-                openModal(<ShortcutsModal />, "zoomInOut");
+                openShortcutsModal();
               }}
             />
           </div>
