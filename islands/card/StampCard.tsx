@@ -97,10 +97,12 @@ export function StampCard({
   stamp,
   isRecentSale = false,
   variant = "cardVerticalDetail",
+  previewHtml,
 }: {
   stamp: StampWithSaleData;
   isRecentSale?: boolean;
   variant?: StampCardVariant;
+  previewHtml?: string;
 }) {
   /* ===== STATE ===== */
   const [loading, setLoading] = useState<boolean>(true);
@@ -175,10 +177,15 @@ export function StampCard({
     return () => globalThis.removeEventListener("resize", handleResize);
   }, []);
 
-  // Fetch stamp image on mount
+  // Fetch stamp image on mount. Unpublished HTML previews skip the CDN
+  // lookup and render `previewHtml` in an iframe instead.
   useEffect(() => {
+    if (previewHtml) {
+      setLoading(false);
+      return;
+    }
     fetchStampImage();
-  }, []);
+  }, [previewHtml]);
 
   // Validate SVG content when source changes
   useEffect(() => {
@@ -319,8 +326,23 @@ export function StampCard({
       return <StampTextContent src={src} />;
     }
 
-    // Handle HTML content - show cached preview PNG in grid view
+    // Handle HTML content - live iframe for unpublished previews, otherwise
+    // the cached PNG used in gallery grids.
     if (stamp.stamp_mimetype === "text/html") {
+      if (previewHtml) {
+        return (
+          <div class="stamp-container">
+            <div class="relative z-10 aspect-square">
+              <iframe
+                srcDoc={previewHtml}
+                sandbox="allow-scripts allow-same-origin"
+                title={`Stamp preview ${stamp.stamp ?? stamp.cpid}`}
+                class="h-full w-full rounded-xl border-0"
+              />
+            </div>
+          </div>
+        );
+      }
       if (imageFailed) {
         return (
           <div class="stamp-container">
@@ -845,6 +867,8 @@ export function StampCard({
     );
   }
 
+  const CardRoot = previewHtml ? "div" : "a";
+
   /* ===== RENDER ===== */
   /* ===== CARD VARIANTS ===== */
   return (
@@ -853,10 +877,12 @@ export function StampCard({
       ref={cardRef}
       class="relative flex justify-center w-full h-full max-w-72"
     >
-      <a
-        href={`/stamp/${stamp.tx_hash}`}
-        target="_top"
-        f-partial={`/stamp/${stamp.tx_hash}`}
+      <CardRoot
+        {...(previewHtml ? {} : {
+          href: `/stamp/${stamp.tx_hash}`,
+          target: "_top",
+          "f-partial": `/stamp/${stamp.tx_hash}`,
+        })}
         data-long-number={isLongNumber(stampValue)}
         class={containerCard}
       >
@@ -1447,7 +1473,7 @@ export function StampCard({
             </PillWithTooltip>
           </div>
         )}
-      </a>
+      </CardRoot>
     </div>
   );
 }
