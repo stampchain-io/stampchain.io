@@ -165,7 +165,7 @@ export function patchLayer(
 
 export function addStampLayer(s: StampRow): RecursiveStampLayer {
   pushHistory();
-  const sz = 45;
+  const sz = 50;
   const layer: RecursiveStampLayer = {
     id: nextId(),
     ...(s.stamp != null ? { num: s.stamp } : {}),
@@ -211,9 +211,9 @@ export function addTextLayer(
     align: style?.align ?? "center",
     name: "Text",
     x: 25,
-    y: 40,
+    y: 25,
     w: 50,
-    h: 20,
+    h: 50,
     r: 0,
     flipH: false,
     flipV: false,
