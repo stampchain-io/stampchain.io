@@ -128,6 +128,9 @@ export function Icon(props: IconVariants) {
       previewImage: "image",
       previewCode: "imageCode",
       previewImageRaw: "imageOut",
+      // - Preview Code Modal Icons
+      previewCodeRaw: "codeRaw",
+      previewCodeFormatted: "codeFormatted",
       // - Media Icons
       play: "play",
       pause: "pause",

@@ -33,11 +33,22 @@ export const rsbHistory = signal<string[]>([]);
 export const rsbFuture = signal<string[]>([]);
 
 let guideUid = 1;
+let previewSelId: string | null = null;
+let previewSelIds: string[] = [];
 
 function nextId(): string {
   const id = `l${rsbUid.value}`;
   rsbUid.value = rsbUid.value + 1;
   return id;
+}
+
+function maxLayerUid(layers: RecursiveStampLayer[]): number {
+  let max = 0;
+  for (const layer of layers) {
+    const n = Number.parseInt(String(layer.id).replace(/^[^\d]*/, ""), 10);
+    if (Number.isFinite(n) && n > max) max = n;
+  }
+  return max;
 }
 
 function snapshot(): string {
@@ -46,6 +57,7 @@ function snapshot(): string {
     bg: rsbBg.value,
     selId: rsbSelId.value,
     selIds: rsbSelIds.value,
+    uid: rsbUid.value,
   });
 }
 
@@ -62,11 +74,13 @@ function restoreSnapshot(snap: string): void {
     bg: string;
     selId: string | null;
     selIds: string[];
+    uid?: number;
   };
   rsbLayers.value = st.layers;
   rsbBg.value = st.bg;
   rsbSelId.value = st.selId;
   rsbSelIds.value = st.selIds ?? [];
+  rsbUid.value = Math.max(st.uid ?? 1, maxLayerUid(st.layers) + 1);
 }
 
 export function undo(): void {
@@ -245,6 +259,13 @@ export function clearAllLayers(): void {
   pushHistory();
   rsbLayers.value = [];
   selectLayer(null);
+  rsbBg.value = "#000000";
+  resetZoom();
+  rsbMode.value = "edit";
+  rsbHtml.value = "";
+  rsbUid.value = 1;
+  previewSelId = null;
+  previewSelIds = [];
 }
 
 export function toggleLayerVis(id: string): void {
@@ -350,9 +371,6 @@ export function resetZoom(): void {
   rsbPanX.value = 0;
   rsbPanY.value = 0;
 }
-
-let previewSelId: string | null = null;
-let previewSelIds: string[] = [];
 
 export function enterPreview(html: string): void {
   previewSelId = rsbSelId.value;
