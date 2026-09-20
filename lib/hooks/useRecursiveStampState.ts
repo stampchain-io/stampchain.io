@@ -226,6 +226,30 @@ export function addTextLayer(
   return layer;
 }
 
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function layerNameBase(name: string): string {
+  return name.replace(/(?: \(copy\)| - \d+)+$/, "");
+}
+
+function nextDuplicateName(
+  name: string,
+  layers: RecursiveStampLayer[],
+): string {
+  const base = layerNameBase(name);
+  const re = new RegExp(`^${escapeRegExp(base)} - (\\d+)$`);
+  let max = 0;
+  for (const layer of layers) {
+    const match = layer.name.match(re);
+    if (!match) continue;
+    const n = Number.parseInt(match[1], 10);
+    if (Number.isFinite(n) && n > max) max = n;
+  }
+  return `${base} - ${max + 1}`;
+}
+
 export function duplicateSelected(): void {
   const layer = getLayer(rsbSelId.value);
   if (!layer) return;
@@ -236,7 +260,7 @@ export function duplicateSelected(): void {
     id: nextId(),
     x: layer.x + 2,
     y: layer.y + 2,
-    name: `${layer.name} (copy)`,
+    name: nextDuplicateName(layer.name, rsbLayers.value),
   };
   rsbLayers.value = [...rsbLayers.value, copy];
   selectLayer(copy.id);
