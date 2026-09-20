@@ -28,6 +28,7 @@ export interface IconVariants {
     | "neutral400"
     | "neutral500"
     | "neutral600"
+    | "neutral800"
     | "primary400"
     | "primary500"
     | "primary600"
@@ -130,6 +131,8 @@ export const iconStyles = {
       "stroke-color-neutral-500 hover:stroke-color-hover group-hover:stroke-color-hover fill-none hover:fill-none group-hover:fill-none cursor-pointer [&_path[class*='fill-stroke']]:fill-color-neutral-500 hover:[&_path[class*='fill-stroke']]:fill-color-hover group-hover:[&_path[class*='fill-stroke']]:fill-color-hover",
     neutral600:
       "stroke-color-neutral-600 hover:stroke-color-hover group-hover:stroke-color-hover fill-none hover:fill-none group-hover:fill-none cursor-pointer [&_path[class*='fill-stroke']]:fill-color-neutral-600 hover:[&_path[class*='fill-stroke']]:fill-color-hover group-hover:[&_path[class*='fill-stroke']]:fill-color-hover",
+    neutral800:
+      "stroke-color-neutral-800 hover:stroke-color-hover group-hover:stroke-color-hover fill-none hover:fill-none group-hover:fill-none cursor-pointer [&_path[class*='fill-stroke']]:fill-color-neutral-800 hover:[&_path[class*='fill-stroke']]:fill-color-hover group-hover:[&_path[class*='fill-stroke']]:fill-color-hover",
 
     primary400:
       "stroke-color-primary-400 hover:stroke-color-hover group-hover:stroke-color-hover fill-none hover:fill-none group-hover:fill-none cursor-pointer [&_path[class*='fill-stroke']]:fill-color-primary-400 hover:[&_path[class*='fill-stroke']]:fill-color-hover group-hover:[&_path[class*='fill-stroke']]:fill-color-hover",
