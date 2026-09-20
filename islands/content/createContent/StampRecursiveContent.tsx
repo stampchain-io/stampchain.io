@@ -560,17 +560,17 @@ const CANVAS_CSS = `
 .rsb-wrap.preview .rsb-el{pointer-events:none}
 .rsb-inner{width:100%;height:100%;overflow:hidden;position:relative;z-index:0}
 .rsb-inner img,.rsb-inner iframe{width:100%;height:100%;object-fit:contain;
-  border:none;display:block;pointer-events:none}
+  border:none;outline:none;display:block;pointer-events:none}
 .rsb-inner img{image-rendering:pixelated;image-rendering:-moz-crisp-edges;
   image-rendering:crisp-edges;-webkit-image-rendering:pixelated}
 .rsb-sel{position:absolute;inset:0;pointer-events:none;z-index:100}
-.rsb-ring{display:none;position:absolute;inset:0;
-  border:2px solid var(--color-primary-400)}
-.rsb-el.sel .rsb-ring,.rsb-el.multi .rsb-ring{display:block}
-.rsb-el.multi .rsb-ring{border-color:color-mix(in srgb,var(--color-primary-400) 50%,transparent)}
+.rsb-ring{display:block;position:absolute;inset:0;
+  border:2px solid var(--color-neutral-400)}
+.rsb-el.sel .rsb-ring{border-color:var(--color-primary-400)}
 .rsb-wrap.preview .rsb-sel{display:none}
 .rsb-h{position:absolute;width:9px;height:9px;background:#fff;
-  border:2px solid var(--color-primary-400);pointer-events:all}
+  border:2px solid var(--color-neutral-400);pointer-events:all}
+.rsb-el.sel .rsb-h{border-color:var(--color-primary-400)}
 .h-tl{top:-5px;left:-5px;cursor:nw-resize}
 .h-tr{top:-5px;right:-5px;cursor:ne-resize}
 .h-bl{bottom:-5px;left:-5px;cursor:sw-resize}
@@ -580,11 +580,13 @@ const CANVAS_CSS = `
 .h-ml{left:-5px;top:calc(50% - 4px);cursor:w-resize}
 .h-mr{right:-5px;top:calc(50% - 4px);cursor:e-resize}
 .rsb-rot{position:absolute;width:12px;height:12px;
-  background:var(--color-primary-400);border:2px solid #fff;
+  background:var(--color-neutral-400);border:2px solid #fff;
   border-radius:50%;top:-30px;left:calc(50% - 6px);cursor:crosshair;
   pointer-events:all}
+.rsb-el.sel .rsb-rot{background:var(--color-primary-400)}
 .rsb-rotline{position:absolute;width:1px;height:18px;
-  background:var(--color-primary-400);top:-22px;left:calc(50% - .5px)}
+  background:var(--color-neutral-400);top:-22px;left:calc(50% - .5px)}
+.rsb-el.sel .rsb-rotline{background:var(--color-primary-400)}
 .rsb-text{width:100%;height:100%;overflow:hidden;word-break:break-word;
   white-space:pre-wrap;pointer-events:none;line-height:1.2}
 .rsb-text.editing{pointer-events:all;cursor:text;outline:none}
@@ -2154,11 +2156,11 @@ export function StampRecursiveContent(
                   <SectionBody>
                     <div class="grid grid-cols-2 gap-3">
                       {([
-                        ["X (%)", "x"],
-                        ["Y (%)", "y"],
-                        ["WIDTH (%)", "w"],
-                        ["HEIGHT (%)", "h"],
-                        ["ROTATION (°)", "r"],
+                        ["X POS", "x"],
+                        ["Y POS", "y"],
+                        ["W%", "w"],
+                        ["H%", "h"],
+                        ["ROTATE", "r"],
                       ] as const).map(([label, key]) => (
                         <label key={key} class="flex flex-col gap-0.5">
                           <span class={labelXs}>{label}</span>
@@ -2380,6 +2382,7 @@ export function StampRecursiveContent(
                     toggleButtonId="switch-toggle-cpid"
                   />
                 </div>
+                <hr />
                 <div class="flex items-center justify-between gap-3">
                   {includeTitle
                     ? (
@@ -2407,7 +2410,7 @@ export function StampRecursiveContent(
                         />
                       </div>
                     )
-                    : <h5 class={labelSm}>NO TITLE</h5>}
+                    : <h5 class={labelSm}>NO HTML TITLE</h5>}
                   <ToggleSwitchButton
                     isActive={includeTitle}
                     onToggle={() => {
@@ -2431,7 +2434,7 @@ export function StampRecursiveContent(
                 </div>
                 <div class="flex items-center justify-between gap-3">
                   <h5 class={labelSm}>
-                    {useTxHashEndpoint ? "TXHASH ENDPOINT" : "CPID ENDPOINT"}
+                    {useTxHashEndpoint ? "TXHASH STRING" : "CPID STRING"}
                   </h5>
                   <ToggleSwitchButton
                     isActive={useTxHashEndpoint}
@@ -2456,7 +2459,7 @@ export function StampRecursiveContent(
               </div>
             </div>
             <div class="shrink-0">
-              <hr class="w-full my-3 border-color-neutral-800 border-t-1" />
+              <hr class="my-3" />
               <FeeCalculatorBase
                 fee={fee}
                 handleChangeFee={setFee}
@@ -2564,7 +2567,7 @@ export function StampRecursiveContent(
               )}
               {mode === "edit" && layers.length === 0 && (
                 <div class="absolute inset-0 flex items-center justify-center
-                text-color-neutral-500 text-xs pointer-events-none">
+                text-color-neutral-500 text-xs uppercase pointer-events-none select-none">
                   Add assets and/or text
                 </div>
               )}
