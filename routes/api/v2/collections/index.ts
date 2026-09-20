@@ -16,10 +16,14 @@ export const handler: Handlers = {
       }
 
       const { limit, page } = pagination;
+      const sortBy = url.searchParams.get("sortBy")?.toUpperCase() === "ASC"
+        ? "ASC"
+        : "DESC";
 
       const result = await CollectionController.getCollectionDetails({
         limit: limit || 50,
         page: page || 1,
+        sortBy,
       });
 
       return ApiResponseUtil.success(result, {
