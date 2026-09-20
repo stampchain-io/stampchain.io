@@ -28,6 +28,8 @@ export const ToggleButton = ({
     | "xsR"
     | "smR"
     | "mdR"
+    | "smallR"
+    | "mediumR"
     | "lgR";
   spacing?: "normal" | "tight" | "even" | "evenFullwidth";
   disabledOptions?: string[];

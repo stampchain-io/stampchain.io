@@ -307,7 +307,7 @@ export function ColorPicker({
   const trigger = showValue
     ? (
       <div
-        class={`flex justify-between w-full ${container3} !rounded-full py-1 pl-1 ${extraClass}`}
+        class={`flex justify-between w-full ${container3} !rounded-full py-0.5 pl-1 ${extraClass}`}
       >
         {swatch}
         <input
@@ -315,7 +315,7 @@ export function ColorPicker({
           spellcheck={false}
           value={hexDraft}
           aria-label={`${ariaLabel} hex`}
-          class={`${textXs} w-20 mr-1 px-3 py-1
+          class={`${textXs} w-20 mr-1 px-3 py-0.5
             bg-transparent border-0 outline-none text-right
             cursor-text select-text`}
           onFocus={onHexFocus}

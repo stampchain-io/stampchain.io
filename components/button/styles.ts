@@ -48,6 +48,8 @@ export interface ButtonVariants {
     | "xsR"
     | "smR"
     | "mdR"
+    | "smallR"
+    | "mediumR"
     | "lgR"
     | "custom",
     string
@@ -118,6 +120,8 @@ export const buttonStyles: ButtonVariants = {
     xsR: "h-[30px] tablet:h-[26px] px-[14px] text-xs tablet:text-[0.625rem]",
     smR: "h-[34px] tablet:h-[30px] px-4 text-xs",
     mdR: "h-[38px] tablet:h-[34px] px-4 text-sm tablet:text-xs",
+    smallR: "h-7.5 tablet:h-6.5 px-3 text-[0.625rem]", // Temp selector button size for the create content page
+    mediumR: "h-9 tablet:h-8 px-3 text-[0.625rem]", // Temp button size for the create content page
     lgR: "h-[42px] tablet:h-[38px] px-4 text-sm",
     custom: "/* Custom size - allows external sizing via className */",
   },

@@ -20,6 +20,7 @@ export interface IconVariants {
     | "xsR"
     | "smR"
     | "mdR"
+    | "mediumR"
     | "lgR"
     | "xlR"
     | "xxlR"
@@ -161,6 +162,7 @@ export const iconStyles = {
     xsR: "w-5 h-5 tablet:w-4 tablet:h-4",
     smR: "w-6 h-6 tablet:w-5 tablet:h-5",
     mdR: "w-7 h-7 tablet:w-6 tablet:h-6",
+    mediumR: "w-4.5 h-4.5 tablet:w-3.5 tablet:h-3.5",
     lgR: "w-8 h-8 tablet:w-7 tablet:h-7",
     xlR: "w-9 h-9 tablet:w-8 tablet:h-8",
     xxlR: "w-10 h-10 tablet:w-9 tablet:h-9",

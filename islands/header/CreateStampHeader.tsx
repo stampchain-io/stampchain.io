@@ -73,7 +73,7 @@ export function CreateStampHeader(
             ]}
             value={stampType}
             onChange={setStampType}
-            size="xsR"
+            size="smallR"
             color="primary"
           />
         </div>
@@ -85,7 +85,7 @@ export function CreateStampHeader(
               type="iconButton"
               name="info"
               weight="normal"
-              size="xsR"
+              size="mediumR"
               color="neutral400"
               ariaLabel="Keyboard shortcuts"
               onClick={(e) => {
