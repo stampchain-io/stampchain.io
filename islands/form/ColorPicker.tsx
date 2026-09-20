@@ -141,7 +141,7 @@ export function ColorPicker({
       if (next.s === 0) return { ...prev, s: 0, v: next.v };
       return next;
     });
-    if (!hexFocused.current) setHexDraft(value);
+    setHexDraft(value);
   }, [value]);
 
   useEffect(() => {
