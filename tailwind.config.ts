@@ -203,9 +203,9 @@ export default {
         "18": "72px",
 
         // PAGE SHELL - horizontal gutter and vertical padding from screen edges to header, footer and horisontal gutter for body containers
-        "shell-mobile": "20px", // updated breakpoint naming convention
+        "shell-mobile": "12px", // updated breakpoint naming convention
         "shell-tablet": "20px", // updated breakpoint naming convention
-        "shell-desktop": "30px", // updated breakpoint naming convention
+        "shell-desktop": "32px", // updated breakpoint naming convention
 
         // SECTION GAPS - vertical spacing between containers in the body)
         "section-mobile": "20px", // updated breakpoint naming convention
