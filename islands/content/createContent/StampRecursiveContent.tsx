@@ -3,12 +3,7 @@ import { Button, ToggleSwitchButton } from "$button";
 import { StampCard } from "$card";
 import { walletContext } from "$client/wallet/wallet.ts";
 import { useFees } from "$fees";
-import {
-  inputField,
-  inputFieldSquare,
-  inputNumeric,
-  messageError,
-} from "$form";
+import { inputField, inputNumeric, messageError } from "$form";
 import { CreateStampRecursiveHeader, openShortcutsModal } from "$header";
 import { Icon, PlaceholderImage } from "$icon";
 import { RangeSlider } from "$islands/button/RangeSlider.tsx";
@@ -156,6 +151,30 @@ const DEFAULT_TEXT_STYLE: TextStyleDraft = {
 
 function clampFontSize(n: number): number {
   return Math.min(100, Math.max(0.5, n));
+}
+
+function capPos(n: number): number {
+  if (!Number.isFinite(n)) return 0;
+  return Math.round(n * 10) / 10;
+}
+
+function formatPos(n: number): string {
+  const v = capPos(n);
+  return Number.isInteger(v) ? String(v) : v.toFixed(1);
+}
+
+function sanitizePosDraft(raw: string): string {
+  let s = raw.replace(",", ".").replace(/[^\d.-]/g, "");
+  const neg = s.startsWith("-");
+  s = s.replace(/-/g, "");
+  const hasDot = s.includes(".");
+  const [whole = "", ...rest] = s.split(".");
+  const frac = rest.join("");
+  let out = whole;
+  if (hasDot) {
+    out += `.${frac.length > 1 ? frac.slice(-1) : frac}`;
+  }
+  return `${neg ? "-" : ""}${out}`;
 }
 
 /** Matches Tailwind `top-5` / `left-5` (1.25rem). */
@@ -943,7 +962,39 @@ export function StampRecursiveContent(
   const [fontSizeInput, setFontSizeInput] = useState(
     String(DEFAULT_TEXT_STYLE.fontSize),
   );
+  const [posDraft, setPosDraft] = useState<
+    Partial<Record<"x" | "y" | "r", string>>
+  >({});
   const primary = getLayer(selId);
+
+  const applyPosDraftInput = (
+    key: "x" | "y" | "r",
+    rawValue: string,
+  ) => {
+    if (!primary) return;
+    const raw = sanitizePosDraft(rawValue);
+    setPosDraft((d) => ({ ...d, [key]: raw }));
+    if (
+      raw === "" || raw === "-" || raw === "." || raw === "-."
+    ) {
+      return;
+    }
+    const n = parseFloat(raw);
+    if (!Number.isFinite(n)) return;
+    patchLayer(primary.id, { [key]: capPos(n) });
+  };
+
+  const commitPosDraft = (key: "x" | "y" | "r") => {
+    if (!primary) return;
+    const n = parseFloat(posDraft[key] ?? "");
+    const next = Number.isFinite(n) ? capPos(n) : capPos(Number(primary[key]));
+    patchLayer(primary.id, { [key]: next });
+    setPosDraft((d) => {
+      const rest = { ...d };
+      delete rest[key];
+      return rest;
+    });
+  };
 
   const patchTextStyle = (partial: Partial<TextStyleDraft>) => {
     setTextStyle((prev) => ({ ...prev, ...partial }));
@@ -972,6 +1023,10 @@ export function StampRecursiveContent(
     setFontSizeInput(String(
       layer.fontSize ?? DEFAULT_TEXT_STYLE.fontSize,
     ));
+  }, [selId]);
+
+  useEffect(() => {
+    setPosDraft({});
   }, [selId]);
 
   useEffect(() => {
@@ -1762,7 +1817,7 @@ export function StampRecursiveContent(
                         type="iconButton"
                         name="search"
                         weight="normal"
-                        size="xsR"
+                        size="xxsR"
                         color="neutral400"
                         ariaLabel="Browse stamps"
                         onClick={(e) => {
@@ -1799,7 +1854,7 @@ export function StampRecursiveContent(
                           ? "hide"
                           : "view"}
                         weight="normal"
-                        size="xsR"
+                        size="xxsR"
                         color="neutral400"
                         ariaLabel={assetPreviewOpen
                           ? "Hide preview"
@@ -1987,7 +2042,7 @@ export function StampRecursiveContent(
                   <Button
                     variant="flat"
                     color="neutral"
-                    size="smR"
+                    size="xsR"
                     class="w-full"
                     disabled={mode !== "edit"}
                     onClick={() => {
@@ -2135,7 +2190,7 @@ export function StampRecursiveContent(
                     variant="outline"
                     color="neutral"
                     size="xsR"
-                    class="w-full mt-2"
+                    class="w-full mt-3"
                     disabled={!primary || mode !== "edit"}
                     onClick={() => duplicateSelected()}
                   >
@@ -2154,35 +2209,102 @@ export function StampRecursiveContent(
                   toggle={() => toggleSection("properties")}
                 >
                   <SectionBody>
-                    <div class="grid grid-cols-2 gap-3">
-                      {([
-                        ["X POS", "x"],
-                        ["Y POS", "y"],
-                        ["W%", "w"],
-                        ["H%", "h"],
-                        ["ROTATE", "r"],
-                      ] as const).map(([label, key]) => (
-                        <label key={key} class="flex flex-col gap-0.5">
-                          <span class={labelXs}>{label}</span>
-                          <input
-                            type="number"
-                            class={inputFieldSquare}
-                            value={Number(primary[key]).toFixed(1)}
-                            step="0.1"
-                            onInput={(e) => {
-                              const v = parseFloat(
-                                (e.target as HTMLInputElement).value,
-                              ) || 0;
-                              patchLayer(primary.id, { [key]: v });
-                            }}
-                          />
-                        </label>
-                      ))}
+                    <div class="flex flex-col gap-3">
+                      <div class="flex justify-between gap-3">
+                        {([
+                          ["X POSITION", "x"],
+                          ["Y POSITION", "y"],
+                        ] as const).map(([unit, key]) => (
+                          <label key={key} class="relative min-w-0 flex-1">
+                            <input
+                              type="text"
+                              inputMode="decimal"
+                              class={`${inputNumeric} text-right !pl-20`}
+                              value={posDraft[key] ??
+                                formatPos(Number(primary[key]))}
+                              aria-label={unit}
+                              onInput={(e) =>
+                                applyPosDraftInput(
+                                  key,
+                                  (e.target as HTMLInputElement).value,
+                                )}
+                              onBlur={() =>
+                                commitPosDraft(key)}
+                            />
+                            <span
+                              class={`${labelXs} absolute left-2.5 top-1/2
+                                -translate-y-1/2 pointer-events-none`}
+                            >
+                              {unit}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                      <div class="flex justify-between gap-3">
+                        {([
+                          ["% WIDTH", "w"],
+                          ["% HEIGHT", "h"],
+                        ] as const).map(([unit, key]) => (
+                          <label key={key} class="relative min-w-0 flex-1">
+                            <input
+                              type="number"
+                              class={`${inputNumeric} text-right !pr-[74px]`}
+                              value={Math.round(Number(primary[key]))}
+                              step="1"
+                              aria-label={unit}
+                              onInput={(e) => {
+                                const v = Math.round(
+                                  parseFloat(
+                                    (e.target as HTMLInputElement).value,
+                                  ) || 0,
+                                );
+                                patchLayer(primary.id, { [key]: v });
+                              }}
+                            />
+                            <span
+                              class={`${labelXs} absolute right-2.5 top-1/2
+                                -translate-y-1/2 pointer-events-none`}
+                            >
+                              {unit}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                      <label class="relative min-w-0 w-full">
+                        <input
+                          type="text"
+                          inputMode="decimal"
+                          class={`${inputNumeric} text-right !pl-20 !pr-4`}
+                          value={posDraft.r ??
+                            formatPos(Number(primary.r))}
+                          aria-label="ROTATION"
+                          onInput={(e) =>
+                            applyPosDraftInput(
+                              "r",
+                              (e.target as HTMLInputElement).value,
+                            )}
+                          onBlur={() => commitPosDraft("r")}
+                        />
+                        <span
+                          class={`${labelXs} absolute left-2.5 top-1/2
+                            -translate-y-1/2 pointer-events-none`}
+                        >
+                          ROTATION
+                        </span>
+                        <span
+                          aria-hidden="true"
+                          class="absolute right-2.5 top-1/2 -translate-y-[70%]
+                            pointer-events-none text-[0.625rem] leading-none
+                            text-color-neutral-500"
+                        >
+                          °
+                        </span>
+                      </label>
                     </div>
                     <label class="flex flex-col gap-0.5 mt-2">
                       <span class={`${labelXs} flex w-full justify-between`}>
                         <span>OPACITY</span>
-                        <span class="text-color-neutral-400">
+                        <span class="text-color-neutral-200">
                           {Math.round(primary.op * 100)}%
                         </span>
                       </span>
@@ -2193,7 +2315,7 @@ export function StampRecursiveContent(
                         onChange={(v) => patchLayer(primary.id, { op: v })}
                       />
                     </label>
-                    <div class="flex justify-between gap-3 mt-2">
+                    <div class="flex justify-between gap-3 mt-3">
                       <Button
                         variant={primary.flipH ? "flat" : "outline"}
                         color="neutral"
@@ -2229,7 +2351,7 @@ export function StampRecursiveContent(
                   toggle={() => toggleSection("filters")}
                 >
                   <SectionBody>
-                    <div class="flex flex-col gap-5">
+                    <div class="flex flex-col gap-3">
                       <div class="flex flex-col gap-3">
                         {([
                           ["brightness", "BRIGHTNESS", 0, 200, "%"],
@@ -2243,7 +2365,7 @@ export function StampRecursiveContent(
                               class={`${labelXs} flex w-full justify-between`}
                             >
                               <span>{label}</span>
-                              <span class="text-color-neutral-400">
+                              <span class="text-color-neutral-200">
                                 {primary.filters[key]}
                                 {unit}
                               </span>

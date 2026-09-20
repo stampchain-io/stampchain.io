@@ -3,8 +3,8 @@ import { container2Hover, shadowGlowPurpleSm } from "$layout";
 
 /* ===== BASE STYLES ===== */
 // Global sizes
-const inputFieldHeight = "h-10 tablet:h-9";
-const inputFieldWidth = "!w-10 tablet:!w-9";
+const inputFieldHeight = "h-9 tablet:h-8";
+const inputFieldWidth = "w-9 tablet:w-8";
 
 export const inputField = `
   ${inputFieldHeight} px-3 w-full bg-transparent
