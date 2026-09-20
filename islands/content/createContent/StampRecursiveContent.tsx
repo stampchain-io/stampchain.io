@@ -217,6 +217,7 @@ function buildGeneratedStampRow(opts: {
   stampName: string;
   creator: string;
   creatorName: string | null;
+  locked: boolean;
 }): StampRow {
   const supply = parseInt(opts.issuance, 10);
   return {
@@ -231,7 +232,7 @@ function buildGeneratedStampRow(opts: {
     creator_name: opts.creatorName,
     divisible: false,
     keyburn: null,
-    locked: 1,
+    locked: opts.locked ? 1 : 0,
     supply: Number.isFinite(supply) && supply > 0 ? supply : 1,
     stamp_base64: "",
     stamp_mimetype: "text/html",
@@ -890,6 +891,7 @@ export function StampRecursiveContent(
   );
   const [issuance, setIssuance] = useState("1");
   const [issuanceError, setIssuanceError] = useState("");
+  const [isLocked, setIsLocked] = useState(true);
   const [stampName, setStampName] = useState("");
   const [stampNameError, setStampNameError] = useState("");
   const [includeCustomCpid, setIncludeCustomCpid] = useState(false);
@@ -902,7 +904,7 @@ export function StampRecursiveContent(
     Record<RsbPanel, boolean>
   >({
     background: false,
-    assets: true,
+    assets: false,
     text: false,
     layers: false,
     properties: false,
@@ -1635,6 +1637,39 @@ export function StampRecursiveContent(
     setPreviewVisible(false);
   };
 
+  const resetComposer = () => {
+    if (
+      !confirm("Clear the canvas and reset the editor?")
+    ) {
+      return;
+    }
+    clearAllLayers();
+    setQuery("");
+    setFetched(null);
+    setStatus("");
+    setCreatorMore([]);
+    setFetching(false);
+    dismissPreview();
+    previewPosRef.current = { x: PREVIEW_INSET, y: PREVIEW_INSET };
+    setPreviewPos({ x: PREVIEW_INSET, y: PREVIEW_INSET });
+    setTextStyle(DEFAULT_TEXT_STYLE);
+    setFontSizeInput(String(DEFAULT_TEXT_STYLE.fontSize));
+    setIssuance("1");
+    setIssuanceError("");
+    setStampName("");
+    setStampNameError("");
+    setIncludeCustomCpid(false);
+    setUseTxHashEndpoint(false);
+    setIncludeTitle(false);
+    setStampTitle("");
+    setTosAgreed(false);
+    setPreviewView("canvas");
+    const recommended = fees?.recommendedFee;
+    setFee(
+      recommended != null && recommended >= 0.1 ? recommended : 1,
+    );
+  };
+
   const previewSrc = fetched
     ? layerDisplaySrc({
       b64: fetched.stamp_base64,
@@ -1666,6 +1701,7 @@ export function StampRecursiveContent(
       stampName: includeCustomCpid ? stampName : "",
       creator: isConnected ? walletContext.wallet.address : "",
       creatorName: isConnected ? null : "Connect Wallet",
+      locked: isLocked,
     })
     : null;
 
@@ -2306,6 +2342,16 @@ export function StampRecursiveContent(
                   </div>
                 </div>
                 <div class="flex items-center justify-between gap-3">
+                  <h5 class={labelSm}>
+                    {isLocked ? "LOCKED" : "UNLOCKED"}
+                  </h5>
+                  <ToggleSwitchButton
+                    isActive={!isLocked}
+                    onToggle={() => setIsLocked((prev) => !prev)}
+                    toggleButtonId="switch-toggle-locked"
+                  />
+                </div>
+                <div class="flex items-center justify-between gap-3">
                   {includeCustomCpid
                     ? (
                       <div class="flex-1 min-w-0">
@@ -2446,14 +2492,7 @@ export function StampRecursiveContent(
                   size="xsR"
                   class="w-full"
                   disabled={!layers.length}
-                  onClick={() => {
-                    if (
-                      !confirm("Remove all layers from the canvas?")
-                    ) {
-                      return;
-                    }
-                    clearAllLayers();
-                  }}
+                  onClick={resetComposer}
                 >
                   CLEAR
                 </Button>
