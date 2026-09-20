@@ -129,26 +129,52 @@ export async function fetchStampsByCreator(
   }
 }
 
+export interface CollectionListPage {
+  collections: Collection[];
+  page: number;
+  totalPages: number;
+  total: number;
+}
+
 export async function fetchCollections(
   limit = 60,
-): Promise<Collection[]> {
+  page = 1,
+  sortBy: "ASC" | "DESC" = "ASC",
+): Promise<CollectionListPage> {
+  const empty: CollectionListPage = {
+    collections: [],
+    page,
+    totalPages: 1,
+    total: 0,
+  };
   try {
     const params = new URLSearchParams({
       limit: String(limit),
-      page: "1",
+      page: String(page),
+      sortBy,
     });
     const res = await fetch(`/api/v2/collections?${params}`, {
       headers: API_HEADERS,
     });
-    if (!res.ok) return [];
+    if (!res.ok) return empty;
     const json = await res.json();
-    if (Array.isArray(json?.data)) return json.data as Collection[];
-    if (Array.isArray(json?.data?.data)) {
-      return json.data.data as Collection[];
-    }
-    return [];
+    const root = json?.data && !Array.isArray(json.data) &&
+        typeof json.data === "object"
+      ? json.data
+      : json;
+    const list = Array.isArray(root?.data)
+      ? root.data
+      : Array.isArray(json?.data)
+      ? json.data
+      : [];
+    return {
+      collections: list as Collection[],
+      page: Number(root?.page ?? page) || page,
+      totalPages: Math.max(1, Number(root?.totalPages ?? 1) || 1),
+      total: Number(root?.total ?? list.length) || 0,
+    };
   } catch {
-    return [];
+    return empty;
   }
 }
 
