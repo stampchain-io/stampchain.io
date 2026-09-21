@@ -1262,12 +1262,10 @@ Deno.test("UI Component Types - Button Component Structure", () => {
     "xsR",
     "smR",
     "mdR",
-    "smallR",
-    "mediumR",
     "lgR",
     "custom",
   ];
-  assertEquals(sizes.length, 16);
+  assertEquals(sizes.length, 14);
 
   // Test BaseButtonProps interface
   const buttonProps: BaseButtonProps = {

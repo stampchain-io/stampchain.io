@@ -418,7 +418,7 @@ export function ViewModeSelector() {
 }
 ```
 
-`SelectorButtons` only supports `color="neutral"` or `color="primary"` (any other value falls back to `neutral`); it reads directly from `buttonStyles.color` in `styles.ts` rather than the full `ButtonColor` union.
+`SelectorButtons` only supports `color="neutral"` or `color="primary"` (any other value falls back to `neutral`); it reads directly from `buttonStyles.color` in `styles.ts` rather than the full `ButtonColor` union. Always pass `size="mdSelector"`.
 
 #### SelectorButtons implementation notes ([islands/button/SelectorButtons.tsx](mdc:islands/button/SelectorButtons.tsx))
 

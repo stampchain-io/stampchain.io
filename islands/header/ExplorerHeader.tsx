@@ -29,7 +29,9 @@ export const ExplorerHeader = (
     stampsTotal = 0,
     tokensTotal = 0,
     sortBy = "DESC",
-  }: ExplorerHeaderProps,
+  }: ExplorerHeaderProps & {
+    sortBy?: "ASC" | "DESC";
+  },
 ) => {
   /* ===== STATE ===== */
   const [isOpen, setIsOpen] = useState(false);

@@ -528,7 +528,7 @@ function AssetPreviewCard(
               type="iconButton"
               name="userCircle"
               weight="normal"
-              size="mediumR"
+              size="md"
               color={showAssetsView ? "primary400" : "neutral400"}
               ariaLabel={showAssetsView
                 ? "Show stamp details"
@@ -545,7 +545,7 @@ function AssetPreviewCard(
           <Button
             variant="flat"
             color="neutral"
-            size="mediumR"
+            size="md"
             class="flex-1"
             onClick={onAdd}
           >
@@ -569,7 +569,7 @@ function PlaceholderIcon(props: {
       type="iconButton"
       name={props.name ?? "website"}
       weight="normal"
-      size="mediumR"
+      size="md"
       color={props.active ? "primary400" : "neutral400"}
       ariaLabel={props.label}
       className={props.disabled ? "opacity-80 pointer-events-none" : ""}
@@ -1841,7 +1841,7 @@ export function StampRecursiveContent(
                         type="iconButton"
                         name="search"
                         weight="normal"
-                        size="mediumR"
+                        size="md"
                         color="neutral400"
                         ariaLabel="Browse stamps"
                         onClick={(e) => {
@@ -1878,7 +1878,7 @@ export function StampRecursiveContent(
                           ? "hide"
                           : "view"}
                         weight="normal"
-                        size="mediumR"
+                        size="md"
                         color="neutral400"
                         className={fetching ? "animate-spin" : ""}
                         ariaLabel={assetPreviewOpen
@@ -2067,7 +2067,7 @@ export function StampRecursiveContent(
                   <Button
                     variant="flat"
                     color="neutral"
-                    size="mediumR"
+                    size="md"
                     class="w-full"
                     disabled={mode !== "edit"}
                     onClick={() => {
@@ -2214,7 +2214,7 @@ export function StampRecursiveContent(
                   <Button
                     variant="outline"
                     color="neutral"
-                    size="mediumR"
+                    size="md"
                     class="w-full mt-3"
                     disabled={!primary || mode !== "edit"}
                     onClick={() => duplicateSelected()}
@@ -2344,7 +2344,7 @@ export function StampRecursiveContent(
                       <Button
                         variant={primary.flipH ? "flat" : "outline"}
                         color="neutral"
-                        size="mediumR"
+                        size="md"
                         onClick={() => flipSelected("h")}
                       >
                         FLIP H
@@ -2352,7 +2352,7 @@ export function StampRecursiveContent(
                       <Button
                         variant={primary.flipV ? "flat" : "outline"}
                         color="neutral"
-                        size="mediumR"
+                        size="md"
                         onClick={() => flipSelected("v")}
                       >
                         FLIP V
@@ -2360,7 +2360,7 @@ export function StampRecursiveContent(
                       <Button
                         variant="outline"
                         color="neutral"
-                        size="mediumR"
+                        size="md"
                         disabled={mode !== "edit"}
                         onClick={() => centerSelected()}
                       >
@@ -2414,7 +2414,7 @@ export function StampRecursiveContent(
                       <Button
                         variant="outline"
                         color="neutral"
-                        size="mediumR"
+                        size="md"
                         onClick={() => {
                           pushHistory();
                           patchLayer(primary.id, {
@@ -2452,7 +2452,7 @@ export function StampRecursiveContent(
                         key={modeKey}
                         variant="outline"
                         color="neutral"
-                        size="mediumR"
+                        size="md"
                         onClick={() => alignSelected(modeKey)}
                       >
                         {label}
@@ -2639,7 +2639,7 @@ export function StampRecursiveContent(
                 <Button
                   variant="flat"
                   color="neutral"
-                  size="mediumR"
+                  size="md"
                   class="w-full"
                   disabled={!layers.length}
                   onClick={resetComposer}
@@ -2649,7 +2649,7 @@ export function StampRecursiveContent(
                 <Button
                   variant="flat"
                   color="primary"
-                  size="mediumR"
+                  size="md"
                   class="w-full"
                   onClick={onGenerate}
                 >
@@ -2963,7 +2963,7 @@ export function StampRecursiveContent(
                     type="iconButton"
                     name="edit"
                     weight="normal"
-                    size="mediumR"
+                    size="md"
                     color="neutral400"
                     ariaLabel="Edit"
                     onClick={(e) => {
@@ -2978,7 +2978,7 @@ export function StampRecursiveContent(
                     type="iconButton"
                     name="previewCode"
                     weight="normal"
-                    size="mediumR"
+                    size="md"
                     color="neutral400"
                     ariaLabel="View code"
                     onClick={(e) => {
@@ -2994,7 +2994,7 @@ export function StampRecursiveContent(
                       ? "viewCardMixed"
                       : "viewCardSingle"}
                     weight="normal"
-                    size="mediumR"
+                    size="md"
                     color="neutral400"
                     ariaLabel={previewView === "cards"
                       ? "Switch to canvas preview"
@@ -3014,7 +3014,7 @@ export function StampRecursiveContent(
                 <Button
                   variant="outline"
                   color="neutral"
-                  size="mediumR"
+                  size="md"
                   onClick={() =>
                     setZoom(zoom / 1.2)}
                 >
@@ -3031,7 +3031,7 @@ export function StampRecursiveContent(
                 <Button
                   variant="outline"
                   color="neutral"
-                  size="mediumR"
+                  size="md"
                   onClick={() => setZoom(zoom * 1.2)}
                 >
                   +

@@ -36,8 +36,6 @@ export type ButtonSize =
   | "xsR"
   | "smR"
   | "mdR"
-  | "smallR"
-  | "mediumR" // Temporary size for the create content page - refactor to mdR (default size)
   | "lgR"
   | "custom";
 

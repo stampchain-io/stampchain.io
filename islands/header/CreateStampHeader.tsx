@@ -85,7 +85,7 @@ export function CreateStampHeader(
               type="iconButton"
               name="info"
               weight="normal"
-              size="mediumR"
+              size="md"
               color="neutral400"
               ariaLabel="Keyboard shortcuts"
               onClick={(e) => {
