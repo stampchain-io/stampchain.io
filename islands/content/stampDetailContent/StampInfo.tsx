@@ -837,7 +837,7 @@ export function StampInfo(
               )}
 
               <UserProfileIcon
-                size="xs"
+                size="lg"
                 weight="bold"
                 className="stroke-color-neutral-200 translate-y-0.5"
                 wrapperClassName="mt-1"
@@ -859,14 +859,14 @@ export function StampInfo(
               <PillWithTooltip label="STAMP TYPE" className="w-fit">
                 <PillContentCount
                   value={getIdentLabel()}
-                  class="!static !text-color-neutral-500"
+                  class="px-3 !static !text-[0.625rem] !text-color-neutral-500 !tracking-wider"
                 />
               </PillWithTooltip>
 
               {!isSrc20Stamp() && (
                 <PillWithTooltip
                   label={stamp.supply === 1 ? "EDITION" : "EDITIONS"}
-                  className={`${containerPill} ${cardSupply} !text-sm w-fit`}
+                  className={`${containerPill} ${cardSupply} w-fit`}
                 >
                   {stamp.supply === 1 ? "1/1" : editionCount}
                 </PillWithTooltip>
@@ -879,8 +879,8 @@ export function StampInfo(
                       type="icon"
                       name="recursive"
                       weight="normal"
-                      size="xs"
-                      color="neutral600"
+                      size="lg"
+                      color="neutral500"
                       ariaLabel="Recursive"
                     />
                   </IconWithTooltip>
@@ -891,8 +891,8 @@ export function StampInfo(
                       type="icon"
                       name="divisible"
                       weight="normal"
-                      size="xs"
-                      color="neutral600"
+                      size="lg"
+                      color="neutral500"
                       ariaLabel="Divisible"
                     />
                   </IconWithTooltip>
@@ -903,8 +903,8 @@ export function StampInfo(
                       type="icon"
                       name="keyburned"
                       weight="normal"
-                      size="xs"
-                      color="neutral600"
+                      size="lg"
+                      color="neutral500"
                       ariaLabel="Keyburned"
                     />
                   </IconWithTooltip>
@@ -916,8 +916,8 @@ export function StampInfo(
                         type="icon"
                         name="locked"
                         weight="normal"
-                        size="xs"
-                        color="neutral600"
+                        size="lg"
+                        color="neutral500"
                         ariaLabel="Locked"
                       />
                     </IconWithTooltip>
@@ -928,8 +928,8 @@ export function StampInfo(
                         type="icon"
                         name="unlocked"
                         weight="normal"
-                        size="xs"
-                        color="neutral600"
+                        size="lg"
+                        color="neutral500"
                         ariaLabel="Unlocked"
                       />
                     </IconWithTooltip>

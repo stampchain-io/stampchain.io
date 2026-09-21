@@ -157,6 +157,7 @@ export const iconStyles = {
   },
 
   /* ===== SIZE VARIANTS ===== */
+  // icon must use bigger sizes than icon button
   size: {
     xxxs: "w-3 h-3",
     xxs: "w-4 h-4",
