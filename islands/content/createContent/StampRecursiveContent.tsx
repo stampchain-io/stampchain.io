@@ -5,7 +5,7 @@ import { walletContext } from "$client/wallet/wallet.ts";
 import { useFees } from "$fees";
 import { inputField, inputNumeric, messageError } from "$form";
 import { CreateStampRecursiveHeader, openShortcutsModal } from "$header";
-import { Icon, PlaceholderImage } from "$icon";
+import { Icon, PlaceholderImage, UserProfileIcon } from "$icon";
 import { RangeSlider } from "$islands/button/RangeSlider.tsx";
 import { ColorPicker } from "$islands/form/ColorPicker.tsx";
 import { InputField } from "$islands/form/InputField.tsx";
@@ -177,8 +177,8 @@ function sanitizePosDraft(raw: string): string {
   return `${neg ? "-" : ""}${out}`;
 }
 
-/** Matches Tailwind `top-5` / `left-5` (1.25rem). */
-const PREVIEW_INSET = 20;
+/** Matches Tailwind `top-3` / `left-3` (0.75rem). */
+const PREVIEW_INSET = 12;
 
 function clampPreviewPos(
   x: number,
@@ -438,99 +438,120 @@ function CanvasLayerMedia(
 }
 
 function AssetPreviewCard(
-  { stamp, previewSrc, more, onAdd, onHide, onPick }: {
+  {
+    stamp,
+    previewSrc,
+    more,
+    onAdd,
+    onPick,
+    showCreatorAssets,
+    onToggleCreatorAssets,
+  }: {
     stamp: StampRow;
     previewSrc: string;
     more: StampRow[];
     onAdd: () => void;
-    onHide: () => void;
     onPick: (id: string) => void;
+    showCreatorAssets: boolean;
+    onToggleCreatorAssets: () => void;
   },
 ): JSX.Element {
-  const moreRow = more.slice(0, 6);
+  // 6 columns x 2 rows max
+  const moreRow = more.slice(0, 12);
+  const hasMore = moreRow.length > 0;
+  const moreGrid = hasMore && (
+    <div class="grid grid-cols-6 gap-3">
+      {moreRow.map((s) => (
+        <button
+          type="button"
+          key={s.tx_hash}
+          class={`${container3} hover:border-hover ${shadowGlowPurpleSm}
+            !rounded-xl aspect-square overflow-hidden p-0`}
+          onClick={() => onPick(String(s.stamp))}
+        >
+          <StampThumb
+            src={staticThumbSrc(s)}
+            alt={`#${s.stamp}`}
+            mime={s.stamp_mimetype}
+            placeholderClassName="!rounded-xl"
+          />
+        </button>
+      ))}
+    </div>
+  );
+  const showAssetsView = showCreatorAssets && hasMore;
+
   return (
     <>
-      <div class="flex gap-3 items-start">
-        <div
-          class={`flex items-center justify-center shrink-0
-            w-[68px] h-[68px] overflow-hidden ${container3}`}
-        >
-          <LiveStampPreview
-            key={stamp.tx_hash}
-            stamp={stamp}
-            previewSrc={previewSrc}
-          />
-        </div>
-        <div class="flex flex-col min-w-0 flex-1 gap-0.5">
-          <div class={cardStampNumber}>
-            {stamp.stamp != null && <span class="font-light">#</span>}
-            {stamp.stamp != null
-              ? stamp.stamp.toLocaleString("en-US")
-              : stamp.cpid}
+      {showAssetsView ? moreGrid : (
+        <div class="flex gap-3 items-start">
+          <div
+            class={`flex items-center justify-center shrink-0
+                  w-[68px] h-[68px] overflow-hidden ${container3}`}
+          >
+            <LiveStampPreview
+              key={stamp.tx_hash}
+              stamp={stamp}
+              previewSrc={previewSrc}
+            />
           </div>
-          {stamp.cpid && (
-            <div
-              class={`font-mono text-xs text-color-neutral-500
-                ${truncate}`}
-            >
-              {stamp.cpid}
+          <div class="flex flex-col min-w-0 flex-1 gap-0.5">
+            <div class={cardStampNumber}>
+              {stamp.stamp != null && <span class="font-light">#</span>}
+              {stamp.stamp != null
+                ? stamp.stamp.toLocaleString("en-US")
+                : stamp.cpid}
             </div>
-          )}
-          {(stamp.creator_name || stamp.creator) && (
-            <span class={`${cardCreator} !text-left`}>
-              {stamp.creator_name ||
-                abbreviateAddress(stamp.creator, 5)}
-            </span>
-          )}
-        </div>
-      </div>
-      {moreRow.length > 0 && (
-        <div class="grid grid-cols-6 gap-3 mt-3">
-          {moreRow.map((s) => (
-            <button
-              type="button"
-              key={s.tx_hash}
-              class={`${container3} hover:border-hover ${shadowGlowPurpleSm}
-                !rounded-xl aspect-square overflow-hidden p-0`}
-              onClick={() => onPick(String(s.stamp))}
-            >
-              <StampThumb
-                src={staticThumbSrc(s)}
-                alt={`#${s.stamp}`}
-                mime={s.stamp_mimetype}
-                placeholderClassName="!rounded-xl"
-              />
-            </button>
-          ))}
+            {stamp.cpid && (
+              <div
+                class={`font-mono text-xs text-color-neutral-500
+                      ${truncate}`}
+              >
+                {stamp.cpid}
+              </div>
+            )}
+            {(stamp.creator_name || stamp.creator) && (
+              <UserProfileIcon wrapperClassName="mt-0.5">
+                <span class={`${cardCreator} !text-left`}>
+                  {stamp.creator_name ||
+                    abbreviateAddress(stamp.creator, 5)}
+                </span>
+              </UserProfileIcon>
+            )}
+          </div>
         </div>
       )}
       <div class="flex items-center gap-1.5 mt-3">
-        <div
-          class={`${container2Icon}`}
-        >
-          <Icon
-            type="iconButton"
-            name="hide"
-            weight="normal"
+        {hasMore && (
+          <div class={`${container2Icon}`}>
+            <Icon
+              type="iconButton"
+              name="userCircle"
+              weight="normal"
+              size="mediumR"
+              color={showAssetsView ? "primary400" : "neutral400"}
+              ariaLabel={showAssetsView
+                ? "Show stamp details"
+                : "Show more by creator"}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onToggleCreatorAssets();
+              }}
+            />
+          </div>
+        )}
+        {!showAssetsView && (
+          <Button
+            variant="flat"
+            color="neutral"
             size="mediumR"
-            color="neutral400"
-            ariaLabel="Hide preview"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              onHide();
-            }}
-          />
-        </div>
-        <Button
-          variant="flat"
-          color="neutral"
-          size="mediumR"
-          class="flex-1"
-          onClick={onAdd}
-        >
-          + ADD ASSET
-        </Button>
+            class="flex-1"
+            onClick={onAdd}
+          >
+            + ADD ASSET
+          </Button>
+        )}
       </div>
     </>
   );
@@ -901,6 +922,7 @@ export function StampRecursiveContent(
   const [fetching, setFetching] = useState(false);
   const [status, setStatus] = useState("");
   const [creatorMore, setCreatorMore] = useState<StampRow[]>([]);
+  const [showCreatorAssets, setShowCreatorAssets] = useState(false);
   const [recent, setRecent] = useState<RecentItem[]>([]);
   const { isConnected } = walletContext;
   const { fees } = useFees();
@@ -1045,6 +1067,7 @@ export function StampRecursiveContent(
     setFetching(true);
     setFetched(null);
     setPreviewVisible(false);
+    setShowCreatorAssets(false);
     setStatus("");
     try {
       const s = await fetchStampById(id);
@@ -1692,6 +1715,7 @@ export function StampRecursiveContent(
     previewDrag.current = null;
     setPreviewDragging(false);
     setPreviewVisible(false);
+    setShowCreatorAssets(false);
   };
 
   const resetComposer = () => {
@@ -2880,7 +2904,8 @@ export function StampRecursiveContent(
                       "success",
                     );
                   }}
-                  onHide={dismissPreview}
+                  showCreatorAssets={showCreatorAssets}
+                  onToggleCreatorAssets={() => setShowCreatorAssets((v) => !v)}
                   onPick={(id) => {
                     setQuery(id);
                     getPreview(id);

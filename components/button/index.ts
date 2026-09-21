@@ -13,6 +13,7 @@ export * from "$components/button/ReadAllButton.tsx";
 export * from "$components/button/ToggleSwitchButton.tsx";
 export * from "$components/button/ViewAllButton.tsx";
 
+export * from "$islands/button/CollectionButton.tsx";
 export * from "$islands/button/FilterButton.tsx";
 export * from "$islands/button/PaginationButtons.tsx";
 export * from "$islands/button/SelectorButtons.tsx";

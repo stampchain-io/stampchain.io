@@ -374,6 +374,14 @@ export function addGuide(type: "h" | "v", pos = 50): void {
   rsbGuides.value = [...rsbGuides.value, g];
 }
 
+export function toggleGuide(type: "h" | "v"): void {
+  if (rsbGuides.value.some((g) => g.type === type)) {
+    rsbGuides.value = rsbGuides.value.filter((g) => g.type !== type);
+    return;
+  }
+  addGuide(type);
+}
+
 export function removeGuide(id: string): void {
   rsbGuides.value = rsbGuides.value.filter((g) => g.id !== id);
 }
@@ -537,6 +545,8 @@ export function useRecursiveStampState() {
     grid: rsbGrid.value,
     rulers: rsbRulers.value,
     guides: rsbGuides.value,
+    guideH: rsbGuides.value.some((g) => g.type === "h"),
+    guideV: rsbGuides.value.some((g) => g.type === "v"),
     zoom: rsbZoom.value,
     panX: rsbPanX.value,
     panY: rsbPanY.value,
