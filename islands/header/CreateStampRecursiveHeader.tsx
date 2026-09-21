@@ -2,12 +2,11 @@
 import { Icon } from "$icon";
 import { container2Icon, ScrollFadeRow } from "$layout";
 import {
-  addGuide,
-  clearGuides,
   redo,
   rsbGrid,
   rsbRulers,
   rsbSnap,
+  toggleGuide,
   undo,
   useRecursiveStampState,
 } from "$lib/hooks/useRecursiveStampState.ts";
@@ -40,7 +39,8 @@ function PlaceholderIcon(props: {
 export function CreateStampRecursiveHeader(
   _props: CreateStampRecursiveHeaderProps = {},
 ) {
-  const { canUndo, canRedo, snap, grid, rulers } = useRecursiveStampState();
+  const { canUndo, canRedo, snap, grid, rulers, guideH, guideV } =
+    useRecursiveStampState();
 
   return (
     <div class="flex flex-col w-full">
@@ -65,17 +65,14 @@ export function CreateStampRecursiveHeader(
             <PlaceholderIcon
               name="horizontalGuide"
               label="Horizontal guide"
-              onClick={() => addGuide("h")}
+              active={guideH}
+              onClick={() => toggleGuide("h")}
             />
             <PlaceholderIcon
               name="verticalGuide"
               label="Vertical guide"
-              onClick={() => addGuide("v")}
-            />
-            <PlaceholderIcon
-              name="clearGuides"
-              label="Clear guides"
-              onClick={() => clearGuides()}
+              active={guideV}
+              onClick={() => toggleGuide("v")}
             />
           </div>
 

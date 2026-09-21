@@ -1,4 +1,4 @@
-import { PaginationButtons, SelectorButtons } from "$button";
+import { CollectionButton, PaginationButtons, SelectorButtons } from "$button";
 import { SearchErrorDisplay, SearchInputField } from "$form";
 import { Icon, PlaceholderImage } from "$icon";
 import { closeModal, openModal } from "$islands/modal/states.ts";
@@ -476,15 +476,17 @@ function SearchStampPickerContent({
             inputRef={inputRef}
             autoFocus={autoFocus}
             hasError={!!error}
-            isLoading={view === "collections" ? collectionsLoading : isLoading}
-            iconName="artStamps"
-            iconAriaLabel={view === "collections"
-              ? "View stamps"
-              : "View collections"}
-            iconActive={view === "collections"}
-            onIconClick={view === "collections"
-              ? exitCollectionsView
-              : enterCollectionsView}
+            trailing={
+              <div class={container2Icon}>
+                <CollectionButton
+                  view={view === "collections" ? "collections" : "stamps"}
+                  onChange={(next) => {
+                    if (next === "collections") enterCollectionsView();
+                    else exitCollectionsView();
+                  }}
+                />
+              </div>
+            }
           />
         )
         : (

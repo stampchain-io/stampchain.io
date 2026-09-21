@@ -6,8 +6,8 @@
  * Used by both SearchStampModal and SearchSRC20Modal.
  */
 import { Icon } from "$icon";
-import { container2Icon, loaderSpinXsGrey } from "$layout";
-import type { RefObject } from "preact";
+import { loaderSpinXsGrey } from "$layout";
+import type { ComponentChildren, RefObject } from "preact";
 
 interface SearchInputFieldProps {
   value: string;
@@ -18,10 +18,7 @@ interface SearchInputFieldProps {
   autoFocus?: boolean;
   hasError: boolean;
   isLoading?: boolean | undefined;
-  iconName?: string;
-  iconAriaLabel?: string;
-  iconActive?: boolean;
-  onIconClick?: () => void;
+  trailing?: ComponentChildren;
 }
 
 export function SearchInputField({
@@ -33,10 +30,7 @@ export function SearchInputField({
   autoFocus = false,
   hasError,
   isLoading = false,
-  iconName = "search",
-  iconAriaLabel = "Search",
-  iconActive = false,
-  onIconClick,
+  trailing,
 }: SearchInputFieldProps) {
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === "Enter") {
@@ -58,30 +52,16 @@ export function SearchInputField({
         autoFocus={autoFocus}
         class={`relative z-modal h-12 w-full pl-7.5 pr-[68px] bg-transparent font-medium text-sm tablet:text-xs text-color-neutral-200 placeholder:font-light placeholder:text-color-neutral-500 placeholder:uppercase outline-none focus-visible:outline-none`}
       />
-      {isLoading
+      {trailing
+        ? (
+          <div class="absolute z-modal right-3 top-[7px]">
+            {trailing}
+          </div>
+        )
+        : isLoading
         ? (
           <div class="absolute z-modal right-6 top-[11px]">
             <div class={`${loaderSpinXsGrey} mt-[7px] mr-[3px]`} />
-          </div>
-        )
-        : onIconClick
-        ? (
-          <div class="absolute z-modal right-3 top-[7px]">
-            <div class={container2Icon}>
-              <Icon
-                type="iconButton"
-                name={iconName}
-                weight="normal"
-                size="xsR"
-                color={iconActive ? "primary400" : "neutral400"}
-                ariaLabel={iconAriaLabel}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  onIconClick();
-                }}
-              />
-            </div>
           </div>
         )
         : (
@@ -91,11 +71,11 @@ export function SearchInputField({
           >
             <Icon
               type="icon"
-              name={iconName}
+              name="search"
               weight="bold"
               size="xs"
               color="custom"
-              ariaLabel={iconAriaLabel}
+              ariaLabel="Search"
               className={`w-5 h-5 ${
                 hasError
                   ? "stroke-color-neutral-400"
