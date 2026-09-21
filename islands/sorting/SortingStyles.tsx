@@ -7,6 +7,7 @@
 import { buttonStyles } from "$button";
 import { SortingComponent } from "$islands/sorting/SortingComponent.tsx";
 import { SortingProvider } from "$islands/sorting/SortingProvider.tsx";
+import { transitionColors } from "$layout";
 import type { ButtonSize } from "$lib/constants/uiConstants.ts";
 import { cardPriceCompact } from "$text";
 import type {
@@ -81,7 +82,7 @@ function StyledSortingDropdown({
           font-medium text-color-grey-dark
           placeholder:font-light placeholder:text-color-grey-dark
           outline-none focus:outline-none
-          transition-colors duration-200
+          ${transitionColors}
           ${className}
         `}
       />

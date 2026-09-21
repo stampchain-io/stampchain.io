@@ -16,6 +16,7 @@
  * don't need to repeat them.
  */
 import { Icon, IconVariants } from "$icon";
+import { transitionColors } from "$layout";
 import type { ComponentChildren } from "preact";
 
 interface UserProfileIconProps {
@@ -44,7 +45,7 @@ export function UserProfileIcon({
       color="custom"
       className={`${
         link
-          ? "group-hover:stroke-color-hover transition-colors duration-200"
+          ? `group-hover:stroke-color-hover ${transitionColors}`
           : ""
       } ${className}`}
     />

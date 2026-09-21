@@ -13,6 +13,7 @@ import {
   formatSatoshisToBTC,
   formatSatoshisToUSD,
 } from "$lib/utils/ui/formatting/formatUtils.ts";
+import { transitionAll, transitionColors } from "$layout";
 import { tooltipButton, tooltipImage } from "$notification";
 import { labelXs, textXs } from "$text";
 import { useEffect, useRef, useState } from "preact/hooks";
@@ -31,7 +32,7 @@ export function FeeCalculatorBase({
   onTosChange = () => {},
   feeDetails,
   mintDetails,
-  isModal = false,
+  isModal: _isModal = false,
   disabled = false,
   cancelText = "CANCEL",
   confirmText,
@@ -69,8 +70,6 @@ export function FeeCalculatorBase({
   const [visible, setVisible] = useState(false);
   const [coinType, setCoinType] = useState("BTC");
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
-  const [isFeeTooltipVisible, setIsFeeTooltipVisible] = useState(false);
-  const feeTooltipTimeoutRef = useRef<number | null>(null);
   const [isCurrencyTooltipVisible, setIsCurrencyTooltipVisible] = useState(
     false,
   );
@@ -93,9 +92,6 @@ export function FeeCalculatorBase({
         message: "FeeCalculatorBase unmounting",
         component: "FeeCalculatorBase",
       });
-      if (feeTooltipTimeoutRef.current) {
-        globalThis.clearTimeout(feeTooltipTimeoutRef.current);
-      }
       if (currencyTooltipTimeoutRef.current) {
         globalThis.clearTimeout(currencyTooltipTimeoutRef.current);
       }
@@ -129,31 +125,6 @@ export function FeeCalculatorBase({
       x: e.clientX,
       y: e.clientY,
     });
-  };
-
-  const handleFeeMouseEnter = () => {
-    if (feeTooltipTimeoutRef.current) {
-      globalThis.clearTimeout(feeTooltipTimeoutRef.current);
-    }
-
-    feeTooltipTimeoutRef.current = globalThis.setTimeout(() => {
-      setIsFeeTooltipVisible(true);
-    }, 1500);
-  };
-
-  const handleFeeMouseLeave = () => {
-    if (feeTooltipTimeoutRef.current) {
-      globalThis.clearTimeout(feeTooltipTimeoutRef.current);
-    }
-    setIsFeeTooltipVisible(false);
-  };
-
-  // Add mousedown handler to hide tooltip
-  const handleMouseDown = () => {
-    if (feeTooltipTimeoutRef.current) {
-      globalThis.clearTimeout(feeTooltipTimeoutRef.current);
-    }
-    setIsFeeTooltipVisible(false);
   };
 
   const handleCurrencyMouseEnter = () => {
@@ -240,18 +211,18 @@ export function FeeCalculatorBase({
     }
   };
 
-  // Fee selector component
+  // Fee selector labels (slider is rendered full-width below this row)
   const renderFeeSelector = () => {
     if (isLoadingMaraFee) {
       return (
-        <div class={`flex flex-col ${isModal ? "w-2/3" : "w-[85%]"}`}>
+        <div class="flex flex-col">
           <FeeSkeletonLoader />
         </div>
       );
     }
 
     return (
-      <div class={`flex flex-col ${isModal ? "w-2/3" : "w-[85%]"}`}>
+      <div class="flex flex-col">
         <div class="flex items-center gap-2">
           {maraMode && (
             <div
@@ -286,34 +257,6 @@ export function FeeCalculatorBase({
           </span>{" "}
           SAT/vB
         </h6>
-        <div class="relative">
-          <div className={`${maraMode ? "opacity-50 cursor-not-allowed" : ""}`}>
-            <RangeSlider
-              value={fee ?? 0}
-              onChange={onSliderChange}
-              valueToPosition={feeToSliderPos}
-              positionToValue={sliderPosToFee}
-              onMouseEnter={handleFeeMouseEnter}
-              onMouseLeave={handleFeeMouseLeave}
-              onMouseDown={handleMouseDown}
-              onMouseMove={handleMouseMove}
-              disabled={maraMode}
-            />
-          </div>
-
-          <div
-            className={`${tooltipImage} ${
-              isFeeTooltipVisible ? "opacity-100" : "opacity-0"
-            }`}
-            style={{
-              left: `${tooltipPosition.x}px`,
-              top: `${tooltipPosition.y - 6}px`,
-              transform: "translate(-50%, -100%)",
-            }}
-          >
-            SELECT FEE
-          </div>
-        </div>
       </div>
     );
   };
@@ -322,7 +265,7 @@ export function FeeCalculatorBase({
   const renderDetails = () => {
     return (
       <div
-        className={`transition-all duration-400 ease-in-out overflow-hidden ${
+        className={`${transitionAll} ease-in-out overflow-hidden ${
           visible ? "max-h-[220px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
@@ -718,34 +661,45 @@ export function FeeCalculatorBase({
 
   return (
     <div class={className}>
-      <div class="flex">
-        {renderFeeSelector()}
-        {showCoinToggle && (
-          <div
-            className={`flex gap-1 items-start justify-end ${
-              isModal ? "w-1/3" : "w-[15%]"
-            }`}
-          >
-            <div className="relative">
-              <ToggleSwitchButton
-                isActive={coinType === "BTC"}
-                onToggle={handleCoinToggle}
-                toggleButtonId="currency-toggle"
-                activeSymbol="₿"
-                inactiveSymbol="$"
-                activeKnobClassName="bg-color-orange-400"
-                inactiveKnobClassName="bg-color-neutral-400"
-                onMouseEnter={handleCurrencyMouseEnter}
-                onMouseLeave={handleCurrencyMouseLeave}
-              />
-              <div
-                className={`${tooltipButton} ${
-                  isCurrencyTooltipVisible ? "opacity-100" : "opacity-0"
-                }`}
-              >
-                {currencyTooltipText}
+      <div>
+        <div class="flex justify-between items-start">
+          {renderFeeSelector()}
+          {showCoinToggle && (
+            <div className="flex gap-1 items-start justify-end">
+              <div className="relative">
+                <ToggleSwitchButton
+                  isActive={coinType === "BTC"}
+                  onToggle={handleCoinToggle}
+                  toggleButtonId="currency-toggle"
+                  activeSymbol="₿"
+                  inactiveSymbol="$"
+                  activeKnobClassName="bg-color-orange-400"
+                  inactiveKnobClassName="bg-color-neutral-400"
+                  onMouseEnter={handleCurrencyMouseEnter}
+                  onMouseLeave={handleCurrencyMouseLeave}
+                />
+                <div
+                  className={`${tooltipButton} ${
+                    isCurrencyTooltipVisible ? "opacity-100" : "opacity-0"
+                  }`}
+                >
+                  {currencyTooltipText}
+                </div>
               </div>
             </div>
+          )}
+        </div>
+        {!isLoadingMaraFee && (
+          <div
+            className={`${maraMode ? "opacity-50 cursor-not-allowed" : ""}`}
+          >
+            <RangeSlider
+              value={fee ?? 0}
+              onChange={onSliderChange}
+              valueToPosition={feeToSliderPos}
+              positionToValue={sliderPosToFee}
+              disabled={maraMode}
+            />
           </div>
         )}
       </div>
@@ -818,7 +772,7 @@ export function FeeCalculatorBase({
 
       <div
         onClick={() => setVisible(!visible)}
-        className="flex items-center font-normal text-xs text-color-neutral-500 hover:text-color-hover uppercase transition-colors duration-200 gap-1.5 cursor-pointer group"
+        className={`flex items-center font-normal text-xs text-color-neutral-500 hover:text-color-hover uppercase ${transitionColors} gap-1.5 cursor-pointer group`}
       >
         DETAILS
         <Icon
@@ -891,7 +845,7 @@ export function FeeCalculatorBase({
             <span
               className={`
                 font-normal text-xs uppercase select-none
-                transition-colors duration-200
+                ${transitionColors}
                 ${
                 tosAgreed ? "text-color-neutral-600" : "text-color-neutral-400"
               }
@@ -911,7 +865,7 @@ export function FeeCalculatorBase({
                     href="/termsofservice"
                     target="_blank"
                     className={`
-                      uppercase transition-colors duration-200
+                      uppercase ${transitionColors}
                       ${
                       tosAgreed
                         ? "text-color-neutral-600"
@@ -928,7 +882,7 @@ export function FeeCalculatorBase({
                     href="/termsofservice"
                     target="_blank"
                     className={`
-                      uppercase transition-colors duration-200
+                      uppercase ${transitionColors}
                       ${
                       tosAgreed
                         ? "text-color-neutral-600"
@@ -989,7 +943,7 @@ export function FeeCalculatorBase({
 
       {/* Transaction Size Tooltip */}
       <div
-        className={`${tooltipImage} ${
+        className={`${tooltipImage} !fixed ${
           isTxSizeTooltipVisible ? "opacity-100" : "opacity-0"
         }`}
         style={{

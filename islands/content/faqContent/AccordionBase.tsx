@@ -1,5 +1,6 @@
 /* ===== ACCORDION BASE COMPONENT ===== */
 import { Icon } from "$icon";
+import { transitionAll, transitionColors, transitionTransform } from "$layout";
 import { text } from "$text";
 import { signal } from "@preact/signals";
 import { JSX } from "preact";
@@ -39,10 +40,10 @@ export const Accordion = (
 
         {/* Toggle Icon */}
         <span
-          class={`transition-transform duration-400 ${
+          class={`${transitionTransform} ${
             isOpen
               ? "stroke-color-hover rotate-45"
-              : "stroke-color-neutral-200 group-hover:stroke-color-hover transition-colors duration-400 rotate-0"
+              : `stroke-color-neutral-200 group-hover:stroke-color-hover ${transitionColors} rotate-0`
           }`}
         >
           <Icon
@@ -59,7 +60,7 @@ export const Accordion = (
       <div
         class={` ${
           isOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-10"
-        } mt-3 overflow-hidden transition-all duration-500`}
+        } mt-3 overflow-hidden ${transitionAll}`}
       >
         <div
           class={`${text} [&>div>ul]:list-disc [&>div>ul]:list-inside [&>div>ul]:mb-6 [&>div>ul]:flex [&>div>ul]:flex-col [&>div>ul]:gap-1.5 mb-6`}

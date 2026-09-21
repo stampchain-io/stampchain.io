@@ -4,7 +4,12 @@ import { MenuButton } from "$islands/button/MenuButton.tsx";
 import { SearchButton } from "$islands/button/SearchButton.tsx";
 import { ToolsButton } from "$islands/button/ToolsButton.tsx";
 import { WalletButton } from "$islands/button/WalletButton.tsx";
-import { container0, container1, transitionTransform } from "$layout";
+import {
+  container0,
+  container1,
+  transitionColors,
+  transitionTransform,
+} from "$layout";
 import { useFees } from "$lib/hooks/useFees.ts";
 import { tooltipIcon } from "$notification";
 import { logoHeader, navLinkActiveDesktop, navLinkDesktop } from "$text";
@@ -421,7 +426,7 @@ export function Header() {
           fixed top-0 right-0 left-auto w-full min-[420px]:w-[320px] h-[100dvh] z-modal
           min-[420px]:rounded-l-3xl min-[420px]:border-l-[1px]
           min-[420px]:border-l-color-border/75 min-[420px]:shadow-[-12px_0_12px_-6px_rgba(8,7,8,0.75)]
-          ${container0} ${transitionTransform} transition-transform will-change-transform
+          ${container0} ${transitionTransform}
           overflow-y-auto overflow-x-hidden scrollbar-background-overlay
           ${isActive ? "translate-x-0" : "translate-x-full"}`}
         style="transition-timing-function: cubic-bezier(0.46,0.03,0.52,0.96);"
@@ -526,7 +531,7 @@ export function Header() {
       onClick={() => setCurrentPath("home")}
     >
       <span class={`${logoHeader} hidden tablet:inline`}>
-        <span class="group-hover:text-color-hover transition-colors duration-200">
+        <span class={`group-hover:text-color-hover ${transitionColors}`}>
           STAMP
         </span>CHAIN
       </span>

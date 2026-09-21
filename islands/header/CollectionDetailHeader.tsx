@@ -6,6 +6,7 @@ import {
   containerGap,
   containerPill,
   StatItem,
+  transitionColors,
 } from "$layout";
 import {
   abbreviateAddress,
@@ -168,7 +169,7 @@ export const CollectionDetailHeader = (
       className="stroke-color-neutral-200 translate-y-0.5"
       link
     >
-      <span class="font-normal text-sm text-color-neutral-200 link-neutral-200 group-hover:text-color-hover transition-colors duration-200">
+      <span class={`font-normal text-sm text-color-neutral-200 link-neutral-200 group-hover:text-color-hover ${transitionColors}`}>
         {creatorDisplay}
       </span>
     </UserProfileIcon>

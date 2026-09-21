@@ -1,5 +1,6 @@
 /* ===== TEXT STYLES MODULE ===== */
 /* ======================================================================== */
+import { transitionColors } from "$components/layout/styles.ts";
 
 /* ===== BASE STYLES ===== */
 const logoFont = "font-black italic tracking-wide";
@@ -10,7 +11,6 @@ const textFont = "font-normal text-color-neutral-200";
 const labelFont = "font-light text-color-neutral-500 tracking-wide";
 const valueFont = "font-medium text-color-neutral-200";
 const select = "select-none whitespace-nowrap";
-const transitionColors = "transition-colors duration-200";
 export const truncate = "truncate max-w-[97%]";
 
 /* ======================================================================== */

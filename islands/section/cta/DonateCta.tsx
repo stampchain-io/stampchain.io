@@ -9,6 +9,7 @@ import {
   containerBackground,
   DonateStampData,
   Transaction,
+  transitionColors,
   TxOutput,
 } from "$layout";
 import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
@@ -402,7 +403,7 @@ export default function DonateCta() {
               {/* Address Text - second on mobile, first on tablet+ */}
               <a
                 href={`/wallet/${DONATE_ADDRESS}`}
-                class="font-medium text-base text-color-neutral-400 hover:text-color-hover link-neutral-400 transition-colors duration-200 order-2 tablet:order-1 peer-hover:text-color-hover peer-hover:[background-size:0%_0.8px]"
+                class={`font-medium text-base text-color-neutral-400 hover:text-color-hover link-neutral-400 ${transitionColors} order-2 tablet:order-1 peer-hover:text-color-hover peer-hover:[background-size:0%_0.8px]`}
               >
                 <span class="hidden tablet:block">{DONATE_ADDRESS}</span>
                 <span class="hidden mobileMd:block tablet:hidden">

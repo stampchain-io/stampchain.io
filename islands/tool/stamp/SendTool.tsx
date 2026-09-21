@@ -15,6 +15,7 @@ import {
   imagePreviewTool,
   loaderSpinGrey,
   rowForm,
+  transitionColors,
 } from "$layout";
 import { useTransactionConstructionService } from "$lib/hooks/useTransactionConstructionService.ts";
 import {
@@ -642,7 +643,7 @@ export function StampSendTool() {
                         e.preventDefault();
                         handleStampSelect(stamp.stamp?.toString() ?? "");
                       }}
-                      class="flex items-center gap-5 px-2 py-2 border-b-[1px] border-color-border last:border-b-0 hover:bg-color-background/60 hover:border-color-border transition-colors duration-200 cursor-pointer"
+                      class={`flex items-center gap-5 px-2 py-2 border-b-[1px] border-color-border last:border-b-0 hover:bg-color-background/60 hover:border-color-border ${transitionColors} cursor-pointer`}
                     >
                       <img
                         src={`/api/v2/stamp/${stamp.stamp}/preview`}
