@@ -22,7 +22,7 @@
  * `link` alone and wrap/handle clicks themselves.
  */
 import { Icon, IconVariants } from "$icon";
-import { transitionColors } from "$layout";
+import { transitionColors } from "$components/layout/styles.ts";
 import type { ComponentChildren } from "preact";
 
 interface UserProfileIconProps {

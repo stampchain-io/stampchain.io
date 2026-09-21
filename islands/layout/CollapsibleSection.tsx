@@ -90,7 +90,7 @@ export const CollapsibleSection = ({
             }`}
             data-section-expanded={expanded}
           >
-            <div class="">
+            <div>
               {children}
             </div>
           </div>
@@ -144,7 +144,7 @@ export const CollapsibleSection = ({
             }`}
             data-section-expanded={expanded}
           >
-            <div class="">
+            <div>
               {children}
             </div>
           </div>
@@ -160,7 +160,7 @@ export const CollapsibleSection = ({
           }`}
           data-section-expanded={expanded}
         >
-          <div class="">
+          <div>
             {children}
           </div>
         </div>
