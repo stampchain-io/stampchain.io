@@ -1,5 +1,6 @@
 import { Icon } from "$icon";
 import type { Toast as ToastTypeFromProvider } from "$islands/Toast/ToastProvider.tsx";
+import { transitionAll } from "$layout";
 import {
   notificationBody,
   notificationContainerError,
@@ -167,7 +168,7 @@ export const ToastComponent = (
           <div
             class={`h-full rounded-full ${
               getProgressBarColor(type)
-            } transition-all ease-linear`}
+            } ${transitionAll} ease-linear`}
             style={{
               animation: `progress ${duration}ms linear forwards`,
             }}

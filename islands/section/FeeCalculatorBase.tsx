@@ -6,6 +6,7 @@ import { handleModalClose } from "$components/layout/ModalBase.tsx";
 import { useFees } from "$fees";
 import { Icon } from "$icon";
 import { RangeSlider } from "$islands/button/RangeSlider.tsx";
+import { transitionAll, transitionColors, transitionTransform } from "$layout";
 import type { ExtendedBaseFeeCalculatorProps } from "$lib/types/base.d.ts";
 import { estimateTransactionSizeForType } from "$lib/utils/bitcoin/transactions/transactionSizeEstimator.ts";
 import { logger } from "$lib/utils/logger.ts";
@@ -13,7 +14,6 @@ import {
   formatSatoshisToBTC,
   formatSatoshisToUSD,
 } from "$lib/utils/ui/formatting/formatUtils.ts";
-import { transitionAll, transitionColors } from "$layout";
 import { tooltipButton, tooltipImage } from "$notification";
 import { labelXs, textXs } from "$text";
 import { useEffect, useRef, useState } from "preact/hooks";
@@ -781,7 +781,7 @@ export function FeeCalculatorBase({
           weight="bold"
           size="xxxs"
           color="custom"
-          className={` stroke-color-neutral-500 group-hover:stroke-color-hover transition-all duration-200 transform ${
+          className={`stroke-color-neutral-500 group-hover:stroke-color-hover ${transitionAll} ${
             visible ? "scale-y-[-1]" : ""
           }`}
         />
@@ -814,7 +814,7 @@ export function FeeCalculatorBase({
                 w-4 h-4 tablet:w-3 tablet:h-3 mr-3 tablet:mr-2
                 flex items-center justify-center
                 rounded-[3px]
-                transition-all duration-200 ease-in-out
+                ${transitionColors} ease-in-out
                 border
                 relative
                 overflow-hidden
@@ -832,7 +832,7 @@ export function FeeCalculatorBase({
               <div
                 className={`
                   absolute inset-[1px] rounded-[2px]
-                  transform transition-all duration-200 ease-in-out
+                  ${transitionTransform} ease-in-out
                   ${tosAgreed ? "scale-100" : "scale-0"}
                   ${
                   canHoverSelected

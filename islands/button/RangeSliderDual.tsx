@@ -1,4 +1,5 @@
 import { sliderBar, sliderKnob, trackFill } from "$button";
+import { transitionColors } from "$layout";
 import { formatNumberWithCommas } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 
@@ -798,7 +799,7 @@ export const RangeSliderDual = ({
                   hoveredHandle === "min" || isHovered
                     ? "text-color-hover"
                     : "text-color-neutral-400"
-                } hover:text-color-hover transition-colors duration-200`}
+                } hover:text-color-hover ${transitionColors}`}
                 onClick={() => startEditing("min")}
               >
                 {config.formatValue(minValue)}
@@ -887,7 +888,7 @@ export const RangeSliderDual = ({
                   hoveredHandle === "max" || isHovered
                     ? "text-color-hover"
                     : "text-color-neutral-400"
-                } hover:text-color-hover transition-colors duration-200`}
+                } hover:text-color-hover ${transitionColors}`}
                 onClick={() => startEditing("max")}
               >
                 {config.formatValue(maxValue)}
@@ -965,7 +966,7 @@ export const RangeSliderDual = ({
                 hoveredHandle !== null || isHovered
                   ? "text-color-hover"
                   : "text-color-neutral-600"
-              } transition-colors duration-100`}
+              } ${transitionColors}`}
             >
               {mark}
             </p>

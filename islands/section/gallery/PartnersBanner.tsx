@@ -1,5 +1,5 @@
 /* ===== PARTNERS GALLERY COMPONENT ===== */
-import { containerBackground, shadowGlowGrey } from "$layout";
+import { containerBackground, shadowGlowGrey, transitionAll } from "$layout";
 import { subtitleNeutral } from "$text";
 import { useState } from "preact/hooks";
 
@@ -66,7 +66,7 @@ function PartnerCard({ name, largeImage, smallImage, url }: Partner) {
         src={largeImage}
         alt={`${name} banner`}
         loading="lazy"
-        class={`hidden mobileMd:block absolute inset-0 w-full cursor-pointer transition-all duration-50 rounded-2xl ${
+        class={`hidden mobileMd:block absolute inset-0 w-full cursor-pointer ${transitionAll} rounded-2xl ${
           isHovered ? "grayscale-0" : "grayscale"
         }`}
       />
@@ -74,7 +74,7 @@ function PartnerCard({ name, largeImage, smallImage, url }: Partner) {
         src={smallImage}
         alt={`${name} banner`}
         loading="lazy"
-        class={`block mobileMd:hidden absolute inset-0 w-full cursor-pointer transition-all duration-50 rounded-2xl ${
+        class={`block mobileMd:hidden absolute inset-0 w-full cursor-pointer ${transitionAll} rounded-2xl ${
           isHovered ? "grayscale-0" : "grayscale"
         }`}
       />

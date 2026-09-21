@@ -8,6 +8,7 @@ import {
   containerGap,
   containerPill,
   StatItem,
+  transitionAll,
 } from "$layout";
 import { unicodeEscapeToEmoji } from "$lib/utils/ui/formatting/emojiUtils.ts";
 import {
@@ -182,7 +183,7 @@ export function SRC20DetailHeader({
     >
       <div class="w-24 min-[420px]:w-[140px] min-[460px]:w-[50px] min-[520px]:w-[90px] mobileMd:w-36 min-[640px]:w-40 mobileLg:w-20 min-[880px]:w-40 tablet:w-60 h-2 tablet:h-1.5 rounded-full bg-color-neutral-800 overflow-hidden">
         <div
-          class="h-full rounded-full bg-gradient-to-r from-color-primary-500 via-color-primary-400 to-color-primary-300 transition-all duration-300"
+          class={`h-full rounded-full bg-gradient-to-r from-color-primary-500 via-color-primary-400 to-color-primary-300 ${transitionAll}`}
           style={{ width: `${Math.min(Math.round(progress), 100)}%` }}
         />
       </div>

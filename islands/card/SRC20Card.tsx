@@ -1,6 +1,11 @@
 /* ===== SRC20 TRANSACTION CARD COMPONENT ===== */
 import { PlaceholderImage, UserProfileIcon } from "$icon";
-import { container3, containerCard, containerPill } from "$layout";
+import {
+  container3,
+  containerCard,
+  containerPill,
+  transitionAll,
+} from "$layout";
 import { unicodeEscapeToEmoji } from "$lib/utils/ui/formatting/emojiUtils.ts";
 import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { getSRC20ImageSrc } from "$lib/utils/ui/media/imageUtils.ts";
@@ -378,7 +383,7 @@ export function SRC20Card(
             <div class="hidden min-[420px]:flex flex-col w-full">
               <div class="w-full h-1 rounded-full bg-color-neutral-800 overflow-hidden">
                 <div
-                  class="h-full rounded-full bg-gradient-to-r from-color-primary-500 via-color-primary-400 to-color-primary-300 transition-all duration-300"
+                  class={`h-full rounded-full bg-gradient-to-r from-color-primary-500 via-color-primary-400 to-color-primary-300 ${transitionAll}`}
                   style={{
                     width: `${Math.min(Math.round(progress), 100)}%`,
                   }}

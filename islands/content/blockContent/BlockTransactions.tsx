@@ -1,7 +1,7 @@
 /* ===== BLOCK TRANSACTIONS COMPONENT ===== */
 import { useFees } from "$fees";
 import { Icon } from "$icon";
-import { containerBackground } from "$layout";
+import { containerBackground, transitionAll } from "$layout";
 import { unicodeEscapeToEmoji } from "$lib/utils/ui/formatting/emojiUtils.ts";
 import { text, text2xl } from "$text";
 import { useState } from "preact/hooks";
@@ -104,7 +104,7 @@ export default function BlockTransactions({
 
   return (
     <div
-      class={`${containerBackground} text-color-grey-light gap-6 transition-all`}
+      class={`${containerBackground} text-color-grey-light gap-6 ${transitionAll}`}
     >
       <div class="flex justify-between">
         <h4 class={text2xl}>TRANSACTIONS</h4>
