@@ -106,7 +106,7 @@ export const ToastComponent = (
           corner without being constrained by the container's padding
           (this container intentionally has no overflow-hidden). */
       }
-      <div class="absolute top-0.5 right-0.5">
+      <div class="absolute top-1 right-1">
         <Icon
           type="iconButton"
           name="close"
@@ -118,18 +118,18 @@ export const ToastComponent = (
         />
       </div>
 
-      <div class="flex items-start space-x-6 pr-8">
+      <div class="flex items-start space-x-3 pr-6">
         <Icon
           type="icon"
           name={getIconName(type)}
           weight="bold"
-          size="lg"
+          size="xl"
           color="custom"
-          className={`${getIconColor(type)} mt-0.5`}
+          className={`${getIconColor(type)}`}
           ariaLabel={`${type} notification`}
         />
 
-        <div class="flex-1 ml-6 break-words">
+        <div class="flex-1 mt-[1px] ml-3 break-words">
           {isUpdate
             ? (
               <>

@@ -38,19 +38,15 @@ const TYPE = "info" as const;
  * localStorage key for tracking if update notification has been shown
  * INCREMENT VERSION for each new major update announcement
  */
-const NOTIFICATION_UPDATE_VERSION = "feature-update-v3.2";
+const NOTIFICATION_UPDATE_VERSION = "feature-update-v3.3";
 
 /**
  * Message content for update notification
  * Supports multi-line formatting with bullet points
  */
-const NOTIFICATION_UPDATE_MESSAGE = `Website UI Reimagined
-• New logo, typeface, and color palette
-• Redesigned stamp cards with multiple view modes
-• Improved Explorer page with fully featured filters
-• Added Marketplace page with listings and sales
-• Updated Collection and Wallet pages
-• Codebase optimization and performance improvements
+const NOTIFICATION_UPDATE_MESSAGE = `Wonder Wallet integration
+• Added support for Wonder Wallet browser extension
+• Minor codebase optimizations
 
 Please clear browser cache and refresh the page for all updates to take effect.`;
 
