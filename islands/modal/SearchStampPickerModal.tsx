@@ -517,7 +517,7 @@ function SearchStampPickerContent({
             options={PICKER_TYPE_OPTIONS}
             value={type}
             onChange={handleTypeChange}
-            size="xxsR"
+            size="mdSelector"
             color="neutral"
             className="w-full"
           />

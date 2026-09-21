@@ -22,6 +22,7 @@ export const ToggleButton = ({
     | "xs"
     | "sm"
     | "md"
+    | "mdSelector"
     | "lg"
     | "xl"
     | "xxsR"

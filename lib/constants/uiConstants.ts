@@ -28,6 +28,7 @@ export type ButtonSize =
   | "xs"
   | "sm"
   | "md"
+  | "mdSelector"
   | "lg"
   | "xl"
   | "xxl"

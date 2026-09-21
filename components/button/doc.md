@@ -411,7 +411,7 @@ export function ViewModeSelector() {
       ]}
       value="grid"
       onChange={(value) => console.log(value)}
-      size="smR"
+      size="mdSelector"
       color="neutral"
     />
   );

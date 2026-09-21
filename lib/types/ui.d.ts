@@ -2241,20 +2241,20 @@ export interface ExplorerContentProps extends BaseComponentProps {
 }
 
 /**
- * Explorer Header component props
+ * ExplorerHeaderProps - Props for the ExplorerHeader island
  */
-export interface ExplorerHeaderProps extends BaseComponentProps {
+export type ExplorerHeaderProps = {
   currentSection?: "all" | "stamps" | "tokens";
   viewMode?: "cardVertical" | "cardSquare" | "cardRow";
-  // Counts for the section-selector's PillContentCount badge — combined
+  // Counts for the section-selector's PillContentCount badge - combined
   // for "all", stamps-only for "stamps", tokens-only for "tokens"
   stampsTotal?: number;
   tokensTotal?: number;
-  // Current sort direction from the URL — passed down so SortButton stays
+  // Current sort direction from the URL - passed down so SortButton stays
   // in sync across Fresh partial navigations instead of relying on
   // client-only URL tracking
   sortBy?: "ASC" | "DESC";
-}
+};
 
 /**
  * Wallet page — Stamps container sub-tabs

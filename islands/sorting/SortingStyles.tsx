@@ -31,6 +31,7 @@ function mapButtonSizeToSortingSize(size: ButtonSize): "sm" | "md" | "lg" {
     case "sm":
       return "sm";
     case "md":
+    case "mdSelector":
       return "md";
     case "lg":
     case "xl":

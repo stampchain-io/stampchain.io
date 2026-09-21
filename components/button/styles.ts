@@ -46,6 +46,7 @@ export interface ButtonVariants {
     | "xs"
     | "sm"
     | "md"
+    | "mdSelector"
     | "lg"
     | "xl"
     | "xxl"
@@ -117,7 +118,8 @@ export const buttonStyles: ButtonVariants = {
     xxs: "h-[26px] px-[14px] text-[0.625rem]",
     xs: "h-[30px] px-[14px] text-xs",
     sm: "h-[34px] px-4 text-xs",
-    md: "h-[38px] px-4 text-sm",
+    md: "h-8 px-3 text-[0.625rem]", // Updated sizing
+    mdSelector: "h-6.5 px-3 text-[0.625rem]", // Updated sizing
     lg: "h-[42px] px-4 text-sm",
     xl: "h-[46px] px-5 text-base",
     xxl: "h-[50px] px-6 text-lg",
