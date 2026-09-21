@@ -1,10 +1,10 @@
 /* ===== FORM STYLES MODULE ===== */
-import { container2Hover, shadowGlowPurpleSm } from "$layout";
+import { container2Hover, shadowGlowPurpleSm, transitionColors } from "$layout";
 
 /* ===== BASE STYLES ===== */
 // Global sizes
-const inputFieldHeight = "h-9 tablet:h-8";
-const inputFieldWidth = "w-9 tablet:w-8";
+const inputFieldHeight = "h-8";
+const inputFieldWidth = "w-8";
 
 export const inputField = `
   ${inputFieldHeight} px-3 w-full bg-transparent
@@ -52,11 +52,11 @@ export const inputCheckbox = (
 ): string => `
   appearance-none
   relative
-  size-4 tablet:size-3
+  size-3
   rounded-full
   border
   cursor-pointer
-  transition-colors duration-200
+  ${transitionColors}
   ${
   checked
     ? canHoverSelected
@@ -68,7 +68,7 @@ export const inputCheckbox = (
 }
     after:content-['']
     after:block
-    after:size-[12px] tablet:after:size-[8px]
+    after:size-[8px]
     after:rounded-full
     after:absolute
     after:top-1/2 after:left-1/2
@@ -76,7 +76,7 @@ export const inputCheckbox = (
     after:scale-0
     checked:after:scale-100
     after:transition-all
-    after:duration-200
+    after:duration-500
   `;
 
 /* ===== NOT IN USE NOR UPDATED ===== */

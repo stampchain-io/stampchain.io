@@ -5,7 +5,7 @@
 // General styles
 // Horisontal Rule is defined in /styles.css using border color
 
-// Transition styles - @baba-refactor codebase to use these instead of hardcoded values
+// Transition styles
 export const transitionColors = "transition-colors duration-200";
 export const transitionTransform =
   "transition-transform duration-500 will-change-transform";
@@ -37,7 +37,7 @@ export const container2 =
 export const container2Hover =
   `${container2} hover:border-color-hover ${transitionColors}`;
 export const container2Icon =
-  `relative flex items-center justify-between ${container2} rounded-full p-0.5 gap-1.5 tablet:gap-1`;
+  `relative flex items-center justify-between ${container2} rounded-full p-0.5 gap-2 tablet:gap-1`;
 // Pill styles
 export const containerPill = `flex items-center
  px-2.5 py-1 rounded-full

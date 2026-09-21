@@ -27,8 +27,7 @@ export const logoFooter = // used in footer
 
 /* ===== NAVIGATION STYLES ===== */
 // Header Navigation - Desktop
-export const navLinkDesktop =
-  `mt-0.5 font-normal tablet:font-normal text-sm tablet:text-xs uppercase
+export const navLinkDesktop = `mt-0.5 font-normal text-xs uppercase
   text-color-neutral-400 group-hover:text-color-hover tracking-[0.01rem] ${transitionColors} cursor-pointer ${select}`;
 export const navLinkActiveDesktop =
   `${navLinkDesktop} !text-color-hover !cursor-default`;
@@ -124,8 +123,8 @@ export const labelLogicResponsive = ( // used for the filter labels
   checked: boolean,
   canHoverSelected: boolean,
 ): string => `
-  inline-block ml-3 tablet:ml-[9px] pt-[1px] tablet:pt-0
-  font-medium text-sm tablet:text-xs
+  inline-block ml-2 pt-[1px]
+  font-medium text-xs
   ${transitionColors} ${select} cursor-pointer
   ${
   checked
@@ -189,13 +188,12 @@ export const valueNeutral = `text-color-neutral-400`;
 
 /* ===== SPECIAL TEXT STYLES ===== */
 export const eyebrowNeutral =
-  `font-bold text-xs tablet:text-[0.625rem] text-color-neutral-700 tracking-wider cursor-default ${select}`; // descriptive text above icons, links, etc.
+  `font-bold text-[0.625rem] text-color-neutral-700 tracking-wider cursor-default ${select}`; // descriptive text above icons, links, etc.
 export const eyebrowPrimary =
-  `font-bold text-sm tablet:text-[0.625rem] text-color-primary-300 tracking-wider cursor-default ${select}`;
+  `font-bold text-[0.625rem] text-color-primary-300 tracking-wider cursor-default ${select}`;
 export const eyebrowSecondary =
-  `font-bold text-sm tablet:text-[0.625rem] text-color-secondary-300 tracking-wider cursor-default ${select}`;
-export const eyebrowPositionFilter =
-  `flex justify-end mt-1 tablet:mt-0 -mb-5 tablet:-mb-4`; // used for the filter file type label positioning
+  `font-bold text-[0.625rem] text-color-secondary-300 tracking-wider cursor-default ${select}`;
+export const eyebrowPositionFilter = `flex justify-end -mb-4`; // used for the filter file type label positioning
 export const tagline = `font-regular text-xs text-color-neutral-400 ${select}`; // used in footer
 export const copyright =
   `font-normal text-xs text-color-neutral-600 cursor-default ${select}`; // used in the footer for copyright and counterparty version text
