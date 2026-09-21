@@ -272,7 +272,7 @@ export default function MediaPage() {
               <Button
                 variant="outline"
                 color="neutral"
-                size="smR"
+                size="md"
                 href="https://sqrr.xyz/reports/docs/4/1/Stamps%20Protocol_Final_17_May_2023.pdf"
                 target="_blank"
               >
@@ -294,7 +294,7 @@ export default function MediaPage() {
               <Button
                 variant="outline"
                 color="neutral"
-                size="smR"
+                size="md"
                 href="https://sqrr.xyz/reports/"
                 target="_blank"
               >

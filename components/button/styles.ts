@@ -48,13 +48,6 @@ export interface ButtonVariants {
     | "md"
     | "mdSelector"
     | "lg"
-    | "xl"
-    | "xxl"
-    | "xxsR"
-    | "xsR"
-    | "smR"
-    | "mdR"
-    | "lgR"
     | "custom",
     string
   >;
@@ -113,20 +106,12 @@ export const buttonStyles: ButtonVariants = {
 
   /* ===== SIZE STYLES ===== */
   size: {
-    xxs: "h-5 px-3 text-[0.625rem]", // Updated sizing
-    xs: "h-6 px-3 text-[0.625rem]", // Updated sizing
-    sm: "h-7 px-3 text-[0.625rem]", // Updated sizing
-    md: "h-8 px-3 text-[0.625rem]", // Updated sizing
-    mdSelector: "h-6.5 px-3 text-[0.625rem]", // Updated sizing
+    xxs: "h-5 px-3.5 text-[0.625rem]", // Updated sizing
+    xs: "h-6 px-3.5 text-[0.625rem]", // Updated sizing
+    sm: "h-7 px-4 text-[0.625rem]", // Updated sizing
+    md: "h-8 px-4 text-[0.625rem]", // Updated sizing
+    mdSelector: "h-6.5 px-4 text-[0.625rem]", // Updated sizing
     lg: "h-9 px-4 text-[0.625rem]", // Updated sizing
-    xl: "h-10 px-5 text-[0.625rem]", // Updated sizing
-
-    xxl: "h-[50px] px-6 text-lg",
-    xxsR: "h-[26px] tablet:h-[22px] px-[14px] text-[0.625rem]",
-    xsR: "h-[30px] tablet:h-[26px] px-[14px] text-xs tablet:text-[0.625rem]",
-    smR: "h-[34px] tablet:h-[30px] px-4 text-xs",
-    mdR: "h-[38px] tablet:h-[34px] px-4 text-sm tablet:text-xs",
-    lgR: "h-[42px] tablet:h-[38px] px-4 text-sm",
     custom: "/* Custom size - allows external sizing via className */",
   },
 

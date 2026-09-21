@@ -21,7 +21,7 @@ export type ButtonColor =
   | "custom";
 
 /**
- * Button size types - responsive sizing system
+ * Button size types
  */
 export type ButtonSize =
   | "xxs"
@@ -30,13 +30,6 @@ export type ButtonSize =
   | "md"
   | "mdSelector"
   | "lg"
-  | "xl"
-  | "xxl"
-  | "xxsR" // Responsive variants
-  | "xsR"
-  | "smR"
-  | "mdR"
-  | "lgR"
   | "custom";
 
 /**

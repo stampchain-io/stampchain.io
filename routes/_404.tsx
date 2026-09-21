@@ -25,7 +25,7 @@ export default function Error404Page() {
           <Button
             variant="outline"
             color="neutral"
-            size="smR"
+            size="md"
             href="javascript:history.back()"
           >
             GO BACK
@@ -33,7 +33,7 @@ export default function Error404Page() {
           <Button
             variant="flat"
             color="neutral"
-            size="smR"
+            size="md"
             href="/home"
             target="_top"
           >

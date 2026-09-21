@@ -21,11 +21,12 @@
  * callers that need a click handler instead of navigation can still use
  * `link` alone and wrap/handle clicks themselves.
  */
-import { Icon, IconVariants } from "$icon";
 import { transitionColors } from "$components/layout/styles.ts";
+import { Icon } from "$components/icon/IconBase.tsx";
+import type { IconVariants } from "$components/icon/styles.ts";
 import type { ComponentChildren } from "preact";
 
-interface UserProfileIconProps {
+export interface UserProfileIconProps {
   size?: IconVariants["size"];
   weight?: IconVariants["weight"];
   className?: string;

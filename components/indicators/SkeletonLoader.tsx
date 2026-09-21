@@ -58,19 +58,21 @@ export function SkeletonInput({
 export function SkeletonButton({
   width = "w-32",
   rounded = "rounded-full",
-  size = "mdR",
+  size = "md",
   className = "",
 }: {
   height?: string;
   width?: string;
   rounded?: string;
-  size?: "smR" | "mdR" | "lgR";
+  size?: "xxs" | "xs" | "sm" | "md" | "lg";
   className?: string;
 }) {
   const sizes = {
-    smR: "h-[34px] tablet:h-[30px]",
-    mdR: "h-[38px] tablet:h-[34px]",
-    lgR: "h-[42px] tablet:h-[38px]",
+    xxs: "h-5",
+    xs: "h-6",
+    sm: "h-7",
+    md: "h-8",
+    lg: "h-9",
   };
 
   return (
@@ -232,7 +234,7 @@ export function FeeCalculatorSkeleton() {
             widths={["w-[160px] tablet:w-[226px]"]}
             className="-mb-1 tablet:-mb-0.5"
           />
-          <SkeletonButton size="smR" width="w-[168px] tablet:w-[150px]" />
+          <SkeletonButton size="md" width="w-[168px] tablet:w-[150px]" />
         </div>
       </div>
     </SkeletonContainer>
@@ -461,7 +463,7 @@ export function RegisterToolSkeleton({ className = "" }: SkeletonLoaderProps) {
           </div>
 
           {/* Available button skeleton */}
-          <SkeletonButton size="smR" width="w-[116px]" />
+          <SkeletonButton size="md" width="w-[116px]" />
         </div>
       </SkeletonContainer>
 

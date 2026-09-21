@@ -161,6 +161,7 @@ export function StampInfo(
   const creatorDisplay = stamp.creator_name
     ? stamp.creator_name
     : abbreviateAddress(stamp.creator, 12);
+  const creatorHref = stamp.creator ? `/wallet/${stamp.creator}` : undefined;
 
   /* ===== CPID COPY STATE ===== */
   const [showCpidCopied, setShowCpidCopied] = useState(false);
@@ -841,7 +842,7 @@ export function StampInfo(
                 className="stroke-color-neutral-200 translate-y-0.5"
                 wrapperClassName="mt-1"
                 link
-                href={stamp.creator ? `/wallet/${stamp.creator}` : undefined}
+                href={creatorHref}
               >
                 <span
                   className={`font-normal text-sm text-color-neutral-200 link-neutral-200 group-hover:text-color-hover ${transitionColors}`}
@@ -1146,7 +1147,7 @@ export function StampInfo(
                       <Button
                         variant="flat"
                         color="primary"
-                        size="smR"
+                        size="md"
                         onClick={() =>
                           toggleModal(
                             selectedDispenser || lowestPriceDispenser,

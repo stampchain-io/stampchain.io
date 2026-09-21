@@ -286,7 +286,7 @@ export function StampListingsRow({ stamp }: StampListingsRowProps) {
         <Button
           variant="flat"
           color="primary"
-          size="xxs"
+          size="xs"
           href={href}
           target="_top"
           class={`rounded-xl ${isPurchasing ? "!opacity-60 !cursor-wait" : ""}`}

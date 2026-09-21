@@ -51,7 +51,7 @@ export const StampchainContactCta = () => {
         <Button
           variant="outline"
           color="neutral"
-          size="smR"
+          size="md"
           href="https://bitcoinstamps.xyz/en/"
           target="_blank"
         >
@@ -60,7 +60,7 @@ export const StampchainContactCta = () => {
         <Button
           variant="flat"
           color="neutral"
-          size="smR"
+          size="md"
           href="/about"
         >
           ABOUT

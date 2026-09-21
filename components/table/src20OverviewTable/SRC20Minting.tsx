@@ -356,7 +356,7 @@ export function SRC20Minting({
                       <Button
                         variant="flat"
                         color="primary"
-                        size="xxs"
+                        size="xs"
                         href={mintHref}
                         class="rounded-xl"
                       >

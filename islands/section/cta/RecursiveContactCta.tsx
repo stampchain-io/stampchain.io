@@ -45,7 +45,7 @@ export const RecursiveContactCta = () => {
           <Button
             variant="outline"
             color="neutral"
-            size="smR"
+            size="md"
             href="/about#contact"
             class="float-right mt-6"
           >

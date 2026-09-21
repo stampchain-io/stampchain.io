@@ -72,17 +72,8 @@ The button system uses **solid colors** driven by a single `--color-button` CSS 
 | **xxs** | 26px | 14px | 10px | Compact UI elements |
 | **xs** | 30px | 14px | 12px | Small buttons |
 | **sm** | 34px | 16px | 12px | Regular small buttons |
-| **md** | 38px | 16px | 14px | Standard medium buttons |
+| **md** | 38px | 16px | 14px | Standard medium buttons (default) |
 | **lg** | 42px | 16px | 14px | Large buttons |
-| **xl** | 46px | 20px | 16px | Extra large buttons |
-| **xxl** | 50px | 24px | 18px | Hero buttons |
-| **xxsR** | 26px/22px* | 14px | 10px | Responsive tiny buttons |
-| **xsR** | 30px/26px* | 14px | 12px/10px* | Responsive small buttons |
-| **smR** | 34px/30px* | 16px | 12px | Responsive regular buttons |
-| **mdR** | 38px/34px* | 16px | 14px/12px* | Responsive medium (default) |
-| **lgR** | 42px/38px* | 16px | 14px | Responsive large buttons |
-
-*Responsive sizes: mobile/tablet
 
 ## Core Components
 
@@ -163,8 +154,7 @@ The button system uses **solid colors** driven by a single `--color-button` CSS 
 export interface ButtonProps extends Omit<JSX.HTMLAttributes<HTMLButtonElement>, "loading" | "size"> {
   variant?: "outline" | "flat" | "custom";
   color?: "neutral" | "primary" | "secondary" | "test" | "custom";
-  size?: "xxs" | "xs" | "sm" | "md" | "lg" | "xl" | "xxl" |
-         "xxsR" | "xsR" | "smR" | "mdR" | "lgR" | "custom";
+  size?: "xxs" | "xs" | "sm" | "md" | "mdSelector" | "lg" | "custom";
   disabled?: boolean;
   loading?: boolean;
   active?: boolean;
@@ -245,7 +235,7 @@ import { Button } from "$button";
 
 export function MyComponent() {
   return (
-    <Button variant="outline" color="neutral" size="mdR">
+    <Button variant="outline" color="neutral" size="md">
       CLICK ME
     </Button>
   );
@@ -316,7 +306,7 @@ import { Button } from "$button";
 
 export function PremiumButton() {
   return (
-    <Button variant="flat" color="primary" size="xl">
+    <Button variant="flat" color="primary" size="lg">
       CONNECT WALLET
     </Button>
   );
@@ -345,7 +335,7 @@ export function NavButton() {
     <Button
       variant="outline"
       color="neutral"
-      size="mdR"
+      size="md"
       href="/stamps"
       f-partial="/stamps"  // Fresh partial navigation
     >
@@ -580,10 +570,9 @@ export const sliderKnob = `... [&::-webkit-slider-thumb]:bg-color-neutral-400 gr
 - **test**: QA/testing-only buttons, not for production UI
 
 ### Size Selection
-- Use responsive sizes (`mdR`, `lgR`) for adaptive UI
-- `md` or `mdR` as default for most buttons
+- `md` is the default when `size` is omitted on `Button` and `ButtonProcessing`
 - `sm` for compact layouts, mobile interfaces
-- `lg` or `xl` for primary CTAs
+- `lg` for primary CTAs
 - Icon buttons typically use `md` or `lg`
 
 ### State Management
@@ -631,7 +620,7 @@ export const sliderKnob = `... [&::-webkit-slider-thumb]:bg-color-neutral-400 gr
 <Button
   variant="outline"
   color="neutral"
-  size="mdR"
+  size="md"
   href="/collection/bitcoin-stamps"
   f-partial="/collection/bitcoin-stamps"
 >

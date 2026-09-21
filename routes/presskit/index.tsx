@@ -28,10 +28,10 @@ function DownloadButtons({ inline = false }: { inline?: boolean }) {
     : "mt-5 flex gap-5";
   return (
     <div class={wrapperClass}>
-      <Button variant="outline" color="neutral" size="smR" href="#">
+      <Button variant="outline" color="neutral" size="md" href="#">
         SVG
       </Button>
-      <Button variant="outline" color="neutral" size="smR" href="#">
+      <Button variant="outline" color="neutral" size="md" href="#">
         PNG
       </Button>
     </div>

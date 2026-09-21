@@ -298,7 +298,7 @@ export const FilterContentSRC20 = ({
             variant="collapsibleLabel"
           >
             <ToggleButton
-              size="smR"
+              size="md"
               options={["24h", "3d", "7d"]}
               selected={volumePeriod}
               onChange={(newPeriod: string | string[]) => {
@@ -334,7 +334,7 @@ export const FilterContentSRC20 = ({
             variant="collapsibleLabel"
           >
             <ToggleButton
-              size="smR"
+              size="md"
               options={["24h", "3d", "7d"]}
               selected={priceChangePeriod}
               onChange={(newPeriod: string | string[]) => {

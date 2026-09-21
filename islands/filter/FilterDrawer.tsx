@@ -472,7 +472,7 @@ const FilterDrawer = (
           <Button
             variant="outline"
             color="neutral"
-            size="xsR"
+            size="md"
             onClick={() => {
               isClearingRef.current = true;
               // Always clear to empty default filters (full reset)
@@ -489,7 +489,7 @@ const FilterDrawer = (
           <Button
             variant="flat"
             color="primary"
-            size="xsR"
+            size="md"
             onClick={handleApplyFilters}
             class="w-full"
           >

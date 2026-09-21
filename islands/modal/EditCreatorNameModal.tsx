@@ -344,7 +344,7 @@ function EditCreatorNameModal({
               <Button
                 variant="outline"
                 color="neutral"
-                size="smR"
+                size="md"
                 onClick={handleClose}
                 disabled={isSubmitting}
                 class="flex-1"
@@ -356,7 +356,7 @@ function EditCreatorNameModal({
               <ButtonProcessing
                 variant="flat"
                 color="primary"
-                size="smR"
+                size="md"
                 isSubmitting={isSubmitting}
                 onClick={handleSubmit}
                 disabled={isOverLimit || charCount === 0}

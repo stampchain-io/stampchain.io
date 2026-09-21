@@ -199,7 +199,7 @@ export function SRC20DetailHeader({
     <Button
       variant="flat"
       color="primary"
-      size="xs"
+      size="sm"
       href={`/tool/src20/mint?tick=${
         encodeURIComponent(deployment.tick ?? "")
       }&trxType=olga`}

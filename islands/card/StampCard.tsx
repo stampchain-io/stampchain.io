@@ -317,7 +317,7 @@ export function StampCard({
                 name={isPlaying ? "pause" : "play"}
                 type="iconButton"
                 weight="bold"
-                size="xsR"
+                size="md"
                 color="custom"
                 className={`relative z-10 [&_path]:fill-color-neutral-600 [&_path]:group-hover/button:fill-color-hover ${transitionAll}`}
               />
@@ -767,7 +767,7 @@ export function StampCard({
               <Button
                 variant="flat"
                 color="primary"
-                size="xsR"
+                size="sm"
                 class={`rounded-xl shrink-0 ${
                   isFetchingDispenser ? "!opacity-60 !cursor-wait" : ""
                 }`}
@@ -1167,7 +1167,7 @@ export function StampCard({
                   <Button
                     variant="flat"
                     color="primary"
-                    size="xs"
+                    size="sm"
                     class={`w-full rounded-xl ${
                       isFetchingDispenser ? "!opacity-60 !cursor-wait" : ""
                     }`}

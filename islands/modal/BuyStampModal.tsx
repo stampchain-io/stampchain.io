@@ -2,7 +2,7 @@
 import { useTransactionForm } from "$client/hooks/useTransactionForm.ts";
 import { walletContext } from "$client/wallet/wallet.ts";
 import { handleModalClose } from "$components/layout/ModalBase.tsx";
-import { StampImage } from "$content";
+import { StampImage } from "$islands/content/stampDetailContent/StampImage.tsx";
 import { inputFieldSquare } from "$form";
 import { UserProfileIcon } from "$icon";
 import { stackConnectWalletModal } from "$islands/layout/ModalStack.tsx";

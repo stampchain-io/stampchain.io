@@ -308,7 +308,7 @@ export default function DonateCta() {
       <Button
         variant="flat"
         color="primary"
-        size="smR"
+        size="md"
         onClick={onClick}
       >
         DONATE

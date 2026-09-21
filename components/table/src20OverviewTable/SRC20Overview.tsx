@@ -523,7 +523,7 @@ export function SRC20Overview({
                       <Button
                         variant="outline"
                         color="custom"
-                        size="xxs"
+                        size="xs"
                         class="rounded-xl border-color-neutral-600 text-color-neutral-600 hover:border-color-neutral-600 hover:text-color-neutral-600 !cursor-not-allowed"
                       >
                         SOON

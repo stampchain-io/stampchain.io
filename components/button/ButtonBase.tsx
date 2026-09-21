@@ -59,7 +59,7 @@ const getCommonButtonProps = ({
 export function Button({
   variant = "outline",
   color = "neutral",
-  size = "mdR",
+  size = "md",
   disabled,
   isActive,
   href,
@@ -179,7 +179,7 @@ export function ButtonIcon({
 export function ButtonProcessing({
   variant = "outline",
   color = "neutral",
-  size = "mdR",
+  size = "md",
   disabled,
   isSubmitting,
   isActive,
