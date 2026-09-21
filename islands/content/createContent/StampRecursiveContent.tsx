@@ -1816,7 +1816,7 @@ export function StampRecursiveContent(
     <div class="flex flex-col w-full pt-3">
       <style>{CANVAS_CSS}</style>
       <CreateStampRecursiveHeader />
-      <div class="flex flex-col-reverse mobileLg:flex-row w-full gap-3 pt-3">
+      <div class="flex flex-col-reverse mobileLg:flex-row w-full gap-5 pt-3">
         <div
           class={`w-full mobileLg:w-[320px] mobileLg:shrink-0
             h-[700px] mobileLg:h-[640px] min-[1080px]:h-[690px]
