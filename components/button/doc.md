@@ -176,11 +176,11 @@ export interface BaseButtonProps extends BaseComponentProps {
   href?: string;
   target?: string;
   type?: "button" | "submit" | "reset";
-  onClick?: MouseEventHandler<HTMLElement> | ((event: JSX.TargetedEvent<HTMLButtonElement>) => void);
+  onClick?: MouseEventHandler<HTMLElement> | ((event: TargetedEvent<HTMLButtonElement>) => void);
   onMouseEnter?: MouseEventHandler;
   onMouseLeave?: MouseEventHandler;
-  onFocus?: JSX.FocusEventHandler<HTMLElement>;
-  onBlur?: JSX.FocusEventHandler<HTMLElement>;
+  onFocus?: FocusEventHandler<HTMLElement>;
+  onBlur?: FocusEventHandler<HTMLElement>;
   "data-type"?: string;
   "f-partial"?: string;
   role?: string;

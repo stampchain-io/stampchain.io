@@ -3,7 +3,7 @@ import { Icon } from "$icon";
 import { container3 } from "$layout";
 import { textXs } from "$text";
 import type { ColorPickerProps } from "$types/ui.d.ts";
-import type { JSX } from "preact";
+import type { TargetedPointerEvent } from "preact";
 import { createPortal } from "preact/compat";
 import { useEffect, useRef, useState } from "preact/hooks";
 
@@ -206,7 +206,7 @@ export function ColorPicker({
   };
 
   const onSvPointer = (
-    e: JSX.TargetedPointerEvent<HTMLDivElement>,
+    e: TargetedPointerEvent<HTMLDivElement>,
   ) => {
     if (e.type === "pointerdown") {
       e.currentTarget.setPointerCapture(e.pointerId);
@@ -224,7 +224,7 @@ export function ColorPicker({
   };
 
   const onHuePointer = (
-    e: JSX.TargetedPointerEvent<HTMLDivElement>,
+    e: TargetedPointerEvent<HTMLDivElement>,
   ) => {
     if (e.type === "pointerdown") {
       e.currentTarget.setPointerCapture(e.pointerId);

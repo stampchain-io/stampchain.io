@@ -26,7 +26,7 @@ import {
 import { FeeCalculatorBase } from "$section";
 import { labelLg, labelSm, titleNeutral } from "$text";
 import type { StampRow } from "$types/stamp.d.ts";
-import { JSX } from "preact";
+import type { JSX, TargetedEvent } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
 
 /* ===== COMPONENT ===== */
@@ -689,7 +689,7 @@ export function StampSendTool() {
         <div class={rowForm}>
           <input
             value={formState.recipientAddress}
-            onInput={(e: JSX.TargetedEvent<HTMLInputElement>) => {
+            onInput={(e: TargetedEvent<HTMLInputElement>) => {
               const newValue = e.currentTarget.value;
               console.log(
                 "SENDTOOL: Recipient Address Input onInput. New value:",

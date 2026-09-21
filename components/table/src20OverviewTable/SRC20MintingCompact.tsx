@@ -24,7 +24,7 @@ import { getSRC20ImageSrc } from "$lib/utils/ui/media/imageUtils.ts";
 import { cardRowStampNumber, labelXxs, textXs } from "$text";
 import type { SRC20Row } from "$types/src20.d.ts";
 import type { SRC20MintingCompactProps } from "$types/ui.d.ts";
-import type { TargetedEvent } from "preact/compat";
+import type { TargetedEvent } from "preact";
 
 export function SRC20MintingCompact({
   data = [],

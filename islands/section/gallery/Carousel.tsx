@@ -5,10 +5,8 @@ import { IS_BROWSER } from "$fresh/runtime.ts";
 import { PlaceholderImage } from "$icon";
 import StampTextContent from "$islands/content/stampDetailContent/StampTextContent.tsx";
 import { container2, shadowGlowPurple } from "$layout";
-import {
-  abbreviateAddress,
-  formatEditionCount,
-} from "$lib/utils/ui/formatting/formatUtils.ts";
+import { formatEditionCount } from "$lib/utils/ui/formatting/formatEditionCount.ts";
+import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
 import {
   getStampImageSrc,
   getStampPreviewUrl,

@@ -6,4 +6,5 @@
  */
 
 export * from "./formatUtils.ts";
+export * from "./formatEditionCount.ts";
 export * from "./emojiUtils.ts";

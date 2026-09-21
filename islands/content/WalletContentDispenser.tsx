@@ -6,10 +6,10 @@ import BuyStampModal from "$islands/modal/BuyStampModal.tsx";
 import { openModal } from "$islands/modal/states.ts";
 import { containerBackground, StatItem, StatPrice, StatTitle } from "$layout";
 import type { WalletOverviewInfo } from "$lib/types/wallet.d.ts";
+import { formatEditionCount } from "$lib/utils/ui/formatting/formatEditionCount.ts";
 import {
   abbreviateAddress,
   formatBTCAmount,
-  formatEditionCount,
 } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { tooltipIcon } from "$notification";
 import { headingGreyLD, textXs, titleNeutral } from "$text";

@@ -15,11 +15,11 @@ import {
 } from "$layout";
 import type { Src101Detail } from "$lib/types/src101.d.ts";
 import type { StampRow } from "$lib/types/stamp.d.ts";
+import { formatEditionCount } from "$lib/utils/ui/formatting/formatEditionCount.ts";
 import {
   abbreviateAddress,
   formatBTCAmount,
   formatDate,
-  formatEditionCount,
   formatFileSize,
   formatFileType,
 } from "$lib/utils/ui/formatting/formatUtils.ts";
@@ -793,7 +793,7 @@ export function StampInfo(
                   <span className="inline-flex max-w-full flex-row-reverse items-center gap-3 min-w-0">
                     <span
                       ref={cpidCopyButtonRef}
-                      className="relative peer -translate-y-[1px] shrink-0"
+                      className="relative peer shrink-0"
                       onMouseEnter={handleCpidCopyMouseEnter}
                       onMouseLeave={handleCpidCopyMouseLeave}
                     >

@@ -21,8 +21,10 @@ import type {
   AriaRole,
   ComponentChildren,
   ComponentProps,
+  FocusEventHandler,
   JSX,
   Ref,
+  TargetedEvent,
 } from "preact";
 
 // Re-export button types for use by other modules
@@ -361,7 +363,7 @@ export interface ExtendedComponentProps extends BaseComponentProps {
   style?: JSX.CSSProperties;
   onClick?:
     | MouseEventHandler<HTMLElement>
-    | ((event: JSX.TargetedEvent<HTMLButtonElement>) => void);
+    | ((event: TargetedEvent<HTMLButtonElement>) => void);
   onKeyDown?: KeyboardEventHandler;
   role?: string;
   tabIndex?: number;
@@ -508,7 +510,7 @@ export interface IconProps extends BaseComponentProps {
   weight?: "light" | "regular" | "bold" | undefined;
   onClick?:
     | MouseEventHandler<HTMLElement>
-    | ((event: JSX.TargetedEvent<HTMLButtonElement>) => void);
+    | ((event: TargetedEvent<HTMLButtonElement>) => void);
 }
 
 /**
@@ -524,7 +526,7 @@ export interface IconButtonProps extends BaseComponentProps {
   isActive?: boolean;
   onClick?:
     | MouseEventHandler<HTMLElement>
-    | ((event: JSX.TargetedEvent<HTMLButtonElement>) => void);
+    | ((event: TargetedEvent<HTMLButtonElement>) => void);
   "aria-label": string; // Required for accessibility
   href?: string;
 }
@@ -543,11 +545,11 @@ export interface BaseButtonProps extends BaseComponentProps {
   type?: "button" | "submit" | "reset";
   onClick?:
     | MouseEventHandler<HTMLElement>
-    | ((event: JSX.TargetedEvent<HTMLButtonElement>) => void);
+    | ((event: TargetedEvent<HTMLButtonElement>) => void);
   onMouseEnter?: MouseEventHandler;
   onMouseLeave?: MouseEventHandler;
-  onFocus?: JSX.FocusEventHandler<HTMLElement>;
-  onBlur?: JSX.FocusEventHandler<HTMLElement>;
+  onFocus?: FocusEventHandler<HTMLElement>;
+  onBlur?: FocusEventHandler<HTMLElement>;
   "data-type"?: string;
   "f-partial"?: string;
   role?: string;
@@ -701,9 +703,9 @@ export interface InputProps extends FormControlProps {
   value?: string;
   defaultValue?: string;
   placeholder?: string;
-  onChange?: (event: JSX.TargetedEvent<HTMLInputElement, Event>) => void;
-  onBlur?: (event: JSX.TargetedEvent<HTMLInputElement, FocusEvent>) => void;
-  onFocus?: (event: JSX.TargetedEvent<HTMLInputElement, FocusEvent>) => void;
+  onChange?: (event: TargetedEvent<HTMLInputElement, Event>) => void;
+  onBlur?: (event: TargetedEvent<HTMLInputElement, FocusEvent>) => void;
+  onFocus?: (event: TargetedEvent<HTMLInputElement, FocusEvent>) => void;
   autoComplete?: string;
   maxLength?: number;
   minLength?: number;
@@ -714,7 +716,7 @@ export interface InputProps extends FormControlProps {
  * Input field component props (extends InputProps with additional features)
  */
 export interface InputFieldProps extends InputProps {
-  onInput?: (event: JSX.TargetedEvent<HTMLInputElement, Event>) => void;
+  onInput?: (event: TargetedEvent<HTMLInputElement, Event>) => void;
   inputMode?:
     | "text"
     | "decimal"
@@ -750,7 +752,7 @@ export interface SelectFieldProps extends FormControlProps {
   onChange?: (value: string) => void;
   multiple?: boolean;
   size?: ButtonSize;
-  onClick?: (event: JSX.TargetedEvent<HTMLSelectElement, Event>) => void;
+  onClick?: (event: TargetedEvent<HTMLSelectElement, Event>) => void;
 }
 
 /**
@@ -1470,7 +1472,7 @@ export interface ScrollContainerProps {
   className?: string;
   maxHeight?: string;
   class?: string;
-  onScroll?: (event: JSX.TargetedEvent<HTMLElement, Event>) => void;
+  onScroll?: (event: TargetedEvent<HTMLElement, Event>) => void;
 }
 
 export interface SectionHeaderProps {
