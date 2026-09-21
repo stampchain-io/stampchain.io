@@ -54,9 +54,7 @@ export function UserProfileIcon({
       size={size}
       color="custom"
       className={`${
-        link
-          ? `group-hover:stroke-color-hover ${transitionColors}`
-          : ""
+        link ? `group-hover:stroke-color-hover ${transitionColors}` : ""
       } ${className}`}
     />
   );

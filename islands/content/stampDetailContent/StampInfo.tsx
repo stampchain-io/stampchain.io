@@ -843,7 +843,9 @@ export function StampInfo(
                 link
                 href={stamp.creator ? `/wallet/${stamp.creator}` : undefined}
               >
-                <span className={`font-normal text-sm text-color-neutral-200 link-neutral-200 group-hover:text-color-hover ${transitionColors}`}>
+                <span
+                  className={`font-normal text-sm text-color-neutral-200 link-neutral-200 group-hover:text-color-hover ${transitionColors}`}
+                >
                   <span className="min-[420px]:hidden">{creatorDisplaySm}</span>
                   <span className="hidden min-[420px]:inline">
                     {creatorDisplay}
@@ -958,7 +960,9 @@ export function StampInfo(
                       className={`stroke-color-neutral-500  group-hover:stroke-color-hover ${transitionColors}`}
                       ariaLabel="Collection"
                     />
-                    <span className={`font-normal text-xs text-color-neutral-500 group-hover:text-color-hover ${transitionColors}`}>
+                    <span
+                      className={`font-normal text-xs text-color-neutral-500 group-hover:text-color-hover ${transitionColors}`}
+                    >
                       {collectionInfo.collection_name}
                     </span>
                   </a>

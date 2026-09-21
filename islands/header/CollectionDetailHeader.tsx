@@ -170,7 +170,9 @@ export const CollectionDetailHeader = (
       link
       href={creatorAddress ? `/wallet/${creatorAddress}` : undefined}
     >
-      <span class={`font-normal text-sm text-color-neutral-200 link-neutral-200 group-hover:text-color-hover ${transitionColors}`}>
+      <span
+        class={`font-normal text-sm text-color-neutral-200 link-neutral-200 group-hover:text-color-hover ${transitionColors}`}
+      >
         {creatorDisplay}
       </span>
     </UserProfileIcon>
