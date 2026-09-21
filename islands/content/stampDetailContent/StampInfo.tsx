@@ -10,6 +10,8 @@ import {
   PillContentCount,
   StatItem,
   StatPrice,
+  transitionAll,
+  transitionColors,
 } from "$layout";
 import type { Src101Detail } from "$lib/types/src101.d.ts";
 import type { StampRow } from "$lib/types/stamp.d.ts";
@@ -709,7 +711,7 @@ export function StampInfo(
         href={`https://www.blockchain.com/explorer/transactions/btc/${stamp.tx_hash}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="link-neutral-400 transition-colors duration-200"
+        className={`link-neutral-400 ${transitionColors}`}
       >
         {abbreviateAddress(stamp.tx_hash, 8)}
       </a>
@@ -818,7 +820,7 @@ export function StampInfo(
                       </div>
                     </span>
                     <span
-                      className={`${truncate} peer-hover:text-color-hover transition-colors duration-200 min-w-0`}
+                      className={`${truncate} peer-hover:text-color-hover ${transitionColors} min-w-0`}
                     >
                       {stamp.cpid}
                     </span>
@@ -841,7 +843,7 @@ export function StampInfo(
                 link
                 href={stamp.creator ? `/wallet/${stamp.creator}` : undefined}
               >
-                <span className="font-normal text-sm text-color-neutral-200 link-neutral-200 group-hover:text-color-hover transition-colors duration-200">
+                <span className={`font-normal text-sm text-color-neutral-200 link-neutral-200 group-hover:text-color-hover ${transitionColors}`}>
                   <span className="min-[420px]:hidden">{creatorDisplaySm}</span>
                   <span className="hidden min-[420px]:inline">
                     {creatorDisplay}
@@ -953,10 +955,10 @@ export function StampInfo(
                       weight="normal"
                       size="xxs"
                       color="custom"
-                      className="stroke-color-neutral-500  group-hover:stroke-color-hover transition-colors duration-200"
+                      className={`stroke-color-neutral-500  group-hover:stroke-color-hover ${transitionColors}`}
                       ariaLabel="Collection"
                     />
-                    <span className="font-normal text-xs text-color-neutral-500 group-hover:text-color-hover transition-colors duration-200">
+                    <span className={`font-normal text-xs text-color-neutral-500 group-hover:text-color-hover ${transitionColors}`}>
                       {collectionInfo.collection_name}
                     </span>
                   </a>
@@ -1117,7 +1119,7 @@ export function StampInfo(
                             weight="bold"
                             size="xxsR"
                             color="custom"
-                            className="stroke-color-orange-400 group-hover:stroke-color-hover transition-colors duration-200"
+                            className={`stroke-color-orange-400 group-hover:stroke-color-hover ${transitionColors}`}
                             ariaLabel="Listings"
                             onClick={() => {
                               setShowListings(!showListings);
@@ -1160,7 +1162,7 @@ export function StampInfo(
       {(dispensers?.length >= 2)
         ? (
           <div
-            className={`col-span-full overflow-hidden transition-all duration-500 ease-in-out
+            className={`col-span-full overflow-hidden ${transitionAll} ease-in-out
                       ${
               showListings
                 ? "max-h-[222px] mt-5 opacity-100"

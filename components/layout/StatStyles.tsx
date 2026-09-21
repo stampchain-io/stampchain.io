@@ -1,6 +1,6 @@
 /* ===== STAT DISPLAY COMPONENTS ===== */
 import { ActivityLevelIndicator } from "$components/indicators/ActivityLevelIndicator.tsx";
-import { alignmentClasses } from "$layout";
+import { alignmentClasses, transitionColors } from "$layout";
 import { cardPrice, labelXs, valueSm, valueXl } from "$text";
 import type {
   StatItemProps,
@@ -26,7 +26,7 @@ export function StatItem({
       <h6
         class={`${valueSm} ${alignmentClass} ${customClass || ""} ${
           valueClass || ""
-        } group-hover:text-color-hover transition-colors duration-200`}
+        } group-hover:text-color-hover ${transitionColors}`}
       >
         {value}
       </h6>
@@ -56,7 +56,7 @@ export function StatTitle({
         {label}
       </h5>
       <h6
-        class={`${valueXl} ${alignmentClass} group-hover:text-color-hover transition-colors duration-200`}
+        class={`${valueXl} ${alignmentClass} group-hover:text-color-hover ${transitionColors}`}
       >
         {value}
       </h6>

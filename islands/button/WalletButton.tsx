@@ -6,7 +6,7 @@ import { Icon } from "$icon";
 import { WalletProvider } from "$islands/layout/WalletProvider.tsx";
 import { ConnectWalletModal } from "$islands/modal/ConnectWalletModal.tsx";
 import { closeModal, openModal } from "$islands/modal/states.ts";
-import { containerStickyBottom } from "$layout";
+import { containerStickyBottom, transitionColors } from "$layout";
 import {
   abbreviateAddress,
   formatSatoshisToBTC,
@@ -258,7 +258,7 @@ export const WalletButton = (
               </div>
             </div>
             <h6
-              class={`${valueDarkSm} !text-xs transition-colors duration-200 peer-hover:text-color-hover`}
+              class={`${valueDarkSm} !text-xs ${transitionColors} peer-hover:text-color-hover`}
             >
               {abbreviateAddress(address, 8)}
             </h6>
@@ -360,7 +360,7 @@ export const WalletButton = (
                 </div>
               </div>
               <h6
-                class={`${valueDarkSm} transition-colors duration-200 peer-hover:text-color-hover`}
+                class={`${valueDarkSm} ${transitionColors} peer-hover:text-color-hover`}
               >
                 {abbreviateAddress(address, 9)}
               </h6>

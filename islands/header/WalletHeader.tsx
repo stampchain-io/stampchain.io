@@ -8,6 +8,7 @@ import {
   containerGap,
   StatItem,
   StatPrice,
+  transitionColors,
 } from "$layout";
 import type { WalletOverviewInfo } from "$lib/types/wallet.d.ts";
 import {
@@ -179,17 +180,17 @@ function WalletOverview({ walletData }: { walletData: WalletOverviewInfo }) {
         </div>
 
         <h6
-          class={`${text} hidden tablet:block transition-colors duration-200 peer-hover:text-color-hover`}
+          class={`${text} hidden tablet:block ${transitionColors} peer-hover:text-color-hover`}
         >
           {walletData.address}
         </h6>
         <h6
-          class={`${text} hidden mobileLg:block tablet:hidden transition-colors duration-200 peer-hover:text-color-hover`}
+          class={`${text} hidden mobileLg:block tablet:hidden ${transitionColors} peer-hover:text-color-hover`}
         >
           {abbreviateAddress(walletData.address, 13)}
         </h6>
         <h6
-          class={`${text} block mobileLg:hidden transition-colors duration-200 peer-hover:text-color-hover`}
+          class={`${text} block mobileLg:hidden ${transitionColors} peer-hover:text-color-hover`}
         >
           {abbreviateAddress(walletData.address, 11)}
         </h6>

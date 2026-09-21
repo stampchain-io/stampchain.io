@@ -1,4 +1,5 @@
 import { Icon } from "$icon";
+import { transitionAll, transitionColors } from "$layout";
 import { labelLogicResponsive } from "$text";
 import { ComponentChildren, JSX } from "preact";
 import { useState } from "preact/hooks";
@@ -32,17 +33,17 @@ export const CollapsibleSection = ({
   switch (variant) {
     case "collapsibleTitle": {
       return (
-        <div>
+        <div class="[&+&]:mt-3">
           <button
             type="button"
             onClick={handleClick}
             onMouseLeave={handleMouseLeave}
-            class="flex items-center w-full justify-between pt-2 pb-4 tablet:pt-2 tablet:pb-3 transition-colors duration-200 group"
+            class={`flex items-center w-full justify-between ${transitionColors} group`}
             data-section-toggle
           >
             <span
               class={`
-                font-light tablet:font-normal text-lg tablet:text-sm transition-colors duration-200
+                font-light text-sm ${transitionColors}
                 ${
                 expanded
                   ? `text-color-primary-400 ${
@@ -57,7 +58,7 @@ export const CollapsibleSection = ({
             </span>
 
             <div
-              class={`transform transition-all duration-400 ${
+              class={`transform ${transitionAll} ${
                 expanded ? "scale-y-[-1]" : ""
               }`}
             >
@@ -70,27 +71,26 @@ export const CollapsibleSection = ({
                     : `stroke-color-neutral-400 ${
                       canHoverSelected ? "group-hover:stroke-color-hover" : ""
                     }`
-                } transition-colors duration-200`}
+                } ${transitionColors}`}
               >
                 <Icon
                   type="iconHover"
                   name="caretDown"
                   weight="normal"
-                  size="xsR"
+                  size="md"
                   color="custom"
-                  className="mb-[3px]"
                 />
               </div>
             </div>
           </button>
 
           <div
-            class={`overflow-hidden transition-all duration-400 ${
+            class={`overflow-hidden ${transitionAll} ${
               expanded ? "max-h-[999px] opacity-100" : "max-h-0 opacity-0"
             }`}
             data-section-expanded={expanded}
           >
-            <div class="-mt-2 tablet:-mt-1 pb-4 pl-0.5">
+            <div class="">
               {children}
             </div>
           </div>
@@ -105,11 +105,11 @@ export const CollapsibleSection = ({
             type="button"
             onClick={handleClick}
             onMouseLeave={handleMouseLeave}
-            class="flex items-center w-full mt-2 tablet:mt-1.5 group transition-colors duration-200"
+            class={`flex items-center w-full group ${transitionColors}`}
           >
             <div
-              class={`transform transition-all duration-400 ${
-                expanded ? "scale-y-[-1]" : "mb-0.5"
+              class={`transform ${transitionAll} ${
+                expanded ? "scale-y-[-1]" : ""
               } ${
                 expanded
                   ? `stroke-color-neutral-400 ${
@@ -118,13 +118,13 @@ export const CollapsibleSection = ({
                   : `stroke-color-primary-400 ${
                     canHoverSelected ? "group-hover:stroke-color-hover" : ""
                   }`
-              } transition-colors duration-200`}
+              } ${transitionColors}`}
             >
               <Icon
                 type="iconHover"
                 name="caretDown"
                 weight="normal"
-                size="xxsR"
+                size="sm"
                 color="custom"
               />
             </div>
@@ -139,12 +139,12 @@ export const CollapsibleSection = ({
           </button>
 
           <div
-            class={`overflow-hidden transition-all duration-400 ${
+            class={`overflow-hidden ${transitionAll} ${
               expanded ? "max-h-[999px] opacity-100" : "max-h-0 opacity-0"
             }`}
             data-section-expanded={expanded}
           >
-            <div class="pt-3.5 pl-0.5">
+            <div class="">
               {children}
             </div>
           </div>
@@ -155,12 +155,12 @@ export const CollapsibleSection = ({
     case "collapsibleLabel": {
       return (
         <div
-          class={`overflow-hidden transition-all duration-400 ease-in-out ${
+          class={`overflow-hidden ${transitionAll} ease-in-out ${
             expanded ? "max-h-[100px] opacity-100" : "max-h-0 opacity-0"
           }`}
           data-section-expanded={expanded}
         >
-          <div class="pt-2 pl-0.5">
+          <div class="">
             {children}
           </div>
         </div>
