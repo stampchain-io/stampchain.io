@@ -545,7 +545,6 @@ function AssetPreviewCard(
           <Button
             variant="flat"
             color="neutral"
-            size="md"
             class="flex-1"
             onClick={onAdd}
           >
@@ -2067,7 +2066,6 @@ export function StampRecursiveContent(
                   <Button
                     variant="flat"
                     color="neutral"
-                    size="md"
                     class="w-full"
                     disabled={mode !== "edit"}
                     onClick={() => {
@@ -2214,7 +2212,6 @@ export function StampRecursiveContent(
                   <Button
                     variant="outline"
                     color="neutral"
-                    size="md"
                     class="w-full mt-3"
                     disabled={!primary || mode !== "edit"}
                     onClick={() => duplicateSelected()}
@@ -2344,7 +2341,6 @@ export function StampRecursiveContent(
                       <Button
                         variant={primary.flipH ? "flat" : "outline"}
                         color="neutral"
-                        size="md"
                         onClick={() => flipSelected("h")}
                       >
                         FLIP H
@@ -2352,7 +2348,6 @@ export function StampRecursiveContent(
                       <Button
                         variant={primary.flipV ? "flat" : "outline"}
                         color="neutral"
-                        size="md"
                         onClick={() => flipSelected("v")}
                       >
                         FLIP V
@@ -2360,7 +2355,6 @@ export function StampRecursiveContent(
                       <Button
                         variant="outline"
                         color="neutral"
-                        size="md"
                         disabled={mode !== "edit"}
                         onClick={() => centerSelected()}
                       >
@@ -2414,7 +2408,6 @@ export function StampRecursiveContent(
                       <Button
                         variant="outline"
                         color="neutral"
-                        size="md"
                         onClick={() => {
                           pushHistory();
                           patchLayer(primary.id, {
@@ -2452,7 +2445,6 @@ export function StampRecursiveContent(
                         key={modeKey}
                         variant="outline"
                         color="neutral"
-                        size="md"
                         onClick={() => alignSelected(modeKey)}
                       >
                         {label}
@@ -2639,7 +2631,6 @@ export function StampRecursiveContent(
                 <Button
                   variant="flat"
                   color="neutral"
-                  size="md"
                   class="w-full"
                   disabled={!layers.length}
                   onClick={resetComposer}
@@ -2649,7 +2640,6 @@ export function StampRecursiveContent(
                 <Button
                   variant="flat"
                   color="primary"
-                  size="md"
                   class="w-full"
                   onClick={onGenerate}
                 >
@@ -3014,7 +3004,6 @@ export function StampRecursiveContent(
                 <Button
                   variant="outline"
                   color="neutral"
-                  size="md"
                   onClick={() =>
                     setZoom(zoom / 1.2)}
                 >
@@ -3031,7 +3020,6 @@ export function StampRecursiveContent(
                 <Button
                   variant="outline"
                   color="neutral"
-                  size="md"
                   onClick={() => setZoom(zoom * 1.2)}
                 >
                   +

@@ -372,7 +372,6 @@ function DispenserStats({
           <Button
             variant="outline"
             color="primary"
-            size="md"
             onClick={handleOpenBuyModal}
           >
             BUY

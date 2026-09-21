@@ -61,7 +61,6 @@ export default function GetStampingCta() {
           <Button
             variant="outline"
             color="neutral"
-            size="md"
             href="/faq"
           >
             FAQ
@@ -69,7 +68,6 @@ export default function GetStampingCta() {
           <Button
             variant="flat"
             color="neutral"
-            size="md"
             href="/tool/stamp/create"
           >
             STAMP

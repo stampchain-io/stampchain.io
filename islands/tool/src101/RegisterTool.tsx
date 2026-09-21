@@ -381,7 +381,6 @@ export function SRC101RegisterTool({
               type="button"
               variant="outline"
               color="neutral"
-              size="md"
               onClick={checkAvailability}
               aria-label="Check bitname availability"
             >

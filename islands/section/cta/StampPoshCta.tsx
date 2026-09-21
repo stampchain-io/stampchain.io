@@ -48,7 +48,6 @@ export const StampPoshCta = () => {
           <Button
             variant="outline"
             color="neutral"
-            size="md"
             href="/tool/stamp/create"
             class="float-right mt-6"
           >

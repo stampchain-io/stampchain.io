@@ -17,7 +17,7 @@ export const ToggleButton = ({
   selected: string | string[];
   onChange: (value: string | string[]) => void;
   mode?: "single" | "multi";
-  size:
+  size?:
     | "xs"
     | "sm"
     | "md"

@@ -1147,7 +1147,6 @@ export function StampInfo(
                       <Button
                         variant="flat"
                         color="primary"
-                        size="md"
                         onClick={() =>
                           toggleModal(
                             selectedDispenser || lowestPriceDispenser,
