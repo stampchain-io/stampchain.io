@@ -8,7 +8,12 @@ import { Icon, LoadingIcon, PlaceholderImage, UserProfileIcon } from "$icon";
 import StampTextContent from "$islands/content/stampDetailContent/StampTextContent.tsx";
 import BuyStampModal from "$islands/modal/BuyStampModal.tsx";
 import { openModal } from "$islands/modal/states.ts";
-import { container3, containerCard, containerPill } from "$layout";
+import {
+  container3,
+  containerCard,
+  containerPill,
+  transitionAll,
+} from "$layout";
 import {
   getFreshDispenserForPurchase,
   useLowestPriceDispenser,
@@ -314,7 +319,7 @@ export function StampCard({
                 weight="bold"
                 size="xsR"
                 color="custom"
-                className="relative z-10 [&_path]:fill-color-neutral-600 [&_path]:group-hover/button:fill-color-hover transition-all duration-200"
+                className={`relative z-10 [&_path]:fill-color-neutral-600 [&_path]:group-hover/button:fill-color-hover ${transitionAll}`}
               />
             </button>
           </div>

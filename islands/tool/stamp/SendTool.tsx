@@ -526,7 +526,7 @@ export function StampSendTool() {
           key={`stamp-${selectedStamp.tx_hash}`}
           src={src}
           alt={`Stamp #${selectedStamp.stamp}`}
-          class={`w-full h-full object-contain pixelart transition-opacity duration-300 ${
+          class={`w-full h-full object-contain pixelart transition-opacity duration-200 ${
             isImageLoading ? "opacity-0" : "opacity-100"
           }`}
           onLoad={() => setIsImageLoading(false)}

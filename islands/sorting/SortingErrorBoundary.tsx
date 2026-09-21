@@ -6,6 +6,7 @@
  */
 
 import { ErrorDisplay } from "$islands/error/ErrorDisplay.tsx";
+import { transitionColors } from "$layout";
 import type { SortingErrorBoundaryProps } from "$types/src20.d.ts";
 import type {
   ErrorInfo,
@@ -216,7 +217,7 @@ function SortingErrorFallback({
           <button
             type="button"
             onClick={onRetry}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl text-sm transition-colors"
+            className={`px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl text-sm ${transitionColors}`}
           >
             Retry ({(maxRetries ?? 3) - (retryCount ?? 0)} left)
           </button>
@@ -225,7 +226,7 @@ function SortingErrorFallback({
         <button
           type="button"
           onClick={onReset}
-          className="px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-2xl text-sm transition-colors"
+          className={`px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-2xl text-sm ${transitionColors}`}
         >
           Reset
         </button>

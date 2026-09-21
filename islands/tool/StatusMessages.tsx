@@ -1,6 +1,6 @@
 /* ===== STATUS MESSAGES ===== */
 /*@baba-move file*/
-import { container1 } from "$layout";
+import { container1, transitionColors } from "$layout";
 import type { StatusMessagesProps } from "$types/ui.d.ts";
 
 export function StatusMessages({
@@ -38,7 +38,7 @@ export function StatusMessages({
                 href={`https://mempool.space/tx/${txid}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="text-green-400 underline whitespace-nowrap hover:text-green-300 transition-colors"
+                class={`text-green-400 underline whitespace-nowrap hover:text-green-300 ${transitionColors}`}
               >
                 {txid}
               </a>
@@ -56,7 +56,7 @@ export function StatusMessages({
               <button
                 type="button"
                 onClick={onCopyHex}
-                class="flex items-center gap-1 px-2 py-1 rounded-2xl bg-red-500/20 hover:bg-red-500/30 transition-colors group"
+                class={`flex items-center gap-1 px-2 py-1 rounded-2xl bg-red-500/20 hover:bg-red-500/30 ${transitionColors} group`}
                 title="Copy transaction hex"
               >
                 <svg

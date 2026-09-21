@@ -1,5 +1,6 @@
 import { Button } from "$button";
 import { Icon } from "$icon";
+import { transitionAll } from "$layout";
 import type {
   MaraSuccessMessageProps,
   TransactionBadgeProps,
@@ -155,7 +156,7 @@ export function TransactionStatus({
               </div>
               <div class="w-full h-2 bg-color-grey-semidark rounded-full overflow-hidden">
                 <div
-                  class={`h-full bg-${config.color}-500 transition-all duration-500`}
+                  class={`h-full bg-${config.color}-500 ${transitionAll}`}
                   style={{
                     width: `${(confirmations / targetConfirmations) * 100}%`,
                   }}

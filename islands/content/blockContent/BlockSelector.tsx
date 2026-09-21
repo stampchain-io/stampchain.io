@@ -1,4 +1,5 @@
 /* ===== BLOCK SELECTOR COMPONENT ===== */
+import { transitionAll } from "$layout";
 import {
   abbreviateAddress,
   formatDate,
@@ -31,7 +32,7 @@ export default function BlockSelector(props: BlockProps) {
       href={`/block/${block.block_index}`}
       class={`${
         isSelected ? "bg-blue-100 text-gray-800" : "bg-gray-800 text-blue-100"
-      } transition-all transform hover:shadow-xl
+      } ${transitionAll} transform hover:shadow-xl
         rounded-2xl overflow-hidden flex flex-col justify-between p-3 mobileLg:p-4 m-2
         cursor-pointer hover:bg-gray-700 hover:text-blue-200`}
       onClick={handleClick}

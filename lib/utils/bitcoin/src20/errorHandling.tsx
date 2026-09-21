@@ -14,6 +14,7 @@
  * @version 1.0.0
  */
 
+import { transitionColors } from "$layout";
 import { logger } from "$lib/utils/logger.ts";
 
 // ===== CUSTOM ERROR CLASSES =====
@@ -421,7 +422,7 @@ export function SRC20ErrorFallback({
       <button
         type="button"
         onClick={resetError}
-        class="px-4 py-2 bg-red-600 text-white rounded-2xl hover:bg-red-700 transition-colors"
+        class={`px-4 py-2 bg-red-600 text-white rounded-2xl hover:bg-red-700 ${transitionColors}`}
       >
         Try Again
       </button>

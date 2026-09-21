@@ -7,7 +7,7 @@
 import { buttonStyles } from "$button";
 import { SortingComponent } from "$islands/sorting/SortingComponent.tsx";
 import { SortingProvider } from "$islands/sorting/SortingProvider.tsx";
-import { transitionColors } from "$layout";
+import { transitionAll, transitionColors } from "$layout";
 import type { ButtonSize } from "$lib/constants/uiConstants.ts";
 import { cardPriceCompact } from "$text";
 import type {
@@ -110,7 +110,7 @@ function StyledSortingButtons({
       ${buttonStyles.base}
       ${buttonStyles.size[size]}
       font-medium
-      transition-all duration-300
+      ${transitionAll}
       border-2
     `;
 
@@ -224,7 +224,7 @@ function StyledSortingLabel({
         className={`
           sorting-label--styled
           ${getVariantClasses()}
-          transition-colors duration-300
+          ${transitionColors}
           ${className}
         `}
       />

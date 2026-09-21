@@ -11,6 +11,7 @@ import {
   container2,
   EmptyState,
   shadowGlowPurple,
+  transitionAll,
 } from "$layout";
 import {
   isBrowser,
@@ -103,7 +104,7 @@ export function SRC20Minting({
       : "text-color-neutral-500";
 
     const clickableClass = isClickable
-      ? "cursor-pointer transition-all duration-200 select-none"
+      ? `cursor-pointer ${transitionAll} select-none`
       : "";
 
     const sortIndicator = isSelected ? "relative" : "";
@@ -126,7 +127,7 @@ export function SRC20Minting({
           weight="normal"
           size="xxxs"
           color="custom"
-          className={`stroke-color-primary-400 transition-all duration-200 transform ${
+          className={`stroke-color-primary-400 ${transitionAll} ${
             currentSort.direction === "desc" ? "scale-y-[-1]" : ""
           }`}
         />

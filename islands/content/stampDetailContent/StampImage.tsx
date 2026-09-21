@@ -316,7 +316,7 @@ function RightPanel(
         ${container2} pt-0.5 pb-[1px] px-0.5 tablet:${container3}
         tablet:absolute tablet:inset-x-0 tablet:bottom-0 tablet:z-10
         tablet:opacity-0 tablet:translate-y-3 tablet:pointer-events-none
-        tablet:transition-all tablet:duration-300 tablet:ease-out
+        tablet:transition-all tablet:duration-500 tablet:will-change-transform tablet:ease-out
         tablet:group-hover/panel:opacity-100 tablet:group-hover/panel:translate-y-0
         tablet:group-hover/panel:pointer-events-auto`}
     >

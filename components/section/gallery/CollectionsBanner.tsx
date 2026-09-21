@@ -1,5 +1,5 @@
 /* ===== COLLECTION LIST CARD COMPONENT ===== */
-import { shadowGlowGrey } from "$layout";
+import { shadowGlowGrey, transitionAll } from "$layout";
 import type { CollectionsBannerProps } from "$types/ui.d.ts";
 import { useState } from "preact/hooks";
 
@@ -8,7 +8,7 @@ const containerClassName =
   `border-2 border-color-grey-semidark rounded-2xl relative overflow-hidden
   w-full h-[92px] mobileMd:h-[116px] mobileLg:h-[130px] tablet:h-[148px] desktop:h-[160px]`;
 const imageContentClassName =
-  "bg-center bg-no-repeat bg-[length:100%] w-full h-full grayscale transition-all duration-300";
+  `bg-center bg-no-repeat bg-[length:100%] w-full h-full grayscale ${transitionAll}`;
 const gradientContentClassName =
   "w-full h-full bg-gradient-to-tr absolute left-0 top-0";
 const nameClassName = `hidden mobileLg:block
