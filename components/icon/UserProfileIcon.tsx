@@ -16,7 +16,7 @@
  * don't need to repeat them.
  */
 import { Icon, IconVariants } from "$icon";
-import { transitionColors } from "$layout";
+import { transitionColors } from "$components/layout/styles.ts";
 import type { ComponentChildren } from "preact";
 
 interface UserProfileIconProps {

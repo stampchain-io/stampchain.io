@@ -26,7 +26,7 @@ export const Checkbox = ({
   return (
     <div class="flex flex-col">
       <div
-        class="flex items-center py-1.5 tablet:py-1.5 cursor-pointer group"
+        class="flex items-center py-1 cursor-pointer group"
         onMouseLeave={handleMouseLeave}
         onClick={handleChange}
       >
@@ -67,7 +67,7 @@ export const Radiobutton = (
 
   return (
     <div
-      class="flex items-center py-1.5 mobileLg:py-1.5 cursor-pointer group"
+      class="flex items-center py-1 cursor-pointer group"
       onMouseLeave={handleMouseLeave}
       onClick={handleChange}
     >

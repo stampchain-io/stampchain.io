@@ -7,6 +7,7 @@ import {
   iconStyles,
   IconVariants,
 } from "$icon";
+import { transitionAll } from "$layout";
 
 /* ===== COMPONENT ===== */
 export function Icon(props: IconVariants) {
@@ -320,7 +321,7 @@ export function BadgeIcon({ text, className = "" }: BadgeVariants) {
         size-5 rounded-full
         font-semibold text-[10px] text-color-hover tracking-wider
         bg-transparent group-hover:bg-gradient-to-b group-hover:from-color-neutral-800 group-hover:via-color-neutral-800 group-hover:to-color-neutral-900 border border-color-neutral-700
-        transition-all duration-200 cursor-pointer
+        ${transitionAll} cursor-pointer
         ${text === "0" ? "opacity-0" : "opacity-100"}
         ${className}
       `}
