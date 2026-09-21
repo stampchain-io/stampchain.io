@@ -32,7 +32,7 @@ export const Accordion = (
         {/* Title with Gradient Styling - uses bg-gradient-to-r color-neutral-gradient color-gradient-hover instead of headingGreyLDLink because group-hover overrides the hover state */}
         {/* group-hover overrides --gradient-stop-* to a custom grey instead of the default primary-400 used by color-gradient-hover */}
         <h2
-          class={`font-bold text-xl text-color-neutral-200 group-hover:text-color-hover tracking-wide
+          class={`font-bold text-lg text-color-neutral-200 group-hover:text-color-hover tracking-wide
             ${isOpen ? "text-color-primary-400" : ""}`}
         >
           {title}
@@ -50,7 +50,7 @@ export const Accordion = (
             type="iconButton"
             name="expand"
             weight="bold"
-            size="xsR"
+            size="lg"
             color="custom"
           />
         </span>
@@ -60,10 +60,10 @@ export const Accordion = (
       <div
         class={` ${
           isOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-10"
-        } mt-3 overflow-hidden ${transitionAll}`}
+        } overflow-hidden ${transitionAll}`}
       >
         <div
-          class={`${text} [&>div>ul]:list-disc [&>div>ul]:list-inside [&>div>ul]:mb-6 [&>div>ul]:flex [&>div>ul]:flex-col [&>div>ul]:gap-1.5 mb-6`}
+          class={`${text} [&>div>ul]:list-disc [&>div>ul]:list-inside [&>div>ul]:mb-6 [&>div>ul]:flex [&>div>ul]:flex-col [&>div>ul]:gap-1.5 mb-3`}
         >
           {children}
         </div>

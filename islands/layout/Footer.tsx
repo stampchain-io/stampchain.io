@@ -125,7 +125,7 @@ export function Footer() {
     ">
       {/* ===== MOBILE SMALL CENTER SECTION - MOBILE MEDIUM+ LEFT SECTION ===== */}
       <div
-        class={`${containerBackground} !py-3 tablet:flex-row justify-between`}
+        class={`${containerBackground} !py-2.5 tablet:flex-row justify-between`}
       >
         <div class="
         flex flex-col mobileMd:flex-row tablet:flex-col w-full

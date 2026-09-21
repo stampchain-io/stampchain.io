@@ -5,7 +5,7 @@ import { transitionColors } from "$components/layout/styles.ts";
 /* ===== BASE STYLES ===== */
 const logoFont = "font-black italic tracking-wide";
 const titleFont =
-  "font-black text-3xl uppercase tracking-tight -mt-2 inline-block w-fit cursor-default";
+  "font-black text-3xl uppercase tracking-tight -mt-2.5 inline-block w-fit cursor-default";
 const subtitleFont = "font-light text-xl uppercase mb-2 cursor-default";
 const textFont = "font-normal text-color-neutral-200";
 const labelFont = "font-light text-color-neutral-500 tracking-wide";
