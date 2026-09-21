@@ -7,7 +7,7 @@ import {
   iconStyles,
   IconVariants,
 } from "$icon";
-import { transitionAll } from "$layout";
+import { transitionAll } from "$components/layout/styles.ts";
 
 /* ===== COMPONENT ===== */
 export function Icon(props: IconVariants) {

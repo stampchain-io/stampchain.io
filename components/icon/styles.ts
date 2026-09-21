@@ -1,5 +1,6 @@
 /* ===== ICON STYLES MODULE ===== */
 /* @baba - check icon button hover states */
+import { transitionColors } from "$components/layout/styles.ts";
 import type { AriaRole } from "preact";
 
 /* ===== TYPE DEFINITIONS ===== */
@@ -97,7 +98,7 @@ export const globalSvgAttributes = {
 /* ===== ICON STYLE DEFINITIONS ===== */
 export const iconStyles = {
   /* ===== BASE STYLES ===== */
-  base: "inline-block transition-colors duration-200",
+  base: `inline-block ${transitionColors}`,
 
   /* ===== ICON VARIANTS & COLOR STYLES ===== */
   // Note: Two-tone colors are built into the icon styles below
@@ -114,6 +115,8 @@ export const iconStyles = {
       "stroke-color-neutral-500 fill-none [&_path[class*='fill-stroke']]:fill-color-neutral-500",
     neutral600:
       "stroke-color-neutral-600 fill-none [&_path[class*='fill-stroke']]:fill-color-neutral-600",
+    neutral800:
+      "stroke-color-neutral-800 fill-none [&_path[class*='fill-stroke']]:fill-color-neutral-800",
 
     primary400:
       "stroke-color-primary-400 fill-none [&_path[class*='fill-stroke']]:fill-color-primary-400",
@@ -158,10 +161,10 @@ export const iconStyles = {
   size: {
     xxxs: "w-3 h-3",
     xxs: "w-4 h-4",
-    xs: "w-5 h-5",
-    sm: "w-6 h-6",
-    md: "w-7 h-7",
-    lg: "w-8 h-8",
+    xs: "w-1.5 h-1.5", // Updated sizing
+    sm: "w-2.5 h-2.5", // Updated sizing
+    md: "w-3.5 h-3.5", // Updated sizing
+    lg: "w-4.5 h-4.5", // Updated sizing
     xl: "w-9 h-9",
     xxl: "w-10 h-10",
 
@@ -169,7 +172,7 @@ export const iconStyles = {
     xsR: "w-5 h-5 tablet:w-4 tablet:h-4",
     smR: "w-6 h-6 tablet:w-5 tablet:h-5",
     mdR: "w-7 h-7 tablet:w-6 tablet:h-6",
-    mediumR: "w-4.5 h-4.5 tablet:w-3.5 tablet:h-3.5",
+    mediumR: "w-3.5 h-3.5 tablet:w-3.5 tablet:h-3.5",
     lgR: "w-8 h-8 tablet:w-7 tablet:h-7",
     xlR: "w-9 h-9 tablet:w-8 tablet:h-8",
     xxlR: "w-10 h-10 tablet:w-9 tablet:h-9",

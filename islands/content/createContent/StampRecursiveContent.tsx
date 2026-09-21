@@ -1880,6 +1880,7 @@ export function StampRecursiveContent(
                         weight="normal"
                         size="mediumR"
                         color="neutral400"
+                        className={fetching ? "animate-spin" : ""}
                         ariaLabel={assetPreviewOpen
                           ? "Hide preview"
                           : "Preview stamp"}
@@ -2636,7 +2637,7 @@ export function StampRecursiveContent(
             <div class="flex flex-col gap-3 pt-3 shrink-0">
               <div class="flex justify-between gap-3">
                 <Button
-                  variant="outline"
+                  variant="flat"
                   color="neutral"
                   size="mediumR"
                   class="w-full"
