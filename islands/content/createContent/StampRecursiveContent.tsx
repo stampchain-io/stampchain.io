@@ -101,6 +101,7 @@ import {
   cardStampNumber,
   labelSm,
   labelXs,
+  subtitlePrimary,
   text,
   textXs,
   truncate,
@@ -1797,9 +1798,12 @@ export function StampRecursiveContent(
         <div
           class={`w-full mobileLg:w-[320px] mobileLg:shrink-0
             h-[700px] mobileLg:h-[640px] min-[1080px]:h-[690px]
-            flex flex-col overflow-hidden p-3
+            flex flex-col overflow-hidden p-5
             ${container2}`}
         >
+          <h2 class={`${subtitlePrimary} -mt-2.5`}>
+            {mode === "preview" ? "STAMP" : "COMPOSER"}
+          </h2>
           <div
             class={`flex flex-1 flex-col pr-1
               mobileLg:min-h-0 mobileLg:overflow-y-auto
@@ -2626,26 +2630,24 @@ export function StampRecursiveContent(
             </div>
           </div>
           {mode !== "preview" && (
-            <div class="flex flex-col gap-3 pt-3 shrink-0">
-              <div class="flex justify-between gap-3">
-                <Button
-                  variant="flat"
-                  color="neutral"
-                  class="w-full"
-                  disabled={!layers.length}
-                  onClick={resetComposer}
-                >
-                  CLEAR
-                </Button>
-                <Button
-                  variant="flat"
-                  color="primary"
-                  class="w-full"
-                  onClick={onGenerate}
-                >
-                  GENERATE
-                </Button>
-              </div>
+            <div class="flex gap-5 pt-5 shrink-0">
+              <Button
+                variant="flat"
+                color="neutral"
+                class="w-full"
+                disabled={!layers.length}
+                onClick={resetComposer}
+              >
+                CLEAR
+              </Button>
+              <Button
+                variant="flat"
+                color="primary"
+                class="w-full"
+                onClick={onGenerate}
+              >
+                GENERATE
+              </Button>
             </div>
           )}
         </div>

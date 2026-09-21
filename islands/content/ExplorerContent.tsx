@@ -53,7 +53,7 @@ export function ExplorerContent({
 
   /* ===== RENDER ===== */
   return (
-    <div class="w-full pt-5">
+    <div class="w-full pt-3">
       {viewMode === "cardRow"
         ? (
           /* ===== ROW TABLE VIEW ===== */

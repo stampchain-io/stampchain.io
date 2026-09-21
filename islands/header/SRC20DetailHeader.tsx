@@ -439,7 +439,7 @@ export function SRC20DetailInfo({ deployment }: SRC20DetailInfoProps) {
           type="iconButton"
           name="twitter"
           weight="normal"
-          size="sm"
+          size="md"
           color="neutral400"
           href={deployment.x}
           target="_blank"
@@ -450,7 +450,7 @@ export function SRC20DetailInfo({ deployment }: SRC20DetailInfoProps) {
           type="iconButton"
           name="telegram"
           weight="normal"
-          size="sm"
+          size="md"
           color="neutral400"
           href={deployment.tg}
           target="_blank"
@@ -461,7 +461,7 @@ export function SRC20DetailInfo({ deployment }: SRC20DetailInfoProps) {
           type="iconButton"
           name="website"
           weight="normal"
-          size="sm"
+          size="md"
           color="neutral400"
           href={deployment.web}
           target="_blank"
@@ -472,7 +472,7 @@ export function SRC20DetailInfo({ deployment }: SRC20DetailInfoProps) {
           type="iconButton"
           name="email"
           weight="normal"
-          size="sm"
+          size="md"
           color="neutral400"
           href={deployment.email}
           target="_blank"

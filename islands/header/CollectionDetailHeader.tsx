@@ -124,7 +124,7 @@ export const CollectionDetailHeader = (
             type="iconButton"
             name="info"
             weight="bold"
-            size="md"
+            size="lg"
             color="neutral500"
             onClick={() => setShowDescription((prev) => !prev)}
             ariaLabel="Collection description"
@@ -164,7 +164,7 @@ export const CollectionDetailHeader = (
   // layout (size, weight, underline, hover) - used in the desktop second row
   const creatorInline = (
     <UserProfileIcon
-      size="md"
+      size="lg"
       weight="bold"
       className="stroke-color-neutral-200 translate-y-0.5"
       link

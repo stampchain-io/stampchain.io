@@ -15,11 +15,11 @@ import {
 import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { tooltipIcon } from "$notification";
 import {
-  headingGrey,
-  labelSm,
+  labelXs,
   subtitlePrimary,
   text,
   textLg,
+  textXl,
   titlePrimary,
 } from "$text";
 import type { StampRow } from "$types/stamp.d.ts";
@@ -339,21 +339,21 @@ export default function DonateCta() {
             </p>
             <div class="grid grid-cols-12 mt-6 mb-6">
               <div class="col-span-6 flex flex-col justify-center items-center">
-                <h6 class={`${labelSm} mb-0`}>
+                <h6 class={`${labelXs} mb-0`}>
                   MONTHLY EXPENSES
                 </h6>
-                <h6 class={headingGrey}>
+                <h6 class={textXl}>
                   2,500 <span class="font-extralight">USD</span>
                 </h6>
               </div>
               <div class="col-span-6 flex flex-col justify-center items-center">
-                <h6 class={labelSm}>
+                <h6 class={labelXs}>
                   <span class="hidden min-[420px]:inline">
                     {currentMonth}
                   </span>{" "}
                   DONATIONS
                 </h6>
-                <h6 class={headingGrey}>
+                <h6 class={textXl}>
                   {monthlyDonations} <span class="font-extralight">USD</span>
                 </h6>
               </div>
