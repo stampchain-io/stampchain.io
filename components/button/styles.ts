@@ -42,11 +42,9 @@ export interface ButtonVariants {
   >;
   size: Record<
     // when adding new sizes, update the ToggleButton.tsx file too
-    | "xxs"
     | "xs"
     | "sm"
     | "md"
-    | "mdSelector"
     | "lg"
     | "custom",
     string
@@ -106,13 +104,11 @@ export const buttonStyles: ButtonVariants = {
 
   /* ===== SIZE STYLES ===== */
   size: {
-    xxs: "h-5 px-3.5 text-[0.625rem]", // Updated sizing
-    xs: "h-6 px-3.5 text-[0.625rem]", // Updated sizing
-    sm: "h-7 px-4 text-[0.625rem]", // Updated sizing
-    md: "h-8 px-4 text-[0.625rem]", // Updated sizing
-    mdSelector: "h-6.5 px-4 text-[0.625rem]", // Updated sizing
-    lg: "h-9 px-4 text-[0.625rem]", // Updated sizing
-    custom: "/* Custom size - allows external sizing via className */",
+    xs: "h-6.5 px-4 text-[0.625rem]",
+    sm: "h-7 px-4 text-[0.625rem]",
+    md: "h-8 px-5 text-[0.625rem]",
+    lg: "h-9 px-5 text-[0.625rem]",
+    custom: "",
   },
 
   /* ===== STATE STYLES ===== */

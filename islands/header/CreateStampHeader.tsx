@@ -73,7 +73,7 @@ export function CreateStampHeader(
             ]}
             value={stampType}
             onChange={setStampType}
-            size="mdSelector"
+            size="xs"
             color="primary"
           />
         </div>

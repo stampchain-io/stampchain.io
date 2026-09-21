@@ -64,12 +64,11 @@ export function SkeletonButton({
   height?: string;
   width?: string;
   rounded?: string;
-  size?: "xxs" | "xs" | "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg";
   className?: string;
 }) {
   const sizes = {
-    xxs: "h-5",
-    xs: "h-6",
+    xs: "h-6.5",
     sm: "h-7",
     md: "h-8",
     lg: "h-9",

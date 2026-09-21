@@ -72,7 +72,7 @@ export const SRC20OverviewHeader = ({
             ]}
             value={viewType}
             onChange={handleViewTypeClick}
-            size="mdSelector"
+            size="xs"
             color="primary"
           />
         </div>
@@ -93,7 +93,7 @@ export const SRC20OverviewHeader = ({
             ]}
             value={timeframe}
             onChange={handleTimeframeClick}
-            size="mdSelector"
+            size="xs"
             color="primary"
           />
         </div>

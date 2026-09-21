@@ -172,7 +172,7 @@ export const MarketplaceHeader = (
             ]}
             value={currentMarketMode}
             onChange={handleMarketModeChange}
-            size="mdSelector"
+            size="xs"
             color="primary"
           />
         </div>
@@ -189,7 +189,7 @@ export const MarketplaceHeader = (
             ]}
             value={currentFilters.stampType || "all"}
             onChange={handleStampTypeChange}
-            size="mdSelector"
+            size="xs"
             color="primary"
           />
         </div>

@@ -97,7 +97,7 @@ export const CollectionDetailContent = (
           ]}
           value={market}
           onChange={handleMarketChange}
-          size="mdSelector"
+          size="xs"
           color="primary"
         />
         <div class="flex items-center gap-3">

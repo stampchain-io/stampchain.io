@@ -278,7 +278,7 @@ export function SRC20MintingCompact({
                       <Button
                         variant="flat"
                         color="primary"
-                        size="xxs"
+                        size="xs"
                         href={mintHref}
                         onClick={handleMintClick}
                         class="rounded-xl"

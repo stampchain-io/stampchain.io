@@ -95,7 +95,7 @@ export const ExplorerHeader = (
             ]}
             value={currentSection}
             onChange={handleSectionChange}
-            size="mdSelector"
+            size="xs"
             color="primary"
           />
         </div>

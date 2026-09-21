@@ -1250,15 +1250,13 @@ Deno.test("UI Component Types - Button Component Structure", () => {
 
   // Test ButtonSize type
   const sizes: ButtonSize[] = [
-    "xxs",
     "xs",
     "sm",
     "md",
-    "mdSelector",
     "lg",
     "custom",
   ];
-  assertEquals(sizes.length, 7);
+  assertEquals(sizes.length, 5);
 
   // Test BaseButtonProps interface
   const buttonProps: BaseButtonProps = {

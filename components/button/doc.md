@@ -69,7 +69,6 @@ The button system uses **solid colors** driven by a single `--color-button` CSS 
 
 | Size | Height | Padding | Font Size | Use Case |
 |------|--------|---------|-----------|----------|
-| **xxs** | 26px | 14px | 10px | Compact UI elements |
 | **xs** | 30px | 14px | 12px | Small buttons |
 | **sm** | 34px | 16px | 12px | Regular small buttons |
 | **md** | 38px | 16px | 14px | Standard medium buttons (default) |
@@ -90,7 +89,7 @@ The button system uses **solid colors** driven by a single `--color-button` CSS 
   - **Features**:
     - 3 button variants (`outline`, `flat`, `custom`)
     - 5 solid colors (`neutral`, `primary`, `secondary`, `test`, `custom`) via a single `--color-button` CSS custom property
-    - 13 size options including responsive variants and `custom`
+    - 5 size options (`xs`, `sm`, `md`, `lg`, `custom`)
     - State management (disabled, loading, active)
 
 - **ButtonBase.tsx**: Core button component implementations
@@ -154,7 +153,7 @@ The button system uses **solid colors** driven by a single `--color-button` CSS 
 export interface ButtonProps extends Omit<JSX.HTMLAttributes<HTMLButtonElement>, "loading" | "size"> {
   variant?: "outline" | "flat" | "custom";
   color?: "neutral" | "primary" | "secondary" | "test" | "custom";
-  size?: "xxs" | "xs" | "sm" | "md" | "mdSelector" | "lg" | "custom";
+  size?: "xs" | "sm" | "md" | "lg" | "custom";
   disabled?: boolean;
   loading?: boolean;
   active?: boolean;
@@ -401,14 +400,14 @@ export function ViewModeSelector() {
       ]}
       value="grid"
       onChange={(value) => console.log(value)}
-      size="mdSelector"
+      size="xs"
       color="neutral"
     />
   );
 }
 ```
 
-`SelectorButtons` only supports `color="neutral"` or `color="primary"` (any other value falls back to `neutral`); it reads directly from `buttonStyles.color` in `styles.ts` rather than the full `ButtonColor` union. Always pass `size="mdSelector"`.
+`SelectorButtons` only supports `color="neutral"` or `color="primary"` (any other value falls back to `neutral`); it reads directly from `buttonStyles.color` in `styles.ts` rather than the full `ButtonColor` union. Always pass `size="xs"`.
 
 #### SelectorButtons implementation notes ([islands/button/SelectorButtons.tsx](mdc:islands/button/SelectorButtons.tsx))
 

@@ -24,11 +24,9 @@ export type ButtonColor =
  * Button size types
  */
 export type ButtonSize =
-  | "xxs"
   | "xs"
   | "sm"
   | "md"
-  | "mdSelector"
   | "lg"
   | "custom";
 

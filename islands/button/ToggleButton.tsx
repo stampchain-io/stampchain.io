@@ -18,11 +18,9 @@ export const ToggleButton = ({
   onChange: (value: string | string[]) => void;
   mode?: "single" | "multi";
   size:
-    | "xxs"
     | "xs"
     | "sm"
     | "md"
-    | "mdSelector"
     | "lg";
   spacing?: "normal" | "tight" | "even" | "evenFullwidth";
   disabledOptions?: string[];

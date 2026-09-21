@@ -106,7 +106,7 @@ export const WalletHeaderContent = (
             ]}
             value={section}
             onChange={handleSectionChange}
-            size="mdSelector"
+            size="xs"
             color="primary"
           />
         </div>
@@ -122,7 +122,7 @@ export const WalletHeaderContent = (
               options={tabOptions}
               value={tab}
               onChange={handleTabChange}
-              size="mdSelector"
+              size="xs"
               color="primary"
             />
           </div>

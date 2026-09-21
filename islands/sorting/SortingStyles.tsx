@@ -25,13 +25,11 @@ import type {
  */
 function mapButtonSizeToSortingSize(size: ButtonSize): "sm" | "md" | "lg" {
   switch (size) {
-    case "xxs":
     case "xs":
       return "sm";
     case "sm":
       return "sm";
     case "md":
-    case "mdSelector":
       return "md";
     case "lg":
       return "lg";
