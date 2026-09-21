@@ -106,7 +106,8 @@ function svBackground(h: number): string {
     `linear-gradient(to right,#fff,hsl(${h},100%,50%))`;
 }
 
-const fieldClass = `h-8 rounded-2xl bg-[#0a0a0a] border border-color-neutral-700
+const fieldClass =
+  `h-8 rounded-2xl bg-color-neutral-900 border border-color-neutral-700
   text-color-neutral-200 font-mono text-xs px-3
   focus:outline-none focus:border-color-primary-400`;
 
@@ -315,7 +316,7 @@ export function ColorPicker({
           spellcheck={false}
           value={hexDraft}
           aria-label={`${ariaLabel} hex`}
-          class={`${textXs} w-20 mr-1 px-3 py-0.5
+          class={`${textXs} w-20 h-5.5 mt-0.5 mr-1 px-3
             bg-transparent border-0 outline-none text-right
             cursor-text select-text`}
           onFocus={onHexFocus}
@@ -339,7 +340,7 @@ export function ColorPicker({
       <div
         ref={popoverRef}
         class="fixed z-tooltip w-[232px] overflow-hidden rounded-3xl
-          border border-color-neutral-700 bg-[#111111]
+          border border-color-neutral-700 bg-color-neutral-900
           text-color-neutral-200
           shadow-[0_8px_40px_rgba(0,0,0,0.65)]"
         style={{

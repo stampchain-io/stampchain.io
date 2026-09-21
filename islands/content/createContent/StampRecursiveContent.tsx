@@ -1,5 +1,5 @@
 /* ===== RECURSIVE STAMP CONTENT ===== */
-import { Button, ToggleSwitchButton } from "$button";
+import { Button, buttonHover, ToggleSwitchButton } from "$button";
 import { StampCard } from "$card";
 import { walletContext } from "$client/wallet/wallet.ts";
 import { useFees } from "$fees";
@@ -178,8 +178,8 @@ function sanitizePosDraft(raw: string): string {
   return `${neg ? "-" : ""}${out}`;
 }
 
-/** Matches Tailwind `top-3` / `left-3` (0.75rem). */
-const PREVIEW_INSET = 12;
+/** Matches Tailwind `top-5` / `left-5` (1.25rem). */
+const PREVIEW_INSET = 20;
 
 function clampPreviewPos(
   x: number,
@@ -457,27 +457,51 @@ function AssetPreviewCard(
     onToggleCreatorAssets: () => void;
   },
 ): JSX.Element {
-  // 6 columns x 2 rows max
-  const moreRow = more.slice(0, 12);
+  // 5 columns x 2 rows max, minus the profile-icon cell (row 2, col 1)
+  const moreRow = more.slice(0, 9);
   const hasMore = moreRow.length > 0;
+  const assetCell = (s: StampRow) => (
+    <button
+      type="button"
+      key={s.tx_hash}
+      class={`${container3} hover:border-hover ${shadowGlowPurpleSm}
+        !rounded-xl aspect-square overflow-hidden p-0`}
+      onClick={() => onPick(String(s.stamp))}
+    >
+      <StampThumb
+        src={staticThumbSrc(s)}
+        alt={`#${s.stamp}`}
+        mime={s.stamp_mimetype}
+        placeholderClassName="!rounded-xl"
+      />
+    </button>
+  );
+  const profileToggleCell = (
+    <button
+      type="button"
+      key="creator-profile-toggle"
+      class={`${container2Icon} aspect-square !justify-center`}
+      aria-label="Show stamp details"
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        onToggleCreatorAssets();
+      }}
+    >
+      <Icon
+        type="iconButton"
+        name="userCircle"
+        weight="normal"
+        size="lg"
+        color="primary400"
+      />
+    </button>
+  );
   const moreGrid = hasMore && (
-    <div class="grid grid-cols-6 gap-3">
-      {moreRow.map((s) => (
-        <button
-          type="button"
-          key={s.tx_hash}
-          class={`${container3} hover:border-hover ${shadowGlowPurpleSm}
-            !rounded-xl aspect-square overflow-hidden p-0`}
-          onClick={() => onPick(String(s.stamp))}
-        >
-          <StampThumb
-            src={staticThumbSrc(s)}
-            alt={`#${s.stamp}`}
-            mime={s.stamp_mimetype}
-            placeholderClassName="!rounded-xl"
-          />
-        </button>
-      ))}
+    <div class="grid grid-cols-5 gap-3">
+      {moreRow.slice(0, 5).map(assetCell)}
+      {profileToggleCell}
+      {moreRow.slice(5, 9).map(assetCell)}
     </div>
   );
   const showAssetsView = showCreatorAssets && hasMore;
@@ -522,27 +546,25 @@ function AssetPreviewCard(
           </div>
         </div>
       )}
-      <div class="flex items-center gap-1.5 mt-3">
-        {hasMore && (
-          <div class={`${container2Icon}`}>
-            <Icon
-              type="iconButton"
-              name="userCircle"
-              weight="normal"
-              size="md"
-              color={showAssetsView ? "primary400" : "neutral400"}
-              ariaLabel={showAssetsView
-                ? "Show stamp details"
-                : "Show more by creator"}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onToggleCreatorAssets();
-              }}
-            />
-          </div>
-        )}
-        {!showAssetsView && (
+      {!showAssetsView && (
+        <div class="flex items-center gap-1.5 mt-3">
+          {hasMore && (
+            <div class={`${container2Icon}`}>
+              <Icon
+                type="iconButton"
+                name="userCircle"
+                weight="normal"
+                size="md"
+                color="neutral400"
+                ariaLabel="Show more by creator"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onToggleCreatorAssets();
+                }}
+              />
+            </div>
+          )}
           <Button
             variant="flat"
             color="neutral"
@@ -551,8 +573,8 @@ function AssetPreviewCard(
           >
             + ADD ASSET
           </Button>
-        )}
-      </div>
+        </div>
+      )}
     </>
   );
 }
@@ -659,8 +681,8 @@ const CANVAS_CSS = `
 .rsb-ruler-v{top:0;left:0;bottom:0;width:18px}
 .rsb-tick{position:absolute;background:rgba(255,255,255,.18)}
 .rsb-rlabel{position:absolute;font-size:8px;color:#777;font-family:monospace}
-.rsb-zoom{position:absolute;bottom:12px;right:12px;z-index:8800;
-  display:flex;align-items:center;gap:2px}
+.rsb-zoom{position:absolute;bottom:20px;right:20px;z-index:8800;
+  display:flex;align-items:center;gap:4px}
 .rsb-preview{position:absolute;z-index:8900;cursor:grab}
 .rsb-preview.dragging{cursor:grabbing}
 .rsb-wrap.preview .rsb-preview{display:none!important}
@@ -3002,30 +3024,48 @@ export function StampRecursiveContent(
               </div>
             )}
             {previewView !== "cards" && (
-              <div class={`rsb-zoom ${container3} p-0.5`}>
-                <Button
-                  variant="outline"
-                  color="neutral"
+              <div class={`rsb-zoom ${container3} !rounded-full p-0.5`}>
+                <button
+                  type="button"
+                  aria-label="Zoom out"
+                  class={`inline-flex items-center leading-none
+                    ${container3} !rounded-full p-0.5 cursor-pointer`}
                   onClick={() =>
                     setZoom(zoom / 1.2)}
                 >
-                  −
-                </Button>
+                  <span
+                    class={`inline-flex items-center justify-center w-5 h-5
+                      text-sm font-medium tracking-wide leading-none
+                      text-color-neutral-400 hover:text-color-hover
+                      ${buttonHover} ${transitionColors}`}
+                  >
+                    −
+                  </span>
+                </button>
                 <button
                   type="button"
-                  class="min-w-[42px] text-[0.625rem] font-mono
-                text-color-neutral-400"
+                  class="min-w-[42px] p-0 leading-none text-[0.625rem] font-mono
+                text-color-neutral-500"
                   onClick={() => resetZoom()}
                 >
                   {Math.round(zoom * 100)}%
                 </button>
-                <Button
-                  variant="outline"
-                  color="neutral"
+                <button
+                  type="button"
+                  aria-label="Zoom in"
+                  class={`inline-flex items-center leading-none
+                    ${container3} !rounded-full p-0.5 cursor-pointer`}
                   onClick={() => setZoom(zoom * 1.2)}
                 >
-                  +
-                </Button>
+                  <span
+                    class={`inline-flex items-center justify-center w-5 h-5
+                      text-sm font-medium tracking-wide leading-none
+                      text-color-neutral-400 hover:text-color-hover
+                      ${buttonHover} ${transitionColors}`}
+                  >
+                    +
+                  </span>
+                </button>
               </div>
             )}
           </div>
