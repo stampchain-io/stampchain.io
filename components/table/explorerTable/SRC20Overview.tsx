@@ -143,7 +143,7 @@ export function SRC20OverviewRow({ src20 }: SRC20OverviewRowProps) {
             type="icon"
             name="src20Token"
             weight="bold"
-            size="xxs"
+            size="md"
             color="custom"
             className="stroke-color-neutral-200"
           />

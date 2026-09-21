@@ -432,41 +432,39 @@ export function Header() {
         style="transition-timing-function: cubic-bezier(0.46,0.03,0.52,0.96);"
         id={`navbar-collapse-${type}`}
       >
-        <div class="flex flex-col h-full">
-          <div class="pt-[21px] px-7.5">
-            <div class="flex flex-row justify-between items-center w-full">
-              <div class="relative -translate-x-3 translate-y-[1px]">
-                <div
-                  class={`${tooltipIcon} ${
-                    isCloseTooltipVisible ? "opacity-100" : "opacity-0"
-                  }`}
-                >
-                  {closeTooltipText}
-                </div>
-                <Icon
-                  type="iconButton"
-                  name="close"
-                  size="md"
-                  weight="bold"
-                  color="neutral400"
-                  ariaLabel="Close menu"
-                  onClick={() => {
-                    if (open) {
-                      closeMenu();
-                    }
-                  }}
-                  onMouseEnter={handleCloseMouseEnter}
-                  onMouseLeave={handleCloseMouseLeave}
-                />
-              </div>
-              <h6
-                class={`font-black text-2xl text-color-neutral-700 tracking-wide select-none ${
-                  type === "menu" ? "italic pr-0.5" : ""
+        <div class="flex flex-col h-full pt-1">
+          <div class="flex flex-row justify-between items-center w-full pl-1 pr-5">
+            <div class="relative">
+              <div
+                class={`${tooltipIcon} ${
+                  isCloseTooltipVisible ? "opacity-100" : "opacity-0"
                 }`}
               >
-                {getTitle()}
-              </h6>
+                {closeTooltipText}
+              </div>
+              <Icon
+                type="iconButton"
+                name="close"
+                size="xl"
+                weight="bold"
+                color="neutral600"
+                ariaLabel="Close menu"
+                onClick={() => {
+                  if (open) {
+                    closeMenu();
+                  }
+                }}
+                onMouseEnter={handleCloseMouseEnter}
+                onMouseLeave={handleCloseMouseLeave}
+              />
             </div>
+            <h6
+              class={`font-black text-lg text-color-neutral-800 tracking-wide select-none ${
+                type === "menu" ? "italic pr-0.5" : ""
+              }`}
+            >
+              {getTitle()}
+            </h6>
           </div>
           {getContent()}
         </div>
@@ -509,7 +507,7 @@ export function Header() {
                   type="icon"
                   name={link.icon}
                   weight="normal"
-                  size="xxs"
+                  size="md"
                   color="neutral400"
                   className="group-hover:stroke-color-hover"
                 />

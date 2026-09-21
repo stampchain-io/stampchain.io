@@ -671,7 +671,7 @@ export function StampCard({
                     type="icon"
                     name="recursive"
                     weight="bold"
-                    size="xxs"
+                    size="md"
                     color="neutral400"
                     ariaLabel="Recursive"
                   />
@@ -683,7 +683,7 @@ export function StampCard({
                     type="icon"
                     name="divisible"
                     weight="bold"
-                    size="xxs"
+                    size="md"
                     color="neutral400"
                     ariaLabel="Divisible"
                   />
@@ -695,7 +695,7 @@ export function StampCard({
                     type="icon"
                     name="keyburned"
                     weight="bold"
-                    size="xxs"
+                    size="md"
                     color="neutral400"
                     ariaLabel="Keyburned"
                   />
@@ -708,7 +708,7 @@ export function StampCard({
                       type="icon"
                       name="locked"
                       weight="bold"
-                      size="xxs"
+                      size="md"
                       color="neutral400"
                       ariaLabel="Locked"
                     />
@@ -720,7 +720,7 @@ export function StampCard({
                       type="icon"
                       name="unlocked"
                       weight="bold"
-                      size="xxs"
+                      size="md"
                       color="neutral400"
                       ariaLabel="Unlocked"
                     />
@@ -911,9 +911,8 @@ export function StampCard({
                   type="icon"
                   name="atom"
                   weight="bold"
-                  size="custom"
+                  size="md"
                   color="neutral400"
-                  className="w-3.5 h-3.5"
                   ariaLabel="Atomic Swap"
                 />
               </div>
@@ -1026,7 +1025,7 @@ export function StampCard({
                       type="icon"
                       name="atom"
                       weight="bold"
-                      size="xxs"
+                      size="md"
                       color="neutral400"
                     />
                   </IconWithTooltip>
@@ -1038,9 +1037,9 @@ export function StampCard({
                       type="icon"
                       name="listings"
                       weight="bold"
-                      size="custom"
+                      size="md"
                       color="custom"
-                      className="w-[17px] h-[17px] stroke-color-secondary-400"
+                      className="stroke-color-secondary-400"
                       ariaLabel="BTC"
                     />
                   </IconWithTooltip>
@@ -1051,7 +1050,7 @@ export function StampCard({
                       type="icon"
                       name="recursive"
                       weight="bold"
-                      size="xxs"
+                      size="md"
                       color="neutral400"
                       ariaLabel="Recursive"
                     />
@@ -1063,7 +1062,7 @@ export function StampCard({
                       type="icon"
                       name="divisible"
                       weight="bold"
-                      size="xxs"
+                      size="md"
                       color="neutral400"
                       ariaLabel="Divisible"
                     />
@@ -1075,7 +1074,7 @@ export function StampCard({
                       type="icon"
                       name="keyburned"
                       weight="bold"
-                      size="xxs"
+                      size="md"
                       color="neutral400"
                       ariaLabel="Keyburned"
                     />
@@ -1088,7 +1087,7 @@ export function StampCard({
                         type="icon"
                         name="locked"
                         weight="bold"
-                        size="xxs"
+                        size="md"
                         color="neutral400"
                         ariaLabel="Locked"
                       />
@@ -1100,7 +1099,7 @@ export function StampCard({
                         type="icon"
                         name="unlocked"
                         weight="bold"
-                        size="xxs"
+                        size="md"
                         color="neutral400"
                         ariaLabel="Unlocked"
                       />
@@ -1255,9 +1254,9 @@ export function StampCard({
                       type="icon"
                       name="bitcoin"
                       weight="bold"
-                      size="custom"
+                      size="md"
                       color="custom"
-                      className="w-[17px] h-[17px] stroke-color-secondary-400"
+                      className="stroke-color-secondary-400"
                       ariaLabel="BTC"
                     />
                   </IconWithTooltip>
@@ -1268,7 +1267,7 @@ export function StampCard({
                       type="icon"
                       name="recursive"
                       weight="bold"
-                      size="xxs"
+                      size="md"
                       color="neutral400"
                       ariaLabel="Recursive"
                     />
@@ -1280,7 +1279,7 @@ export function StampCard({
                       type="icon"
                       name="divisible"
                       weight="bold"
-                      size="xxs"
+                      size="md"
                       color="neutral400"
                       ariaLabel="Divisible"
                     />
@@ -1292,7 +1291,7 @@ export function StampCard({
                       type="icon"
                       name="keyburned"
                       weight="bold"
-                      size="xxs"
+                      size="md"
                       color="neutral400"
                       ariaLabel="Keyburned"
                     />
@@ -1305,7 +1304,7 @@ export function StampCard({
                         type="icon"
                         name="locked"
                         weight="bold"
-                        size="xxs"
+                        size="md"
                         color="neutral400"
                         ariaLabel="Locked"
                       />
@@ -1317,7 +1316,7 @@ export function StampCard({
                         type="icon"
                         name="unlocked"
                         weight="bold"
-                        size="xxs"
+                        size="md"
                         color="neutral400"
                         ariaLabel="Unlocked"
                       />

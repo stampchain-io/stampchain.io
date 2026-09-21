@@ -234,7 +234,7 @@ SortingComponent.Label = function SortingLabel({
             type="icon"
             name="caretUp"
             weight="normal"
-            size="xxs"
+            size="md"
             color="custom"
             className={`stroke-color-grey-light ${transitionAll} ${
               sortState.direction === "desc" ? "scale-y-[-1]" : ""

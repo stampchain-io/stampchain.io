@@ -2022,22 +2022,13 @@ export interface ComponentWithChildren extends ExtendedComponentProps {
  * Icon size variants
  */
 export type IconSize =
+  | "xs"
   | "sm"
   | "md"
   | "lg"
   | "xl"
-  | "custom"
-  | "xxs"
-  | "xs"
-  | "xxsR"
-  | "xsR"
-  | "smR"
-  | "mdR"
-  | "lgR"
-  | "xxxs"
   | "xxl"
-  | "xlR"
-  | "xxlR";
+  | "custom";
 
 /**
  * Icon weight variants

@@ -100,7 +100,7 @@ export function ErrorDisplay({
       >
         <Icon
           name={styles.iconName}
-          size="sm"
+          size="md"
           type="icon"
           weight="normal"
           color="custom"
@@ -126,7 +126,7 @@ export function ErrorDisplay({
           >
             <Icon
               name="x"
-              size="xs"
+              size="md"
               type="icon"
               weight="normal"
               color="custom"
@@ -212,7 +212,7 @@ export function ErrorDisplay({
             >
               <Icon
                 name="x"
-                size="sm"
+                size="md"
                 type="icon"
                 weight="normal"
                 color="custom"

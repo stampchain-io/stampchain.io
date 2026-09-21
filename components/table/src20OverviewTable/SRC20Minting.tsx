@@ -125,7 +125,7 @@ export function SRC20Minting({
           type="icon"
           name="caretUp"
           weight="normal"
-          size="xxxs"
+          size="md"
           color="custom"
           className={`stroke-color-primary-400 ${transitionAll} ${
             currentSort.direction === "desc" ? "scale-y-[-1]" : ""

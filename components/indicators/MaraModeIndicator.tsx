@@ -96,7 +96,7 @@ export function MaraModeIndicator({
           <Icon
             type="icon"
             name="bitcoin"
-            size="xxs"
+            size="md"
             weight="normal"
             color="custom"
             className="fill-purple-400"
@@ -111,7 +111,7 @@ export function MaraModeIndicator({
               <Icon
                 type="icon"
                 name="network"
-                size="xxs"
+                size="md"
                 weight="normal"
                 color="custom"
                 className="stroke-purple-400"

@@ -71,8 +71,7 @@ export const containerBackground = `${body} ${container1} p-5`;
 export const containerGap =
   "gap-section-mobile mobileLg:gap-section-tablet tablet:gap-section-desktop";
 export const containerDetailImage = `relative ${container2} p-0.5`;
-export const containerStickyBottom =
-  `sticky bottom-0 mt-auto pb-7.5 tablet:pb-5`;
+export const containerStickyBottom = `sticky bottom-0 mt-auto pb-5`;
 
 // Table card container styles - check if used
 export const containerCardTable = `rounded-3xl ${container1} ${shadowGlowPurple}

@@ -113,7 +113,7 @@ export function TransactionStatus({
           <Icon
             type="icon"
             name={config.icon}
-            size="sm"
+            size="md"
             weight="normal"
             color="custom"
             className={`fill-${config.color}-400`}
@@ -135,7 +135,7 @@ export function TransactionStatus({
               <Icon
                 type="icon"
                 name="timer"
-                size="xs"
+                size="md"
                 weight="normal"
                 color="custom"
                 className={`fill-${config.color}-400`}
@@ -276,7 +276,7 @@ export function MaraSuccessMessage({
           <Icon
             type="icon"
             name="rocket"
-            size="sm"
+            size="md"
             weight="normal"
             color="custom"
             className="fill-purple-400"

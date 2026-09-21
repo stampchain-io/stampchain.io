@@ -9,21 +9,12 @@ export interface IconVariants {
   name: string;
   weight: "extraLight" | "light" | "normal" | "bold" | "custom";
   size:
-    | "xxxs"
-    | "xxs"
     | "xs"
     | "sm"
     | "md"
     | "lg"
     | "xl"
     | "xxl"
-    | "xxsR"
-    | "xsR"
-    | "smR"
-    | "mdR"
-    | "lgR"
-    | "xlR"
-    | "xxlR"
     | "custom";
   color:
     | "neutral400"
@@ -149,9 +140,9 @@ export const iconStyles = {
 
   /* ===== WEIGHT VARIANTS ===== */
   weight: {
-    extraLight: "[stroke-width:0.75]", // used for loading icon and tool image icons
-    light: "[stroke-width:1.0]",
-    normal: "[stroke-width:1.25] tablet:[stroke-width:1.0]",
+    extraLight: "[stroke-width:0.75]", // used for loading icon and tool image icons - change to 0.5 and rename usage
+    light: "[stroke-width:0.75]",
+    normal: "[stroke-width:1.0]",
     bold: "[stroke-width:1.25]",
     custom: "",
   },
@@ -159,22 +150,12 @@ export const iconStyles = {
   /* ===== SIZE VARIANTS ===== */
   // icon must use bigger sizes than icon button
   size: {
-    xxxs: "w-3 h-3",
-    xxs: "w-4 h-4",
     xs: "w-1.5 h-1.5", // Updated sizing
     sm: "w-2.5 h-2.5", // Updated sizing
-    md: "w-3.5 h-3.5", // Updated sizing
-    lg: "w-4.5 h-4.5", // Updated sizing
-    xl: "w-9 h-9",
-    xxl: "w-10 h-10",
-
-    xxsR: "w-4 h-4 tablet:w-3 tablet:h-3",
-    xsR: "w-5 h-5 tablet:w-4 tablet:h-4",
-    smR: "w-6 h-6 tablet:w-5 tablet:h-5",
-    mdR: "w-7 h-7 tablet:w-6 tablet:h-6",
-    lgR: "w-8 h-8 tablet:w-7 tablet:h-7",
-    xlR: "w-9 h-9 tablet:w-8 tablet:h-8",
-    xxlR: "w-10 h-10 tablet:w-9 tablet:h-9",
+    md: "w-3.5 h-3.5", // Standard icon size with Container2Icon wrapper
+    lg: "w-4.5 h-4.5", // Used in footer
+    xl: "w-5.5 h-5.5", // Standard icon size used in header, stamp image right panel and standard icon buttons
+    xxl: "w-6.5 h-6.5", // Logo icon size
     custom: "",
   },
 } as const;

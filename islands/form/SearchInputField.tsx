@@ -73,10 +73,10 @@ export function SearchInputField({
               type="icon"
               name="search"
               weight="bold"
-              size="xs"
+              size="xl"
               color="custom"
               ariaLabel="Search"
-              className={`w-5 h-5 ${
+              className={`${
                 hasError
                   ? "stroke-color-neutral-400"
                   : "stroke-color-neutral-600"

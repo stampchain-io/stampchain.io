@@ -11,7 +11,6 @@ import { xverseProvider } from "$client/wallet/xverse.ts";
 import { WALLET_PROVIDERS } from "$constants";
 import { closeForegroundModal, closeModal } from "$islands/modal/states.ts";
 import { container2Hover, shadowGlowPurple, transitionColors } from "$layout";
-import type { WalletProviderKey } from "$lib/constants/walletProviders.ts";
 import { handleUnknownError } from "$lib/utils/errorHandling.ts";
 import type { BaseToast } from "$lib/utils/ui/notifications/toastSignal.ts";
 import { showToast } from "$lib/utils/ui/notifications/toastSignal.ts";
@@ -25,10 +24,9 @@ type AddToastFunction = (
 ) => void;
 
 /* ===== WALLET CONNECTORS CONFIG ===== */
-const walletConnectors: Record<
-  WalletProviderKey,
-  (addToast: AddToastFunction) => Promise<void>
-> = {
+type WalletConnectFn = (addToast: AddToastFunction) => Promise<void>;
+
+const walletConnectors = {
   unisat: unisatProvider.connectUnisat,
   leather: leatherProvider.connectLeather,
   okx: okxProvider.connectOKX,
@@ -37,7 +35,7 @@ const walletConnectors: Record<
   horizon: horizonProvider.connectHorizon,
   xverse: xverseProvider.connectXverse,
   wonder: wonderProvider.connectWonder,
-} as const;
+} satisfies Record<string, WalletConnectFn>;
 
 /* ===== MODAL COMPONENT ===== */
 export function WalletProvider(
@@ -55,7 +53,7 @@ export function WalletProvider(
   const handleConnect = async () => {
     try {
       const connectFunction =
-        walletConnectors[providerKey as WalletProviderKey];
+        walletConnectors[providerKey as keyof typeof walletConnectors];
       if (!connectFunction) {
         throw new Error(`Unsupported wallet provider: ${providerKey}`);
       }
@@ -127,10 +125,8 @@ export function WalletProvider(
     >
       {/* ===== PROVIDER NAME ===== */}
       <h6
-        class={`font-extrabold text-lg uppercase tracking-wide ${
-          isHovered
-            ? "text-color-hover"
-            : "bg-gradient-to-r color-neutral-gradient"
+        class={`font-medium text-sm uppercase tracking-wide ${
+          isHovered ? "text-color-hover" : "text-color-neutral-200"
         }`}
       >
         {providerInfo.name}

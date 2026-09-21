@@ -94,10 +94,10 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
 
   const tools = () => {
     return (
-      <div class="flex flex-col space-y-0 w-full">
+      <div class="flex flex-col w-full">
         {/* STAMPS Section */}
-        <div class="flex flex-col space-y-5">
-          <h6 class={`${eyebrowNeutral} -mb-7 text-right`}>
+        <div class="flex flex-col space-y-3">
+          <h6 class={`${eyebrowNeutral} -mb-6 text-right`}>
             STAMPS
           </h6>
           {toolLinks.filter((link) =>
@@ -120,8 +120,8 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
         </div>
 
         {/* TOKENS Section */}
-        <div class="flex flex-col space-y-5">
-          <h6 class={`${eyebrowNeutral} mt-3 -mb-7 text-right`}>
+        <div class="flex flex-col space-y-3">
+          <h6 class={`${eyebrowNeutral} mt-2.5 -mb-6 text-right`}>
             TOKENS
           </h6>
           {toolLinks.filter((link) =>
@@ -145,8 +145,8 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
         </div>
 
         {/* BITNAME Section */}
-        <div class="flex flex-col space-y-5">
-          <h6 class={`${eyebrowNeutral} mt-3 -mb-7 text-right`}>
+        <div class="flex flex-col space-y-3">
+          <h6 class={`${eyebrowNeutral} mt-2.5 -mb-6 text-right`}>
             BITNAME
           </h6>
           {toolLinks.filter((link) => link.href === "/tool/src101/mint")
@@ -179,7 +179,7 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
           type="icon"
           name="bitcoinBlock"
           weight="normal"
-          size="xs"
+          size="lg"
           color="neutral500"
           className="mr-3"
         />
@@ -195,7 +195,7 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
           type="icon"
           name="bitcoin"
           weight="normal"
-          size="xs"
+          size="lg"
           color="neutral500"
           className="mr-3"
         />
@@ -228,21 +228,21 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
             type="icon"
             name="speedSlow"
             weight="normal"
-            size="xs"
+            size="lg"
             color="neutral500"
           />
           <Icon
             type="icon"
             name="speedMedium"
             weight="normal"
-            size="xs"
+            size="lg"
             color="neutral500"
           />
           <Icon
             type="icon"
             name="speedFast"
             weight="normal"
-            size="xs"
+            size="lg"
             color="neutral500"
           />
         </div>
@@ -278,7 +278,7 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
           type="iconButton"
           name="tools"
           weight="normal"
-          size="smR"
+          size="xl"
           color="neutral400"
           onClick={handleToolsClick}
         />
@@ -370,9 +370,9 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
     ),
     // The tools drawer content
     drawer: (
-      <div class="flex flex-col h-full px-7.5">
+      <div class="flex flex-col h-full px-5">
         {/* Top - Main navigation content */}
-        <div class="flex flex-col flex-1 items-start pt-6 gap-3">
+        <div class="flex flex-col flex-1 items-start pt-[5px]">
           {tools()}
         </div>
 

@@ -2243,7 +2243,7 @@ function StampingToolMain({ config }: { config: Config }) {
                 type="iconButton"
                 name={isLocked ? "locked" : "unlocked"}
                 weight="normal"
-                size="xs"
+                size="lg"
                 color="neutral600"
                 className="mb-0.5"
               />
@@ -2287,7 +2287,7 @@ function StampingToolMain({ config }: { config: Config }) {
                 type="iconButton"
                 name="previewImage"
                 weight="normal"
-                size="xs"
+                size="lg"
                 color="neutral600"
                 className={`mb-0.5 ${!file ? "!cursor-not-allowed" : ""}`}
               />

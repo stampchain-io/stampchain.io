@@ -220,7 +220,7 @@ export function CollectionCard(
             </h2>
 
             <h5 class="mt-1">
-              <UserProfileIcon size="xxs" weight="bold">
+              <UserProfileIcon size="md" weight="bold">
                 <span class={`${valueSm} normal-case`}>
                   {collection.creators && collection.creators.length > 0
                     ? (
@@ -507,7 +507,7 @@ export function CollectionCardHorizontal(
             </h2>
 
             <h5 class="mt-1">
-              <UserProfileIcon size="xxs" weight="bold">
+              <UserProfileIcon size="md" weight="bold">
                 <span class={`${valueSm} normal-case`}>
                   {collection.creators && collection.creators.length > 0
                     ? (

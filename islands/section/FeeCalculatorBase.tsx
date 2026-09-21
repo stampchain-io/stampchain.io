@@ -779,7 +779,7 @@ export function FeeCalculatorBase({
           type="icon"
           name="caretUp"
           weight="bold"
-          size="xxxs"
+          size="md"
           color="custom"
           className={`stroke-color-neutral-500 group-hover:stroke-color-hover ${transitionAll} ${
             visible ? "scale-y-[-1]" : ""

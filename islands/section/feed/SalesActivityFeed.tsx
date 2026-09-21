@@ -191,7 +191,7 @@ export default function SalesActivityFeed({
                 >
                   <Icon
                     name="external-link"
-                    size="xs"
+                    size="md"
                     type="icon"
                     weight="normal"
                     color="custom"
@@ -209,7 +209,7 @@ export default function SalesActivityFeed({
                   >
                     <Icon
                       name="view"
-                      size="xs"
+                      size="md"
                       type="icon"
                       weight="normal"
                       color="custom"

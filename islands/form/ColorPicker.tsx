@@ -371,13 +371,13 @@ export function ColorPicker({
                 aria-label="Eyedropper"
                 onClick={pickEyeDropper}
                 class="w-6 h-6 shrink-0 flex items-center justify-center
-                  rounded-full hover:bg-color-neutral-800"
+                  rounded-full border border-color-neutral-600 p-0.5 hover:bg-color-neutral-800"
               >
                 <Icon
                   type="iconButton"
                   name="dropper"
                   weight="normal"
-                  size="xxs"
+                  size="md"
                   color="neutral400"
                   ariaLabel="Eyedropper"
                 />

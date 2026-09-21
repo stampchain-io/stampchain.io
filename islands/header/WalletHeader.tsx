@@ -142,7 +142,7 @@ function WalletOverview({ walletData }: { walletData: WalletOverviewInfo }) {
               type="iconButton"
               name="edit"
               weight="bold"
-              size="xsR"
+              size="md"
               color="neutral500"
               onClick={handleEditClick}
               ariaLabel="Edit creator name"
@@ -161,7 +161,7 @@ function WalletOverview({ walletData }: { walletData: WalletOverviewInfo }) {
             type="iconButton"
             name="copy"
             weight="bold"
-            size="xsR"
+            size="md"
             color="neutral500"
             onClick={copy}
           />
@@ -250,7 +250,7 @@ function TokenStats(
           type="icon"
           name="bitcoins"
           weight="bold"
-          size="xs"
+          size="md"
           color="neutral600"
         />
         <StatPrice

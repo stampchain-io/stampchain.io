@@ -71,9 +71,9 @@ export function MaraModeWarningModal({
           <Icon
             type="iconButton"
             name="close"
-            size="smR"
+            size="xl"
             weight="bold"
-            color="neutral400"
+            color="neutral600"
             ariaLabel="Close"
             onClick={onCancel || (() => {})}
           />

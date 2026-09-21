@@ -65,7 +65,7 @@ export function ProgressIndicator({
             <Icon
               type="icon"
               name={config.icon}
-              size="xs"
+              size="md"
               weight="normal"
               color="custom"
               className={`fill-${config.color}`}
@@ -115,7 +115,7 @@ export function TransactionProgress({
                     <Icon
                       type="icon"
                       name="check"
-                      size="xs"
+                      size="md"
                       weight="normal"
                       color="custom"
                       className="fill-white"
@@ -126,7 +126,7 @@ export function TransactionProgress({
                     <Icon
                       type="icon"
                       name="close"
-                      size="xs"
+                      size="md"
                       weight="normal"
                       color="custom"
                       className="fill-red-400"

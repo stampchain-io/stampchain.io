@@ -232,7 +232,7 @@ export default function PressKit() {
                   type="iconButton"
                   name="share"
                   weight="bold"
-                  size="xxs"
+                  size="md"
                   color="custom"
                   className={`stroke-color-grey-light group-hover:stroke-color-grey ${transitionColors}`}
                   href="https://fonts.google.com/specimen/Open+Sans"
@@ -341,7 +341,7 @@ export default function PressKit() {
                   type="iconButton"
                   name="share"
                   weight="bold"
-                  size="xxs"
+                  size="md"
                   color="custom"
                   className={`stroke-color-grey-light group-hover:stroke-color-grey ${transitionColors}`}
                   href="https://fonts.google.com/specimen/Montserrat"

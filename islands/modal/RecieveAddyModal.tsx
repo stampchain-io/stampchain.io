@@ -153,8 +153,8 @@ function RecieveAddyModal(
             <Icon
               type="iconButton"
               name="copy"
-              weight="light"
-              size="xs"
+              weight="normal"
+              size="md"
               color="neutral400"
               onClick={handleCopy}
             />

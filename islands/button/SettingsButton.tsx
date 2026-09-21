@@ -37,7 +37,7 @@ export function SettingsButton({
             <Icon
               type="iconButton"
               name="x"
-              size="smR"
+              size="lg"
               color="custom"
               weight="normal"
               className="absolute top-5 right-2"
@@ -68,7 +68,7 @@ export function SettingsButton({
             type="iconButton"
             name="gear"
             weight="normal"
-            size="custom"
+            size="lg"
             color="neutral400"
             ariaLabel="Settings"
             onClick={() => handleOpen?.(true)}

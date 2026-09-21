@@ -331,9 +331,8 @@ function RightPanel(
             type="iconButton"
             name="copyLink"
             weight="normal"
-            size="custom"
+            size="xl"
             color="neutral400"
-            className="w-[25px] h-[25px] tablet:w-[21px] tablet:h-[21px]"
             onClick={copyLink}
           />
           <div
@@ -359,9 +358,8 @@ function RightPanel(
             type="iconButton"
             name="share"
             weight="normal"
-            size="custom"
+            size="xl"
             color="neutral400"
-            className="w-[25px] h-[25px] tablet:w-[21px] tablet:h-[21px]"
             onClick={shareContent}
             ariaLabel="Share content"
           />
@@ -383,7 +381,7 @@ function RightPanel(
             type="iconButton"
             name="twitterImage"
             weight="normal"
-            size="smR"
+            size="xl"
             color="neutral400"
             onClick={shareToX}
             ariaLabel="Share on X"
@@ -410,7 +408,7 @@ function RightPanel(
               type="iconButton"
               name="previewCode"
               weight="normal"
-              size="smR"
+              size="xl"
               color="neutral400"
               onClick={() => {
                 setIsCodeTooltipVisible(false);
@@ -436,7 +434,7 @@ function RightPanel(
             type="iconButton"
             name="downloadImage"
             weight="normal"
-            size="smR"
+            size="xl"
             color="neutral400"
             onClick={handleDownloadPreview}
             ariaLabel="Download stamp preview image"
@@ -458,7 +456,7 @@ function RightPanel(
             type="iconButton"
             name="previewImageRaw"
             weight="normal"
-            size="smR"
+            size="xl"
             color="neutral400"
             onClick={() =>
               globalThis.open(
@@ -489,7 +487,7 @@ function RightPanel(
             type="iconButton"
             name="previewImage"
             weight="normal"
-            size="smR"
+            size="xl"
             color="neutral400"
             onClick={() => {
               setIsFullscreenTooltipVisible(false);

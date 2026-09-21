@@ -277,7 +277,7 @@ export function SRC20Card(
           TO
         </div>
         <UserProfileIcon
-          className="w-[14px] h-[14px] stroke-[2] stroke-color-neutral-400 shrink-0"
+          className="w-3.5 h-3.5 stroke-[2] stroke-color-neutral-400 shrink-0"
           wrapperClassName="hidden min-[420px]:flex"
         >
           <span class={cardFileSize}>

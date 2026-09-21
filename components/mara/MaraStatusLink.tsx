@@ -41,7 +41,7 @@ export function MaraStatusLink(
           <Icon
             type="icon"
             name="arrowUpRight"
-            size="xs"
+            size="md"
             color="custom"
             weight="normal"
           />

@@ -2094,7 +2094,7 @@ export function StampRecursiveContent(
                     {[...layers].reverse().map((l) => (
                       <div
                         key={l.id}
-                        class={`flex items-center gap-1.5 ${container3} p-0.5
+                        class={`flex items-center ${container3} !rounded-full p-0.5 gap-1.5
                   hover:border-color-hover ${transitionColors}
                   hover:shadow-[0px_0px_8px_2px_color-mix(in_srgb,var(--color-primary-500)_75%,transparent)]
                   ${
@@ -2116,9 +2116,9 @@ export function StampRecursiveContent(
                           if (src) reorderLayers(src, l.id);
                         }}
                       >
-                        <div class="w-6.5 h-6.5 overflow-hidden shrink-0 flex
+                        <div class="w-7 h-7 overflow-hidden shrink-0 flex
                   items-center justify-center bg-color-neutral-900
-                  rounded-lg border border-color-neutral-700">
+                  rounded-full border border-color-neutral-700">
                           {l.type === "text"
                             ? (
                               <span class="text-color-primary-400 font-bold text-xs">
@@ -2130,8 +2130,8 @@ export function StampRecursiveContent(
                                 src={staticLayerThumbSrc(l)}
                                 alt={l.name}
                                 mime={l.mime}
-                                className="w-full h-full object-contain pixelart rounded-lg"
-                                placeholderClassName="!rounded-lg !p-[15%]"
+                                className="w-full h-full object-contain pixelart rounded-full"
+                                placeholderClassName="!rounded-full !p-[15%]"
                               />
                             )}
                         </div>
@@ -2145,7 +2145,7 @@ export function StampRecursiveContent(
                           type="iconButton"
                           name={l.locked ? "locked" : "unlocked"}
                           weight="bold"
-                          size="xxxs"
+                          size="md"
                           color={l.locked ? "primary400" : "neutral400"}
                           ariaLabel="Lock layer"
                           onClick={(e) => {
@@ -2158,7 +2158,7 @@ export function StampRecursiveContent(
                           type="iconButton"
                           name="caretUp"
                           weight="bold"
-                          size="xxxs"
+                          size="md"
                           color="neutral400"
                           ariaLabel="Move up"
                           onClick={(e) => {
@@ -2171,7 +2171,7 @@ export function StampRecursiveContent(
                           type="iconButton"
                           name="caretDown"
                           weight="bold"
-                          size="xxxs"
+                          size="md"
                           color="neutral400"
                           ariaLabel="Move down"
                           onClick={(e) => {
@@ -2184,7 +2184,7 @@ export function StampRecursiveContent(
                           type="iconButton"
                           name={l.vis ? "view" : "hide"}
                           weight="bold"
-                          size="xxxs"
+                          size="md"
                           color="neutral400"
                           ariaLabel="Toggle visibility"
                           onClick={(e) => {
@@ -2197,7 +2197,7 @@ export function StampRecursiveContent(
                           type="iconButton"
                           name="close"
                           weight="bold"
-                          size="xxxs"
+                          size="md"
                           color="neutral400"
                           ariaLabel="Delete layer"
                           onClick={(e) => {

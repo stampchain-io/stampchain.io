@@ -37,13 +37,13 @@ export const navSublinkActiveDesktop =
   `${navSublinkDesktop} !text-color-hover !cursor-default`;
 
 // Drawer Navigation - Mobile/tablet
-export const navLinkMobile = `font-light text-xl uppercase
-  text-color-neutral-400 hover:text-color-hover
+export const navLinkMobile = `font-light text-lg uppercase
+  text-color-neutral-200 hover:text-color-hover
   tracking-wider cursor-pointer ${select}`;
 export const navLinkActiveMobile =
   `${navLinkMobile} text-color-hover !cursor-default`;
-export const navSublinkMobile = `font-semibold text-sm tablet:text-xs uppercase
-  text-color-neutral-500 hover:text-color-hover
+export const navSublinkMobile = `font-semibold text-xs uppercase
+  text-color-neutral-400 hover:text-color-hover
   tracking-wide ${transitionColors} cursor-pointer ${select}`;
 export const navSublinkActiveMobile =
   `${navSublinkMobile} !text-color-hover !cursor-default`;

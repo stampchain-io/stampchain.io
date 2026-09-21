@@ -66,7 +66,7 @@ export function LogoIcon({
         type="icon"
         name="stampchain"
         weight="normal"
-        size="mdR"
+        size="xxl"
         color="neutral400"
       />
 

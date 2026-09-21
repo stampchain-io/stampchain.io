@@ -132,7 +132,7 @@ export const CollectionDetailHeader = (
             type="iconButton"
             name="info"
             weight="bold"
-            size="xs"
+            size="md"
             color="neutral500"
             onClick={() => setShowDescription((prev) => !prev)}
             ariaLabel="Collection description"
@@ -172,7 +172,7 @@ export const CollectionDetailHeader = (
       label="CREATOR"
       value={
         <UserProfileIcon
-          size="xxs"
+          size="md"
           weight="bold"
           className="stroke-color-neutral-200"
         >

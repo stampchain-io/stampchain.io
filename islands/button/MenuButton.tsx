@@ -1,5 +1,5 @@
 import { Icon } from "$icon";
-import { container3, containerStickyBottom } from "$layout";
+import { container2, containerStickyBottom } from "$layout";
 import {
   labelXs,
   navLinkActiveMobile,
@@ -113,7 +113,7 @@ export function MenuButton({ onOpenDrawer }: MenuButtonProps) {
                   type="icon"
                   name={link.icon}
                   weight="normal"
-                  size="xs"
+                  size="xl"
                   color="custom"
                   className="stroke-color-neutral-400 !hover:stroke-color-hover"
                 />
@@ -128,7 +128,7 @@ export function MenuButton({ onOpenDrawer }: MenuButtonProps) {
 
   const subnavigation = () => {
     return (
-      <div class="flex flex-col gap-3 mb-2.5">
+      <div class="flex flex-col gap-2">
         {subNavLinks.map((link) => (
           <a
             key={link.title}
@@ -155,25 +155,28 @@ export function MenuButton({ onOpenDrawer }: MenuButtonProps) {
       <Icon
         type="iconButton"
         name="menu"
-        weight="normal"
-        size="sm"
+        weight="light"
+        size="custom"
         color="neutral400"
+        className="w-6 h-6"
         isOpen={false}
         onClick={handleMenuClick}
       />
     ),
     // The menu drawer content
     drawer: (
-      <div class="flex flex-col h-full px-7.5">
+      <div class="flex flex-col h-full px-5">
         {/* Top - Main navigation content */}
-        <div class="flex flex-col flex-1 items-start pt-8 gap-5">
+        <div class="flex flex-col flex-1 items-start pt-2 gap-3">
           {navigation()}
         </div>
 
         {/* Bottom - Sub navigation and version */}
         <div class={containerStickyBottom}>
           {subnavigation()}
-          <div class={`${container3} flex items-end mt-4.5 px-3 py-2`}>
+          <div
+            class={`${container2} !border-color-neutral-900 flex items-end mt-3 px-2 py-1.5`}
+          >
             <CounterpartyVersion />
           </div>
         </div>
@@ -222,7 +225,7 @@ function CounterpartyVersion() {
         type="icon"
         name="version"
         weight="normal"
-        size="xs"
+        size="lg"
         color="neutral600"
         className="mr-3"
       />

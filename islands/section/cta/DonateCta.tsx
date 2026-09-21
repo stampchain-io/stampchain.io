@@ -375,15 +375,15 @@ export default function DonateCta() {
             <div class="flex justify-start gap-3 items-center mt-3">
               <div
                 ref={receiveButtonRef}
-                class="relative group order-1 tablet:order-2 peer "
+                class="relative group order-1 tablet:order-2 peer translate-y-[6px]"
                 onMouseEnter={handleReceiveMouseEnter}
                 onMouseLeave={handleReceiveMouseLeave}
               >
                 <Icon
-                  type="iconButton"
+                  type="iconHover"
                   name="donate"
                   weight="normal"
-                  size="smR"
+                  size="xl"
                   color="neutral400"
                   onClick={() => {
                     setIsReceiveTooltipVisible(false);

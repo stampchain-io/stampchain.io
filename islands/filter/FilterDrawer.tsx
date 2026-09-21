@@ -397,39 +397,37 @@ const FilterDrawer = (
       aria-labelledby="drawer-form-label"
     >
       {/* Content container with flex column to separate scrollable area from sticky buttons */}
-      <div class="flex flex-col h-full pt-[21px] mobileLg:pt-[31px]">
+      <div class="flex flex-col h-full pt-1">
         {/* Scrollable content area - overflow only on this section */}
         <div class="flex-1 overflow-y-auto scrollbar-background-overlay">
-          <div class="px-7.5 tablet:px-5">
-            <div class="relative w-full">
-              {/* Close icon + heading - order flips between mobile and tablet+ via flex-row-reverse */}
-              <div class="flex flex-row-reverse tablet:flex-row justify-between items-center w-full">
-                <div class="relative tablet:-translate-x-2 translate-y-[1px]">
-                  <Tooltip
-                    visible={isCloseTooltipVisible}
-                    text={closeTooltipText}
-                  />
-                  <Icon
-                    type="iconButton"
-                    name="close"
-                    weight="bold"
-                    size="mdR"
-                    color="neutral400"
-                    ariaLabel="Close filter drawer"
-                    onClick={handleCloseDrawer}
-                    onMouseEnter={handleCloseMouseEnter}
-                    onMouseLeave={handleCloseMouseLeave}
-                  />
-                </div>
-                <h6 class="font-black text-2xl tablet:text-lg text-color-neutral-700 tracking-wide tablet:tracking-normal select-none">
-                  FILTERS
-                </h6>
+          <div class="pl-5 pr-1 tablet:pl-1 tablet:pr-5 relative w-full">
+            {/* Close icon + heading - order flips between mobile and tablet+ via flex-row-reverse */}
+            <div class="flex flex-row-reverse tablet:flex-row justify-between items-center w-full">
+              <div class="relative">
+                <Tooltip
+                  visible={isCloseTooltipVisible}
+                  text={closeTooltipText}
+                />
+                <Icon
+                  type="iconButton"
+                  name="close"
+                  weight="bold"
+                  size="lg"
+                  color="neutral600"
+                  ariaLabel="Close filter drawer"
+                  onClick={handleCloseDrawer}
+                  onMouseEnter={handleCloseMouseEnter}
+                  onMouseLeave={handleCloseMouseLeave}
+                />
               </div>
+              <h6 class="font-black text-lg text-color-neutral-800 tracking-wide tablet:tracking-normal select-none">
+                FILTERS
+              </h6>
             </div>
           </div>
 
           {/* Filter content based on type */}
-          <div class="flex flex-col pt-6 pb-[120px] px-9 tablet:pt-5 tablet:pb-[100px] tablet:px-6">
+          <div class="flex flex-col p-5">
             {type === "stamp" && (
               <FilterContentExplorerStamp
                 initialFilters={currentFilters as ExplorerStampFilters}
@@ -467,7 +465,7 @@ const FilterDrawer = (
 
         {/* Sticky buttons - now outside overflow container */}
         <div
-          class={`flex justify-between ${containerStickyBottom} !mt-0 w-full px-7.5 tablet:px-5 gap-5 bg-transparent`}
+          class={`flex justify-between ${containerStickyBottom} !mt-0 w-full pt-5 px-5 gap-5 bg-transparent`}
         >
           <Button
             variant="outline"

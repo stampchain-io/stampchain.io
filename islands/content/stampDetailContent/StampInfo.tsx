@@ -801,7 +801,7 @@ export function StampInfo(
                         type="iconButton"
                         name="copy"
                         weight="normal"
-                        size="xxs"
+                        size="md"
                         color="neutral500"
                         onClick={copyCpid}
                       />
@@ -956,7 +956,7 @@ export function StampInfo(
                       type="icon"
                       name="artStamps"
                       weight="normal"
-                      size="xxs"
+                      size="md"
                       color="custom"
                       className={`stroke-color-neutral-500  group-hover:stroke-color-hover ${transitionColors}`}
                       ariaLabel="Collection"
@@ -1122,7 +1122,7 @@ export function StampInfo(
                             type="iconButton"
                             name="listings"
                             weight="bold"
-                            size="xxsR"
+                            size="md"
                             color="custom"
                             className={`stroke-color-orange-400 group-hover:stroke-color-hover ${transitionColors}`}
                             ariaLabel="Listings"

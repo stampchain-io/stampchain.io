@@ -142,6 +142,12 @@ export const FAQ_CONTENT: FAQContent[] = [
             className: "link-neutral-200-bold",
           },
           {
+            text: "Wonder Wallet",
+            href: "https://wonder-wallet.com/",
+            target: "_blank",
+            className: "link-neutral-200-bold",
+          },
+          {
             text: "TapWallet",
             href: "https://bitcoinuniverse.io/",
             target: "_blank",
@@ -156,6 +162,12 @@ export const FAQ_CONTENT: FAQContent[] = [
           {
             text: "Phantom",
             href: "https://phantom.app/download",
+            target: "_blank",
+            className: "link-neutral-200-bold",
+          },
+          {
+            text: "Xverse",
+            href: "https://www.xverse.app/",
             target: "_blank",
             className: "link-neutral-200-bold",
           },
