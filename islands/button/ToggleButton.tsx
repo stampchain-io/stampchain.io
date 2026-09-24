@@ -6,7 +6,7 @@ export const ToggleButton = ({
   selected,
   onChange,
   mode = "single",
-  size = "smR",
+  size = "md",
   spacing = "normal",
   disabledOptions = [],
   alwaysSelectedOptions = [],
@@ -17,18 +17,11 @@ export const ToggleButton = ({
   selected: string | string[];
   onChange: (value: string | string[]) => void;
   mode?: "single" | "multi";
-  size:
-    | "xxs"
+  size?:
     | "xs"
     | "sm"
     | "md"
-    | "lg"
-    | "xl"
-    | "xxsR"
-    | "xsR"
-    | "smR"
-    | "mdR"
-    | "lgR";
+    | "lg";
   spacing?: "normal" | "tight" | "even" | "evenFullwidth";
   disabledOptions?: string[];
   alwaysSelectedOptions?: string[];

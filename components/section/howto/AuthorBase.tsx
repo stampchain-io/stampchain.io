@@ -13,20 +13,20 @@ export function AuthorSection({ name, twitter, website }: AuthorProps) {
       <div
         class={`flex min-[520px]:flex-col justify-between min-[520px]:justify-end items-center min-[520px]:items-end w-full min-[520px]:w-fit -mt-4 min-[520px]:ml-auto p-1 ${container2}`}
       >
-        <div class="flex flex-col min-[520px]:items-end min-[520px]:mb-1 pt-0.5 px-2 ">
+        <div class="flex flex-col min-[520px]:items-end -mt-1 min-[520px]:mt-0 px-2 ">
           <h6 class={eyebrowNeutral}>
             AUTHOR
           </h6>
-          <h5 class="font-semibold text-sm text-color-neutral-400 min-[520px]:mb-1">
+          <h5 class="-mt-1 font-semibold text-sm text-color-neutral-400">
             {name}
           </h5>
         </div>
-        <div class="flex items-center min-[520px]:items-end gap-1.5 tablet:gap-0">
+        <div class="flex items-center min-[520px]:items-end gap-1 tablet:gap-0">
           <Icon
             type="iconButton"
             name="twitter"
             weight="normal"
-            size="xsR"
+            size="md"
             color="neutral400"
             href={`https://twitter.com/${twitter}`}
             target="_blank"
@@ -37,7 +37,7 @@ export function AuthorSection({ name, twitter, website }: AuthorProps) {
               type="iconButton"
               name="website"
               weight="normal"
-              size="xsR"
+              size="md"
               color="neutral400"
               href={website}
               target="_blank"

@@ -1,7 +1,13 @@
 /* ===== MEDIA KIT PAGE ===== */
 import { Button } from "$button";
 import { Icon } from "$icon";
-import { body, container2, containerBackground, containerGap } from "$layout";
+import {
+  body,
+  container2,
+  containerBackground,
+  containerGap,
+  transitionColors,
+} from "$layout";
 import {
   label,
   labelSm,
@@ -22,10 +28,10 @@ function DownloadButtons({ inline = false }: { inline?: boolean }) {
     : "mt-5 flex gap-5";
   return (
     <div class={wrapperClass}>
-      <Button variant="outline" color="neutral" size="smR" href="#">
+      <Button variant="outline" color="neutral" href="#">
         SVG
       </Button>
-      <Button variant="outline" color="neutral" size="smR" href="#">
+      <Button variant="outline" color="neutral" href="#">
         PNG
       </Button>
     </div>
@@ -226,9 +232,9 @@ export default function PressKit() {
                   type="iconButton"
                   name="share"
                   weight="bold"
-                  size="xxs"
+                  size="md"
                   color="custom"
-                  className="stroke-color-grey-light group-hover:stroke-color-grey transition-colors"
+                  className={`stroke-color-grey-light group-hover:stroke-color-grey ${transitionColors}`}
                   href="https://fonts.google.com/specimen/Open+Sans"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -335,9 +341,9 @@ export default function PressKit() {
                   type="iconButton"
                   name="share"
                   weight="bold"
-                  size="xxs"
+                  size="md"
                   color="custom"
-                  className="stroke-color-grey-light group-hover:stroke-color-grey transition-colors"
+                  className={`stroke-color-grey-light group-hover:stroke-color-grey ${transitionColors}`}
                   href="https://fonts.google.com/specimen/Montserrat"
                   target="_blank"
                   rel="noopener noreferrer"

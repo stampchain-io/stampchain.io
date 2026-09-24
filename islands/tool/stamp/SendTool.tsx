@@ -15,6 +15,7 @@ import {
   imagePreviewTool,
   loaderSpinGrey,
   rowForm,
+  transitionColors,
 } from "$layout";
 import { useTransactionConstructionService } from "$lib/hooks/useTransactionConstructionService.ts";
 import {
@@ -25,7 +26,7 @@ import {
 import { FeeCalculatorBase } from "$section";
 import { labelLg, labelSm, titleNeutral } from "$text";
 import type { StampRow } from "$types/stamp.d.ts";
-import { JSX } from "preact";
+import type { JSX, TargetedEvent } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
 
 /* ===== COMPONENT ===== */
@@ -525,7 +526,7 @@ export function StampSendTool() {
           key={`stamp-${selectedStamp.tx_hash}`}
           src={src}
           alt={`Stamp #${selectedStamp.stamp}`}
-          class={`w-full h-full object-contain pixelart transition-opacity duration-300 ${
+          class={`w-full h-full object-contain pixelart transition-opacity duration-200 ${
             isImageLoading ? "opacity-0" : "opacity-100"
           }`}
           onLoad={() => setIsImageLoading(false)}
@@ -642,7 +643,7 @@ export function StampSendTool() {
                         e.preventDefault();
                         handleStampSelect(stamp.stamp?.toString() ?? "");
                       }}
-                      class="flex items-center gap-5 px-2 py-2 border-b-[1px] border-color-border last:border-b-0 hover:bg-color-background/60 hover:border-color-border transition-colors duration-200 cursor-pointer"
+                      class={`flex items-center gap-5 px-2 py-2 border-b-[1px] border-color-border last:border-b-0 hover:bg-color-background/60 hover:border-color-border ${transitionColors} cursor-pointer`}
                     >
                       <img
                         src={`/api/v2/stamp/${stamp.stamp}/preview`}
@@ -688,7 +689,7 @@ export function StampSendTool() {
         <div class={rowForm}>
           <input
             value={formState.recipientAddress}
-            onInput={(e: JSX.TargetedEvent<HTMLInputElement>) => {
+            onInput={(e: TargetedEvent<HTMLInputElement>) => {
               const newValue = e.currentTarget.value;
               console.log(
                 "SENDTOOL: Recipient Address Input onInput. New value:",

@@ -2,9 +2,9 @@
 import { useTransactionForm } from "$client/hooks/useTransactionForm.ts";
 import { walletContext } from "$client/wallet/wallet.ts";
 import { handleModalClose } from "$components/layout/ModalBase.tsx";
-import { StampImage } from "$content";
 import { inputFieldSquare } from "$form";
 import { UserProfileIcon } from "$icon";
+import { StampImage } from "$islands/content/stampDetailContent/StampImage.tsx";
 import { stackConnectWalletModal } from "$islands/layout/ModalStack.tsx";
 import { closeModal, openModal } from "$islands/modal/states.ts";
 import { ModalBase } from "$layout";
@@ -389,7 +389,7 @@ const BuyStampModal = ({
               )}
 
               <UserProfileIcon
-                size="xs"
+                size="md"
                 weight="bold"
                 className="stroke-color-neutral-200"
                 wrapperClassName="mt-1"

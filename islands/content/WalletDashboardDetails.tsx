@@ -250,7 +250,7 @@ function WalletOverview(
                   type="iconButton"
                   name="view"
                   weight="normal"
-                  size="mdR"
+                  size="xl"
                   color="neutral400"
                   ariaLabel="Show Balance"
                 />
@@ -269,7 +269,7 @@ function WalletOverview(
                   type="iconButton"
                   name="hide"
                   weight="normal"
-                  size="mdR"
+                  size="xl"
                   color="neutral400"
                   ariaLabel="Hide Balance"
                 />
@@ -307,7 +307,7 @@ function WalletOverview(
             type="iconButton"
             name="copy"
             weight="normal"
-            size="mdR"
+            size="xl"
             color="neutral400"
             onClick={copy}
           />
@@ -334,7 +334,7 @@ function WalletOverview(
             type="iconButton"
             name="send"
             weight="normal"
-            size="mdR"
+            size="xl"
             color="neutral400"
             onClick={() => {
               setIsSendTooltipVisible(false);
@@ -359,7 +359,7 @@ function WalletOverview(
             type="iconButton"
             name="receive"
             weight="normal"
-            size="mdR"
+            size="xl"
             color="neutral400"
             onClick={() => {
               setIsReceiveTooltipVisible(false);
@@ -389,7 +389,7 @@ function WalletOverview(
               type="iconButton"
               name="history"
               weight="normal"
-              size="mdR"
+              size="xl"
               color="neutral400"
             />
           </a>
@@ -452,7 +452,7 @@ function DashboardProfile() {
             type="iconButton"
             name="website"
             weight="normal"
-            size="mdR"
+            size="xl"
             color="neutral400"
           />
 
@@ -460,7 +460,7 @@ function DashboardProfile() {
             type="iconButton"
             name="collection"
             weight="normal"
-            size="mdR"
+            size="xl"
             color="neutral400"
           />
 
@@ -468,7 +468,7 @@ function DashboardProfile() {
             type="iconButton"
             name="stamp"
             weight="normal"
-            size="mdR"
+            size="xl"
             color="neutral400"
           />
         </div>

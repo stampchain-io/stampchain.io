@@ -6,3 +6,4 @@
  */
 
 export * from "./svgUtils.ts";
+export * from "./recursiveStampHtml.ts";

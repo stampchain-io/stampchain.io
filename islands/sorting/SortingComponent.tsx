@@ -6,6 +6,7 @@
 
 import { Icon } from "$icon";
 import { useSorting } from "$islands/sorting/SortingProvider.tsx";
+import { transitionAll } from "$layout";
 import type { SortKey } from "$lib/types/sorting.d.ts";
 import { SORT_LABELS } from "$lib/utils/data/sorting/sortingConstants.ts";
 import type {
@@ -233,9 +234,9 @@ SortingComponent.Label = function SortingLabel({
             type="icon"
             name="caretUp"
             weight="normal"
-            size="xxs"
+            size="md"
             color="custom"
-            className={`stroke-color-grey-light transition-all duration-300 transform ${
+            className={`stroke-color-grey-light ${transitionAll} ${
               sortState.direction === "desc" ? "scale-y-[-1]" : ""
             }`}
           />

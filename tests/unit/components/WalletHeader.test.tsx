@@ -3,9 +3,9 @@
  * @description Tests for edit button integration and modal interaction in WalletHeader
  */
 
+import type { WalletOverviewInfo } from "$lib/types/wallet.d.ts";
 import { assertEquals, assertExists } from "@std/assert";
 import { afterEach, beforeEach, describe, it } from "@std/testing/bdd";
-import type { WalletOverviewInfo } from "$lib/types/wallet.d.ts";
 
 /* ===== TEST UTILITIES ===== */
 // Mock wallet context that can be configured per test
@@ -485,11 +485,11 @@ describe("WalletHeader - Edit Button Integration", () => {
 
       // Icon component should receive ariaLabel prop
       const iconProps = {
-        type: "icon",
+        type: "iconButton",
         name: "edit",
-        weight: "normal",
-        size: "smR",
-        color: "neutral600",
+        weight: "bold",
+        size: "md",
+        color: "neutral500",
         ariaLabel: expectedAriaLabel,
       };
 
@@ -499,15 +499,15 @@ describe("WalletHeader - Edit Button Integration", () => {
     it("should configure edit icon with proper visual styling", () => {
       const iconConfig = {
         name: "edit",
-        weight: "normal",
-        size: "smR",
-        color: "neutral600",
+        weight: "bold",
+        size: "md",
+        color: "neutral500",
       };
 
       assertEquals(iconConfig.name, "edit");
-      assertEquals(iconConfig.weight, "normal");
-      assertEquals(iconConfig.size, "smR");
-      assertEquals(iconConfig.color, "neutral600");
+      assertEquals(iconConfig.weight, "bold");
+      assertEquals(iconConfig.size, "md");
+      assertEquals(iconConfig.color, "neutral500");
     });
   });
 

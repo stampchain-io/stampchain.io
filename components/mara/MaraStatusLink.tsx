@@ -1,5 +1,5 @@
 import { Icon } from "$icon";
-import { container1 } from "$layout";
+import { container1, transitionColors } from "$layout";
 import type { MaraStatusLinkProps } from "$types/ui.d.ts";
 
 export function MaraStatusLink(
@@ -35,13 +35,13 @@ export function MaraStatusLink(
           href={statusUrl}
           target="_blank"
           rel="noopener noreferrer"
-          class="px-4 py-2 bg-purple-600/80 hover:bg-purple-600 text-white text-sm rounded-2xl transition-colors font-semibold flex items-center gap-2"
+          class={`px-4 py-2 bg-purple-600/80 hover:bg-purple-600 text-white text-sm rounded-2xl ${transitionColors} font-semibold flex items-center gap-2`}
         >
           View Status
           <Icon
             type="icon"
             name="arrowUpRight"
-            size="xs"
+            size="md"
             color="custom"
             weight="normal"
           />

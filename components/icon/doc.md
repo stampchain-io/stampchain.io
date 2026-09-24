@@ -142,24 +142,13 @@ cursor: pointer
 
 | Size | Dimensions | Responsive | Use Case |
 |------|-----------|------------|----------|
-| **xxxs** | 12px × 12px | No | Tiny indicators, badges |
-| **xxs** | 16px × 16px | No | Small UI elements |
 | **xs** | 20px × 20px | No | Compact icons |
 | **sm** | 24px × 24px | No | Regular small icons |
 | **md** | 28px × 28px | No | Standard medium icons |
 | **lg** | 32px × 32px | No | Large icons |
 | **xl** | 36px × 36px | No | Extra large icons |
 | **xxl** | 40px × 40px | No | Hero icons |
-| **xxsR** | 16px/12px* | Yes | Responsive tiny |
-| **xsR** | 20px/16px* | Yes | Responsive compact |
-| **smR** | 24px/20px* | Yes | Responsive small |
-| **mdR** | 28px/24px* | Yes | Responsive medium |
-| **lgR** | 32px/28px* | Yes | Responsive large |
-| **xlR** | 36px/32px* | Yes | Responsive XL |
-| **xxlR** | 40px/36px* | Yes | Responsive XXL |
 | **custom** | Custom | Manual | Full size control |
-
-*Responsive sizes: mobile/tablet
 
 ### Weight Options
 
@@ -263,8 +252,7 @@ export interface IconVariants {
   type: "icon" | "iconHover" | "iconButton";
   name: string;
   weight: "extraLight" | "light" | "normal" | "bold" | "custom";
-  size: "xxxs" | "xxs" | "xs" | "sm" | "md" | "lg" | "xl" | "xxl" |
-        "xxsR" | "xsR" | "smR" | "mdR" | "lgR" | "xlR" | "xxlR" | "custom";
+  size: "xs" | "sm" | "md" | "lg" | "xl" | "xxl" | "custom";
   color: "neutral400" | "neutral500" | "neutral600" | "primary400" | "primary500" | "primary600" | "custom";
   className?: string;
   role?: JSX.AriaRole;
@@ -355,7 +343,7 @@ The system includes 80+ icons mapped through `iconNameMap`:
 - `bitcoin`, `bitcoins`, `bitcoinTx`, `bitcoinBlock`, `listings`, `version`, `send`, `receive`, `history`, `wallet`, `donate`, `explorer`
 
 **Tools & Misc**
-- `stamp`, `uploadImage`, `downloadImage`, `loading`, `refresh`, `eye`, `externallink`
+- `stamp`, `uploadImage`, `downloadImage`, `loading`, `refresh`, `externallink`
 
 **Notifications**
 - `info`, `error`, `success`
@@ -408,7 +396,7 @@ export function TwitterLink() {
       type="iconButton"
       name="twitter"
       weight="bold"
-      size="mdR"
+      size="md"
       color="primary400"
       href="https://twitter.com/stampchain_io"
       target="_blank"
@@ -429,7 +417,7 @@ export function CustomIcon() {
       type="iconButton"
       name="close"
       weight="bold"
-      size="mdR"
+      size="md"
       color="custom"
       className="stroke-red-500 hover:stroke-green-500"
       onClick={() => handleClose()}
@@ -841,11 +829,11 @@ All icons share these SVG attributes:
 - **custom**: Full control for special cases (gradients, conditional colors)
 
 ### Size Selection
-- Use responsive sizes (`mdR`, `lgR`) for adaptive UI
-- `md` or `mdR` as default for most icons
+- `md` as default for most icons
 - `sm` for compact layouts, mobile
 - `lg` or `xl` for prominent actions
 - Match icon size to button size in buttons
+- Use `custom` with Tailwind classes when a call site needs its own size
 
 ### Weight Selection
 - **normal**: Default weight for most icons
@@ -874,7 +862,7 @@ All icons share these SVG attributes:
   type="iconButton"
   name="twitter"
   weight="bold"
-  size="mdR"
+  size="md"
   color="primary500"
   href="https://twitter.com/stampchain_io"
   target="_blank"
@@ -931,8 +919,8 @@ All icons share these SVG attributes:
 ### Issue: Hover colors not working
 **Solution**: Ensure `type="iconButton"` is used. Verify parent has `group` class if using group-hover.
 
-### Issue: Icon size not responsive
-**Solution**: Use responsive size variants (`mdR`, `lgR`) instead of static sizes (`md`, `lg`).
+### Issue: Icon size not matching the layout
+**Solution**: Pick a fixed size (`md`, `lg`, `xl`) or use `size="custom"` with Tailwind width/height classes.
 
 ### Issue: Custom colors not applying
 **Solution**: When using `color="custom"`, all color styling must be in `className`. No default colors are applied.

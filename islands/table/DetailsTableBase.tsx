@@ -341,7 +341,7 @@ export default function DetailsTableBase({
               options={selectorOptions}
               value={selectedTab}
               onChange={setSelectedTab}
-              size="xsR"
+              size="xs"
               color="primary"
             />
           </div>

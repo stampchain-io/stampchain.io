@@ -14,10 +14,10 @@
  * layer preserves the type via bigIntSerializer/bigIntReviver).
  */
 import { assertEquals } from "@std/assert";
+import { formatEditionCount } from "$lib/utils/ui/formatting/formatEditionCount.ts";
 import {
   bigIntReviver,
   bigIntSerializer,
-  formatEditionCount,
   formatSupply,
 } from "$lib/utils/ui/formatting/formatUtils.ts";
 

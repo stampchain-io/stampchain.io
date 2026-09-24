@@ -21,10 +21,12 @@
  * callers that need a click handler instead of navigation can still use
  * `link` alone and wrap/handle clicks themselves.
  */
-import { Icon, IconVariants } from "$icon";
+import { Icon } from "$components/icon/IconBase.tsx";
+import type { IconVariants } from "$components/icon/styles.ts";
+import { transitionColors } from "$components/layout/styles.ts";
 import type { ComponentChildren } from "preact";
 
-interface UserProfileIconProps {
+export interface UserProfileIconProps {
   size?: IconVariants["size"];
   weight?: IconVariants["weight"];
   className?: string;
@@ -53,16 +55,14 @@ export function UserProfileIcon({
       size={size}
       color="custom"
       className={`${
-        link
-          ? "group-hover:stroke-color-hover transition-colors duration-200"
-          : ""
+        link ? `group-hover:stroke-color-hover ${transitionColors}` : ""
       } ${className}`}
     />
   );
 
   if (children === undefined) return icon;
 
-  const wrapperClass = `inline-flex items-center gap-1.5 ${
+  const wrapperClass = `inline-flex items-center gap-2 ${
     link ? "group cursor-pointer" : ""
   } ${wrapperClassName}`;
 

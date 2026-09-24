@@ -9,16 +9,17 @@ import {
   containerBackground,
   DonateStampData,
   Transaction,
+  transitionColors,
   TxOutput,
 } from "$layout";
 import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { tooltipIcon } from "$notification";
 import {
-  headingGrey,
-  labelSm,
+  labelXs,
   subtitlePrimary,
   text,
   textLg,
+  textXl,
   titlePrimary,
 } from "$text";
 import type { StampRow } from "$types/stamp.d.ts";
@@ -307,7 +308,6 @@ export default function DonateCta() {
       <Button
         variant="flat"
         color="primary"
-        size="smR"
         onClick={onClick}
       >
         DONATE
@@ -339,21 +339,21 @@ export default function DonateCta() {
             </p>
             <div class="grid grid-cols-12 mt-6 mb-6">
               <div class="col-span-6 flex flex-col justify-center items-center">
-                <h6 class={`${labelSm} mb-0`}>
+                <h6 class={`${labelXs} mb-0`}>
                   MONTHLY EXPENSES
                 </h6>
-                <h6 class={headingGrey}>
+                <h6 class={textXl}>
                   2,500 <span class="font-extralight">USD</span>
                 </h6>
               </div>
               <div class="col-span-6 flex flex-col justify-center items-center">
-                <h6 class={labelSm}>
+                <h6 class={labelXs}>
                   <span class="hidden min-[420px]:inline">
                     {currentMonth}
                   </span>{" "}
                   DONATIONS
                 </h6>
-                <h6 class={headingGrey}>
+                <h6 class={textXl}>
                   {monthlyDonations} <span class="font-extralight">USD</span>
                 </h6>
               </div>
@@ -375,15 +375,15 @@ export default function DonateCta() {
             <div class="flex justify-start gap-3 items-center mt-3">
               <div
                 ref={receiveButtonRef}
-                class="relative group order-1 tablet:order-2 peer "
+                class="relative group order-1 tablet:order-2 peer translate-y-[6px]"
                 onMouseEnter={handleReceiveMouseEnter}
                 onMouseLeave={handleReceiveMouseLeave}
               >
                 <Icon
-                  type="iconButton"
+                  type="iconHover"
                   name="donate"
                   weight="normal"
-                  size="smR"
+                  size="xl"
                   color="neutral400"
                   onClick={() => {
                     setIsReceiveTooltipVisible(false);
@@ -402,7 +402,7 @@ export default function DonateCta() {
               {/* Address Text - second on mobile, first on tablet+ */}
               <a
                 href={`/wallet/${DONATE_ADDRESS}`}
-                class="font-medium text-base text-color-neutral-400 hover:text-color-hover link-neutral-400 transition-colors duration-200 order-2 tablet:order-1 peer-hover:text-color-hover peer-hover:[background-size:0%_0.8px]"
+                class={`font-medium text-base text-color-neutral-400 hover:text-color-hover link-neutral-400 ${transitionColors} order-2 tablet:order-1 peer-hover:text-color-hover peer-hover:[background-size:0%_0.8px]`}
               >
                 <span class="hidden tablet:block">{DONATE_ADDRESS}</span>
                 <span class="hidden mobileMd:block tablet:hidden">

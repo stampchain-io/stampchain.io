@@ -5,7 +5,7 @@
 // General styles
 // Horisontal Rule is defined in /styles.css using border color
 
-// Transition styles - @baba-refactor codebase to use these instead of hardcoded values
+// Transition styles
 export const transitionColors = "transition-colors duration-200";
 export const transitionTransform =
   "transition-transform duration-500 will-change-transform";
@@ -18,7 +18,9 @@ export const shadow =
 export const shadowL2 =
   "shadow-[0_2px_4px_rgba(13,11,13,0.1),inset_0_1px_0_rgba(13,11,13,0.08),inset_0_-1px_0_rgba(13,11,13,0.08),inset_0_0_2px_2px_rgba(13,11,13,0.08)]";
 export const shadowGlowPurple =
-  `group hover:shadow-[0px_0px_16px_color-mix(in_srgb,var(--color-primary-500)_75%,transparent)] ${transitionColors} cursor-pointer`;
+  `group hover:shadow-[0px_0px_16px_4px_color-mix(in_srgb,var(--color-primary-500)_75%,transparent)] ${transitionColors} cursor-pointer`;
+export const shadowGlowPurpleSm =
+  `group hover:shadow-[0px_0px_8px_2px_color-mix(in_srgb,var(--color-primary-500)_75%,transparent)] ${transitionColors} cursor-pointer`;
 export const shadowGlowGrey =
   `group hover:shadow-[0px_0px_16px_color-mix(in_srgb,var(--color-neutral-500)_75%,transparent)] ${transitionColors} cursor-pointer`;
 
@@ -35,7 +37,7 @@ export const container2 =
 export const container2Hover =
   `${container2} hover:border-color-hover ${transitionColors}`;
 export const container2Icon =
-  `relative flex items-center justify-between ${container2} rounded-full p-0.5 gap-1.5 tablet:gap-1`;
+  `relative flex items-center justify-between ${container2} rounded-full p-0.5 gap-2 tablet:gap-1`;
 // Pill styles
 export const containerPill = `flex items-center
  px-2.5 py-1 rounded-full
@@ -69,8 +71,7 @@ export const containerBackground = `${body} ${container1} p-5`;
 export const containerGap =
   "gap-section-mobile mobileLg:gap-section-tablet tablet:gap-section-desktop";
 export const containerDetailImage = `relative ${container2} p-0.5`;
-export const containerStickyBottom =
-  `sticky bottom-0 mt-auto pb-7.5 tablet:pb-5`;
+export const containerStickyBottom = `sticky bottom-0 mt-auto pb-5`;
 
 // Table card container styles - check if used
 export const containerCardTable = `rounded-3xl ${container1} ${shadowGlowPurple}

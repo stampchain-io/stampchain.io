@@ -3,7 +3,7 @@ import { container3, shadow } from "$layout";
 /* ===== BASE STYLES ===== */
 /* ===== NOTIFICATION STYLES ===== */
 const notificationContainer = `
-  w-full px-4 pt-3 pb-4 border rounded-2xl backdrop-blur-md ${shadow}`;
+  w-full px-3 py-2 border rounded-2xl backdrop-blur-md ${shadow}`;
 
 /* ===== TOOLTIPS STYLES ===== */
 const tooltipBackground =

@@ -1,5 +1,6 @@
 import { Button } from "$button";
 import { Icon } from "$icon";
+import { transitionAll } from "$layout";
 import type {
   MaraSuccessMessageProps,
   TransactionBadgeProps,
@@ -112,7 +113,7 @@ export function TransactionStatus({
           <Icon
             type="icon"
             name={config.icon}
-            size="sm"
+            size="md"
             weight="normal"
             color="custom"
             className={`fill-${config.color}-400`}
@@ -134,7 +135,7 @@ export function TransactionStatus({
               <Icon
                 type="icon"
                 name="timer"
-                size="xs"
+                size="md"
                 weight="normal"
                 color="custom"
                 className={`fill-${config.color}-400`}
@@ -155,7 +156,7 @@ export function TransactionStatus({
               </div>
               <div class="w-full h-2 bg-color-grey-semidark rounded-full overflow-hidden">
                 <div
-                  class={`h-full bg-${config.color}-500 transition-all duration-500`}
+                  class={`h-full bg-${config.color}-500 ${transitionAll}`}
                   style={{
                     width: `${(confirmations / targetConfirmations) * 100}%`,
                   }}
@@ -180,7 +181,6 @@ export function TransactionStatus({
               <Button
                 variant="outline"
                 color="neutral"
-                size="smR"
                 onClick={onViewTransaction}
               >
                 VIEW TRANSACTION
@@ -190,7 +190,6 @@ export function TransactionStatus({
               <Button
                 variant="flat"
                 color="neutral"
-                size="smR"
                 onClick={onRetry}
               >
                 RETRY
@@ -277,7 +276,7 @@ export function MaraSuccessMessage({
           <Icon
             type="icon"
             name="rocket"
-            size="sm"
+            size="md"
             weight="normal"
             color="custom"
             className="fill-purple-400"

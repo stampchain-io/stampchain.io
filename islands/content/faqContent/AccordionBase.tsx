@@ -1,5 +1,6 @@
 /* ===== ACCORDION BASE COMPONENT ===== */
 import { Icon } from "$icon";
+import { transitionAll, transitionColors, transitionTransform } from "$layout";
 import { text } from "$text";
 import { signal } from "@preact/signals";
 import { JSX } from "preact";
@@ -31,7 +32,7 @@ export const Accordion = (
         {/* Title with Gradient Styling - uses bg-gradient-to-r color-neutral-gradient color-gradient-hover instead of headingGreyLDLink because group-hover overrides the hover state */}
         {/* group-hover overrides --gradient-stop-* to a custom grey instead of the default primary-400 used by color-gradient-hover */}
         <h2
-          class={`font-bold text-xl text-color-neutral-200 group-hover:text-color-hover tracking-wide
+          class={`font-bold text-lg text-color-neutral-200 group-hover:text-color-hover tracking-wide
             ${isOpen ? "text-color-primary-400" : ""}`}
         >
           {title}
@@ -39,17 +40,17 @@ export const Accordion = (
 
         {/* Toggle Icon */}
         <span
-          class={`transition-transform duration-400 ${
+          class={`${transitionTransform} ${
             isOpen
               ? "stroke-color-hover rotate-45"
-              : "stroke-color-neutral-200 group-hover:stroke-color-hover transition-colors duration-400 rotate-0"
+              : `stroke-color-neutral-200 group-hover:stroke-color-hover ${transitionColors} rotate-0`
           }`}
         >
           <Icon
             type="iconButton"
             name="expand"
             weight="bold"
-            size="xsR"
+            size="lg"
             color="custom"
           />
         </span>
@@ -59,10 +60,10 @@ export const Accordion = (
       <div
         class={` ${
           isOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-10"
-        } mt-3 overflow-hidden transition-all duration-500`}
+        } overflow-hidden ${transitionAll}`}
       >
         <div
-          class={`${text} [&>div>ul]:list-disc [&>div>ul]:list-inside [&>div>ul]:mb-6 [&>div>ul]:flex [&>div>ul]:flex-col [&>div>ul]:gap-1.5 mb-6`}
+          class={`${text} [&>div>ul]:list-disc [&>div>ul]:list-inside [&>div>ul]:mb-6 [&>div>ul]:flex [&>div>ul]:flex-col [&>div>ul]:gap-1.5 mb-3`}
         >
           {children}
         </div>

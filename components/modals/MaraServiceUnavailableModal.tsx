@@ -1,6 +1,6 @@
 import { ModalBase } from "$components/layout/ModalBase.tsx";
 import { Icon } from "$icon";
-import { container1 } from "$layout";
+import { container1, transitionColors } from "$layout";
 import { tooltipIcon } from "$notification";
 import { titlePrimary } from "$text";
 import type { MaraServiceUnavailableModalProps } from "$types/ui.d.ts";
@@ -67,9 +67,9 @@ export function MaraServiceUnavailableModal({
           <Icon
             type="iconButton"
             name="close"
-            size="mdR"
+            size="xl"
             weight="bold"
-            color="neutral400"
+            color="neutral600"
             ariaLabel="Close"
             onClick={onClose}
           />
@@ -159,14 +159,14 @@ export function MaraServiceUnavailableModal({
         <button
           type="button"
           onClick={onRetry}
-          class={`flex-1 px-4 py-2 rounded-2xl transition-colors ${container1} bg-gradient-to-br from-color-grey-dark/20 to-color-grey-dark/40 text-color-grey-light hover:from-color-grey-dark/30 hover:to-color-grey-dark/50`}
+          class={`flex-1 px-4 py-2 rounded-2xl ${transitionColors} ${container1} bg-gradient-to-br from-color-grey-dark/20 to-color-grey-dark/40 text-color-grey-light hover:from-color-grey-dark/30 hover:to-color-grey-dark/50`}
         >
           Retry MARA
         </button>
         <button
           type="button"
           onClick={onSwitchToStandard}
-          class={`flex-1 px-4 py-2 rounded-2xl transition-colors font-semibold ${container1} bg-gradient-to-br from-purple-600/80 to-purple-700/80 text-white hover:from-purple-600 hover:to-purple-700`}
+          class={`flex-1 px-4 py-2 rounded-2xl ${transitionColors} font-semibold ${container1} bg-gradient-to-br from-purple-600/80 to-purple-700/80 text-white hover:from-purple-600 hover:to-purple-700`}
         >
           Switch to Standard
         </button>

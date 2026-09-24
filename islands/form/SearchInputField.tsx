@@ -7,7 +7,7 @@
  */
 import { Icon } from "$icon";
 import { loaderSpinXsGrey } from "$layout";
-import type { RefObject } from "preact";
+import type { ComponentChildren, RefObject } from "preact";
 
 interface SearchInputFieldProps {
   value: string;
@@ -18,6 +18,7 @@ interface SearchInputFieldProps {
   autoFocus?: boolean;
   hasError: boolean;
   isLoading?: boolean | undefined;
+  trailing?: ComponentChildren;
 }
 
 export function SearchInputField({
@@ -29,6 +30,7 @@ export function SearchInputField({
   autoFocus = false,
   hasError,
   isLoading = false,
+  trailing,
 }: SearchInputFieldProps) {
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === "Enter") {
@@ -50,27 +52,38 @@ export function SearchInputField({
         autoFocus={autoFocus}
         class={`relative z-modal h-12 w-full pl-7.5 pr-[68px] bg-transparent font-medium text-sm tablet:text-xs text-color-neutral-200 placeholder:font-light placeholder:text-color-neutral-500 placeholder:uppercase outline-none focus-visible:outline-none`}
       />
-      <div
-        class="absolute z-[3] right-6 top-[11px] cursor-pointer"
-        onClick={onSearch}
-      >
-        {isLoading
-          ? <div class={`${loaderSpinXsGrey} mt-[7px] mr-[3px]`} />
-          : (
+      {trailing
+        ? (
+          <div class="absolute z-modal right-3 top-[7px]">
+            {trailing}
+          </div>
+        )
+        : isLoading
+        ? (
+          <div class="absolute z-modal right-6 top-[11px]">
+            <div class={`${loaderSpinXsGrey} mt-[7px] mr-[3px]`} />
+          </div>
+        )
+        : (
+          <div
+            class="absolute z-modal right-6 top-[11px] cursor-pointer"
+            onClick={onSearch}
+          >
             <Icon
               type="icon"
               name="search"
               weight="bold"
-              size="xs"
+              size="xl"
               color="custom"
-              className={`w-5 h-5 ${
+              ariaLabel="Search"
+              className={`${
                 hasError
                   ? "stroke-color-neutral-400"
                   : "stroke-color-neutral-600"
               }`}
             />
-          )}
-      </div>
+          </div>
+        )}
     </>
   );
 }

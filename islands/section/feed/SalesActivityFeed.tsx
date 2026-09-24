@@ -1,6 +1,6 @@
 /* ===== SALES ACTIVITY FEED COMPONENT ===== */
 import { Icon, LoadingIcon } from "$icon";
-import { container2 } from "$layout";
+import { container2, transitionColors } from "$layout";
 import {
   abbreviateAddress,
   formatBTCAmount,
@@ -87,7 +87,7 @@ export default function SalesActivityFeed({
         key={`${sale.tx_hash}-${saleData.tx_hash}-${index}`}
         class={`feed-item border-l-2 border-color-purple-light pl-4 pb-6 relative ${
           !compact
-            ? "hover:bg-gray-800/30 transition-colors cursor-pointer rounded-r-lg p-4 -ml-4"
+            ? `hover:bg-gray-800/30 ${transitionColors} cursor-pointer rounded-r-lg p-4 -ml-4`
             : ""
         }`}
         onClick={() => !compact && handleItemClick(sale)}
@@ -185,13 +185,13 @@ export default function SalesActivityFeed({
                   href={`${explorerBaseUrl}${saleData.tx_hash}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="p-1 text-blue-400 hover:text-blue-300 transition-colors"
+                  class={`p-1 text-blue-400 hover:text-blue-300 ${transitionColors}`}
                   title="View transaction"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <Icon
                     name="external-link"
-                    size="xs"
+                    size="md"
                     type="icon"
                     weight="normal"
                     color="custom"
@@ -200,7 +200,7 @@ export default function SalesActivityFeed({
                 {!compact && (
                   <button
                     type="button"
-                    class="p-1 text-gray-400 hover:text-white transition-colors"
+                    class={`p-1 text-gray-400 hover:text-white ${transitionColors}`}
                     title="View stamp details"
                     onClick={(e) => {
                       e.stopPropagation();
@@ -208,8 +208,8 @@ export default function SalesActivityFeed({
                     }}
                   >
                     <Icon
-                      name="eye"
-                      size="xs"
+                      name="view"
+                      size="md"
                       type="icon"
                       weight="normal"
                       color="custom"
@@ -249,7 +249,7 @@ export default function SalesActivityFeed({
               type="button"
               onClick={handleRefresh}
               disabled={refreshLoading}
-              class="p-2 text-gray-400 hover:text-white transition-colors disabled:opacity-50"
+              class={`p-2 text-gray-400 hover:text-white ${transitionColors} disabled:opacity-50`}
               title="Refresh feed"
             >
               <Icon

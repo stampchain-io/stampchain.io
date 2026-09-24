@@ -5,6 +5,7 @@
  */
 
 // Import ValidationErrorCode for use within this file
+import { transitionColors } from "$components/layout/styles.ts";
 import { ValidationErrorCode } from "$constants";
 import { serverConfig } from "$server/config/config.ts";
 
@@ -1272,7 +1273,7 @@ export function createDefaultErrorFallback({
       details: "text-xs text-red-500 mb-4 font-mono bg-red-100 p-2 rounded-2xl",
       errorId: "text-xs text-red-500 mb-4",
       button:
-        "px-4 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors",
+        `px-4 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 ${transitionColors}`,
       ...customStyles,
     };
 

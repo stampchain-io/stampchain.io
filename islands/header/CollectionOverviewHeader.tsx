@@ -67,7 +67,7 @@ function CollectionOverviewHeader(
             ]}
             value={editionsFilter}
             onChange={handleEditionsChange}
-            size="xsR"
+            size="xs"
             color="primary"
           />
         </div>

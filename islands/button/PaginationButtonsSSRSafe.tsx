@@ -72,7 +72,7 @@ export const PaginationButtonsSSRSafe = ({
               type="icon"
               name={iconName}
               weight="bold"
-              size="xxs"
+              size="md"
               color="custom"
               className="stroke-color-grey-semidark group-hover:stroke-color-grey"
             />

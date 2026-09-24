@@ -2146,7 +2146,7 @@ function StampingToolMain({ config }: { config: Config }) {
             <button
               type="button"
               onClick={switchToStandardMode}
-              class={`px-4 py-2 ${container1} bg-gradient-to-br from-purple-600/80 to-purple-700/80 text-white text-sm rounded-2xl hover:from-purple-600 hover:to-purple-700 transition-colors font-semibold`}
+              class={`px-4 py-2 ${container1} bg-gradient-to-br from-purple-600/80 to-purple-700/80 text-white text-sm rounded-2xl hover:from-purple-600 hover:to-purple-700 ${transitionColors} font-semibold`}
             >
               Switch to Standard
             </button>
@@ -2243,7 +2243,7 @@ function StampingToolMain({ config }: { config: Config }) {
                 type="iconButton"
                 name={isLocked ? "locked" : "unlocked"}
                 weight="normal"
-                size="xs"
+                size="lg"
                 color="neutral600"
                 className="mb-0.5"
               />
@@ -2287,7 +2287,7 @@ function StampingToolMain({ config }: { config: Config }) {
                 type="iconButton"
                 name="previewImage"
                 weight="normal"
-                size="xs"
+                size="lg"
                 color="neutral600"
                 className={`mb-0.5 ${!file ? "!cursor-not-allowed" : ""}`}
               />

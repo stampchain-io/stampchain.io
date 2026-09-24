@@ -149,7 +149,7 @@ export const FilterContentExplorer = ({
           ]}
           value={filters.section}
           onChange={handleSectionChange}
-          size="xsR"
+          size="xs"
           color="primary"
           className="w-full"
         />

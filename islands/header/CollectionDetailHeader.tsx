@@ -6,6 +6,7 @@ import {
   containerGap,
   containerPill,
   StatItem,
+  transitionColors,
 } from "$layout";
 import {
   abbreviateAddress,
@@ -123,7 +124,7 @@ export const CollectionDetailHeader = (
             type="iconButton"
             name="info"
             weight="bold"
-            size="xs"
+            size="lg"
             color="neutral500"
             onClick={() => setShowDescription((prev) => !prev)}
             ariaLabel="Collection description"
@@ -163,13 +164,15 @@ export const CollectionDetailHeader = (
   // layout (size, weight, underline, hover) - used in the desktop second row
   const creatorInline = (
     <UserProfileIcon
-      size="xs"
+      size="lg"
       weight="bold"
       className="stroke-color-neutral-200 translate-y-0.5"
       link
       href={creatorAddress ? `/wallet/${creatorAddress}` : undefined}
     >
-      <span class="font-normal text-sm text-color-neutral-200 link-neutral-200 group-hover:text-color-hover transition-colors duration-200">
+      <span
+        class={`font-normal text-sm text-color-neutral-200 link-neutral-200 group-hover:text-color-hover ${transitionColors}`}
+      >
         {creatorDisplay}
       </span>
     </UserProfileIcon>

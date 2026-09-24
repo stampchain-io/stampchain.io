@@ -6,7 +6,7 @@ import { Icon } from "$icon";
 import { WalletProvider } from "$islands/layout/WalletProvider.tsx";
 import { ConnectWalletModal } from "$islands/modal/ConnectWalletModal.tsx";
 import { closeModal, openModal } from "$islands/modal/states.ts";
-import { containerStickyBottom } from "$layout";
+import { containerStickyBottom, transitionColors } from "$layout";
 import {
   abbreviateAddress,
   formatSatoshisToBTC,
@@ -188,16 +188,16 @@ export const WalletButton = (
   return {
     // The wallet icon component
     icon: (
-      <div class="relative z-10 flex items-center">
+      <div class="relative z-10 flex items-center translate-y-[1px]">
         {/* ===== CONNECT WALLET BUTTON ===== */}
         {!(isConnected && address) && (
           <Icon
             type="iconButton"
             name="wallet"
-            weight="normal"
+            weight="light"
             size="custom"
             color="neutral400"
-            className="w-[26px] h-[26px] tablet:w-[22px] tablet:h-[22px]"
+            className="w-6 h-6"
             onClick={handleWalletIconClick}
           />
         )}
@@ -210,10 +210,10 @@ export const WalletButton = (
               <Icon
                 type="iconButton"
                 name="wallet"
-                weight="normal"
+                weight="light"
                 size="custom"
                 color="neutral400"
-                className="w-[25px] h-[25px] tablet:w-[21px] tablet:h-[21px]"
+                className="w-6 h-6"
                 colorAccent="var(--color-primary-400)"
                 colorAccentHover="var(--color-hover)"
                 onClick={handleWalletIconClick}
@@ -230,7 +230,7 @@ export const WalletButton = (
           <div class="flex flex-row-reverse justify-end items-center gap-3">
             <div
               ref={copyButtonRef}
-              class="relative peer translate-y-0.5"
+              class="relative peer"
               onMouseEnter={handleCopyMouseEnter}
               onMouseLeave={handleCopyMouseLeave}
             >
@@ -238,7 +238,7 @@ export const WalletButton = (
                 type="iconButton"
                 name="copy"
                 weight="normal"
-                size="xxs"
+                size="md"
                 color="neutral500"
                 onClick={copy}
               />
@@ -258,7 +258,7 @@ export const WalletButton = (
               </div>
             </div>
             <h6
-              class={`${valueDarkSm} !text-xs transition-colors duration-200 peer-hover:text-color-hover`}
+              class={`${valueDarkSm} !text-xs ${transitionColors} peer-hover:text-color-hover`}
             >
               {abbreviateAddress(address, 8)}
             </h6>
@@ -268,7 +268,7 @@ export const WalletButton = (
               type="icon"
               name="bitcoins"
               weight="normal"
-              size="xs"
+              size="lg"
               color="neutral500"
             />
             <h6 class="font-semibold text-sm text-color-orange-400">
@@ -298,9 +298,9 @@ export const WalletButton = (
       : null,
     // The wallet drawer content
     drawer: (
-      <div class="flex flex-col h-full px-7.5 tablet:px-5">
+      <div class="flex flex-col h-full px-5">
         {/* Top - Main navigation content */}
-        <div class="flex flex-col flex-1 items-start pt-8 gap-5">
+        <div class="flex flex-col flex-1 items-start pt-1 gap-3">
           {getWalletLinks(address).map((link) => (
             <a
               key={link.title}
@@ -332,7 +332,7 @@ export const WalletButton = (
             <div class="flex flex-row-reverse justify-start items-center gap-3">
               <div
                 ref={copyButtonRef}
-                class="relative peer translate-y-0.5"
+                class="relative peer"
                 onMouseEnter={handleCopyMouseEnter}
                 onMouseLeave={handleCopyMouseLeave}
               >
@@ -340,7 +340,7 @@ export const WalletButton = (
                   type="iconButton"
                   name="copy"
                   weight="normal"
-                  size="xs"
+                  size="md"
                   color="neutral500"
                   onClick={copy}
                 />
@@ -360,7 +360,7 @@ export const WalletButton = (
                 </div>
               </div>
               <h6
-                class={`${valueDarkSm} transition-colors duration-200 peer-hover:text-color-hover`}
+                class={`${valueDarkSm} ${transitionColors} peer-hover:text-color-hover`}
               >
                 {abbreviateAddress(address, 9)}
               </h6>
@@ -370,7 +370,7 @@ export const WalletButton = (
                 type="icon"
                 name="bitcoins"
                 weight="normal"
-                size="xs"
+                size="lg"
                 color="neutral500"
               />
               <h6 class="font-semibold text-lg text-color-orange-400">

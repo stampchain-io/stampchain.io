@@ -8,7 +8,12 @@ import { Icon, LoadingIcon, PlaceholderImage, UserProfileIcon } from "$icon";
 import StampTextContent from "$islands/content/stampDetailContent/StampTextContent.tsx";
 import BuyStampModal from "$islands/modal/BuyStampModal.tsx";
 import { openModal } from "$islands/modal/states.ts";
-import { container3, containerCard, containerPill } from "$layout";
+import {
+  container3,
+  containerCard,
+  containerPill,
+  transitionAll,
+} from "$layout";
 import {
   getFreshDispenserForPurchase,
   useLowestPriceDispenser,
@@ -97,10 +102,12 @@ export function StampCard({
   stamp,
   isRecentSale = false,
   variant = "cardVerticalDetail",
+  previewHtml,
 }: {
   stamp: StampWithSaleData;
   isRecentSale?: boolean;
   variant?: StampCardVariant;
+  previewHtml?: string;
 }) {
   /* ===== STATE ===== */
   const [loading, setLoading] = useState<boolean>(true);
@@ -175,10 +182,15 @@ export function StampCard({
     return () => globalThis.removeEventListener("resize", handleResize);
   }, []);
 
-  // Fetch stamp image on mount
+  // Fetch stamp image on mount. Unpublished HTML previews skip the CDN
+  // lookup and render `previewHtml` in an iframe instead.
   useEffect(() => {
+    if (previewHtml) {
+      setLoading(false);
+      return;
+    }
     fetchStampImage();
-  }, []);
+  }, [previewHtml]);
 
   // Validate SVG content when source changes
   useEffect(() => {
@@ -305,9 +317,9 @@ export function StampCard({
                 name={isPlaying ? "pause" : "play"}
                 type="iconButton"
                 weight="bold"
-                size="xsR"
+                size="md"
                 color="custom"
-                className="relative z-10 [&_path]:fill-color-neutral-600 [&_path]:group-hover/button:fill-color-hover transition-all duration-200"
+                className={`relative z-10 [&_path]:fill-color-neutral-600 [&_path]:group-hover/button:fill-color-hover ${transitionAll}`}
               />
             </button>
           </div>
@@ -319,8 +331,23 @@ export function StampCard({
       return <StampTextContent src={src} />;
     }
 
-    // Handle HTML content - show cached preview PNG in grid view
+    // Handle HTML content - live iframe for unpublished previews, otherwise
+    // the cached PNG used in gallery grids.
     if (stamp.stamp_mimetype === "text/html") {
+      if (previewHtml) {
+        return (
+          <div class="stamp-container">
+            <div class="relative z-10 aspect-square">
+              <iframe
+                srcDoc={previewHtml}
+                sandbox="allow-scripts allow-same-origin"
+                title={`Stamp preview ${stamp.stamp ?? stamp.cpid}`}
+                class="h-full w-full rounded-xl border-0"
+              />
+            </div>
+          </div>
+        );
+      }
       if (imageFailed) {
         return (
           <div class="stamp-container">
@@ -644,7 +671,7 @@ export function StampCard({
                     type="icon"
                     name="recursive"
                     weight="bold"
-                    size="xxs"
+                    size="md"
                     color="neutral400"
                     ariaLabel="Recursive"
                   />
@@ -656,7 +683,7 @@ export function StampCard({
                     type="icon"
                     name="divisible"
                     weight="bold"
-                    size="xxs"
+                    size="md"
                     color="neutral400"
                     ariaLabel="Divisible"
                   />
@@ -668,7 +695,7 @@ export function StampCard({
                     type="icon"
                     name="keyburned"
                     weight="bold"
-                    size="xxs"
+                    size="md"
                     color="neutral400"
                     ariaLabel="Keyburned"
                   />
@@ -681,7 +708,7 @@ export function StampCard({
                       type="icon"
                       name="locked"
                       weight="bold"
-                      size="xxs"
+                      size="md"
                       color="neutral400"
                       ariaLabel="Locked"
                     />
@@ -693,7 +720,7 @@ export function StampCard({
                       type="icon"
                       name="unlocked"
                       weight="bold"
-                      size="xxs"
+                      size="md"
                       color="neutral400"
                       ariaLabel="Unlocked"
                     />
@@ -740,7 +767,7 @@ export function StampCard({
               <Button
                 variant="flat"
                 color="primary"
-                size="xsR"
+                size="sm"
                 class={`rounded-xl shrink-0 ${
                   isFetchingDispenser ? "!opacity-60 !cursor-wait" : ""
                 }`}
@@ -845,6 +872,8 @@ export function StampCard({
     );
   }
 
+  const CardRoot = previewHtml ? "div" : "a";
+
   /* ===== RENDER ===== */
   /* ===== CARD VARIANTS ===== */
   return (
@@ -853,10 +882,12 @@ export function StampCard({
       ref={cardRef}
       class="relative flex justify-center w-full h-full max-w-72"
     >
-      <a
-        href={`/stamp/${stamp.tx_hash}`}
-        target="_top"
-        f-partial={`/stamp/${stamp.tx_hash}`}
+      <CardRoot
+        {...(previewHtml ? {} : {
+          href: `/stamp/${stamp.tx_hash}`,
+          target: "_top",
+          "f-partial": `/stamp/${stamp.tx_hash}`,
+        })}
         data-long-number={isLongNumber(stampValue)}
         class={containerCard}
       >
@@ -880,9 +911,8 @@ export function StampCard({
                   type="icon"
                   name="atom"
                   weight="bold"
-                  size="custom"
+                  size="md"
                   color="neutral400"
-                  className="w-3.5 h-3.5"
                   ariaLabel="Atomic Swap"
                 />
               </div>
@@ -995,7 +1025,7 @@ export function StampCard({
                       type="icon"
                       name="atom"
                       weight="bold"
-                      size="xxs"
+                      size="md"
                       color="neutral400"
                     />
                   </IconWithTooltip>
@@ -1007,9 +1037,9 @@ export function StampCard({
                       type="icon"
                       name="listings"
                       weight="bold"
-                      size="custom"
+                      size="md"
                       color="custom"
-                      className="w-[17px] h-[17px] stroke-color-secondary-400"
+                      className="stroke-color-secondary-400"
                       ariaLabel="BTC"
                     />
                   </IconWithTooltip>
@@ -1020,7 +1050,7 @@ export function StampCard({
                       type="icon"
                       name="recursive"
                       weight="bold"
-                      size="xxs"
+                      size="md"
                       color="neutral400"
                       ariaLabel="Recursive"
                     />
@@ -1032,7 +1062,7 @@ export function StampCard({
                       type="icon"
                       name="divisible"
                       weight="bold"
-                      size="xxs"
+                      size="md"
                       color="neutral400"
                       ariaLabel="Divisible"
                     />
@@ -1044,7 +1074,7 @@ export function StampCard({
                       type="icon"
                       name="keyburned"
                       weight="bold"
-                      size="xxs"
+                      size="md"
                       color="neutral400"
                       ariaLabel="Keyburned"
                     />
@@ -1057,7 +1087,7 @@ export function StampCard({
                         type="icon"
                         name="locked"
                         weight="bold"
-                        size="xxs"
+                        size="md"
                         color="neutral400"
                         ariaLabel="Locked"
                       />
@@ -1069,7 +1099,7 @@ export function StampCard({
                         type="icon"
                         name="unlocked"
                         weight="bold"
-                        size="xxs"
+                        size="md"
                         color="neutral400"
                         ariaLabel="Unlocked"
                       />
@@ -1136,7 +1166,7 @@ export function StampCard({
                   <Button
                     variant="flat"
                     color="primary"
-                    size="xs"
+                    size="sm"
                     class={`w-full rounded-xl ${
                       isFetchingDispenser ? "!opacity-60 !cursor-wait" : ""
                     }`}
@@ -1224,9 +1254,9 @@ export function StampCard({
                       type="icon"
                       name="bitcoin"
                       weight="bold"
-                      size="custom"
+                      size="md"
                       color="custom"
-                      className="w-[17px] h-[17px] stroke-color-secondary-400"
+                      className="stroke-color-secondary-400"
                       ariaLabel="BTC"
                     />
                   </IconWithTooltip>
@@ -1237,7 +1267,7 @@ export function StampCard({
                       type="icon"
                       name="recursive"
                       weight="bold"
-                      size="xxs"
+                      size="md"
                       color="neutral400"
                       ariaLabel="Recursive"
                     />
@@ -1249,7 +1279,7 @@ export function StampCard({
                       type="icon"
                       name="divisible"
                       weight="bold"
-                      size="xxs"
+                      size="md"
                       color="neutral400"
                       ariaLabel="Divisible"
                     />
@@ -1261,7 +1291,7 @@ export function StampCard({
                       type="icon"
                       name="keyburned"
                       weight="bold"
-                      size="xxs"
+                      size="md"
                       color="neutral400"
                       ariaLabel="Keyburned"
                     />
@@ -1274,7 +1304,7 @@ export function StampCard({
                         type="icon"
                         name="locked"
                         weight="bold"
-                        size="xxs"
+                        size="md"
                         color="neutral400"
                         ariaLabel="Locked"
                       />
@@ -1286,7 +1316,7 @@ export function StampCard({
                         type="icon"
                         name="unlocked"
                         weight="bold"
-                        size="xxs"
+                        size="md"
                         color="neutral400"
                         ariaLabel="Unlocked"
                       />
@@ -1471,7 +1501,7 @@ export function StampCard({
             </PillWithTooltip>
           </div>
         )}
-      </a>
+      </CardRoot>
     </div>
   );
 }

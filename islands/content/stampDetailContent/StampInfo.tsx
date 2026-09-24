@@ -10,14 +10,16 @@ import {
   PillContentCount,
   StatItem,
   StatPrice,
+  transitionAll,
+  transitionColors,
 } from "$layout";
 import type { Src101Detail } from "$lib/types/src101.d.ts";
 import type { StampRow } from "$lib/types/stamp.d.ts";
+import { formatEditionCount } from "$lib/utils/ui/formatting/formatEditionCount.ts";
 import {
   abbreviateAddress,
   formatBTCAmount,
   formatDate,
-  formatEditionCount,
   formatFileSize,
   formatFileType,
 } from "$lib/utils/ui/formatting/formatUtils.ts";
@@ -159,6 +161,7 @@ export function StampInfo(
   const creatorDisplay = stamp.creator_name
     ? stamp.creator_name
     : abbreviateAddress(stamp.creator, 12);
+  const creatorHref = stamp.creator ? `/wallet/${stamp.creator}` : undefined;
 
   /* ===== CPID COPY STATE ===== */
   const [showCpidCopied, setShowCpidCopied] = useState(false);
@@ -709,7 +712,7 @@ export function StampInfo(
         href={`https://www.blockchain.com/explorer/transactions/btc/${stamp.tx_hash}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="link-neutral-400 transition-colors duration-200"
+        className={`link-neutral-400 ${transitionColors}`}
       >
         {abbreviateAddress(stamp.tx_hash, 8)}
       </a>
@@ -790,7 +793,7 @@ export function StampInfo(
                   <span className="inline-flex max-w-full flex-row-reverse items-center gap-3 min-w-0">
                     <span
                       ref={cpidCopyButtonRef}
-                      className="relative peer -translate-y-[1px] shrink-0"
+                      className="relative peer shrink-0"
                       onMouseEnter={handleCpidCopyMouseEnter}
                       onMouseLeave={handleCpidCopyMouseLeave}
                     >
@@ -798,7 +801,7 @@ export function StampInfo(
                         type="iconButton"
                         name="copy"
                         weight="normal"
-                        size="xxs"
+                        size="md"
                         color="neutral500"
                         onClick={copyCpid}
                       />
@@ -818,7 +821,7 @@ export function StampInfo(
                       </div>
                     </span>
                     <span
-                      className={`${truncate} peer-hover:text-color-hover transition-colors duration-200 min-w-0`}
+                      className={`${truncate} peer-hover:text-color-hover ${transitionColors} min-w-0`}
                     >
                       {stamp.cpid}
                     </span>
@@ -834,14 +837,16 @@ export function StampInfo(
               )}
 
               <UserProfileIcon
-                size="xs"
+                size="lg"
                 weight="bold"
                 className="stroke-color-neutral-200 translate-y-0.5"
                 wrapperClassName="mt-1"
                 link
-                href={stamp.creator ? `/wallet/${stamp.creator}` : undefined}
+                href={creatorHref}
               >
-                <span className="font-normal text-sm text-color-neutral-200 link-neutral-200 group-hover:text-color-hover transition-colors duration-200">
+                <span
+                  className={`font-normal text-sm text-color-neutral-200 link-neutral-200 group-hover:text-color-hover ${transitionColors}`}
+                >
                   <span className="min-[420px]:hidden">{creatorDisplaySm}</span>
                   <span className="hidden min-[420px]:inline">
                     {creatorDisplay}
@@ -854,14 +859,14 @@ export function StampInfo(
               <PillWithTooltip label="STAMP TYPE" className="w-fit">
                 <PillContentCount
                   value={getIdentLabel()}
-                  class="!static !text-color-neutral-500"
+                  class="px-3 !static !text-[0.625rem] !text-color-neutral-500 !tracking-wider"
                 />
               </PillWithTooltip>
 
               {!isSrc20Stamp() && (
                 <PillWithTooltip
                   label={stamp.supply === 1 ? "EDITION" : "EDITIONS"}
-                  className={`${containerPill} ${cardSupply} !text-sm w-fit`}
+                  className={`${containerPill} ${cardSupply} w-fit`}
                 >
                   {stamp.supply === 1 ? "1/1" : editionCount}
                 </PillWithTooltip>
@@ -874,8 +879,8 @@ export function StampInfo(
                       type="icon"
                       name="recursive"
                       weight="normal"
-                      size="xs"
-                      color="neutral600"
+                      size="lg"
+                      color="neutral500"
                       ariaLabel="Recursive"
                     />
                   </IconWithTooltip>
@@ -886,8 +891,8 @@ export function StampInfo(
                       type="icon"
                       name="divisible"
                       weight="normal"
-                      size="xs"
-                      color="neutral600"
+                      size="lg"
+                      color="neutral500"
                       ariaLabel="Divisible"
                     />
                   </IconWithTooltip>
@@ -898,8 +903,8 @@ export function StampInfo(
                       type="icon"
                       name="keyburned"
                       weight="normal"
-                      size="xs"
-                      color="neutral600"
+                      size="lg"
+                      color="neutral500"
                       ariaLabel="Keyburned"
                     />
                   </IconWithTooltip>
@@ -911,8 +916,8 @@ export function StampInfo(
                         type="icon"
                         name="locked"
                         weight="normal"
-                        size="xs"
-                        color="neutral600"
+                        size="lg"
+                        color="neutral500"
                         ariaLabel="Locked"
                       />
                     </IconWithTooltip>
@@ -923,8 +928,8 @@ export function StampInfo(
                         type="icon"
                         name="unlocked"
                         weight="normal"
-                        size="xs"
-                        color="neutral600"
+                        size="lg"
+                        color="neutral500"
                         ariaLabel="Unlocked"
                       />
                     </IconWithTooltip>
@@ -951,12 +956,14 @@ export function StampInfo(
                       type="icon"
                       name="artStamps"
                       weight="normal"
-                      size="xxs"
+                      size="md"
                       color="custom"
-                      className="stroke-color-neutral-500  group-hover:stroke-color-hover transition-colors duration-200"
+                      className={`stroke-color-neutral-500  group-hover:stroke-color-hover ${transitionColors}`}
                       ariaLabel="Collection"
                     />
-                    <span className="font-normal text-xs text-color-neutral-500 group-hover:text-color-hover transition-colors duration-200">
+                    <span
+                      className={`font-normal text-xs text-color-neutral-500 group-hover:text-color-hover ${transitionColors}`}
+                    >
                       {collectionInfo.collection_name}
                     </span>
                   </a>
@@ -1115,9 +1122,9 @@ export function StampInfo(
                             type="iconButton"
                             name="listings"
                             weight="bold"
-                            size="xxsR"
+                            size="md"
                             color="custom"
-                            className="stroke-color-orange-400 group-hover:stroke-color-hover transition-colors duration-200"
+                            className={`stroke-color-orange-400 group-hover:stroke-color-hover ${transitionColors}`}
                             ariaLabel="Listings"
                             onClick={() => {
                               setShowListings(!showListings);
@@ -1140,7 +1147,6 @@ export function StampInfo(
                       <Button
                         variant="flat"
                         color="primary"
-                        size="smR"
                         onClick={() =>
                           toggleModal(
                             selectedDispenser || lowestPriceDispenser,
@@ -1160,7 +1166,7 @@ export function StampInfo(
       {(dispensers?.length >= 2)
         ? (
           <div
-            className={`col-span-full overflow-hidden transition-all duration-500 ease-in-out
+            className={`col-span-full overflow-hidden ${transitionAll} ease-in-out
                       ${
               showListings
                 ? "max-h-[222px] mt-5 opacity-100"

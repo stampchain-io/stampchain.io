@@ -1,6 +1,6 @@
 /* ===== PREVIEW IMAGE MODAL COMPONENT ===== */
 import { ModalBase } from "$components/layout/ModalBase.tsx";
-import { StampTextContent } from "$content";
+import StampTextContent from "$islands/content/stampDetailContent/StampTextContent.tsx";
 import { PlaceholderImage } from "$icon";
 import { closeModal } from "$islands/modal/states.ts";
 import { logger } from "$lib/utils/logger.ts";

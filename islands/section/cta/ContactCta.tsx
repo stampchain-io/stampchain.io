@@ -120,7 +120,6 @@ const ContactCta = () => {
                   type="submit"
                   variant="flat"
                   color="neutral"
-                  size="smR"
                   isSubmitting={isSubmitting}
                 >
                   SEND

@@ -1,5 +1,10 @@
 /* ===== BUTTON STYLES MODULE ===== */
-import { container2Hover, transitionColors } from "$layout";
+import {
+  container2Hover,
+  shadowGlowPurpleSm,
+  transitionColors,
+  transitionTransform,
+} from "$layout";
 import { JSX } from "preact";
 
 /* ===== TYPE DEFINITIONS ===== */
@@ -37,18 +42,10 @@ export interface ButtonVariants {
   >;
   size: Record<
     // when adding new sizes, update the ToggleButton.tsx file too
-    | "xxs"
     | "xs"
     | "sm"
     | "md"
     | "lg"
-    | "xl"
-    | "xxl"
-    | "xxsR"
-    | "xsR"
-    | "smR"
-    | "mdR"
-    | "lgR"
     | "custom",
     string
   >;
@@ -107,19 +104,11 @@ export const buttonStyles: ButtonVariants = {
 
   /* ===== SIZE STYLES ===== */
   size: {
-    xxs: "h-[26px] px-[14px] text-[0.625rem]",
-    xs: "h-[30px] px-[14px] text-xs",
-    sm: "h-[34px] px-4 text-xs",
-    md: "h-[38px] px-4 text-sm",
-    lg: "h-[42px] px-4 text-sm",
-    xl: "h-[46px] px-5 text-base",
-    xxl: "h-[50px] px-6 text-lg",
-    xxsR: "h-[26px] tablet:h-[22px] px-[14px] text-[0.625rem]",
-    xsR: "h-[30px] tablet:h-[26px] px-[14px] text-xs tablet:text-[0.625rem]",
-    smR: "h-[34px] tablet:h-[30px] px-4 text-xs",
-    mdR: "h-[38px] tablet:h-[34px] px-4 text-sm tablet:text-xs",
-    lgR: "h-[42px] tablet:h-[38px] px-4 text-sm",
-    custom: "/* Custom size - allows external sizing via className */",
+    xs: "h-6.5 px-4 text-[0.625rem]",
+    sm: "h-7 px-4 text-[0.625rem]",
+    md: "h-8 px-5 text-[0.625rem]",
+    lg: "h-9 px-5 text-[0.625rem]",
+    custom: "",
   },
 
   /* ===== STATE STYLES ===== */
@@ -143,7 +132,7 @@ export const buttonStyles: ButtonVariants = {
     active: `
       scale-95
       transform
-      transition-transform
+      ${transitionTransform}
     `,
   },
 };
@@ -154,26 +143,27 @@ export const buttonHover = `px-1.5 py-0.5 bg-transparent rounded-full
   hover:bg-gradient-to-b hover:from-color-neutral-700/80 hover:via-color-neutral-800/90 hover:to-color-neutral-800 hover:stroke-color-hover`;
 /* ===== TOGGLE SWITCH BUTTON STYLES ===== */
 export const toggleButton = `flex items-center relative w-10 h-5 !rounded-full
-  ${container2Hover} group focus:outline-none focus-visible:outline-none transition duration-50`;
+  overflow-hidden ${container2Hover} ${shadowGlowPurpleSm} group focus:outline-none
+  focus-visible:outline-none transition duration-50`;
 export const toggleKnobBackground =
   "flex justify-center items-center relative w-5 h-5 bg-transparent rounded-full cursor-pointer transition ease-in-out transform duration-400";
 export const toggleKnob =
   "w-[14px] h-[14px] rounded-full cursor-pointer group-hover:bg-color-primary-400";
 /* ===== SLIDER BUTTON STYLES ===== */
 export const sliderBar =
-  `relative w-full h-5 tablet:h-4 !rounded-full ${container2Hover} group cursor-pointer`;
+  `relative w-full h-3.5 tablet:h-3 !rounded-full ${container2Hover} group cursor-pointer`;
 export const trackFill = `
-  absolute top-0.5 bottom-0.5 h-[14px] tablet:h-[10px] rounded-full transition-colors duration-200 pointer-events-none
+  absolute top-0.5 bottom-0.5 h-2 tablet:h-1.5 rounded-full ${transitionColors} pointer-events-none
   `;
 export const sliderKnob = `
-  absolute top-0.5 bottom-0.5 w-full h-[14px] tablet:h-[10px] rounded-full appearance-none bg-transparent pointer-events-none focus:outline-none focus-visible:outline-none
+  absolute top-0.5 bottom-0.5 w-full h-2 tablet:h-1.5 rounded-full appearance-none bg-transparent pointer-events-none focus:outline-none focus-visible:outline-none
   [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:pointer-events-auto
-  [&::-webkit-slider-thumb]:size-[14px] [&::-webkit-slider-thumb]:tablet:size-[10px]
+  [&::-webkit-slider-thumb]:size-2 [&::-webkit-slider-thumb]:tablet:size-1.5
   [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-color-neutral-400
   group-hover:[&::-webkit-slider-thumb]:bg-color-primary-400 [&::-webkit-slider-thumb]:cursor-grab
   [&::-webkit-slider-thumb]:active:cursor-grabbing
   [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:pointer-events-auto
-  [&::-moz-range-thumb]:size-[14px][&::-moz-range-thumb]:tablet:size-[10px]
+  [&::-moz-range-thumb]:size-2[&::-moz-range-thumb]:tablet:size-1.5
   [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-color-neutral-400
   group-hover:[&::-moz-range-thumb]:bg-color-primary-400 [&::-moz-range-thumb]:cursor-grab
   [&::-moz-range-thumb]:active:cursor-grabbing [&::-moz-range-thumb]:border-0

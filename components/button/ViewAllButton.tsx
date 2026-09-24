@@ -9,7 +9,6 @@ export function ViewAllButton({ href }: ViewAllButtonProps) {
       <Button
         variant="flat"
         color="primary"
-        size="smR"
         href={href}
         f-partial={href}
         target="_top"

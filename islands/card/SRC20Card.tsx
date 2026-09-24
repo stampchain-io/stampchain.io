@@ -1,6 +1,11 @@
 /* ===== SRC20 TRANSACTION CARD COMPONENT ===== */
 import { PlaceholderImage, UserProfileIcon } from "$icon";
-import { container3, containerCard, containerPill } from "$layout";
+import {
+  container3,
+  containerCard,
+  containerPill,
+  transitionAll,
+} from "$layout";
 import { unicodeEscapeToEmoji } from "$lib/utils/ui/formatting/emojiUtils.ts";
 import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { getSRC20ImageSrc } from "$lib/utils/ui/media/imageUtils.ts";
@@ -97,7 +102,9 @@ export function SRC20Card(
 
   const tick = unicodeEscapeToEmoji(src20.tick ?? "");
   const op = (src20.op ?? "").toUpperCase() as "DEPLOY" | "MINT" | "TRANSFER";
-  const imageUrl = imgError ? null : getSRC20ImageSrc(src20) ?? null;
+  const imageUrl = imgError
+    ? null
+    : (src20.deploy_img || getSRC20ImageSrc(src20) || null);
 
   const href = `/src20/${encodeURIComponent(tick)}`;
 
@@ -270,7 +277,7 @@ export function SRC20Card(
           TO
         </div>
         <UserProfileIcon
-          className="w-[14px] h-[14px] stroke-[2] stroke-color-neutral-400 shrink-0"
+          className="w-3.5 h-3.5 stroke-[2] stroke-color-neutral-400 shrink-0"
           wrapperClassName="hidden min-[420px]:flex"
         >
           <span class={cardFileSize}>
@@ -376,7 +383,7 @@ export function SRC20Card(
             <div class="hidden min-[420px]:flex flex-col w-full">
               <div class="w-full h-1 rounded-full bg-color-neutral-800 overflow-hidden">
                 <div
-                  class="h-full rounded-full bg-gradient-to-r from-color-primary-500 via-color-primary-400 to-color-primary-300 transition-all duration-300"
+                  class={`h-full rounded-full bg-gradient-to-r from-color-primary-500 via-color-primary-400 to-color-primary-300 ${transitionAll}`}
                   style={{
                     width: `${Math.min(Math.round(progress), 100)}%`,
                   }}
@@ -402,13 +409,14 @@ export function SRC20Card(
       <>
         {/* ===== BACKGROUND IMAGE with dark overlay gradient (top -> bottom) ===== */}
         {imageUrl && (
-          <div class="absolute inset-0 z-0 overflow-hidden rounded-xl">
+          <div class="absolute inset-0 z-0 overflow-hidden rounded-2xl">
             <img
               src={imageUrl}
               alt=""
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover rounded-2xl"
+              onError={() => setImgError(true)}
             />
-            <div class="absolute inset-0 bg-gradient-to-b from-color-neutral-950/95 via-color-neutral-900/70 to-color-neutral-1000/90" />
+            <div class="absolute inset-0 bg-gradient-to-b from-color-neutral-950/95 via-color-neutral-900/70 to-color-neutral-1000/90 rounded-2xl" />
           </div>
         )}
 
@@ -492,13 +500,14 @@ export function SRC20Card(
     <>
       {/* ===== BACKGROUND IMAGE with dark overlay gradient (top -> bottom) ===== */}
       {imageUrl && (
-        <div class="absolute inset-0 z-0 overflow-hidden rounded-xl">
+        <div class="absolute inset-0 z-0 overflow-hidden rounded-2xl">
           <img
             src={imageUrl}
             alt=""
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover rounded-2xl"
+            onError={() => setImgError(true)}
           />
-          <div class="absolute inset-0 bg-gradient-to-b from-color-neutral-950/95 via-color-neutral-900/70 to-color-neutral-1000/90" />
+          <div class="absolute inset-0 bg-gradient-to-b from-color-neutral-950/95 via-color-neutral-900/70 to-color-neutral-1000/90 rounded-2xl" />
         </div>
       )}
 

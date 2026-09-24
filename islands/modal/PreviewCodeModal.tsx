@@ -1,6 +1,10 @@
 /* ===== PREVIEW CODE MODAL COMPONENT ===== */
+import {
+  type CodeViewMode,
+  ViewCodeButton,
+} from "$islands/button/ViewCodeButton.tsx";
 import { closeModal } from "$islands/modal/states.ts";
-import { ModalBase } from "$layout";
+import { container2Icon, ModalBase } from "$layout";
 import { logger } from "$lib/utils/logger.ts";
 import type { PreviewCodeModalProps } from "$types/ui.d.ts";
 import { useEffect, useState } from "preact/hooks";
@@ -10,12 +14,14 @@ import { useEffect, useState } from "preact/hooks";
 /* ===== COMPONENT ===== */
 export default function PreviewCodeModal({ src }: PreviewCodeModalProps) {
   /* ===== STATE ===== */
-  const [formattedSrc, setFormattedSrc] = useState("");
+  const codeRaw = src ? src : "No content available";
+  const [codeFormatted, setCodeFormatted] = useState("");
+  const [codeView, setCodeView] = useState<CodeViewMode>("codeRaw");
 
   /* ===== EFFECTS ===== */
   // Effect to format the source code
   useEffect(() => {
-    setFormattedSrc(formatHtmlSource(src ?? ""));
+    setCodeFormatted(formatHtmlSource(src ?? ""));
   }, [src]);
 
   /* ===== HELPER FUNCTIONS ===== */
@@ -85,13 +91,24 @@ export default function PreviewCodeModal({ src }: PreviewCodeModalProps) {
       }}
       title=""
       hideHeader
-      className="w-[calc(100vw-40px)] h-[calc(100vh-40px)] mobileLg:w-[calc(100vw-80px)] mobileLg:h-[calc(100vh-80px)] max-w-[800px]"
-      contentClassName="h-full bg-[#FAFAFA] rounded-2xl overflow-auto scrollbar-background-layer1"
+      className={`!w-[calc(100vw-12px)] h-[calc(100vh-12px)]
+        mobileLg:!w-[calc(100vw-20px)] mobileLg:h-[calc(100vh-20px)]
+        tablet:!w-[calc(100vw-32px)] tablet:h-[calc(100vh-32px)]
+        !max-w-[calc(100vw-12px)] mobileLg:!max-w-[800px]`}
+      contentClassName="h-full bg-color-neutral-50 rounded-2xl"
     >
+      {/* ===== VIEW TOGGLE ===== */}
+      <div class="absolute top-1 right-1 z-10">
+        <div
+          class={`${container2Icon} !bg-none !bg-color-neutral-200 !border-color-neutral-400`}
+        >
+          <ViewCodeButton mode={codeView} onChange={setCodeView} />
+        </div>
+      </div>
       {/* ===== CODE DISPLAY ===== */}
-      <div class="flex flex-col w-full h-full p-5">
-        <code class="whitespace-pre-wrap text-xs text-color-neutral-600 leading-tight pb-5">
-          {formattedSrc}
+      <div class="flex flex-col w-full h-full p-3 overflow-auto scrollbar-background-layer1">
+        <code class="whitespace-pre-wrap text-xs text-color-neutral-800 leading-tight pb-3">
+          {codeView === "codeRaw" ? codeRaw : codeFormatted}
         </code>
       </div>
     </ModalBase>

@@ -84,7 +84,7 @@ export function ModalBase({
   return (
     <div /* similar to container1 design on the drawers - importing the class consts doesn't display properly */
       className={`
-        relative w-[340px] min-[420px]:w-[360px] mobileMd:w-[380px] p-5
+        relative w-[340px] min-[420px]:w-[360px] mobileMd:w-[380px] p-3
         ${container0} rounded-3xl
         border border-color-neutral-800
         ${shadow} ${className}
@@ -95,16 +95,16 @@ export function ModalBase({
         {!hideHeader && (
           <>
             <div
-              class="absolute -top-[16px] -right-[16px] ms-auto cursor-pointer"
+              class="absolute -top-2 -right-2 ms-auto cursor-pointer"
               onMouseEnter={handleCloseMouseEnter}
               onMouseLeave={handleCloseMouseLeave}
             >
               <Icon
                 type="iconButton"
                 name="close"
-                size="mdR"
+                size="xl"
                 weight="bold"
-                color="neutral400"
+                color="neutral600"
                 ariaLabel="Close modal"
                 onClick={() => handleClose()}
               />

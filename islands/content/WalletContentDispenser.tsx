@@ -6,10 +6,10 @@ import BuyStampModal from "$islands/modal/BuyStampModal.tsx";
 import { openModal } from "$islands/modal/states.ts";
 import { containerBackground, StatItem, StatPrice, StatTitle } from "$layout";
 import type { WalletOverviewInfo } from "$lib/types/wallet.d.ts";
+import { formatEditionCount } from "$lib/utils/ui/formatting/formatEditionCount.ts";
 import {
   abbreviateAddress,
   formatBTCAmount,
-  formatEditionCount,
 } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { tooltipIcon } from "$notification";
 import { headingGreyLD, textXs, titleNeutral } from "$text";
@@ -179,9 +179,8 @@ function StampStats({
                 type="icon"
                 name="divisible"
                 weight="normal"
-                size="custom"
+                size="lg"
                 color="neutral400"
-                className="w-[23px] h-[23px]"
               />
               <div
                 className={`${tooltipIcon} ${
@@ -202,7 +201,7 @@ function StampStats({
                 type="icon"
                 name="keyburned"
                 weight="normal"
-                size="xs"
+                size="lg"
                 color="neutral400"
               />
               <div
@@ -224,7 +223,7 @@ function StampStats({
                 type="icon"
                 name="locked"
                 weight="normal"
-                size="xs"
+                size="lg"
                 color="neutral400"
               />
               <div
@@ -246,7 +245,7 @@ function StampStats({
                 type="icon"
                 name="unlocked"
                 weight="normal"
-                size="xs"
+                size="lg"
                 color="neutral400"
               />
               <div
@@ -372,7 +371,6 @@ function DispenserStats({
           <Button
             variant="outline"
             color="primary"
-            size="md"
             onClick={handleOpenBuyModal}
           >
             BUY
@@ -480,7 +478,7 @@ function WalletOverview({ walletData }: { walletData: WalletOverviewInfo }) {
             type="iconButton"
             name="copy"
             weight="normal"
-            size="mdR"
+            size="md"
             color="neutral500"
             onClick={copy}
           />

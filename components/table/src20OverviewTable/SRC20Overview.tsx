@@ -11,6 +11,7 @@ import {
   container2,
   EmptyState,
   shadowGlowPurple,
+  transitionAll,
 } from "$layout";
 import {
   isBrowser,
@@ -164,7 +165,7 @@ export function SRC20Overview({
       : "text-color-neutral-500";
 
     const clickableClass = isClickable
-      ? "cursor-pointer transition-all duration-200 select-none"
+      ? `cursor-pointer ${transitionAll} select-none`
       : "";
 
     const sortIndicator = isSelected ? "relative" : "";
@@ -195,9 +196,9 @@ export function SRC20Overview({
           type="icon"
           name="caretUp"
           weight="normal"
-          size="xxxs"
+          size="md"
           color="custom"
-          className={`stroke-color-primary-400 transition-all duration-200 transform ${
+          className={`stroke-color-primary-400 ${transitionAll} ${
             currentSort?.direction === "desc" ? "scale-y-[-1]" : ""
           }`}
         />
@@ -522,7 +523,7 @@ export function SRC20Overview({
                       <Button
                         variant="outline"
                         color="custom"
-                        size="xxs"
+                        size="xs"
                         class="rounded-xl border-color-neutral-600 text-color-neutral-600 hover:border-color-neutral-600 hover:text-color-neutral-600 !cursor-not-allowed"
                       >
                         SOON

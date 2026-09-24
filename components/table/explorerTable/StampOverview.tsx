@@ -154,7 +154,7 @@ export function StampOverviewRow({ stamp }: StampOverviewRowProps) {
             type="icon"
             name="artStamp"
             weight="bold"
-            size="xxs"
+            size="md"
             color="custom"
             className="stroke-color-neutral-200"
           />

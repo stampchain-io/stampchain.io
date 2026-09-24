@@ -7,6 +7,7 @@ import {
   iconStyles,
   IconVariants,
 } from "$icon";
+import { transitionAll } from "$components/layout/styles.ts";
 
 /* ===== COMPONENT ===== */
 export function Icon(props: IconVariants) {
@@ -80,11 +81,29 @@ export function Icon(props: IconVariants) {
       speedMedium: "time30",
       speedFast: "time60",
 
+      // Artboard Icons
+      undo: "undo",
+      redo: "redo",
+      dropper: "dropper",
+      grid: "grid",
+      gridsnap: "magnet",
+      ruler: "ruler",
+      horizontalGuide: "arrowHorizontal",
+      verticalGuide: "arrowVertical",
+      clearGuides: "trashcan",
+      bold: "bold",
+      italic: "italic",
+      justifyLeft: "justifyLeft",
+      justifyCenter: "justifyCenter",
+      justifyRight: "justifyRight",
+
       // View Mode Icons
       viewCardRow: "gridRow",
       viewCardVertical: "gridVertical",
       viewCardSquare: "gridSquare",
       viewCardHorizontal: "gridHorizontal",
+      viewCardSingle: "gridSingle",
+      viewCardMixed: "gridMixed",
 
       // Caret Icons
       caretUp: "caretUp",
@@ -110,6 +129,9 @@ export function Icon(props: IconVariants) {
       previewImage: "image",
       previewCode: "imageCode",
       previewImageRaw: "imageOut",
+      // - Preview Code Modal Icons
+      previewCodeRaw: "codeRaw",
+      previewCodeFormatted: "codeFormatted",
       // - Media Icons
       play: "play",
       pause: "pause",
@@ -164,7 +186,6 @@ export function Icon(props: IconVariants) {
       externallink: "imageOut",
       loading: "refresh",
       refresh: "refresh",
-      eye: "eye",
     };
 
     const iconName = iconNameMap[name as keyof typeof iconNameMap];
@@ -300,7 +321,7 @@ export function BadgeIcon({ text, className = "" }: BadgeVariants) {
         size-5 rounded-full
         font-semibold text-[10px] text-color-hover tracking-wider
         bg-transparent group-hover:bg-gradient-to-b group-hover:from-color-neutral-800 group-hover:via-color-neutral-800 group-hover:to-color-neutral-900 border border-color-neutral-700
-        transition-all duration-200 cursor-pointer
+        ${transitionAll} cursor-pointer
         ${text === "0" ? "opacity-0" : "opacity-100"}
         ${className}
       `}

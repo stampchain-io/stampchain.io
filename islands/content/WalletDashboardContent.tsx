@@ -299,14 +299,14 @@ function DispenserRow(
                 type="iconButton"
                 name="copy"
                 weight="normal"
-                size="xs"
+                size="md"
                 color="neutral400"
               />
               <Icon
                 type="iconButton"
                 name="history"
                 weight="normal"
-                size="xs"
+                size="md"
                 color="neutral400"
               />
             </div>

@@ -1,5 +1,6 @@
 /* ===== ERROR DISPLAY COMPONENT ===== */
 import { Icon } from "$icon";
+import { transitionColors } from "$layout";
 import {
   ErrorHandlingUtils,
   ErrorInfo,
@@ -99,7 +100,7 @@ export function ErrorDisplay({
       >
         <Icon
           name={styles.iconName}
-          size="sm"
+          size="md"
           type="icon"
           weight="normal"
           color="custom"
@@ -111,7 +112,7 @@ export function ErrorDisplay({
           <button
             type="button"
             onClick={onRetry}
-            class="text-xs px-2 py-1 bg-gray-700 hover:bg-gray-600 rounded transition-colors"
+            class={`text-xs px-2 py-1 bg-gray-700 hover:bg-gray-600 rounded ${transitionColors}`}
           >
             Retry
           </button>
@@ -121,11 +122,11 @@ export function ErrorDisplay({
           <button
             type="button"
             onClick={onDismiss}
-            class="text-gray-400 hover:text-white transition-colors"
+            class={`text-gray-400 hover:text-white ${transitionColors}`}
           >
             <Icon
               name="x"
-              size="xs"
+              size="md"
               type="icon"
               weight="normal"
               color="custom"
@@ -196,7 +197,7 @@ export function ErrorDisplay({
             <button
               type="button"
               onClick={onRetry}
-              class="px-3 py-1 text-sm bg-blue-600 hover:bg-blue-500 text-white rounded transition-colors"
+              class={`px-3 py-1 text-sm bg-blue-600 hover:bg-blue-500 text-white rounded ${transitionColors}`}
             >
               Try Again
             </button>
@@ -206,12 +207,12 @@ export function ErrorDisplay({
             <button
               type="button"
               onClick={onDismiss}
-              class="p-1 text-gray-400 hover:text-white transition-colors"
+              class={`p-1 text-gray-400 hover:text-white ${transitionColors}`}
               aria-label="Dismiss error"
             >
               <Icon
                 name="x"
-                size="sm"
+                size="md"
                 type="icon"
                 weight="normal"
                 color="custom"

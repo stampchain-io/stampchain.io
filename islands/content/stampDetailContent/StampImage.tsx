@@ -316,7 +316,7 @@ function RightPanel(
         ${container2} pt-0.5 pb-[1px] px-0.5 tablet:${container3}
         tablet:absolute tablet:inset-x-0 tablet:bottom-0 tablet:z-10
         tablet:opacity-0 tablet:translate-y-3 tablet:pointer-events-none
-        tablet:transition-all tablet:duration-300 tablet:ease-out
+        tablet:transition-all tablet:duration-500 tablet:will-change-transform tablet:ease-out
         tablet:group-hover/panel:opacity-100 tablet:group-hover/panel:translate-y-0
         tablet:group-hover/panel:pointer-events-auto`}
     >
@@ -331,9 +331,8 @@ function RightPanel(
             type="iconButton"
             name="copyLink"
             weight="normal"
-            size="custom"
+            size="xl"
             color="neutral400"
-            className="w-[25px] h-[25px] tablet:w-[21px] tablet:h-[21px]"
             onClick={copyLink}
           />
           <div
@@ -359,9 +358,8 @@ function RightPanel(
             type="iconButton"
             name="share"
             weight="normal"
-            size="custom"
+            size="xl"
             color="neutral400"
-            className="w-[25px] h-[25px] tablet:w-[21px] tablet:h-[21px]"
             onClick={shareContent}
             ariaLabel="Share content"
           />
@@ -383,7 +381,7 @@ function RightPanel(
             type="iconButton"
             name="twitterImage"
             weight="normal"
-            size="smR"
+            size="xl"
             color="neutral400"
             onClick={shareToX}
             ariaLabel="Share on X"
@@ -410,7 +408,7 @@ function RightPanel(
               type="iconButton"
               name="previewCode"
               weight="normal"
-              size="smR"
+              size="xl"
               color="neutral400"
               onClick={() => {
                 setIsCodeTooltipVisible(false);
@@ -436,7 +434,7 @@ function RightPanel(
             type="iconButton"
             name="downloadImage"
             weight="normal"
-            size="smR"
+            size="xl"
             color="neutral400"
             onClick={handleDownloadPreview}
             ariaLabel="Download stamp preview image"
@@ -458,7 +456,7 @@ function RightPanel(
             type="iconButton"
             name="previewImageRaw"
             weight="normal"
-            size="smR"
+            size="xl"
             color="neutral400"
             onClick={() =>
               globalThis.open(
@@ -489,7 +487,7 @@ function RightPanel(
             type="iconButton"
             name="previewImage"
             weight="normal"
-            size="smR"
+            size="xl"
             color="neutral400"
             onClick={() => {
               setIsFullscreenTooltipVisible(false);

@@ -65,7 +65,7 @@ const socialLinks = [
         type="iconButton"
         name="twitter"
         weight="light"
-        size="smR"
+        size="lg"
         color="neutral400"
         href="https://x.com/Stampchain"
         target="_blank"
@@ -78,7 +78,7 @@ const socialLinks = [
         type="iconButton"
         name="telegram"
         weight="light"
-        size="smR"
+        size="lg"
         color="neutral400"
         href="https://t.me/BitcoinStamps"
         target="_blank"
@@ -91,7 +91,7 @@ const socialLinks = [
         type="iconButton"
         name="discord"
         weight="light"
-        size="smR"
+        size="lg"
         color="neutral400"
         href="https://discord.gg/BRYRt4bH"
         target="_blank"
@@ -104,7 +104,7 @@ const socialLinks = [
         type="iconButton"
         name="github"
         weight="light"
-        size="smR"
+        size="lg"
         color="neutral400"
         href="https://github.com/stampchain-io/"
         target="_blank"
@@ -125,7 +125,7 @@ export function Footer() {
     ">
       {/* ===== MOBILE SMALL CENTER SECTION - MOBILE MEDIUM+ LEFT SECTION ===== */}
       <div
-        class={`${containerBackground} !py-3 tablet:flex-row justify-between`}
+        class={`${containerBackground} !py-2.5 tablet:flex-row justify-between`}
       >
         <div class="
         flex flex-col mobileMd:flex-row tablet:flex-col w-full

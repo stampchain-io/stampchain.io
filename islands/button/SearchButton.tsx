@@ -33,10 +33,10 @@ export function SearchButton() {
       <Icon
         type="iconButton"
         name="search"
-        weight="normal"
+        weight="light"
         size="custom"
         color="neutral400"
-        className="w-[25px] h-[25px] tablet:w-[21px] tablet:h-[21px]"
+        className="w-6 h-6"
         onClick={openContextualSearch}
         role="button"
         aria-label="Search"

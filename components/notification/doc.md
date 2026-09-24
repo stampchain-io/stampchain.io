@@ -238,7 +238,7 @@ Please clear browser cache ...            ← notificationFooter
 ### Manual Close
 
 - **Close button**: Always available, `absolute top-0.5 right-0.5`
-- **Icon**: `Icon` `type="iconButton"` `name="close"` `weight="bold"` `size="mdR"` `color="neutral400"`
+- **Icon**: `Icon` `type="iconButton"` `name="close"` `weight="bold"` `size="lg"` `color="neutral400"`
 - **Instant response**: Triggers `notification-exit` animation immediately, then removes the toast after 400ms
 - **Accessible**: Proper ARIA labels and keyboard support
 

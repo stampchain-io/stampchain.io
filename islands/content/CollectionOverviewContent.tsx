@@ -10,7 +10,7 @@ export function CollectionOverviewContent({
 }: CollectionOverviewContentProps) {
   /* ===== RENDER ===== */
   return (
-    <div class="w-full pt-5">
+    <div class="w-full pt-3">
       <CollectionGallery
         collections={collections}
         viewMode={viewMode}

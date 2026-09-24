@@ -489,7 +489,7 @@ const Radio = ({ label, value, checked, onChange, name }: RadioProps) => {
 
   return (
     <div
-      class="flex items-center py-1.5 mobileLg:py-1.5 cursor-pointer group"
+      class="flex items-center py-1 cursor-pointer group"
       onMouseLeave={handleMouseLeave}
       onClick={handleChange}
     >
@@ -921,7 +921,7 @@ export const FilterContentMarketplace = ({
           ]}
           value={filters.market || "listings"}
           onChange={handleMarketSelectorChange}
-          size="xsR"
+          size="xs"
           color="primary"
           className="w-full"
         />

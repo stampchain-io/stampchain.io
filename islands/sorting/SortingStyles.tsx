@@ -7,6 +7,7 @@
 import { buttonStyles } from "$button";
 import { SortingComponent } from "$islands/sorting/SortingComponent.tsx";
 import { SortingProvider } from "$islands/sorting/SortingProvider.tsx";
+import { transitionAll, transitionColors } from "$layout";
 import type { ButtonSize } from "$lib/constants/uiConstants.ts";
 import { cardPriceCompact } from "$text";
 import type {
@@ -24,7 +25,6 @@ import type {
  */
 function mapButtonSizeToSortingSize(size: ButtonSize): "sm" | "md" | "lg" {
   switch (size) {
-    case "xxs":
     case "xs":
       return "sm";
     case "sm":
@@ -32,7 +32,6 @@ function mapButtonSizeToSortingSize(size: ButtonSize): "sm" | "md" | "lg" {
     case "md":
       return "md";
     case "lg":
-    case "xl":
       return "lg";
     default:
       return "md";
@@ -81,7 +80,7 @@ function StyledSortingDropdown({
           font-medium text-color-grey-dark
           placeholder:font-light placeholder:text-color-grey-dark
           outline-none focus:outline-none
-          transition-colors duration-200
+          ${transitionColors}
           ${className}
         `}
       />
@@ -109,7 +108,7 @@ function StyledSortingButtons({
       ${buttonStyles.base}
       ${buttonStyles.size[size]}
       font-medium
-      transition-all duration-300
+      ${transitionAll}
       border-2
     `;
 
@@ -223,7 +222,7 @@ function StyledSortingLabel({
         className={`
           sorting-label--styled
           ${getVariantClasses()}
-          transition-colors duration-300
+          ${transitionColors}
           ${className}
         `}
       />

@@ -114,6 +114,7 @@ import * as $collection_id_ from "./routes/collection/[id].tsx";
 import * as $collection_index from "./routes/collection/index.tsx";
 import * as $config from "./routes/config.ts";
 import * as $content_imgpath_ from "./routes/content/[...imgpath].tsx";
+import * as $create_recursivestamp from "./routes/create/recursivestamp.tsx";
 import * as $dashboard_address_ from "./routes/dashboard/[address].tsx";
 import * as $docs_index from "./routes/docs/index.tsx";
 import * as $explorer_index from "./routes/explorer/index.tsx";
@@ -162,6 +163,7 @@ import * as $Toast_NotificationUpdate from "./islands/Toast/NotificationUpdate.t
 import * as $Toast_ToastComponent from "./islands/Toast/ToastComponent.tsx";
 import * as $Toast_ToastProvider from "./islands/Toast/ToastProvider.tsx";
 import * as $WebVitalsReporter from "./islands/WebVitalsReporter.tsx";
+import * as $button_CollectionButton from "./islands/button/CollectionButton.tsx";
 import * as $button_FilterButton from "./islands/button/FilterButton.tsx";
 import * as $button_MenuButton from "./islands/button/MenuButton.tsx";
 import * as $button_PaginationButtons from "./islands/button/PaginationButtons.tsx";
@@ -176,6 +178,7 @@ import * as $button_ToggleButton from "./islands/button/ToggleButton.tsx";
 import * as $button_ToolsButton from "./islands/button/ToolsButton.tsx";
 import * as $button_TrendingButton from "./islands/button/TrendingButton.tsx";
 import * as $button_ViewButton from "./islands/button/ViewButton.tsx";
+import * as $button_ViewCodeButton from "./islands/button/ViewCodeButton.tsx";
 import * as $button_WalletButton from "./islands/button/WalletButton.tsx";
 import * as $button_buttonActions from "./islands/button/buttonActions.tsx";
 import * as $card_SRC20Card from "./islands/card/SRC20Card.tsx";
@@ -192,6 +195,9 @@ import * as $content_WalletDashboardContent from "./islands/content/WalletDashbo
 import * as $content_WalletDashboardDetails from "./islands/content/WalletDashboardDetails.tsx";
 import * as $content_blockContent_BlockSelector from "./islands/content/blockContent/BlockSelector.tsx";
 import * as $content_blockContent_BlockTransactions from "./islands/content/blockContent/BlockTransactions.tsx";
+import * as $content_createContent_CreateStampClassicContent from "./islands/content/createContent/CreateStampClassicContent.tsx";
+import * as $content_createContent_CreateStampPoshContent from "./islands/content/createContent/CreateStampPoshContent.tsx";
+import * as $content_createContent_StampRecursiveContent from "./islands/content/createContent/StampRecursiveContent.tsx";
 import * as $content_faqContent_AccordionBase from "./islands/content/faqContent/AccordionBase.tsx";
 import * as $content_faqContent_FaqAccordion from "./islands/content/faqContent/FaqAccordion.tsx";
 import * as $content_index from "./islands/content/index.ts";
@@ -212,6 +218,7 @@ import * as $filter_FilterOptionsExplorerStamp from "./islands/filter/FilterOpti
 import * as $filter_FilterOptionsMarketplace from "./islands/filter/FilterOptionsMarketplace.tsx";
 import * as $filter_FilterOptionsSRC20 from "./islands/filter/FilterOptionsSRC20.tsx";
 import * as $form_Checkbox from "./islands/form/Checkbox.tsx";
+import * as $form_ColorPicker from "./islands/form/ColorPicker.tsx";
 import * as $form_InputField from "./islands/form/InputField.tsx";
 import * as $form_SRC20InputField from "./islands/form/SRC20InputField.tsx";
 import * as $form_SearchErrorDisplay from "./islands/form/SearchErrorDisplay.tsx";
@@ -223,6 +230,8 @@ import * as $header_BlockHeader from "./islands/header/BlockHeader.tsx";
 import * as $header_CollectionDetailHeader_v2 from "./islands/header/CollectionDetailHeader-v2.tsx";
 import * as $header_CollectionDetailHeader from "./islands/header/CollectionDetailHeader.tsx";
 import * as $header_CollectionOverviewHeader from "./islands/header/CollectionOverviewHeader.tsx";
+import * as $header_CreateStampHeader from "./islands/header/CreateStampHeader.tsx";
+import * as $header_CreateStampRecursiveHeader from "./islands/header/CreateStampRecursiveHeader.tsx";
 import * as $header_ExplorerHeader from "./islands/header/ExplorerHeader.tsx";
 import * as $header_Header from "./islands/header/Header.tsx";
 import * as $header_MarketplaceHeader from "./islands/header/MarketplaceHeader.tsx";
@@ -256,6 +265,7 @@ import * as $modal_PreviewImageModal from "./islands/modal/PreviewImageModal.tsx
 import * as $modal_RecieveAddyModal from "./islands/modal/RecieveAddyModal.tsx";
 import * as $modal_SearchSRC20Modal from "./islands/modal/SearchSRC20Modal.tsx";
 import * as $modal_SearchStampModal from "./islands/modal/SearchStampModal.tsx";
+import * as $modal_SearchStampPickerModal from "./islands/modal/SearchStampPickerModal.tsx";
 import * as $modal_SendBTCModal from "./islands/modal/SendBTCModal.tsx";
 import * as $modal_states from "./islands/modal/states.ts";
 import * as $section_FeeCalculatorBase from "./islands/section/FeeCalculatorBase.tsx";
@@ -467,6 +477,7 @@ const manifest = {
     "./routes/collection/index.tsx": $collection_index,
     "./routes/config.ts": $config,
     "./routes/content/[...imgpath].tsx": $content_imgpath_,
+    "./routes/create/recursivestamp.tsx": $create_recursivestamp,
     "./routes/dashboard/[address].tsx": $dashboard_address_,
     "./routes/docs/index.tsx": $docs_index,
     "./routes/explorer/index.tsx": $explorer_index,
@@ -519,6 +530,7 @@ const manifest = {
     "./islands/Toast/ToastComponent.tsx": $Toast_ToastComponent,
     "./islands/Toast/ToastProvider.tsx": $Toast_ToastProvider,
     "./islands/WebVitalsReporter.tsx": $WebVitalsReporter,
+    "./islands/button/CollectionButton.tsx": $button_CollectionButton,
     "./islands/button/FilterButton.tsx": $button_FilterButton,
     "./islands/button/MenuButton.tsx": $button_MenuButton,
     "./islands/button/PaginationButtons.tsx": $button_PaginationButtons,
@@ -534,6 +546,7 @@ const manifest = {
     "./islands/button/ToolsButton.tsx": $button_ToolsButton,
     "./islands/button/TrendingButton.tsx": $button_TrendingButton,
     "./islands/button/ViewButton.tsx": $button_ViewButton,
+    "./islands/button/ViewCodeButton.tsx": $button_ViewCodeButton,
     "./islands/button/WalletButton.tsx": $button_WalletButton,
     "./islands/button/buttonActions.tsx": $button_buttonActions,
     "./islands/card/SRC20Card.tsx": $card_SRC20Card,
@@ -557,6 +570,12 @@ const manifest = {
       $content_blockContent_BlockSelector,
     "./islands/content/blockContent/BlockTransactions.tsx":
       $content_blockContent_BlockTransactions,
+    "./islands/content/createContent/CreateStampClassicContent.tsx":
+      $content_createContent_CreateStampClassicContent,
+    "./islands/content/createContent/CreateStampPoshContent.tsx":
+      $content_createContent_CreateStampPoshContent,
+    "./islands/content/createContent/StampRecursiveContent.tsx":
+      $content_createContent_StampRecursiveContent,
     "./islands/content/faqContent/AccordionBase.tsx":
       $content_faqContent_AccordionBase,
     "./islands/content/faqContent/FaqAccordion.tsx":
@@ -588,6 +607,7 @@ const manifest = {
       $filter_FilterOptionsMarketplace,
     "./islands/filter/FilterOptionsSRC20.tsx": $filter_FilterOptionsSRC20,
     "./islands/form/Checkbox.tsx": $form_Checkbox,
+    "./islands/form/ColorPicker.tsx": $form_ColorPicker,
     "./islands/form/InputField.tsx": $form_InputField,
     "./islands/form/SRC20InputField.tsx": $form_SRC20InputField,
     "./islands/form/SearchErrorDisplay.tsx": $form_SearchErrorDisplay,
@@ -602,6 +622,9 @@ const manifest = {
       $header_CollectionDetailHeader,
     "./islands/header/CollectionOverviewHeader.tsx":
       $header_CollectionOverviewHeader,
+    "./islands/header/CreateStampHeader.tsx": $header_CreateStampHeader,
+    "./islands/header/CreateStampRecursiveHeader.tsx":
+      $header_CreateStampRecursiveHeader,
     "./islands/header/ExplorerHeader.tsx": $header_ExplorerHeader,
     "./islands/header/Header.tsx": $header_Header,
     "./islands/header/MarketplaceHeader.tsx": $header_MarketplaceHeader,
@@ -636,6 +659,7 @@ const manifest = {
     "./islands/modal/RecieveAddyModal.tsx": $modal_RecieveAddyModal,
     "./islands/modal/SearchSRC20Modal.tsx": $modal_SearchSRC20Modal,
     "./islands/modal/SearchStampModal.tsx": $modal_SearchStampModal,
+    "./islands/modal/SearchStampPickerModal.tsx": $modal_SearchStampPickerModal,
     "./islands/modal/SendBTCModal.tsx": $modal_SendBTCModal,
     "./islands/modal/states.ts": $modal_states,
     "./islands/section/FeeCalculatorBase.tsx": $section_FeeCalculatorBase,

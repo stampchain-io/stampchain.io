@@ -1,5 +1,6 @@
 import { Icon } from "$icon";
 import type { Toast as ToastTypeFromProvider } from "$islands/Toast/ToastProvider.tsx";
+import { transitionAll } from "$layout";
 import {
   notificationBody,
   notificationContainerError,
@@ -105,30 +106,30 @@ export const ToastComponent = (
           corner without being constrained by the container's padding
           (this container intentionally has no overflow-hidden). */
       }
-      <div class="absolute top-0.5 right-0.5">
+      <div class="absolute top-1 right-1">
         <Icon
           type="iconButton"
           name="close"
           weight="bold"
-          size="mdR"
+          size="lg"
           color="neutral400"
           ariaLabel="Close notification"
           onClick={onClose}
         />
       </div>
 
-      <div class="flex items-start space-x-6 pr-8">
+      <div class="flex items-start space-x-3 pr-6">
         <Icon
           type="icon"
           name={getIconName(type)}
           weight="bold"
-          size="xs"
+          size="xl"
           color="custom"
-          className={`${getIconColor(type)} mt-0.5`}
+          className={`${getIconColor(type)}`}
           ariaLabel={`${type} notification`}
         />
 
-        <div class="flex-1 ml-6 break-words">
+        <div class="flex-1 mt-[1px] ml-3 break-words">
           {isUpdate
             ? (
               <>
@@ -167,7 +168,7 @@ export const ToastComponent = (
           <div
             class={`h-full rounded-full ${
               getProgressBarColor(type)
-            } transition-all ease-linear`}
+            } ${transitionAll} ease-linear`}
             style={{
               animation: `progress ${duration}ms linear forwards`,
             }}

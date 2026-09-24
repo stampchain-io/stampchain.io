@@ -21,8 +21,10 @@ import type {
   AriaRole,
   ComponentChildren,
   ComponentProps,
+  FocusEventHandler,
   JSX,
   Ref,
+  TargetedEvent,
 } from "preact";
 
 // Re-export button types for use by other modules
@@ -361,7 +363,7 @@ export interface ExtendedComponentProps extends BaseComponentProps {
   style?: JSX.CSSProperties;
   onClick?:
     | MouseEventHandler<HTMLElement>
-    | ((event: JSX.TargetedEvent<HTMLButtonElement>) => void);
+    | ((event: TargetedEvent<HTMLButtonElement>) => void);
   onKeyDown?: KeyboardEventHandler;
   role?: string;
   tabIndex?: number;
@@ -508,7 +510,7 @@ export interface IconProps extends BaseComponentProps {
   weight?: "light" | "regular" | "bold" | undefined;
   onClick?:
     | MouseEventHandler<HTMLElement>
-    | ((event: JSX.TargetedEvent<HTMLButtonElement>) => void);
+    | ((event: TargetedEvent<HTMLButtonElement>) => void);
 }
 
 /**
@@ -524,7 +526,7 @@ export interface IconButtonProps extends BaseComponentProps {
   isActive?: boolean;
   onClick?:
     | MouseEventHandler<HTMLElement>
-    | ((event: JSX.TargetedEvent<HTMLButtonElement>) => void);
+    | ((event: TargetedEvent<HTMLButtonElement>) => void);
   "aria-label": string; // Required for accessibility
   href?: string;
 }
@@ -543,11 +545,11 @@ export interface BaseButtonProps extends BaseComponentProps {
   type?: "button" | "submit" | "reset";
   onClick?:
     | MouseEventHandler<HTMLElement>
-    | ((event: JSX.TargetedEvent<HTMLButtonElement>) => void);
+    | ((event: TargetedEvent<HTMLButtonElement>) => void);
   onMouseEnter?: MouseEventHandler;
   onMouseLeave?: MouseEventHandler;
-  onFocus?: JSX.FocusEventHandler<HTMLElement>;
-  onBlur?: JSX.FocusEventHandler<HTMLElement>;
+  onFocus?: FocusEventHandler<HTMLElement>;
+  onBlur?: FocusEventHandler<HTMLElement>;
   "data-type"?: string;
   "f-partial"?: string;
   role?: string;
@@ -701,9 +703,9 @@ export interface InputProps extends FormControlProps {
   value?: string;
   defaultValue?: string;
   placeholder?: string;
-  onChange?: (event: JSX.TargetedEvent<HTMLInputElement, Event>) => void;
-  onBlur?: (event: JSX.TargetedEvent<HTMLInputElement, FocusEvent>) => void;
-  onFocus?: (event: JSX.TargetedEvent<HTMLInputElement, FocusEvent>) => void;
+  onChange?: (event: TargetedEvent<HTMLInputElement, Event>) => void;
+  onBlur?: (event: TargetedEvent<HTMLInputElement, FocusEvent>) => void;
+  onFocus?: (event: TargetedEvent<HTMLInputElement, FocusEvent>) => void;
   autoComplete?: string;
   maxLength?: number;
   minLength?: number;
@@ -714,7 +716,7 @@ export interface InputProps extends FormControlProps {
  * Input field component props (extends InputProps with additional features)
  */
 export interface InputFieldProps extends InputProps {
-  onInput?: (event: JSX.TargetedEvent<HTMLInputElement, Event>) => void;
+  onInput?: (event: TargetedEvent<HTMLInputElement, Event>) => void;
   inputMode?:
     | "text"
     | "decimal"
@@ -750,7 +752,18 @@ export interface SelectFieldProps extends FormControlProps {
   onChange?: (value: string) => void;
   multiple?: boolean;
   size?: ButtonSize;
-  onClick?: (event: JSX.TargetedEvent<HTMLSelectElement, Event>) => void;
+  onClick?: (event: TargetedEvent<HTMLSelectElement, Event>) => void;
+}
+
+/**
+ * Dark-themed popover color picker (hex default).
+ */
+export interface ColorPickerProps {
+  value: string;
+  onChange: (hex: string) => void;
+  ariaLabel?: string;
+  showValue?: boolean;
+  class?: string;
 }
 
 // =============================================================================
@@ -1459,7 +1472,7 @@ export interface ScrollContainerProps {
   className?: string;
   maxHeight?: string;
   class?: string;
-  onScroll?: (event: JSX.TargetedEvent<HTMLElement, Event>) => void;
+  onScroll?: (event: TargetedEvent<HTMLElement, Event>) => void;
 }
 
 export interface SectionHeaderProps {
@@ -2009,22 +2022,13 @@ export interface ComponentWithChildren extends ExtendedComponentProps {
  * Icon size variants
  */
 export type IconSize =
+  | "xs"
   | "sm"
   | "md"
   | "lg"
   | "xl"
-  | "custom"
-  | "xxs"
-  | "xs"
-  | "xxsR"
-  | "xsR"
-  | "smR"
-  | "mdR"
-  | "lgR"
-  | "xxxs"
   | "xxl"
-  | "xlR"
-  | "xxlR";
+  | "custom";
 
 /**
  * Icon weight variants
@@ -2230,20 +2234,20 @@ export interface ExplorerContentProps extends BaseComponentProps {
 }
 
 /**
- * Explorer Header component props
+ * ExplorerHeaderProps - Props for the ExplorerHeader island
  */
-export interface ExplorerHeaderProps extends BaseComponentProps {
+export type ExplorerHeaderProps = {
   currentSection?: "all" | "stamps" | "tokens";
   viewMode?: "cardVertical" | "cardSquare" | "cardRow";
-  // Counts for the section-selector's PillContentCount badge — combined
+  // Counts for the section-selector's PillContentCount badge - combined
   // for "all", stamps-only for "stamps", tokens-only for "tokens"
   stampsTotal?: number;
   tokensTotal?: number;
-  // Current sort direction from the URL — passed down so SortButton stays
+  // Current sort direction from the URL - passed down so SortButton stays
   // in sync across Fresh partial navigations instead of relying on
   // client-only URL tracking
   sortBy?: "ASC" | "DESC";
-}
+};
 
 /**
  * Wallet page — Stamps container sub-tabs
@@ -4271,6 +4275,69 @@ export interface HowToStepProps {
 export interface NumberedHowToStepProps extends HowToStepProps {
   number: number;
 }
+
+/**
+ * Recursive stamp builder — CSS filter values for a canvas layer
+ */
+export interface RecursiveStampFilters {
+  brightness: number;
+  contrast: number;
+  saturate: number;
+  hue: number;
+  grayscale: number;
+}
+
+/**
+ * Recursive stamp builder — stamp or text layer on the canvas
+ */
+export interface RecursiveStampLayer {
+  id: string;
+  name: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  r: number;
+  flipH: boolean;
+  flipV: boolean;
+  op: number;
+  vis: boolean;
+  filters: RecursiveStampFilters;
+  locked?: boolean;
+  group?: string;
+  type?: "text";
+  text?: string;
+  font?: string;
+  fontSize?: number;
+  color?: string;
+  bold?: boolean;
+  italic?: boolean;
+  align?: "left" | "center" | "right";
+  num?: number;
+  hash?: string;
+  cpid?: string | null;
+  url?: string;
+  mime?: string;
+  ident?: string | null;
+  b64?: string | null;
+}
+
+/**
+ * Recursive stamp builder — user-placed canvas guide
+ */
+export interface RecursiveStampGuide {
+  id: string;
+  type: "h" | "v";
+  pos: number;
+}
+
+export type RecursiveStampMode = "edit" | "preview";
+
+export type CreateStampHeaderProps = BaseComponentProps;
+
+export type CreateStampRecursiveHeaderProps = BaseComponentProps;
+
+export type RecursiveStampContentProps = BaseComponentProps;
 
 /**
  * JSX Extension for f-partial attribute support

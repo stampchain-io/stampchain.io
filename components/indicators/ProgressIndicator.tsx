@@ -1,4 +1,5 @@
 import { Icon } from "$icon";
+import { transitionAll } from "$layout";
 import type {
   ProgressIndicatorProps,
   SpinnerProps,
@@ -64,7 +65,7 @@ export function ProgressIndicator({
             <Icon
               type="icon"
               name={config.icon}
-              size="xs"
+              size="md"
               weight="normal"
               color="custom"
               className={`fill-${config.color}`}
@@ -99,7 +100,7 @@ export function TransactionProgress({
             {/* Step indicator */}
             <div class="flex flex-col items-center">
               <div
-                class={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
+                class={`w-8 h-8 rounded-full flex items-center justify-center ${transitionAll} ${
                   step.status === "completed"
                     ? "bg-purple-500 text-white"
                     : step.status === "active"
@@ -114,7 +115,7 @@ export function TransactionProgress({
                     <Icon
                       type="icon"
                       name="check"
-                      size="xs"
+                      size="md"
                       weight="normal"
                       color="custom"
                       className="fill-white"
@@ -125,7 +126,7 @@ export function TransactionProgress({
                     <Icon
                       type="icon"
                       name="close"
-                      size="xs"
+                      size="md"
                       weight="normal"
                       color="custom"
                       className="fill-red-400"
@@ -156,7 +157,7 @@ export function TransactionProgress({
             {index < steps.length - 1 && (
               <div class="flex-1 h-0.5 mx-2 mt-[-20px]">
                 <div
-                  class={`h-full transition-all duration-500 ${
+                  class={`h-full ${transitionAll} ${
                     steps[index + 1].status !== "pending"
                       ? "bg-purple-500"
                       : "bg-color-grey-light/30"
