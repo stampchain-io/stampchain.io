@@ -147,10 +147,13 @@ export default function App({ Component, state, url }: PageProps<unknown>) {
               animation-play-state: paused !important;
             }
 
-            /* Reduced motion support (accessibility) */
-            .reduced-motion *,
-            .reduced-motion *::before,
-            .reduced-motion *::after {
+            /* Reduced motion support (accessibility).
+               Elements marked .motion-essential are exempt: their animation
+               carries information (toast countdown bar, loading spinners),
+               and collapsing it to 0.01ms hides that information. */
+            .reduced-motion *:not(.motion-essential),
+            .reduced-motion *:not(.motion-essential)::before,
+            .reduced-motion *:not(.motion-essential)::after {
               animation-duration: 0.01ms !important;
               animation-iteration-count: 1 !important;
               transition-duration: 0.01ms !important;

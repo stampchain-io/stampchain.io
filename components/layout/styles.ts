@@ -198,7 +198,9 @@ export const imageUploadTool =
 // Text loader styles are defined in /text/styles.ts
 // Skeleton loader styles are defined in /layout/SkeletonLoader.tsx
 // Base loader style
-const loaderSpin = "animate-spin rounded-full border-b-[2px]";
+// motion-essential: the spin is the "work in progress" cue, so it is exempt
+// from the global reduced-motion override in routes/_app.tsx.
+const loaderSpin = "motion-essential animate-spin rounded-full border-b-[2px]";
 export const loaderSkeleton =
   `bg-color-background border border-color-border animate-pulse`;
 // Spinning loader styles
