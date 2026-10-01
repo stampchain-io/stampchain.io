@@ -197,7 +197,7 @@ import * as $content_blockContent_BlockSelector from "./islands/content/blockCon
 import * as $content_blockContent_BlockTransactions from "./islands/content/blockContent/BlockTransactions.tsx";
 import * as $content_createContent_CreateStampClassicContent from "./islands/content/createContent/CreateStampClassicContent.tsx";
 import * as $content_createContent_CreateStampPoshContent from "./islands/content/createContent/CreateStampPoshContent.tsx";
-import * as $content_createContent_StampRecursiveContent from "./islands/content/createContent/StampRecursiveContent.tsx";
+import * as $content_createContent_CreateStampRecursiveContent from "./islands/content/createContent/CreateStampRecursiveContent.tsx";
 import * as $content_faqContent_AccordionBase from "./islands/content/faqContent/AccordionBase.tsx";
 import * as $content_faqContent_FaqAccordion from "./islands/content/faqContent/FaqAccordion.tsx";
 import * as $content_index from "./islands/content/index.ts";
@@ -574,8 +574,8 @@ const manifest = {
       $content_createContent_CreateStampClassicContent,
     "./islands/content/createContent/CreateStampPoshContent.tsx":
       $content_createContent_CreateStampPoshContent,
-    "./islands/content/createContent/StampRecursiveContent.tsx":
-      $content_createContent_StampRecursiveContent,
+    "./islands/content/createContent/CreateStampRecursiveContent.tsx":
+      $content_createContent_CreateStampRecursiveContent,
     "./islands/content/faqContent/AccordionBase.tsx":
       $content_faqContent_AccordionBase,
     "./islands/content/faqContent/FaqAccordion.tsx":

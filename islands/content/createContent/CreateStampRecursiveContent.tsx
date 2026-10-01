@@ -899,7 +899,7 @@ function RulerTicks({ axis }: { axis: "h" | "v" }) {
   return <>{marks}</>;
 }
 
-export function StampRecursiveContent(
+export function CreateStampRecursiveContent(
   _props: RecursiveStampContentProps = {},
 ) {
   const {
