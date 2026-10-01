@@ -307,7 +307,7 @@ function SendBTCModal({
           );
         }
       } else if (signResult.cancelled) {
-        showToast("Transaction signing was cancelled.", "info");
+        showToast("Transaction signing was cancelled.", "warning");
       } else {
         const signError = signResult.error || "Unknown signing error";
         logger.error("ui", {

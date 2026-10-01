@@ -1235,7 +1235,7 @@ function StampingToolMain({ config }: { config: Config }) {
             errorLower.includes("cancelled") ||
             errorLower.includes("user denied")
           ) {
-            showToast("Transaction signing was cancelled.", "info");
+            showToast("Transaction signing was cancelled.", "warning");
           } else {
             showToast(result.error, "error");
           }
@@ -1247,7 +1247,7 @@ function StampingToolMain({ config }: { config: Config }) {
           logger.debug("stamps", {
             message: "Transaction was cancelled by user",
           });
-          showToast("Transaction signing was cancelled.", "info");
+          showToast("Transaction signing was cancelled.", "warning");
           setIsSubmitting(false);
           return;
         }

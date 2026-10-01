@@ -150,8 +150,8 @@ export const iconStyles = {
   /* ===== SIZE VARIANTS ===== */
   // icon must use bigger sizes than icon button
   size: {
-    xs: "w-1.5 h-1.5", // Updated sizing
-    sm: "w-2.5 h-2.5", // Updated sizing
+    xs: "w-1.5 h-1.5",
+    sm: "w-2.5 h-2.5",
     md: "w-3.5 h-3.5", // Standard icon size with Container2Icon wrapper
     lg: "w-4.5 h-4.5", // Used in footer
     xl: "w-5.5 h-5.5", // Standard icon size used in header, stamp image right panel and standard icon buttons

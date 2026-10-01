@@ -360,7 +360,7 @@ const DonateStampModal = ({
           }`,
         );
       } else {
-        showToast("Transaction signing was cancelled.", "info");
+        showToast("Transaction signing was cancelled.", "warning");
       }
     });
   };
