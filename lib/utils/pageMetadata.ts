@@ -10,7 +10,8 @@
  * Rules enforced by `tests/unit/utils/pageMetadata.test.ts`:
  *   - title       <= 60 chars (Google truncates around here)
  *   - description <= 155 chars
- *   - both unique across every static entry
+ *   - both unique across every static entry, except `/create/recursive`,
+ *     which intentionally shares the stamping tool's title
  *
  * Copy is grounded in what each page actually renders and in real Search
  * Console demand for `sc-domain:stampchain.io`. Do not add claims about the
@@ -162,6 +163,12 @@ export const STATIC_PAGE_METADATA: Record<string, PageMetadata> = {
     title: "Create a Bitcoin Stamp | Stamping Tool",
     description:
       "Stamp artwork into Bitcoin. Upload a file, set the edition count, choose a custom CPID or posh name, lock the supply and tune the fee before signing.",
+  },
+
+  "/create/recursive": {
+    title: "Create a Bitcoin Stamp | Stamping Tool",
+    description:
+      "Build a recursive Bitcoin Stamp from stamps already on-chain. Arrange the layers, name the piece, then sign and broadcast.",
   },
 
   "/tool/fairmint": {
