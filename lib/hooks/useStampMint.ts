@@ -8,11 +8,6 @@ import { useConfig } from "$client/hooks/useConfig.ts";
 import { walletContext } from "$client/wallet/wallet.ts";
 import { getWalletProvider } from "$client/wallet/walletHelper.ts";
 import { useFees } from "$lib/hooks/useFees.ts";
-import {
-  isMaraUnavailableError,
-  type StampSubmissionMessage,
-  useMaraMode,
-} from "$lib/hooks/useMaraMode.ts";
 import { useTransactionConstructionService } from "$lib/hooks/useTransactionConstructionService.ts";
 import { logger } from "$lib/utils/logger.ts";
 import { validateWalletAddressForMinting } from "$lib/utils/scriptTypeUtils.ts";
@@ -36,12 +31,15 @@ import { Fragment, h } from "preact";
 import { useEffect, useState } from "preact/hooks";
 
 /* ===== TYPES ===== */
+export interface StampSubmissionMessage {
+  message: string;
+  txid?: string;
+}
+
 export interface UseStampMintOptions {
   variant: StampMintVariant;
   /** File content to mint; null until the caller has something valid. */
   payload: StampMintPayload | null;
-  /** Enable MARA Slipstream mode (activated via `?outputValue=`). */
-  enableMara?: boolean;
   /** Caller-specific reason minting is blocked (e.g. payload too large). */
   extraBlockReason?: string | null;
   /** Skip network fee estimation (e.g. while the caller is still editing). */
@@ -59,7 +57,6 @@ export function useStampMint(options: UseStampMintOptions) {
   const {
     variant,
     payload,
-    enableMara = false,
     extraBlockReason = null,
     pauseEstimation = false,
     onSuccess,
@@ -91,15 +88,6 @@ export function useStampMint(options: UseStampMintOptions) {
     undefined,
   );
 
-  /* ===== MARA ===== */
-  const mara = useMaraMode({
-    enabled: enableMara,
-    setFee,
-    setApiError,
-    setSubmissionMessage,
-  });
-  const { maraMode, outputValue, maraFeeRate } = mara;
-
   /* ===== FEE ESTIMATION ===== */
   const estimation = useTransactionConstructionService({
     toolType: "stamp",
@@ -119,7 +107,6 @@ export function useStampMint(options: UseStampMintOptions) {
       : 1,
     locked: isLocked,
     divisible: false,
-    ...(maraMode && outputValue !== null ? { outputValue } : {}),
   });
 
   const progressiveFeeDetails = estimation.getBestEstimate();
@@ -133,9 +120,9 @@ export function useStampMint(options: UseStampMintOptions) {
     setExactFeeDetails(null);
   }, [fee, issuance, isLocked, payload?.file]);
 
-  // Follow the network fee unless MARA dictates the rate
+  // Follow the recommended network fee
   useEffect(() => {
-    if (fees && !feesLoading && !maraMode) {
+    if (fees && !feesLoading) {
       const recommended = fees.recommendedFee;
       if (recommended != null && recommended >= MIN_FEE_RATE) {
         setFee(recommended);
@@ -144,7 +131,7 @@ export function useStampMint(options: UseStampMintOptions) {
     if (typeof fees?.btcPrice === "number" && fees.btcPrice > 0) {
       setBTCPrice(fees.btcPrice);
     }
-  }, [fees, feesLoading, maraMode]);
+  }, [fees, feesLoading]);
 
   // Validate the connected wallet address type for minting
   useEffect(() => {
@@ -172,18 +159,6 @@ export function useStampMint(options: UseStampMintOptions) {
 
   /* ===== INPUT HANDLERS ===== */
   const handleChangeFee = (newFee: number) => {
-    // In MARA mode only allow fee rates at/above the (buffered) MARA minimum
-    if (maraMode && maraFeeRate !== null) {
-      if (newFee < maraFeeRate) {
-        logger.warn("stamps", {
-          message: "Fee rate must be at least MARA minimum (buffered)",
-          attemptedFee: newFee,
-          maraMinFee: maraFeeRate,
-        });
-      }
-      setFee(Math.max(newFee, maraFeeRate));
-      return;
-    }
     setFee(Math.max(newFee, MIN_FEE_RATE));
   };
 
@@ -223,14 +198,12 @@ export function useStampMint(options: UseStampMintOptions) {
     setApiError("");
     setSubmissionMessage(null);
     setExactFeeDetails(null);
-    if (!maraMode) {
-      const recommended = fees?.recommendedFee;
-      setFee(
-        recommended != null && recommended >= MIN_FEE_RATE
-          ? recommended
-          : DEFAULT_FEE_RATE,
-      );
-    }
+    const recommended = fees?.recommendedFee;
+    setFee(
+      recommended != null && recommended >= MIN_FEE_RATE
+        ? recommended
+        : DEFAULT_FEE_RATE,
+    );
   };
 
   const finishSuccess = () => {
@@ -254,10 +227,6 @@ export function useStampMint(options: UseStampMintOptions) {
     logger.info("stamps", {
       message: "processSignedTransaction called",
       variant,
-      maraMode,
-      hasOutputValue: mintPayload.outputValue !== undefined,
-      outputValue: mintPayload.outputValue,
-      maraFeeRate: mintPayload.maraFeeRate,
     });
 
     const response = await axiod.post("/api/v2/olga/mint", mintPayload);
@@ -286,13 +255,12 @@ export function useStampMint(options: UseStampMintOptions) {
       index: input.signingIndex,
     }));
 
-    // MARA mode must not auto-broadcast: the signed tx goes to the MARA pool
     const result = await walletProvider.signPSBT(
       mintResponse.hex,
       inputsToSign,
       true, // enableRBF
       undefined, // sighashTypes
-      !maraMode, // autoBroadcast
+      true, // autoBroadcast
     );
 
     logger.debug("stamps", {
@@ -303,7 +271,6 @@ export function useStampMint(options: UseStampMintOptions) {
         signed: result?.signed === true,
         cancelled: result?.cancelled === true,
         txid: result?.txid,
-        maraMode,
       },
     });
 
@@ -359,107 +326,6 @@ export function useStampMint(options: UseStampMintOptions) {
         "error",
         false,
       );
-      return;
-    }
-
-    /* ----- MARA: submit the signed tx to the pool ----- */
-    if (maraMode) {
-      if (!result.psbt) {
-        // Wallet may have broadcast despite autoBroadcast=false
-        if (result.txid) {
-          logger.warn("stamps", {
-            message:
-              "MARA mode: Wallet broadcast transaction despite autoBroadcast=false",
-            txid: result.txid,
-          });
-          showToast(
-            `Transaction broadcast by wallet.\n${result.txid.substring(0, 10)}`,
-            "success",
-            false,
-          );
-          finishSuccess();
-          return;
-        }
-        logger.error("stamps", {
-          message:
-            "MARA mode: No signed transaction hex available for submission",
-          walletProvider: wallet?.provider,
-          resultKeys: Object.keys(result),
-        });
-        setApiError(
-          "MARA mode requires signed transaction hex but wallet didn't provide it. Please try switching to standard stamping mode.",
-        );
-        return;
-      }
-
-      try {
-        mara.prepareDebugHex(result.psbt);
-        await mara.submitToMara(result.psbt);
-        finishSuccess();
-      } catch (maraError) {
-        const errorMessage = (maraError as Error)?.message || "";
-        logger.error("stamps", {
-          message: "MARA submission failed, attempting fallback",
-          error: errorMessage,
-        });
-
-        if (isMaraUnavailableError(errorMessage)) {
-          mara.setMaraUnavailable(true);
-          setApiError(
-            "MARA pool is temporarily unavailable. You can switch to standard stamping or retry later.",
-          );
-          mara.setShowMaraUnavailableModal(true);
-          return;
-        }
-
-        // Other errors: attempt automatic fallback to standard broadcasting
-        try {
-          if (result.txid) {
-            showToast(
-              `MARA failed, but transaction was broadcast.\n${
-                result.txid.substring(0, 10)
-              }`,
-              "info",
-              false,
-            );
-            finishSuccess();
-            return;
-          }
-          if (result.psbt && walletProvider.broadcastPSBT) {
-            const fallbackTxid = await walletProvider.broadcastPSBT(
-              result.psbt,
-            );
-            logger.info("stamps", {
-              message: "Fallback broadcast successful",
-              txid: fallbackTxid,
-              method: "wallet_broadcast_psbt",
-            });
-            showToast(
-              `MARA failed, broadcasted via wallet.\n${
-                fallbackTxid.substring(0, 10)
-              }`,
-              "info",
-              false,
-            );
-            finishSuccess();
-            return;
-          }
-          setApiError(
-            `MARA submission failed and automatic fallback unsuccessful.\nError: ${errorMessage}.\nPlease try switching to standard stamping mode.`,
-          );
-        } catch (fallbackError) {
-          logger.error("stamps", {
-            message: "Both MARA submission and fallback failed",
-            maraError: errorMessage,
-            fallbackError: (fallbackError as Error)?.message,
-          });
-          setApiError(
-            "MARA submission and fallback both failed. Please try switching to standard stamping mode.",
-          );
-        }
-        mara.setMaraUnavailable(true);
-        mara.setShowMaraUnavailableModal(true);
-      }
       return;
     }
 
@@ -520,11 +386,6 @@ export function useStampMint(options: UseStampMintOptions) {
     logger.info("stamps", {
       message: "Starting mint process",
       variant,
-      maraMode,
-      outputValue,
-      maraFeeRate,
-      hasMaraError: !!mara.maraError,
-      maraUnavailable: mara.maraUnavailable,
     });
 
     setIsSubmitting(true);
@@ -552,21 +413,11 @@ export function useStampMint(options: UseStampMintOptions) {
         includeCustomCpid,
         serviceFee: config.MINTING_SERVICE_FEE,
         serviceFeeAddress: config.MINTING_SERVICE_FEE_ADDRESS,
-        ...(maraMode && outputValue !== null
-          ? { mara: { outputValue, feeRate: maraFeeRate } }
-          : {}),
       });
 
       // Phase 3: exact fee estimation before building the final transaction
       const exactFeeResult = await estimation.estimateExact();
       setExactFeeDetails({ ...exactFeeResult, hasExactFees: true });
-
-      // MARA: require explicit confirmation before proceeding
-      if (maraMode && outputValue !== null) {
-        mara.setPendingMintPayload(mintRequest);
-        mara.setShowMaraWarning(true);
-        return;
-      }
 
       await processSignedTransaction(mintRequest);
     } catch (error) {
@@ -574,29 +425,6 @@ export function useStampMint(options: UseStampMintOptions) {
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  /* ===== MARA WARNING MODAL HANDLERS ===== */
-  const confirmMaraWarning = async () => {
-    const pending = mara.pendingMintPayload;
-    mara.setShowMaraWarning(false);
-    if (!pending) return;
-
-    setIsSubmitting(true);
-    try {
-      await processSignedTransaction(pending);
-    } catch (error) {
-      reportMintError(error);
-    } finally {
-      mara.setPendingMintPayload(null);
-      setIsSubmitting(false);
-    }
-  };
-
-  const cancelMaraWarning = () => {
-    mara.setShowMaraWarning(false);
-    mara.setPendingMintPayload(null);
-    setIsSubmitting(false);
   };
 
   return {
@@ -648,11 +476,6 @@ export function useStampMint(options: UseStampMintOptions) {
       feeEstimationError: estimation.error,
       clearError: estimation.clearError,
     },
-
-    // MARA
-    mara,
-    confirmMaraWarning,
-    cancelMaraWarning,
   };
 }
 

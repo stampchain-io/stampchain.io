@@ -32,10 +32,6 @@ export interface StampMintRequest {
   divisible: boolean;
   isPoshStamp: boolean;
   dryRun?: boolean;
-  /** MARA custom dust value */
-  outputValue?: number;
-  /** MARA-specified fee rate */
-  maraFeeRate?: number;
 }
 
 export interface FileValidationResult {
@@ -220,8 +216,6 @@ export interface BuildMintRequestParams {
   includeCustomCpid: boolean;
   serviceFee: string | null | undefined;
   serviceFeeAddress: string | null | undefined;
-  /** MARA parameters, only when MARA mode is active. */
-  mara?: { outputValue: number; feeRate: number | null };
 }
 
 /** Build the POST /api/v2/olga/mint body for a real (non dry-run) mint. */
@@ -241,10 +235,6 @@ export function buildMintRequest(p: BuildMintRequestParams): StampMintRequest {
   };
   const usesName = p.variant === "posh" || p.includeCustomCpid;
   if (usesName && p.stampName) request.assetName = p.stampName;
-  if (p.mara) {
-    request.outputValue = p.mara.outputValue;
-    if (p.mara.feeRate !== null) request.maraFeeRate = p.mara.feeRate;
-  }
   return request;
 }
 

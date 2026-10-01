@@ -214,7 +214,7 @@ Deno.test("isStampFormValid is variant aware", () => {
   );
 });
 
-Deno.test("buildMintRequest sets posh flag, asset name and MARA params", () => {
+Deno.test("buildMintRequest sets posh flag and asset name", () => {
   const common = {
     sourceWallet: "bc1qtest",
     payload: { file: "AAAA", filename: "a.png", fileSize: 3 },
@@ -248,18 +248,7 @@ Deno.test("buildMintRequest sets posh flag, asset name and MARA params", () => {
     ...common,
     variant: "posh",
     stampName: "Bob",
-    mara: { outputValue: 100, feeRate: 6.1 },
   });
   assertEquals(posh.isPoshStamp, true);
   assertEquals(posh.assetName, "Bob");
-  assertEquals(posh.outputValue, 100);
-  assertEquals(posh.maraFeeRate, 6.1);
-
-  const maraNoRate = buildMintRequest({
-    ...common,
-    variant: "classic",
-    stampName: "",
-    mara: { outputValue: 50, feeRate: null },
-  });
-  assertEquals("maraFeeRate" in maraNoRate, false);
 });

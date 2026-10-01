@@ -5,8 +5,6 @@ import { useStampMint } from "$lib/hooks/useStampMint.ts";
 import {
   CreateStampLayout,
   StampCpidToggleRow,
-  StampMaraDebug,
-  StampMaraNotices,
   StampMintPanel,
   StampUploadWorkspace,
 } from "$islands/content/createContent/CreateStampBase.tsx";
@@ -16,13 +14,11 @@ export function CreateStampClassicContent() {
   const mint = useStampMint({
     variant: "classic",
     payload: stampFile.payload,
-    enableMara: true,
     onSuccess: stampFile.clearFile,
   });
 
   return (
     <div class="flex flex-col w-full">
-      <StampMaraNotices mint={mint} />
       <CreateStampLayout
         title="STAMP"
         sidebar={
@@ -31,7 +27,8 @@ export function CreateStampClassicContent() {
             cpidRow={<StampCpidToggleRow mint={mint} />}
             fileType={stampFile.file?.type || "image/png"}
             fileSize={stampFile.file?.size ?? 0}
-            fileUploadError={stampFile.fileError || null}
+            fileUploadError={stampFile.fileError || stampFile.fileWarning ||
+              null}
           />
         }
       >
@@ -41,7 +38,6 @@ export function CreateStampClassicContent() {
           disabled={mint.isSubmitting}
         />
       </CreateStampLayout>
-      <StampMaraDebug mint={mint} />
     </div>
   );
 }
