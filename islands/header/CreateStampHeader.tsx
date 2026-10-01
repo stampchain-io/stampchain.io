@@ -3,9 +3,9 @@ import { SelectorButtons } from "$button";
 import { Icon } from "$icon";
 import { openModal } from "$islands/modal/states.ts";
 import { container2Icon, ModalBase, ScrollFadeRow } from "$layout";
+import { useSSRSafeNavigation } from "$lib/hooks/useSSRSafeNavigation.ts";
 import { textSm, titlePrimary } from "$text";
-import type { CreateStampHeaderProps } from "$types/ui.d.ts";
-import { useState } from "preact/hooks";
+import type { CreateStampHeaderProps, CreateStampType } from "$types/ui.d.ts";
 
 const SHORTCUTS: Array<{ keys: string; action: string }> = [
   { keys: "Cmd/Ctrl+Z · ⇧Z", action: "Undo / Redo" },
@@ -53,10 +53,23 @@ export function openShortcutsModal(): void {
   openModal(<ShortcutsModal />, "zoomInOut");
 }
 
+const CREATE_STAMP_TYPES: readonly CreateStampType[] = [
+  "classic",
+  "posh",
+  "recursive",
+];
+
 export function CreateStampHeader(
-  _props: CreateStampHeaderProps = {},
+  { active = "recursive" }: CreateStampHeaderProps = {},
 ) {
-  const [stampType, setStampType] = useState("recursive");
+  const { navigate } = useSSRSafeNavigation();
+  const stampType = active;
+
+  const handleTypeChange = (value: string) => {
+    if (value === active) return;
+    if (!CREATE_STAMP_TYPES.includes(value as CreateStampType)) return;
+    navigate(`/create/${value}`);
+  };
 
   return (
     <div class="flex flex-col w-full gap-1.5">
@@ -72,29 +85,31 @@ export function CreateStampHeader(
               { value: "recursive", label: "RECURSIVE" },
             ]}
             value={stampType}
-            onChange={setStampType}
+            onChange={handleTypeChange}
             size="xs"
             color="primary"
           />
         </div>
 
-        {/* Info - Right */}
-        <div class="flex shrink-0 ml-auto">
-          <div class={container2Icon}>
-            <Icon
-              type="iconButton"
-              name="info"
-              weight="normal"
-              size="md"
-              color="neutral400"
-              ariaLabel="Keyboard shortcuts"
-              onClick={(e) => {
-                e.preventDefault();
-                openShortcutsModal();
-              }}
-            />
+        {/* Info - Right (canvas shortcuts only apply to the recursive editor) */}
+        {active === "recursive" && (
+          <div class="flex shrink-0 ml-auto">
+            <div class={container2Icon}>
+              <Icon
+                type="iconButton"
+                name="info"
+                weight="normal"
+                size="md"
+                color="neutral400"
+                ariaLabel="Keyboard shortcuts"
+                onClick={(e) => {
+                  e.preventDefault();
+                  openShortcutsModal();
+                }}
+              />
+            </div>
           </div>
-        </div>
+        )}
       </ScrollFadeRow>
     </div>
   );

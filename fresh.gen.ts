@@ -197,6 +197,7 @@ import * as $content_WalletDashboardContent from "./islands/content/WalletDashbo
 import * as $content_WalletDashboardDetails from "./islands/content/WalletDashboardDetails.tsx";
 import * as $content_blockContent_BlockSelector from "./islands/content/blockContent/BlockSelector.tsx";
 import * as $content_blockContent_BlockTransactions from "./islands/content/blockContent/BlockTransactions.tsx";
+import * as $content_createContent_CreateStampBase from "./islands/content/createContent/CreateStampBase.tsx";
 import * as $content_createContent_CreateStampClassicContent from "./islands/content/createContent/CreateStampClassicContent.tsx";
 import * as $content_createContent_CreateStampPoshContent from "./islands/content/createContent/CreateStampPoshContent.tsx";
 import * as $content_createContent_CreateStampRecursiveContent from "./islands/content/createContent/CreateStampRecursiveContent.tsx";
@@ -574,6 +575,8 @@ const manifest = {
       $content_blockContent_BlockSelector,
     "./islands/content/blockContent/BlockTransactions.tsx":
       $content_blockContent_BlockTransactions,
+    "./islands/content/createContent/CreateStampBase.tsx":
+      $content_createContent_CreateStampBase,
     "./islands/content/createContent/CreateStampClassicContent.tsx":
       $content_createContent_CreateStampClassicContent,
     "./islands/content/createContent/CreateStampPoshContent.tsx":

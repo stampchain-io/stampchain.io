@@ -1,14 +1,15 @@
 /* ===== RECURSIVE STAMP CONTENT ===== */
 import { Button, buttonHover, ToggleSwitchButton } from "$button";
 import { StampCard } from "$card";
-import { useConfig } from "$client/hooks/useConfig.ts";
 import { walletContext } from "$client/wallet/wallet.ts";
-import { getWalletProvider } from "$client/wallet/walletHelper.ts";
-import { ProgressiveEstimationIndicator } from "$components/indicators/ProgressiveEstimationIndicator.tsx";
-import { useFees } from "$fees";
 import { inputField, inputNumeric, messageError } from "$form";
 import { CreateStampRecursiveHeader, openShortcutsModal } from "$header";
 import { Icon, PlaceholderImage, UserProfileIcon } from "$icon";
+import {
+  buildGeneratedStampRow,
+  StampCpidToggleRow,
+  StampMintPanel,
+} from "$islands/content/createContent/CreateStampBase.tsx";
 import { RangeSlider } from "$islands/button/RangeSlider.tsx";
 import { ColorPicker } from "$islands/form/ColorPicker.tsx";
 import { InputField } from "$islands/form/InputField.tsx";
@@ -71,15 +72,13 @@ import {
   ungroupSelection,
   useRecursiveStampState,
 } from "$lib/hooks/useRecursiveStampState.ts";
-import { useTransactionConstructionService } from "$lib/hooks/useTransactionConstructionService.ts";
 import {
   fetchStampById,
   fetchStampsByCreator,
 } from "$lib/utils/api/stamps/fetchStamp.ts";
+import { useStampMint } from "$lib/hooks/useStampMint.ts";
 import { logger } from "$lib/utils/logger.ts";
-import { validateWalletAddressForMinting } from "$lib/utils/scriptTypeUtils.ts";
 import {
-  extractErrorMessage,
   MAX_STAMP_FILE_BYTES,
   textToBase64,
   utf8ByteLength,
@@ -107,26 +106,20 @@ import {
   type SmartGuideLine,
   snapMove,
 } from "$lib/utils/ui/rendering/recursiveStampSnap.ts";
-import { StatusMessages } from "$notification";
-import { FeeCalculatorBase } from "$section";
 import {
   cardCreator,
   cardStampNumber,
   labelSm,
   labelXs,
   subtitlePrimary,
-  text,
   textXs,
   truncate,
 } from "$text";
-import type { NormalizedMintResponse } from "$types/api.d.ts";
-import type { Config } from "$types/base.d.ts";
 import type { StampRow } from "$types/stamp.d.ts";
 import type {
   RecursiveStampContentProps,
   RecursiveStampLayer,
 } from "$types/ui.d.ts";
-import axiod from "axiod";
 import type { ComponentChildren, JSX } from "preact";
 import {
   useEffect,
@@ -135,22 +128,6 @@ import {
   useRef,
   useState,
 } from "preact/hooks";
-
-/** Request body for POST /api/v2/olga/mint (mirrors StampingTool). */
-interface RecursiveMintRequest {
-  sourceWallet: string | undefined;
-  qty: string;
-  locked: boolean;
-  filename: string;
-  file: string;
-  satsPerVB: number;
-  service_fee: string | null | undefined;
-  service_fee_address: string | null | undefined;
-  assetName?: string;
-  divisible: boolean;
-  isPoshStamp: boolean;
-  dryRun: boolean;
-}
 
 /** Filename used for the generated recursive HTML stamp file. */
 const RECURSIVE_STAMP_FILENAME = "recursive.html";
@@ -270,39 +247,6 @@ function layerToStampRow(layer: RecursiveStampLayer): StampRow {
     tx_hash: layer.hash ?? "",
     stamp_base64: layer.b64 ?? "",
   } as StampRow;
-}
-
-function buildGeneratedStampRow(opts: {
-  html: string;
-  issuance: string;
-  stampName: string;
-  creator: string;
-  creatorName: string | null;
-  locked: boolean;
-}): StampRow {
-  const supply = parseInt(opts.issuance, 10);
-  return {
-    stamp: 1234567,
-    cpid: opts.stampName || "AUTO GENERATED",
-    ident: "SRC-721",
-    block_index: 0,
-    block_time: new Date(),
-    tx_hash: "preview",
-    tx_index: 0,
-    creator: opts.creator,
-    creator_name: opts.creatorName,
-    divisible: false,
-    keyburn: null,
-    locked: opts.locked ? 1 : 0,
-    supply: Number.isFinite(supply) && supply > 0 ? supply : 1,
-    stamp_base64: "",
-    stamp_mimetype: "text/html",
-    stamp_url: "",
-    stamp_hash: "",
-    file_hash: "",
-    file_size_bytes: new TextEncoder().encode(opts.html).length,
-    unbound_quantity: 0,
-  };
 }
 
 function liveHtmlSrc(
@@ -989,27 +933,10 @@ export function CreateStampRecursiveContent(
   const [creatorMore, setCreatorMore] = useState<StampRow[]>([]);
   const [showCreatorAssets, setShowCreatorAssets] = useState(false);
   const [recent, setRecent] = useState<RecentItem[]>([]);
-  const { wallet, isConnected } = walletContext;
-  const address = isConnected ? wallet.address : undefined;
-  const { config } = useConfig<Config>();
-  const { fees } = useFees();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [apiError, setApiError] = useState("");
-  const [addressError, setAddressError] = useState<string | undefined>(
-    undefined,
-  );
-  const [fee, setFee] = useState(1);
-  const [BTCPrice, setBTCPrice] = useState(60000);
-  const [tosAgreed, setTosAgreed] = useState(false);
+  const { isConnected } = walletContext;
   const [previewView, setPreviewView] = useState<"canvas" | "cards">(
     "canvas",
   );
-  const [issuance, setIssuance] = useState("1");
-  const [issuanceError, setIssuanceError] = useState("");
-  const [isLocked, setIsLocked] = useState(true);
-  const [stampName, setStampName] = useState("");
-  const [stampNameError, setStampNameError] = useState("");
-  const [includeCustomCpid, setIncludeCustomCpid] = useState(false);
   const [useTxHashEndpoint, setUseTxHashEndpoint] = useState(false);
   const [includeTitle, setIncludeTitle] = useState(false);
   const [stampTitle, setStampTitle] = useState("");
@@ -1150,16 +1077,6 @@ export function CreateStampRecursiveContent(
   useEffect(() => {
     setPosDraft({});
   }, [selId]);
-
-  useEffect(() => {
-    const recommended = fees?.recommendedFee;
-    if (recommended != null && recommended >= 0.1) {
-      setFee(recommended);
-    }
-    if (typeof fees?.btcPrice === "number" && fees.btcPrice > 0) {
-      setBTCPrice(fees.btcPrice);
-    }
-  }, [fees]);
 
   const getPreview = async (raw?: string) => {
     const id = (raw ?? query).trim().replace(/^#/, "");
@@ -1757,242 +1674,19 @@ export function CreateStampRecursiveContent(
     );
   };
 
-  const handleStamp = async () => {
-    if (!isConnected) {
-      walletContext.showConnectModal();
-      return;
-    }
-    if (isSubmitting) return;
-
-    if (!layers.length || !stampPayload) {
+  const handleStamp = () => {
+    // Not connected: let the hook open the connect modal first
+    if (mint.isConnected && (!layers.length || !stampPayload)) {
       showToast("Generate the stamp before minting.", "warning");
       return;
     }
-    if (!isFormValid) {
-      setApiError(
-        payloadTooLarge
-          ? payloadTooLargeMessage
-          : "Please fix the highlighted fields before stamping.",
-      );
-      return;
-    }
-    if (!config) {
-      showToast("Configuration not loaded yet. Please try again.", "warning");
-      return;
-    }
-
     logger.info("stamps", {
       message: "Starting recursive stamp mint",
       layerCount: layers.length,
-      fileSize: stampPayload.fileSize,
+      fileSize: stampPayload?.fileSize,
       srcId,
     });
-
-    setIsSubmitting(true);
-    setApiError("");
-
-    try {
-      if (!address) {
-        throw new Error("Wallet address not available");
-      }
-      const { isValid, error: walletAddressError } =
-        validateWalletAddressForMinting(address);
-      setAddressError(walletAddressError);
-      if (!isValid) {
-        throw new Error(walletAddressError || "Invalid wallet address type");
-      }
-
-      const mintPayload: RecursiveMintRequest = {
-        sourceWallet: address,
-        qty: issuance,
-        locked: isLocked,
-        filename: stampPayload.filename,
-        file: stampPayload.file,
-        satsPerVB: fee,
-        divisible: false,
-        isPoshStamp: false,
-        service_fee: config.MINTING_SERVICE_FEE,
-        service_fee_address: config.MINTING_SERVICE_FEE_ADDRESS,
-        dryRun: false, // Critical: false to generate the real PSBT
-      };
-      if (includeCustomCpid && stampName) {
-        mintPayload.assetName = stampName;
-      }
-
-      // Phase 3: exact fee estimation before building the final transaction
-      const exactFeeResult = await estimateExact();
-      setExactFeeDetails({ ...exactFeeResult, hasExactFees: true });
-
-      const response = await axiod.post("/api/v2/olga/mint", mintPayload);
-      if (!response.data) {
-        throw new Error("No data received from API");
-      }
-      const mintResponse = response.data as NormalizedMintResponse;
-      if (!mintResponse.hex) {
-        throw new Error("Invalid response structure: missing hex field");
-      }
-
-      // Show the ACTUAL values from the final transaction
-      const netSpendAmount = (mintResponse.input_value || 0) -
-        (mintResponse.change_value || 0);
-      setExactFeeDetails({
-        phase: "exact",
-        minerFee: mintResponse.est_miner_fee || 0,
-        dustValue: mintResponse.total_dust_value || 0,
-        totalValue: netSpendAmount,
-        hasExactFees: true,
-        estimationMethod: "final_transaction",
-      });
-
-      const walletProvider = getWalletProvider(wallet.provider);
-      const inputsToSign = mintResponse.txDetails.map((input) => ({
-        index: input.signingIndex,
-      }));
-
-      // Open the wallet: sign and let the wallet broadcast
-      const result = await walletProvider.signPSBT(
-        mintResponse.hex,
-        inputsToSign,
-        true, // enableRBF
-        undefined, // sighashTypes
-        true, // autoBroadcast
-      );
-
-      if (!result) {
-        logger.error("stamps", {
-          message: "Wallet provider returned null or undefined response",
-        });
-        setApiError("Wallet provider error: No response received");
-        return;
-      }
-
-      if (!result.signed) {
-        if (result.error) {
-          const errorLower = result.error.toLowerCase();
-          if (errorLower.includes("insufficient funds")) {
-            showToast(
-              "Insufficient funds in wallet to cover transaction fees.",
-              "error",
-              false,
-            );
-          } else if (
-            errorLower.includes("timeout") || errorLower.includes("timed out")
-          ) {
-            showToast(
-              "Wallet connection timed out. Please try again.",
-              "error",
-              false,
-            );
-          } else if (
-            errorLower.includes("rejected") ||
-            errorLower.includes("declined") ||
-            errorLower.includes("cancelled") ||
-            errorLower.includes("user denied")
-          ) {
-            showToast("Transaction signing was cancelled.", "warning");
-          } else {
-            showToast(result.error, "error");
-          }
-          return;
-        }
-
-        if (result.cancelled) {
-          showToast("Transaction signing was cancelled.", "warning");
-          return;
-        }
-
-        logger.error("stamps", {
-          message: "Unknown PSBT signing failure",
-          data: { result },
-        });
-        showToast(
-          "Failed to sign transaction.\nPlease check wallet connection and try again.",
-          "error",
-          false,
-        );
-        return;
-      }
-
-      if (result.txid) {
-        logger.debug("stamps", {
-          message: "Recursive stamp signed and broadcast",
-          data: { txid: result.txid },
-        });
-        showToast(
-          "Transaction broadcasted successfully.",
-          "success",
-          false,
-          <>
-            Transaction hash:{" "}
-            <a
-              href={`https://mempool.space/tx/${result.txid}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="underline hover:opacity-80"
-            >
-              {result.txid.substring(0, 12)}...
-            </a>
-          </>,
-        );
-      } else {
-        showToast(
-          "Transaction broadcasted successfully, but no transaction hash was returned.\nPlease check your wallet history for confirmation.",
-          "warning",
-          true,
-        );
-      }
-      // Broadcast happened either way: reset so it cannot be stamped twice
-      resetEditor();
-    } catch (error) {
-      const errorMsg = extractErrorMessage(error);
-      logger.error("stamps", {
-        message: "Recursive stamp minting error",
-        error,
-        extractedMessage: errorMsg,
-      });
-      setApiError(errorMsg);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleIssuanceChange = (e: Event) => {
-    const value = (e.target as HTMLInputElement).value;
-    if (/^\d*$/.test(value)) {
-      setIssuance(value === "" ? "1" : value);
-      setIssuanceError("");
-    } else {
-      setIssuanceError("Please enter a valid number.");
-    }
-  };
-
-  const handleStampNameChange = (e: Event) => {
-    const value = (e.target as HTMLInputElement).value;
-    if (value === "" || value === "A") {
-      setStampName(value);
-      setStampNameError("");
-      return;
-    }
-    if (!value.startsWith("A")) {
-      setStampNameError("Custom CPID must start with 'A'");
-      return;
-    }
-    const numStr = value.slice(1);
-    try {
-      const num = BigInt(numStr);
-      const min = BigInt(26) ** BigInt(12) + BigInt(1);
-      const max = BigInt("18446744073709551615");
-      if (num >= min && num <= max) {
-        setStampName(value);
-        setStampNameError("");
-      } else {
-        setStampNameError(
-          `Number must be between ${min.toString()} and ${max.toString()}`,
-        );
-      }
-    } catch (error) {
-      setStampNameError("Invalid number format after 'A', error: " + error);
-    }
+    return mint.mint();
   };
 
   const openSearch = () => {
@@ -2022,8 +1716,7 @@ export function CreateStampRecursiveContent(
 
   const resetEditor = () => {
     clearAllLayers();
-    setApiError("");
-    setExactFeeDetails(null);
+    mint.resetMint();
     setQuery("");
     setFetched(null);
     setStatus("");
@@ -2034,20 +1727,10 @@ export function CreateStampRecursiveContent(
     setPreviewPos({ x: PREVIEW_INSET, y: PREVIEW_INSET });
     setTextStyle(DEFAULT_TEXT_STYLE);
     setFontSizeInput(String(DEFAULT_TEXT_STYLE.fontSize));
-    setIssuance("1");
-    setIssuanceError("");
-    setStampName("");
-    setStampNameError("");
-    setIncludeCustomCpid(false);
     setUseTxHashEndpoint(false);
     setIncludeTitle(false);
     setStampTitle("");
-    setTosAgreed(false);
     setPreviewView("canvas");
-    const recommended = fees?.recommendedFee;
-    setFee(
-      recommended != null && recommended >= 0.1 ? recommended : 1,
-    );
   };
 
   const previewSrc = fetched
@@ -2074,16 +1757,6 @@ export function CreateStampRecursiveContent(
   const generatedPreviewHtml = mode === "preview"
     ? buildRecursiveStampHtml(layers, bg, true, srcId, htmlTitle)
     : "";
-  const generatedPreviewStamp = mode === "preview"
-    ? buildGeneratedStampRow({
-      html: generatedPreviewHtml,
-      issuance,
-      stampName: includeCustomCpid ? stampName : "",
-      creator: isConnected ? walletContext.wallet.address : "",
-      creatorName: isConnected ? null : "Connect Wallet",
-      locked: isLocked,
-    })
-    : null;
 
   /* ===== STAMP PAYLOAD + FEE ESTIMATION ===== */
   // Only built in preview mode so editing the canvas does not re-encode or
@@ -2105,63 +1778,29 @@ export function CreateStampRecursiveContent(
     } KB. File size must be less than ${MAX_STAMP_FILE_BYTES / 1024}KB.`
     : "";
 
-  const {
-    getBestEstimate,
-    isPreFetching,
-    estimateExact,
-    phase1,
-    phase2,
-    phase3,
-    currentPhase,
-    error: feeEstimationError,
-    clearError,
-  } = useTransactionConstructionService({
-    toolType: "stamp",
-    feeRate: isSubmitting ? 0 : fee, // Disable by setting feeRate to 0 during submission
-    walletAddress: wallet?.address || "",
-    isConnected: !!wallet && !isSubmitting,
-    // Phase 2 (network) is skipped outside preview mode or while submitting
-    isSubmitting: isSubmitting || mode !== "preview",
-    ...(stampPayload
-      ? {
-        file: stampPayload.file,
-        filename: stampPayload.filename,
-        fileSize: stampPayload.fileSize,
-      }
-      : {}),
-    quantity: parseInt(issuance, 10),
-    locked: isLocked,
-    divisible: false,
+  const mint = useStampMint({
+    variant: "recursive",
+    payload: stampPayload,
+    extraBlockReason: layers.length === 0
+      ? "Add at least one layer before stamping."
+      : payloadTooLarge
+      ? payloadTooLargeMessage
+      : null,
+    // Network estimation (phase 2) only runs in preview mode
+    pauseEstimation: mode !== "preview",
+    onSuccess: resetEditor,
   });
 
-  const progressiveFeeDetails = getBestEstimate();
-  const [exactFeeDetails, setExactFeeDetails] = useState<
-    typeof progressiveFeeDetails | null
-  >(null);
-  const displayedFeeDetails = exactFeeDetails || progressiveFeeDetails;
-
-  // Reset exact fee details when inputs change so slider updates apply
-  useEffect(() => {
-    setExactFeeDetails(null);
-  }, [fee, issuance, isLocked, generatedHtml]);
-
-  // Validate the connected wallet address type for minting
-  useEffect(() => {
-    if (isConnected && address) {
-      setAddressError(validateWalletAddressForMinting(address).error);
-    } else {
-      setAddressError(undefined);
-    }
-  }, [address, isConnected]);
-
-  const issuanceCount = parseInt(issuance, 10);
-  const isFormValid = layers.length > 0 &&
-    !issuanceError &&
-    Number.isFinite(issuanceCount) && issuanceCount >= 1 &&
-    !stampNameError &&
-    (!includeCustomCpid || !!stampName) &&
-    !payloadTooLarge &&
-    !addressError;
+  const generatedPreviewStamp = mode === "preview"
+    ? buildGeneratedStampRow({
+      html: generatedPreviewHtml,
+      issuance: mint.issuance,
+      stampName: mint.includeCustomCpid ? mint.stampName : "",
+      creator: isConnected ? walletContext.wallet.address : "",
+      creatorName: isConnected ? null : "Connect Wallet",
+      locked: mint.isLocked,
+    })
+    : null;
 
   const onViewCode = () => {
     openModal(<PreviewCodeModal src={generatedHtml} />, "zoomInOut");
@@ -2842,193 +2481,92 @@ export function CreateStampRecursiveContent(
             class={`flex min-h-0 flex-1 flex-col
               ${mode === "preview" ? "" : "hidden"}`}
           >
-            <div class="flex min-h-0 flex-1 flex-col overflow-hidden">
-              <div class="flex flex-col gap-3">
-                <div class="flex items-center justify-between gap-3">
-                  <h5 class={text}>
-                    EDITIONS
-                  </h5>
-                  <div
-                    class="w-9 tablet:w-10 shrink-0"
-                    style={issuance.length > 1
-                      ? {
-                        width: `calc(${issuance.length}ch + 1.5rem + 2px)`,
-                      }
-                      : undefined}
-                  >
-                    <InputField
-                      type="text"
-                      value={issuance}
-                      onChange={handleIssuanceChange}
-                      error={issuanceError}
-                      textAlign="center"
+            <StampMintPanel
+              mint={mint}
+              cpidRow={<StampCpidToggleRow mint={mint} />}
+              fileType="text/html"
+              fileSize={stampPayload?.fileSize ??
+                utf8ByteLength(generatedHtml)}
+              fileUploadError={payloadTooLarge ? payloadTooLargeMessage : null}
+              onSubmit={handleStamp}
+              extraRows={
+                <>
+                  <div class="flex items-center justify-between gap-3">
+                    {includeTitle
+                      ? (
+                        <div class="flex-1 min-w-0">
+                          <InputField
+                            type="text"
+                            value={stampTitle}
+                            placeholder="TITLE"
+                            onInput={(e) => {
+                              const value =
+                                (e.currentTarget as HTMLInputElement).value;
+                              setStampTitle(value);
+                              if (mode === "preview") {
+                                setPreviewHtml(
+                                  buildRecursiveStampHtml(
+                                    layers,
+                                    bg,
+                                    false,
+                                    srcId,
+                                    value.trim() || undefined,
+                                  ),
+                                );
+                              }
+                            }}
+                          />
+                        </div>
+                      )
+                      : <h5 class={labelSm}>NO HTML TITLE</h5>}
+                    <ToggleSwitchButton
+                      isActive={includeTitle}
+                      onToggle={() => {
+                        const next = !includeTitle;
+                        setIncludeTitle(next);
+                        if (!next) setStampTitle("");
+                        if (mode === "preview") {
+                          setPreviewHtml(
+                            buildRecursiveStampHtml(
+                              layers,
+                              bg,
+                              false,
+                              srcId,
+                              next ? stampTitle.trim() : undefined,
+                            ),
+                          );
+                        }
+                      }}
+                      toggleButtonId="switch-toggle-title"
                     />
                   </div>
-                </div>
-                <div class="flex items-center justify-between gap-3">
-                  <h5 class={labelSm}>
-                    {isLocked ? "LOCKED" : "UNLOCKED"}
-                  </h5>
-                  <ToggleSwitchButton
-                    isActive={!isLocked}
-                    onToggle={() => setIsLocked((prev) => !prev)}
-                    toggleButtonId="switch-toggle-locked"
-                  />
-                </div>
-                <div class="flex items-center justify-between gap-3">
-                  {includeCustomCpid
-                    ? (
-                      <div class="flex-1 min-w-0">
-                        <InputField
-                          type="text"
-                          value={stampName}
-                          onChange={handleStampNameChange}
-                          placeholder="CUSTOM CPID"
-                          maxLength={21}
-                          minLength={15}
-                          error={stampNameError}
-                        />
-                      </div>
-                    )
-                    : <h5 class={labelSm}>AUTO GENERATE CPID</h5>}
-                  <ToggleSwitchButton
-                    isActive={includeCustomCpid}
-                    onToggle={() => {
-                      const next = !includeCustomCpid;
-                      setIncludeCustomCpid(next);
-                      if (!next) {
-                        setStampName("");
-                        setStampNameError("");
-                      }
-                    }}
-                    toggleButtonId="switch-toggle-cpid"
-                  />
-                </div>
-                <hr />
-                <div class="flex items-center justify-between gap-3">
-                  {includeTitle
-                    ? (
-                      <div class="flex-1 min-w-0">
-                        <InputField
-                          type="text"
-                          value={stampTitle}
-                          placeholder="TITLE"
-                          onInput={(e) => {
-                            const value =
-                              (e.currentTarget as HTMLInputElement).value;
-                            setStampTitle(value);
-                            if (mode === "preview") {
-                              setPreviewHtml(
-                                buildRecursiveStampHtml(
-                                  layers,
-                                  bg,
-                                  false,
-                                  srcId,
-                                  value.trim() || undefined,
-                                ),
-                              );
-                            }
-                          }}
-                        />
-                      </div>
-                    )
-                    : <h5 class={labelSm}>NO HTML TITLE</h5>}
-                  <ToggleSwitchButton
-                    isActive={includeTitle}
-                    onToggle={() => {
-                      const next = !includeTitle;
-                      setIncludeTitle(next);
-                      if (!next) setStampTitle("");
-                      if (mode === "preview") {
-                        setPreviewHtml(
-                          buildRecursiveStampHtml(
-                            layers,
-                            bg,
-                            false,
-                            srcId,
-                            next ? stampTitle.trim() : undefined,
-                          ),
-                        );
-                      }
-                    }}
-                    toggleButtonId="switch-toggle-title"
-                  />
-                </div>
-                <div class="flex items-center justify-between gap-3">
-                  <h5 class={labelSm}>
-                    {useTxHashEndpoint ? "TXHASH STRING" : "CPID STRING"}
-                  </h5>
-                  <ToggleSwitchButton
-                    isActive={useTxHashEndpoint}
-                    onToggle={() => {
-                      const next = !useTxHashEndpoint;
-                      setUseTxHashEndpoint(next);
-                      if (mode === "preview") {
-                        setPreviewHtml(
-                          buildRecursiveStampHtml(
-                            layers,
-                            bg,
-                            false,
-                            next ? "txHash" : "cpid",
-                            htmlTitle,
-                          ),
-                        );
-                      }
-                    }}
-                    toggleButtonId="switch-toggle-endpoint"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="shrink-0">
-              <hr class="my-3" />
-              <FeeCalculatorBase
-                fee={fee}
-                handleChangeFee={setFee}
-                type="stamp"
-                fileType="text/html"
-                fileSize={stampPayload?.fileSize ??
-                  utf8ByteLength(generatedHtml)}
-                issuance={parseInt(issuance, 10)}
-                BTCPrice={BTCPrice}
-                showCoinToggle
-                tosAgreed={tosAgreed}
-                onTosChange={setTosAgreed}
-                isSubmitting={isSubmitting}
-                onSubmit={handleStamp}
-                buttonName={isConnected ? "STAMP" : "CONNECT WALLET"}
-                disabled={isConnected ? !isFormValid : false}
-                bitname=""
-                {...(includeCustomCpid && stampName ? { cpid: stampName } : {})}
-                feeDetails={{
-                  minerFee: displayedFeeDetails?.minerFee || 0,
-                  dustValue: displayedFeeDetails?.dustValue || 0,
-                  totalValue: displayedFeeDetails?.totalValue || 0,
-                  hasExactFees: displayedFeeDetails?.hasExactFees || false,
-                  estimatedSize: 300,
-                }}
-                progressIndicator={
-                  <ProgressiveEstimationIndicator
-                    isConnected={!!wallet && !isSubmitting}
-                    isSubmitting={isSubmitting}
-                    isPreFetching={isPreFetching}
-                    currentPhase={currentPhase}
-                    phase1={!!phase1}
-                    phase2={!!phase2}
-                    phase3={!!phase3}
-                    feeEstimationError={feeEstimationError}
-                    clearError={clearError}
-                  />
-                }
-              />
-              <StatusMessages
-                apiError={apiError}
-                fileUploadError={payloadTooLarge
-                  ? payloadTooLargeMessage
-                  : null}
-                walletError={isConnected ? addressError ?? null : null}
-              />
-            </div>
+                  <div class="flex items-center justify-between gap-3">
+                    <h5 class={labelSm}>
+                      {useTxHashEndpoint ? "TXHASH STRING" : "CPID STRING"}
+                    </h5>
+                    <ToggleSwitchButton
+                      isActive={useTxHashEndpoint}
+                      onToggle={() => {
+                        const next = !useTxHashEndpoint;
+                        setUseTxHashEndpoint(next);
+                        if (mode === "preview") {
+                          setPreviewHtml(
+                            buildRecursiveStampHtml(
+                              layers,
+                              bg,
+                              false,
+                              next ? "txHash" : "cpid",
+                              htmlTitle,
+                            ),
+                          );
+                        }
+                      }}
+                      toggleButtonId="switch-toggle-endpoint"
+                    />
+                  </div>
+                </>
+              }
+            />
           </div>
           {mode !== "preview" && (
             <div class="flex gap-5 pt-5 shrink-0">

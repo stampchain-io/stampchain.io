@@ -91,6 +91,7 @@ export function Icon(props: IconVariants) {
       horizontalGuide: "arrowHorizontal",
       verticalGuide: "arrowVertical",
       clearGuides: "trashcan",
+      trash: "trashcan",
       bold: "bold",
       italic: "italic",
       justifyLeft: "justifyLeft",

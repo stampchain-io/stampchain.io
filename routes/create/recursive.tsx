@@ -6,7 +6,7 @@ import { containerBackground } from "$layout";
 export default function RecursiveStampPage() {
   return (
     <div class={containerBackground}>
-      <CreateStampHeader />
+      <CreateStampHeader active="recursive" />
       <CreateStampRecursiveContent />
     </div>
   );
