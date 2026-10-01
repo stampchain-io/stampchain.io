@@ -492,7 +492,7 @@ function AssetPreviewCard(
         type="iconButton"
         name="userCircle"
         weight="normal"
-        size="lg"
+        size="md"
         color="primary400"
       />
     </button>
@@ -918,6 +918,8 @@ export function CreateStampRecursiveContent(
   } = useRecursiveStampState();
 
   const wrapRef = useRef<HTMLDivElement>(null);
+  const composerScrollRef = useRef<HTMLDivElement>(null);
+  const [composerOverflows, setComposerOverflows] = useState(false);
   const canvasRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLCanvasElement>(null);
   const previewCardRef = useRef<HTMLDivElement>(null);
@@ -992,6 +994,34 @@ export function CreateStampRecursiveContent(
       return next;
     });
   };
+
+  useLayoutEffect(() => {
+    const el = composerScrollRef.current;
+    if (!el) return;
+
+    const check = () => {
+      setComposerOverflows(el.scrollHeight > el.clientHeight + 1);
+    };
+
+    check();
+    const observer = new ResizeObserver(check);
+    observer.observe(el);
+    const watchChildren = () => {
+      for (const child of el.children) observer.observe(child);
+    };
+    watchChildren();
+    const mutations = new MutationObserver(() => {
+      watchChildren();
+      check();
+    });
+    mutations.observe(el, { childList: true });
+
+    return () => {
+      observer.disconnect();
+      mutations.disconnect();
+    };
+  }, []);
+
   const [ctxOpen, setCtxOpen] = useState<
     { x: number; y: number } | null
   >(null);
@@ -1827,8 +1857,10 @@ export function CreateStampRecursiveContent(
             {mode === "preview" ? "STAMP" : "COMPOSER"}
           </h2>
           <div
-            class={`flex flex-1 flex-col pr-1
+            ref={composerScrollRef}
+            class={`flex flex-1 flex-col scrollbar-background-layer1
               mobileLg:min-h-0 mobileLg:overflow-y-auto
+              ${composerOverflows ? "mobileLg:-mr-[14px] mobileLg:pr-2" : ""}
               ${mode === "preview" ? "hidden" : ""}`}
           >
             <CollapsibleSection
