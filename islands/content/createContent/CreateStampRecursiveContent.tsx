@@ -5,12 +5,12 @@ import { walletContext } from "$client/wallet/wallet.ts";
 import { inputField, inputNumeric, messageError } from "$form";
 import { CreateStampRecursiveHeader, openShortcutsModal } from "$header";
 import { Icon, PlaceholderImage, UserProfileIcon } from "$icon";
+import { RangeSlider } from "$islands/button/RangeSlider.tsx";
 import {
   buildGeneratedStampRow,
   StampCpidToggleRow,
   StampMintPanel,
 } from "$islands/content/createContent/CreateStampBase.tsx";
-import { RangeSlider } from "$islands/button/RangeSlider.tsx";
 import { ColorPicker } from "$islands/form/ColorPicker.tsx";
 import { InputField } from "$islands/form/InputField.tsx";
 import { CollapsibleSection } from "$islands/layout/CollapsibleSection.tsx";
@@ -72,11 +72,11 @@ import {
   ungroupSelection,
   useRecursiveStampState,
 } from "$lib/hooks/useRecursiveStampState.ts";
+import { useStampMint } from "$lib/hooks/useStampMint.ts";
 import {
   fetchStampById,
   fetchStampsByCreator,
 } from "$lib/utils/api/stamps/fetchStamp.ts";
-import { useStampMint } from "$lib/hooks/useStampMint.ts";
 import { logger } from "$lib/utils/logger.ts";
 import {
   MAX_STAMP_FILE_BYTES,

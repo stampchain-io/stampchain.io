@@ -4,13 +4,13 @@
  * StampingTool: URL-driven activation (?outputValue=1..329), MARA fee-rate
  * fetching, availability checks and signed-transaction submission with retry.
  */
-import type { StampMintRequest } from "$lib/utils/stamps/mintHelpers.ts";
 import { useSSRSafeNavigation } from "$lib/hooks/useSSRSafeNavigation.ts";
 import {
   ensureRawTransactionFormat,
   extractRawTransactionFromPSBT,
 } from "$lib/utils/bitcoin/psbt/psbtUtils.ts";
 import { logger } from "$lib/utils/logger.ts";
+import type { StampMintRequest } from "$lib/utils/stamps/mintHelpers.ts";
 import { showToast } from "$lib/utils/ui/notifications/toastSignal.ts";
 import {
   getSearchParams,
