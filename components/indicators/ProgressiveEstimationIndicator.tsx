@@ -36,7 +36,7 @@ export function ProgressiveEstimationIndicator({
       {!isSubmitting && !feeEstimationError && (
         <div className="relative group/pill">
           <div
-            className={`${containerPill} min-[420px]:!py-2 min-[460px]:!py-1`}
+            className={`${containerPill}`}
           >
             {/* Phase indicators */}
             <div className="flex items-center gap-1">
@@ -65,14 +65,14 @@ export function ProgressiveEstimationIndicator({
             </div>
 
             {/* Current phase text */}
-            <span className="inline min-[420px]:hidden min-[460px]:inline ml-1.5 font-norma text-[10px] text-color-primary-500 tracking-wider">
+            <span className="hidden min-[420px]:inline mt-[1px] ml-2 font-norma1 text-[8px] text-color-primary-500 tracking-wider">
               {currentPhase === "instant" && "ROUGH"}
               {currentPhase === "smart" && "SMART"}
               {currentPhase === "exact" && "EXACT"}
             </span>
 
             {/* Mobile-only emoji */}
-            <span className="hidden min-[420px]:inline min-[460px]:hidden">
+            <span className="inline min-[420px]:hidden">
               {currentPhase === "instant" && ""}
               {currentPhase === "smart" && ""}
               {currentPhase === "exact" && ""}

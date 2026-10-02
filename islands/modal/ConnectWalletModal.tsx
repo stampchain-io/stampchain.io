@@ -39,12 +39,12 @@ export const ConnectWalletModal = ({
       onClose={handleModalClose}
       className="w-[340px] min-[420px]:w-[360px] mobileMd:w-[380px] mobileLg:w-[640px]"
     >
-      <h4 class={`${subtitlePrimary} text-center -mt-3 pb-3`}>
+      <h4 class={`${subtitlePrimary} text-center -mt-3 mb-3`}>
         YOUR WALLET
       </h4>
 
       {/* ===== WALLET PROVIDERS GRID ===== */}
-      <div class="grid grid-cols-1 mobileLg:grid-cols-2 gap-5 items-center">
+      <div class="grid grid-cols-1 mobileLg:grid-cols-2 gap-3 items-center">
         {connectors}
       </div>
     </ModalBase>

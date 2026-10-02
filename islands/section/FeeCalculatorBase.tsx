@@ -664,28 +664,9 @@ export function FeeCalculatorBase({
       <div>
         <div class="flex justify-between items-start">
           {renderFeeSelector()}
-          {showCoinToggle && (
-            <div className="flex gap-1 items-start justify-end">
-              <div className="relative">
-                <ToggleSwitchButton
-                  isActive={coinType === "BTC"}
-                  onToggle={handleCoinToggle}
-                  toggleButtonId="currency-toggle"
-                  activeSymbol="₿"
-                  inactiveSymbol="$"
-                  activeKnobClassName="bg-color-orange-400"
-                  inactiveKnobClassName="bg-color-neutral-400"
-                  onMouseEnter={handleCurrencyMouseEnter}
-                  onMouseLeave={handleCurrencyMouseLeave}
-                />
-                <div
-                  className={`${tooltipButton} ${
-                    isCurrencyTooltipVisible ? "opacity-100" : "opacity-0"
-                  }`}
-                >
-                  {currencyTooltipText}
-                </div>
-              </div>
+          {progressIndicator && (
+            <div className="flex items-start justify-end w-auto">
+              {progressIndicator}
             </div>
           )}
         </div>
@@ -704,9 +685,9 @@ export function FeeCalculatorBase({
         )}
       </div>
 
-      <div class="mt-6 flex flex-col-reverse justify-start min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-between">
+      <div class="mt-5 flex flex-row justify-between items-center">
         <h6
-          class={`text-base font-light cursor-default select-none ${
+          class={`text-sm font-light cursor-default select-none ${
             coinType === "BTC"
               ? "text-color-orange-400"
               : "text-color-neutral-400"
@@ -717,7 +698,7 @@ export function FeeCalculatorBase({
             ? (
               <>
                 {!feeDetails.hasExactFees && (
-                  <span class="pl-2.5 pr-1.5">~</span>
+                  <span class="hidden min-[420px]:inline pl-2.5">~</span>
                 )}
                 {(() => {
                   // Add MARA service fee if in MARA mode
@@ -728,7 +709,7 @@ export function FeeCalculatorBase({
                   return coinType === "BTC"
                     ? (
                       <>
-                        <span class="font-bold">
+                        <span class="font-bold pl-2.5 min-[420px]:pl-1.5">
                           {formatSatoshisToBTC(totalWithMaraFee, {
                             includeSymbol: false,
                           })}
@@ -763,9 +744,28 @@ export function FeeCalculatorBase({
             )}
         </h6>
 
-        {progressIndicator && (
-          <div className="flex items-center justify-start mb-0.5 min-[420px]:justify-end min-[420px]:mb-0 w-auto">
-            {progressIndicator}
+        {showCoinToggle && (
+          <div className="flex gap-1 items-center justify-end">
+            <div className="relative">
+              <ToggleSwitchButton
+                isActive={coinType === "BTC"}
+                onToggle={handleCoinToggle}
+                toggleButtonId="currency-toggle"
+                activeSymbol="₿"
+                inactiveSymbol="$"
+                activeKnobClassName="bg-color-orange-400"
+                inactiveKnobClassName="bg-color-neutral-400"
+                onMouseEnter={handleCurrencyMouseEnter}
+                onMouseLeave={handleCurrencyMouseLeave}
+              />
+              <div
+                className={`${tooltipButton} ${
+                  isCurrencyTooltipVisible ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                {currencyTooltipText}
+              </div>
+            </div>
           </div>
         )}
       </div>
@@ -789,7 +789,7 @@ export function FeeCalculatorBase({
 
       {renderDetails()}
 
-      <div class="flex flex-col items-end gap-4 pt-10">
+      <div class="flex flex-col items-end mt-7.5 gap-3">
         <div class="relative flex items-center">
           <input
             type="checkbox"
@@ -811,7 +811,7 @@ export function FeeCalculatorBase({
           >
             <div
               className={`
-                w-4 h-4 tablet:w-3 tablet:h-3 mr-3 tablet:mr-2
+                w-3 h-3 mr-2
                 flex items-center justify-center
                 rounded-[3px]
                 ${transitionColors} ease-in-out
@@ -844,7 +844,7 @@ export function FeeCalculatorBase({
             </div>
             <span
               className={`
-                font-normal text-xs uppercase select-none
+                font-normal text-[0.625rem] uppercase select-none
                 ${transitionColors}
                 ${
                 tosAgreed ? "text-color-neutral-600" : "text-color-neutral-400"
@@ -859,83 +859,60 @@ export function FeeCalculatorBase({
               `}
             >
               Agree to the{" "}
-              <span class="text-color-neutral-600">
-                <span class="tablet:hidden">
-                  <a
-                    href="/termsofservice"
-                    target="_blank"
-                    className={`
+              <a
+                href="/termsofservice"
+                target="_blank"
+                className={`
                       uppercase ${transitionColors}
                       ${
-                      tosAgreed
-                        ? "text-color-neutral-600"
-                        : "text-color-neutral-600"
-                    }
+                  tosAgreed
+                    ? "text-color-neutral-600"
+                    : "text-color-neutral-600"
+                }
                       hover:text-color-hover
                     `}
-                  >
-                    Terms
-                  </a>
-                </span>
-                <span class="hidden tablet:inline">
-                  <a
-                    href="/termsofservice"
-                    target="_blank"
-                    className={`
-                      uppercase ${transitionColors}
-                      ${
-                      tosAgreed
-                        ? "text-color-neutral-600"
-                        : "text-color-neutral-600"
-                    }
-                      hover:text-color-hover
-                    `}
-                  >
-                    Terms of Service
-                  </a>
-                </span>
-              </span>
+              >
+                Terms of Service
+              </a>
             </span>
           </label>
         </div>
 
-        <div class="flex items-center justify-end gap-5">
-          {/* Buttons on the right */}
-          <div class="flex justify-end gap-5">
-            {onCancel && (
-              <Button
-                variant="outline"
-                color="neutral"
-                onClick={() => {
-                  logger.debug("ui", {
-                    message: "Cancel clicked",
-                    component: "FeeCalculatorBase",
-                  });
-                  handleModalClose();
-                  onCancel();
-                }}
-                disabled={!!isSubmitting}
-              >
-                {cancelText}
-              </Button>
-            )}
-            <ButtonProcessing
+        {/* Buttons on the right */}
+        <div class="flex gap-5">
+          {onCancel && (
+            <Button
               variant="flat"
-              color="primary"
-              isSubmitting={!!isSubmitting}
+              color="neutral"
               onClick={() => {
-                console.log(
-                  "FEE_CALCULATOR_BASE: Internal button onClick fired! About to call props.onSubmit.",
-                );
-                if (onSubmit) {
-                  onSubmit();
-                }
+                logger.debug("ui", {
+                  message: "Cancel clicked",
+                  component: "FeeCalculatorBase",
+                });
+                handleModalClose();
+                onCancel();
               }}
-              disabled={!!(disabled || !tosAgreed)}
+              disabled={!!isSubmitting}
             >
-              {confirmText || buttonName}
-            </ButtonProcessing>
-          </div>
+              {cancelText}
+            </Button>
+          )}
+          <ButtonProcessing
+            variant="flat"
+            color="primary"
+            isSubmitting={!!isSubmitting}
+            onClick={() => {
+              console.log(
+                "FEE_CALCULATOR_BASE: Internal button onClick fired! About to call props.onSubmit.",
+              );
+              if (onSubmit) {
+                onSubmit();
+              }
+            }}
+            disabled={!!(disabled || !tosAgreed)}
+          >
+            {confirmText || buttonName}
+          </ButtonProcessing>
         </div>
       </div>
 
