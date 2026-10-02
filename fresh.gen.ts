@@ -115,6 +115,7 @@ import * as $collection_index from "./routes/collection/index.tsx";
 import * as $config from "./routes/config.ts";
 import * as $content_imgpath_ from "./routes/content/[...imgpath].tsx";
 import * as $create_classic from "./routes/create/classic.tsx";
+import * as $create_index from "./routes/create/index.tsx";
 import * as $create_posh from "./routes/create/posh.tsx";
 import * as $create_recursive from "./routes/create/recursive.tsx";
 import * as $dashboard_address_ from "./routes/dashboard/[address].tsx";
@@ -481,6 +482,7 @@ const manifest = {
     "./routes/config.ts": $config,
     "./routes/content/[...imgpath].tsx": $content_imgpath_,
     "./routes/create/classic.tsx": $create_classic,
+    "./routes/create/index.tsx": $create_index,
     "./routes/create/posh.tsx": $create_posh,
     "./routes/create/recursive.tsx": $create_recursive,
     "./routes/dashboard/[address].tsx": $dashboard_address_,

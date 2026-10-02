@@ -60,7 +60,7 @@ const CREATE_STAMP_TYPES: readonly CreateStampType[] = [
 ];
 
 export function CreateStampHeader(
-  { active = "recursive" }: CreateStampHeaderProps = {},
+  { active = "classic" }: CreateStampHeaderProps = {},
 ) {
   const { navigate } = useSSRSafeNavigation();
   const stampType = active;
