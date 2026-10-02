@@ -195,9 +195,8 @@ export const WalletButton = (
             type="iconButton"
             name="wallet"
             weight="light"
-            size="custom"
+            size="xl"
             color="neutral400"
-            className="w-6 h-6"
             onClick={handleWalletIconClick}
           />
         )}
@@ -211,9 +210,8 @@ export const WalletButton = (
                 type="iconButton"
                 name="wallet"
                 weight="light"
-                size="custom"
+                size="xl"
                 color="neutral400"
-                className="w-6 h-6"
                 colorAccent="var(--color-primary-400)"
                 colorAccentHover="var(--color-hover)"
                 onClick={handleWalletIconClick}

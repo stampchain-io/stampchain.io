@@ -278,9 +278,8 @@ export function ToolsButton({ onOpenDrawer, data }: ToolsButtonProps) {
           type="iconButton"
           name="tools"
           weight="light"
-          size="custom"
+          size="xl"
           color="neutral400"
-          className="w-6 h-6"
           onClick={handleToolsClick}
         />
         {/* Dropdown content is rendered by Header.tsx */}

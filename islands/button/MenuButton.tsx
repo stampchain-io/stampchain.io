@@ -1,6 +1,10 @@
 import { Icon } from "$icon";
 import { container2, containerStickyBottom } from "$layout";
 import {
+  CREATE_NAV_HREF,
+  CREATE_NAV_LINKS,
+} from "$lib/constants/navConstants.ts";
+import {
   labelXs,
   navLinkActiveMobile,
   navLinkMobile,
@@ -13,7 +17,7 @@ interface NavLink {
   title: string;
   href?: string;
   icon?: string;
-  subLinks?: NavLink[];
+  subLinks?: readonly NavLink[];
 }
 
 interface MenuButtonProps {
@@ -44,6 +48,11 @@ const navLinks: NavLink[] = [
     title: "Explorer",
     href: "/explorer",
     icon: "explorer",
+  },
+  {
+    title: "Create",
+    href: CREATE_NAV_HREF,
+    subLinks: CREATE_NAV_LINKS,
   },
 ];
 
@@ -90,22 +99,15 @@ export function MenuButton({ onOpenDrawer }: MenuButtonProps) {
         {navLinks.map((link) => (
           <div key={link.title} class="relative group w-full">
             <a
-              href={link.subLinks ? undefined : link.href}
+              href={link.href}
               onClick={() => {
-                if (link.subLinks) {
-                  return;
-                }
                 if (!link?.href) {
                   return;
                 }
                 setCurrentPath(link.href);
               }}
               class={`flex items-center gap-3 ${
-                link.subLinks
-                  ? navSublinkMobile
-                  : isActive(link.href)
-                  ? navLinkActiveMobile
-                  : navLinkMobile
+                isActive(link.href) ? navLinkActiveMobile : navLinkMobile
               }`}
             >
               {NAV_ICONS && link.icon && (
@@ -120,6 +122,26 @@ export function MenuButton({ onOpenDrawer }: MenuButtonProps) {
               )}
               <span>{link.title}</span>
             </a>
+            {link.subLinks && (
+              <div class="flex flex-col gap-2 pl-4 pt-2">
+                {link.subLinks.map((subLink) => (
+                  <a
+                    key={subLink.href}
+                    href={subLink.href}
+                    onClick={() => {
+                      if (subLink.href) {
+                        setCurrentPath(subLink.href);
+                      }
+                    }}
+                    class={isActive(subLink.href)
+                      ? navSublinkActiveMobile
+                      : navSublinkMobile}
+                  >
+                    {subLink.title}
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
         ))}
       </>
@@ -156,9 +178,8 @@ export function MenuButton({ onOpenDrawer }: MenuButtonProps) {
         type="iconButton"
         name="menu"
         weight="light"
-        size="custom"
+        size="xl"
         color="neutral400"
-        className="w-6 h-6"
         isOpen={false}
         onClick={handleMenuClick}
       />
