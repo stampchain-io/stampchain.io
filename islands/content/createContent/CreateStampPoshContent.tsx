@@ -25,6 +25,7 @@ export function CreateStampPoshContent() {
           <StampMintPanel
             mint={mint}
             cpidRow={<StampNamedStampRow mint={mint} />}
+            cpidAboveLocked
             fileType={stampFile.file?.type || "image/png"}
             fileSize={stampFile.file?.size ?? 0}
             fileUploadError={stampFile.fileError || stampFile.fileWarning ||

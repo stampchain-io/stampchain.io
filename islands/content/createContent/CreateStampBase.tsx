@@ -24,7 +24,7 @@ import { MAX_STAMP_FILE_BYTES } from "$lib/utils/stamps/mintHelpers.ts";
 import { handleImageError } from "$lib/utils/ui/media/imageUtils.ts";
 import { StatusMessages } from "$notification";
 import { FeeCalculatorBase } from "$section";
-import { labelSm, subtitlePrimary, text, textXs } from "$text";
+import { labelXs, subtitlePrimary, textSm, textXs } from "$text";
 import type { StampRow } from "$types/stamp.d.ts";
 import type { ComponentChildren } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
@@ -74,9 +74,9 @@ function StampEditionsRow({ mint }: MintRowProps) {
   const { issuance } = mint;
   return (
     <div class="flex items-center justify-between gap-3">
-      <h5 class={text}>EDITIONS</h5>
+      <h5 class={textSm}>EDITIONS</h5>
       <div
-        class="w-9 tablet:w-10 shrink-0"
+        class="w-8 shrink-0"
         style={issuance.length > 1
           ? { width: `calc(${issuance.length}ch + 1.5rem + 2px)` }
           : undefined}
@@ -96,7 +96,7 @@ function StampEditionsRow({ mint }: MintRowProps) {
 function StampLockedRow({ mint }: MintRowProps) {
   return (
     <div class="flex items-center justify-between gap-3">
-      <h5 class={labelSm}>{mint.isLocked ? "LOCKED" : "UNLOCKED"}</h5>
+      <h5 class={labelXs}>{mint.isLocked ? "LOCKED" : "UNLOCKED"}</h5>
       <ToggleSwitchButton
         isActive={!mint.isLocked}
         onToggle={() => mint.setIsLocked((prev) => !prev)}
@@ -124,7 +124,7 @@ export function StampCpidToggleRow({ mint }: MintRowProps) {
             />
           </div>
         )
-        : <h5 class={labelSm}>AUTO GENERATE CPID</h5>}
+        : <h5 class={labelXs}>AUTO GENERATE CPID</h5>}
       <ToggleSwitchButton
         isActive={mint.includeCustomCpid}
         onToggle={mint.toggleCustomCpid}
@@ -157,6 +157,8 @@ interface StampMintPanelProps {
   mint: StampMintController;
   /** CPID row: `StampCpidToggleRow` or `StampNamedStampRow`. */
   cpidRow: ComponentChildren;
+  /** Render the CPID row above the LOCKED row (default: below it). */
+  cpidAboveLocked?: boolean;
   /** Extra rows rendered below the CPID row, after a divider. */
   extraRows?: ComponentChildren;
   /** MIME type of the stamp (fee calculator size hint). */
@@ -173,6 +175,7 @@ export function StampMintPanel(
   {
     mint,
     cpidRow,
+    cpidAboveLocked = false,
     extraRows,
     fileType,
     fileSize,
@@ -190,8 +193,9 @@ export function StampMintPanel(
       <div class="flex min-h-0 flex-1 flex-col overflow-hidden">
         <div class="flex flex-col gap-3">
           <StampEditionsRow mint={mint} />
+          {cpidAboveLocked && cpidRow}
           <StampLockedRow mint={mint} />
-          {cpidRow}
+          {!cpidAboveLocked && cpidRow}
           {extraRows && (
             <>
               <hr />
@@ -437,7 +441,7 @@ export function StampUploadWorkspace(
         color="custom"
         className="stroke-color-grey-dark group-hover:stroke-color-grey-semidark/80"
       />
-      <h5 class={labelSm}>UPLOAD FILE</h5>
+      <h5 class={labelXs}>UPLOAD FILE</h5>
       <p class={textXs}>
         CLICK OR DROP HERE - MAX {MAX_STAMP_FILE_BYTES / 1024}KB
       </p>

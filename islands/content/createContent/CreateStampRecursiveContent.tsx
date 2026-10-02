@@ -109,7 +109,6 @@ import {
 import {
   cardCreator,
   cardStampNumber,
-  labelSm,
   labelXs,
   subtitlePrimary,
   textXs,
@@ -2518,7 +2517,7 @@ export function CreateStampRecursiveContent(
                           />
                         </div>
                       )
-                      : <h5 class={labelSm}>NO HTML TITLE</h5>}
+                      : <h5 class={labelXs}>NO HTML TITLE</h5>}
                     <ToggleSwitchButton
                       isActive={includeTitle}
                       onToggle={() => {
@@ -2541,7 +2540,7 @@ export function CreateStampRecursiveContent(
                     />
                   </div>
                   <div class="flex items-center justify-between gap-3">
-                    <h5 class={labelSm}>
+                    <h5 class={labelXs}>
                       {useTxHashEndpoint ? "TXHASH STRING" : "CPID STRING"}
                     </h5>
                     <ToggleSwitchButton
