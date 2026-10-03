@@ -1,57 +1,14 @@
 /* ===== CREATE STAMP HEADER ===== */
 import { SelectorButtons } from "$button";
-import { Icon } from "$icon";
-import { openModal } from "$islands/modal/states.ts";
-import { container2Icon, ModalBase, ScrollFadeRow } from "$layout";
+import { InfoButton } from "$islands/button/InfoButton.tsx";
+import { StampCreateClassicHowto } from "$islands/section/howto/StampCreateClassicHowto.tsx";
+import { StampCreatePoshHowto } from "$islands/section/howto/StampCreatePoshHowto.tsx";
+import { StampCreateRecursiveHowto } from "$islands/section/howto/StampCreateRecursiveHowto.tsx";
+import { ScrollFadeRow } from "$layout";
 import { useSSRSafeNavigation } from "$lib/hooks/useSSRSafeNavigation.ts";
-import { textSm, titlePrimary } from "$text";
+import { titlePrimary } from "$text";
 import type { CreateStampHeaderProps, CreateStampType } from "$types/ui.d.ts";
-
-const SHORTCUTS: Array<{ keys: string; action: string }> = [
-  { keys: "Cmd/Ctrl+Z · ⇧Z", action: "Undo / Redo" },
-  { keys: "Cmd/Ctrl+D", action: "Duplicate selected" },
-  { keys: "Cmd/Ctrl+C · X · V", action: "Copy / Cut / Paste" },
-  { keys: "Cmd/Ctrl+G · ⇧G", action: "Group / Ungroup" },
-  { keys: "Cmd/Ctrl+A", action: "Select all layers" },
-  { keys: "Delete / Backspace", action: "Delete selected" },
-  { keys: "Arrow keys", action: "Nudge selected (0.5%)" },
-  { keys: "Shift+Arrows", action: "Nudge selected (5%)" },
-  { keys: "Shift+H · Shift+V", action: "Flip horizontal / vertical" },
-  { keys: "Shift+Drag handle", action: "Constrain aspect ratio" },
-  { keys: "Drag empty canvas", action: "Box-select layers" },
-  { keys: "Shift+Click", action: "Add to / remove from selection" },
-  { keys: "Double-click name", action: "Rename layer" },
-  { keys: "+ / − · Wheel", action: "Zoom in / out" },
-  { keys: "Space+Drag · Middle-drag", action: "Pan canvas" },
-  { keys: "0", action: "Reset zoom & pan" },
-  { keys: "Esc", action: "Deselect / close dialogs" },
-  { keys: "?", action: "Show this help" },
-];
-
-function ShortcutsModal() {
-  return (
-    <ModalBase title="SHORTCUTS">
-      <div class="flex flex-col gap-1.5 pt-5">
-        {SHORTCUTS.map((row) => (
-          <div
-            key={row.action}
-            class="flex justify-between items-center gap-3 py-1
-              border-b border-color-neutral-800 last:border-0"
-          >
-            <span class={textSm}>{row.action}</span>
-            <span class="font-mono text-[0.625rem] text-color-neutral-500">
-              {row.keys}
-            </span>
-          </div>
-        ))}
-      </div>
-    </ModalBase>
-  );
-}
-
-export function openShortcutsModal(): void {
-  openModal(<ShortcutsModal />, "zoomInOut");
-}
+import type { JSX } from "preact";
 
 const CREATE_STAMP_TYPES: readonly CreateStampType[] = [
   "classic",
@@ -64,6 +21,11 @@ export function CreateStampHeader(
 ) {
   const { navigate } = useSSRSafeNavigation();
   const stampType = active;
+  const howtoByType: Record<CreateStampType, JSX.Element> = {
+    classic: <StampCreateClassicHowto />,
+    posh: <StampCreatePoshHowto />,
+    recursive: <StampCreateRecursiveHowto />,
+  };
 
   const handleTypeChange = (value: string) => {
     if (value === active) return;
@@ -91,25 +53,10 @@ export function CreateStampHeader(
           />
         </div>
 
-        {/* Info - Right (canvas shortcuts only apply to the recursive editor) */}
-        {active === "recursive" && (
-          <div class="flex shrink-0 ml-auto">
-            <div class={container2Icon}>
-              <Icon
-                type="iconButton"
-                name="info"
-                weight="normal"
-                size="md"
-                color="neutral400"
-                ariaLabel="Keyboard shortcuts"
-                onClick={(e) => {
-                  e.preventDefault();
-                  openShortcutsModal();
-                }}
-              />
-            </div>
-          </div>
-        )}
+        {/* Info - Right (how-to modal for the active stamp type) */}
+        <div class="flex shrink-0 ml-auto">
+          <InfoButton modal={howtoByType[stampType]} />
+        </div>
       </ScrollFadeRow>
     </div>
   );

@@ -168,6 +168,7 @@ import * as $Toast_ToastProvider from "./islands/Toast/ToastProvider.tsx";
 import * as $WebVitalsReporter from "./islands/WebVitalsReporter.tsx";
 import * as $button_CollectionButton from "./islands/button/CollectionButton.tsx";
 import * as $button_FilterButton from "./islands/button/FilterButton.tsx";
+import * as $button_InfoButton from "./islands/button/InfoButton.tsx";
 import * as $button_MenuButton from "./islands/button/MenuButton.tsx";
 import * as $button_PaginationButtons from "./islands/button/PaginationButtons.tsx";
 import * as $button_PaginationButtonsSSRSafe from "./islands/button/PaginationButtonsSSRSafe.tsx";
@@ -304,6 +305,9 @@ import * as $section_howto_SRC101TransferHowto from "./islands/section/howto/SRC
 import * as $section_howto_SRC20DeployHowto from "./islands/section/howto/SRC20DeployHowto.tsx";
 import * as $section_howto_SRC20MintHowto from "./islands/section/howto/SRC20MintHowto.tsx";
 import * as $section_howto_SRC20TransferHowto from "./islands/section/howto/SRC20TransferHowto.tsx";
+import * as $section_howto_StampCreateClassicHowto from "./islands/section/howto/StampCreateClassicHowto.tsx";
+import * as $section_howto_StampCreatePoshHowto from "./islands/section/howto/StampCreatePoshHowto.tsx";
+import * as $section_howto_StampCreateRecursiveHowto from "./islands/section/howto/StampCreateRecursiveHowto.tsx";
 import * as $section_howto_StampSendHowTo from "./islands/section/howto/StampSendHowTo.tsx";
 import * as $section_howto_StampingHowto from "./islands/section/howto/StampingHowto.tsx";
 import * as $section_index from "./islands/section/index.ts";
@@ -540,6 +544,7 @@ const manifest = {
     "./islands/WebVitalsReporter.tsx": $WebVitalsReporter,
     "./islands/button/CollectionButton.tsx": $button_CollectionButton,
     "./islands/button/FilterButton.tsx": $button_FilterButton,
+    "./islands/button/InfoButton.tsx": $button_InfoButton,
     "./islands/button/MenuButton.tsx": $button_MenuButton,
     "./islands/button/PaginationButtons.tsx": $button_PaginationButtons,
     "./islands/button/PaginationButtonsSSRSafe.tsx":
@@ -719,6 +724,12 @@ const manifest = {
     "./islands/section/howto/SRC20MintHowto.tsx": $section_howto_SRC20MintHowto,
     "./islands/section/howto/SRC20TransferHowto.tsx":
       $section_howto_SRC20TransferHowto,
+    "./islands/section/howto/StampCreateClassicHowto.tsx":
+      $section_howto_StampCreateClassicHowto,
+    "./islands/section/howto/StampCreatePoshHowto.tsx":
+      $section_howto_StampCreatePoshHowto,
+    "./islands/section/howto/StampCreateRecursiveHowto.tsx":
+      $section_howto_StampCreateRecursiveHowto,
     "./islands/section/howto/StampSendHowTo.tsx": $section_howto_StampSendHowTo,
     "./islands/section/howto/StampingHowto.tsx": $section_howto_StampingHowto,
     "./islands/section/index.ts": $section_index,

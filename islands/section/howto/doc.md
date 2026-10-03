@@ -17,6 +17,9 @@
  * - SRC20TransferHowto.tsx
  * - StampSendHowTo.tsx
  * - StampingHowto.tsx
+ * - StampCreateClassicHowto.tsx (create/classic info modal, renders ModalBase)
+ * - StampCreatePoshHowto.tsx (create/posh info modal, renders ModalBase)
+ * - StampCreateRecursiveHowto.tsx (create/recursive keyboard shortcuts modal, renders ModalBase)
  * - doc.md (this documentation)
  * 
  * Creating a New Module

@@ -2,7 +2,7 @@
 import { Button, buttonHover, ToggleSwitchButton } from "$button";
 import { walletContext } from "$client/wallet/wallet.ts";
 import { inputField, inputNumeric, messageError } from "$form";
-import { CreateStampRecursiveHeader, openShortcutsModal } from "$header";
+import { CreateStampRecursiveHeader } from "$header";
 import { Icon, PlaceholderImage, UserProfileIcon } from "$icon";
 import { RangeSlider } from "$islands/button/RangeSlider.tsx";
 import {
@@ -18,6 +18,7 @@ import { InputField } from "$islands/form/InputField.tsx";
 import { CollapsibleSection } from "$islands/layout/CollapsibleSection.tsx";
 import PreviewCodeModal from "$islands/modal/PreviewCodeModal.tsx";
 import PreviewImageModal from "$islands/modal/PreviewImageModal.tsx";
+import { StampCreateRecursiveHowto } from "$islands/section/howto/StampCreateRecursiveHowto.tsx";
 import { openSearchStampPicker } from "$islands/modal/SearchStampPickerModal.tsx";
 import { openModal } from "$islands/modal/states.ts";
 import {
@@ -1477,7 +1478,7 @@ export function CreateStampRecursiveContent(
       if (t.isContentEditable) return;
       if (e.key === "?") {
         e.preventDefault();
-        openShortcutsModal();
+        openModal(<StampCreateRecursiveHowto />, "zoomInOut");
         return;
       }
       if (e.key === "Escape") {
