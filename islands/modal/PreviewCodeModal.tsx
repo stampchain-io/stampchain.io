@@ -10,10 +10,23 @@ import { logger } from "$lib/utils/logger.ts";
 import type { PreviewCodeModalProps } from "$types/ui.d.ts";
 import { useEffect, useState } from "preact/hooks";
 
-/* ===== TYPES ===== */
+/* ===== CONSTANTS ===== */
+/** Minimum length before a whitespace-free string is treated as base64. */
+const BASE64_MIN_LENGTH = 256;
+const BASE64_PATTERN = /^[A-Za-z0-9+/]+={0,2}$/;
+
+/** True for data URLs and long base64 blobs (e.g. image stamp payloads). */
+function isBinaryBlob(value: string): boolean {
+  const trimmed = value.trim();
+  if (trimmed.startsWith("data:")) return true;
+  return trimmed.length > BASE64_MIN_LENGTH && BASE64_PATTERN.test(trimmed);
+}
 
 /* ===== COMPONENT ===== */
 export default function PreviewCodeModal({ src }: PreviewCodeModalProps) {
+  // Formatting only makes sense for source text (html, svg, css, js, json...)
+  const canFormat = !!src && !isBinaryBlob(src);
+
   /* ===== STATE ===== */
   const codeRaw = src ? src : "No content available";
   const [codeFormatted, setCodeFormatted] = useState("");
@@ -100,11 +113,13 @@ export default function PreviewCodeModal({ src }: PreviewCodeModalProps) {
     >
       {/* ===== VIEW TOGGLE ===== */}
       <div class="absolute top-1 right-1 z-10 flex gap-2">
-        <div
-          class={`${container2Icon}`}
-        >
-          <ViewCodeButton mode={codeView} onChange={setCodeView} />
-        </div>
+        {canFormat && (
+          <div
+            class={`${container2Icon}`}
+          >
+            <ViewCodeButton mode={codeView} onChange={setCodeView} />
+          </div>
+        )}
         <div
           class={`${container2Icon}`}
         >
@@ -120,9 +135,9 @@ export default function PreviewCodeModal({ src }: PreviewCodeModalProps) {
         </div>
       </div>
       {/* ===== CODE DISPLAY ===== */}
-      <div class="flex flex-col w-full h-full p-3 overflow-auto scrollbar-background-layer1">
-        <code class="whitespace-pre-wrap text-xs text-color-neutral-200 leading-relaxed pb-3">
-          {codeView === "codeRaw" ? codeRaw : codeFormatted}
+      <div class="flex flex-col w-full h-full p-3 overflow-y-auto overflow-x-hidden scrollbar-background-layer1">
+        <code class="block w-full min-w-0 whitespace-pre-wrap break-all [overflow-wrap:anywhere] text-xs text-color-neutral-200 leading-relaxed pb-3">
+          {canFormat && codeView === "codeFormatted" ? codeFormatted : codeRaw}
         </code>
       </div>
     </ModalBase>

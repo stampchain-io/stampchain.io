@@ -544,7 +544,7 @@ interface StampUploadWorkspaceProps {
   disabled?: boolean;
 }
 
-const TEXT_FILE_EXT = /\.(svg|html|txt|json|xml)$/i;
+const TEXT_FILE_EXT = /\.(svg|html|htm|txt|json|xml|js|css)$/i;
 
 const MIME_BY_EXT: Record<string, string> = {
   png: "image/png",
@@ -682,7 +682,7 @@ export function StampUploadWorkspace(
         weight="custom"
         size="custom"
         color="neutral400"
-        className={`w-12 h-12 stroke-[0.3] group-hover:stroke-color-hover  ${transitionColors} ${
+        className={`w-12 h-12 stroke-[0.4] group-hover:stroke-color-hover  ${transitionColors} ${
           isDragging ? "stroke-color-hover" : ""
         }`}
       />
