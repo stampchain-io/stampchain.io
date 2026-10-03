@@ -272,6 +272,7 @@ import * as $modal_SearchStampModal from "./islands/modal/SearchStampModal.tsx";
 import * as $modal_SearchStampPickerModal from "./islands/modal/SearchStampPickerModal.tsx";
 import * as $modal_SendBTCModal from "./islands/modal/SendBTCModal.tsx";
 import * as $modal_states from "./islands/modal/states.ts";
+import * as $section_BlockchainStats from "./islands/section/BlockchainStats.tsx";
 import * as $section_FeeCalculatorBase from "./islands/section/FeeCalculatorBase.tsx";
 import * as $section_cta_ContactCta from "./islands/section/cta/ContactCta.tsx";
 import * as $section_cta_DonateCta from "./islands/section/cta/DonateCta.tsx";
@@ -671,6 +672,7 @@ const manifest = {
     "./islands/modal/SearchStampPickerModal.tsx": $modal_SearchStampPickerModal,
     "./islands/modal/SendBTCModal.tsx": $modal_SendBTCModal,
     "./islands/modal/states.ts": $modal_states,
+    "./islands/section/BlockchainStats.tsx": $section_BlockchainStats,
     "./islands/section/FeeCalculatorBase.tsx": $section_FeeCalculatorBase,
     "./islands/section/cta/ContactCta.tsx": $section_cta_ContactCta,
     "./islands/section/cta/DonateCta.tsx": $section_cta_DonateCta,

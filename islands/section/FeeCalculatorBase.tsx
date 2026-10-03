@@ -1,11 +1,11 @@
 import { Button, ButtonProcessing } from "$button";
 import { ToggleSwitchButton } from "$components/button/ToggleSwitchButton.tsx";
 import { MaraModeBadge } from "$components/indicators/MaraModeIndicator.tsx";
-import { FeeSkeletonLoader } from "$components/indicators/ProgressIndicator.tsx";
 import { handleModalClose } from "$components/layout/ModalBase.tsx";
 import { useFees } from "$fees";
 import { Icon } from "$icon";
 import { RangeSlider } from "$islands/button/RangeSlider.tsx";
+import { BlockchainStats } from "$islands/section/BlockchainStats.tsx";
 import { transitionAll, transitionColors, transitionTransform } from "$layout";
 import type { ExtendedBaseFeeCalculatorProps } from "$lib/types/base.d.ts";
 import { estimateTransactionSizeForType } from "$lib/utils/bitcoin/transactions/transactionSizeEstimator.ts";
@@ -211,35 +211,32 @@ export function FeeCalculatorBase({
     }
   };
 
-  // Fee selector labels (slider is rendered full-width below this row)
-  const renderFeeSelector = () => {
+  // Recommended fee (rendered inside BlockchainStats, above its divider)
+  const renderRecommendedFee = () => {
     if (isLoadingMaraFee) {
       return (
-        <div class="flex flex-col">
-          <FeeSkeletonLoader />
+        <div class="animate-pulse flex items-center gap-2">
+          <div class="h-3 w-24 bg-color-neutral-500 rounded" />
+          <div class="h-3 w-12 bg-color-neutral-500 rounded" />
         </div>
       );
     }
 
     return (
       <div class="flex flex-col">
-        <div class="flex items-center gap-2">
-          {maraMode && (
-            <div
-              className="relative cursor-help"
-              title="MARA Pool: Direct mining pool submission for non-standard transactions"
-            >
-              <MaraModeBadge />
-            </div>
-          )}
-        </div>
+        {maraMode && (
+          <div
+            className="relative cursor-help"
+            title="MARA Pool: Direct mining pool submission for non-standard transactions"
+          >
+            <MaraModeBadge />
+          </div>
+        )}
         <h6 class="font-light text-xs text-color-neutral-300 cursor-default select-none text-nowrap">
           <span class="text-color-neutral-500 pr-2">
             {maraMode ? "MARA REQUIRED" : "RECOMMENDED"}
           </span>
-          <span
-            class={`font-medium ${maraMode ? "" : ""}`}
-          >
+          <span class="font-medium">
             {maraMode && maraFeeRate !== null
               ? maraFeeRate
               : fees?.recommendedFee
@@ -248,16 +245,29 @@ export function FeeCalculatorBase({
           </span>{" "}
           SAT/vB
         </h6>
-        <h6 class="font-light text-sm text-color-primary-400 mb-1.5 cursor-default select-none">
-          <span class="text-color-neutral-500 pr-2.5">FEE</span>
-          <span
-            class={`font-bold ${maraMode ? "" : ""}`}
-          >
-            {fee === 0 ? <span class="animate-pulse">XX</span> : fee}
-          </span>{" "}
-          SAT/vB
-        </h6>
       </div>
+    );
+  };
+
+  // Selected fee label (slider is rendered full-width below this row)
+  const renderFeeSelector = () => {
+    if (isLoadingMaraFee) {
+      return (
+        <div class="animate-pulse flex items-center gap-2">
+          <div class="h-4 w-8 bg-color-neutral-500 rounded" />
+          <div class="h-5 w-10 bg-color-neutral-500 rounded" />
+        </div>
+      );
+    }
+
+    return (
+      <h6 class="font-light text-sm text-color-primary-400 cursor-default select-none">
+        <span class="text-color-neutral-500 pr-2.5">FEE</span>
+        <span class="font-bold">
+          {fee === 0 ? <span class="animate-pulse">XX</span> : fee}
+        </span>{" "}
+        SAT/vB
+      </h6>
     );
   };
 
@@ -662,7 +672,8 @@ export function FeeCalculatorBase({
   return (
     <div class={className}>
       <div>
-        <div class="flex justify-between items-start">
+        <BlockchainStats>{renderRecommendedFee()}</BlockchainStats>
+        <div class="flex justify-between items-center mb-2">
           {renderFeeSelector()}
           {progressIndicator && (
             <div className="flex items-start justify-end w-auto">

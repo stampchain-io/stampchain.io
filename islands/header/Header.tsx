@@ -90,10 +90,8 @@ export function Header() {
   const closeTooltipTimeoutRef = useRef<number | null>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
 
-  // Centralized data fetching - starts immediately on page load
-  const { fees, loading: feesLoading } = useFees();
-  const [latestBlock, setLatestBlock] = useState(0);
-  const [healthLoading, setHealthLoading] = useState(true);
+  // Prefetch fee data on page load (consumed by BlockchainStats in FeeCalculatorBase)
+  useFees();
 
   // Single atomic dropdown state
   const [dropdownState, setDropdownState] = useState<{
@@ -125,36 +123,6 @@ export function Header() {
     create: null,
   });
   const animationTimeoutRef = useRef<number | null>(null);
-
-  /* ===== HEALTH DATA FETCHING ===== */
-  useEffect(() => {
-    const fetchHealthData = async () => {
-      try {
-        const response = await fetch("/api/v2/health");
-        if (response.ok) {
-          const healthData = await response.json();
-          const blockHeight = healthData.services?.blockSync?.indexed || 0;
-          setLatestBlock(blockHeight);
-
-          if (blockHeight === 0) {
-            // Set -1 to indicate service is unavailable
-            setLatestBlock(-1);
-          }
-        } else {
-          // API failed, set -1 to indicate service is unavailable
-          setLatestBlock(-1);
-        }
-      } catch (err) {
-        console.error("Health data fetch error:", err);
-        // Set -1 to indicate service is unavailable
-        setLatestBlock(-1);
-      } finally {
-        setHealthLoading(false);
-      }
-    };
-
-    fetchHealthData();
-  }, []);
 
   // Scroll lock
   useEffect(() => {
@@ -311,7 +279,7 @@ export function Header() {
       const rect = toolsButtonRef.current.getBoundingClientRect();
       toolsPos = {
         top: rect.bottom + 2,
-        left: rect.right - 550 + 55,
+        left: rect.right - 97,
       };
     }
 
@@ -445,18 +413,6 @@ export function Header() {
     });
   }, [openDrawer, closeMenu]);
 
-  // Create centralized data object to pass to ToolsButton
-  const toolsData = useMemo(() => ({
-    btcPrice: fees?.btcPrice || 0,
-    recommendedFee: fees?.recommendedFee || 6,
-    latestBlock,
-    isLoading: feesLoading || healthLoading,
-    // Priority fees from mempool.space
-    lowFee: fees?.hourFee || 0,
-    mediumFee: fees?.halfHourFee || 0,
-    highFee: fees?.fastestFee || 0,
-  }), [fees, latestBlock, feesLoading, healthLoading]);
-
   /* ===== DRAWER RENDERER ===== */
   const renderDrawer = (type: "menu" | "wallet" | "tools") => {
     const isActive = drawerContent === type && open;
@@ -471,8 +427,7 @@ export function Header() {
             onCloseDrawer: closeMenu,
           }).drawer;
         case "tools":
-          return ToolsButton({ onOpenDrawer: openDrawer, data: toolsData })
-            .drawer;
+          return ToolsButton({ onOpenDrawer: openDrawer }).drawer;
       }
     };
 
@@ -631,7 +586,7 @@ export function Header() {
           {/* Right: Search, Tools, Wallet and Menu Buttons */}
           <div class="flex items-center gap-1 -mr-2">
             <SearchButton />
-            {ToolsButton({ onOpenDrawer: openDrawer, data: toolsData }).icon}
+            {ToolsButton({ onOpenDrawer: openDrawer }).icon}
             {WalletButton({
               onOpenDrawer: openDrawer,
               onCloseDrawer: closeMenu,
@@ -675,7 +630,7 @@ export function Header() {
               onMouseEnter={handleToolsMouseEnter}
               onMouseLeave={handleDropdownMouseLeave}
             >
-              {ToolsButton({ onOpenDrawer: openDrawer, data: toolsData }).icon}
+              {ToolsButton({ onOpenDrawer: openDrawer }).icon}
             </div>
             <div
               class="relative group"
@@ -711,7 +666,7 @@ export function Header() {
 
         return shouldRenderTools && createPortal(
           <div
-            class={`hidden tablet:block !fixed z-dropdown w-[550px] px-5 py-3.5 whitespace-nowrap ${container1} ${animationClass}`}
+            class={`hidden tablet:block !fixed z-dropdown min-w-[150px] px-5 py-3.5 whitespace-nowrap ${container1} ${animationClass}`}
             style={{
               top: `${dropdownState.toolsPos!.top}px`,
               left: `${dropdownState.toolsPos!.left}px`,
@@ -733,10 +688,7 @@ export function Header() {
             }}
             onMouseLeave={handleDropdownMouseLeave}
           >
-            <div class="grid grid-cols-5 w-full">
-              {ToolsButton({ onOpenDrawer: openDrawer, data: toolsData })
-                .dropdown}
-            </div>
+            {ToolsButton({ onOpenDrawer: openDrawer }).dropdown}
           </div>,
           document.body,
         );
@@ -782,7 +734,7 @@ export function Header() {
             onMouseLeave={handleDropdownMouseLeave}
           >
             <div class="flex flex-col space-y-1 text-left">
-              <h6 class={eyebrowNeutral}>STAMP</h6>
+              <h6 class={`${eyebrowNeutral} -my-0.5`}>STAMP</h6>
               {CREATE_NAV_LINKS.map((link) => (
                 <a
                   key={link.href}
