@@ -1,5 +1,6 @@
 /* ===== ICON COMPONENT ===== */
 import * as iconPaths from "$components/icon/paths.ts";
+import { transitionAll } from "$components/layout/styles.ts";
 import {
   BadgeVariants,
   globalSvgAttributes,
@@ -7,7 +8,6 @@ import {
   iconStyles,
   IconVariants,
 } from "$icon";
-import { transitionAll } from "$components/layout/styles.ts";
 
 /* ===== COMPONENT ===== */
 export function Icon(props: IconVariants) {
@@ -77,9 +77,10 @@ export function Icon(props: IconVariants) {
       sortAsc: "listAsc",
       sortDesc: "listDesc",
       tools: "gearWrench",
-      speedSlow: "time10",
+      speedSlow: "time60",
       speedMedium: "time30",
-      speedFast: "time60",
+      speedFast: "time10",
+      speedNone: "timeClock",
 
       // Artboard Icons
       undo: "undo",

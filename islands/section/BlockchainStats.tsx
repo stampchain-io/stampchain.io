@@ -1,9 +1,40 @@
 import { Icon } from "$icon";
 import { useFees } from "$lib/hooks/useFees.ts";
 import { formatUSDValue } from "$lib/utils/ui/formatting/formatUtils.ts";
+import { tooltipButton } from "$notification";
 import { eyebrowNeutral, labelXs } from "$text";
 import type { ComponentChildren } from "preact";
 import { useEffect, useState } from "preact/hooks";
+
+/* ===== FEE SPEED TOOLTIPS ===== */
+// `align` overrides the default centered tooltip on the outer icons so the
+// tooltip doesn't overflow the container edges.
+const FEE_SPEEDS = [
+  {
+    name: "speedFast",
+    feeKey: "fastestFee",
+    label: "10 MINUTE CONFIRMATION TIME",
+    align: "!-left-3 !translate-x-0",
+  },
+  {
+    name: "speedMedium",
+    feeKey: "halfHourFee",
+    label: "HALF HOUR CONFIRMATION",
+    align: "",
+  },
+  {
+    name: "speedSlow",
+    feeKey: "hourFee",
+    label: "ONE HOUR CONFIRMATION",
+    align: "",
+  },
+  {
+    name: "speedNone",
+    feeKey: "economyFee",
+    label: "NO PRIORITY - CONFIRMATION WHENEVER",
+    align: "!left-auto !-right-3 !translate-x-0",
+  },
+] as const;
 
 interface BlockchainStatsProps {
   className?: string;
@@ -53,9 +84,12 @@ export function BlockchainStats(
 
   const isLoading = feesLoading || healthLoading;
   const btcPrice = fees?.btcPrice || 0;
-  const lowFee = fees?.hourFee || 0;
-  const mediumFee = fees?.halfHourFee || 0;
-  const highFee = fees?.fastestFee || 0;
+  const feeValues = {
+    economyFee: fees?.economyFee || 0,
+    hourFee: fees?.hourFee || 0,
+    halfHourFee: fees?.halfHourFee || 0,
+    fastestFee: fees?.fastestFee || 0,
+  };
 
   const displayPrice = btcPrice && typeof btcPrice === "number"
     ? formatUSDValue(btcPrice).toLocaleString()
@@ -65,14 +99,14 @@ export function BlockchainStats(
     iconName: string,
     content: ComponentChildren,
   ) => (
-    <div class="flex items-center font-medium text-color-orange-400">
+    <div class="flex items-center font-medium text-color-neutral-400">
       <Icon
         type="icon"
         name={iconName}
         weight="normal"
         size="lg"
         color="neutral500"
-        className="mr-3"
+        className="mr-2"
       />
       {content}
     </div>
@@ -80,84 +114,80 @@ export function BlockchainStats(
 
   return (
     <div class={`w-full ${labelXs} ${className}`}>
-      {/* Row 1: Latest block (left) + BTC price (right) */}
-      <div class="flex flex-row justify-between items-center w-full gap-4">
-        {statValue(
-          "bitcoinBlock",
-          isLoading
-            ? <span class="animate-pulse">XXX,XXX</span>
-            : latestBlock === -1
-            ? <span>N/A</span>
-            : <span>{latestBlock.toLocaleString()}</span>,
-        )}
-        {statValue(
-          "bitcoin",
-          isLoading
-            ? (
-              <>
-                <span class="animate-pulse">XXX,XXX</span>
-                <span class="font-light">&nbsp;USD</span>
-              </>
-            )
-            : (
-              <>
-                <span>{displayPrice}</span>
-                <span class="font-light">&nbsp;USD</span>
-              </>
-            ),
-        )}
-      </div>
-
-      {/* Row 2: Priority fees - 3 column layout */}
-      <div class="flex flex-col space-y-1 w-full mt-3">
-        <h6
-          class={`pb-1 ${eyebrowNeutral} !text-color-neutral-500 text-center`}
-        >
-          TRANSACTION FEES
-        </h6>
-        <div class="flex justify-between">
-          <Icon
-            type="icon"
-            name="speedSlow"
-            weight="normal"
-            size="lg"
-            color="neutral500"
-          />
-          <Icon
-            type="icon"
-            name="speedMedium"
-            weight="normal"
-            size="lg"
-            color="neutral500"
-          />
-          <Icon
-            type="icon"
-            name="speedFast"
-            weight="normal"
-            size="lg"
-            color="neutral500"
-          />
+      <div class="flex flex-col items-start w-full gap-2">
+        {/* Latest block + BTC price */}
+        <div class="flex flex-row items-center justify-between w-full whitespace-nowrap">
+          {statValue(
+            "bitcoin",
+            isLoading
+              ? (
+                <>
+                  <span class="animate-pulse">XXX,XXX</span>
+                  <span class="font-light">&nbsp;USD</span>
+                </>
+              )
+              : (
+                <>
+                  <span>{displayPrice}</span>
+                  <span class="font-light">&nbsp;USD</span>
+                </>
+              ),
+          )}
+          {statValue(
+            "bitcoinBlock",
+            isLoading
+              ? <span class="animate-pulse">XXX,XXX</span>
+              : latestBlock === -1
+              ? <span>N/A</span>
+              : <span>{latestBlock.toLocaleString()}</span>,
+          )}
         </div>
-        <div class="flex justify-between font-medium text-color-orange-400">
-          {isLoading
-            ? (
-              <>
-                <span class="animate-pulse pl-0.5">XX</span>
-                <span class="animate-pulse">XX</span>
-                <span class="animate-pulse pr-0.5">XX</span>
-              </>
-            )
-            : (
-              <>
-                <span class="pl-0.5">{lowFee || "N/A"}</span>
-                <span>{mediumFee || "N/A"}</span>
-                <span class="pr-0.5">{highFee || "N/A"}</span>
-              </>
-            )}
+
+        {/* Priority fees - 4 column layout */}
+        <div class="flex flex-col w-full space-y-1">
+          <h6
+            class={`${eyebrowNeutral} text-center`}
+          >
+            TRANSACTION FEES
+          </h6>
+          <div class="flex justify-between">
+            {FEE_SPEEDS.map(({ name, label, align }) => (
+              <div key={name} class="relative group flex">
+                <Icon
+                  type="icon"
+                  name={name}
+                  weight="normal"
+                  size="xl"
+                  color="neutral500"
+                />
+                <div
+                  class={`${tooltipButton} ${align} opacity-0 group-hover:opacity-100`}
+                >
+                  {label}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div class="flex justify-between font-medium text-color-neutral-400">
+            {FEE_SPEEDS.map(({ feeKey }, index) => (
+              <span
+                key={feeKey}
+                class={`${isLoading ? "animate-pulse" : ""} ${
+                  index === 0
+                    ? "pl-0.5"
+                    : index === FEE_SPEEDS.length - 1
+                    ? "pr-0.5"
+                    : ""
+                }`}
+              >
+                {isLoading ? "XX" : feeValues[feeKey] || "N/A"}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Row 3: Optional content (e.g. recommended fee), above the divider */}
+      {/* Optional content (e.g. recommended fee), above the divider */}
       {children && <div class="mt-3">{children}</div>}
 
       <hr class="mt-3 mb-3" />
