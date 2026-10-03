@@ -1,8 +1,8 @@
 /* ===== PREVIEW IMAGE MODAL COMPONENT ===== */
-import { ModalBase } from "$components/layout/ModalBase.tsx";
+import { Icon, PlaceholderImage } from "$icon";
 import StampTextContent from "$islands/content/stampDetailContent/StampTextContent.tsx";
-import { PlaceholderImage } from "$icon";
 import { closeModal } from "$islands/modal/states.ts";
+import { container2Icon, ModalBase } from "$layout";
 import { logger } from "$lib/utils/logger.ts";
 import { handleImageError } from "$lib/utils/ui/media/imageUtils.ts";
 import type { PreviewImageModalProps } from "$types/ui.d.ts";
@@ -38,6 +38,20 @@ const PreviewImageModal = ({
       hideHeader
       className="!w-[min(calc(100vh-40px),calc(100vw-40px))] !h-[min(calc(100vh-40px),calc(100vw-40px))] mobileLg:!w-[min(calc(100vh-80px),calc(100vw-80px))] mobileLg:!h-[min(calc(100vh-80px),calc(100vw-80px))] !p-2"
     >
+      {/* ===== CLOSE BUTTON ===== */}
+      <div class="absolute top-1 right-1 z-10">
+        <div class={`${container2Icon}`}>
+          <Icon
+            type="iconButton"
+            name="close"
+            weight="normal"
+            size="md"
+            color="neutral400"
+            ariaLabel="Close"
+            onClick={() => closeModal()}
+          />
+        </div>
+      </div>
       <div class="flex flex-col h-full w-full stamp-container">
         {/* ===== CONTENT RENDERING ===== */}
         {contentType === "html"

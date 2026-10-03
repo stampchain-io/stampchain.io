@@ -79,7 +79,7 @@ export function ViewCodeButton({
         name={iconName}
         weight="bold"
         size="md"
-        color="neutral800"
+        color="neutral400"
         className="!p-0"
         onClick={() => onChange(nextMode)}
         ariaLabel={ariaLabel}

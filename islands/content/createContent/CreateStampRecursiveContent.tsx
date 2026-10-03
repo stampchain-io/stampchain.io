@@ -10,6 +10,7 @@ import {
   StampCardsPreview,
   StampCpidToggleRow,
   StampMintPanel,
+  StampPreviewStage,
   StampPreviewToolbar,
 } from "$islands/content/createContent/CreateStampBase.tsx";
 import { ColorPicker } from "$islands/form/ColorPicker.tsx";
@@ -590,18 +591,14 @@ function PlaceholderIcon(props: {
 }
 
 const CANVAS_CSS = `
-.rsb-wrap{position:relative;width:100%;height:100%;
-  overflow:hidden;touch-action:none}
+.rsb-wrap{touch-action:none}
 .rsb-wrap:not(.preview){background:repeating-conic-gradient(#191919 0% 25%,#141414 0% 50%) 0 0/20px 20px}
 .rsb-canvas,.rsb-el{touch-action:none}
 .rsb-zoom,.rsb-preview{touch-action:manipulation}
 .rsb-wrap.preview .rsb-guide,
 .rsb-wrap.preview .rsb-grid,
 .rsb-wrap.preview .rsb-ruler{display:none!important}
-.rsb-canvas{position:absolute;top:0;bottom:0;left:0;right:0;margin:auto;
-  max-width:calc(100% - 48px);max-height:calc(100% - 48px);aspect-ratio:1/1;
-  overflow:hidden;container-type:size;transform-origin:center center;
-  box-shadow:0 8px 60px rgba(0,0,0,.7)}
+.rsb-canvas{transform-origin:center center}
 .rsb-grid{position:absolute;inset:0;width:100%;height:100%;display:block;
   pointer-events:none;z-index:9999}
 .rsb-el{position:absolute;cursor:move;transform-origin:center center}
@@ -2611,184 +2608,183 @@ export function CreateStampRecursiveContent(
             mobileLg:h-[640px] min-[1080px]:h-[690px]
             flex flex-col overflow-hidden ${container2}`}
         >
-          <div
-            ref={wrapRef}
-            class={`rsb-wrap h-full rounded-2xl ${rulers ? "rulers-on" : ""} ${
+          <StampPreviewStage
+            wrapRef={wrapRef}
+            wrapClass={`rsb-wrap ${rulers ? "rulers-on" : ""} ${
               mode === "preview" ? "preview" : ""
-            } ${
-              mode === "preview" && previewView === "single"
-                ? "bg-gradient-to-b from-color-neutral-800/40 via-color-neutral-900/60 to-neutral-900/80"
-                : ""
             }`}
-            onMouseDown={(e) => beginCanvasPointer(e)}
-            onTouchStart={(e) => {
-              if (e.touches.length !== 1) return;
-              beginCanvasPointer(pointerFromTouch(e, e.touches[0]));
-            }}
-            onContextMenu={(e) => {
-              e.preventDefault();
-              const el = (e.target as HTMLElement).closest(".rsb-el") as
-                | HTMLElement
-                | null;
-              if (el?.dataset.id) {
-                if (!rsbSelIds.value.includes(el.dataset.id)) {
-                  selectLayer(el.dataset.id);
+            showBackdrop={mode === "preview" && previewView === "single"}
+            wrapProps={{
+              onMouseDown: (e) => beginCanvasPointer(e),
+              onTouchStart: (e) => {
+                if (e.touches.length !== 1) return;
+                beginCanvasPointer(pointerFromTouch(e, e.touches[0]));
+              },
+              onContextMenu: (e) => {
+                e.preventDefault();
+                const el = (e.target as HTMLElement).closest(".rsb-el") as
+                  | HTMLElement
+                  | null;
+                if (el?.dataset.id) {
+                  if (!rsbSelIds.value.includes(el.dataset.id)) {
+                    selectLayer(el.dataset.id);
+                  }
                 }
-              }
-              setCtxOpen({ x: e.clientX, y: e.clientY });
+                setCtxOpen({ x: e.clientX, y: e.clientY });
+              },
             }}
-          >
-            <div
-              ref={canvasRef}
-              class={`rsb-canvas${
-                mode === "preview" && previewView === "cards" ? " hidden" : ""
-              }`}
-              style={{
-                background: bg,
-                transform: `translate(${panX}px,${panY}px) scale(${zoom})`,
-              }}
-            >
-              <canvas ref={gridRef} class="rsb-grid" />
-              {mode === "preview" && previewView === "single" && (
-                <iframe
-                  class="rsb-preview-frame"
-                  title="Stamp preview"
-                  srcDoc={generatedPreviewHtml}
-                />
-              )}
-              {mode === "edit" && layers.length === 0 && (
-                <div class="absolute inset-0 flex items-center justify-center
+            canvasRef={canvasRef}
+            canvasClass="rsb-canvas"
+            hideCanvas={mode === "preview" && previewView === "cards"}
+            canvasStyle={{
+              background: bg,
+              transform: `translate(${panX}px,${panY}px) scale(${zoom})`,
+            }}
+            canvas={
+              <>
+                <canvas ref={gridRef} class="rsb-grid" />
+                {mode === "preview" && previewView === "single" && (
+                  <iframe
+                    class="rsb-preview-frame"
+                    title="Stamp preview"
+                    srcDoc={generatedPreviewHtml}
+                  />
+                )}
+                {mode === "edit" && layers.length === 0 && (
+                  <div class="absolute inset-0 flex items-center justify-center
                 text-color-neutral-500 text-xs uppercase pointer-events-none select-none">
-                  Add assets and/or text
-                </div>
-              )}
-              {mode === "edit" && guides.map((g) => (
-                <div
-                  key={g.id}
-                  class={`rsb-guide rsb-guide-${g.type}`}
-                  style={g.type === "h"
-                    ? { top: `${g.pos}%` }
-                    : { left: `${g.pos}%` }}
-                  onMouseDown={(e) => {
-                    e.stopPropagation();
-                    guideDrag.current = { id: g.id };
-                  }}
-                  onTouchStart={(e) => {
-                    if (e.touches.length !== 1) return;
-                    e.stopPropagation();
-                    e.preventDefault();
-                    guideDrag.current = { id: g.id };
-                  }}
-                  onDblClick={() => removeGuide(g.id)}
-                >
-                  <div class="rsb-glabel">{g.pos.toFixed(1)}%</div>
-                </div>
-              ))}
-              {mode === "edit" && layers.map((l, z) => {
-                const isSel = l.id === selId;
-                const isMulti = selIds.includes(l.id) && !isSel;
-                return (
+                    Add assets and/or text
+                  </div>
+                )}
+                {mode === "edit" && guides.map((g) => (
                   <div
-                    key={l.id}
-                    data-id={l.id}
-                    class={`rsb-el${isSel ? " sel" : ""}${
-                      isMulti ? " multi" : ""
-                    }`}
-                    style={{
-                      left: `${l.x}%`,
-                      top: `${l.y}%`,
-                      width: `${l.w}%`,
-                      height: `${l.h}%`,
-                      transform: layerTransformCss(l),
-                      opacity: l.op,
-                      display: l.vis ? "block" : "none",
-                      zIndex: z,
-                      filter: layerFilterCss(l) || undefined,
+                    key={g.id}
+                    class={`rsb-guide rsb-guide-${g.type}`}
+                    style={g.type === "h"
+                      ? { top: `${g.pos}%` }
+                      : { left: `${g.pos}%` }}
+                    onMouseDown={(e) => {
+                      e.stopPropagation();
+                      guideDrag.current = { id: g.id };
                     }}
-                    onMouseDown={(e) => onElPointer(e, l)}
                     onTouchStart={(e) => {
                       if (e.touches.length !== 1) return;
+                      e.stopPropagation();
                       e.preventDefault();
-                      onElPointer(pointerFromTouch(e, e.touches[0]), l);
+                      guideDrag.current = { id: g.id };
                     }}
-                    onDblClick={(e) => {
-                      if (l.type !== "text") return;
-                      const inner = (e.currentTarget as HTMLElement)
-                        .querySelector(".rsb-text") as HTMLElement | null;
-                      if (!inner) return;
-                      pushHistory();
-                      inner.contentEditable = "true";
-                      inner.classList.add("editing");
-                      inner.focus();
-                      const finish = () => {
-                        patchLayer(l.id, {
-                          text: inner.textContent ?? "",
-                          name: (inner.textContent ?? "").slice(0, 20) ||
-                            "Text",
-                        });
-                        inner.contentEditable = "false";
-                        inner.classList.remove("editing");
-                        inner.removeEventListener("blur", finish);
-                      };
-                      inner.addEventListener("blur", finish);
-                    }}
+                    onDblClick={() => removeGuide(g.id)}
                   >
-                    {l.type === "text"
-                      ? (
-                        <div
-                          class="rsb-text"
-                          style={{
-                            fontFamily: recursiveStampFontFamily(l.font),
-                            fontSize: `${l.fontSize}cqh`,
-                            color: l.color,
-                            fontWeight: l.bold ? "bold" : "normal",
-                            fontStyle: l.italic ? "italic" : "normal",
-                            textAlign: l.align,
-                          }}
-                        >
-                          {l.text}
-                        </div>
-                      )
-                      : (
-                        <div class="rsb-inner">
-                          <CanvasLayerMedia layer={l} />
-                        </div>
-                      )}
-                    <div class="rsb-sel">
-                      <div class="rsb-ring" />
-                      <div class="rsb-rotline" />
-                      <div class="rsb-rot" data-rot="1" />
-                      {["tl", "tr", "bl", "br", "tm", "bm", "ml", "mr"]
-                        .map((h) => (
-                          <div
-                            key={h}
-                            class={`rsb-h h-${h}`}
-                            data-h={h}
-                          />
-                        ))}
-                    </div>
+                    <div class="rsb-glabel">{g.pos.toFixed(1)}%</div>
                   </div>
-                );
-              })}
-              {smartLines.map((g, i) => (
-                <div
-                  key={`smart-${g.type}-${g.pos}-${i}`}
-                  class={`rsb-smart rsb-smart-${g.type}`}
-                  style={g.type === "h"
-                    ? { top: `${g.pos}%` }
-                    : { left: `${g.pos}%` }}
-                />
-              ))}
-              {measureChips.map((b, i) => (
-                <div
-                  key={`measure-${i}`}
-                  class="rsb-measure"
-                  style={{ left: `${b.left}%`, top: `${b.top}%` }}
-                >
-                  {b.text}
-                </div>
-              ))}
-            </div>
+                ))}
+                {mode === "edit" && layers.map((l, z) => {
+                  const isSel = l.id === selId;
+                  const isMulti = selIds.includes(l.id) && !isSel;
+                  return (
+                    <div
+                      key={l.id}
+                      data-id={l.id}
+                      class={`rsb-el${isSel ? " sel" : ""}${
+                        isMulti ? " multi" : ""
+                      }`}
+                      style={{
+                        left: `${l.x}%`,
+                        top: `${l.y}%`,
+                        width: `${l.w}%`,
+                        height: `${l.h}%`,
+                        transform: layerTransformCss(l),
+                        opacity: l.op,
+                        display: l.vis ? "block" : "none",
+                        zIndex: z,
+                        filter: layerFilterCss(l) || undefined,
+                      }}
+                      onMouseDown={(e) => onElPointer(e, l)}
+                      onTouchStart={(e) => {
+                        if (e.touches.length !== 1) return;
+                        e.preventDefault();
+                        onElPointer(pointerFromTouch(e, e.touches[0]), l);
+                      }}
+                      onDblClick={(e) => {
+                        if (l.type !== "text") return;
+                        const inner = (e.currentTarget as HTMLElement)
+                          .querySelector(".rsb-text") as HTMLElement | null;
+                        if (!inner) return;
+                        pushHistory();
+                        inner.contentEditable = "true";
+                        inner.classList.add("editing");
+                        inner.focus();
+                        const finish = () => {
+                          patchLayer(l.id, {
+                            text: inner.textContent ?? "",
+                            name: (inner.textContent ?? "").slice(0, 20) ||
+                              "Text",
+                          });
+                          inner.contentEditable = "false";
+                          inner.classList.remove("editing");
+                          inner.removeEventListener("blur", finish);
+                        };
+                        inner.addEventListener("blur", finish);
+                      }}
+                    >
+                      {l.type === "text"
+                        ? (
+                          <div
+                            class="rsb-text"
+                            style={{
+                              fontFamily: recursiveStampFontFamily(l.font),
+                              fontSize: `${l.fontSize}cqh`,
+                              color: l.color,
+                              fontWeight: l.bold ? "bold" : "normal",
+                              fontStyle: l.italic ? "italic" : "normal",
+                              textAlign: l.align,
+                            }}
+                          >
+                            {l.text}
+                          </div>
+                        )
+                        : (
+                          <div class="rsb-inner">
+                            <CanvasLayerMedia layer={l} />
+                          </div>
+                        )}
+                      <div class="rsb-sel">
+                        <div class="rsb-ring" />
+                        <div class="rsb-rotline" />
+                        <div class="rsb-rot" data-rot="1" />
+                        {["tl", "tr", "bl", "br", "tm", "bm", "ml", "mr"]
+                          .map((h) => (
+                            <div
+                              key={h}
+                              class={`rsb-h h-${h}`}
+                              data-h={h}
+                            />
+                          ))}
+                      </div>
+                    </div>
+                  );
+                })}
+                {smartLines.map((g, i) => (
+                  <div
+                    key={`smart-${g.type}-${g.pos}-${i}`}
+                    class={`rsb-smart rsb-smart-${g.type}`}
+                    style={g.type === "h"
+                      ? { top: `${g.pos}%` }
+                      : { left: `${g.pos}%` }}
+                  />
+                ))}
+                {measureChips.map((b, i) => (
+                  <div
+                    key={`measure-${i}`}
+                    class="rsb-measure"
+                    style={{ left: `${b.left}%`, top: `${b.top}%` }}
+                  >
+                    {b.text}
+                  </div>
+                ))}
+              </>
+            }
+          >
             {marqueeRect && (
               <div
                 class="rsb-marquee"
@@ -2924,7 +2920,7 @@ export function CreateStampRecursiveContent(
                 </button>
               </div>
             )}
-          </div>
+          </StampPreviewStage>
         </div>
       </div>
 

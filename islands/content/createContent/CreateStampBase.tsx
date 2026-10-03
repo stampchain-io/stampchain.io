@@ -32,9 +32,9 @@ import { MAX_STAMP_FILE_BYTES } from "$lib/utils/stamps/mintHelpers.ts";
 import { handleImageError } from "$lib/utils/ui/media/imageUtils.ts";
 import { StatusMessages } from "$notification";
 import { FeeCalculatorBase } from "$section";
-import { labelSm, labelXs, subtitlePrimary, textSm, textXs } from "$text";
+import { labelXs, subtitlePrimary, textSm, textXs } from "$text";
 import type { StampRow } from "$types/stamp.d.ts";
-import type { ComponentChildren } from "preact";
+import type { ComponentChildren, JSX, Ref } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
 
 /* ===== LAYOUT ===== */
@@ -467,6 +467,75 @@ export function StampCardsPreview(
   );
 }
 
+/* ===== PREVIEW STAGE ===== */
+interface StampPreviewStageProps {
+  /** Gradient backdrop behind the canvas (single preview). */
+  showBackdrop?: boolean;
+  /** Hide the centered square, e.g. while the cards overlay is shown. */
+  hideCanvas?: boolean;
+  wrapRef?: Ref<HTMLDivElement>;
+  /** Extra classes on the stage wrapper. */
+  wrapClass?: string;
+  /** Event handlers / data attributes for the stage wrapper. */
+  wrapProps?: Omit<
+    JSX.HTMLAttributes<HTMLDivElement>,
+    "class" | "className" | "ref"
+  >;
+  canvasRef?: Ref<HTMLDivElement>;
+  /** Extra classes on the canvas square. */
+  canvasClass?: string;
+  canvasStyle?: JSX.CSSProperties;
+  /** Content of the centered 1:1 canvas square. */
+  canvas?: ComponentChildren;
+  /** Overlays rendered in the stage (toolbar, cards, zoom controls, ...). */
+  children?: ComponentChildren;
+}
+
+/**
+ * Preview area shared by all create pages: a full-size rounded stage with a
+ * gradient backdrop and a centered, shadowed 1:1 canvas square. The caller
+ * renders the canvas content and any overlays; the stage owns the look.
+ */
+export function StampPreviewStage(
+  {
+    showBackdrop = false,
+    hideCanvas = false,
+    wrapRef,
+    wrapClass = "",
+    wrapProps,
+    canvasRef,
+    canvasClass = "",
+    canvasStyle,
+    canvas,
+    children,
+  }: StampPreviewStageProps,
+) {
+  return (
+    <div
+      {...(wrapRef ? { ref: wrapRef } : {})}
+      {...wrapProps}
+      class={`relative w-full h-full overflow-hidden rounded-2xl
+        ${
+        showBackdrop
+          ? "bg-gradient-to-b from-color-neutral-800/40 via-color-neutral-900/60 to-neutral-900/80"
+          : ""
+      } ${wrapClass}`}
+    >
+      <div
+        {...(canvasRef ? { ref: canvasRef } : {})}
+        class={`absolute inset-0 m-auto aspect-square overflow-hidden
+          max-w-[calc(100%-48px)] max-h-[calc(100%-48px)]
+          [container-type:size] shadow-[0_8px_60px_rgba(0,0,0,0.7)]
+          ${hideCanvas ? "hidden" : ""} ${canvasClass}`}
+        {...(canvasStyle ? { style: canvasStyle } : {})}
+      >
+        {canvas}
+      </div>
+      {children}
+    </div>
+  );
+}
+
 /* ===== UPLOAD WORKSPACE ===== */
 interface StampUploadWorkspaceProps {
   stampFile: StampFileController;
@@ -493,9 +562,6 @@ function getFileMime(file: File): string {
   const ext = file.name.split(".").pop()?.toLowerCase() ?? "";
   return MIME_BY_EXT[ext] ?? "application/octet-stream";
 }
-
-const CHECKER_BG =
-  "bg-conic-pattern bg-[length:4px_4px] bg-color-neutral-800/50 [image-rendering:pixelated]";
 
 /** 1:1 square sized to the largest fit inside the size-container wrapper. */
 const SQUARE_SIZE = "shrink-0 w-[min(100cqw,100cqh)] h-[min(100cqw,100cqh)]";
@@ -616,12 +682,13 @@ export function StampUploadWorkspace(
         weight="custom"
         size="custom"
         color="neutral400"
-        className={`w-16 h-16 stroke-[0.3] group-hover:stroke-color-hover  ${transitionColors} ${
+        className={`w-12 h-12 stroke-[0.3] group-hover:stroke-color-hover  ${transitionColors} ${
           isDragging ? "stroke-color-hover" : ""
         }`}
       />
       <h5
-        class={`${labelSm} group-hover:!text-color-hover ${transitionColors} -my-2 ${
+        class={`-my-2 font-light text-xs tracking-wide select-none
+         group-hover:!text-color-hover ${transitionColors}  ${
           isDragging ? "!text-color-hover" : "!text-color-neutral-400"
         }`}
       >
@@ -633,58 +700,56 @@ export function StampUploadWorkspace(
     </label>
   );
 
+  const previewCanvas = fileKind === "image" && objectUrl
+    ? (
+      <img
+        class="w-full h-full object-contain [image-rendering:pixelated]"
+        src={objectUrl}
+        alt="Stamp preview"
+        onError={handleImageError}
+      />
+    )
+    : fileKind === "html" && htmlPreviewUrl
+    ? (
+      <iframe
+        title="Stamp preview"
+        loading="lazy"
+        sandbox="allow-scripts allow-same-origin"
+        src={htmlPreviewUrl}
+        class="w-full h-full overflow-hidden"
+      />
+    )
+    : (
+      <div class="w-1/3 max-w-[200px]">
+        <PlaceholderImage variant="no-image" />
+      </div>
+    );
+
   const previewState = file && (
-    <div
-      class={`relative flex ${SQUARE_SIZE} items-center justify-center
-        rounded-2xl overflow-hidden
-        ${previewView === "single" ? CHECKER_BG : ""}
-        ${isDragging ? "ring-2 ring-color-primary-400" : ""}`}
+    <StampPreviewStage
+      showBackdrop={previewView === "single"}
+      hideCanvas={previewView === "cards"}
+      wrapClass={isDragging ? "ring-2 ring-inset ring-color-primary-400" : ""}
+      canvasClass="flex items-center justify-center"
+      canvas={previewCanvas}
     >
-      {previewView === "single" && (fileKind === "image" && objectUrl
-        ? (
-          <img
-            class="w-full h-full object-contain [image-rendering:pixelated]"
-            src={objectUrl}
-            alt="Stamp preview"
-            onError={handleImageError}
-          />
-        )
-        : fileKind === "html" && htmlPreviewUrl
-        ? (
-          <iframe
-            title="Stamp preview"
-            loading="lazy"
-            sandbox="allow-scripts allow-same-origin"
-            src={htmlPreviewUrl}
-            class="w-full h-full overflow-hidden"
-          />
-        )
-        : (
-          <div class="w-1/3 max-w-[200px]">
-            <PlaceholderImage variant="no-image" />
-          </div>
-        ))}
       {previewView === "cards" && cardStamp && (
         <StampCardsPreview stamp={cardStamp} {...cardProps} />
       )}
-    </div>
-  );
-
-  /* Toolbar sits in the top-right corner of the container2 column */
-  const actionButtons = file && (
-    <StampPreviewToolbar
-      onDelete={stampFile.clearFile}
-      onViewCode={openCode}
-      onViewFullscreen={openFullscreen}
-      previewView={previewView}
-      onTogglePreviewView={() =>
-        setPreviewView((v) => v === "single" ? "cards" : "single")}
-    />
+      <StampPreviewToolbar
+        onDelete={stampFile.clearFile}
+        onViewCode={openCode}
+        onViewFullscreen={openFullscreen}
+        previewView={previewView}
+        onTogglePreviewView={() =>
+          setPreviewView((v) => v === "single" ? "cards" : "single")}
+      />
+    </StampPreviewStage>
   );
 
   return (
     <div
-      class="relative flex flex-1 min-h-0 flex-col gap-3 p-5"
+      class="relative flex flex-1 min-h-0 flex-col"
       onDragOver={(e) => {
         e.preventDefault();
         if (!disabled) setIsDragging(true);
@@ -700,11 +765,12 @@ export function StampUploadWorkspace(
         disabled={disabled}
         onChange={handleInput}
       />
-      {/* Size-container: the 1:1 area fits the largest square available */}
-      <div class="flex flex-1 min-h-0 items-center justify-center [container-type:size]">
-        {file ? previewState : emptyState}
-      </div>
-      {actionButtons}
+      {file ? previewState : (
+        /* Size-container: the 1:1 area fits the largest square available */
+        <div class="flex flex-1 min-h-0 items-center justify-center p-5 [container-type:size]">
+          {emptyState}
+        </div>
+      )}
       {/* All notifications live in the sidebar (StatusMessages) */}
     </div>
   );

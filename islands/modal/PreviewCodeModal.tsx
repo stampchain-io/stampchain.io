@@ -1,4 +1,5 @@
 /* ===== PREVIEW CODE MODAL COMPONENT ===== */
+import { Icon } from "$icon";
 import {
   type CodeViewMode,
   ViewCodeButton,
@@ -95,19 +96,32 @@ export default function PreviewCodeModal({ src }: PreviewCodeModalProps) {
         mobileLg:!w-[calc(100vw-20px)] mobileLg:h-[calc(100vh-20px)]
         tablet:!w-[calc(100vw-32px)] tablet:h-[calc(100vh-32px)]
         !max-w-[calc(100vw-12px)] mobileLg:!max-w-[800px]`}
-      contentClassName="h-full bg-color-neutral-50 rounded-2xl"
+      contentClassName="h-full bg-color-neutral-900 rounded-2xl"
     >
       {/* ===== VIEW TOGGLE ===== */}
-      <div class="absolute top-1 right-1 z-10">
+      <div class="absolute top-1 right-1 z-10 flex gap-2">
         <div
-          class={`${container2Icon} !bg-none !bg-color-neutral-200 !border-color-neutral-400`}
+          class={`${container2Icon}`}
         >
           <ViewCodeButton mode={codeView} onChange={setCodeView} />
+        </div>
+        <div
+          class={`${container2Icon}`}
+        >
+          <Icon
+            type="iconButton"
+            name="close"
+            weight="normal"
+            size="md"
+            color="neutral400"
+            ariaLabel="Close"
+            onClick={() => closeModal()}
+          />
         </div>
       </div>
       {/* ===== CODE DISPLAY ===== */}
       <div class="flex flex-col w-full h-full p-3 overflow-auto scrollbar-background-layer1">
-        <code class="whitespace-pre-wrap text-xs text-color-neutral-800 leading-tight pb-3">
+        <code class="whitespace-pre-wrap text-xs text-color-neutral-200 leading-relaxed pb-3">
           {codeView === "codeRaw" ? codeRaw : codeFormatted}
         </code>
       </div>
