@@ -1,6 +1,5 @@
 /* ===== RECURSIVE STAMP CONTENT ===== */
 import { Button, buttonHover, ToggleSwitchButton } from "$button";
-import { StampCard } from "$card";
 import { walletContext } from "$client/wallet/wallet.ts";
 import { inputField, inputNumeric, messageError } from "$form";
 import { CreateStampRecursiveHeader, openShortcutsModal } from "$header";
@@ -8,13 +7,16 @@ import { Icon, PlaceholderImage, UserProfileIcon } from "$icon";
 import { RangeSlider } from "$islands/button/RangeSlider.tsx";
 import {
   buildGeneratedStampRow,
+  StampCardsPreview,
   StampCpidToggleRow,
   StampMintPanel,
+  StampPreviewToolbar,
 } from "$islands/content/createContent/CreateStampBase.tsx";
 import { ColorPicker } from "$islands/form/ColorPicker.tsx";
 import { InputField } from "$islands/form/InputField.tsx";
 import { CollapsibleSection } from "$islands/layout/CollapsibleSection.tsx";
 import PreviewCodeModal from "$islands/modal/PreviewCodeModal.tsx";
+import PreviewImageModal from "$islands/modal/PreviewImageModal.tsx";
 import { openSearchStampPicker } from "$islands/modal/SearchStampPickerModal.tsx";
 import { openModal } from "$islands/modal/states.ts";
 import {
@@ -933,8 +935,8 @@ export function CreateStampRecursiveContent(
   const [showCreatorAssets, setShowCreatorAssets] = useState(false);
   const [recent, setRecent] = useState<RecentItem[]>([]);
   const { isConnected } = walletContext;
-  const [previewView, setPreviewView] = useState<"canvas" | "cards">(
-    "canvas",
+  const [previewView, setPreviewView] = useState<"single" | "cards">(
+    "single",
   );
   const [useTxHashEndpoint, setUseTxHashEndpoint] = useState(false);
   const [includeTitle, setIncludeTitle] = useState(false);
@@ -1667,7 +1669,7 @@ export function CreateStampRecursiveContent(
       showToast("Canvas is empty - add some assets.", "warning");
       return;
     }
-    setPreviewView("canvas");
+    setPreviewView("single");
     enterPreview(
       buildRecursiveStampHtml(layers, bg, false, srcId, htmlTitle),
     );
@@ -1729,7 +1731,7 @@ export function CreateStampRecursiveContent(
     setUseTxHashEndpoint(false);
     setIncludeTitle(false);
     setStampTitle("");
-    setPreviewView("canvas");
+    setPreviewView("single");
   };
 
   const previewSrc = fetched
@@ -1803,6 +1805,18 @@ export function CreateStampRecursiveContent(
 
   const onViewCode = () => {
     openModal(<PreviewCodeModal src={generatedHtml} />, "zoomInOut");
+  };
+
+  /** Fullscreen preview of the generated stamp (same HTML as the preview). */
+  const onViewFullscreen = () => {
+    if (!generatedPreviewHtml) return;
+    const previewFile = new File([generatedPreviewHtml], "stamp.html", {
+      type: "text/html",
+    });
+    openModal(
+      <PreviewImageModal src={previewFile} contentType="html" />,
+      "zoomInOut",
+    );
   };
 
   return (
@@ -2602,7 +2616,7 @@ export function CreateStampRecursiveContent(
             class={`rsb-wrap h-full rounded-2xl ${rulers ? "rulers-on" : ""} ${
               mode === "preview" ? "preview" : ""
             } ${
-              mode === "preview" && previewView === "canvas"
+              mode === "preview" && previewView === "single"
                 ? "bg-gradient-to-b from-color-neutral-800/40 via-color-neutral-900/60 to-neutral-900/80"
                 : ""
             }`}
@@ -2635,7 +2649,7 @@ export function CreateStampRecursiveContent(
               }}
             >
               <canvas ref={gridRef} class="rsb-grid" />
-              {mode === "preview" && previewView === "canvas" && (
+              {mode === "preview" && previewView === "single" && (
                 <iframe
                   class="rsb-preview-frame"
                   title="Stamp preview"
@@ -2846,96 +2860,24 @@ export function CreateStampRecursiveContent(
             )}
             {mode === "preview" && previewView === "cards" &&
               generatedPreviewStamp && (
-              <div class="absolute inset-0 z-[8700] min-w-0 overflow-x-hidden
-                overflow-y-auto min-[480px]:overflow-hidden p-3 flex
-                items-start min-[480px]:items-center justify-center">
-                <div class="flex flex-col min-[480px]:flex-row gap-3
-                  items-center min-[480px]:items-start">
-                  <div class="flex flex-col gap-3">
-                    <div class="flex gap-3 items-end">
-                      <div class="w-12 h-12 shrink-0">
-                        <StampCard
-                          stamp={generatedPreviewStamp}
-                          variant="cardSquare"
-                          previewHtml={generatedPreviewHtml}
-                        />
-                      </div>
-                      <div class="w-24 h-24 shrink-0">
-                        <StampCard
-                          stamp={generatedPreviewStamp}
-                          variant="cardSquare"
-                          previewHtml={generatedPreviewHtml}
-                        />
-                      </div>
-                    </div>
-                    <div class="w-40 h-40 shrink-0">
-                      <StampCard
-                        stamp={generatedPreviewStamp}
-                        variant="cardSquare"
-                        previewHtml={generatedPreviewHtml}
-                      />
-                    </div>
-                  </div>
-                  <div class="w-[180px] shrink-0">
-                    <StampCard
-                      stamp={generatedPreviewStamp}
-                      variant="cardVerticalDetail"
-                      previewHtml={generatedPreviewHtml}
-                    />
-                  </div>
-                </div>
-              </div>
+              <StampCardsPreview
+                stamp={generatedPreviewStamp}
+                previewHtml={generatedPreviewHtml}
+                class="z-[8700]"
+              />
             )}
             {mode === "preview" && (
-              <div class="absolute top-0 right-0 z-[8800] p-3 flex gap-3">
-                <div class={`${container2Icon}`}>
-                  <Icon
-                    type="iconButton"
-                    name="edit"
-                    weight="normal"
-                    size="md"
-                    color="neutral400"
-                    ariaLabel="Edit"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setPreviewView("canvas");
-                      enterEdit();
-                    }}
-                  />
-                </div>
-                <div class={`${container2Icon}`}>
-                  <Icon
-                    type="iconButton"
-                    name="previewCode"
-                    weight="normal"
-                    size="md"
-                    color="neutral400"
-                    ariaLabel="View code"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      onViewCode();
-                    }}
-                  />
-                  <Icon
-                    type="iconButton"
-                    name={previewView === "cards"
-                      ? "viewCardMixed"
-                      : "viewCardSingle"}
-                    weight="normal"
-                    size="md"
-                    color="neutral400"
-                    ariaLabel={previewView === "cards"
-                      ? "Switch to canvas preview"
-                      : "Switch to card preview"}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setPreviewView((v) =>
-                        v === "canvas" ? "cards" : "canvas"
-                      );
-                    }}
-                  />
-                </div>
-              </div>
+              <StampPreviewToolbar
+                onEdit={() => {
+                  setPreviewView("single");
+                  enterEdit();
+                }}
+                onViewCode={onViewCode}
+                onViewFullscreen={onViewFullscreen}
+                previewView={previewView}
+                onTogglePreviewView={() =>
+                  setPreviewView((v) => v === "single" ? "cards" : "single")}
+              />
             )}
             {previewView !== "cards" && (
               <div class={`rsb-zoom ${container3} !rounded-full p-0.5`}>

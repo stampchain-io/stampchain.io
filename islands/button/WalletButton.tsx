@@ -258,7 +258,7 @@ export const WalletButton = (
             <h6
               class={`${valueDarkSm} !text-xs ${transitionColors} peer-hover:text-color-hover`}
             >
-              {abbreviateAddress(address, 8)}
+              {abbreviateAddress(address, 6)}
             </h6>
           </div>
           <div class="flex items-center justify-between gap-3 mb-0.5">

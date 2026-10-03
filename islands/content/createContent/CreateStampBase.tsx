@@ -5,6 +5,8 @@
  *  - StampMintPanel:         EDITIONS / LOCKED / CPID rows, fee calculator
  *  - StampCpidToggleRow:     AUTO GENERATE CPID <-> CUSTOM CPID (classic)
  *  - StampNamedStampRow:     required ADD ASSET NAME input (posh)
+ *  - StampPreviewToolbar:    top-right overlay buttons (all create pages)
+ *  - StampCardsPreview:      card variants overlay (all create pages)
  *  - StampUploadWorkspace:   upload + preview column (classic / posh)
  * Logic lives in `useStampMint` / `useStampFile`.
  */
@@ -17,7 +19,13 @@ import { InputField } from "$islands/form/InputField.tsx";
 import PreviewCodeModal from "$islands/modal/PreviewCodeModal.tsx";
 import PreviewImageModal from "$islands/modal/PreviewImageModal.tsx";
 import { openModal } from "$islands/modal/states.ts";
-import { container2, container2Icon, transitionColors } from "$layout";
+import {
+  container2,
+  container2Icon,
+  container3,
+  shadowGlowPurple,
+  transitionColors,
+} from "$layout";
 import type { StampFileController } from "$lib/hooks/useStampFile.ts";
 import type { StampMintController } from "$lib/hooks/useStampMint.ts";
 import { MAX_STAMP_FILE_BYTES } from "$lib/utils/stamps/mintHelpers.ts";
@@ -292,6 +300,173 @@ export function buildGeneratedStampRow(opts: {
   };
 }
 
+/* ===== PREVIEW TOOLBAR ===== */
+export type StampPreviewView = "single" | "cards";
+
+interface StampPreviewToolbarProps {
+  /** Group 1: delete the uploaded file (Classic / Posh). */
+  onDelete?: () => void;
+  /** Group 1: back to the editor (Recursive). */
+  onEdit?: () => void;
+  onViewCode?: () => void;
+  onViewFullscreen?: () => void;
+  previewView: StampPreviewView;
+  onTogglePreviewView?: () => void;
+}
+
+/**
+ * Overlay buttons in the top-right corner of the workspace column.
+ * Each button renders only when its handler is passed.
+ */
+export function StampPreviewToolbar(
+  {
+    onDelete,
+    onEdit,
+    onViewCode,
+    onViewFullscreen,
+    previewView,
+    onTogglePreviewView,
+  }: StampPreviewToolbarProps,
+) {
+  const hasGroupOne = !!onDelete || !!onEdit;
+  const hasGroupTwo = !!onViewCode || !!onViewFullscreen ||
+    !!onTogglePreviewView;
+
+  return (
+    <div class="absolute top-0 right-0 z-[8800] p-3 flex gap-2">
+      {hasGroupOne && (
+        <div class={container2Icon}>
+          {onDelete && (
+            <Icon
+              type="iconButton"
+              name="trash"
+              weight="normal"
+              size="md"
+              color="neutral400"
+              ariaLabel="Delete file"
+              onClick={(e) => {
+                e.preventDefault();
+                onDelete();
+              }}
+            />
+          )}
+          {onEdit && (
+            <Icon
+              type="iconButton"
+              name="edit"
+              weight="normal"
+              size="md"
+              color="neutral400"
+              ariaLabel="Edit"
+              onClick={(e) => {
+                e.preventDefault();
+                onEdit();
+              }}
+            />
+          )}
+        </div>
+      )}
+      {hasGroupTwo && (
+        <div class={container2Icon}>
+          {onViewCode && (
+            <Icon
+              type="iconButton"
+              name="previewCode"
+              weight="normal"
+              size="md"
+              color="neutral400"
+              ariaLabel="View code"
+              onClick={(e) => {
+                e.preventDefault();
+                onViewCode();
+              }}
+            />
+          )}
+          {onViewFullscreen && (
+            <Icon
+              type="iconButton"
+              name="previewImage"
+              weight="normal"
+              size="md"
+              color="neutral400"
+              ariaLabel="Preview stamp fullscreen"
+              onClick={(e) => {
+                e.preventDefault();
+                onViewFullscreen();
+              }}
+            />
+          )}
+          {onTogglePreviewView && (
+            <Icon
+              type="iconButton"
+              name={previewView === "cards"
+                ? "viewCardMixed"
+                : "viewCardSingle"}
+              weight="normal"
+              size="md"
+              color="neutral400"
+              ariaLabel={previewView === "cards"
+                ? "Switch to single preview"
+                : "Switch to card preview"}
+              onClick={(e) => {
+                e.preventDefault();
+                onTogglePreviewView();
+              }}
+            />
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ===== CARDS PREVIEW ===== */
+interface StampCardsPreviewProps {
+  stamp: StampRow;
+  /** HTML source rendered inside the cards (srcDoc). */
+  previewHtml?: string;
+  /** Overlay stacking override, e.g. "z-[8700]". Defaults to "z-[5]". */
+  class?: string;
+}
+
+/** Overlay with the stamp rendered in the different card variants. */
+export function StampCardsPreview(
+  { stamp, previewHtml, class: className = "z-[5]" }: StampCardsPreviewProps,
+) {
+  const cardProps = previewHtml ? { previewHtml } : {};
+  return (
+    <div
+      class={`absolute inset-0 ${className} min-w-0 overflow-x-hidden
+        overflow-y-auto min-[480px]:overflow-hidden p-3 flex
+        items-start min-[480px]:items-center justify-center`}
+    >
+      <div class="flex flex-col min-[480px]:flex-row gap-3
+        items-center min-[480px]:items-start">
+        <div class="flex flex-col gap-3">
+          <div class="flex gap-3 items-end">
+            <div class="w-12 h-12 shrink-0">
+              <StampCard stamp={stamp} variant="cardSquare" {...cardProps} />
+            </div>
+            <div class="w-24 h-24 shrink-0">
+              <StampCard stamp={stamp} variant="cardSquare" {...cardProps} />
+            </div>
+          </div>
+          <div class="w-40 h-40 shrink-0">
+            <StampCard stamp={stamp} variant="cardSquare" {...cardProps} />
+          </div>
+        </div>
+        <div class="w-[180px] shrink-0">
+          <StampCard
+            stamp={stamp}
+            variant="cardVerticalDetail"
+            {...cardProps}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ===== UPLOAD WORKSPACE ===== */
 interface StampUploadWorkspaceProps {
   stampFile: StampFileController;
@@ -320,7 +495,7 @@ function getFileMime(file: File): string {
 }
 
 const CHECKER_BG =
-  "bg-conic-pattern bg-[length:4px_4px] bg-color-grey/30 [image-rendering:pixelated]";
+  "bg-conic-pattern bg-[length:4px_4px] bg-color-neutral-800/50 [image-rendering:pixelated]";
 
 /** 1:1 square sized to the largest fit inside the size-container wrapper. */
 const SQUARE_SIZE = "shrink-0 w-[min(100cqw,100cqh)] h-[min(100cqw,100cqh)]";
@@ -430,23 +605,30 @@ export function StampUploadWorkspace(
   const emptyState = (
     <label
       for="stamp-upload"
-      class={`group flex ${SQUARE_SIZE} flex-col items-center justify-center
-        gap-3 rounded-2xl cursor-pointer ${CHECKER_BG} ${transitionColors}
-        border border-dashed ${
-        isDragging ? "border-color-primary-400" : "border-color-neutral-700"
-      }`}
+      class={`group flex flex-col ${container3} ${SQUARE_SIZE}
+      items-center justify-center gap-3
+    hover:border-color-hover ${shadowGlowPurple} ${transitionColors} cursor-pointer
+        ${isDragging ? "border-color-hover" : "border-color-neutral-700"}`}
     >
       <Icon
         type="icon"
         name="uploadImage"
-        weight="extraLight"
+        weight="custom"
         size="custom"
-        color="neutral600"
-        className="w-20 h-20"
+        color="neutral400"
+        className={`w-16 h-16 stroke-[0.3] group-hover:stroke-color-hover  ${transitionColors} ${
+          isDragging ? "stroke-color-hover" : ""
+        }`}
       />
-      <h5 class={labelSm}>UPLOAD FILE</h5>
+      <h5
+        class={`${labelSm} group-hover:!text-color-hover ${transitionColors} -my-2 ${
+          isDragging ? "!text-color-hover" : "!text-color-neutral-400"
+        }`}
+      >
+        UPLOAD FILE
+      </h5>
       <h6 class={labelXs}>
-        CLICK OR DROP HERE - MAX {MAX_STAMP_FILE_BYTES / 1024}KB
+        CLICK OR DRAG N'DROP - MAX {MAX_STAMP_FILE_BYTES / 1024}KB
       </h6>
     </label>
   );
@@ -454,7 +636,8 @@ export function StampUploadWorkspace(
   const previewState = file && (
     <div
       class={`relative flex ${SQUARE_SIZE} items-center justify-center
-        rounded-2xl overflow-hidden ${CHECKER_BG}
+        rounded-2xl overflow-hidden
+        ${previewView === "single" ? CHECKER_BG : ""}
         ${isDragging ? "ring-2 ring-color-primary-400" : ""}`}
     >
       {previewView === "single" && (fileKind === "image" && objectUrl
@@ -482,107 +665,21 @@ export function StampUploadWorkspace(
           </div>
         ))}
       {previewView === "cards" && cardStamp && (
-        <div class="absolute inset-0 z-[5] min-w-0 overflow-x-hidden
-          overflow-y-auto min-[480px]:overflow-hidden p-3 flex
-          items-start min-[480px]:items-center justify-center">
-          <div class="flex flex-col min-[480px]:flex-row gap-3
-            items-center min-[480px]:items-start">
-            <div class="flex flex-col gap-3">
-              <div class="flex gap-3 items-end">
-                <div class="w-12 h-12 shrink-0">
-                  <StampCard
-                    stamp={cardStamp}
-                    variant="cardSquare"
-                    {...cardProps}
-                  />
-                </div>
-                <div class="w-24 h-24 shrink-0">
-                  <StampCard
-                    stamp={cardStamp}
-                    variant="cardSquare"
-                    {...cardProps}
-                  />
-                </div>
-              </div>
-              <div class="w-40 h-40 shrink-0">
-                <StampCard
-                  stamp={cardStamp}
-                  variant="cardSquare"
-                  {...cardProps}
-                />
-              </div>
-            </div>
-            <div class="w-[180px] shrink-0">
-              <StampCard
-                stamp={cardStamp}
-                variant="cardVerticalDetail"
-                {...cardProps}
-              />
-            </div>
-          </div>
-        </div>
+        <StampCardsPreview stamp={cardStamp} {...cardProps} />
       )}
     </div>
   );
 
-  /* Action buttons sit in the top-right corner of the container2 column */
+  /* Toolbar sits in the top-right corner of the container2 column */
   const actionButtons = file && (
-    <div class="absolute top-0 right-0 z-10 p-5 flex gap-2">
-      <div class={container2Icon}>
-        <Icon
-          type="iconButton"
-          name="trash"
-          weight="normal"
-          size="md"
-          color="neutral400"
-          ariaLabel="Delete file"
-          onClick={(e) => {
-            e.preventDefault();
-            stampFile.clearFile();
-          }}
-        />
-      </div>
-      <div class={container2Icon}>
-        <Icon
-          type="iconButton"
-          name="previewCode"
-          weight="normal"
-          size="md"
-          color="neutral400"
-          ariaLabel="View code"
-          onClick={(e) => {
-            e.preventDefault();
-            openCode();
-          }}
-        />
-        <Icon
-          type="iconButton"
-          name="previewImage"
-          weight="normal"
-          size="md"
-          color="neutral400"
-          ariaLabel="Preview stamp fullscreen"
-          onClick={(e) => {
-            e.preventDefault();
-            openFullscreen();
-          }}
-        />
-        <Icon
-          type="iconButton"
-          name={previewView === "cards" ? "viewCardMixed" : "viewCardSingle"}
-          weight="normal"
-          size="md"
-          color="neutral400"
-          ariaLabel={previewView === "cards"
-            ? "Switch to single preview"
-            : "Switch to card preview"}
-          onClick={(e) => {
-            e.preventDefault();
-            setPreviewView((v) => v === "single" ? "cards" : "single");
-          }}
-        />
-      </div>
-    </div>
+    <StampPreviewToolbar
+      onDelete={stampFile.clearFile}
+      onViewCode={openCode}
+      onViewFullscreen={openFullscreen}
+      previewView={previewView}
+      onTogglePreviewView={() =>
+        setPreviewView((v) => v === "single" ? "cards" : "single")}
+    />
   );
 
   return (
