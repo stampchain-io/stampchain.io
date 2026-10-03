@@ -2916,8 +2916,6 @@ export function CreateStampRecursiveContent(
                       onViewCode();
                     }}
                   />
-                </div>
-                <div class={`${container2Icon}`}>
                   <Icon
                     type="iconButton"
                     name={previewView === "cards"

@@ -24,7 +24,7 @@ import { MAX_STAMP_FILE_BYTES } from "$lib/utils/stamps/mintHelpers.ts";
 import { handleImageError } from "$lib/utils/ui/media/imageUtils.ts";
 import { StatusMessages } from "$notification";
 import { FeeCalculatorBase } from "$section";
-import { labelXs, subtitlePrimary, textSm, textXs } from "$text";
+import { labelSm, labelXs, subtitlePrimary, textSm, textXs } from "$text";
 import type { StampRow } from "$types/stamp.d.ts";
 import type { ComponentChildren } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
@@ -322,6 +322,9 @@ function getFileMime(file: File): string {
 const CHECKER_BG =
   "bg-conic-pattern bg-[length:4px_4px] bg-color-grey/30 [image-rendering:pixelated]";
 
+/** 1:1 square sized to the largest fit inside the size-container wrapper. */
+const SQUARE_SIZE = "shrink-0 w-[min(100cqw,100cqh)] h-[min(100cqw,100cqh)]";
+
 /**
  * Right column for Classic / Posh: upload, drag & drop and file preview.
  * Overlay buttons (top right): delete, fullscreen, view code, view mode
@@ -427,7 +430,7 @@ export function StampUploadWorkspace(
   const emptyState = (
     <label
       for="stamp-upload"
-      class={`group flex flex-1 min-h-0 flex-col items-center justify-center
+      class={`group flex ${SQUARE_SIZE} flex-col items-center justify-center
         gap-3 rounded-2xl cursor-pointer ${CHECKER_BG} ${transitionColors}
         border border-dashed ${
         isDragging ? "border-color-primary-400" : "border-color-neutral-700"
@@ -437,20 +440,20 @@ export function StampUploadWorkspace(
         type="icon"
         name="uploadImage"
         weight="extraLight"
-        size="xxl"
-        color="custom"
-        className="stroke-color-grey-dark group-hover:stroke-color-grey-semidark/80"
+        size="custom"
+        color="neutral600"
+        className="w-20 h-20"
       />
-      <h5 class={labelXs}>UPLOAD FILE</h5>
-      <p class={textXs}>
+      <h5 class={labelSm}>UPLOAD FILE</h5>
+      <h6 class={labelXs}>
         CLICK OR DROP HERE - MAX {MAX_STAMP_FILE_BYTES / 1024}KB
-      </p>
+      </h6>
     </label>
   );
 
   const previewState = file && (
     <div
-      class={`relative flex flex-1 min-h-0 items-center justify-center
+      class={`relative flex ${SQUARE_SIZE} items-center justify-center
         rounded-2xl overflow-hidden ${CHECKER_BG}
         ${isDragging ? "ring-2 ring-color-primary-400" : ""}`}
     >
@@ -519,72 +522,72 @@ export function StampUploadWorkspace(
           </div>
         </div>
       )}
-      <div class="absolute top-0 right-0 z-10 p-3 flex gap-3">
-        <div class={container2Icon}>
-          <Icon
-            type="iconButton"
-            name="trash"
-            weight="normal"
-            size="md"
-            color="neutral400"
-            ariaLabel="Delete file"
-            onClick={(e) => {
-              e.preventDefault();
-              stampFile.clearFile();
-            }}
-          />
-        </div>
-        <div class={container2Icon}>
-          <Icon
-            type="iconButton"
-            name="previewImage"
-            weight="normal"
-            size="md"
-            color="neutral400"
-            ariaLabel="Preview stamp fullscreen"
-            onClick={(e) => {
-              e.preventDefault();
-              openFullscreen();
-            }}
-          />
-        </div>
-        <div class={container2Icon}>
-          <Icon
-            type="iconButton"
-            name="previewCode"
-            weight="normal"
-            size="md"
-            color="neutral400"
-            ariaLabel="View code"
-            onClick={(e) => {
-              e.preventDefault();
-              openCode();
-            }}
-          />
-        </div>
-        <div class={container2Icon}>
-          <Icon
-            type="iconButton"
-            name={previewView === "cards" ? "viewCardMixed" : "viewCardSingle"}
-            weight="normal"
-            size="md"
-            color="neutral400"
-            ariaLabel={previewView === "cards"
-              ? "Switch to single preview"
-              : "Switch to card preview"}
-            onClick={(e) => {
-              e.preventDefault();
-              setPreviewView((v) => v === "single" ? "cards" : "single");
-            }}
-          />
-        </div>
+    </div>
+  );
+
+  /* Action buttons sit in the top-right corner of the container2 column */
+  const actionButtons = file && (
+    <div class="absolute top-0 right-0 z-10 p-5 flex gap-2">
+      <div class={container2Icon}>
+        <Icon
+          type="iconButton"
+          name="trash"
+          weight="normal"
+          size="md"
+          color="neutral400"
+          ariaLabel="Delete file"
+          onClick={(e) => {
+            e.preventDefault();
+            stampFile.clearFile();
+          }}
+        />
+      </div>
+      <div class={container2Icon}>
+        <Icon
+          type="iconButton"
+          name="previewCode"
+          weight="normal"
+          size="md"
+          color="neutral400"
+          ariaLabel="View code"
+          onClick={(e) => {
+            e.preventDefault();
+            openCode();
+          }}
+        />
+        <Icon
+          type="iconButton"
+          name="previewImage"
+          weight="normal"
+          size="md"
+          color="neutral400"
+          ariaLabel="Preview stamp fullscreen"
+          onClick={(e) => {
+            e.preventDefault();
+            openFullscreen();
+          }}
+        />
+        <Icon
+          type="iconButton"
+          name={previewView === "cards" ? "viewCardMixed" : "viewCardSingle"}
+          weight="normal"
+          size="md"
+          color="neutral400"
+          ariaLabel={previewView === "cards"
+            ? "Switch to single preview"
+            : "Switch to card preview"}
+          onClick={(e) => {
+            e.preventDefault();
+            setPreviewView((v) => v === "single" ? "cards" : "single");
+          }}
+        />
       </div>
     </div>
   );
 
   return (
     <div
-      class="flex flex-1 min-h-0 flex-col gap-3 p-5"
+      class="relative flex flex-1 min-h-0 flex-col gap-3 p-5"
       onDragOver={(e) => {
         e.preventDefault();
         if (!disabled) setIsDragging(true);
@@ -600,7 +603,11 @@ export function StampUploadWorkspace(
         disabled={disabled}
         onChange={handleInput}
       />
-      {file ? previewState : emptyState}
+      {/* Size-container: the 1:1 area fits the largest square available */}
+      <div class="flex flex-1 min-h-0 items-center justify-center [container-type:size]">
+        {file ? previewState : emptyState}
+      </div>
+      {actionButtons}
       {/* All notifications live in the sidebar (StatusMessages) */}
     </div>
   );

@@ -37,7 +37,7 @@ export const container2 =
 export const container2Hover =
   `${container2} hover:border-color-hover ${transitionColors}`;
 export const container2Icon =
-  `relative flex items-center justify-between ${container2} rounded-full p-0.5 gap-2 tablet:gap-1`;
+  `relative flex items-center justify-between ${container2} rounded-full p-0.5 gap-2 tablet:gap-0.5`;
 // Pill styles
 export const containerPill = `flex items-center
  px-2.5 py-1 rounded-full
