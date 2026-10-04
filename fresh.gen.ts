@@ -265,6 +265,7 @@ import * as $modal_DetailSRC101Modal from "./islands/modal/DetailSRC101Modal.tsx
 import * as $modal_DonateStampModal from "./islands/modal/DonateStampModal.tsx";
 import * as $modal_EditCreatorNameModal from "./islands/modal/EditCreatorNameModal.tsx";
 import * as $modal_FilterSRC20Modal from "./islands/modal/FilterSRC20Modal.tsx";
+import * as $modal_InfoModal from "./islands/modal/InfoModal.tsx";
 import * as $modal_PreviewCodeModal from "./islands/modal/PreviewCodeModal.tsx";
 import * as $modal_PreviewImageModal from "./islands/modal/PreviewImageModal.tsx";
 import * as $modal_RecieveAddyModal from "./islands/modal/RecieveAddyModal.tsx";
@@ -669,6 +670,7 @@ const manifest = {
     "./islands/modal/DonateStampModal.tsx": $modal_DonateStampModal,
     "./islands/modal/EditCreatorNameModal.tsx": $modal_EditCreatorNameModal,
     "./islands/modal/FilterSRC20Modal.tsx": $modal_FilterSRC20Modal,
+    "./islands/modal/InfoModal.tsx": $modal_InfoModal,
     "./islands/modal/PreviewCodeModal.tsx": $modal_PreviewCodeModal,
     "./islands/modal/PreviewImageModal.tsx": $modal_PreviewImageModal,
     "./islands/modal/RecieveAddyModal.tsx": $modal_RecieveAddyModal,

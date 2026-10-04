@@ -180,6 +180,7 @@ export function Icon(props: IconVariants) {
       downloadImage: "imageDownload",
 
       // Notification Display Icons
+      help: "help",
       info: "info",
       error: "error",
       success: "success",

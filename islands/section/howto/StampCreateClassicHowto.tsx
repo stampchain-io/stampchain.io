@@ -1,74 +1,67 @@
 /* ===== HOW TO STAMP COMPONENT ===== */
-import { ReadAllButton } from "$button";
-import { ModalBase } from "$layout";
-import { subtitlePrimary, textSm } from "$text";
+import { InfoModal } from "$islands/modal/InfoModal.tsx";
+import { textSm } from "$text";
 
 /* ===== COMPONENT ===== */
 export const StampCreateClassicHowto = () => {
   return (
-    <ModalBase title="HOW-TO">
-      <h4 class={`${subtitlePrimary} text-center -mt-3 mb-3`}>
-        CREATE A CLASSIC STAMP
-      </h4>
-
-      <div class="flex flex-col gap-5 max-h-[80vh] overflow-y-auto scrollbar-background-layer1">
-        <div class="flex flex-col">
-          <p class={textSm}>
-            <ul class="list-disc pl-5 space-y-2">
-              <li>
-                Click the <b>image icon</b>{" "}
-                to upload your artwork in a supported format.
-              </li>
-              <li>
-                <b>Editions</b> sets the amount of copies you want to create.
-              </li>
-              <li>
-                Use the <b>toggle switch</b> to access advanced options.
-              </li>
-              <li>
-                In the advanced options you can choose a custom name for your
-                art. Select between a <b>custom CPID</b> or <b>posh name</b>
-                {" "}
-                with the toggle.
-              </li>
-              <li>
-                The <b>lock button</b>{" "}
-                is enabled by default, preventing future changes to the amount
-                of editions.
-              </li>
-              <li>
-                You can preview your art by clicking the{" "}
-                <b>fullscreen button</b>.
-              </li>
-              <li>
-                <b>Fee</b>{" "}
-                displays the suggested amount, and you can adjust it with the
-                slider.
-              </li>
-              <li>
-                A fee <b>estimate</b>{" "}
-                is displayed based on the current fee and transaction size.
-              </li>
-              <li>
-                Accept the <b>terms and conditions</b>{" "}
-                to enable the stamp button.
-              </li>
-              <li>
-                The <b>stamp button</b>{" "}
-                will submit your transaction with all the provided details.
-              </li>
-            </ul>
-          </p>
-          <p class={textSm}>
-            All related costs are listed under the <b>details</b> section.{" "}
-            <br />
-            Lowering the fee may delay your art being stamped.<br />
-            Fees are displayed in BTC by default, but you can switch to USDT
-            using the <b>toggle</b>.<br />
-          </p>
-        </div>
-        <ReadAllButton href="/howto/stamp" />
+    <InfoModal title="HOW-TO" subtitle="CREATE A CLASSIC STAMP">
+      <div class="flex flex-col">
+        <p class={textSm}>
+          <ul class="list-disc pl-5 space-y-2">
+            <li>
+              Click or drag and drop your file in the <b>upload file canvas</b>
+              {" "}
+              to upload your artwork.
+            </li>
+            <li>
+              Define the amount of stamp <b>editions</b> you want to create.
+            </li>
+            <li>
+              Editions are <b>locked</b>{" "}
+              by default, preventing future changes to the amount of editions.
+              Unlock to be able to edit the amount in the future.
+            </li>
+            <li>
+              A random numeric CPID is auto-generated on broadcast. You can
+              choose a custom CPID for your stamp if you wish.
+            </li>
+            <li>
+              Bitcoin <b>transaction fees</b>{"  "}
+              are displayed for fast 1 block confirmation to slower one hour or
+              no priority confirmations. A recommended fee is displayed based on
+              the current fee and transaction size.
+            </li>
+            <li>
+              Adjust the <b>transaction fee</b>{" "}
+              with the slider to your desired amount per byte.
+            </li>
+            <li>
+              A <b>fee estimate</b>{" "}
+              is displayed based on the selected transaction fee and file size.
+            </li>
+            <li>
+              Accept the <b>terms and conditions</b>{" "}
+              to be able to create your stamp.
+            </li>
+            <li>
+              Connect your wallet if you haven't already. Once connected you can
+              stamp your art on the blockchain by clicking the{" "}
+              <b>stamp button</b>.{" "}
+              Your transaction will be submitted with all the provided details
+              and your wallet will prompt you to confirm the transaction. Sign
+              it and it will be broadcast to the blockchain.
+            </li>
+          </ul>
+        </p>
+        <p class={textSm}>
+          All related costs are listed under the <b>details</b> section. <br />
+          Lowering the fee may delay your art being stamped.<br />
+          Fees are displayed in BTC by default, you can switch to USDT using the
+          {" "}
+          <b>toggle</b>.
+        </p>
       </div>
-    </ModalBase>
+    </InfoModal>
   );
 };

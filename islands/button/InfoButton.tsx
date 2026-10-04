@@ -20,7 +20,7 @@ export function InfoButton(
     <div class={container2Icon}>
       <Icon
         type="iconButton"
-        name="info"
+        name="help"
         weight="normal"
         size="md"
         color="neutral400"

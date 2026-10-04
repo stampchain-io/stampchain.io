@@ -10,6 +10,7 @@ import { useEffect, useRef, useState } from "preact/hooks";
 export function ModalBase({
   onClose,
   title,
+  titleClass = titlePrimary,
   children,
   className = "",
   contentClassName = "",
@@ -118,7 +119,7 @@ export function ModalBase({
             </div>
 
             <div class="w-full text-center">
-              <h2 class={`${titlePrimary} py-3`}>
+              <h2 class={`${titleClass} py-3`}>
                 {title}
               </h2>
             </div>

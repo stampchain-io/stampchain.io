@@ -1,7 +1,7 @@
 /* ===== HOW TO RECURSIVE STAMP COMPONENT ===== */
 /* Keyboard shortcuts of the recursive stamp composer. */
-import { ModalBase } from "$layout";
-import { subtitlePrimary, textSm } from "$text";
+import { InfoModal } from "$islands/modal/InfoModal.tsx";
+import { textSm } from "$text";
 
 /* ===== DATA ===== */
 const SHORTCUTS: Array<{ keys: string; action: string }> = [
@@ -28,13 +28,8 @@ const SHORTCUTS: Array<{ keys: string; action: string }> = [
 /* ===== COMPONENT ===== */
 export const StampCreateRecursiveHowto = () => {
   return (
-    <ModalBase title="HOW-TO">
-      <h4 class={`${subtitlePrimary} text-center -mt-3 mb-3`}>
-        KEYBOARD SHORTCUTS
-      </h4>
-
-      {/* ===== SHORTCUTS LIST ===== */}
-      <div class="flex flex-col gap-1.5 max-h-[80vh] overflow-y-auto scrollbar-background-layer1">
+    <InfoModal title="HOW-TO" subtitle="KEYBOARD SHORTCUTS">
+      <div class="flex flex-col gap-1.5">
         {SHORTCUTS.map((row) => (
           <div
             key={row.action}
@@ -48,6 +43,6 @@ export const StampCreateRecursiveHowto = () => {
           </div>
         ))}
       </div>
-    </ModalBase>
+    </InfoModal>
   );
 };
