@@ -512,7 +512,7 @@ function SearchStampPickerContent({
         )}
 
       {view === "stamps" && (
-        <div class="w-full px-3 pb-3">
+        <div class="w-full px-3 pt-1 pb-3">
           <SelectorButtons
             options={PICKER_TYPE_OPTIONS}
             value={type}
@@ -523,7 +523,7 @@ function SearchStampPickerContent({
           />
         </div>
       )}
-      {view === "collections" && <div class="w-full pb-3" />}
+      {view === "collections" && <div class="w-full -mt-2 pb-3" />}
 
       {error && view === "stamps" ? <SearchErrorDisplay error={error} /> : (
         <>
