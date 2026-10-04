@@ -776,7 +776,8 @@ export interface ColorPickerProps {
 export interface ModalBaseProps extends BaseComponentProps {
   onClose?: () => void;
   title: string;
-  titleClass?: string;
+  subtitle?: string | undefined;
+  variant?: "primary" | "neutral";
   children: ComponentChildren;
   className?: string;
   contentClassName?: string;

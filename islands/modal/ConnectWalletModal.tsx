@@ -2,7 +2,6 @@
 import { showConnectWalletModal } from "$client/wallet/wallet.ts";
 import { ModalBase } from "$layout";
 import { logger } from "$lib/utils/logger.ts";
-import { subtitlePrimary } from "$text";
 import type { ConnectWalletModalProps } from "$types/ui.d.ts";
 
 /* ===== TYPES ===== */
@@ -36,13 +35,10 @@ export const ConnectWalletModal = ({
   return (
     <ModalBase
       title="CONNECT"
+      subtitle="YOUR WALLET"
       onClose={handleModalClose}
       className="w-[340px] min-[420px]:w-[360px] mobileMd:w-[380px] mobileLg:w-[640px]"
     >
-      <h4 class={`${subtitlePrimary} text-center -mt-3 mb-3`}>
-        YOUR WALLET
-      </h4>
-
       {/* ===== WALLET PROVIDERS GRID ===== */}
       <div class="grid grid-cols-1 mobileLg:grid-cols-2 gap-3 items-center">
         {connectors}
