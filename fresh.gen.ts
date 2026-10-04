@@ -309,6 +309,7 @@ import * as $section_howto_SRC20TransferHowto from "./islands/section/howto/SRC2
 import * as $section_howto_StampCreateClassicHowto from "./islands/section/howto/StampCreateClassicHowto.tsx";
 import * as $section_howto_StampCreatePoshHowto from "./islands/section/howto/StampCreatePoshHowto.tsx";
 import * as $section_howto_StampCreateRecursiveHowto from "./islands/section/howto/StampCreateRecursiveHowto.tsx";
+import * as $section_howto_StampCreateRecursiveShortcuts from "./islands/section/howto/StampCreateRecursiveShortcuts.tsx";
 import * as $section_howto_StampSendHowTo from "./islands/section/howto/StampSendHowTo.tsx";
 import * as $section_howto_StampingHowto from "./islands/section/howto/StampingHowto.tsx";
 import * as $section_index from "./islands/section/index.ts";
@@ -732,6 +733,8 @@ const manifest = {
       $section_howto_StampCreatePoshHowto,
     "./islands/section/howto/StampCreateRecursiveHowto.tsx":
       $section_howto_StampCreateRecursiveHowto,
+    "./islands/section/howto/StampCreateRecursiveShortcuts.tsx":
+      $section_howto_StampCreateRecursiveShortcuts,
     "./islands/section/howto/StampSendHowTo.tsx": $section_howto_StampSendHowTo,
     "./islands/section/howto/StampingHowto.tsx": $section_howto_StampingHowto,
     "./islands/section/index.ts": $section_index,

@@ -9,18 +9,20 @@ interface InfoButtonProps {
   /** Complete modal, e.g. `<StampCreateClassicHowto />` (renders `ModalBase`). */
   modal: ComponentChildren;
   ariaLabel?: string;
+  /** Icon name (defaults to the help icon). */
+  icon?: string;
 }
 
 /* ===== COMPONENT ===== */
-/** Info icon button that opens the given modal. */
+/** Icon button that opens the given modal (help icon by default). */
 export function InfoButton(
-  { modal, ariaLabel = "How-to" }: InfoButtonProps,
+  { modal, ariaLabel = "How-to", icon = "help" }: InfoButtonProps,
 ) {
   return (
     <div class={container2Icon}>
       <Icon
         type="iconButton"
-        name="help"
+        name={icon}
         weight="normal"
         size="md"
         color="neutral400"

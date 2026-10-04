@@ -1,5 +1,7 @@
 /* ===== CREATE STAMP RECURSIVE HEADER ===== */
 import { Icon } from "$icon";
+import { InfoButton } from "$islands/button/InfoButton.tsx";
+import { StampCreateRecursiveShortcuts } from "$islands/section/howto/StampCreateRecursiveShortcuts.tsx";
 import { container2Icon, ScrollFadeRow } from "$layout";
 import {
   redo,
@@ -102,6 +104,12 @@ export function CreateStampRecursiveHeader(
               }}
             />
           </div>
+
+          <InfoButton
+            modal={<StampCreateRecursiveShortcuts />}
+            icon="keyboard"
+            ariaLabel="Keyboard shortcuts"
+          />
         </div>
       </ScrollFadeRow>
     </div>

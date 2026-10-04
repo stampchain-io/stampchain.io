@@ -83,6 +83,7 @@ export function Icon(props: IconVariants) {
       speedNone: "timeClock",
 
       // Artboard Icons
+      keyboard: "keyboard",
       undo: "undo",
       redo: "redo",
       dropper: "dropper",

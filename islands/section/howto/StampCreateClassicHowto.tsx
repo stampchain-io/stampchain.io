@@ -8,7 +8,7 @@ export const StampCreateClassicHowto = () => {
     <InfoModal title="HOW-TO" subtitle="CREATE A CLASSIC STAMP">
       <div class="flex flex-col">
         <p class={textSm}>
-          <ul class="list-disc pl-5 space-y-2">
+          <ul class="list-disc pl-5 space-y-2 mb-0">
             <li>
               Click or drag and drop your file in the <b>upload file canvas</b>
               {" "}
@@ -53,6 +53,13 @@ export const StampCreateClassicHowto = () => {
               it and it will be broadcast to the blockchain.
             </li>
           </ul>
+        </p>
+        <p class={textSm}>
+          While previewing your generated stamp, use the toolbar to <b>view</b>
+          {" "}
+          the HTML <b>code</b>, open the stamp in{" "}
+          <b>fullscreen</b>, or toggle the <b>stamp cards</b>{" "}
+          mockup to see how your stamp will look on stampchain.io.
         </p>
         <p class={textSm}>
           All related costs are listed under the <b>details</b> section. <br />

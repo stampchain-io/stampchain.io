@@ -32,7 +32,7 @@ import { MAX_STAMP_FILE_BYTES } from "$lib/utils/stamps/mintHelpers.ts";
 import { handleImageError } from "$lib/utils/ui/media/imageUtils.ts";
 import { StatusMessages } from "$notification";
 import { FeeCalculatorBase } from "$section";
-import { labelXs, subtitlePrimary, textSm, textXs } from "$text";
+import { labelXs, subtitlePrimary, textSm } from "$text";
 import type { StampRow } from "$types/stamp.d.ts";
 import type { ComponentChildren, JSX, Ref } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
@@ -145,18 +145,15 @@ export function StampCpidToggleRow({ mint }: MintRowProps) {
 /** Posh: the named stamp is mandatory (B-Z, up to 13 letters, needs XCP). */
 export function StampNamedStampRow({ mint }: MintRowProps) {
   return (
-    <div class="flex flex-col gap-1">
-      <InputField
-        type="text"
-        value={mint.stampName}
-        onChange={mint.handleStampNameChange}
-        placeholder="ADD ASSET NAME"
-        maxLength={13}
-        minLength={1}
-        error={mint.stampNameError}
-      />
-      <p class={textXs}>REQUIRES XCP IN YOUR WALLET</p>
-    </div>
+    <InputField
+      type="text"
+      value={mint.stampName}
+      onChange={mint.handleStampNameChange}
+      placeholder="ADD ASSET NAME - REQUIRED"
+      maxLength={13}
+      minLength={1}
+      error={mint.stampNameError}
+    />
   );
 }
 
