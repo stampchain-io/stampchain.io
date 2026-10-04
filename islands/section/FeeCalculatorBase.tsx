@@ -822,13 +822,9 @@ export function FeeCalculatorBase({
           >
             <div
               className={`
-                w-3 h-3 mr-2
-                flex items-center justify-center
-                rounded-[3px]
+                relative flex items-center justify-center
+                 w-3 h-3 mr-2 rounded-[3px] border overflow-hidden
                 ${transitionColors} ease-in-out
-                border
-                relative
-                overflow-hidden
                 ${
                 tosAgreed
                   ? canHoverSelected
