@@ -38,7 +38,7 @@ const TYPE = "info" as const;
  * localStorage key for tracking if update notification has been shown
  * INCREMENT VERSION for each new major update announcement
  */
-const NOTIFICATION_UPDATE_VERSION = "feature-update-v3.3914";
+const NOTIFICATION_UPDATE_VERSION = "feature-update-v3.4";
 
 /**
  * Message content for update notification
