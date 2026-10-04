@@ -34,7 +34,7 @@ export function SearchButton() {
         type="iconButton"
         name="search"
         weight="light"
-        size="xl"
+        size="container1"
         color="neutral400"
         onClick={openContextualSearch}
         role="button"

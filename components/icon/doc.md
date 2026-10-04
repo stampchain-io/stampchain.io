@@ -142,12 +142,13 @@ cursor: pointer
 
 | Size | Dimensions | Responsive | Use Case |
 |------|-----------|------------|----------|
-| **container2** | 18px × 18px | No | Every icon inside a `container2Icon` wrapper (header view/filter/sort buttons, modal controls, toolbars) |
+| **container1** | 20px × 20px | No | Site header and footer icon buttons (search, tools, wallet, menu, drawer close, footer socials) |
+| **container2** | 16px × 16px | No | Every icon inside a `container2Icon` wrapper (page header view/filter/sort buttons, modal controls, toolbars) |
 | **xs** | 6px × 6px | No | Compact icons |
 | **sm** | 10px × 10px | No | Regular small icons |
 | **md** | 14px × 14px | No | Standard medium icons outside a `container2Icon` wrapper |
-| **lg** | 18px × 18px | No | Large icons (footer) |
-| **xl** | 22px × 22px | No | Extra large icons (site header, stamp image right panel) |
+| **lg** | 18px × 18px | No | Large icons |
+| **xl** | 22px × 22px | No | Extra large icons (stamp image right panel, drawer nav icons, modal close) |
 | **xxl** | 26px × 26px | No | Logo icon size |
 | **custom** | Custom | Manual | Full size control |
 
@@ -253,7 +254,7 @@ export interface IconVariants {
   type: "icon" | "iconHover" | "iconButton";
   name: string;
   weight: "extraLight" | "light" | "normal" | "bold" | "custom";
-  size: "container2" | "xs" | "sm" | "md" | "lg" | "xl" | "xxl" | "custom";
+  size: "container1" | "container2" | "xs" | "sm" | "md" | "lg" | "xl" | "xxl" | "custom";
   color: "neutral400" | "neutral500" | "neutral600" | "primary400" | "primary500" | "primary600" | "custom";
   className?: string;
   role?: JSX.AriaRole;

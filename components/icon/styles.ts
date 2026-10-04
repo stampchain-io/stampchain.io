@@ -9,6 +9,7 @@ export interface IconVariants {
   name: string;
   weight: "extraLight" | "light" | "normal" | "bold" | "custom";
   size:
+    | "container1"
     | "container2"
     | "xs"
     | "sm"
@@ -158,7 +159,7 @@ export const iconStyles = {
     md: "w-3.5 h-3.5",
     lg: "w-4.5 h-4.5", // Used in footer
     xl: "w-5.5 h-5.5", // Standard icon size used in header, stamp image right panel and standard icon buttons
-    xxl: "w-6.5 h-6.5", // Logo icon size
+    xxl: "w-6 h-6", // Logo icon size
     custom: "",
   },
 } as const;

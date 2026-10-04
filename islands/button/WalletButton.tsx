@@ -18,6 +18,7 @@ import {
   navSublinkActiveDesktop,
   navSublinkDesktop,
   valueDarkSm,
+  valueDarkXs,
 } from "$text";
 import { useEffect, useRef, useState } from "preact/hooks";
 
@@ -195,7 +196,7 @@ export const WalletButton = (
             type="iconButton"
             name="wallet"
             weight="light"
-            size="xl"
+            size="container1"
             color="neutral400"
             onClick={handleWalletIconClick}
           />
@@ -210,7 +211,7 @@ export const WalletButton = (
                 type="iconButton"
                 name="wallet"
                 weight="light"
-                size="xl"
+                size="container1"
                 color="neutral400"
                 colorAccent="var(--color-primary-400)"
                 colorAccentHover="var(--color-hover)"
@@ -358,9 +359,9 @@ export const WalletButton = (
                 </div>
               </div>
               <h6
-                class={`${valueDarkSm} ${transitionColors} peer-hover:text-color-hover`}
+                class={`${valueDarkXs} ${transitionColors} peer-hover:text-color-hover`}
               >
-                {abbreviateAddress(address, 9)}
+                {abbreviateAddress(address, 13)}
               </h6>
             </div>
             <div class="flex justify-between items-end flex-1">
@@ -371,7 +372,7 @@ export const WalletButton = (
                 size="lg"
                 color="neutral500"
               />
-              <h6 class="font-semibold text-lg text-color-orange-400">
+              <h6 class="font-semibold text-base text-color-orange-400">
                 {formatSatoshisToBTC(btcBalance.total, {
                   includeSymbol: false,
                   stripZeros: true,

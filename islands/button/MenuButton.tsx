@@ -178,7 +178,7 @@ export function MenuButton({ onOpenDrawer }: MenuButtonProps) {
         type="iconButton"
         name="menu"
         weight="light"
-        size="xl"
+        size="container1"
         color="neutral400"
         isOpen={false}
         onClick={handleMenuClick}

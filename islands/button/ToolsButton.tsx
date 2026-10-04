@@ -116,7 +116,7 @@ export function ToolsButton({ onOpenDrawer }: ToolsButtonProps) {
           type="iconButton"
           name="tools"
           weight="light"
-          size="xl"
+          size="container1"
           color="neutral400"
           onClick={handleToolsClick}
         />

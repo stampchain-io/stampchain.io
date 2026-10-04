@@ -279,7 +279,7 @@ export function Header() {
       const rect = toolsButtonRef.current.getBoundingClientRect();
       toolsPos = {
         top: rect.bottom + 2,
-        left: rect.right - 97,
+        left: rect.right - 99,
       };
     }
 
@@ -317,7 +317,7 @@ export function Header() {
       const rect = walletButtonRef.current.getBoundingClientRect();
       walletPos = {
         top: rect.bottom + 2,
-        left: rect.right - 168,
+        left: rect.right - 166,
       };
     }
 
@@ -356,7 +356,7 @@ export function Header() {
     if (createButtonRef.current) {
       const rect = createButtonRef.current.getBoundingClientRect();
       createPos = {
-        top: rect.bottom + 11,
+        top: rect.bottom + 9,
         left: rect.left - 20,
       };
     }
@@ -455,7 +455,7 @@ export function Header() {
         style="transition-timing-function: cubic-bezier(0.46,0.03,0.52,0.96);"
         id={`navbar-collapse-${type}`}
       >
-        <div class="flex flex-col h-full pt-1">
+        <div class="flex flex-col h-full pt-0.5">
           <div class="flex flex-row justify-between items-center w-full pl-1 pr-5">
             <div class="relative">
               <div
@@ -468,7 +468,7 @@ export function Header() {
               <Icon
                 type="iconButton"
                 name="close"
-                size="xl"
+                size="container1"
                 weight="bold"
                 color="neutral600"
                 ariaLabel="Close menu"
@@ -482,7 +482,7 @@ export function Header() {
               />
             </div>
             <h6
-              class={`font-black text-lg text-color-neutral-800 tracking-wide select-none ${
+              class={`-mt-[3px] -mr-3 font-black text-lg text-color-neutral-800 tracking-wide select-none ${
                 type === "menu" ? "italic pr-0.5" : ""
               }`}
             >
