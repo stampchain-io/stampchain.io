@@ -10,8 +10,7 @@ export interface IconVariants {
   weight: "extraLight" | "light" | "normal" | "bold" | "custom";
   size:
     | "container1"
-    | "container2"
-    | "xs"
+    | "containerIcon"
     | "sm"
     | "md"
     | "lg"
@@ -153,13 +152,12 @@ export const iconStyles = {
   // icon must use bigger sizes than icon button
   size: {
     container1: "w-5 h-5", // Header and footer icon buttons
-    container2: "w-4 h-4", // Standard icon size with Container2Icon wrapper
-    xs: "w-1.5 h-1.5",
+    containerIcon: "w-4 h-4", // Standard icon size with Container2Icon wrapper
     sm: "w-2.5 h-2.5",
     md: "w-3.5 h-3.5",
-    lg: "w-4.5 h-4.5", // Used in footer
-    xl: "w-5.5 h-5.5", // Standard icon size used in header, stamp image right panel and standard icon buttons
-    xxl: "w-6 h-6", // Logo icon size
+    lg: "w-4.5 h-4.5",
+    xl: "w-5.5 h-5.5",
+    xxl: "w-6.5 h-6.5", // StampImage audio control
     custom: "",
   },
 } as const;

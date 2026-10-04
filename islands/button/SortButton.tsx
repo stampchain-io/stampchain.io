@@ -88,7 +88,7 @@ export function SortButton(
         type="iconButton"
         name={sort === "DESC" ? "sortDesc" : "sortAsc"}
         weight="bold"
-        size="container2"
+        size="containerIcon"
         color="neutral400"
         className="stroke-width:1.5"
         href={getSortUrl()}

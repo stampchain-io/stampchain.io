@@ -66,9 +66,9 @@ export function LogoIcon({
         type="icon"
         name="stampchain"
         weight="normal"
-        size="xxl"
+        size="custom"
         color="neutral400"
-        className="[&_path:nth-child(-n+2)]:group-hover:stroke-color-primary-400 [&_path]:transition-colors [&_path]:duration-200"
+        className="w-6 h-6 [&_path:nth-child(-n+2)]:group-hover:stroke-color-primary-400 [&_path]:transition-colors [&_path]:duration-200"
       />
 
       {children}

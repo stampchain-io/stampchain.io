@@ -496,7 +496,7 @@ function SearchStampPickerContent({
                 type="iconButton"
                 name="caretLeft"
                 weight="normal"
-                size="container2"
+                size="containerIcon"
                 color="neutral400"
                 ariaLabel="Back to collections"
                 onClick={(e) => {

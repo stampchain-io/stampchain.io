@@ -101,7 +101,7 @@ export function ViewButton(
         type="iconButton"
         name={iconName}
         weight="bold"
-        size="container2"
+        size="containerIcon"
         color="neutral400"
         className="stroke-width:1.5"
         onClick={() => handleViewModeChange(nextMode)}

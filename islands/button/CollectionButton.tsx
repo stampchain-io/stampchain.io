@@ -73,7 +73,7 @@ export function CollectionButton({
         type="iconButton"
         name={iconName}
         weight="bold"
-        size="container2"
+        size="containerIcon"
         color="neutral400"
         onClick={(e) => {
           e.preventDefault();

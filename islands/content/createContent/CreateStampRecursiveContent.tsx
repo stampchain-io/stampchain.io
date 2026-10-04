@@ -480,7 +480,7 @@ function AssetPreviewCard(
         type="iconButton"
         name="userCircle"
         weight="normal"
-        size="container2"
+        size="containerIcon"
         color="primary400"
       />
     </button>
@@ -542,7 +542,7 @@ function AssetPreviewCard(
                 type="iconButton"
                 name="userCircle"
                 weight="normal"
-                size="container2"
+                size="containerIcon"
                 color="neutral400"
                 ariaLabel="Show more by creator"
                 onClick={(e) => {
@@ -579,7 +579,7 @@ function PlaceholderIcon(props: {
       type="iconButton"
       name={props.name ?? "website"}
       weight="normal"
-      size="container2"
+      size="containerIcon"
       color={props.active ? "primary400" : "neutral400"}
       ariaLabel={props.label}
       className={props.disabled ? "opacity-80 pointer-events-none" : ""}
@@ -1873,7 +1873,7 @@ export function CreateStampRecursiveContent(
                         type="iconButton"
                         name="search"
                         weight="normal"
-                        size="container2"
+                        size="containerIcon"
                         color="neutral400"
                         ariaLabel="Browse stamps"
                         onClick={(e) => {
@@ -1910,7 +1910,7 @@ export function CreateStampRecursiveContent(
                           ? "hide"
                           : "view"}
                         weight="normal"
-                        size="container2"
+                        size="containerIcon"
                         color="neutral400"
                         className={fetching ? "animate-spin" : ""}
                         ariaLabel={assetPreviewOpen

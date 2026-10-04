@@ -127,7 +127,7 @@ export default function PreviewCodeModal({ src }: PreviewCodeModalProps) {
             type="iconButton"
             name="close"
             weight="normal"
-            size="container2"
+            size="containerIcon"
             color="neutral400"
             ariaLabel="Close"
             onClick={() => closeModal()}

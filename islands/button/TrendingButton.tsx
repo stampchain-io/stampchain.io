@@ -56,7 +56,7 @@ export function TrendingButton(
         type="iconButton"
         name="chartUp"
         weight="bold"
-        size="container2"
+        size="containerIcon"
         color={selected ? "custom" : "neutral400"}
         className={`${
           selected

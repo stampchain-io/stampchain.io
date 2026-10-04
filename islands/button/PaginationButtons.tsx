@@ -126,7 +126,7 @@ export function PaginationButtons({
                 type="iconHover"
                 name={iconName}
                 weight="bold"
-                size="container2"
+                size="containerIcon"
                 color="neutral400"
               />
             )

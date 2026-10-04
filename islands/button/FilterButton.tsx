@@ -57,7 +57,7 @@ export function FilterButton(
         type="iconButton"
         name="filter"
         weight="bold"
-        size="container2"
+        size="containerIcon"
         color={count > 0 ? "primary400" : "neutral400"}
         className="stroke-width:1.5"
         onClick={() => {

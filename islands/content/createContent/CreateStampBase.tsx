@@ -338,7 +338,7 @@ export function StampPreviewToolbar(
               type="iconButton"
               name="trash"
               weight="normal"
-              size="container2"
+              size="containerIcon"
               color="neutral400"
               ariaLabel="Delete file"
               onClick={(e) => {
@@ -352,7 +352,7 @@ export function StampPreviewToolbar(
               type="iconButton"
               name="edit"
               weight="normal"
-              size="container2"
+              size="containerIcon"
               color="neutral400"
               ariaLabel="Edit"
               onClick={(e) => {
@@ -370,7 +370,7 @@ export function StampPreviewToolbar(
               type="iconButton"
               name="previewCode"
               weight="normal"
-              size="container2"
+              size="containerIcon"
               color="neutral400"
               ariaLabel="View code"
               onClick={(e) => {
@@ -384,7 +384,7 @@ export function StampPreviewToolbar(
               type="iconButton"
               name="previewImage"
               weight="normal"
-              size="container2"
+              size="containerIcon"
               color="neutral400"
               ariaLabel="Preview stamp fullscreen"
               onClick={(e) => {
@@ -400,7 +400,7 @@ export function StampPreviewToolbar(
                 ? "viewCardMixed"
                 : "viewCardSingle"}
               weight="normal"
-              size="container2"
+              size="containerIcon"
               color="neutral400"
               ariaLabel={previewView === "cards"
                 ? "Switch to single preview"
