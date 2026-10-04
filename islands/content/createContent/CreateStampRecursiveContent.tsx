@@ -24,7 +24,7 @@ import { openModal } from "$islands/modal/states.ts";
 import {
   container2,
   container2Hover,
-  container2Icon,
+  containerIcon,
   container3,
   shadowGlowPurpleSm,
   transitionColors,
@@ -468,7 +468,7 @@ function AssetPreviewCard(
     <button
       type="button"
       key="creator-profile-toggle"
-      class={`${container2Icon} aspect-square !justify-center`}
+      class={`${containerIcon} aspect-square !justify-center`}
       aria-label="Show stamp details"
       onClick={(e) => {
         e.preventDefault();
@@ -537,7 +537,7 @@ function AssetPreviewCard(
       {!showAssetsView && (
         <div class="flex items-center gap-1.5 mt-3">
           {hasMore && (
-            <div class={`${container2Icon}`}>
+            <div class={`${containerIcon}`}>
               <Icon
                 type="iconButton"
                 name="userCircle"
@@ -1867,7 +1867,7 @@ export function CreateStampRecursiveContent(
                   <h5 class={labelXs}>STAMP</h5>
                   <div class="flex items-center gap-1.5">
                     <div
-                      class={`${container2Icon}`}
+                      class={`${containerIcon}`}
                     >
                       <Icon
                         type="iconButton"
@@ -1900,7 +1900,7 @@ export function CreateStampRecursiveContent(
                       />
                     </form>
                     <div
-                      class={`${container2Icon}`}
+                      class={`${containerIcon}`}
                     >
                       <Icon
                         type="iconButton"
@@ -2052,14 +2052,14 @@ export function CreateStampRecursiveContent(
                       </label>
                     </div>
                     <div class="flex justify-between">
-                      <div class={container2Icon}>
+                      <div class={containerIcon}>
                         <ColorPicker
                           value={textStyle.color}
                           onChange={(hex) => patchTextStyle({ color: hex })}
                           ariaLabel="Text color"
                         />
                       </div>
-                      <div class={container2Icon}>
+                      <div class={containerIcon}>
                         <PlaceholderIcon
                           name="bold"
                           label="Bold"
@@ -2077,7 +2077,7 @@ export function CreateStampRecursiveContent(
                             })}
                         />
                       </div>
-                      <div class={container2Icon}>
+                      <div class={containerIcon}>
                         {(
                           [
                             ["left", "justifyLeft", "Align left"],

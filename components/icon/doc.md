@@ -143,9 +143,9 @@ cursor: pointer
 | Size | Dimensions | Responsive | Use Case |
 |------|-----------|------------|----------|
 | **container1** | 20px × 20px | No | Site header and footer icon buttons (search, tools, wallet, menu, drawer close, footer socials) |
-| **containerIcon** | 16px × 16px | No | Every icon inside a `container2Icon` wrapper (page header view/filter/sort buttons, modal controls, toolbars) |
+| **containerIcon** | 16px × 16px | No | Every icon inside a `containerIcon` wrapper (page header view/filter/sort buttons, modal controls, toolbars) |
 | **sm** | 10px × 10px | No | Regular small icons |
-| **md** | 14px × 14px | No | Standard medium icons outside a `container2Icon` wrapper |
+| **md** | 14px × 14px | No | Standard medium icons outside a `containerIcon` wrapper |
 | **lg** | 18px × 18px | No | Large icons |
 | **xl** | 22px × 22px | No | Extra large icons (stamp image right panel, drawer nav icons, modal close) |
 | **xxl** | 26px × 26px | No | Logo icon size |

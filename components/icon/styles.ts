@@ -152,7 +152,7 @@ export const iconStyles = {
   // icon must use bigger sizes than icon button
   size: {
     container1: "w-5 h-5", // Header and footer icon buttons
-    containerIcon: "w-4 h-4", // Standard icon size with Container2Icon wrapper
+    containerIcon: "w-4 h-4", // Standard icon size with containerIcon wrapper
     sm: "w-2.5 h-2.5",
     md: "w-3.5 h-3.5",
     lg: "w-4.5 h-4.5",

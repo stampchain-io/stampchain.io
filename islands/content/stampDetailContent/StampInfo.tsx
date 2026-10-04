@@ -4,7 +4,7 @@ import { Icon, UserProfileIcon } from "$icon";
 import BuyStampModal from "$islands/modal/BuyStampModal.tsx";
 import { openModal } from "$islands/modal/states.ts";
 import {
-  container2Icon,
+  containerIcon,
   container3,
   containerPill,
   PillContentCount,
@@ -1114,7 +1114,7 @@ export function StampInfo(
                     <div className="flex items-center justify-end gap-5">
                       {dispensers?.length >= 2 && (
                         <div
-                          class={container2Icon}
+                          class={containerIcon}
                           onMouseEnter={handleListingsMouseEnter}
                           onMouseLeave={handleListingsMouseLeave}
                         >

@@ -2,7 +2,7 @@
 import { SelectorButtons } from "$button";
 import { SortButton } from "$islands/button/SortButton.tsx";
 import { ViewButton } from "$islands/button/ViewButton.tsx";
-import { container2Icon, PillContentCount, ScrollFadeRow } from "$layout";
+import { containerIcon, PillContentCount, ScrollFadeRow } from "$layout";
 import {
   getCurrentPathname,
   safeNavigate,
@@ -74,13 +74,13 @@ function CollectionOverviewHeader(
 
         {/* View Toggle + Sort Controls - Right */}
         <div class="shrink-0 flex ml-auto gap-3">
-          <div class={container2Icon}>
+          <div class={containerIcon}>
             <ViewButton
               viewMode={viewMode}
               modes={["cardHorizontal", "cardVertical", "cardSquare"]}
             />
           </div>
-          <div class={container2Icon}>
+          <div class={containerIcon}>
             <SortButton initSort={sortBy} />
           </div>
         </div>

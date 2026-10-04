@@ -5,7 +5,7 @@ import { closeModal, openModal } from "$islands/modal/states.ts";
 import {
   container1,
   container2Hover,
-  container2Icon,
+  containerIcon,
   containerPill,
   loaderSpinSmGrey,
   ModalSearchBase,
@@ -477,7 +477,7 @@ function SearchStampPickerContent({
             autoFocus={autoFocus}
             hasError={!!error}
             trailing={
-              <div class={container2Icon}>
+              <div class={containerIcon}>
                 <CollectionButton
                   view={view === "collections" ? "collections" : "stamps"}
                   onChange={(next) => {
@@ -491,7 +491,7 @@ function SearchStampPickerContent({
         )
         : (
           <div class="flex items-center gap-1.5 px-3 pb-3 pt-3">
-            <div class={container2Icon}>
+            <div class={containerIcon}>
               <Icon
                 type="iconButton"
                 name="caretLeft"

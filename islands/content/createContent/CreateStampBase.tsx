@@ -21,7 +21,7 @@ import PreviewImageModal from "$islands/modal/PreviewImageModal.tsx";
 import { openModal } from "$islands/modal/states.ts";
 import {
   container2,
-  container2Icon,
+  containerIcon,
   container3,
   shadowGlowPurple,
   transitionColors,
@@ -332,7 +332,7 @@ export function StampPreviewToolbar(
   return (
     <div class="absolute top-0 right-0 z-[8800] p-3 flex gap-2">
       {hasGroupOne && (
-        <div class={container2Icon}>
+        <div class={containerIcon}>
           {onDelete && (
             <Icon
               type="iconButton"
@@ -364,7 +364,7 @@ export function StampPreviewToolbar(
         </div>
       )}
       {hasGroupTwo && (
-        <div class={container2Icon}>
+        <div class={containerIcon}>
           {onViewCode && (
             <Icon
               type="iconButton"

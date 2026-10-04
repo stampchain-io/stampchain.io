@@ -2,7 +2,7 @@
 import { Icon, PlaceholderImage } from "$icon";
 import StampTextContent from "$islands/content/stampDetailContent/StampTextContent.tsx";
 import { closeModal } from "$islands/modal/states.ts";
-import { container2Icon, ModalBase } from "$layout";
+import { containerIcon, ModalBase } from "$layout";
 import { logger } from "$lib/utils/logger.ts";
 import { handleImageError } from "$lib/utils/ui/media/imageUtils.ts";
 import type { PreviewImageModalProps } from "$types/ui.d.ts";
@@ -40,7 +40,7 @@ const PreviewImageModal = ({
     >
       {/* ===== CLOSE BUTTON ===== */}
       <div class="absolute top-1 right-1 z-10">
-        <div class={`${container2Icon}`}>
+        <div class={`${containerIcon}`}>
           <Icon
             type="iconButton"
             name="close"

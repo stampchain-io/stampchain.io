@@ -1,7 +1,7 @@
 /* ===== INFO BUTTON ===== */
 import { Icon } from "$icon";
 import { openModal } from "$islands/modal/states.ts";
-import { container2Icon } from "$layout";
+import { containerIcon } from "$layout";
 import type { ComponentChildren } from "preact";
 
 /* ===== TYPES ===== */
@@ -19,7 +19,7 @@ export function InfoButton(
   { modal, ariaLabel = "How-to", icon = "help" }: InfoButtonProps,
 ) {
   return (
-    <div class={container2Icon}>
+    <div class={containerIcon}>
       <Icon
         type="iconButton"
         name={icon}

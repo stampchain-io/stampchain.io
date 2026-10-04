@@ -5,7 +5,7 @@ import {
   ViewCodeButton,
 } from "$islands/button/ViewCodeButton.tsx";
 import { closeModal } from "$islands/modal/states.ts";
-import { container2Icon, ModalBase } from "$layout";
+import { containerIcon, ModalBase } from "$layout";
 import { logger } from "$lib/utils/logger.ts";
 import type { PreviewCodeModalProps } from "$types/ui.d.ts";
 import { useEffect, useState } from "preact/hooks";
@@ -115,13 +115,13 @@ export default function PreviewCodeModal({ src }: PreviewCodeModalProps) {
       <div class="absolute top-1 right-1 z-10 flex gap-2">
         {canFormat && (
           <div
-            class={`${container2Icon}`}
+            class={`${containerIcon}`}
           >
             <ViewCodeButton mode={codeView} onChange={setCodeView} />
           </div>
         )}
         <div
-          class={`${container2Icon}`}
+          class={`${containerIcon}`}
         >
           <Icon
             type="iconButton"

@@ -2,7 +2,7 @@
 import { Icon } from "$icon";
 import { InfoButton } from "$islands/button/InfoButton.tsx";
 import { StampCreateRecursiveShortcuts } from "$islands/section/howto/StampCreateRecursiveShortcuts.tsx";
-import { container2Icon, ScrollFadeRow } from "$layout";
+import { containerIcon, ScrollFadeRow } from "$layout";
 import {
   redo,
   rsbGrid,
@@ -47,7 +47,7 @@ export function CreateStampRecursiveHeader(
   return (
     <div class="flex flex-col w-full">
       <ScrollFadeRow>
-        <div class={`${container2Icon} shrink-0`}>
+        <div class={`${containerIcon} shrink-0`}>
           <PlaceholderIcon
             name="undo"
             label="Undo"
@@ -63,7 +63,7 @@ export function CreateStampRecursiveHeader(
         </div>
 
         <div class="flex shrink-0 ml-auto gap-3">
-          <div class={container2Icon}>
+          <div class={containerIcon}>
             <PlaceholderIcon
               name="horizontalGuide"
               label="Horizontal guide"
@@ -78,7 +78,7 @@ export function CreateStampRecursiveHeader(
             />
           </div>
 
-          <div class={`${container2Icon} gap-1.5 tablet:gap-1`}>
+          <div class={`${containerIcon} gap-1.5 tablet:gap-1`}>
             <PlaceholderIcon
               name="ruler"
               label="Rulers"
