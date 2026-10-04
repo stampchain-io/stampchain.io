@@ -614,7 +614,7 @@ export function Header() {
           )}
 
           {/* Right: Icon Buttons (nav links prepended when NAV_POSITION === "right") */}
-          <div class="flex items-center gap-0.5">
+          <div class="flex items-center gap-1">
             {NAV_POSITION === "right" && (
               <div class="flex items-center gap-5 mr-2">
                 {renderNavLinks()}

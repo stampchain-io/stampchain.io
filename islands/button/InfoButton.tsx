@@ -24,7 +24,7 @@ export function InfoButton(
         type="iconButton"
         name={icon}
         weight="normal"
-        size="md"
+        size="container2"
         color="neutral400"
         ariaLabel={ariaLabel}
         onClick={(e) => {

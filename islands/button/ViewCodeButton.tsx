@@ -78,7 +78,7 @@ export function ViewCodeButton({
         type="iconButton"
         name={iconName}
         weight="bold"
-        size="md"
+        size="container2"
         color="neutral400"
         className="!p-0"
         onClick={() => onChange(nextMode)}

@@ -1122,7 +1122,7 @@ export function StampInfo(
                             type="iconButton"
                             name="listings"
                             weight="bold"
-                            size="md"
+                            size="container2"
                             color="custom"
                             className={`stroke-color-orange-400 group-hover:stroke-color-hover ${transitionColors}`}
                             ariaLabel="Listings"

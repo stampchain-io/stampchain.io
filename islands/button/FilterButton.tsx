@@ -57,9 +57,9 @@ export function FilterButton(
         type="iconButton"
         name="filter"
         weight="bold"
-        size="custom"
+        size="container2"
         color={count > 0 ? "primary400" : "neutral400"}
-        className="w-[17px] h-[17px] tablet:w-[14px] tablet:h-[14px] stroke-width:1.5"
+        className="stroke-width:1.5"
         onClick={() => {
           setOpen(!open);
           setIsTooltipVisible(false);

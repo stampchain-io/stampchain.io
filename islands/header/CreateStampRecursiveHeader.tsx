@@ -26,7 +26,7 @@ function PlaceholderIcon(props: {
       type="iconButton"
       name={props.name ?? "website"}
       weight="normal"
-      size="md"
+      size="container2"
       color={props.active ? "primary400" : "neutral400"}
       ariaLabel={props.label}
       className={props.disabled ? "opacity-80 pointer-events-none" : ""}
