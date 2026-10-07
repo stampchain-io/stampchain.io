@@ -1,6 +1,6 @@
 /* ===== SRC20 HEADER COMPONENT ===== */
 import { SelectorButtons, TrendingButton } from "$button";
-import { container2Icon, PillContentCount, ScrollFadeRow } from "$layout";
+import { containerIcon, PillContentCount, ScrollFadeRow } from "$layout";
 import {
   navigateWithFreshPartial,
 } from "$lib/utils/navigation/freshNavigationUtils.ts";
@@ -79,7 +79,7 @@ export const SRC20OverviewHeader = ({
 
         {/* Timeframe Buttons - Right */}
         <div class="shrink-0 flex ml-auto gap-3">
-          <div class={container2Icon}>
+          <div class={containerIcon}>
             <TrendingButton
               selected={sortBy === "TRENDING"}
               onClick={handleTrendingClick}

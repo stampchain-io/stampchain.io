@@ -38,15 +38,16 @@ const TYPE = "info" as const;
  * localStorage key for tracking if update notification has been shown
  * INCREMENT VERSION for each new major update announcement
  */
-const NOTIFICATION_UPDATE_VERSION = "feature-update-v3.3";
+const NOTIFICATION_UPDATE_VERSION = "feature-update-v3.4";
 
 /**
  * Message content for update notification
  * Supports multi-line formatting with bullet points
  */
-const NOTIFICATION_UPDATE_MESSAGE = `Wonder Wallet integration
-• Added support for Wonder Wallet browser extension
-• Minor codebase optimizations
+const NOTIFICATION_UPDATE_MESSAGE = `Create Stamp tool update
+• Redesigned Stamp creator page with Classic, Posh and Recursive modes.
+• New Recursive Stamp builder that lets you add layers of stamp asset images and/or text, tweak the elements, to easily create a new lightweight recursive stamp.
+• Improved fee calculator with transaction fees, bitcoin block and price display.
 
 Please clear browser cache and refresh the page for all updates to take effect.`;
 

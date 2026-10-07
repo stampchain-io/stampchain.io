@@ -151,7 +151,7 @@ export const toggleKnob =
   "w-[14px] h-[14px] rounded-full cursor-pointer group-hover:bg-color-primary-400";
 /* ===== SLIDER BUTTON STYLES ===== */
 export const sliderBar =
-  `relative w-full h-3.5 tablet:h-3 !rounded-full ${container2Hover} group cursor-pointer`;
+  `relative w-full h-3.5 tablet:h-3 !rounded-full ${container2Hover} ${shadowGlowPurpleSm} group cursor-pointer`;
 export const trackFill = `
   absolute top-0.5 bottom-0.5 h-2 tablet:h-1.5 rounded-full ${transitionColors} pointer-events-none
   `;

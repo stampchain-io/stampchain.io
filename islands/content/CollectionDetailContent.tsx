@@ -4,7 +4,7 @@ import { StampCard } from "$card";
 import { SortButton } from "$islands/button/SortButton.tsx";
 import { ViewButton } from "$islands/button/ViewButton.tsx";
 import {
-  container2Icon,
+  containerIcon,
   EmptyState,
   gridCard,
   PillContentCount,
@@ -101,13 +101,13 @@ export const CollectionDetailContent = (
           color="primary"
         />
         <div class="flex items-center gap-3">
-          <div class={container2Icon}>
+          <div class={containerIcon}>
             <ViewButton
               viewMode={viewMode}
               modes={["cardVertical", "cardSquare"]}
             />
           </div>
-          <div class={container2Icon}>
+          <div class={containerIcon}>
             <SortButton initSort={sortBy} />
           </div>
         </div>

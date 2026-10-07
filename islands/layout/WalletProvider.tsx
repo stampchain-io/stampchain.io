@@ -10,7 +10,12 @@ import { wonderProvider } from "$client/wallet/wonder.ts";
 import { xverseProvider } from "$client/wallet/xverse.ts";
 import { WALLET_PROVIDERS } from "$constants";
 import { closeForegroundModal, closeModal } from "$islands/modal/states.ts";
-import { container2Hover, shadowGlowPurple, transitionColors } from "$layout";
+import {
+  container2Hover,
+  containerPill,
+  shadowGlowPurple,
+  transitionColors,
+} from "$layout";
 import { handleUnknownError } from "$lib/utils/errorHandling.ts";
 import type { BaseToast } from "$lib/utils/ui/notifications/toastSignal.ts";
 import { showToast } from "$lib/utils/ui/notifications/toastSignal.ts";
@@ -123,6 +128,16 @@ export function WalletProvider(
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+      {providerKey === "wonder" && (
+        <span
+          class={`absolute -top-4 left-3 z-10 pointer-events-none
+            ${containerPill} font-light text-[9px] text-color-neutral-400
+            group-hover:text-color-hover ${transitionColors} tracking-wide`}
+        >
+          RECOMMENDED
+        </span>
+      )}
+
       {/* ===== PROVIDER NAME ===== */}
       <h6
         class={`font-medium text-sm uppercase tracking-wide ${

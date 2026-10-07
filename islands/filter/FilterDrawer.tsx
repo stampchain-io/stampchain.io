@@ -468,7 +468,7 @@ const FilterDrawer = (
           class={`flex justify-between ${containerStickyBottom} !mt-0 w-full pt-5 px-5 gap-5 bg-transparent`}
         >
           <Button
-            variant="outline"
+            variant="flat"
             color="neutral"
             onClick={() => {
               isClearingRef.current = true;

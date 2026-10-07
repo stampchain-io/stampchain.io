@@ -1,6 +1,8 @@
 /* ===== CREATE STAMP RECURSIVE HEADER ===== */
 import { Icon } from "$icon";
-import { container2Icon, ScrollFadeRow } from "$layout";
+import { InfoButton } from "$islands/button/InfoButton.tsx";
+import { StampCreateRecursiveShortcuts } from "$islands/section/howto/StampCreateRecursiveShortcuts.tsx";
+import { containerIcon, ScrollFadeRow } from "$layout";
 import {
   redo,
   rsbGrid,
@@ -24,7 +26,7 @@ function PlaceholderIcon(props: {
       type="iconButton"
       name={props.name ?? "website"}
       weight="normal"
-      size="md"
+      size="containerIcon"
       color={props.active ? "primary400" : "neutral400"}
       ariaLabel={props.label}
       className={props.disabled ? "opacity-80 pointer-events-none" : ""}
@@ -45,7 +47,7 @@ export function CreateStampRecursiveHeader(
   return (
     <div class="flex flex-col w-full">
       <ScrollFadeRow>
-        <div class={`${container2Icon} shrink-0`}>
+        <div class={`${containerIcon} shrink-0`}>
           <PlaceholderIcon
             name="undo"
             label="Undo"
@@ -61,7 +63,7 @@ export function CreateStampRecursiveHeader(
         </div>
 
         <div class="flex shrink-0 ml-auto gap-3">
-          <div class={container2Icon}>
+          <div class={containerIcon}>
             <PlaceholderIcon
               name="horizontalGuide"
               label="Horizontal guide"
@@ -76,7 +78,7 @@ export function CreateStampRecursiveHeader(
             />
           </div>
 
-          <div class={`${container2Icon} gap-1.5 tablet:gap-1`}>
+          <div class={`${containerIcon} gap-1.5 tablet:gap-1`}>
             <PlaceholderIcon
               name="ruler"
               label="Rulers"
@@ -102,6 +104,12 @@ export function CreateStampRecursiveHeader(
               }}
             />
           </div>
+
+          <InfoButton
+            modal={<StampCreateRecursiveShortcuts />}
+            icon="keyboard"
+            ariaLabel="Keyboard shortcuts"
+          />
         </div>
       </ScrollFadeRow>
     </div>

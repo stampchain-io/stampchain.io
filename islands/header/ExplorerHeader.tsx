@@ -8,7 +8,7 @@ import {
   countActiveExplorerFilters,
   queryParamsToFilters as explorerQueryParamsToFilters,
 } from "$islands/filter/FilterOptionsExplorer.tsx";
-import { container2Icon, PillContentCount, ScrollFadeRow } from "$layout";
+import { containerIcon, PillContentCount, ScrollFadeRow } from "$layout";
 import {
   getCurrentPathname,
   getSearchParams,
@@ -102,10 +102,10 @@ export const ExplorerHeader = (
 
         {/* View Toggle + Filter + Sort Controls - Right */}
         <div class="shrink-0 flex ml-auto gap-3">
-          <div class={container2Icon}>
+          <div class={containerIcon}>
             <ViewButton viewMode={viewMode} />
           </div>
-          <div class={`${container2Icon} gap-1.5 tablet:gap-1`}>
+          <div class={`${containerIcon} gap-1.5 tablet:gap-1`}>
             <FilterButton
               count={activeFilterCount}
               open={isOpen}

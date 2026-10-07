@@ -1,22 +1,30 @@
 /* ===== RECURSIVE STAMP CONTENT ===== */
 import { Button, buttonHover, ToggleSwitchButton } from "$button";
-import { StampCard } from "$card";
 import { walletContext } from "$client/wallet/wallet.ts";
-import { useFees } from "$fees";
 import { inputField, inputNumeric, messageError } from "$form";
-import { CreateStampRecursiveHeader, openShortcutsModal } from "$header";
+import { CreateStampRecursiveHeader } from "$header";
 import { Icon, PlaceholderImage, UserProfileIcon } from "$icon";
 import { RangeSlider } from "$islands/button/RangeSlider.tsx";
+import {
+  buildGeneratedStampRow,
+  StampCardsPreview,
+  StampCpidToggleRow,
+  StampMintPanel,
+  StampPreviewStage,
+  StampPreviewToolbar,
+} from "$islands/content/createContent/CreateStampBase.tsx";
 import { ColorPicker } from "$islands/form/ColorPicker.tsx";
 import { InputField } from "$islands/form/InputField.tsx";
 import { CollapsibleSection } from "$islands/layout/CollapsibleSection.tsx";
 import PreviewCodeModal from "$islands/modal/PreviewCodeModal.tsx";
+import PreviewImageModal from "$islands/modal/PreviewImageModal.tsx";
+import { StampCreateRecursiveHowto } from "$islands/section/howto/StampCreateRecursiveHowto.tsx";
 import { openSearchStampPicker } from "$islands/modal/SearchStampPickerModal.tsx";
 import { openModal } from "$islands/modal/states.ts";
 import {
   container2,
   container2Hover,
-  container2Icon,
+  containerIcon,
   container3,
   shadowGlowPurpleSm,
   transitionColors,
@@ -68,10 +76,17 @@ import {
   ungroupSelection,
   useRecursiveStampState,
 } from "$lib/hooks/useRecursiveStampState.ts";
+import { useStampMint } from "$lib/hooks/useStampMint.ts";
 import {
   fetchStampById,
   fetchStampsByCreator,
 } from "$lib/utils/api/stamps/fetchStamp.ts";
+import { logger } from "$lib/utils/logger.ts";
+import {
+  MAX_STAMP_FILE_BYTES,
+  textToBase64,
+  utf8ByteLength,
+} from "$lib/utils/stamps/mintHelpers.ts";
 import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
 import {
   getStampImageSrc,
@@ -95,14 +110,11 @@ import {
   type SmartGuideLine,
   snapMove,
 } from "$lib/utils/ui/rendering/recursiveStampSnap.ts";
-import { FeeCalculatorBase } from "$section";
 import {
   cardCreator,
   cardStampNumber,
-  labelSm,
   labelXs,
   subtitlePrimary,
-  text,
   textXs,
   truncate,
 } from "$text";
@@ -112,7 +124,16 @@ import type {
   RecursiveStampLayer,
 } from "$types/ui.d.ts";
 import type { ComponentChildren, JSX } from "preact";
-import { useEffect, useLayoutEffect, useRef, useState } from "preact/hooks";
+import {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "preact/hooks";
+
+/** Filename used for the generated recursive HTML stamp file. */
+const RECURSIVE_STAMP_FILENAME = "recursive.html";
 
 type RsbPanel =
   | "background"
@@ -229,39 +250,6 @@ function layerToStampRow(layer: RecursiveStampLayer): StampRow {
     tx_hash: layer.hash ?? "",
     stamp_base64: layer.b64 ?? "",
   } as StampRow;
-}
-
-function buildGeneratedStampRow(opts: {
-  html: string;
-  issuance: string;
-  stampName: string;
-  creator: string;
-  creatorName: string | null;
-  locked: boolean;
-}): StampRow {
-  const supply = parseInt(opts.issuance, 10);
-  return {
-    stamp: 1234567,
-    cpid: opts.stampName || "AUTO GENERATED",
-    ident: "SRC-721",
-    block_index: 0,
-    block_time: new Date(),
-    tx_hash: "preview",
-    tx_index: 0,
-    creator: opts.creator,
-    creator_name: opts.creatorName,
-    divisible: false,
-    keyburn: null,
-    locked: opts.locked ? 1 : 0,
-    supply: Number.isFinite(supply) && supply > 0 ? supply : 1,
-    stamp_base64: "",
-    stamp_mimetype: "text/html",
-    stamp_url: "",
-    stamp_hash: "",
-    file_hash: "",
-    file_size_bytes: new TextEncoder().encode(opts.html).length,
-    unbound_quantity: 0,
-  };
 }
 
 function liveHtmlSrc(
@@ -480,7 +468,7 @@ function AssetPreviewCard(
     <button
       type="button"
       key="creator-profile-toggle"
-      class={`${container2Icon} aspect-square !justify-center`}
+      class={`${containerIcon} aspect-square !justify-center`}
       aria-label="Show stamp details"
       onClick={(e) => {
         e.preventDefault();
@@ -492,7 +480,7 @@ function AssetPreviewCard(
         type="iconButton"
         name="userCircle"
         weight="normal"
-        size="lg"
+        size="containerIcon"
         color="primary400"
       />
     </button>
@@ -549,12 +537,12 @@ function AssetPreviewCard(
       {!showAssetsView && (
         <div class="flex items-center gap-1.5 mt-3">
           {hasMore && (
-            <div class={`${container2Icon}`}>
+            <div class={`${containerIcon}`}>
               <Icon
                 type="iconButton"
                 name="userCircle"
                 weight="normal"
-                size="md"
+                size="containerIcon"
                 color="neutral400"
                 ariaLabel="Show more by creator"
                 onClick={(e) => {
@@ -591,7 +579,7 @@ function PlaceholderIcon(props: {
       type="iconButton"
       name={props.name ?? "website"}
       weight="normal"
-      size="md"
+      size="containerIcon"
       color={props.active ? "primary400" : "neutral400"}
       ariaLabel={props.label}
       className={props.disabled ? "opacity-80 pointer-events-none" : ""}
@@ -604,18 +592,14 @@ function PlaceholderIcon(props: {
 }
 
 const CANVAS_CSS = `
-.rsb-wrap{position:relative;width:100%;height:100%;
-  overflow:hidden;touch-action:none}
+.rsb-wrap{touch-action:none}
 .rsb-wrap:not(.preview){background:repeating-conic-gradient(#191919 0% 25%,#141414 0% 50%) 0 0/20px 20px}
 .rsb-canvas,.rsb-el{touch-action:none}
 .rsb-zoom,.rsb-preview{touch-action:manipulation}
 .rsb-wrap.preview .rsb-guide,
 .rsb-wrap.preview .rsb-grid,
 .rsb-wrap.preview .rsb-ruler{display:none!important}
-.rsb-canvas{position:absolute;top:0;bottom:0;left:0;right:0;margin:auto;
-  max-width:calc(100% - 48px);max-height:calc(100% - 48px);aspect-ratio:1/1;
-  overflow:hidden;container-type:size;transform-origin:center center;
-  box-shadow:0 8px 60px rgba(0,0,0,.7)}
+.rsb-canvas{transform-origin:center center}
 .rsb-grid{position:absolute;inset:0;width:100%;height:100%;display:block;
   pointer-events:none;z-index:9999}
 .rsb-el{position:absolute;cursor:move;transform-origin:center center}
@@ -899,7 +883,7 @@ function RulerTicks({ axis }: { axis: "h" | "v" }) {
   return <>{marks}</>;
 }
 
-export function StampRecursiveContent(
+export function CreateStampRecursiveContent(
   _props: RecursiveStampContentProps = {},
 ) {
   const {
@@ -918,6 +902,8 @@ export function StampRecursiveContent(
   } = useRecursiveStampState();
 
   const wrapRef = useRef<HTMLDivElement>(null);
+  const composerScrollRef = useRef<HTMLDivElement>(null);
+  const [composerOverflows, setComposerOverflows] = useState(false);
   const canvasRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLCanvasElement>(null);
   const previewCardRef = useRef<HTMLDivElement>(null);
@@ -947,19 +933,9 @@ export function StampRecursiveContent(
   const [showCreatorAssets, setShowCreatorAssets] = useState(false);
   const [recent, setRecent] = useState<RecentItem[]>([]);
   const { isConnected } = walletContext;
-  const { fees } = useFees();
-  const [fee, setFee] = useState(1);
-  const [BTCPrice, setBTCPrice] = useState(60000);
-  const [tosAgreed, setTosAgreed] = useState(false);
-  const [previewView, setPreviewView] = useState<"canvas" | "cards">(
-    "canvas",
+  const [previewView, setPreviewView] = useState<"single" | "cards">(
+    "single",
   );
-  const [issuance, setIssuance] = useState("1");
-  const [issuanceError, setIssuanceError] = useState("");
-  const [isLocked, setIsLocked] = useState(true);
-  const [stampName, setStampName] = useState("");
-  const [stampNameError, setStampNameError] = useState("");
-  const [includeCustomCpid, setIncludeCustomCpid] = useState(false);
   const [useTxHashEndpoint, setUseTxHashEndpoint] = useState(false);
   const [includeTitle, setIncludeTitle] = useState(false);
   const [stampTitle, setStampTitle] = useState("");
@@ -992,6 +968,34 @@ export function StampRecursiveContent(
       return next;
     });
   };
+
+  useLayoutEffect(() => {
+    const el = composerScrollRef.current;
+    if (!el) return;
+
+    const check = () => {
+      setComposerOverflows(el.scrollHeight > el.clientHeight + 1);
+    };
+
+    check();
+    const observer = new ResizeObserver(check);
+    observer.observe(el);
+    const watchChildren = () => {
+      for (const child of el.children) observer.observe(child);
+    };
+    watchChildren();
+    const mutations = new MutationObserver(() => {
+      watchChildren();
+      check();
+    });
+    mutations.observe(el, { childList: true });
+
+    return () => {
+      observer.disconnect();
+      mutations.disconnect();
+    };
+  }, []);
+
   const [ctxOpen, setCtxOpen] = useState<
     { x: number; y: number } | null
   >(null);
@@ -1072,16 +1076,6 @@ export function StampRecursiveContent(
   useEffect(() => {
     setPosDraft({});
   }, [selId]);
-
-  useEffect(() => {
-    const recommended = fees?.recommendedFee;
-    if (recommended != null && recommended >= 0.1) {
-      setFee(recommended);
-    }
-    if (typeof fees?.btcPrice === "number" && fees.btcPrice > 0) {
-      setBTCPrice(fees.btcPrice);
-    }
-  }, [fees]);
 
   const getPreview = async (raw?: string) => {
     const id = (raw ?? query).trim().replace(/^#/, "");
@@ -1484,7 +1478,7 @@ export function StampRecursiveContent(
       if (t.isContentEditable) return;
       if (e.key === "?") {
         e.preventDefault();
-        openShortcutsModal();
+        openModal(<StampCreateRecursiveHowto />, "zoomInOut");
         return;
       }
       if (e.key === "Escape") {
@@ -1673,55 +1667,25 @@ export function StampRecursiveContent(
       showToast("Canvas is empty - add some assets.", "warning");
       return;
     }
-    setPreviewView("canvas");
+    setPreviewView("single");
     enterPreview(
       buildRecursiveStampHtml(layers, bg, false, srcId, htmlTitle),
     );
   };
 
   const handleStamp = () => {
-    if (!isConnected) {
-      walletContext.showConnectModal();
-    }
-  };
-
-  const handleIssuanceChange = (e: Event) => {
-    const value = (e.target as HTMLInputElement).value;
-    if (/^\d*$/.test(value)) {
-      setIssuance(value === "" ? "1" : value);
-      setIssuanceError("");
-    } else {
-      setIssuanceError("Please enter a valid number.");
-    }
-  };
-
-  const handleStampNameChange = (e: Event) => {
-    const value = (e.target as HTMLInputElement).value;
-    if (value === "" || value === "A") {
-      setStampName(value);
-      setStampNameError("");
+    // Not connected: let the hook open the connect modal first
+    if (mint.isConnected && (!layers.length || !stampPayload)) {
+      showToast("Generate the stamp before minting.", "warning");
       return;
     }
-    if (!value.startsWith("A")) {
-      setStampNameError("Custom CPID must start with 'A'");
-      return;
-    }
-    const numStr = value.slice(1);
-    try {
-      const num = BigInt(numStr);
-      const min = BigInt(26) ** BigInt(12) + BigInt(1);
-      const max = BigInt("18446744073709551615");
-      if (num >= min && num <= max) {
-        setStampName(value);
-        setStampNameError("");
-      } else {
-        setStampNameError(
-          `Number must be between ${min.toString()} and ${max.toString()}`,
-        );
-      }
-    } catch (error) {
-      setStampNameError("Invalid number format after 'A', error: " + error);
-    }
+    logger.info("stamps", {
+      message: "Starting recursive stamp mint",
+      layerCount: layers.length,
+      fileSize: stampPayload?.fileSize,
+      srcId,
+    });
+    return mint.mint();
   };
 
   const openSearch = () => {
@@ -1746,7 +1710,12 @@ export function StampRecursiveContent(
     ) {
       return;
     }
+    resetEditor();
+  };
+
+  const resetEditor = () => {
     clearAllLayers();
+    mint.resetMint();
     setQuery("");
     setFetched(null);
     setStatus("");
@@ -1757,20 +1726,10 @@ export function StampRecursiveContent(
     setPreviewPos({ x: PREVIEW_INSET, y: PREVIEW_INSET });
     setTextStyle(DEFAULT_TEXT_STYLE);
     setFontSizeInput(String(DEFAULT_TEXT_STYLE.fontSize));
-    setIssuance("1");
-    setIssuanceError("");
-    setStampName("");
-    setStampNameError("");
-    setIncludeCustomCpid(false);
     setUseTxHashEndpoint(false);
     setIncludeTitle(false);
     setStampTitle("");
-    setTosAgreed(false);
-    setPreviewView("canvas");
-    const recommended = fees?.recommendedFee;
-    setFee(
-      recommended != null && recommended >= 0.1 ? recommended : 1,
-    );
+    setPreviewView("single");
   };
 
   const previewSrc = fetched
@@ -1797,19 +1756,65 @@ export function StampRecursiveContent(
   const generatedPreviewHtml = mode === "preview"
     ? buildRecursiveStampHtml(layers, bg, true, srcId, htmlTitle)
     : "";
+
+  /* ===== STAMP PAYLOAD + FEE ESTIMATION ===== */
+  // Only built in preview mode so editing the canvas does not re-encode or
+  // re-estimate on every change.
+  const stampPayload = useMemo(() => {
+    if (mode !== "preview") return null;
+    return {
+      file: textToBase64(generatedHtml),
+      fileSize: utf8ByteLength(generatedHtml),
+      filename: RECURSIVE_STAMP_FILENAME,
+    };
+  }, [mode, generatedHtml]);
+
+  const payloadTooLarge = !!stampPayload &&
+    stampPayload.fileSize > MAX_STAMP_FILE_BYTES;
+  const payloadTooLargeMessage = stampPayload
+    ? `Generated HTML is ${
+      (stampPayload.fileSize / 1024).toFixed(1)
+    } KB. File size must be less than ${MAX_STAMP_FILE_BYTES / 1024}KB.`
+    : "";
+
+  const mint = useStampMint({
+    variant: "recursive",
+    payload: stampPayload,
+    extraBlockReason: layers.length === 0
+      ? "Add at least one layer before stamping."
+      : payloadTooLarge
+      ? payloadTooLargeMessage
+      : null,
+    // Network estimation (phase 2) only runs in preview mode
+    pauseEstimation: mode !== "preview",
+    onSuccess: resetEditor,
+  });
+
   const generatedPreviewStamp = mode === "preview"
     ? buildGeneratedStampRow({
       html: generatedPreviewHtml,
-      issuance,
-      stampName: includeCustomCpid ? stampName : "",
+      issuance: mint.issuance,
+      stampName: mint.includeCustomCpid ? mint.stampName : "",
       creator: isConnected ? walletContext.wallet.address : "",
       creatorName: isConnected ? null : "Connect Wallet",
-      locked: isLocked,
+      locked: mint.isLocked,
     })
     : null;
 
   const onViewCode = () => {
     openModal(<PreviewCodeModal src={generatedHtml} />, "zoomInOut");
+  };
+
+  /** Fullscreen preview of the generated stamp (same HTML as the preview). */
+  const onViewFullscreen = () => {
+    if (!generatedPreviewHtml) return;
+    const previewFile = new File([generatedPreviewHtml], "stamp.html", {
+      type: "text/html",
+    });
+    openModal(
+      <PreviewImageModal src={previewFile} contentType="html" />,
+      "zoomInOut",
+    );
   };
 
   return (
@@ -1827,8 +1832,10 @@ export function StampRecursiveContent(
             {mode === "preview" ? "STAMP" : "COMPOSER"}
           </h2>
           <div
-            class={`flex flex-1 flex-col pr-1
+            ref={composerScrollRef}
+            class={`flex flex-1 flex-col scrollbar-background-layer1
               mobileLg:min-h-0 mobileLg:overflow-y-auto
+              ${composerOverflows ? "mobileLg:-mr-[14px] mobileLg:pr-2" : ""}
               ${mode === "preview" ? "hidden" : ""}`}
           >
             <CollapsibleSection
@@ -1860,13 +1867,13 @@ export function StampRecursiveContent(
                   <h5 class={labelXs}>STAMP</h5>
                   <div class="flex items-center gap-1.5">
                     <div
-                      class={`${container2Icon}`}
+                      class={`${containerIcon}`}
                     >
                       <Icon
                         type="iconButton"
                         name="search"
                         weight="normal"
-                        size="md"
+                        size="containerIcon"
                         color="neutral400"
                         ariaLabel="Browse stamps"
                         onClick={(e) => {
@@ -1893,7 +1900,7 @@ export function StampRecursiveContent(
                       />
                     </form>
                     <div
-                      class={`${container2Icon}`}
+                      class={`${containerIcon}`}
                     >
                       <Icon
                         type="iconButton"
@@ -1903,7 +1910,7 @@ export function StampRecursiveContent(
                           ? "hide"
                           : "view"}
                         weight="normal"
-                        size="md"
+                        size="containerIcon"
                         color="neutral400"
                         className={fetching ? "animate-spin" : ""}
                         ariaLabel={assetPreviewOpen
@@ -2045,14 +2052,14 @@ export function StampRecursiveContent(
                       </label>
                     </div>
                     <div class="flex justify-between">
-                      <div class={container2Icon}>
+                      <div class={containerIcon}>
                         <ColorPicker
                           value={textStyle.color}
                           onChange={(hex) => patchTextStyle({ color: hex })}
                           ariaLabel="Text color"
                         />
                       </div>
-                      <div class={container2Icon}>
+                      <div class={containerIcon}>
                         <PlaceholderIcon
                           name="bold"
                           label="Bold"
@@ -2070,7 +2077,7 @@ export function StampRecursiveContent(
                             })}
                         />
                       </div>
-                      <div class={container2Icon}>
+                      <div class={containerIcon}>
                         {(
                           [
                             ["left", "justifyLeft", "Align left"],
@@ -2485,171 +2492,92 @@ export function StampRecursiveContent(
             class={`flex min-h-0 flex-1 flex-col
               ${mode === "preview" ? "" : "hidden"}`}
           >
-            <div class="flex min-h-0 flex-1 flex-col overflow-hidden">
-              <div class="flex flex-col gap-3">
-                <div class="flex items-center justify-between gap-3">
-                  <h5 class={text}>
-                    EDITIONS
-                  </h5>
-                  <div
-                    class="w-9 tablet:w-10 shrink-0"
-                    style={issuance.length > 1
-                      ? {
-                        width: `calc(${issuance.length}ch + 1.5rem + 2px)`,
-                      }
-                      : undefined}
-                  >
-                    <InputField
-                      type="text"
-                      value={issuance}
-                      onChange={handleIssuanceChange}
-                      error={issuanceError}
-                      textAlign="center"
+            <StampMintPanel
+              mint={mint}
+              cpidRow={<StampCpidToggleRow mint={mint} />}
+              fileType="text/html"
+              fileSize={stampPayload?.fileSize ??
+                utf8ByteLength(generatedHtml)}
+              fileUploadError={payloadTooLarge ? payloadTooLargeMessage : null}
+              onSubmit={handleStamp}
+              extraRows={
+                <>
+                  <div class="flex items-center justify-between gap-3">
+                    {includeTitle
+                      ? (
+                        <div class="flex-1 min-w-0">
+                          <InputField
+                            type="text"
+                            value={stampTitle}
+                            placeholder="TITLE"
+                            onInput={(e) => {
+                              const value =
+                                (e.currentTarget as HTMLInputElement).value;
+                              setStampTitle(value);
+                              if (mode === "preview") {
+                                setPreviewHtml(
+                                  buildRecursiveStampHtml(
+                                    layers,
+                                    bg,
+                                    false,
+                                    srcId,
+                                    value.trim() || undefined,
+                                  ),
+                                );
+                              }
+                            }}
+                          />
+                        </div>
+                      )
+                      : <h5 class={labelXs}>NO HTML TITLE</h5>}
+                    <ToggleSwitchButton
+                      isActive={includeTitle}
+                      onToggle={() => {
+                        const next = !includeTitle;
+                        setIncludeTitle(next);
+                        if (!next) setStampTitle("");
+                        if (mode === "preview") {
+                          setPreviewHtml(
+                            buildRecursiveStampHtml(
+                              layers,
+                              bg,
+                              false,
+                              srcId,
+                              next ? stampTitle.trim() : undefined,
+                            ),
+                          );
+                        }
+                      }}
+                      toggleButtonId="switch-toggle-title"
                     />
                   </div>
-                </div>
-                <div class="flex items-center justify-between gap-3">
-                  <h5 class={labelSm}>
-                    {isLocked ? "LOCKED" : "UNLOCKED"}
-                  </h5>
-                  <ToggleSwitchButton
-                    isActive={!isLocked}
-                    onToggle={() => setIsLocked((prev) => !prev)}
-                    toggleButtonId="switch-toggle-locked"
-                  />
-                </div>
-                <div class="flex items-center justify-between gap-3">
-                  {includeCustomCpid
-                    ? (
-                      <div class="flex-1 min-w-0">
-                        <InputField
-                          type="text"
-                          value={stampName}
-                          onChange={handleStampNameChange}
-                          placeholder="CUSTOM CPID"
-                          maxLength={21}
-                          minLength={15}
-                          error={stampNameError}
-                        />
-                      </div>
-                    )
-                    : <h5 class={labelSm}>AUTO GENERATE CPID</h5>}
-                  <ToggleSwitchButton
-                    isActive={includeCustomCpid}
-                    onToggle={() => {
-                      const next = !includeCustomCpid;
-                      setIncludeCustomCpid(next);
-                      if (!next) {
-                        setStampName("");
-                        setStampNameError("");
-                      }
-                    }}
-                    toggleButtonId="switch-toggle-cpid"
-                  />
-                </div>
-                <hr />
-                <div class="flex items-center justify-between gap-3">
-                  {includeTitle
-                    ? (
-                      <div class="flex-1 min-w-0">
-                        <InputField
-                          type="text"
-                          value={stampTitle}
-                          placeholder="TITLE"
-                          onInput={(e) => {
-                            const value =
-                              (e.currentTarget as HTMLInputElement).value;
-                            setStampTitle(value);
-                            if (mode === "preview") {
-                              setPreviewHtml(
-                                buildRecursiveStampHtml(
-                                  layers,
-                                  bg,
-                                  false,
-                                  srcId,
-                                  value.trim() || undefined,
-                                ),
-                              );
-                            }
-                          }}
-                        />
-                      </div>
-                    )
-                    : <h5 class={labelSm}>NO HTML TITLE</h5>}
-                  <ToggleSwitchButton
-                    isActive={includeTitle}
-                    onToggle={() => {
-                      const next = !includeTitle;
-                      setIncludeTitle(next);
-                      if (!next) setStampTitle("");
-                      if (mode === "preview") {
-                        setPreviewHtml(
-                          buildRecursiveStampHtml(
-                            layers,
-                            bg,
-                            false,
-                            srcId,
-                            next ? stampTitle.trim() : undefined,
-                          ),
-                        );
-                      }
-                    }}
-                    toggleButtonId="switch-toggle-title"
-                  />
-                </div>
-                <div class="flex items-center justify-between gap-3">
-                  <h5 class={labelSm}>
-                    {useTxHashEndpoint ? "TXHASH STRING" : "CPID STRING"}
-                  </h5>
-                  <ToggleSwitchButton
-                    isActive={useTxHashEndpoint}
-                    onToggle={() => {
-                      const next = !useTxHashEndpoint;
-                      setUseTxHashEndpoint(next);
-                      if (mode === "preview") {
-                        setPreviewHtml(
-                          buildRecursiveStampHtml(
-                            layers,
-                            bg,
-                            false,
-                            next ? "txHash" : "cpid",
-                            htmlTitle,
-                          ),
-                        );
-                      }
-                    }}
-                    toggleButtonId="switch-toggle-endpoint"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="shrink-0">
-              <hr class="my-3" />
-              <FeeCalculatorBase
-                fee={fee}
-                handleChangeFee={setFee}
-                type="stamp"
-                fileType="text/html"
-                fileSize={generatedHtml.length}
-                issuance={parseInt(issuance, 10)}
-                BTCPrice={BTCPrice}
-                showCoinToggle
-                tosAgreed={tosAgreed}
-                onTosChange={setTosAgreed}
-                isSubmitting={false}
-                onSubmit={handleStamp}
-                buttonName={isConnected ? "STAMP" : "CONNECT WALLET"}
-                bitname=""
-                {...(includeCustomCpid && stampName ? { cpid: stampName } : {})}
-                feeDetails={{
-                  minerFee: 0,
-                  dustValue: 0,
-                  totalValue: 0,
-                  hasExactFees: false,
-                  estimatedSize: 300,
-                }}
-              />
-            </div>
+                  <div class="flex items-center justify-between gap-3">
+                    <h5 class={labelXs}>
+                      {useTxHashEndpoint ? "TXHASH STRING" : "CPID STRING"}
+                    </h5>
+                    <ToggleSwitchButton
+                      isActive={useTxHashEndpoint}
+                      onToggle={() => {
+                        const next = !useTxHashEndpoint;
+                        setUseTxHashEndpoint(next);
+                        if (mode === "preview") {
+                          setPreviewHtml(
+                            buildRecursiveStampHtml(
+                              layers,
+                              bg,
+                              false,
+                              next ? "txHash" : "cpid",
+                              htmlTitle,
+                            ),
+                          );
+                        }
+                      }}
+                      toggleButtonId="switch-toggle-endpoint"
+                    />
+                  </div>
+                </>
+              }
+            />
           </div>
           {mode !== "preview" && (
             <div class="flex gap-5 pt-5 shrink-0">
@@ -2681,184 +2609,183 @@ export function StampRecursiveContent(
             mobileLg:h-[640px] min-[1080px]:h-[690px]
             flex flex-col overflow-hidden ${container2}`}
         >
-          <div
-            ref={wrapRef}
-            class={`rsb-wrap h-full rounded-2xl ${rulers ? "rulers-on" : ""} ${
+          <StampPreviewStage
+            wrapRef={wrapRef}
+            wrapClass={`rsb-wrap ${rulers ? "rulers-on" : ""} ${
               mode === "preview" ? "preview" : ""
-            } ${
-              mode === "preview" && previewView === "canvas"
-                ? "bg-gradient-to-b from-color-neutral-800/40 via-color-neutral-900/60 to-neutral-900/80"
-                : ""
             }`}
-            onMouseDown={(e) => beginCanvasPointer(e)}
-            onTouchStart={(e) => {
-              if (e.touches.length !== 1) return;
-              beginCanvasPointer(pointerFromTouch(e, e.touches[0]));
-            }}
-            onContextMenu={(e) => {
-              e.preventDefault();
-              const el = (e.target as HTMLElement).closest(".rsb-el") as
-                | HTMLElement
-                | null;
-              if (el?.dataset.id) {
-                if (!rsbSelIds.value.includes(el.dataset.id)) {
-                  selectLayer(el.dataset.id);
+            showBackdrop={mode === "preview" && previewView === "single"}
+            wrapProps={{
+              onMouseDown: (e) => beginCanvasPointer(e),
+              onTouchStart: (e) => {
+                if (e.touches.length !== 1) return;
+                beginCanvasPointer(pointerFromTouch(e, e.touches[0]));
+              },
+              onContextMenu: (e) => {
+                e.preventDefault();
+                const el = (e.target as HTMLElement).closest(".rsb-el") as
+                  | HTMLElement
+                  | null;
+                if (el?.dataset.id) {
+                  if (!rsbSelIds.value.includes(el.dataset.id)) {
+                    selectLayer(el.dataset.id);
+                  }
                 }
-              }
-              setCtxOpen({ x: e.clientX, y: e.clientY });
+                setCtxOpen({ x: e.clientX, y: e.clientY });
+              },
             }}
-          >
-            <div
-              ref={canvasRef}
-              class={`rsb-canvas${
-                mode === "preview" && previewView === "cards" ? " hidden" : ""
-              }`}
-              style={{
-                background: bg,
-                transform: `translate(${panX}px,${panY}px) scale(${zoom})`,
-              }}
-            >
-              <canvas ref={gridRef} class="rsb-grid" />
-              {mode === "preview" && previewView === "canvas" && (
-                <iframe
-                  class="rsb-preview-frame"
-                  title="Stamp preview"
-                  srcDoc={generatedPreviewHtml}
-                />
-              )}
-              {mode === "edit" && layers.length === 0 && (
-                <div class="absolute inset-0 flex items-center justify-center
+            canvasRef={canvasRef}
+            canvasClass="rsb-canvas"
+            hideCanvas={mode === "preview" && previewView === "cards"}
+            canvasStyle={{
+              background: bg,
+              transform: `translate(${panX}px,${panY}px) scale(${zoom})`,
+            }}
+            canvas={
+              <>
+                <canvas ref={gridRef} class="rsb-grid" />
+                {mode === "preview" && previewView === "single" && (
+                  <iframe
+                    class="rsb-preview-frame"
+                    title="Stamp preview"
+                    srcDoc={generatedPreviewHtml}
+                  />
+                )}
+                {mode === "edit" && layers.length === 0 && (
+                  <div class="absolute inset-0 flex items-center justify-center
                 text-color-neutral-500 text-xs uppercase pointer-events-none select-none">
-                  Add assets and/or text
-                </div>
-              )}
-              {mode === "edit" && guides.map((g) => (
-                <div
-                  key={g.id}
-                  class={`rsb-guide rsb-guide-${g.type}`}
-                  style={g.type === "h"
-                    ? { top: `${g.pos}%` }
-                    : { left: `${g.pos}%` }}
-                  onMouseDown={(e) => {
-                    e.stopPropagation();
-                    guideDrag.current = { id: g.id };
-                  }}
-                  onTouchStart={(e) => {
-                    if (e.touches.length !== 1) return;
-                    e.stopPropagation();
-                    e.preventDefault();
-                    guideDrag.current = { id: g.id };
-                  }}
-                  onDblClick={() => removeGuide(g.id)}
-                >
-                  <div class="rsb-glabel">{g.pos.toFixed(1)}%</div>
-                </div>
-              ))}
-              {mode === "edit" && layers.map((l, z) => {
-                const isSel = l.id === selId;
-                const isMulti = selIds.includes(l.id) && !isSel;
-                return (
+                    Add assets and/or text
+                  </div>
+                )}
+                {mode === "edit" && guides.map((g) => (
                   <div
-                    key={l.id}
-                    data-id={l.id}
-                    class={`rsb-el${isSel ? " sel" : ""}${
-                      isMulti ? " multi" : ""
-                    }`}
-                    style={{
-                      left: `${l.x}%`,
-                      top: `${l.y}%`,
-                      width: `${l.w}%`,
-                      height: `${l.h}%`,
-                      transform: layerTransformCss(l),
-                      opacity: l.op,
-                      display: l.vis ? "block" : "none",
-                      zIndex: z,
-                      filter: layerFilterCss(l) || undefined,
+                    key={g.id}
+                    class={`rsb-guide rsb-guide-${g.type}`}
+                    style={g.type === "h"
+                      ? { top: `${g.pos}%` }
+                      : { left: `${g.pos}%` }}
+                    onMouseDown={(e) => {
+                      e.stopPropagation();
+                      guideDrag.current = { id: g.id };
                     }}
-                    onMouseDown={(e) => onElPointer(e, l)}
                     onTouchStart={(e) => {
                       if (e.touches.length !== 1) return;
+                      e.stopPropagation();
                       e.preventDefault();
-                      onElPointer(pointerFromTouch(e, e.touches[0]), l);
+                      guideDrag.current = { id: g.id };
                     }}
-                    onDblClick={(e) => {
-                      if (l.type !== "text") return;
-                      const inner = (e.currentTarget as HTMLElement)
-                        .querySelector(".rsb-text") as HTMLElement | null;
-                      if (!inner) return;
-                      pushHistory();
-                      inner.contentEditable = "true";
-                      inner.classList.add("editing");
-                      inner.focus();
-                      const finish = () => {
-                        patchLayer(l.id, {
-                          text: inner.textContent ?? "",
-                          name: (inner.textContent ?? "").slice(0, 20) ||
-                            "Text",
-                        });
-                        inner.contentEditable = "false";
-                        inner.classList.remove("editing");
-                        inner.removeEventListener("blur", finish);
-                      };
-                      inner.addEventListener("blur", finish);
-                    }}
+                    onDblClick={() => removeGuide(g.id)}
                   >
-                    {l.type === "text"
-                      ? (
-                        <div
-                          class="rsb-text"
-                          style={{
-                            fontFamily: recursiveStampFontFamily(l.font),
-                            fontSize: `${l.fontSize}cqh`,
-                            color: l.color,
-                            fontWeight: l.bold ? "bold" : "normal",
-                            fontStyle: l.italic ? "italic" : "normal",
-                            textAlign: l.align,
-                          }}
-                        >
-                          {l.text}
-                        </div>
-                      )
-                      : (
-                        <div class="rsb-inner">
-                          <CanvasLayerMedia layer={l} />
-                        </div>
-                      )}
-                    <div class="rsb-sel">
-                      <div class="rsb-ring" />
-                      <div class="rsb-rotline" />
-                      <div class="rsb-rot" data-rot="1" />
-                      {["tl", "tr", "bl", "br", "tm", "bm", "ml", "mr"]
-                        .map((h) => (
-                          <div
-                            key={h}
-                            class={`rsb-h h-${h}`}
-                            data-h={h}
-                          />
-                        ))}
-                    </div>
+                    <div class="rsb-glabel">{g.pos.toFixed(1)}%</div>
                   </div>
-                );
-              })}
-              {smartLines.map((g, i) => (
-                <div
-                  key={`smart-${g.type}-${g.pos}-${i}`}
-                  class={`rsb-smart rsb-smart-${g.type}`}
-                  style={g.type === "h"
-                    ? { top: `${g.pos}%` }
-                    : { left: `${g.pos}%` }}
-                />
-              ))}
-              {measureChips.map((b, i) => (
-                <div
-                  key={`measure-${i}`}
-                  class="rsb-measure"
-                  style={{ left: `${b.left}%`, top: `${b.top}%` }}
-                >
-                  {b.text}
-                </div>
-              ))}
-            </div>
+                ))}
+                {mode === "edit" && layers.map((l, z) => {
+                  const isSel = l.id === selId;
+                  const isMulti = selIds.includes(l.id) && !isSel;
+                  return (
+                    <div
+                      key={l.id}
+                      data-id={l.id}
+                      class={`rsb-el${isSel ? " sel" : ""}${
+                        isMulti ? " multi" : ""
+                      }`}
+                      style={{
+                        left: `${l.x}%`,
+                        top: `${l.y}%`,
+                        width: `${l.w}%`,
+                        height: `${l.h}%`,
+                        transform: layerTransformCss(l),
+                        opacity: l.op,
+                        display: l.vis ? "block" : "none",
+                        zIndex: z,
+                        filter: layerFilterCss(l) || undefined,
+                      }}
+                      onMouseDown={(e) => onElPointer(e, l)}
+                      onTouchStart={(e) => {
+                        if (e.touches.length !== 1) return;
+                        e.preventDefault();
+                        onElPointer(pointerFromTouch(e, e.touches[0]), l);
+                      }}
+                      onDblClick={(e) => {
+                        if (l.type !== "text") return;
+                        const inner = (e.currentTarget as HTMLElement)
+                          .querySelector(".rsb-text") as HTMLElement | null;
+                        if (!inner) return;
+                        pushHistory();
+                        inner.contentEditable = "true";
+                        inner.classList.add("editing");
+                        inner.focus();
+                        const finish = () => {
+                          patchLayer(l.id, {
+                            text: inner.textContent ?? "",
+                            name: (inner.textContent ?? "").slice(0, 20) ||
+                              "Text",
+                          });
+                          inner.contentEditable = "false";
+                          inner.classList.remove("editing");
+                          inner.removeEventListener("blur", finish);
+                        };
+                        inner.addEventListener("blur", finish);
+                      }}
+                    >
+                      {l.type === "text"
+                        ? (
+                          <div
+                            class="rsb-text"
+                            style={{
+                              fontFamily: recursiveStampFontFamily(l.font),
+                              fontSize: `${l.fontSize}cqh`,
+                              color: l.color,
+                              fontWeight: l.bold ? "bold" : "normal",
+                              fontStyle: l.italic ? "italic" : "normal",
+                              textAlign: l.align,
+                            }}
+                          >
+                            {l.text}
+                          </div>
+                        )
+                        : (
+                          <div class="rsb-inner">
+                            <CanvasLayerMedia layer={l} />
+                          </div>
+                        )}
+                      <div class="rsb-sel">
+                        <div class="rsb-ring" />
+                        <div class="rsb-rotline" />
+                        <div class="rsb-rot" data-rot="1" />
+                        {["tl", "tr", "bl", "br", "tm", "bm", "ml", "mr"]
+                          .map((h) => (
+                            <div
+                              key={h}
+                              class={`rsb-h h-${h}`}
+                              data-h={h}
+                            />
+                          ))}
+                      </div>
+                    </div>
+                  );
+                })}
+                {smartLines.map((g, i) => (
+                  <div
+                    key={`smart-${g.type}-${g.pos}-${i}`}
+                    class={`rsb-smart rsb-smart-${g.type}`}
+                    style={g.type === "h"
+                      ? { top: `${g.pos}%` }
+                      : { left: `${g.pos}%` }}
+                  />
+                ))}
+                {measureChips.map((b, i) => (
+                  <div
+                    key={`measure-${i}`}
+                    class="rsb-measure"
+                    style={{ left: `${b.left}%`, top: `${b.top}%` }}
+                  >
+                    {b.text}
+                  </div>
+                ))}
+              </>
+            }
+          >
             {marqueeRect && (
               <div
                 class="rsb-marquee"
@@ -2930,98 +2857,24 @@ export function StampRecursiveContent(
             )}
             {mode === "preview" && previewView === "cards" &&
               generatedPreviewStamp && (
-              <div class="absolute inset-0 z-[8700] min-w-0 overflow-x-hidden
-                overflow-y-auto min-[480px]:overflow-hidden p-3 flex
-                items-start min-[480px]:items-center justify-center">
-                <div class="flex flex-col min-[480px]:flex-row gap-3
-                  items-center min-[480px]:items-start">
-                  <div class="flex flex-col gap-3">
-                    <div class="flex gap-3 items-end">
-                      <div class="w-12 h-12 shrink-0">
-                        <StampCard
-                          stamp={generatedPreviewStamp}
-                          variant="cardSquare"
-                          previewHtml={generatedPreviewHtml}
-                        />
-                      </div>
-                      <div class="w-24 h-24 shrink-0">
-                        <StampCard
-                          stamp={generatedPreviewStamp}
-                          variant="cardSquare"
-                          previewHtml={generatedPreviewHtml}
-                        />
-                      </div>
-                    </div>
-                    <div class="w-40 h-40 shrink-0">
-                      <StampCard
-                        stamp={generatedPreviewStamp}
-                        variant="cardSquare"
-                        previewHtml={generatedPreviewHtml}
-                      />
-                    </div>
-                  </div>
-                  <div class="w-[180px] shrink-0">
-                    <StampCard
-                      stamp={generatedPreviewStamp}
-                      variant="cardVerticalDetail"
-                      previewHtml={generatedPreviewHtml}
-                    />
-                  </div>
-                </div>
-              </div>
+              <StampCardsPreview
+                stamp={generatedPreviewStamp}
+                previewHtml={generatedPreviewHtml}
+                class="z-[8700]"
+              />
             )}
             {mode === "preview" && (
-              <div class="absolute top-0 right-0 z-[8800] p-3 flex gap-3">
-                <div class={`${container2Icon}`}>
-                  <Icon
-                    type="iconButton"
-                    name="edit"
-                    weight="normal"
-                    size="md"
-                    color="neutral400"
-                    ariaLabel="Edit"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setPreviewView("canvas");
-                      enterEdit();
-                    }}
-                  />
-                </div>
-                <div class={`${container2Icon}`}>
-                  <Icon
-                    type="iconButton"
-                    name="previewCode"
-                    weight="normal"
-                    size="md"
-                    color="neutral400"
-                    ariaLabel="View code"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      onViewCode();
-                    }}
-                  />
-                </div>
-                <div class={`${container2Icon}`}>
-                  <Icon
-                    type="iconButton"
-                    name={previewView === "cards"
-                      ? "viewCardMixed"
-                      : "viewCardSingle"}
-                    weight="normal"
-                    size="md"
-                    color="neutral400"
-                    ariaLabel={previewView === "cards"
-                      ? "Switch to canvas preview"
-                      : "Switch to card preview"}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setPreviewView((v) =>
-                        v === "canvas" ? "cards" : "canvas"
-                      );
-                    }}
-                  />
-                </div>
-              </div>
+              <StampPreviewToolbar
+                onEdit={() => {
+                  setPreviewView("single");
+                  enterEdit();
+                }}
+                onViewCode={onViewCode}
+                onViewFullscreen={onViewFullscreen}
+                previewView={previewView}
+                onTogglePreviewView={() =>
+                  setPreviewView((v) => v === "single" ? "cards" : "single")}
+              />
             )}
             {previewView !== "cards" && (
               <div class={`rsb-zoom ${container3} !rounded-full p-0.5`}>
@@ -3068,7 +2921,7 @@ export function StampRecursiveContent(
                 </button>
               </div>
             )}
-          </div>
+          </StampPreviewStage>
         </div>
       </div>
 

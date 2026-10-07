@@ -10,9 +10,20 @@ import {
   transitionColors,
   transitionTransform,
 } from "$layout";
+import {
+  CREATE_NAV_HREF,
+  CREATE_NAV_LINKS,
+} from "$lib/constants/navConstants.ts";
 import { useFees } from "$lib/hooks/useFees.ts";
 import { tooltipIcon } from "$notification";
-import { logoHeader, navLinkActiveDesktop, navLinkDesktop } from "$text";
+import {
+  eyebrowNeutral,
+  logoHeader,
+  navLinkActiveDesktop,
+  navLinkDesktop,
+  navSublinkActiveDesktop,
+  navSublinkDesktop,
+} from "$text";
 import { createPortal } from "preact/compat";
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 
@@ -21,6 +32,7 @@ interface NavLink {
   title: string;
   href?: string;
   icon?: string;
+  subLinks?: readonly NavLink[];
 }
 
 /* ===== TOOLS CONFIGURATION ===== */
@@ -46,6 +58,11 @@ const desktopNavLinks: NavLink[] = [
     title: "Explorer",
     href: "/explorer",
     icon: "explorer",
+  },
+  {
+    title: "Create",
+    href: CREATE_NAV_HREF,
+    subLinks: CREATE_NAV_LINKS,
   },
 ];
 
@@ -73,23 +90,24 @@ export function Header() {
   const closeTooltipTimeoutRef = useRef<number | null>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
 
-  // Centralized data fetching - starts immediately on page load
-  const { fees, loading: feesLoading } = useFees();
-  const [latestBlock, setLatestBlock] = useState(0);
-  const [healthLoading, setHealthLoading] = useState(true);
+  // Prefetch fee data on page load (consumed by BlockchainStats in FeeCalculatorBase)
+  useFees();
 
   // Single atomic dropdown state
   const [dropdownState, setDropdownState] = useState<{
-    active: "tools" | "wallet" | null;
+    active: "tools" | "wallet" | "create" | null;
     toolsPos: { top: number; left: number } | null;
     walletPos: { top: number; left: number } | null;
+    createPos: { top: number; left: number } | null;
   }>({
     active: null,
     toolsPos: null,
     walletPos: null,
+    createPos: null,
   });
   const toolsButtonRef = useRef<HTMLDivElement>(null);
   const walletButtonRef = useRef<HTMLDivElement>(null);
+  const createButtonRef = useRef<HTMLDivElement>(null);
 
   // Hover delay timeout
   const dropdownTimeoutRef = useRef<number | null>(null);
@@ -98,41 +116,13 @@ export function Header() {
   const [dropdownAnimation, setDropdownAnimation] = useState<{
     tools: "enter" | "exit" | null;
     wallet: "enter" | "exit" | null;
+    create: "enter" | "exit" | null;
   }>({
     tools: null,
     wallet: null,
+    create: null,
   });
   const animationTimeoutRef = useRef<number | null>(null);
-
-  /* ===== HEALTH DATA FETCHING ===== */
-  useEffect(() => {
-    const fetchHealthData = async () => {
-      try {
-        const response = await fetch("/api/v2/health");
-        if (response.ok) {
-          const healthData = await response.json();
-          const blockHeight = healthData.services?.blockSync?.indexed || 0;
-          setLatestBlock(blockHeight);
-
-          if (blockHeight === 0) {
-            // Set -1 to indicate service is unavailable
-            setLatestBlock(-1);
-          }
-        } else {
-          // API failed, set -1 to indicate service is unavailable
-          setLatestBlock(-1);
-        }
-      } catch (err) {
-        console.error("Health data fetch error:", err);
-        // Set -1 to indicate service is unavailable
-        setLatestBlock(-1);
-      } finally {
-        setHealthLoading(false);
-      }
-    };
-
-    fetchHealthData();
-  }, []);
 
   // Scroll lock
   useEffect(() => {
@@ -288,8 +278,8 @@ export function Header() {
     if (toolsButtonRef.current) {
       const rect = toolsButtonRef.current.getBoundingClientRect();
       toolsPos = {
-        top: rect.bottom + 24,
-        left: rect.right - 550 + 56,
+        top: rect.bottom + 2,
+        left: rect.right - 99,
       };
     }
 
@@ -298,6 +288,7 @@ export function Header() {
       active: "tools" as const,
       toolsPos: toolsPos,
       walletPos: null,
+      createPos: null,
     };
     setDropdownState(newState);
 
@@ -305,6 +296,7 @@ export function Header() {
     setDropdownAnimation({
       tools: "enter",
       wallet: null,
+      create: null,
     });
   };
 
@@ -324,8 +316,8 @@ export function Header() {
     if (walletButtonRef.current) {
       const rect = walletButtonRef.current.getBoundingClientRect();
       walletPos = {
-        top: rect.bottom + 23.5,
-        left: rect.right - 150 - 50,
+        top: rect.bottom + 2,
+        left: rect.right - 166,
       };
     }
 
@@ -334,6 +326,7 @@ export function Header() {
       active: "wallet" as const,
       toolsPos: null,
       walletPos: walletPos,
+      createPos: null,
     };
     setDropdownState(newState);
 
@@ -341,6 +334,45 @@ export function Header() {
     setDropdownAnimation({
       tools: null,
       wallet: "enter",
+      create: null,
+    });
+  };
+
+  const handleCreateMouseEnter = () => {
+    // Clear any existing timeout
+    if (dropdownTimeoutRef.current) {
+      clearTimeout(dropdownTimeoutRef.current);
+      dropdownTimeoutRef.current = null;
+    }
+    if (animationTimeoutRef.current) {
+      clearTimeout(animationTimeoutRef.current);
+      animationTimeoutRef.current = null;
+    }
+
+    // Calculate create position (anchored under the CREATE nav link).
+    // The text link is ~10px shorter than the icon buttons, so +14 keeps the
+    // dropdown top level with the tools/wallet dropdowns (icon bottom + 4).
+    let createPos = null;
+    if (createButtonRef.current) {
+      const rect = createButtonRef.current.getBoundingClientRect();
+      createPos = {
+        top: rect.bottom + 9,
+        left: rect.left - 20,
+      };
+    }
+
+    setDropdownState({
+      active: "create",
+      toolsPos: null,
+      walletPos: null,
+      createPos,
+    });
+
+    // Trigger enter animation
+    setDropdownAnimation({
+      tools: null,
+      wallet: null,
+      create: "enter",
     });
   };
 
@@ -352,6 +384,8 @@ export function Header() {
         setDropdownAnimation((prev) => ({ ...prev, tools: "exit" }));
       } else if (dropdownState.active === "wallet") {
         setDropdownAnimation((prev) => ({ ...prev, wallet: "exit" }));
+      } else if (dropdownState.active === "create") {
+        setDropdownAnimation((prev) => ({ ...prev, create: "exit" }));
       }
 
       // Close dropdown after animation completes (200ms animation duration)
@@ -360,10 +394,12 @@ export function Header() {
           active: null,
           toolsPos: null,
           walletPos: null,
+          createPos: null,
         });
         setDropdownAnimation({
           tools: null,
           wallet: null,
+          create: null,
         });
       }, 200);
     }, 300); // 300ms hover delay that works as a bridge between icon button and dropdown
@@ -376,18 +412,6 @@ export function Header() {
       onCloseDrawer: closeMenu,
     });
   }, [openDrawer, closeMenu]);
-
-  // Create centralized data object to pass to ToolsButton
-  const toolsData = useMemo(() => ({
-    btcPrice: fees?.btcPrice || 0,
-    recommendedFee: fees?.recommendedFee || 6,
-    latestBlock,
-    isLoading: feesLoading || healthLoading,
-    // Priority fees from mempool.space
-    lowFee: fees?.hourFee || 0,
-    mediumFee: fees?.halfHourFee || 0,
-    highFee: fees?.fastestFee || 0,
-  }), [fees, latestBlock, feesLoading, healthLoading]);
 
   /* ===== DRAWER RENDERER ===== */
   const renderDrawer = (type: "menu" | "wallet" | "tools") => {
@@ -403,8 +427,7 @@ export function Header() {
             onCloseDrawer: closeMenu,
           }).drawer;
         case "tools":
-          return ToolsButton({ onOpenDrawer: openDrawer, data: toolsData })
-            .drawer;
+          return ToolsButton({ onOpenDrawer: openDrawer }).drawer;
       }
     };
 
@@ -432,7 +455,7 @@ export function Header() {
         style="transition-timing-function: cubic-bezier(0.46,0.03,0.52,0.96);"
         id={`navbar-collapse-${type}`}
       >
-        <div class="flex flex-col h-full pt-1">
+        <div class="flex flex-col h-full pt-0.5">
           <div class="flex flex-row justify-between items-center w-full pl-1 pr-5">
             <div class="relative">
               <div
@@ -445,7 +468,7 @@ export function Header() {
               <Icon
                 type="iconButton"
                 name="close"
-                size="xl"
+                size="container1"
                 weight="bold"
                 color="neutral600"
                 ariaLabel="Close menu"
@@ -459,7 +482,7 @@ export function Header() {
               />
             </div>
             <h6
-              class={`font-black text-lg text-color-neutral-800 tracking-wide select-none ${
+              class={`-mt-[3px] -mr-3 font-black text-lg text-color-neutral-800 tracking-wide select-none ${
                 type === "menu" ? "italic pr-0.5" : ""
               }`}
             >
@@ -481,12 +504,23 @@ export function Header() {
       return currentPath === hrefPath || currentPath.startsWith(`${hrefPath}/`);
     };
 
+    // Hover/ref props only for the entry that owns a dropdown (CREATE)
+    const dropdownProps = (link: NavLink) =>
+      link.subLinks
+        ? {
+          ref: createButtonRef,
+          onMouseEnter: handleCreateMouseEnter,
+          onMouseLeave: handleDropdownMouseLeave,
+        }
+        : {};
+
     return (
       <>
         {desktopNavLinks.map((link) => (
           <div
             key={link.title}
             class="relative group mb-[2px]"
+            {...dropdownProps(link)}
           >
             <a
               href={link.href}
@@ -544,15 +578,15 @@ export function Header() {
       {/* ===== MOBILE NAVIGATION ===== */}
       <div class="mobileLg:hidden flex items-center w-full relative z-header">
         <div
-          class={`flex items-center justify-between w-full gap-7 py-0.5 px-5 ${container1} !rounded-full`}
+          class={`flex items-center justify-between w-full py-0.5 px-5 ${container1} !rounded-full`}
         >
           {/* Left: Logo Icon */}
           {logoIcon}
 
           {/* Right: Search, Tools, Wallet and Menu Buttons */}
-          <div class="flex items-center gap-2 -mr-2">
+          <div class="flex items-center gap-1 -mr-2">
             <SearchButton />
-            {ToolsButton({ onOpenDrawer: openDrawer, data: toolsData }).icon}
+            {ToolsButton({ onOpenDrawer: openDrawer }).icon}
             {WalletButton({
               onOpenDrawer: openDrawer,
               onCloseDrawer: closeMenu,
@@ -574,15 +608,15 @@ export function Header() {
 
           {/* Center: Navigation Links (only when NAV_POSITION === "center") */}
           {NAV_POSITION === "center" && (
-            <div class="absolute left-1/2 -translate-x-1/2 flex items-center gap-6 tablet:gap-5">
+            <div class="absolute left-1/2 -translate-x-1/2 flex items-center gap-5">
               {renderNavLinks()}
             </div>
           )}
 
           {/* Right: Icon Buttons (nav links prepended when NAV_POSITION === "right") */}
-          <div class="flex items-center gap-2 tablet:gap-1">
+          <div class="flex items-center gap-1">
             {NAV_POSITION === "right" && (
-              <div class="flex items-center gap-6 tablet:gap-5 mr-2">
+              <div class="flex items-center gap-5 mr-2">
                 {renderNavLinks()}
               </div>
             )}
@@ -596,7 +630,7 @@ export function Header() {
               onMouseEnter={handleToolsMouseEnter}
               onMouseLeave={handleDropdownMouseLeave}
             >
-              {ToolsButton({ onOpenDrawer: openDrawer, data: toolsData }).icon}
+              {ToolsButton({ onOpenDrawer: openDrawer }).icon}
             </div>
             <div
               class="relative group"
@@ -632,7 +666,7 @@ export function Header() {
 
         return shouldRenderTools && createPortal(
           <div
-            class={`hidden tablet:block !fixed z-dropdown w-[550px] py-3.5 px-5 whitespace-nowrap ${container1} ${animationClass}`}
+            class={`hidden tablet:block !fixed z-dropdown min-w-[150px] px-5 py-3.5 whitespace-nowrap ${container1} ${animationClass}`}
             style={{
               top: `${dropdownState.toolsPos!.top}px`,
               left: `${dropdownState.toolsPos!.left}px`,
@@ -654,9 +688,65 @@ export function Header() {
             }}
             onMouseLeave={handleDropdownMouseLeave}
           >
-            <div class="grid grid-cols-5 w-full">
-              {ToolsButton({ onOpenDrawer: openDrawer, data: toolsData })
-                .dropdown}
+            {ToolsButton({ onOpenDrawer: openDrawer }).dropdown}
+          </div>,
+          document.body,
+        );
+      })()}
+
+      {(() => {
+        const shouldRenderCreate = (dropdownState.active === "create" ||
+          dropdownAnimation.create === "exit") &&
+          dropdownState.createPos;
+
+        const animationClass = dropdownAnimation.create === "enter"
+          ? "dropdown-enter"
+          : dropdownAnimation.create === "exit"
+          ? "dropdown-exit"
+          : "";
+
+        const isCreateLinkActive = (href: string) =>
+          !!currentPath &&
+          (currentPath === href || currentPath.startsWith(`${href}/`));
+
+        return shouldRenderCreate && createPortal(
+          <div
+            class={`hidden tablet:block !fixed z-dropdown min-w-[150px] px-5 py-3.5 whitespace-nowrap ${container1} ${animationClass}`}
+            style={{
+              top: `${dropdownState.createPos!.top}px`,
+              left: `${dropdownState.createPos!.left}px`,
+            }}
+            onMouseEnter={() => {
+              // Clear timeout when hovering over dropdown
+              if (dropdownTimeoutRef.current) {
+                clearTimeout(dropdownTimeoutRef.current);
+                dropdownTimeoutRef.current = null;
+              }
+              if (animationTimeoutRef.current) {
+                clearTimeout(animationTimeoutRef.current);
+                animationTimeoutRef.current = null;
+              }
+              // If we were exiting, switch back to enter
+              if (dropdownAnimation.create === "exit") {
+                setDropdownAnimation((prev) => ({ ...prev, create: "enter" }));
+              }
+            }}
+            onMouseLeave={handleDropdownMouseLeave}
+          >
+            <div class="flex flex-col space-y-1 text-left">
+              <h6 class={`${eyebrowNeutral} -my-0.5`}>STAMP</h6>
+              {CREATE_NAV_LINKS.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setCurrentPath(link.href)}
+                  class={isCreateLinkActive(link.href)
+                    ? navSublinkActiveDesktop
+                    : navSublinkDesktop}
+                >
+                  {link.title}
+                </a>
+              ))}
             </div>
           </div>,
           document.body,
@@ -677,7 +767,7 @@ export function Header() {
 
         return shouldRenderWallet && createPortal(
           <div
-            class={`hidden tablet:block !fixed z-dropdown min-w-[150px] py-3.5 px-5 justify-end whitespace-nowrap ${container1} ${animationClass}`}
+            class={`hidden tablet:block !fixed z-dropdown min-w-[150px] px-5 py-3.5 justify-end whitespace-nowrap ${container1} ${animationClass}`}
             style={{
               top: `${dropdownState.walletPos!.top}px`,
               left: `${dropdownState.walletPos!.left}px`,

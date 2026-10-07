@@ -50,23 +50,23 @@ export function SearchInputField({
         onInput={(e) => onChange((e.target as HTMLInputElement).value)}
         onKeyDown={handleKeyDown}
         autoFocus={autoFocus}
-        class={`relative z-modal h-12 w-full pl-7.5 pr-[68px] bg-transparent font-medium text-sm tablet:text-xs text-color-neutral-200 placeholder:font-light placeholder:text-color-neutral-500 placeholder:uppercase outline-none focus-visible:outline-none`}
+        class={`relative z-modal h-10 w-full pl-5 pr-[50px] bg-transparent font-medium text-xs text-color-neutral-200 placeholder:font-light placeholder:text-color-neutral-500 placeholder:uppercase outline-none focus-visible:outline-none`}
       />
       {trailing
         ? (
-          <div class="absolute z-modal right-3 top-[7px]">
+          <div class="absolute z-modal top-0.5 right-0.5">
             {trailing}
           </div>
         )
         : isLoading
         ? (
-          <div class="absolute z-modal right-6 top-[11px]">
-            <div class={`${loaderSpinXsGrey} mt-[7px] mr-[3px]`} />
+          <div class="absolute z-modal top-3.5 right-4.5">
+            <div class={`${loaderSpinXsGrey}`} />
           </div>
         )
         : (
           <div
-            class="absolute z-modal right-6 top-[11px] cursor-pointer"
+            class="absolute z-modal top-1.5 right-3.5 cursor-pointer"
             onClick={onSearch}
           >
             <Icon

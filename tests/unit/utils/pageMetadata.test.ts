@@ -75,6 +75,11 @@ Deno.test("descriptions fit inside what Google renders", () => {
 Deno.test("no two pages share a title or a description", () => {
   const titles = new Map<string, string>();
   const descriptions = new Map<string, string>();
+  // The recursive creator is the same stamping flow under a new URL, so the
+  // tab title stays identical to /tool/stamp/create on purpose.
+  const sharedTitles = new Set([
+    STATIC_PAGE_METADATA["/tool/stamp/create"].title,
+  ]);
 
   for (const [path, meta] of Object.entries(STATIC_PAGE_METADATA)) {
     // The home page IS the default, so it is allowed to match it.
@@ -87,7 +92,12 @@ Deno.test("no two pages share a title or a description", () => {
     }
 
     const titleOwner = titles.get(meta.title);
-    assert(!titleOwner, `${path} reuses the title from ${titleOwner}`);
+    const sharesTitle = sharedTitles.has(meta.title) &&
+      (path === "/create/recursive" || titleOwner === "/tool/stamp/create");
+    assert(
+      !titleOwner || sharesTitle,
+      `${path} reuses the title from ${titleOwner}`,
+    );
     titles.set(meta.title, path);
 
     const descOwner = descriptions.get(meta.description);
@@ -136,6 +146,13 @@ Deno.test("derived metadata is clamped to the same limits", () => {
     "/wallet/bc1qf8cedqguh2ucc3fgsphmgt789q9szh35vtl38m",
   );
   assert(longAddress.title.length <= MAX_TITLE_LENGTH);
+});
+
+Deno.test("/create/recursive uses the stamping tool title", () => {
+  assertEquals(
+    getPageMetadata("/create/recursive").title,
+    STATIC_PAGE_METADATA["/tool/stamp/create"].title,
+  );
 });
 
 Deno.test("trailing slashes and unknown paths resolve sensibly", () => {

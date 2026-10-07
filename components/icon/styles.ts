@@ -9,7 +9,8 @@ export interface IconVariants {
   name: string;
   weight: "extraLight" | "light" | "normal" | "bold" | "custom";
   size:
-    | "xs"
+    | "container1"
+    | "containerIcon"
     | "sm"
     | "md"
     | "lg"
@@ -150,12 +151,13 @@ export const iconStyles = {
   /* ===== SIZE VARIANTS ===== */
   // icon must use bigger sizes than icon button
   size: {
-    xs: "w-1.5 h-1.5", // Updated sizing
-    sm: "w-2.5 h-2.5", // Updated sizing
-    md: "w-3.5 h-3.5", // Standard icon size with Container2Icon wrapper
-    lg: "w-4.5 h-4.5", // Used in footer
-    xl: "w-5.5 h-5.5", // Standard icon size used in header, stamp image right panel and standard icon buttons
-    xxl: "w-6.5 h-6.5", // Logo icon size
+    container1: "w-5 h-5", // Header and footer icon buttons
+    containerIcon: "w-4 h-4", // Standard icon size with containerIcon wrapper
+    sm: "w-2.5 h-2.5",
+    md: "w-3.5 h-3.5",
+    lg: "w-4.5 h-4.5",
+    xl: "w-5.5 h-5.5",
+    xxl: "w-6.5 h-6.5", // StampImage audio control
     custom: "",
   },
 } as const;
@@ -166,7 +168,7 @@ export const iconStyles = {
  * wrapping <a>, not the svg. Icons that want the same interactive coloring
  * without the pill (e.g. tightly-spaced carets) should use type="iconHover"
  * instead. */
-export const iconButtonPill = `p-1.5 bg-transparent rounded-full
+export const iconButtonPill = `p-[5px] bg-transparent rounded-full
   hover:bg-gradient-to-b hover:from-color-neutral-700/80 hover:via-color-neutral-800/90 hover:to-color-neutral-800`;
 
 /* ===== SLIDER HANDLE ===== */

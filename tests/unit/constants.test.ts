@@ -131,14 +131,14 @@ Deno.test("constants - carousel stamp IDs", () => {
 
 Deno.test("constants - wallet providers", () => {
   const expectedProviders: WalletProviderKey[] = [
+    "wonder",
     "unisat",
-    "leather",
-    "okx",
-    "tapwallet",
-    "phantom",
     "horizon",
     "xverse",
-    "wonder",
+    "tapwallet",
+    "phantom",
+    "leather",
+    "okx",
   ];
 
   assertEquals(

@@ -18,6 +18,7 @@ import {
   navSublinkActiveDesktop,
   navSublinkDesktop,
   valueDarkSm,
+  valueDarkXs,
 } from "$text";
 import { useEffect, useRef, useState } from "preact/hooks";
 
@@ -195,9 +196,8 @@ export const WalletButton = (
             type="iconButton"
             name="wallet"
             weight="light"
-            size="custom"
+            size="container1"
             color="neutral400"
-            className="w-6 h-6"
             onClick={handleWalletIconClick}
           />
         )}
@@ -211,9 +211,8 @@ export const WalletButton = (
                 type="iconButton"
                 name="wallet"
                 weight="light"
-                size="custom"
+                size="container1"
                 color="neutral400"
-                className="w-6 h-6"
                 colorAccent="var(--color-primary-400)"
                 colorAccentHover="var(--color-hover)"
                 onClick={handleWalletIconClick}
@@ -260,7 +259,7 @@ export const WalletButton = (
             <h6
               class={`${valueDarkSm} !text-xs ${transitionColors} peer-hover:text-color-hover`}
             >
-              {abbreviateAddress(address, 8)}
+              {abbreviateAddress(address, 6)}
             </h6>
           </div>
           <div class="flex items-center justify-between gap-3 mb-0.5">
@@ -360,9 +359,9 @@ export const WalletButton = (
                 </div>
               </div>
               <h6
-                class={`${valueDarkSm} ${transitionColors} peer-hover:text-color-hover`}
+                class={`${valueDarkXs} ${transitionColors} peer-hover:text-color-hover`}
               >
-                {abbreviateAddress(address, 9)}
+                {abbreviateAddress(address, 13)}
               </h6>
             </div>
             <div class="flex justify-between items-end flex-1">
@@ -373,7 +372,7 @@ export const WalletButton = (
                 size="lg"
                 color="neutral500"
               />
-              <h6 class="font-semibold text-lg text-color-orange-400">
+              <h6 class="font-semibold text-base text-color-orange-400">
                 {formatSatoshisToBTC(btcBalance.total, {
                   includeSymbol: false,
                   stripZeros: true,

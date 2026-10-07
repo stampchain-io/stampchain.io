@@ -21,19 +21,26 @@ export default function GetStampingCta() {
         <div class="flex flex-col">
           <p>
             <b>
-              The Stampchain stamping machine has been revamped and refitted
-              with sleek new naming features.
+              The Stampchain stamping machine now comes with three ways to
+              stamp - Classic, Posh and Recursive.
             </b>
           </p>
           <p>
             <b>
-              Experience greater creative freedom and adorn your treasured art
-              with fanciful letters and posh names.
+              Adorn your treasured art with fanciful letters and posh names.
             </b>
             <br />
-            By leveraging Counterparty's asset-naming system and handling the
-            XCP fee, we've made it simple and smooth for you to create Posh
-            stamps.
+            By leveraging Counterparty's named assets, you can give your stamp
+            a unique, readable name instead of a random numeric CPID. Just make
+            sure your wallet holds enough XCP to register it.
+          </p>
+          <p>
+            <b>Feeling creative ?</b>
+            <br />
+            Compose existing stamps into brand new artwork with the recursive
+            stamp builder. Layer assets, add text, apply filters and move,
+            resize and rotate everything right on the canvas. Your stamp only
+            references the originals, so it stays light and cheap to broadcast.
           </p>
         </div>
         <div class="flex flex-col -mt-1 mobileMd:-mt-2 mobileLg:-mt-4 tablet:mt-0 tablet:text-right">
@@ -44,9 +51,11 @@ export default function GetStampingCta() {
             a custom CPID number for your stamp.
           </p>
           <p>
-            Either way the stamping machine handles everything, from low-fi
-            pixel art (png/jpg/gif) to hi-res vector art (svg/html) - up to a
-            whooping 65kB.
+            Whichever way you stamp, the machine handles everything, from
+            low-fi pixel art (png/jpg/gif) to hi-res vector art (svg/html) - up
+            to a whooping 65kB. Set your editions, tune the fee with the slider
+            and preview your stamp in fullscreen or as a stamp card before you
+            sign.
           </p>
           <p>
             <b>Time to get stamping !</b>

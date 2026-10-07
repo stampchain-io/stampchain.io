@@ -776,6 +776,8 @@ export interface ColorPickerProps {
 export interface ModalBaseProps extends BaseComponentProps {
   onClose?: () => void;
   title: string;
+  subtitle?: string | undefined;
+  variant?: "primary" | "neutral";
   children: ComponentChildren;
   className?: string;
   contentClassName?: string;
@@ -4333,7 +4335,12 @@ export interface RecursiveStampGuide {
 
 export type RecursiveStampMode = "edit" | "preview";
 
-export type CreateStampHeaderProps = BaseComponentProps;
+export type CreateStampType = "classic" | "posh" | "recursive";
+
+export interface CreateStampHeaderProps extends BaseComponentProps {
+  /** Which create page is currently shown (selected tab). */
+  active?: CreateStampType;
+}
 
 export type CreateStampRecursiveHeaderProps = BaseComponentProps;
 
