@@ -140,6 +140,12 @@ jobs:
           fi
 
       # Create a summary comment for PR
+      # SSR Safety Check
+      - name: Check SSR Safety
+        id: ssrcheck
+        run: deno task check:ssr
+        continue-on-error: true
+
       - name: Create PR Comment with Quality Results
         if: github.event_name == 'pull_request'
         # Fork PRs receive a read-only GITHUB_TOKEN; commenting fails with
@@ -297,12 +303,6 @@ jobs:
           fail_level: error
           filter_mode: nofilter
           actionlint_flags: '-ignore "shellcheck reported issue.*SC2086.*" -ignore "shellcheck reported issue.*SC2129.*" -ignore "shellcheck reported issue.*SC2034.*" -ignore "shellcheck reported issue.*SC2144.*" -ignore "shellcheck reported issue.*SC2012.*"'
-        continue-on-error: true
-
-      # SSR Safety Check
-      - name: Check SSR Safety
-        id: ssrcheck
-        run: deno task check:ssr
         continue-on-error: true
 
       # Response Pattern Check
