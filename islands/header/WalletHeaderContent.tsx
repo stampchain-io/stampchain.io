@@ -2,7 +2,7 @@
 import { SelectorButtons } from "$button";
 import { SortButton } from "$islands/button/SortButton.tsx";
 import { ViewButton } from "$islands/button/ViewButton.tsx";
-import { container2Icon, PillContentCount, ScrollFadeRow } from "$layout";
+import { containerIcon, PillContentCount, ScrollFadeRow } from "$layout";
 import {
   getCurrentPathname,
   safeNavigate,
@@ -134,14 +134,14 @@ export const WalletHeaderContent = (
             (the other flex-grow element) is hidden for "all". */
         }
         <div class="flex shrink-0 gap-3 ml-auto">
-          <div class={container2Icon}>
+          <div class={containerIcon}>
             <ViewButton
               viewMode={viewMode}
               paramName="view"
               modes={["cardVertical", "cardSquare", "cardRow"]}
             />
           </div>
-          <div class={`${container2Icon} gap-1.5 tablet:gap-1`}>
+          <div class={`${containerIcon} gap-1.5 tablet:gap-1`}>
             <SortButton sortParam="sortBy" />
           </div>
         </div>

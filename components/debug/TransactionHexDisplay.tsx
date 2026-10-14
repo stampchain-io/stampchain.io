@@ -64,7 +64,7 @@ export function TransactionHexDisplay({
             <Icon
               type="icon"
               name={copied ? "check" : "copy"}
-              size="xs"
+              size="sm"
               weight="normal"
               color="custom"
               className={copied ? "fill-green-300" : "fill-purple-300"}

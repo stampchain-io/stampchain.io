@@ -166,6 +166,8 @@ export const value5xlPurpleGlow =
 export const value7xlPurpleGlow =
   `font-black text-7xl text-black text-stroke-glow-large cursor-default ${select}`; // used in about header
 // Dark variants
+export const valueDarkXs =
+  `font-normal text-xs text-color-neutral-500 ${select}`; // used for addy styling in wallet button
 export const valueDarkSm =
   `font-normal text-sm text-color-neutral-500 ${select}`; // used for tables and addy styling in wallet button
 export const valueDark =
@@ -306,6 +308,7 @@ export type TextStyles = {
   value2xlPurpleGlow: string;
   value5xlPurpleGlow: string;
   value7xlPurpleGlow: string;
+  valueDarkXs: string;
   valueDarkSm: string;
   valueDark: string;
   valuePositive: string;

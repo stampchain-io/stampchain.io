@@ -114,7 +114,10 @@ import * as $collection_id_ from "./routes/collection/[id].tsx";
 import * as $collection_index from "./routes/collection/index.tsx";
 import * as $config from "./routes/config.ts";
 import * as $content_imgpath_ from "./routes/content/[...imgpath].tsx";
-import * as $create_recursivestamp from "./routes/create/recursivestamp.tsx";
+import * as $create_classic from "./routes/create/classic.tsx";
+import * as $create_index from "./routes/create/index.tsx";
+import * as $create_posh from "./routes/create/posh.tsx";
+import * as $create_recursive from "./routes/create/recursive.tsx";
 import * as $dashboard_address_ from "./routes/dashboard/[address].tsx";
 import * as $docs_index from "./routes/docs/index.tsx";
 import * as $explorer_index from "./routes/explorer/index.tsx";
@@ -165,6 +168,7 @@ import * as $Toast_ToastProvider from "./islands/Toast/ToastProvider.tsx";
 import * as $WebVitalsReporter from "./islands/WebVitalsReporter.tsx";
 import * as $button_CollectionButton from "./islands/button/CollectionButton.tsx";
 import * as $button_FilterButton from "./islands/button/FilterButton.tsx";
+import * as $button_InfoButton from "./islands/button/InfoButton.tsx";
 import * as $button_MenuButton from "./islands/button/MenuButton.tsx";
 import * as $button_PaginationButtons from "./islands/button/PaginationButtons.tsx";
 import * as $button_PaginationButtonsSSRSafe from "./islands/button/PaginationButtonsSSRSafe.tsx";
@@ -195,9 +199,10 @@ import * as $content_WalletDashboardContent from "./islands/content/WalletDashbo
 import * as $content_WalletDashboardDetails from "./islands/content/WalletDashboardDetails.tsx";
 import * as $content_blockContent_BlockSelector from "./islands/content/blockContent/BlockSelector.tsx";
 import * as $content_blockContent_BlockTransactions from "./islands/content/blockContent/BlockTransactions.tsx";
+import * as $content_createContent_CreateStampBase from "./islands/content/createContent/CreateStampBase.tsx";
 import * as $content_createContent_CreateStampClassicContent from "./islands/content/createContent/CreateStampClassicContent.tsx";
 import * as $content_createContent_CreateStampPoshContent from "./islands/content/createContent/CreateStampPoshContent.tsx";
-import * as $content_createContent_StampRecursiveContent from "./islands/content/createContent/StampRecursiveContent.tsx";
+import * as $content_createContent_CreateStampRecursiveContent from "./islands/content/createContent/CreateStampRecursiveContent.tsx";
 import * as $content_faqContent_AccordionBase from "./islands/content/faqContent/AccordionBase.tsx";
 import * as $content_faqContent_FaqAccordion from "./islands/content/faqContent/FaqAccordion.tsx";
 import * as $content_index from "./islands/content/index.ts";
@@ -260,6 +265,7 @@ import * as $modal_DetailSRC101Modal from "./islands/modal/DetailSRC101Modal.tsx
 import * as $modal_DonateStampModal from "./islands/modal/DonateStampModal.tsx";
 import * as $modal_EditCreatorNameModal from "./islands/modal/EditCreatorNameModal.tsx";
 import * as $modal_FilterSRC20Modal from "./islands/modal/FilterSRC20Modal.tsx";
+import * as $modal_InfoModal from "./islands/modal/InfoModal.tsx";
 import * as $modal_PreviewCodeModal from "./islands/modal/PreviewCodeModal.tsx";
 import * as $modal_PreviewImageModal from "./islands/modal/PreviewImageModal.tsx";
 import * as $modal_RecieveAddyModal from "./islands/modal/RecieveAddyModal.tsx";
@@ -268,6 +274,7 @@ import * as $modal_SearchStampModal from "./islands/modal/SearchStampModal.tsx";
 import * as $modal_SearchStampPickerModal from "./islands/modal/SearchStampPickerModal.tsx";
 import * as $modal_SendBTCModal from "./islands/modal/SendBTCModal.tsx";
 import * as $modal_states from "./islands/modal/states.ts";
+import * as $section_BlockchainStats from "./islands/section/BlockchainStats.tsx";
 import * as $section_FeeCalculatorBase from "./islands/section/FeeCalculatorBase.tsx";
 import * as $section_cta_ContactCta from "./islands/section/cta/ContactCta.tsx";
 import * as $section_cta_DonateCta from "./islands/section/cta/DonateCta.tsx";
@@ -299,6 +306,10 @@ import * as $section_howto_SRC101TransferHowto from "./islands/section/howto/SRC
 import * as $section_howto_SRC20DeployHowto from "./islands/section/howto/SRC20DeployHowto.tsx";
 import * as $section_howto_SRC20MintHowto from "./islands/section/howto/SRC20MintHowto.tsx";
 import * as $section_howto_SRC20TransferHowto from "./islands/section/howto/SRC20TransferHowto.tsx";
+import * as $section_howto_StampCreateClassicHowto from "./islands/section/howto/StampCreateClassicHowto.tsx";
+import * as $section_howto_StampCreatePoshHowto from "./islands/section/howto/StampCreatePoshHowto.tsx";
+import * as $section_howto_StampCreateRecursiveHowto from "./islands/section/howto/StampCreateRecursiveHowto.tsx";
+import * as $section_howto_StampCreateRecursiveShortcuts from "./islands/section/howto/StampCreateRecursiveShortcuts.tsx";
 import * as $section_howto_StampSendHowTo from "./islands/section/howto/StampSendHowTo.tsx";
 import * as $section_howto_StampingHowto from "./islands/section/howto/StampingHowto.tsx";
 import * as $section_index from "./islands/section/index.ts";
@@ -477,7 +488,10 @@ const manifest = {
     "./routes/collection/index.tsx": $collection_index,
     "./routes/config.ts": $config,
     "./routes/content/[...imgpath].tsx": $content_imgpath_,
-    "./routes/create/recursivestamp.tsx": $create_recursivestamp,
+    "./routes/create/classic.tsx": $create_classic,
+    "./routes/create/index.tsx": $create_index,
+    "./routes/create/posh.tsx": $create_posh,
+    "./routes/create/recursive.tsx": $create_recursive,
     "./routes/dashboard/[address].tsx": $dashboard_address_,
     "./routes/docs/index.tsx": $docs_index,
     "./routes/explorer/index.tsx": $explorer_index,
@@ -532,6 +546,7 @@ const manifest = {
     "./islands/WebVitalsReporter.tsx": $WebVitalsReporter,
     "./islands/button/CollectionButton.tsx": $button_CollectionButton,
     "./islands/button/FilterButton.tsx": $button_FilterButton,
+    "./islands/button/InfoButton.tsx": $button_InfoButton,
     "./islands/button/MenuButton.tsx": $button_MenuButton,
     "./islands/button/PaginationButtons.tsx": $button_PaginationButtons,
     "./islands/button/PaginationButtonsSSRSafe.tsx":
@@ -570,12 +585,14 @@ const manifest = {
       $content_blockContent_BlockSelector,
     "./islands/content/blockContent/BlockTransactions.tsx":
       $content_blockContent_BlockTransactions,
+    "./islands/content/createContent/CreateStampBase.tsx":
+      $content_createContent_CreateStampBase,
     "./islands/content/createContent/CreateStampClassicContent.tsx":
       $content_createContent_CreateStampClassicContent,
     "./islands/content/createContent/CreateStampPoshContent.tsx":
       $content_createContent_CreateStampPoshContent,
-    "./islands/content/createContent/StampRecursiveContent.tsx":
-      $content_createContent_StampRecursiveContent,
+    "./islands/content/createContent/CreateStampRecursiveContent.tsx":
+      $content_createContent_CreateStampRecursiveContent,
     "./islands/content/faqContent/AccordionBase.tsx":
       $content_faqContent_AccordionBase,
     "./islands/content/faqContent/FaqAccordion.tsx":
@@ -654,6 +671,7 @@ const manifest = {
     "./islands/modal/DonateStampModal.tsx": $modal_DonateStampModal,
     "./islands/modal/EditCreatorNameModal.tsx": $modal_EditCreatorNameModal,
     "./islands/modal/FilterSRC20Modal.tsx": $modal_FilterSRC20Modal,
+    "./islands/modal/InfoModal.tsx": $modal_InfoModal,
     "./islands/modal/PreviewCodeModal.tsx": $modal_PreviewCodeModal,
     "./islands/modal/PreviewImageModal.tsx": $modal_PreviewImageModal,
     "./islands/modal/RecieveAddyModal.tsx": $modal_RecieveAddyModal,
@@ -662,6 +680,7 @@ const manifest = {
     "./islands/modal/SearchStampPickerModal.tsx": $modal_SearchStampPickerModal,
     "./islands/modal/SendBTCModal.tsx": $modal_SendBTCModal,
     "./islands/modal/states.ts": $modal_states,
+    "./islands/section/BlockchainStats.tsx": $section_BlockchainStats,
     "./islands/section/FeeCalculatorBase.tsx": $section_FeeCalculatorBase,
     "./islands/section/cta/ContactCta.tsx": $section_cta_ContactCta,
     "./islands/section/cta/DonateCta.tsx": $section_cta_DonateCta,
@@ -708,6 +727,14 @@ const manifest = {
     "./islands/section/howto/SRC20MintHowto.tsx": $section_howto_SRC20MintHowto,
     "./islands/section/howto/SRC20TransferHowto.tsx":
       $section_howto_SRC20TransferHowto,
+    "./islands/section/howto/StampCreateClassicHowto.tsx":
+      $section_howto_StampCreateClassicHowto,
+    "./islands/section/howto/StampCreatePoshHowto.tsx":
+      $section_howto_StampCreatePoshHowto,
+    "./islands/section/howto/StampCreateRecursiveHowto.tsx":
+      $section_howto_StampCreateRecursiveHowto,
+    "./islands/section/howto/StampCreateRecursiveShortcuts.tsx":
+      $section_howto_StampCreateRecursiveShortcuts,
     "./islands/section/howto/StampSendHowTo.tsx": $section_howto_StampSendHowTo,
     "./islands/section/howto/StampingHowto.tsx": $section_howto_StampingHowto,
     "./islands/section/index.ts": $section_index,

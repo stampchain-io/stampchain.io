@@ -84,7 +84,7 @@ The app UI is inspired by Apple design principles, with dark themed multilayered
 
 - Layer 2 styles:
   - Container2
-    - Used for child containers inside of parent layer 1 containers, and as the base for pills (`containerPill`, `containerPillCount`) and the icon-row container (`container2Icon`)
+    - Used for child containers inside of parent layer 1 containers, and as the base for pills (`containerPill`, `containerPillCount`) and the icon-row container (`containerIcon`)
     - Black background with medium-high opacity, no blur
     - Rounded corners (16px):
       - rounded-2xl
@@ -121,7 +121,7 @@ The app UI is inspired by Apple design principles, with dark themed multilayered
   - **Exports**:
     - Transition utilities: `transitionColors`, `transitionTransform`, `transitionAll`
     - Shadow variants: `shadow`, `shadowL2`, `shadowGlowPurple`, `shadowGlowGrey`
-    - Container layers: `container0`, `container1`, `container2`, `container2Hover`, `container2Icon`, `container3`
+    - Container layers: `container0`, `container1`, `container2`, `container2Hover`, `containerIcon`, `container3`
     - Pill styles: `containerPill`, `containerPillCount`
     - Body styles: `body`, `bodyTool`, `bodyArticle`
     - Container styles: `containerBackground`, `containerGap`, `containerDetailImage`, `containerStickyBottom`, `containerCard`, `containerCardTable`, `containerColData`, `containerColForm`, `containerRowForm`
@@ -237,7 +237,7 @@ export type LayoutStyles = {
   container1: string;
   container2: string;
   container2Hover: string;
-  container2Icon: string;
+  containerIcon: string;
   container3: string;
   containerPill: string;
 

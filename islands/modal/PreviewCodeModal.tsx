@@ -1,18 +1,32 @@
 /* ===== PREVIEW CODE MODAL COMPONENT ===== */
+import { Icon } from "$icon";
 import {
   type CodeViewMode,
   ViewCodeButton,
 } from "$islands/button/ViewCodeButton.tsx";
 import { closeModal } from "$islands/modal/states.ts";
-import { container2Icon, ModalBase } from "$layout";
+import { containerIcon, ModalBase } from "$layout";
 import { logger } from "$lib/utils/logger.ts";
 import type { PreviewCodeModalProps } from "$types/ui.d.ts";
 import { useEffect, useState } from "preact/hooks";
 
-/* ===== TYPES ===== */
+/* ===== CONSTANTS ===== */
+/** Minimum length before a whitespace-free string is treated as base64. */
+const BASE64_MIN_LENGTH = 256;
+const BASE64_PATTERN = /^[A-Za-z0-9+/]+={0,2}$/;
+
+/** True for data URLs and long base64 blobs (e.g. image stamp payloads). */
+function isBinaryBlob(value: string): boolean {
+  const trimmed = value.trim();
+  if (trimmed.startsWith("data:")) return true;
+  return trimmed.length > BASE64_MIN_LENGTH && BASE64_PATTERN.test(trimmed);
+}
 
 /* ===== COMPONENT ===== */
 export default function PreviewCodeModal({ src }: PreviewCodeModalProps) {
+  // Formatting only makes sense for source text (html, svg, css, js, json...)
+  const canFormat = !!src && !isBinaryBlob(src);
+
   /* ===== STATE ===== */
   const codeRaw = src ? src : "No content available";
   const [codeFormatted, setCodeFormatted] = useState("");
@@ -95,20 +109,35 @@ export default function PreviewCodeModal({ src }: PreviewCodeModalProps) {
         mobileLg:!w-[calc(100vw-20px)] mobileLg:h-[calc(100vh-20px)]
         tablet:!w-[calc(100vw-32px)] tablet:h-[calc(100vh-32px)]
         !max-w-[calc(100vw-12px)] mobileLg:!max-w-[800px]`}
-      contentClassName="h-full bg-color-neutral-50 rounded-2xl"
+      contentClassName="h-full bg-color-neutral-900 rounded-2xl"
     >
       {/* ===== VIEW TOGGLE ===== */}
-      <div class="absolute top-1 right-1 z-10">
+      <div class="absolute top-1 right-1 z-10 flex gap-2">
+        {canFormat && (
+          <div
+            class={`${containerIcon}`}
+          >
+            <ViewCodeButton mode={codeView} onChange={setCodeView} />
+          </div>
+        )}
         <div
-          class={`${container2Icon} !bg-none !bg-color-neutral-200 !border-color-neutral-400`}
+          class={`${containerIcon}`}
         >
-          <ViewCodeButton mode={codeView} onChange={setCodeView} />
+          <Icon
+            type="iconButton"
+            name="close"
+            weight="normal"
+            size="containerIcon"
+            color="neutral400"
+            ariaLabel="Close"
+            onClick={() => closeModal()}
+          />
         </div>
       </div>
       {/* ===== CODE DISPLAY ===== */}
-      <div class="flex flex-col w-full h-full p-3 overflow-auto scrollbar-background-layer1">
-        <code class="whitespace-pre-wrap text-xs text-color-neutral-800 leading-tight pb-3">
-          {codeView === "codeRaw" ? codeRaw : codeFormatted}
+      <div class="flex flex-col w-full h-full p-3 overflow-y-auto overflow-x-hidden scrollbar-background-layer1">
+        <code class="block w-full min-w-0 whitespace-pre-wrap break-all [overflow-wrap:anywhere] text-xs text-color-neutral-200 leading-relaxed pb-3">
+          {canFormat && codeView === "codeFormatted" ? codeFormatted : codeRaw}
         </code>
       </div>
     </ModalBase>

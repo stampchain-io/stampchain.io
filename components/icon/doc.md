@@ -142,12 +142,13 @@ cursor: pointer
 
 | Size | Dimensions | Responsive | Use Case |
 |------|-----------|------------|----------|
-| **xs** | 20px × 20px | No | Compact icons |
-| **sm** | 24px × 24px | No | Regular small icons |
-| **md** | 28px × 28px | No | Standard medium icons |
-| **lg** | 32px × 32px | No | Large icons |
-| **xl** | 36px × 36px | No | Extra large icons |
-| **xxl** | 40px × 40px | No | Hero icons |
+| **container1** | 20px × 20px | No | Site header and footer icon buttons (search, tools, wallet, menu, drawer close, footer socials) |
+| **containerIcon** | 16px × 16px | No | Every icon inside a `containerIcon` wrapper (page header view/filter/sort buttons, modal controls, toolbars) |
+| **sm** | 10px × 10px | No | Regular small icons |
+| **md** | 14px × 14px | No | Standard medium icons outside a `containerIcon` wrapper |
+| **lg** | 18px × 18px | No | Large icons |
+| **xl** | 22px × 22px | No | Extra large icons (stamp image right panel, drawer nav icons, modal close) |
+| **xxl** | 26px × 26px | No | Logo icon size |
 | **custom** | Custom | Manual | Full size control |
 
 ### Weight Options
@@ -252,7 +253,7 @@ export interface IconVariants {
   type: "icon" | "iconHover" | "iconButton";
   name: string;
   weight: "extraLight" | "light" | "normal" | "bold" | "custom";
-  size: "xs" | "sm" | "md" | "lg" | "xl" | "xxl" | "custom";
+  size: "container1" | "containerIcon" | "sm" | "md" | "lg" | "xl" | "xxl" | "custom";
   color: "neutral400" | "neutral500" | "neutral600" | "primary400" | "primary500" | "primary600" | "custom";
   className?: string;
   role?: JSX.AriaRole;
@@ -496,7 +497,7 @@ import { UserProfileIcon } from "$icon";
 
 export function CreatorLabel({ creatorName }: { creatorName: string }) {
   return (
-    <UserProfileIcon link size="xs" weight="bold">
+    <UserProfileIcon link size="md" weight="bold">
       <span class="group-hover:text-color-hover">{creatorName}</span>
     </UserProfileIcon>
   );
@@ -905,7 +906,7 @@ All icons share these SVG attributes:
   type="iconButton"
   name="caretRight"
   weight="bold"
-  size="xs"
+  size="sm"
   color="primary500"
   onClick={handleNext}
 />

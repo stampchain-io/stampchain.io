@@ -10,7 +10,7 @@ import {
   filtersToQueryParams,
   StampFilters as FilterStampFilters,
 } from "$islands/filter/FilterOptionsMarketplace.tsx";
-import { container2Icon, PillContentCount, ScrollFadeRow } from "$layout";
+import { containerIcon, PillContentCount, ScrollFadeRow } from "$layout";
 import {
   getCurrentPathname,
   getSearchParams,
@@ -196,12 +196,12 @@ export const MarketplaceHeader = (
 
         {/* View Mode Toggle + Filter and Sort Controls - Right */}
         <div class="flex shrink-0 gap-3">
-          <div class={container2Icon}>
+          <div class={containerIcon}>
             <ViewButton viewMode={viewMode} />
           </div>
 
           <div
-            class={`${container2Icon} gap-1.5 tablet:gap-1`}
+            class={`${containerIcon} gap-1.5 tablet:gap-1`}
           >
             <FilterButton
               count={countActiveMarketplaceFilters(

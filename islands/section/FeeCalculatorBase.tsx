@@ -1,11 +1,11 @@
 import { Button, ButtonProcessing } from "$button";
 import { ToggleSwitchButton } from "$components/button/ToggleSwitchButton.tsx";
 import { MaraModeBadge } from "$components/indicators/MaraModeIndicator.tsx";
-import { FeeSkeletonLoader } from "$components/indicators/ProgressIndicator.tsx";
 import { handleModalClose } from "$components/layout/ModalBase.tsx";
 import { useFees } from "$fees";
 import { Icon } from "$icon";
 import { RangeSlider } from "$islands/button/RangeSlider.tsx";
+import { BlockchainStats } from "$islands/section/BlockchainStats.tsx";
 import { transitionAll, transitionColors, transitionTransform } from "$layout";
 import type { ExtendedBaseFeeCalculatorProps } from "$lib/types/base.d.ts";
 import { estimateTransactionSizeForType } from "$lib/utils/bitcoin/transactions/transactionSizeEstimator.ts";
@@ -211,35 +211,32 @@ export function FeeCalculatorBase({
     }
   };
 
-  // Fee selector labels (slider is rendered full-width below this row)
-  const renderFeeSelector = () => {
+  // Recommended fee (rendered inside BlockchainStats, above its divider)
+  const renderRecommendedFee = () => {
     if (isLoadingMaraFee) {
       return (
-        <div class="flex flex-col">
-          <FeeSkeletonLoader />
+        <div class="animate-pulse flex items-center gap-2">
+          <div class="h-3 w-24 bg-color-neutral-500 rounded" />
+          <div class="h-3 w-12 bg-color-neutral-500 rounded" />
         </div>
       );
     }
 
     return (
       <div class="flex flex-col">
-        <div class="flex items-center gap-2">
-          {maraMode && (
-            <div
-              className="relative cursor-help"
-              title="MARA Pool: Direct mining pool submission for non-standard transactions"
-            >
-              <MaraModeBadge />
-            </div>
-          )}
-        </div>
+        {maraMode && (
+          <div
+            className="relative cursor-help"
+            title="MARA Pool: Direct mining pool submission for non-standard transactions"
+          >
+            <MaraModeBadge />
+          </div>
+        )}
         <h6 class="font-light text-xs text-color-neutral-300 cursor-default select-none text-nowrap">
           <span class="text-color-neutral-500 pr-2">
             {maraMode ? "MARA REQUIRED" : "RECOMMENDED"}
           </span>
-          <span
-            class={`font-medium ${maraMode ? "" : ""}`}
-          >
+          <span class="font-medium">
             {maraMode && maraFeeRate !== null
               ? maraFeeRate
               : fees?.recommendedFee
@@ -248,16 +245,29 @@ export function FeeCalculatorBase({
           </span>{" "}
           SAT/vB
         </h6>
-        <h6 class="font-light text-sm text-color-primary-400 mb-1.5 cursor-default select-none">
-          <span class="text-color-neutral-500 pr-2.5">FEE</span>
-          <span
-            class={`font-bold ${maraMode ? "" : ""}`}
-          >
-            {fee === 0 ? <span class="animate-pulse">XX</span> : fee}
-          </span>{" "}
-          SAT/vB
-        </h6>
       </div>
+    );
+  };
+
+  // Selected fee label (slider is rendered full-width below this row)
+  const renderFeeSelector = () => {
+    if (isLoadingMaraFee) {
+      return (
+        <div class="animate-pulse flex items-center gap-2">
+          <div class="h-4 w-8 bg-color-neutral-500 rounded" />
+          <div class="h-5 w-10 bg-color-neutral-500 rounded" />
+        </div>
+      );
+    }
+
+    return (
+      <h6 class="font-light text-sm text-color-primary-400 cursor-default select-none">
+        <span class="text-color-neutral-500 pr-2.5">FEE</span>
+        <span class="font-bold">
+          {fee === 0 ? <span class="animate-pulse">XX</span> : fee}
+        </span>{" "}
+        SAT/vB
+      </h6>
     );
   };
 
@@ -662,30 +672,12 @@ export function FeeCalculatorBase({
   return (
     <div class={className}>
       <div>
-        <div class="flex justify-between items-start">
+        <BlockchainStats>{renderRecommendedFee()}</BlockchainStats>
+        <div class="flex justify-between items-center mb-2">
           {renderFeeSelector()}
-          {showCoinToggle && (
-            <div className="flex gap-1 items-start justify-end">
-              <div className="relative">
-                <ToggleSwitchButton
-                  isActive={coinType === "BTC"}
-                  onToggle={handleCoinToggle}
-                  toggleButtonId="currency-toggle"
-                  activeSymbol="₿"
-                  inactiveSymbol="$"
-                  activeKnobClassName="bg-color-orange-400"
-                  inactiveKnobClassName="bg-color-neutral-400"
-                  onMouseEnter={handleCurrencyMouseEnter}
-                  onMouseLeave={handleCurrencyMouseLeave}
-                />
-                <div
-                  className={`${tooltipButton} ${
-                    isCurrencyTooltipVisible ? "opacity-100" : "opacity-0"
-                  }`}
-                >
-                  {currencyTooltipText}
-                </div>
-              </div>
+          {progressIndicator && (
+            <div className="flex items-start justify-end w-auto">
+              {progressIndicator}
             </div>
           )}
         </div>
@@ -704,9 +696,9 @@ export function FeeCalculatorBase({
         )}
       </div>
 
-      <div class="mt-6 flex flex-col-reverse justify-start min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-between">
+      <div class="mt-5 flex flex-row justify-between items-center">
         <h6
-          class={`text-base font-light cursor-default select-none ${
+          class={`text-sm font-light cursor-default select-none ${
             coinType === "BTC"
               ? "text-color-orange-400"
               : "text-color-neutral-400"
@@ -717,7 +709,7 @@ export function FeeCalculatorBase({
             ? (
               <>
                 {!feeDetails.hasExactFees && (
-                  <span class="pl-2.5 pr-1.5">~</span>
+                  <span class="hidden min-[420px]:inline pl-2.5">~</span>
                 )}
                 {(() => {
                   // Add MARA service fee if in MARA mode
@@ -728,7 +720,7 @@ export function FeeCalculatorBase({
                   return coinType === "BTC"
                     ? (
                       <>
-                        <span class="font-bold">
+                        <span class="font-bold pl-2.5 min-[420px]:pl-1.5">
                           {formatSatoshisToBTC(totalWithMaraFee, {
                             includeSymbol: false,
                           })}
@@ -763,9 +755,28 @@ export function FeeCalculatorBase({
             )}
         </h6>
 
-        {progressIndicator && (
-          <div className="flex items-center justify-start mb-0.5 min-[420px]:justify-end min-[420px]:mb-0 w-auto">
-            {progressIndicator}
+        {showCoinToggle && (
+          <div className="flex gap-1 items-center justify-end">
+            <div className="relative">
+              <ToggleSwitchButton
+                isActive={coinType === "BTC"}
+                onToggle={handleCoinToggle}
+                toggleButtonId="currency-toggle"
+                activeSymbol="₿"
+                inactiveSymbol="$"
+                activeKnobClassName="bg-color-orange-400"
+                inactiveKnobClassName="bg-color-neutral-400"
+                onMouseEnter={handleCurrencyMouseEnter}
+                onMouseLeave={handleCurrencyMouseLeave}
+              />
+              <div
+                className={`${tooltipButton} ${
+                  isCurrencyTooltipVisible ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                {currencyTooltipText}
+              </div>
+            </div>
           </div>
         )}
       </div>
@@ -789,7 +800,7 @@ export function FeeCalculatorBase({
 
       {renderDetails()}
 
-      <div class="flex flex-col items-end gap-4 pt-10">
+      <div class="flex flex-col items-end mt-7.5 gap-3">
         <div class="relative flex items-center">
           <input
             type="checkbox"
@@ -811,13 +822,9 @@ export function FeeCalculatorBase({
           >
             <div
               className={`
-                w-4 h-4 tablet:w-3 tablet:h-3 mr-3 tablet:mr-2
-                flex items-center justify-center
-                rounded-[3px]
+                relative flex items-center justify-center
+                 w-3 h-3 mr-2 rounded-[3px] border overflow-hidden
                 ${transitionColors} ease-in-out
-                border
-                relative
-                overflow-hidden
                 ${
                 tosAgreed
                   ? canHoverSelected
@@ -844,7 +851,7 @@ export function FeeCalculatorBase({
             </div>
             <span
               className={`
-                font-normal text-xs uppercase select-none
+                font-normal text-[0.625rem] uppercase select-none
                 ${transitionColors}
                 ${
                 tosAgreed ? "text-color-neutral-600" : "text-color-neutral-400"
@@ -859,83 +866,60 @@ export function FeeCalculatorBase({
               `}
             >
               Agree to the{" "}
-              <span class="text-color-neutral-600">
-                <span class="tablet:hidden">
-                  <a
-                    href="/termsofservice"
-                    target="_blank"
-                    className={`
+              <a
+                href="/termsofservice"
+                target="_blank"
+                className={`
                       uppercase ${transitionColors}
                       ${
-                      tosAgreed
-                        ? "text-color-neutral-600"
-                        : "text-color-neutral-600"
-                    }
+                  tosAgreed
+                    ? "text-color-neutral-600"
+                    : "text-color-neutral-600"
+                }
                       hover:text-color-hover
                     `}
-                  >
-                    Terms
-                  </a>
-                </span>
-                <span class="hidden tablet:inline">
-                  <a
-                    href="/termsofservice"
-                    target="_blank"
-                    className={`
-                      uppercase ${transitionColors}
-                      ${
-                      tosAgreed
-                        ? "text-color-neutral-600"
-                        : "text-color-neutral-600"
-                    }
-                      hover:text-color-hover
-                    `}
-                  >
-                    Terms of Service
-                  </a>
-                </span>
-              </span>
+              >
+                Terms of Service
+              </a>
             </span>
           </label>
         </div>
 
-        <div class="flex items-center justify-end gap-5">
-          {/* Buttons on the right */}
-          <div class="flex justify-end gap-5">
-            {onCancel && (
-              <Button
-                variant="outline"
-                color="neutral"
-                onClick={() => {
-                  logger.debug("ui", {
-                    message: "Cancel clicked",
-                    component: "FeeCalculatorBase",
-                  });
-                  handleModalClose();
-                  onCancel();
-                }}
-                disabled={!!isSubmitting}
-              >
-                {cancelText}
-              </Button>
-            )}
-            <ButtonProcessing
+        {/* Buttons on the right */}
+        <div class="flex gap-5">
+          {onCancel && (
+            <Button
               variant="flat"
-              color="primary"
-              isSubmitting={!!isSubmitting}
+              color="neutral"
               onClick={() => {
-                console.log(
-                  "FEE_CALCULATOR_BASE: Internal button onClick fired! About to call props.onSubmit.",
-                );
-                if (onSubmit) {
-                  onSubmit();
-                }
+                logger.debug("ui", {
+                  message: "Cancel clicked",
+                  component: "FeeCalculatorBase",
+                });
+                handleModalClose();
+                onCancel();
               }}
-              disabled={!!(disabled || !tosAgreed)}
+              disabled={!!isSubmitting}
             >
-              {confirmText || buttonName}
-            </ButtonProcessing>
-          </div>
+              {cancelText}
+            </Button>
+          )}
+          <ButtonProcessing
+            variant="flat"
+            color="primary"
+            isSubmitting={!!isSubmitting}
+            onClick={() => {
+              console.log(
+                "FEE_CALCULATOR_BASE: Internal button onClick fired! About to call props.onSubmit.",
+              );
+              if (onSubmit) {
+                onSubmit();
+              }
+            }}
+            disabled={!!(disabled || !tosAgreed)}
+          >
+            {confirmText || buttonName}
+          </ButtonProcessing>
         </div>
       </div>
 

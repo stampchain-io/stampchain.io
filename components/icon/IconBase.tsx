@@ -1,5 +1,6 @@
 /* ===== ICON COMPONENT ===== */
 import * as iconPaths from "$components/icon/paths.ts";
+import { transitionAll } from "$components/layout/styles.ts";
 import {
   BadgeVariants,
   globalSvgAttributes,
@@ -7,7 +8,6 @@ import {
   iconStyles,
   IconVariants,
 } from "$icon";
-import { transitionAll } from "$components/layout/styles.ts";
 
 /* ===== COMPONENT ===== */
 export function Icon(props: IconVariants) {
@@ -58,7 +58,7 @@ export function Icon(props: IconVariants) {
   const getIconPath = () => {
     const iconNameMap = {
       // Social Media Icons
-      stampchain: "stampchainFill",
+      stampchain: "stampchainOutline",
       twitter: "twitter",
       telegram: "telegram",
       github: "github",
@@ -77,11 +77,13 @@ export function Icon(props: IconVariants) {
       sortAsc: "listAsc",
       sortDesc: "listDesc",
       tools: "gearWrench",
-      speedSlow: "time10",
+      speedSlow: "time60",
       speedMedium: "time30",
-      speedFast: "time60",
+      speedFast: "time10",
+      speedNone: "timeClock",
 
       // Artboard Icons
+      keyboard: "keyboard",
       undo: "undo",
       redo: "redo",
       dropper: "dropper",
@@ -91,6 +93,7 @@ export function Icon(props: IconVariants) {
       horizontalGuide: "arrowHorizontal",
       verticalGuide: "arrowVertical",
       clearGuides: "trashcan",
+      trash: "trashcan",
       bold: "bold",
       italic: "italic",
       justifyLeft: "justifyLeft",
@@ -178,6 +181,7 @@ export function Icon(props: IconVariants) {
       downloadImage: "imageDownload",
 
       // Notification Display Icons
+      help: "help",
       info: "info",
       error: "error",
       success: "success",

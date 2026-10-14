@@ -1,7 +1,7 @@
 import { buttonHover } from "$components/button/styles.ts";
 import { IS_BROWSER } from "$fresh/runtime.ts";
 import { Icon } from "$icon";
-import { container2Icon } from "$layout";
+import { containerIcon } from "$layout";
 import { useSSRSafeNavigation } from "$lib/hooks/useSSRSafeNavigation.ts";
 import type { PaginationProps } from "$types/pagination.d.ts";
 import { getWindowWidth } from "$utils/navigation/freshNavigationUtils.ts";
@@ -13,7 +13,7 @@ const MOBILEMD_MAX_PAGE_RANGE = 2;
 const TABLET_MAX_PAGE_RANGE = 3;
 const DESKTOP_MAX_PAGE_RANGE = 4;
 
-// Each button gets its own container2Icon pill (wrapping div below).
+// Each button gets its own containerIcon pill (wrapping div below).
 // buttonHover is applied per-button in render — never on the current page.
 // Digit buttons size by character count (1-2 / 3 / 4+).
 const navBase = "flex items-center justify-center group";
@@ -105,11 +105,11 @@ export function PaginationButtons({
     const buttonClass = isCurrentPage
       ? `${baseClass} font-medium !text-color-primary-400`
       : `${baseClass} ${buttonHover}`;
-    // Current page: same pill shape + neutral border as container2Icon, but
+    // Current page: same pill shape + neutral border as containerIcon, but
     // no gradient fill so the background stays transparent.
     const wrapperClass = isCurrentPage
       ? "relative flex items-center justify-between border border-color-neutral-700 rounded-full p-0.5 gap-1.5 tablet:gap-1"
-      : container2Icon;
+      : containerIcon;
 
     return (
       <div class={wrapperClass}>
@@ -126,7 +126,7 @@ export function PaginationButtons({
                 type="iconHover"
                 name={iconName}
                 weight="bold"
-                size="md"
+                size="containerIcon"
                 color="neutral400"
               />
             )

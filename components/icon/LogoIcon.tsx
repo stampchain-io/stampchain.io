@@ -66,11 +66,17 @@ export function LogoIcon({
         type="icon"
         name="stampchain"
         weight="normal"
-        size="xxl"
+        size="custom"
         color="neutral400"
+        className="w-6 h-6 [&_path:nth-child(-n+2)]:group-hover:stroke-color-primary-400 [&_path]:transition-colors [&_path]:duration-200"
       />
 
       {children}
     </a>
   );
 }
+/* Hover colour applies to the first two paths only (the stamp head + body in
+ * stampchainOutline); the three base paths keep the neutral stroke. The
+ * parent <a> is the `group`. Paths carry no per-path classes (IconBase would
+ * turn { path, style } objects into filled shapes), so target them by index
+ * here. Keep these as complete class literals for Tailwind JIT. */

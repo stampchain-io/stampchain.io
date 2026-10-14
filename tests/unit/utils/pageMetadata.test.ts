@@ -138,6 +138,13 @@ Deno.test("derived metadata is clamped to the same limits", () => {
   assert(longAddress.title.length <= MAX_TITLE_LENGTH);
 });
 
+Deno.test("each create page has its own title, distinct from the stamping tool", () => {
+  const titles = ["/create/classic", "/create/posh", "/create/recursive", "/tool/stamp/create"]
+    .map((path) => getPageMetadata(path).title);
+  assertEquals(new Set(titles).size, titles.length, `create titles collide: ${titles.join(" / ")}`);
+  assertEquals(getPageMetadata("/create/recursive").title, "Create a Recursive Stamp | Stampchain");
+});
+
 Deno.test("trailing slashes and unknown paths resolve sensibly", () => {
   assertEquals(getPageMetadata("/faq/").title, STATIC_PAGE_METADATA["/faq"].title);
   assertEquals(getPageMetadata("/").title, DEFAULT_METADATA.title);

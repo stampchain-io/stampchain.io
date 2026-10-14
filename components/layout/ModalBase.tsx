@@ -3,13 +3,20 @@ import { closeModal } from "$islands/modal/states.ts";
 import { container0, shadow } from "$layout";
 import { logger } from "$lib/utils/logger.ts";
 import { tooltipIcon } from "$notification";
-import { titlePrimary } from "$text";
+import {
+  subtitleNeutral,
+  subtitlePrimary,
+  titleNeutral,
+  titlePrimary,
+} from "$text";
 import type { ModalBaseProps } from "$types/ui.d.ts";
 import { useEffect, useRef, useState } from "preact/hooks";
 
 export function ModalBase({
   onClose,
   title,
+  subtitle,
+  variant = "primary",
   children,
   className = "",
   contentClassName = "",
@@ -118,9 +125,22 @@ export function ModalBase({
             </div>
 
             <div class="w-full text-center">
-              <h2 class={`${titlePrimary} py-3`}>
+              <h2
+                class={`${
+                  variant === "neutral" ? titleNeutral : titlePrimary
+                } ${subtitle ? "pt-3" : "py-3"}`}
+              >
                 {title}
               </h2>
+              {subtitle && (
+                <h4
+                  class={`${
+                    variant === "neutral" ? subtitleNeutral : subtitlePrimary
+                  } mb-3`}
+                >
+                  {subtitle}
+                </h4>
+              )}
             </div>
           </>
         )}

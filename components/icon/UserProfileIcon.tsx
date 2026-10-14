@@ -3,8 +3,8 @@
  * Shared "creator/artist" avatar icon (userCircle) used wherever a creator
  * name or address is displayed - cards, detail headers, etc. Defaults match
  * the compact card usage; pass size/weight/className to match other
- * contexts (e.g. detail headers use size="xs" weight="bold" with hover
- * transitions).
+ * contexts (e.g. detail headers use size="md" or size="lg" with
+ * weight="bold" and hover transitions).
  *
  * Pass `children` (the creator name/address markup) to render the icon
  * inline next to it - this strips the repeated icon+wrapper markup out of

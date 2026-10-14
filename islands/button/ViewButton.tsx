@@ -101,9 +101,9 @@ export function ViewButton(
         type="iconButton"
         name={iconName}
         weight="bold"
-        size="custom"
+        size="containerIcon"
         color="neutral400"
-        className="w-[16px] h-[16px] tablet:w-[13px] tablet:h-[13px] stroke-width:1.5"
+        className="stroke-width:1.5"
         onClick={() => handleViewModeChange(nextMode)}
         ariaLabel={ariaLabel}
       />

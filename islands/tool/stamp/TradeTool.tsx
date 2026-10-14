@@ -324,7 +324,7 @@ export function StampTradeTool() {
         });
         setTradeFormState((prev) => ({ ...prev, psbtHex: walletResult.psbt }));
       } else if (walletResult.cancelled) {
-        showToast("PSBT signing cancelled by user.", "info");
+        showToast("PSBT signing cancelled by user.", "warning");
         setSubmissionMessage({
           message: "PSBT signing cancelled by user.",
         });

@@ -36,7 +36,12 @@ export const container2 =
   `bg-gradient-to-b from-color-neutral-800/40 via-color-neutral-900/60 to-neutral-900/80 border border-color-neutral-700 rounded-2xl`;
 export const container2Hover =
   `${container2} hover:border-color-hover ${transitionColors}`;
-export const container2Icon =
+// 3rd layer styles - mainly used in cards
+export const container3 =
+  `bg-gradient-to-b from-color-neutral-800/80 via-color-neutral-900/90 to-color-neutral-900
+ border border-color-neutral-800 rounded-xl cursor-default select-none`;
+// Icon container styles - used for icon buttons
+export const containerIcon =
   `relative flex items-center justify-between ${container2} rounded-full p-0.5 gap-2 tablet:gap-1`;
 // Pill styles
 export const containerPill = `flex items-center
@@ -50,10 +55,6 @@ export const containerPillCount = `flex items-center
 export const containerCard = `group relative z-0 flex flex-col
  w-full h-full p-1 ${container2Hover}
 ${shadowGlowPurple} ${transitionColors}`;
-// 3rd layer styles - mainly used in cards
-export const container3 =
-  `bg-gradient-to-b from-color-neutral-800/80 via-color-neutral-900/90 to-color-neutral-900
- border border-color-neutral-800 rounded-xl cursor-default select-none`;
 
 /* ===== BODY STYLES ===== */
 // Main body styles
@@ -198,7 +199,9 @@ export const imageUploadTool =
 // Text loader styles are defined in /text/styles.ts
 // Skeleton loader styles are defined in /layout/SkeletonLoader.tsx
 // Base loader style
-const loaderSpin = "animate-spin rounded-full border-b-[2px]";
+// motion-essential: the spin is the "work in progress" cue, so it is exempt
+// from the global reduced-motion override in routes/_app.tsx.
+const loaderSpin = "motion-essential animate-spin rounded-full border-b-[2px]";
 export const loaderSkeleton =
   `bg-color-background border border-color-border animate-pulse`;
 // Spinning loader styles
@@ -227,8 +230,8 @@ export type LayoutStyles = {
   container1: string;
   container2: string;
   container2Hover: string;
-  container2Icon: string;
   container3: string;
+  containerIcon: string;
   containerPill: string;
 
   // Body styles

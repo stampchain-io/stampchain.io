@@ -165,6 +165,12 @@
 *    - Base: ModalBase
 *    - Purpose: Handles BTC sending transactions
 *
+* 13. InfoModal.tsx
+*    - Base: ModalBase
+*    - Purpose: Info / how-to guides (`<InfoModal title="HOW-TO" subtitle="...">`)
+*    - Note: subtitle is optional; sizing constants live in the file; the content scrolls
+*      with scrollbar-background-layer1 and adds horizontal spacing only while overflowing
+*
 * State Management
 * ---------------
 * - states.ts provides centralized modal state management and operations
