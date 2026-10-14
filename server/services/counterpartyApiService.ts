@@ -9,11 +9,49 @@ import { FetchHttpClient } from "$server/interfaces/httpClient.ts";
 import type { DispenseEvent, Dispenser, DispenserFilter, XcpBalance } from "$types/services.d.ts";
 
 // Create a shared httpClient instance
-const httpClient = new FetchHttpClient(
+const rawHttpClient = new FetchHttpClient(
   30000, // defaultTimeout - 30 seconds for XCP API calls
   2,     // defaultRetries
   1000   // defaultRetryDelay
 );
+
+/**
+ * Cap concurrent requests to the public Counterparty node. Crawlers walking
+ * stamp pages used to fan out hundreds of simultaneous asset lookups, which
+ * the node answered with 429s (~150/hour). Requests beyond the cap wait in
+ * FIFO order instead of being fired at once.
+ */
+const XCP_MAX_CONCURRENCY = Math.max(
+  1,
+  Number(
+    (typeof Deno !== "undefined" ? Deno.env.get("XCP_MAX_CONCURRENCY") : undefined) ?? 4,
+  ) || 4,
+);
+let xcpInFlight = 0;
+const xcpWaiters: Array<() => void> = [];
+
+async function withXcpSlot<T>(fn: () => Promise<T>): Promise<T> {
+  if (xcpInFlight >= XCP_MAX_CONCURRENCY) {
+    await new Promise<void>((resolve) => xcpWaiters.push(resolve));
+  }
+  xcpInFlight++;
+  try {
+    return await fn();
+  } finally {
+    xcpInFlight--;
+    xcpWaiters.shift()?.();
+  }
+}
+
+const httpClient = {
+  get: <T = any>(url: string, config?: Parameters<FetchHttpClient["get"]>[1]) =>
+    withXcpSlot(() => rawHttpClient.get<T>(url, config)),
+};
+
+/** Test hook: current limiter state. */
+export function _xcpLimiterState() {
+  return { inFlight: xcpInFlight, waiting: xcpWaiters.length, max: XCP_MAX_CONCURRENCY };
+}
 
 // Re-export XCP nodes from $constants
 export { XCP_V2_NODES as xcp_v2_nodes } from "$constants";
@@ -69,6 +107,9 @@ export function normalizeFeeRate(params: {
  * When XCP API fails, we can serve stale cached data for a longer period
  */
 const STALE_IF_ERROR_TTL = 60 * 60; // 1 hour - serve stale data if all nodes fail
+const ASSET_INFO_TTL = 60 * 5; // asset info changes rarely (issuance, lock)
+const ASSET_MISSING_TTL = 60; // a missing asset may be issued at any block
+const assetInfoInFlight = new Map<string, Promise<any>>();
 
 /**
  * In-memory stale cache for XCP API responses
@@ -1814,48 +1855,106 @@ export class CounterpartyApiManager {
     }
   }
 
+  /**
+   * Asset info for one Counterparty asset, or null when it does not exist.
+   *
+   * Cached (found: 5 min, not found: 1 min) and de-duplicated across
+   * concurrent callers: a stamp detail page used to call this twice per view
+   * with no cache, so crawlers drove the public node into rate limiting. On a
+   * failed lookup the last good value is served for up to an hour, else
+   * null; callers already fall back to the database's own supply/divisible/
+   * locked values when this returns null. Failures are not cached.
+   */
   static async getAssetInfo(asset: string): Promise<any> {
-    const endpoint = `/assets/${asset}`;
-    const queryParams = new URLSearchParams({
-      verbose: "true"
-    });
+    const key = `xcp:asset:v2:${asset}`;
+    const cached = await dbManager.getCacheValue<{ result: any }>(key);
+    if (cached && typeof cached === "object" && "result" in cached) {
+      return cached.result;
+    }
 
+    const pending = assetInfoInFlight.get(asset);
+    if (pending) return await pending;
+
+    const lookup = (async () => {
+      const outcome = await this.fetchAssetInfoUncached(asset);
+      if (outcome.kind === "found") {
+        setStaleCache(key, outcome.result, STALE_IF_ERROR_TTL);
+        await dbManager.setCacheValue(key, { result: outcome.result }, ASSET_INFO_TTL);
+        return outcome.result;
+      }
+      if (outcome.kind === "missing") {
+        await dbManager.setCacheValue(key, { result: null }, ASSET_MISSING_TTL);
+        return null;
+      }
+      const stale = getStaleCache<any>(key);
+      await logger.warn("api", {
+        message: stale
+          ? "XCP asset lookup failed, serving last good value"
+          : "XCP asset lookup failed, caller falls back to database values",
+        asset,
+        status: outcome.status,
+        error: outcome.error,
+      });
+      return stale ?? null;
+    })();
+
+    assetInfoInFlight.set(asset, lookup);
     try {
-      for (const node of XCP_V2_NODES) {
-        const url = `${node.url}${endpoint}?${queryParams.toString()}`;
-        console.log(`Attempting to fetch from URL: ${url}`);
+      return await lookup;
+    } finally {
+      assetInfoInFlight.delete(asset);
+    }
+  }
 
-        try {
-          const response = await httpClient.get(url);
-          console.log(`Response status from ${node.name}: ${response.status}`);
+  /**
+   * Authoritative, uncached availability for minting: a cached "missing" or
+   * a failed lookup must never be read as "available".
+   */
+  static async checkAssetAvailability(
+    asset: string,
+  ): Promise<"available" | "taken" | "unknown"> {
+    const outcome = await this.fetchAssetInfoUncached(asset);
+    if (outcome.kind === "missing") return "available";
+    if (outcome.kind === "found") return "taken";
+    await logger.warn("api", {
+      message: "XCP asset availability could not be determined",
+      asset,
+      status: outcome.status,
+      error: outcome.error,
+    });
+    return "unknown";
+  }
 
-          // If asset doesn't exist, it's available for use
-          if (response.status === 404) {
-            return null;
-          }
+  private static async fetchAssetInfoUncached(
+    asset: string,
+  ): Promise<
+    | { kind: "found"; result: any }
+    | { kind: "missing" }
+    | { kind: "failed"; status: number | null; error: string }
+  > {
+    const endpoint = `/assets/${asset}`;
+    const queryParams = new URLSearchParams({ verbose: "true" });
+    let status: number | null = null;
+    let error = "no node answered";
 
-          if (!response.ok) {
-            const errorBody = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
-            console.error(`Error response body from ${node.name}: ${errorBody}`);
-            continue;
-          }
-
-          const data = response.data;
-          if (data && data.result) {
-            return data.result;
-          }
-        } catch (error) {
-          console.error(`Fetch error for ${url}:`, error);
+    for (const node of XCP_V2_NODES) {
+      const url = `${node.url}${endpoint}?${queryParams.toString()}`;
+      try {
+        const response = await httpClient.get(url);
+        status = response.status;
+        if (response.status === 404) return { kind: "missing" };
+        if (!response.ok) {
+          error = `HTTP ${response.status} from ${node.name}`;
           continue;
         }
+        const data = response.data;
+        if (data && data.result) return { kind: "found", result: data.result };
+        return { kind: "missing" };
+      } catch (err) {
+        error = `${node.name}: ${err instanceof Error ? err.message : String(err)}`;
       }
-
-      // If we get here, the asset wasn't found on any node
-      return null;
-    } catch (error) {
-      console.error(`Error fetching asset info for ${asset}:`, error);
-      throw error; // Throw non-404 errors
     }
+    return { kind: "failed", status, error };
   }
 
   static async getDispensersByAddress(

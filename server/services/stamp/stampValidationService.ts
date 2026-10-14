@@ -3,36 +3,38 @@ import { generateRandomNumber } from "$lib/utils/data/numbers/numberUtils.ts";
 import { isCpid } from "$lib/utils/typeGuards.ts";
 
 export class StampValidationService {
+  static readonly AVAILABILITY_UNKNOWN_MESSAGE =
+    "Could not confirm the asset name with Counterparty right now. Please try again in a moment.";
+
+  /**
+   * True when the name is free, false when it is taken. Throws when
+   * Counterparty cannot answer, so a rate-limited lookup is never read as
+   * "available" (which would let a mint compose against a taken name).
+   */
   static async checkAssetAvailability(assetName: string): Promise<boolean> {
-    try {
-      const result = await CounterpartyApiManager.getAssetInfo(assetName);
-      // If we get no result (null), the asset is available
-      return result === null;
-    } catch (error) {
-      console.error(`Error checking asset availability for ${assetName}:`, error);
-      // Only return false for non-404 errors
-      return false;
+    const state = await CounterpartyApiManager.checkAssetAvailability(assetName);
+    if (state === "unknown") {
+      throw new Error(this.AVAILABILITY_UNKNOWN_MESSAGE);
     }
+    return state === "available";
   }
 
   static async generateAvailableAssetName(): Promise<string> {
     const max_asset_id = 2n ** 64n - 1n;
     const min_asset_id = 26n ** 12n + 1n;
-    let asset_name: string;
-    let nameAvailable = false;
     const maxIterations = 100;
-    
+
     for (let i = 0; i < maxIterations; i++) {
       // Convert to string after subtracting BigInts
-      asset_name = "A" + (generateRandomNumber(
-        Number(min_asset_id - 8008n), 
+      const asset_name = "A" + (generateRandomNumber(
+        Number(min_asset_id - 8008n),
         Number(max_asset_id - 8008n)
       ));
-      nameAvailable = await this.checkAssetAvailability(asset_name);
-      if (nameAvailable) break;
+      if (await this.checkAssetAvailability(asset_name)) return asset_name;
     }
-    
-    return asset_name!;
+
+    // Previously this returned the last (taken) name after 100 misses.
+    throw new Error("Could not find an available numeric asset name. Please try again.");
   }
 
   static async validateAndPrepareAssetName(assetName?: string): Promise<string> {

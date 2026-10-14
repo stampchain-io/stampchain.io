@@ -10,10 +10,10 @@ import { formatSupply } from "./formatUtils.ts";
  * bigint supply. They share this one implementation instead.
  */
 export function formatEditionCount(
-  supply: number | string | bigint | undefined,
+  supply: number | string | bigint | null | undefined,
   divisible: boolean,
 ): string {
-  if (supply === undefined) return "0";
+  if (supply === undefined || supply === null) return "0";
   if (divisible) return formatSupply(supply, true);
 
   const exceedsCap = typeof supply === "bigint"
