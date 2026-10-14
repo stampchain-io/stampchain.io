@@ -5,7 +5,7 @@ import type { Fairminter } from "$lib/types/services.d.ts";
 import { logger } from "$lib/utils/logger.ts";
 import { formatSatoshisToBTC } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { dbManager } from "$server/database/databaseManager.ts";
-import { FetchHttpClient } from "$server/interfaces/httpClient.ts";
+import { FetchHttpClient, type HttpResponse } from "$server/interfaces/httpClient.ts";
 import type { DispenseEvent, Dispenser, DispenserFilter, XcpBalance } from "$types/services.d.ts";
 
 // Create a shared httpClient instance
@@ -43,9 +43,53 @@ async function withXcpSlot<T>(fn: () => Promise<T>): Promise<T> {
   }
 }
 
+/**
+ * Shared back-off. The node rate-limits this deployment's egress IP, so a 429
+ * means "everyone wait", not "this request should retry": the HTTP client's
+ * own 429 handling (>=5s sleep, two retries, inside a concurrency slot) held
+ * slots for 10s+ and stacked page loads to 30s under crawler traffic. Client
+ * retries are therefore off for these calls; on 429 every caller pauses for
+ * Retry-After (default 2s) and the request is tried once more.
+ */
+let xcpCooldownUntil = 0;
+const XCP_DEFAULT_COOLDOWN_MS = 2000;
+const XCP_MAX_ATTEMPTS = 2;
+const RETRYABLE_STATUSES = new Set([429, 502, 503, 504]);
+
+async function waitForXcpCooldown(): Promise<void> {
+  const wait = xcpCooldownUntil - Date.now();
+  if (wait > 0) await new Promise((r) => setTimeout(r, wait));
+}
+
+function noteXcpRateLimit(retryAfter: string | undefined): void {
+  const seconds = Number.parseInt(retryAfter ?? "", 10);
+  const ms = Number.isFinite(seconds) && seconds > 0 ? seconds * 1000 : XCP_DEFAULT_COOLDOWN_MS;
+  xcpCooldownUntil = Math.max(xcpCooldownUntil, Date.now() + ms);
+}
+
 const httpClient = {
-  get: <T = any>(url: string, config?: Parameters<FetchHttpClient["get"]>[1]) =>
-    withXcpSlot(() => rawHttpClient.get<T>(url, config)),
+  get: async <T = any>(
+    url: string,
+    config?: Parameters<FetchHttpClient["get"]>[1],
+  ): Promise<HttpResponse<T>> => {
+    let last: HttpResponse<T> | undefined;
+    let lastError: unknown;
+    for (let attempt = 1; attempt <= XCP_MAX_ATTEMPTS; attempt++) {
+      await waitForXcpCooldown();
+      try {
+        last = await withXcpSlot(() => rawHttpClient.get<T>(url, { ...config, retries: 0 }));
+      } catch (error) {
+        lastError = error;
+        continue;
+      }
+      if (!RETRYABLE_STATUSES.has(last.status)) return last;
+      if (last.status === 429) {
+        noteXcpRateLimit(last.headers?.["retry-after"]);
+      }
+    }
+    if (last) return last;
+    throw lastError;
+  },
 };
 
 /** Test hook: override the asset-info render deadline; returns the previous value. */
@@ -57,7 +101,17 @@ export function _setAssetInfoDeadlineMs(ms: number): number {
 
 /** Test hook: current limiter state. */
 export function _xcpLimiterState() {
-  return { inFlight: xcpInFlight, waiting: xcpWaiters.length, max: XCP_MAX_CONCURRENCY };
+  return {
+    inFlight: xcpInFlight,
+    waiting: xcpWaiters.length,
+    max: XCP_MAX_CONCURRENCY,
+    cooldownMs: Math.max(0, xcpCooldownUntil - Date.now()),
+  };
+}
+
+/** Test hook: clear the shared 429 cooldown. */
+export function _resetXcpCooldown(): void {
+  xcpCooldownUntil = 0;
 }
 
 // Re-export XCP nodes from $constants
@@ -117,6 +171,7 @@ const STALE_IF_ERROR_TTL = 60 * 60; // 1 hour - serve stale data if all nodes fa
 const ASSET_INFO_TTL = 60 * 5; // asset info changes rarely (issuance, lock)
 const ASSET_MISSING_TTL = 60; // a missing asset may be issued at any block
 const assetInfoInFlight = new Map<string, Promise<any>>();
+const xcpV2InFlight = new Map<string, Promise<unknown>>();
 const DEADLINE_HIT = Symbol("asset-info-deadline");
 let ASSET_INFO_DEADLINE_MS = Number(
   (typeof Deno !== "undefined" ? Deno.env.get("XCP_ASSET_INFO_DEADLINE_MS") : undefined) ?? 4000,
@@ -195,9 +250,18 @@ export async function fetchXcpV2WithCache<T>(
     cacheTimeout
   });
 
-  return await dbManager.handleCache(
-    cacheKey,
-    async () => {
+  // Only successful responses are cached. This used to go through
+  // handleCache, which stored whatever came back, so one rate-limited moment
+  // cached the empty fallback for the full TTL (a stamp showing no holders or
+  // dispensers for five minutes).
+  const cached = await dbManager.getCacheValue<T>(cacheKey);
+  if (cached) return cached;
+
+  const pending = xcpV2InFlight.get(cacheKey) as Promise<T> | undefined;
+  if (pending) return await pending;
+
+  const run = (async (): Promise<T> => {
+    const outcome = await (async (): Promise<{ data: T; ok: boolean }> => {
       let errorMessage = null;
       let lastStatusCode: number | null = null;
       let isRateLimited = false;
@@ -260,7 +324,7 @@ export async function fetchXcpV2WithCache<T>(
           // Store successful response in stale cache for fallback
           setStaleCache(cacheKey, data, STALE_IF_ERROR_TTL);
 
-          return data;
+          return { data: data as T, ok: true };
         } catch (error) {
           const errorMsg = error instanceof Error ? error.message : String(error);
 
@@ -291,7 +355,7 @@ export async function fetchXcpV2WithCache<T>(
           error: errorMessage,
           isRateLimited,
         });
-        return staleData;
+        return { data: staleData, ok: false };
       }
 
       // No stale data available, return minimal structure
@@ -304,16 +368,26 @@ export async function fetchXcpV2WithCache<T>(
         lastStatusCode,
       });
 
-      return {
+      return { ok: false, data: {
         result: [],
         next_cursor: null,
         result_count: 0,
         error: errorMessage,
         fromStaleCache: false,
-      } as T;
-    },
-    cacheTimeout,
-  );
+      } as T };
+    })();
+    if (outcome.ok) {
+      await dbManager.setCacheValue(cacheKey, outcome.data, cacheTimeout);
+    }
+    return outcome.data;
+  })();
+
+  xcpV2InFlight.set(cacheKey, run);
+  try {
+    return await run;
+  } finally {
+    xcpV2InFlight.delete(cacheKey);
+  }
 }
 
 export class CounterpartyDispenserService {
