@@ -97,12 +97,11 @@ const _xcpApiUrl = typeof Deno !== "undefined"
   : undefined;
 export const XCP_V2_NODES: ReadonlyArray<{ name: string; url: string }> =
   _xcpApiUrl ? [{ name: "mock", url: _xcpApiUrl }] : [
+    // One public node. A second "dev.counterparty.io" entry pointed at this
+    // same URL (dev.counterparty.io does not resolve), so every failover
+    // re-sent the request to the server that had just rate-limited it.
     {
       name: "counterparty.io",
-      url: "https://api.counterparty.io:4000/v2",
-    },
-    {
-      name: "dev.counterparty.io",
       url: "https://api.counterparty.io:4000/v2",
     },
   ];

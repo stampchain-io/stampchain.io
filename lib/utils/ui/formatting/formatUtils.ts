@@ -205,13 +205,16 @@ function divisibleBigIntToFixed2(baseUnits: bigint): string {
  * supply becomes a display string.
  */
 export function formatSupply(
-  supply: number | string | bigint | undefined,
+  supply: number | string | bigint | null | undefined,
   divisible: boolean,
 ): string {
-  if (supply === undefined) return "0";
+  // stamps.supply is `bigint unsigned DEFAULT NULL`: a stamp with no
+  // Counterparty asset behind it has no supply, and the API returns null.
+  if (supply === undefined || supply === null) return "0";
 
   if (typeof supply === "string") {
     supply = parseInt(supply);
+    if (Number.isNaN(supply)) return "0";
   }
 
   if (typeof supply === "bigint") {
