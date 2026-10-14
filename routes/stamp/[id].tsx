@@ -74,7 +74,7 @@ export const handler: Handlers<StampData> = {
           false,
         ),
         15000,
-        "DB timeout after 15000ms",
+        "Stamp detail load timed out after 15000ms",
       );
       if (!stampData?.data?.stamp) {
         return ctx.renderNotFound();

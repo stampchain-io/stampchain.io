@@ -21,7 +21,7 @@ const store = new Map<string, unknown>();
   },
   handleCache: (_k: string, fetch: () => Promise<unknown>) => fetch(),
 };
-const { _xcpLimiterState, CounterpartyApiManager } = await import(
+const { _setAssetInfoDeadlineMs, _xcpLimiterState, CounterpartyApiManager } = await import(
   "$server/services/counterpartyApiService.ts"
 );
 const { StampValidationService } = await import(
@@ -110,6 +110,9 @@ Deno.test({
         ? new Response("rate limited", { status: 429, headers: { "retry-after": "0" } })
         : asset(limited);
     });
+    // The client retries 429s with backoff (~10s here); this test is about
+    // what gets cached, so take the render deadline out of the picture.
+    const previous = _setAssetInfoDeadlineMs(60_000);
     try {
       assertEquals(await CounterpartyApiManager.getAssetInfo(missing), null);
       assertEquals(await CounterpartyApiManager.getAssetInfo(missing), null);
@@ -119,6 +122,7 @@ Deno.test({
       const retried = await CounterpartyApiManager.getAssetInfo(limited);
       assertEquals(retried.asset, limited);
     } finally {
+      _setAssetInfoDeadlineMs(previous);
       restore();
     }
   },
@@ -173,6 +177,37 @@ Deno.test({
         "Could not confirm the asset name",
       );
     } finally {
+      restore();
+    }
+  },
+});
+
+Deno.test({
+  name: "getAssetInfo: a slow node cannot hold a page past the deadline; the late answer fills the cache",
+  sanitizeOps: false,
+  sanitizeResources: false,
+  async fn() {
+    const name = unique("A");
+    let release!: () => void;
+    const gate = new Promise<void>((r) => (release = r));
+    const calls = countingFetch(async () => {
+      await gate;
+      return asset(name);
+    });
+    const previous = _setAssetInfoDeadlineMs(50);
+    try {
+      const started = Date.now();
+      assertEquals(await CounterpartyApiManager.getAssetInfo(name), null);
+      const waited = Date.now() - started;
+      assertEquals(waited < 1000, true, `waited ${waited}ms past a 50ms deadline`);
+
+      release();
+      await new Promise((r) => setTimeout(r, 20));
+      const later = await CounterpartyApiManager.getAssetInfo(name);
+      assertEquals(later.asset, name);
+      assertEquals(calls.length, 1);
+    } finally {
+      _setAssetInfoDeadlineMs(previous);
       restore();
     }
   },

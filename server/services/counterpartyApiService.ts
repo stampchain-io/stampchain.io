@@ -48,6 +48,13 @@ const httpClient = {
     withXcpSlot(() => rawHttpClient.get<T>(url, config)),
 };
 
+/** Test hook: override the asset-info render deadline; returns the previous value. */
+export function _setAssetInfoDeadlineMs(ms: number): number {
+  const previous = ASSET_INFO_DEADLINE_MS;
+  ASSET_INFO_DEADLINE_MS = ms;
+  return previous;
+}
+
 /** Test hook: current limiter state. */
 export function _xcpLimiterState() {
   return { inFlight: xcpInFlight, waiting: xcpWaiters.length, max: XCP_MAX_CONCURRENCY };
@@ -110,6 +117,10 @@ const STALE_IF_ERROR_TTL = 60 * 60; // 1 hour - serve stale data if all nodes fa
 const ASSET_INFO_TTL = 60 * 5; // asset info changes rarely (issuance, lock)
 const ASSET_MISSING_TTL = 60; // a missing asset may be issued at any block
 const assetInfoInFlight = new Map<string, Promise<any>>();
+const DEADLINE_HIT = Symbol("asset-info-deadline");
+let ASSET_INFO_DEADLINE_MS = Number(
+  (typeof Deno !== "undefined" ? Deno.env.get("XCP_ASSET_INFO_DEADLINE_MS") : undefined) ?? 4000,
+) || 4000;
 
 /**
  * In-memory stale cache for XCP API responses
@@ -1899,10 +1910,27 @@ export class CounterpartyApiManager {
     })();
 
     assetInfoInFlight.set(asset, lookup);
+    lookup.finally(() => assetInfoInFlight.delete(asset)).catch(() => {});
+
+    // Page renders must not wait on a rate-limited node: past the deadline,
+    // answer with the last good value (or null, so callers use the database's
+    // own values) and let the lookup finish in the background to fill the
+    // cache for the next view.
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const deadline = new Promise<typeof DEADLINE_HIT>((resolve) => {
+      timer = setTimeout(() => resolve(DEADLINE_HIT), ASSET_INFO_DEADLINE_MS);
+    });
     try {
-      return await lookup;
+      const first = await Promise.race([lookup, deadline]);
+      if (first !== DEADLINE_HIT) return first;
+      await logger.warn("api", {
+        message: "XCP asset lookup exceeded deadline, rendering with fallback values",
+        asset,
+        deadlineMs: ASSET_INFO_DEADLINE_MS,
+      });
+      return getStaleCache<any>(key) ?? null;
     } finally {
-      assetInfoInFlight.delete(asset);
+      clearTimeout(timer);
     }
   }
 
