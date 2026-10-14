@@ -8866,7 +8866,7 @@
               }
             ],
             "url": {
-              "raw": "{{prod_base_url}}/api/v2/health",
+              "raw": "{{prod_base_url}}/api/v2/health?simple=1",
               "host": [
                 "{{prod_base_url}}"
               ],
@@ -8874,6 +8874,12 @@
                 "api",
                 "v2",
                 "health"
+              ],
+              "query": [
+                {
+                  "key": "simple",
+                  "value": "1"
+                }
               ]
             }
           },
@@ -8893,32 +8899,14 @@
                   "pm.test(\"Response has required fields\", function() {",
                   "  const json = pm.response.json();",
                   "  pm.expect(json).to.have.property('status');",
-                  "  pm.expect(json).to.have.property('services');",
+                  "  pm.expect(json).to.have.property('database');",
                   "});",
                   "",
-                  "",
-                  "// Data content validation for health endpoint",
+                  "// Simple health check (?simple=1) returns {status, database}; services object not required",
                   "pm.test(\"Health data values are valid\", function() {",
                   "  const json = pm.response.json();",
-                  "  ",
-                  "  // Validate status is OK or ERROR",
-                  "  if (json.status !== undefined && json.status !== null) {",
-                  "    pm.expect(json.status).to.be.a('string');",
-                  "    pm.expect(['OK', 'ERROR', 'DEGRADED']).to.include(json.status, 'status should be OK, ERROR, or DEGRADED');",
-                  "  }",
-                  "  ",
-                  "  // Validate services structure",
-                  "  if (json.services !== undefined && json.services !== null) {",
-                  "    pm.expect(json.services).to.be.an('object');",
-                  "    // Core service booleans",
-                  "    const booleanServices = ['api', 'indexer', 'mempool', 'database', 'xcp'];",
-                  "    booleanServices.forEach(key => {",
-                  "      if (json.services[key] !== undefined) {",
-                  "        pm.expect(json.services[key]).to.be.a('boolean', `service ${key} should be boolean`);",
-                  "      }",
-                  "    });",
-                  "    // Optional nested objects are allowed (blockSync, stats, circuitBreaker)",
-                  "  }",
+                  "  pm.expect(json.status).to.equal('OK');",
+                  "  pm.expect(json.database).to.equal(true);",
                   "});"
                 ],
                 "type": "text/javascript"

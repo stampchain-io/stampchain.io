@@ -115,12 +115,9 @@ export const handler: Handlers = {
         totalStamps: stampCount.count,
       };
 
-      // Check database
-      const src20Check = await SRC20Repository.checkSrc20Deployments();
-      health.services.database = src20Check.isValid && src20Check.count > 0;
-      if (health.services.stats) {
-        health.services.stats.src20Deployments = src20Check.count;
-      }
+      // Check database (reuse the checkSrc20Deployments result from above)
+      health.services.database = src20Deployments.isValid &&
+        src20Deployments.count > 0;
 
       // Check circuit breaker status
       try {
