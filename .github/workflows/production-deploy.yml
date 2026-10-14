@@ -383,6 +383,8 @@ jobs:
           while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
             ATTEMPT=$((ATTEMPT + 1))
 
+            # Backticks are JMESPath literals and must stay unexpanded.
+            # shellcheck disable=SC2016
             ROLLOUT_STATE=$(aws ecs describe-services \
               --cluster "${{ env.ECS_CLUSTER }}" \
               --services "${{ env.ECS_SERVICE }}" \

@@ -1,5 +1,9 @@
 import { verify } from "https://esm.sh/bitcoinjs-message@2.2.0";
-import { Verifier } from "https://esm.sh/bip322-js@3.0.0";
+// bip322-js 3.0.0 breaks against bitcoinjs-lib >= 6.1.9 ("Need a Utxo input
+// item for input #0"), which esm.sh serves by default for a fresh cache. Pin
+// the version it was written against so verification does not depend on the
+// lockfile being honoured.
+import { Verifier } from "https://esm.sh/bip322-js@3.0.0?deps=bitcoinjs-lib@6.1.7";
 
 export function verifySignature(
   message: string,

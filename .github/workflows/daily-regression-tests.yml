@@ -161,7 +161,7 @@ jobs:
         if: always()
         run: |
           # Docker containers run as root and change file ownership
-          sudo chown -R $(id -u):$(id -g) . || true
+          sudo chown -R "$(id -u):$(id -g)" . || true
 
       - name: Run regression analysis with historical comparison
         id: analysis
