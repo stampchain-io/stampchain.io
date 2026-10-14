@@ -181,7 +181,7 @@ jobs:
         run: |
           # Docker containers run as root and change file ownership
           # This prevents EACCES errors in subsequent steps
-          sudo chown -R $(id -u):$(id -g) . || true
+          sudo chown -R "$(id -u):$(id -g)" . || true
 
       - name: Analyze Regression Results
         id: regression-analysis
@@ -568,7 +568,7 @@ jobs:
 
       - name: Fix Docker file permissions
         if: always()
-        run: sudo chown -R $(id -u):$(id -g) . || true
+        run: sudo chown -R "$(id -u):$(id -g)" . || true
 
       - name: Store performance results
         if: always()
@@ -920,12 +920,12 @@ jobs:
         run: |
           if [ -f dev-server.pid ]; then
             echo "Stopping dev server..."
-            kill $(cat dev-server.pid) || true
+            kill "$(cat dev-server.pid)" || true
             rm dev-server.pid
           fi
           if [ -f mock-api-server.pid ]; then
             echo "Stopping mock API server..."
-            kill $(cat mock-api-server.pid) || true
+            kill "$(cat mock-api-server.pid)" || true
             rm mock-api-server.pid
           fi
 
@@ -1082,7 +1082,7 @@ jobs:
 
       - name: Fix Docker file permissions
         if: always()
-        run: sudo chown -R $(id -u):$(id -g) . || true
+        run: sudo chown -R "$(id -u):$(id -g)" . || true
 
       - name: Parse test results
         if: always()
