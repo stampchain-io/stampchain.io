@@ -24,8 +24,8 @@ import { openModal } from "$islands/modal/states.ts";
 import {
   container2,
   container2Hover,
-  containerIcon,
   container3,
+  containerIcon,
   shadowGlowPurpleSm,
   transitionColors,
 } from "$layout";

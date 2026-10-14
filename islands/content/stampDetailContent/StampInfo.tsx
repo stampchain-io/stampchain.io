@@ -4,8 +4,8 @@ import { Icon, UserProfileIcon } from "$icon";
 import BuyStampModal from "$islands/modal/BuyStampModal.tsx";
 import { openModal } from "$islands/modal/states.ts";
 import {
-  containerIcon,
   container3,
+  containerIcon,
   containerPill,
   PillContentCount,
   StatItem,
