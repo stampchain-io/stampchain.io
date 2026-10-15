@@ -28,6 +28,38 @@ function convertToUIProgressiveResult(
 }
 
 /**
+ * The operator service fee from /config, in whole sats. The server sends it
+ * as a string; anything that is not a positive integer (unset, "", or the
+ * legacy BTC-style fallback "0.00001") means no fee, matching how the mint
+ * and fairmint routes parse it.
+ */
+export function parseServiceFeeSats(value: unknown): number {
+  const text = String(value ?? "").trim();
+  if (!/^\d+$/.test(text)) return 0;
+  const sats = Number(text);
+  return Number.isSafeInteger(sats) && sats > 0 ? sats : 0;
+}
+
+/**
+ * Show the operator service fee the request will carry. Fee estimates are
+ * computed without it, so it is added both as its own line and to the total;
+ * a not-yet-estimated total (0) stays 0.
+ */
+export function withServiceFee<T extends FeeDetails>(
+  details: T,
+  sats: number,
+): T {
+  if (sats <= 0) return details;
+  return {
+    ...details,
+    serviceFee: sats,
+    totalValue: details.totalValue > 0
+      ? details.totalValue + sats
+      : details.totalValue,
+  };
+}
+
+/**
  * Maps progressive fee estimation result to FeeDetails interface
  * Used by all tools to ensure consistent fee details formatting
  */

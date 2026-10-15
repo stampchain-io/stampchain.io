@@ -1,4 +1,8 @@
 /* ===== STAMPING COMPONENT ===== */
+import {
+  parseServiceFeeSats,
+  withServiceFee,
+} from "$lib/utils/performance/fees/fee-estimation-utils.ts";
 import { ToggleSwitchButton } from "$button";
 import { useConfig } from "$client/hooks/useConfig.ts";
 import { walletContext } from "$client/wallet/wallet.ts";
@@ -2319,28 +2323,33 @@ function StampingToolMain({ config }: { config: Config }) {
           maraFeeRate={maraFeeRate}
           isLoadingMaraFee={isLoadingMaraFee}
           showCoinToggle
-          feeDetails={(exactFeeDetails || progressiveFeeDetails)
-            ? {
-              minerFee: (exactFeeDetails || progressiveFeeDetails)?.minerFee ||
-                0,
-              dustValue:
-                (exactFeeDetails || progressiveFeeDetails)?.dustValue || 0,
-              serviceFee: maraMode ? 42000 : 0, // MARA service fee
-              totalValue:
-                (exactFeeDetails || progressiveFeeDetails)?.totalValue || 0,
-              hasExactFees:
-                (exactFeeDetails || progressiveFeeDetails)?.hasExactFees ||
-                false,
-              estimatedSize: 300, // Default transaction size for stamps
-            }
-            : {
-              minerFee: 0,
-              dustValue: 0,
-              serviceFee: maraMode ? 42000 : 0, // MARA service fee
-              totalValue: 0,
-              hasExactFees: false,
-              estimatedSize: 300,
-            }}
+          feeDetails={withServiceFee(
+            (exactFeeDetails || progressiveFeeDetails)
+              ? {
+                minerFee:
+                  (exactFeeDetails || progressiveFeeDetails)?.minerFee ||
+                  0,
+                dustValue:
+                  (exactFeeDetails || progressiveFeeDetails)?.dustValue || 0,
+                serviceFee: maraMode ? 42000 : 0, // MARA service fee
+                totalValue:
+                  (exactFeeDetails || progressiveFeeDetails)?.totalValue || 0,
+                hasExactFees:
+                  (exactFeeDetails || progressiveFeeDetails)?.hasExactFees ||
+                  false,
+                estimatedSize: 300, // Default transaction size for stamps
+              }
+              : {
+                minerFee: 0,
+                dustValue: 0,
+                serviceFee: maraMode ? 42000 : 0, // MARA service fee
+                totalValue: 0,
+                hasExactFees: false,
+                estimatedSize: 300,
+              },
+            // MARA mode adds its own 42,000-sat fee inside the calculator.
+            maraMode ? 0 : parseServiceFeeSats(config?.MINTING_SERVICE_FEE),
+          )}
           tosAgreed={tosAgreed}
           onTosChange={setTosAgreed}
           disabled={isConnected ? !isFormValid : false}

@@ -119,8 +119,11 @@ export const handler: Handlers = {
         // Fairmint has no separate `options` layer, so body overrides env directly.
         const { serviceFeeSats: envFeeSats, serviceFeeAddress: envFeeAddress } =
           getServiceFeeConfig();
+        // The frontend sends the fee as a string ("2500"); parse to whole sats
+        // like the mint route does, so the dry-run total adds numbers instead
+        // of concatenating strings.
         const serviceFeeInput = service_fee !== undefined
-          ? service_fee
+          ? (Number.parseInt(String(service_fee), 10) || 0)
           : Number(envFeeSats);
         const serviceFeeAddrInput = service_fee_address !== undefined
           ? service_fee_address
