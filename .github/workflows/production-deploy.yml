@@ -35,6 +35,17 @@ env:
   CODEBUILD_SOURCE_BUCKET: stamps-app-codebuild-source
   PROD_URL: https://stampchain.io
 
+
+# Deploys run one at a time, never cancelled mid-flight. Two merges in quick
+# succession (2026-10-15, #1274/#1275) started two deploys at once: both
+# upload the same S3 source archive and push the same ECR :latest tag, so the
+# build that finished last won, whichever commit it held. Queued runs now
+# wait; GitHub keeps only the newest pending run, which carries every merged
+# commit.
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
 jobs:
   # Gate: ensure production-validation passed on this commit
   pre-check:
