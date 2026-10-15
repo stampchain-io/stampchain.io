@@ -122,3 +122,67 @@ Deno.test({
     }
   },
 });
+
+Deno.test({
+  name:
+    "fairmint compose: the website's request shape works and forwards only node parameters",
+  sanitizeOps: false,
+  sanitizeResources: false,
+  async fn() {
+    const { restore, stub } = await import("@std/testing/mock");
+    const calls: string[] = [];
+    stub(globalThis, "fetch", (input: string | URL | Request) => {
+      const url = String(input instanceof Request ? input.url : input);
+      calls.push(url);
+      const result = url.includes("/compose/")
+        ? { rawtransaction: "00" } // the dry run returns before decoding it
+        : [{ price: 0, status: "open" }];
+      return Promise.resolve(
+        new Response(JSON.stringify({ result }), {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        }),
+      );
+    });
+    try {
+      // Exactly what client/hooks/useFairmintForm.ts sends.
+      const req = new Request("http://localhost/api/v2/fairmint/compose", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          address: "bc1qzxszplp8v7w0jc89dlrqyct9staqlhwxzy7lkq",
+          asset: "FREEMINT2",
+          quantity: 1,
+          options: { fee_per_kb: 2000 },
+          service_fee: "2500",
+          service_fee_address: "bc1qhhv6rmxvq5mj2fc3zne2gpjqduy45urapje64m",
+          dryRun: true,
+        }),
+      });
+      const res = await (handler as any).POST(req, {} as any);
+      const body = await res.json();
+      assertEquals(res.status, 200, JSON.stringify(body));
+      const compose = new URL(
+        calls.find((u) => u.includes("/compose/fairmint"))!,
+      );
+      assertEquals(compose.searchParams.get("fee_per_kb"), "2000");
+      for (
+        const leaked of [
+          "dryRun",
+          "options",
+          "satsPerKB",
+          "service_fee",
+          "service_fee_address",
+        ]
+      ) {
+        assertEquals(
+          compose.searchParams.has(leaked),
+          false,
+          `${leaked} reached the node`,
+        );
+      }
+    } finally {
+      restore();
+    }
+  },
+});
