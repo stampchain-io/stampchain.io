@@ -1,3 +1,4 @@
+import { isUserFundsError } from "$server/services/src20/userFundsError.ts";
 import { Handlers } from "$fresh/server.ts";
 import { ApiResponseUtil } from "$lib/utils/api/responses/apiResponseUtil.ts";
 import { logger } from "$lib/utils/logger.ts";
@@ -235,17 +236,18 @@ export const handler: Handlers<SRC20CreateResponse | TXError> = {
       const errorMessage = error instanceof Error
         ? error.message
         : String(error);
-      logger.error("api-src20-create", {
+      const userFunds = isUserFundsError(errorMessage);
+      logger[userFunds ? "warn" : "error"]("api-src20-create", {
         message: "Error processing SRC20 create request",
         error: errorMessage,
-        stack: error instanceof Error ? error.stack : undefined,
+        stack: userFunds
+          ? undefined
+          : error instanceof Error
+          ? error.stack
+          : undefined,
       });
 
-      if (
-        errorMessage.toLowerCase().includes("insufficient funds") ||
-        errorMessage.toLowerCase().includes("no utxos available") ||
-        errorMessage.includes("UTXO selection failed")
-      ) {
+      if (userFunds) {
         return ApiResponseUtil.badRequest(errorMessage);
       }
 

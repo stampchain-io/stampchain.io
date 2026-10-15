@@ -67,6 +67,16 @@ function noteXcpRateLimit(retryAfter: string | undefined): void {
   xcpCooldownUntil = Math.max(xcpCooldownUntil, Date.now() + ms);
 }
 
+function retryAfterFromBody(data: unknown): string | undefined {
+  try {
+    const body = typeof data === "string" ? JSON.parse(data) : data;
+    const seconds = (body as { retry_after_seconds?: unknown } | null)?.retry_after_seconds;
+    return typeof seconds === "number" && seconds > 0 ? String(Math.min(seconds, 60)) : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 const httpClient = {
   get: async <T = any>(
     url: string,
@@ -83,8 +93,11 @@ const httpClient = {
         continue;
       }
       if (!RETRYABLE_STATUSES.has(last.status)) return last;
-      if (last.status === 429) {
-        noteXcpRateLimit(last.headers?.["retry-after"]);
+      if (last.status === 429 || last.status === 503) {
+        // A 503 from the node is "counterparty_temporarily_unavailable" with
+        // a retry hint in the body; treat it like a rate limit so every
+        // caller backs off instead of each retrying on its own.
+        noteXcpRateLimit(last.headers?.["retry-after"] ?? retryAfterFromBody(last.data));
       }
     }
     if (last) return last;
@@ -303,7 +316,11 @@ export async function fetchXcpV2WithCache<T>(
 
           if (!response.ok) {
             const errorBody = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
-            await logger.error("api", {
+            // An unavailable upstream is handled (stale data or the minimal
+            // fallback below), so it is a warning; a 404 is an ordinary miss.
+            // Only other 4xx, which mean we sent a bad request, are errors.
+            const level = response.status >= 500 ? "warn" : response.status === 404 ? "debug" : "error";
+            await logger[level]("api", {
               message: "XCP node error response",
               node: node.name,
               status: response.status,
