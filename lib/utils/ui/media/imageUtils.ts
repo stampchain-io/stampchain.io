@@ -148,6 +148,33 @@ const NON_RENDERABLE_IMAGE_MIMETYPES = new Set([
   "text/json",
 ]);
 
+/**
+ * SRC-20 deploy SVGs draw the protocol JSON inside a `<pre>` on top of the
+ * token art. Display paths have no use for that text.
+ */
+export function stripSrc20JsonOverlay(svg: string): string {
+  return svg.replace(/<pre\b[^>]*>[\s\S]*?<\/pre>/gi, "");
+}
+
+const SRC20_STAMP_FILE = /\/stamps\/([a-f0-9]{64})\.(?:svg|json)(?:[?#].*)?$/i;
+
+/**
+ * Rewrite a CDN stamp file URL to the local route that serves the same SVG
+ * with the JSON `<pre>` removed. Other URLs are returned unchanged.
+ */
+export function toCleanSrc20ImageUrl(url: string): string {
+  const match = url.match(SRC20_STAMP_FILE);
+  if (!match?.[1]) return url;
+  return `/token-image/${match[1].toLowerCase()}`;
+}
+
+export function isSrc20ImageStamp(
+  stamp: { ident?: string; p?: string },
+): boolean {
+  return stamp.ident?.toUpperCase() === "SRC-20" ||
+    stamp.p?.toUpperCase() === "SRC-20";
+}
+
 export const getStampImageSrc = (stamp: StampRow): string | undefined => {
   const baseUrl = getBaseUrl();
   if (!stamp.stamp_url) {
@@ -162,14 +189,14 @@ export const getStampImageSrc = (stamp: StampRow): string | undefined => {
 
   // SRC-20 stamps have JSON metadata but also have SVG images
   // The SVG is at /stamps/txhash.svg (managed by Cloudflare CDN)
-  if (stamp.ident === "SRC-20" && stamp.stamp_url.includes("json")) {
+  if (isSrc20ImageStamp(stamp) && stamp.stamp_url.includes("json")) {
     // Extract the transaction hash from the JSON URL and construct SVG URL
     const urlParts = stamp.stamp_url.split("/stamps/");
     if (urlParts.length > 1) {
-      const filename = urlParts[1].replace(".json", ".svg");
-      // Always use CDN for /stamps/ assets
+      const filename = urlParts[1].replace(/\.json(?:[?#].*)?$/i, ".svg");
+      // Always use CDN for /stamps/ assets, then drop the JSON overlay
       const cdnUrl = getCdnUrl();
-      return `${cdnUrl}/stamps/${filename}`;
+      return toCleanSrc20ImageUrl(`${cdnUrl}/stamps/${filename}`);
     }
     return undefined;
   }
@@ -194,18 +221,14 @@ export const getStampImageSrc = (stamp: StampRow): string | undefined => {
 
   // For all other stamps, use the CDN
   const cdnUrl = getCdnUrl();
-  return `${cdnUrl}/stamps/${filename}`;
+  const resolved = `${cdnUrl}/stamps/${filename}`;
+  return isSrc20ImageStamp(stamp) ? toCleanSrc20ImageUrl(resolved) : resolved;
 };
 
-export const getSRC20ImageSrc = (src20: SRC20Row): string | undefined => {
+function rawSrc20StampUrl(src20: SRC20Row): string | undefined {
   // Deploy-derived image takes priority: it's the token's canonical icon,
   // and it's the *only* image available for balance-style rows that don't
   // carry their own transaction hash (see SRC20Repository.getSrc20BalanceFromDb).
-  // It's already a fully-qualified URL built server-side, so no further
-  // munging is needed. Mirrors the `deploy_img || getSRC20ImageSrc(...)`
-  // fallback previously duplicated across SRC20Overview/SRC20Minting* —
-  // centralizing it here means every consumer (including SRC20Card) gets
-  // it for free.
   if (src20.deploy_img) {
     return src20.deploy_img;
   }
@@ -221,7 +244,7 @@ export const getSRC20ImageSrc = (src20: SRC20Row): string | undefined => {
     // Extract the transaction hash from the JSON URL and construct SVG URL
     const urlParts = src20.stamp_url.split("/stamps/");
     if (urlParts.length > 1) {
-      const filename = urlParts[1].replace(".json", ".svg");
+      const filename = urlParts[1].replace(/\.json(?:[?#].*)?$/i, ".svg");
       // Always use CDN for /stamps/ assets
       const cdnUrl = getCdnUrl();
       return `${cdnUrl}/stamps/${filename}`;
@@ -235,6 +258,11 @@ export const getSRC20ImageSrc = (src20: SRC20Row): string | undefined => {
 
   const cdnUrl = getCdnUrl();
   return `${cdnUrl}/stamps/${filename}`;
+}
+
+export const getSRC20ImageSrc = (src20: SRC20Row): string | undefined => {
+  const raw = rawSrc20StampUrl(src20);
+  return raw ? toCleanSrc20ImageUrl(raw) : undefined;
 };
 
 export const getMimeTypeFromExtension = (filename: string): string => {

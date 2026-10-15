@@ -102,9 +102,7 @@ export function SRC20Card(
 
   const tick = unicodeEscapeToEmoji(src20.tick ?? "");
   const op = (src20.op ?? "").toUpperCase() as "DEPLOY" | "MINT" | "TRANSFER";
-  const imageUrl = imgError
-    ? null
-    : (src20.deploy_img || getSRC20ImageSrc(src20) || null);
+  const imageUrl = imgError ? null : (getSRC20ImageSrc(src20) ?? null);
 
   const href = `/src20/${encodeURIComponent(tick)}`;
 
