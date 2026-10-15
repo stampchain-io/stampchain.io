@@ -55,9 +55,20 @@ let xcpCooldownUntil = 0;
 const XCP_DEFAULT_COOLDOWN_MS = 2000;
 const XCP_MAX_ATTEMPTS = 2;
 const RETRYABLE_STATUSES = new Set([429, 502, 503, 504]);
+/**
+ * Longest any single request sleeps on the shared cooldown. The node's 503
+ * body asks for 10s+; honouring that inside a user-facing compose call made
+ * attach/mint take 16-20s and still fail. A caller waits at most this long,
+ * and skips its retry when the node asked for longer.
+ */
+const XCP_MAX_COOLDOWN_WAIT_MS = 2000;
+
+function xcpCooldownRemaining(): number {
+  return Math.max(0, xcpCooldownUntil - Date.now());
+}
 
 async function waitForXcpCooldown(): Promise<void> {
-  const wait = xcpCooldownUntil - Date.now();
+  const wait = Math.min(xcpCooldownRemaining(), XCP_MAX_COOLDOWN_WAIT_MS);
   if (wait > 0) await new Promise((r) => setTimeout(r, wait));
 }
 
@@ -85,6 +96,7 @@ const httpClient = {
     let last: HttpResponse<T> | undefined;
     let lastError: unknown;
     for (let attempt = 1; attempt <= XCP_MAX_ATTEMPTS; attempt++) {
+      if (attempt > 1 && xcpCooldownRemaining() > XCP_MAX_COOLDOWN_WAIT_MS) break;
       await waitForXcpCooldown();
       try {
         last = await withXcpSlot(() => rawHttpClient.get<T>(url, { ...config, retries: 0 }));
@@ -118,7 +130,7 @@ export function _xcpLimiterState() {
     inFlight: xcpInFlight,
     waiting: xcpWaiters.length,
     max: XCP_MAX_CONCURRENCY,
-    cooldownMs: Math.max(0, xcpCooldownUntil - Date.now()),
+    cooldownMs: xcpCooldownRemaining(),
   };
 }
 

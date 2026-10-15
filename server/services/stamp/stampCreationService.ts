@@ -1,3 +1,4 @@
+import { isUserFundsError } from "$server/services/src20/userFundsError.ts";
 // was previously // lib/utils/minting/stamp.ts
 
 import { base64ToHex } from "$lib/utils/data/binary/baseUtils.ts";
@@ -185,7 +186,10 @@ export class StampCreationService {
         };
       }
     } catch (error) {
-      logger.error("stamp-create", { message: "Detailed mint error", error: error instanceof Error ? error.message : String(error) });
+      {
+        const msg = error instanceof Error ? error.message : String(error);
+        (isUserFundsError(msg) ? logger.warn : logger.error).call(logger, "stamp-create", { message: "Detailed mint error", error: msg });
+      }
       // Enhance error messages for common issues
       if (error instanceof Error && error.message.includes('invalid base58')) {
         throw new Error('Invalid address format. Please use a supported Bitcoin address format (P2PKH, P2WPKH, or P2SH).');
@@ -785,7 +789,7 @@ export class StampCreationService {
         changeAddress: address,
       };
     } catch (error) {
-      logger.error("stamp-create", { message: "PSBT Generation Error in StampCreationService", error: error instanceof Error ? error.message : String(error), address, fileSize, satsPerVB, totalOutputValue, cip33AddressCount: cip33Addresses.length, vouts: vouts.length, estimatedFee: estMinerFee });
+      (isUserFundsError(error instanceof Error ? error.message : String(error)) ? logger.warn : logger.error).call(logger, "stamp-create", { message: "PSBT Generation Error in StampCreationService", error: error instanceof Error ? error.message : String(error), address, fileSize, satsPerVB, totalOutputValue, cip33AddressCount: cip33Addresses.length, vouts: vouts.length, estimatedFee: estMinerFee });
       throw error;
     }
   }

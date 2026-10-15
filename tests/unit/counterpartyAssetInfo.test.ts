@@ -432,3 +432,38 @@ Deno.test({
     }
   },
 });
+
+Deno.test({
+  name: "a 503 asking for a long cooldown fails fast instead of stalling the caller",
+  sanitizeOps: false,
+  sanitizeResources: false,
+  async fn() {
+    const calls = countingFetch(() =>
+      new Response(
+        JSON.stringify({ error: "counterparty_temporarily_unavailable", retry_after_seconds: 10 }),
+        { status: 503, headers: { "content-type": "application/json" } },
+      )
+    );
+    try {
+      const started = Date.now();
+      const response = await fetchXcpV2WithCache(
+        `/addresses/${unique("bc1q")}/compose/attach`,
+        new URLSearchParams(),
+      );
+      const waited = Date.now() - started;
+      assertEquals(calls.length, 1, "no retry inside a 10s cooldown");
+      assertEquals(waited < 2000, true, `caller stalled ${waited}ms`);
+      assertEquals(Boolean(response.error) || !response.result, true);
+      assertEquals(_xcpLimiterState().cooldownMs > 5000, true, "cooldown still recorded for everyone");
+
+      // A second caller inside the cooldown waits at most the cap, not 10s.
+      const second = Date.now();
+      await fetchXcpV2WithCache(`/addresses/${unique("bc1q")}/compose/attach`, new URLSearchParams());
+      const secondWaited = Date.now() - second;
+      assertEquals(secondWaited < 3000, true, `second caller stalled ${secondWaited}ms`);
+    } finally {
+      _resetXcpCooldown();
+      restore();
+    }
+  },
+});
