@@ -12,6 +12,27 @@ import {
 import { CommonUTXOService } from "$server/services/utxo/commonUtxoService.ts";
 import { Buffer } from "node:buffer";
 
+/** compose/fairmint parameters a caller may pass through (body or options). */
+const XCP_FAIRMINT_PASSTHROUGH = [
+  "encoding",
+  "regular_dust_size",
+  "multisig_dust_size",
+  "pubkeys",
+  "allow_unconfirmed_inputs",
+  "exact_fee",
+  "fee_provided",
+  "unspent_tx_hash",
+  "dust_return_pubkey",
+  "disable_utxo_locks",
+  "p2sh_pretx_txid",
+  "segwit",
+  "confirmation_target",
+  "exclude_utxos",
+  "inputs_set",
+  "extended_tx_info",
+  "show_unconfirmed",
+] as const;
+
 export const handler: Handlers = {
   async POST(req) {
     const commonUtxoService = new CommonUTXOService();
@@ -28,6 +49,9 @@ export const handler: Handlers = {
         service_fee_address,
         dryRun,
       } = body;
+      // The website's fairmint form sends its rate as options.fee_per_kb (sats
+      // per kB), like the attach/detach forms; API callers send satsPerVB.
+      const options = (body.options ?? {}) as Record<string, unknown>;
 
       // `quantity` is required for PAID fairminters but must be OMITTED for free
       // ones (CP rejects it with "quantity is not allowed for free fairminters").
@@ -42,9 +66,11 @@ export const handler: Handlers = {
       // the caller's input, so answer 400 as the attach/detach/dispense routes do.
       let normalizedFees;
       try {
+        const vb = satsPerVB ?? options.satsPerVB;
+        const kb = satsPerKB ?? options.fee_per_kb;
         normalizedFees = normalizeFeeRate({
-          ...(satsPerKB && { satsPerKB }),
-          ...(satsPerVB && { satsPerVB }),
+          ...(kb && { satsPerKB: Number(kb) }),
+          ...(vb && { satsPerVB: Number(vb) }),
         });
       } catch (error) {
         return ResponseUtil.badRequest(
@@ -55,14 +81,14 @@ export const handler: Handlers = {
       }
 
       try {
-        // Prepare XCP API options (same as before, but no PSBT-related options)
-        const xcpApiOptions = { ...body };
-        delete xcpApiOptions.address;
-        delete xcpApiOptions.asset;
-        delete xcpApiOptions.quantity;
-        delete xcpApiOptions.satsPerVB; // Not for XCP API call
-        delete xcpApiOptions.service_fee; // Not for XCP API call
-        delete xcpApiOptions.service_fee_address; // Not for XCP API call
+        // Forward only parameters Counterparty's compose/fairmint accepts. The
+        // body used to be copied whole, so `dryRun`, `options` and `satsPerKB`
+        // reached the node, which rejects unknown parameters with a 400.
+        const xcpApiOptions: Record<string, unknown> = {};
+        for (const key of XCP_FAIRMINT_PASSTHROUGH) {
+          const value = body[key] ?? options[key];
+          if (value !== undefined && value !== null) xcpApiOptions[key] = value;
+        }
 
         // Free fairminters reject `quantity`; paid ones require it. Decide based
         // on the fairminter's price.
