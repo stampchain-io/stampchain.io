@@ -1475,7 +1475,8 @@ export class CounterpartyApiManager {
     const unavailable = upstreamUnavailable(response.lastStatusCode, response.error);
     if (unavailable) throw unavailable;
     if (response.error || !response.result) {
-        await logger.error("api", {
+        const level = isUserFundsError(String(response.error ?? "")) ? "warn" : "error";
+        await logger[level]("api", {
             message: "[CounterpartyApiManager.composeAttach] Error from Counterparty API",
             error: response.error,
             result: response.result

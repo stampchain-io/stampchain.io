@@ -1,3 +1,4 @@
+import { isUserFundsError } from "$server/services/src20/userFundsError.ts";
 import { logger } from "$lib/utils/logger.ts";
 import { CounterpartyApiManager } from "$server/services/counterpartyApiService.ts";
 import { CommonUTXOService } from "$server/services/utxo/commonUtxoService.ts";
@@ -218,10 +219,13 @@ export class BitcoinUtxoManager {
         fee: selectionResult.fee,
       };
     } catch (error) {
-      logger.error("transaction-utxo-service", {
+      const message = error instanceof Error ? error.message : String(error);
+      const userFunds = isUserFundsError(message);
+      // An unfundable wallet is the user's problem; the route answers 400.
+      (userFunds ? logger.warn : logger.error).call(logger, "transaction-utxo-service", {
         message: "Error in selectUTXOsLogic with optimal selection",
-        error: (error as any).message,
-        stack: (error as any).stack,
+        error: message,
+        stack: userFunds ? undefined : (error as any).stack,
         fetchFullDetails
       });
       throw error;

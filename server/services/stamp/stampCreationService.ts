@@ -979,7 +979,10 @@ export class StampCreationService {
         orderedInputs,
       };
     } catch (error) {
-      logger.error("stamp-create", { message: "Detailed createIssuanceTransaction error", error: error instanceof Error ? error.message : String(error) });
+      {
+        const msg = error instanceof Error ? error.message : String(error);
+        (isUserFundsError(msg) ? logger.warn : logger.error).call(logger, "stamp-create", { message: "Detailed createIssuanceTransaction error", error: msg });
+      }
       throw error;
     }
   }
