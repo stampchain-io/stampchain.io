@@ -28,6 +28,7 @@ const store = new Map<string, unknown>();
     return value;
   },
 };
+const counterparty = await import("$server/services/counterpartyApiService.ts");
 const {
   _resetXcpCooldown,
   _setAssetInfoDeadlineMs,
@@ -403,7 +404,8 @@ Deno.test({
 });
 
 Deno.test({
-  name: "a 503 with retry_after_seconds in the body triggers the shared cooldown",
+  name:
+    "a 503 with retry_after_seconds in the body triggers the shared cooldown",
   sanitizeOps: false,
   sanitizeResources: false,
   async fn() {
@@ -412,7 +414,10 @@ Deno.test({
     const calls = countingFetch(() =>
       ++n === 1
         ? new Response(
-          JSON.stringify({ error: "counterparty_temporarily_unavailable", retry_after_seconds: 1 }),
+          JSON.stringify({
+            error: "counterparty_temporarily_unavailable",
+            retry_after_seconds: 1,
+          }),
           { status: 503, headers: { "content-type": "application/json" } },
         )
         : asset(name)
@@ -424,7 +429,11 @@ Deno.test({
       const waited = Date.now() - started;
       assertEquals(result.asset, name);
       assertEquals(calls.length, 2);
-      assertEquals(waited >= 900, true, `retried after ${waited}ms, before the 1s hint`);
+      assertEquals(
+        waited >= 900,
+        true,
+        `retried after ${waited}ms, before the 1s hint`,
+      );
     } finally {
       _setAssetInfoDeadlineMs(previous);
       _resetXcpCooldown();
@@ -434,13 +443,17 @@ Deno.test({
 });
 
 Deno.test({
-  name: "a 503 asking for a long cooldown fails fast instead of stalling the caller",
+  name:
+    "a 503 asking for a long cooldown fails fast instead of stalling the caller",
   sanitizeOps: false,
   sanitizeResources: false,
   async fn() {
     const calls = countingFetch(() =>
       new Response(
-        JSON.stringify({ error: "counterparty_temporarily_unavailable", retry_after_seconds: 10 }),
+        JSON.stringify({
+          error: "counterparty_temporarily_unavailable",
+          retry_after_seconds: 10,
+        }),
         { status: 503, headers: { "content-type": "application/json" } },
       )
     );
@@ -454,13 +467,70 @@ Deno.test({
       assertEquals(calls.length, 1, "no retry inside a 10s cooldown");
       assertEquals(waited < 2000, true, `caller stalled ${waited}ms`);
       assertEquals(Boolean(response.error) || !response.result, true);
-      assertEquals(_xcpLimiterState().cooldownMs > 5000, true, "cooldown still recorded for everyone");
+      assertEquals(
+        _xcpLimiterState().cooldownMs > 5000,
+        true,
+        "cooldown still recorded for everyone",
+      );
 
       // A second caller inside the cooldown waits at most the cap, not 10s.
       const second = Date.now();
-      await fetchXcpV2WithCache(`/addresses/${unique("bc1q")}/compose/attach`, new URLSearchParams());
+      await fetchXcpV2WithCache(
+        `/addresses/${unique("bc1q")}/compose/attach`,
+        new URLSearchParams(),
+      );
       const secondWaited = Date.now() - second;
-      assertEquals(secondWaited < 3000, true, `second caller stalled ${secondWaited}ms`);
+      assertEquals(
+        secondWaited < 3000,
+        true,
+        `second caller stalled ${secondWaited}ms`,
+      );
+    } finally {
+      _resetXcpCooldown();
+      restore();
+    }
+  },
+});
+
+Deno.test({
+  name: "composeErrorMessage unwraps the node's stringified-list errors",
+  fn() {
+    const { composeErrorMessage } = counterparty;
+    assertEquals(
+      composeErrorMessage({ error: "['fairminter not found for asset: `X`']" }),
+      "fairminter not found for asset: `X`",
+    );
+    assertEquals(
+      composeErrorMessage('{"error":"no assets to detach"}'),
+      "no assets to detach",
+    );
+    assertEquals(composeErrorMessage({}), undefined);
+  },
+});
+
+Deno.test({
+  name: "composeFairmint returns the node's 4xx reason instead of throwing",
+  sanitizeOps: false,
+  sanitizeResources: false,
+  async fn() {
+    const calls = countingFetch(() =>
+      new Response(
+        JSON.stringify({
+          error: "['fairminter not found for asset: `TESTFAIRMINT`']",
+        }),
+        { status: 400, headers: { "content-type": "application/json" } },
+      )
+    );
+    try {
+      const result = await CounterpartyApiManager.composeFairmint(
+        unique("bc1q"),
+        "TESTFAIRMINT",
+        1,
+      );
+      assertEquals(result, {
+        error: "fairminter not found for asset: `TESTFAIRMINT`",
+      });
+      assertEquals(calls.length, 1);
     } finally {
       _resetXcpCooldown();
       restore();
