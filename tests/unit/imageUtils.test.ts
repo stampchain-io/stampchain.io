@@ -1,10 +1,13 @@
 import {
   getSRC101Data,
+  getSRC20ImageSrc,
   getStampImageSrc,
   handleImageError,
   getMimeTypeFromExtension,
   mimeTypeToSuffix,
   showFallback,
+  stripSrc20JsonOverlay,
+  toCleanSrc20ImageUrl,
 } from "$lib/utils/ui/media/imageUtils.ts";
 import { assertEquals } from "@std/assert";
 
@@ -88,6 +91,51 @@ Deno.test("getStampImageSrc - handles SRC-20 JSON stamps", () => {
   } as any;
   const result = getStampImageSrc(stamp);
   assertEquals(result, "https://stampchain.io/stamps/abc123.svg");
+});
+
+const SRC20_TX =
+  "f353823cdc63ee24fe2167ca14d3bb9b6a54dd063b53382c0cd42f05d7262808";
+
+Deno.test("stripSrc20JsonOverlay removes the JSON pre and keeps the image", () => {
+  const svg = [
+    `<svg xmlns="http://www.w3.org/2000/svg">`,
+    `<p style="background-image: url(data:image/webp;base64,QUJD)">`,
+    `<pre>{"tick":"STAMP"}</pre></p></svg>`,
+  ].join("");
+  const result = stripSrc20JsonOverlay(svg);
+  assertEquals(result.includes("<pre>"), false);
+  assertEquals(result.includes("data:image/webp;base64,QUJD"), true);
+  assertEquals(result.includes("<svg"), true);
+});
+
+Deno.test("toCleanSrc20ImageUrl rewrites a deploy stamp svg", () => {
+  assertEquals(
+    toCleanSrc20ImageUrl(`https://stampchain.io/stamps/${SRC20_TX}.svg`),
+    `/token-image/${SRC20_TX}`,
+  );
+  assertEquals(
+    toCleanSrc20ImageUrl(`https://stampchain.io/stamps/${SRC20_TX}.json`),
+    `/token-image/${SRC20_TX}`,
+  );
+  assertEquals(
+    toCleanSrc20ImageUrl("https://stampchain.io/stamps/abc123.svg"),
+    "https://stampchain.io/stamps/abc123.svg",
+  );
+});
+
+Deno.test("getSRC20ImageSrc points deploy_img at the cleaned token image", () => {
+  const result = getSRC20ImageSrc({
+    deploy_img: `https://dev.stampchain.io/stamps/${SRC20_TX}.svg`,
+  } as any);
+  assertEquals(result, `/token-image/${SRC20_TX}`);
+});
+
+Deno.test("getStampImageSrc uses the cleaned image for SRC-20 svg stamps", () => {
+  const result = getStampImageSrc({
+    stamp_url: `https://stampchain.io/stamps/${SRC20_TX}.svg`,
+    ident: "SRC-20",
+  } as any);
+  assertEquals(result, `/token-image/${SRC20_TX}`);
 });
 
 Deno.test("getStampImageSrc - returns undefined for SRC-20 with invalid URL", () => {

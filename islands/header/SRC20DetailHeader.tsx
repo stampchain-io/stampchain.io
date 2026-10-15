@@ -16,7 +16,10 @@ import {
   formatDate,
   formatNumber,
 } from "$lib/utils/ui/formatting/formatUtils.ts";
-import { constructStampUrl } from "$lib/utils/ui/media/imageUtils.ts";
+import {
+  constructStampUrl,
+  toCleanSrc20ImageUrl,
+} from "$lib/utils/ui/media/imageUtils.ts";
 import { tooltipButton } from "$notification";
 import {
   cardPrice,
@@ -49,14 +52,14 @@ export function SRC20DetailHeader({
     ? unicodeEscapeToEmoji(deployment.tick)
     : "N/A";
 
-  // ✅ ENHANCED IMAGE URL LOGIC: Use new stamp_url and deploy_img fields
-  // 1. Use deploy_img if provided (for deploy operations: https://stampchain.io/stamps/{deploy_tx}.svg)
-  // 2. Use stamp_url if provided (for transaction stamps: https://stampchain.io/stamps/{tx_hash}.svg)
-  // 3. Fallback to constructing URL from deployment.tx_hash if available
-  // 4. If unavailable (or fails to load), fall back to the placeholder icon
-  const imageUrl = imgError ? null : deployment.deploy_img ||
+  // Prefer the deploy stamp, then this transaction's stamp. The local
+  // token-image route serves that SVG with the JSON overlay removed.
+  const rawImageUrl = deployment.deploy_img ||
     deployment.stamp_url ||
     (deployment.tx_hash ? constructStampUrl(deployment.tx_hash) : null);
+  const imageUrl = imgError || !rawImageUrl
+    ? null
+    : toCleanSrc20ImageUrl(rawImageUrl);
 
   // Minting state: still minting while progress hasn't reached 100%
   const progress = _mintStatus ? parseFloat(String(_mintStatus.progress)) : 100;
