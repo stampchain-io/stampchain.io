@@ -69,7 +69,15 @@ export const handler: Handlers = {
         const fairminter = await CounterpartyApiManager.getAssetFairminter(
           asset,
         );
-        const isFreeFairminter = fairminter !== null && fairminter.price === 0;
+        // The node confirmed nothing is open: composing would only be
+        // rejected, and costs a second rate-limited round trip.
+        if (fairminter === null) {
+          return ResponseUtil.badRequest(
+            `No open fairminter for asset: ${asset}`,
+          );
+        }
+        const isFreeFairminter = fairminter !== undefined &&
+          fairminter.price === 0;
         if (
           !isFreeFairminter &&
           (quantity === undefined || quantity === null || quantity === "")
