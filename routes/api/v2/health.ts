@@ -1,4 +1,9 @@
 import { Handlers } from "$fresh/server.ts";
+import {
+  serverTiming,
+  type Timed,
+  timedCheck,
+} from "$lib/utils/api/timedCheck.ts";
 import { ApiResponseUtil } from "$lib/utils/api/responses/apiResponseUtil.ts";
 import { getCurrentBlock } from "$lib/utils/mempool.ts";
 import type { HealthStatus } from "$types/src20.d.ts";
@@ -8,6 +13,13 @@ import { SRC20Repository } from "$server/database/src20Repository.ts";
 import { BlockService } from "$server/services/core/blockService.ts";
 import { CounterpartyApiManager } from "$server/services/counterpartyApiService.ts";
 import { StampService } from "$server/services/stampService.ts";
+
+/** Per-check budget for the full health scan. */
+const CHECK_BUDGET_MS = 2000;
+/** mempool.space retries sleep 1 s each; starting at 2 leaves one retry. */
+const MAX_RETRIES_IN_HEALTH = 2;
+const timed = <T>(name: string, fn: () => Promise<T>) =>
+  timedCheck(name, fn, CHECK_BUDGET_MS);
 
 export const handler: Handlers = {
   /**
@@ -42,6 +54,7 @@ export const handler: Handlers = {
     }
 
     // Continue with full health check if not simple
+    const timings: Timed<unknown>[] = [];
     const health: HealthStatus = {
       status: "OK",
       services: {
@@ -54,7 +67,11 @@ export const handler: Handlers = {
     };
 
     try {
-      // Use Promise.allSettled to prevent one failure from breaking entire health check
+      // Every sub-check runs in parallel under its own time budget. The full
+      // check used to take 4-6 s from production, failing the daily
+      // regression run's 5 s threshold; one slow dependency must not hold the
+      // whole response. A check that runs out of budget reports as degraded,
+      // and Server-Timing exposes each check's duration.
       const [
         lastIndexedBlockResult,
         currentBlockHeightResult,
@@ -62,37 +79,30 @@ export const handler: Handlers = {
         src20DeploymentsResult,
         xcpHealthResult,
         nodeVersionsResult,
-      ] = await Promise.allSettled([
-        BlockService.getLastBlock(),
-        getCurrentBlock().catch(() => null), // Catch mempool.space failures
-        StampService.countTotalStamps(),
-        SRC20Repository.checkSrc20Deployments(),
-        CounterpartyApiManager.checkHealth(30).catch((error) => {
-          console.error("XCP health check failed in health endpoint:", error);
-          return false;
-        }), // 30 seconds cache for health checks (was 30000ms)
-        NodeVersionRepository.getCurrentVersions(),
+      ] = await Promise.all([
+        timed("indexer", () => BlockService.getLastBlock()),
+        timed("mempool", () => getCurrentBlock(MAX_RETRIES_IN_HEALTH)),
+        timed("stamps", () => StampService.countTotalStamps()),
+        timed("src20", () => SRC20Repository.checkSrc20Deployments()),
+        timed("xcp", () => CounterpartyApiManager.checkHealth(30)),
+        timed("versions", () => NodeVersionRepository.getCurrentVersions()),
       ]);
+      timings.push(
+        lastIndexedBlockResult,
+        currentBlockHeightResult,
+        stampCountResult,
+        src20DeploymentsResult,
+        xcpHealthResult,
+        nodeVersionsResult,
+      );
 
-      // Extract values from settled promises
-      const lastIndexedBlock = lastIndexedBlockResult.status === "fulfilled"
-        ? lastIndexedBlockResult.value
-        : null;
-      const currentBlockHeight = currentBlockHeightResult.status === "fulfilled"
-        ? currentBlockHeightResult.value
-        : null;
-      const stampCount = stampCountResult.status === "fulfilled"
-        ? stampCountResult.value
-        : { isValid: false, count: 0 };
-      const src20Deployments = src20DeploymentsResult.status === "fulfilled"
-        ? src20DeploymentsResult.value
-        : { isValid: false, count: 0 };
-      const xcpHealth = xcpHealthResult.status === "fulfilled"
-        ? xcpHealthResult.value
-        : false;
-      const nodeVersions = nodeVersionsResult.status === "fulfilled"
-        ? nodeVersionsResult.value
-        : [];
+      const lastIndexedBlock = lastIndexedBlockResult.value ?? null;
+      const currentBlockHeight = currentBlockHeightResult.value ?? null;
+      const stampCount = stampCountResult.value ?? { isValid: false, count: 0 };
+      const src20Deployments = src20DeploymentsResult.value ??
+        { isValid: false, count: 0 };
+      const xcpHealth = xcpHealthResult.value ?? false;
+      const nodeVersions = nodeVersionsResult.value ?? [];
 
       // Update service statuses
       health.services.indexer = !!lastIndexedBlock;
@@ -115,12 +125,10 @@ export const handler: Handlers = {
         totalStamps: stampCount.count,
       };
 
-      // Check database
-      const src20Check = await SRC20Repository.checkSrc20Deployments();
-      health.services.database = src20Check.isValid && src20Check.count > 0;
-      if (health.services.stats) {
-        health.services.stats.src20Deployments = src20Check.count;
-      }
+      // Database health reuses the SRC-20 count fetched above; this used to
+      // run the same query a second time, sequentially.
+      health.services.database = src20Deployments.isValid &&
+        src20Deployments.count > 0;
 
       // Check circuit breaker status
       try {
@@ -159,6 +167,9 @@ export const handler: Handlers = {
       health.status = "ERROR";
     }
 
-    return ApiResponseUtil.success(health, { forceNoCache: true });
+    return ApiResponseUtil.success(health, {
+      forceNoCache: true,
+      headers: { "Server-Timing": serverTiming(timings) },
+    });
   },
 };
