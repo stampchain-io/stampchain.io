@@ -7,88 +7,17 @@ import { logger } from "$lib/utils/logger.ts";
 import { formatSatoshisToBTC } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { dbManager } from "$server/database/databaseManager.ts";
 import { isUserFundsError } from "$server/services/src20/userFundsError.ts";
-import { FetchHttpClient, type HttpResponse } from "$server/interfaces/httpClient.ts";
 import type { DispenseEvent, Dispenser, DispenserFilter, XcpBalance } from "$types/services.d.ts";
 
-// Create a shared httpClient instance
-const rawHttpClient = new FetchHttpClient(
-  30000, // defaultTimeout - 30 seconds for XCP API calls
-  2,     // defaultRetries
-  1000   // defaultRetryDelay
-);
+import {
+  _resetXcpCooldown,
+  _xcpLimiterState,
+  isDefinitiveRejection,
+  retryAfterFromBody,
+  xcpHttpClient as httpClient,
+} from "$server/services/counterparty/xcpNodeClient.ts";
 
-/**
- * Cap concurrent requests to the public Counterparty node. Crawlers walking
- * stamp pages used to fan out hundreds of simultaneous asset lookups, which
- * the node answered with 429s (~150/hour). Requests beyond the cap wait in
- * FIFO order instead of being fired at once.
- */
-const XCP_MAX_CONCURRENCY = Math.max(
-  1,
-  Number(
-    (typeof Deno !== "undefined" ? Deno.env.get("XCP_MAX_CONCURRENCY") : undefined) ?? 4,
-  ) || 4,
-);
-let xcpInFlight = 0;
-const xcpWaiters: Array<() => void> = [];
-
-async function withXcpSlot<T>(fn: () => Promise<T>): Promise<T> {
-  if (xcpInFlight >= XCP_MAX_CONCURRENCY) {
-    await new Promise<void>((resolve) => xcpWaiters.push(resolve));
-  }
-  xcpInFlight++;
-  try {
-    return await fn();
-  } finally {
-    xcpInFlight--;
-    xcpWaiters.shift()?.();
-  }
-}
-
-/**
- * Shared back-off. The node rate-limits this deployment's egress IP, so a 429
- * means "everyone wait", not "this request should retry": the HTTP client's
- * own 429 handling (>=5s sleep, two retries, inside a concurrency slot) held
- * slots for 10s+ and stacked page loads to 30s under crawler traffic. Client
- * retries are therefore off for these calls; on 429 every caller pauses for
- * Retry-After (default 2s) and the request is tried once more.
- */
-let xcpCooldownUntil = 0;
-const XCP_DEFAULT_COOLDOWN_MS = 2000;
-const XCP_MAX_ATTEMPTS = 2;
-const RETRYABLE_STATUSES = new Set([429, 502, 503, 504]);
-/**
- * Longest any single request sleeps on the shared cooldown. The node's 503
- * body asks for 10s+; honouring that inside a user-facing compose call made
- * attach/mint take 16-20s and still fail. A caller waits at most this long,
- * and skips its retry when the node asked for longer.
- */
-const XCP_MAX_COOLDOWN_WAIT_MS = 2000;
-
-function xcpCooldownRemaining(): number {
-  return Math.max(0, xcpCooldownUntil - Date.now());
-}
-
-async function waitForXcpCooldown(): Promise<void> {
-  const wait = Math.min(xcpCooldownRemaining(), XCP_MAX_COOLDOWN_WAIT_MS);
-  if (wait > 0) await new Promise((r) => setTimeout(r, wait));
-}
-
-function noteXcpRateLimit(retryAfter: string | undefined): void {
-  const seconds = Number.parseInt(retryAfter ?? "", 10);
-  const ms = Number.isFinite(seconds) && seconds > 0 ? seconds * 1000 : XCP_DEFAULT_COOLDOWN_MS;
-  xcpCooldownUntil = Math.max(xcpCooldownUntil, Date.now() + ms);
-}
-
-function retryAfterFromBody(data: unknown): string | undefined {
-  try {
-    const body = typeof data === "string" ? JSON.parse(data) : data;
-    const seconds = (body as { retry_after_seconds?: unknown } | null)?.retry_after_seconds;
-    return typeof seconds === "number" && seconds > 0 ? String(Math.min(seconds, 60)) : undefined;
-  } catch {
-    return undefined;
-  }
-}
+export { _resetXcpCooldown, _xcpLimiterState };
 
 /**
  * The node's reason for rejecting a compose request. Counterparty returns
@@ -115,55 +44,11 @@ function upstreamUnavailable(status: number, data: unknown): UpstreamUnavailable
   return new UpstreamUnavailableError("Counterparty", Number(retryAfterFromBody(data) ?? 10));
 }
 
-const httpClient = {
-  get: async <T = any>(
-    url: string,
-    config?: Parameters<FetchHttpClient["get"]>[1],
-  ): Promise<HttpResponse<T>> => {
-    let last: HttpResponse<T> | undefined;
-    let lastError: unknown;
-    for (let attempt = 1; attempt <= XCP_MAX_ATTEMPTS; attempt++) {
-      if (attempt > 1 && xcpCooldownRemaining() > XCP_MAX_COOLDOWN_WAIT_MS) break;
-      await waitForXcpCooldown();
-      try {
-        last = await withXcpSlot(() => rawHttpClient.get<T>(url, { ...config, retries: 0 }));
-      } catch (error) {
-        lastError = error;
-        continue;
-      }
-      if (!RETRYABLE_STATUSES.has(last.status)) return last;
-      if (last.status === 429 || last.status === 503) {
-        // A 503 from the node is "counterparty_temporarily_unavailable" with
-        // a retry hint in the body; treat it like a rate limit so every
-        // caller backs off instead of each retrying on its own.
-        noteXcpRateLimit(last.headers?.["retry-after"] ?? retryAfterFromBody(last.data));
-      }
-    }
-    if (last) return last;
-    throw lastError;
-  },
-};
-
 /** Test hook: override the asset-info render deadline; returns the previous value. */
 export function _setAssetInfoDeadlineMs(ms: number): number {
   const previous = ASSET_INFO_DEADLINE_MS;
   ASSET_INFO_DEADLINE_MS = ms;
   return previous;
-}
-
-/** Test hook: current limiter state. */
-export function _xcpLimiterState() {
-  return {
-    inFlight: xcpInFlight,
-    waiting: xcpWaiters.length,
-    max: XCP_MAX_CONCURRENCY,
-    cooldownMs: xcpCooldownRemaining(),
-  };
-}
-
-/** Test hook: clear the shared 429 cooldown. */
-export function _resetXcpCooldown(): void {
-  xcpCooldownUntil = 0;
 }
 
 // Re-export XCP nodes from $constants
@@ -372,6 +257,8 @@ export async function fetchXcpV2WithCache<T>(
               url
             });
             errorMessage = errorBody
+            // A 4xx settles it; the next node would say the same.
+            if (isDefinitiveRejection(response.status)) break;
             continue; // Try the next node
           }
 
@@ -1396,6 +1283,10 @@ export class CounterpartyApiManager {
           } catch (_e) {
             lastError = errorBody;
           }
+          if (isDefinitiveRejection(response.status)) {
+            lastUnavailable = null; // the rejection, not an earlier outage, is the answer
+            break;
+          }
           continue; // Try the next node
         }
 
@@ -1498,6 +1389,10 @@ export class CounterpartyApiManager {
             }
           } catch (_e) {
             lastError = errorBody;
+          }
+          if (isDefinitiveRejection(response.status)) {
+            lastUnavailable = null; // the rejection, not an earlier outage, is the answer
+            break;
           }
           continue; // Try the next node
         }
@@ -1657,6 +1552,10 @@ export class CounterpartyApiManager {
           } catch (_e) {
             lastError = errorBody;
           }
+          if (isDefinitiveRejection(response.status)) {
+            lastUnavailable = null; // the rejection, not an earlier outage, is the answer
+            break;
+          }
           continue;
         }
 
@@ -1752,6 +1651,10 @@ export class CounterpartyApiManager {
           }
           const errorBody = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
           console.error(`Error response body from ${node.name}: ${errorBody}`);
+          if (isDefinitiveRejection(response.status)) {
+            lastUnavailable = null; // the rejection, not an earlier outage, is the answer
+            break;
+          }
           continue; // Try the next node
         }
 
@@ -2161,6 +2064,7 @@ export class CounterpartyApiManager {
         if (response.status === 404) return { kind: "missing" };
         if (!response.ok) {
           error = `HTTP ${response.status} from ${node.name}`;
+          if (isDefinitiveRejection(response.status)) break;
           continue;
         }
         const data = response.data;
