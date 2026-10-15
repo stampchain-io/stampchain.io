@@ -5,6 +5,7 @@ import type { Fairminter } from "$lib/types/services.d.ts";
 import { logger } from "$lib/utils/logger.ts";
 import { formatSatoshisToBTC } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { dbManager } from "$server/database/databaseManager.ts";
+import { isUserFundsError } from "$server/services/src20/userFundsError.ts";
 import { FetchHttpClient, type HttpResponse } from "$server/interfaces/httpClient.ts";
 import type { DispenseEvent, Dispenser, DispenserFilter, XcpBalance } from "$types/services.d.ts";
 
@@ -86,6 +87,25 @@ function retryAfterFromBody(data: unknown): string | undefined {
   } catch {
     return undefined;
   }
+}
+
+/**
+ * The node's reason for rejecting a compose request. Counterparty returns
+ * either {"error": "msg"} or {"error": "['msg']"} (a stringified list).
+ */
+export function composeErrorMessage(data: unknown): string | undefined {
+  let body: unknown = data;
+  if (typeof data === "string") {
+    try {
+      body = JSON.parse(data);
+    } catch {
+      return data || undefined;
+    }
+  }
+  const raw = (body as { error?: unknown } | null)?.error;
+  if (typeof raw !== "string" || !raw) return undefined;
+  const listed = raw.match(/^\[\s*['"](.*)['"]\s*\]$/s);
+  return listed ? listed[1] : raw;
 }
 
 const httpClient = {
@@ -330,8 +350,13 @@ export async function fetchXcpV2WithCache<T>(
             const errorBody = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
             // An unavailable upstream is handled (stale data or the minimal
             // fallback below), so it is a warning; a 404 is an ordinary miss.
-            // Only other 4xx, which mean we sent a bad request, are errors.
-            const level = response.status >= 500 ? "warn" : response.status === 404 ? "debug" : "error";
+            // An unfundable wallet is the user's problem, not ours. Only other
+            // 4xx, which mean we sent a bad request, are errors.
+            const level = response.status >= 500 || isUserFundsError(errorBody)
+              ? "warn"
+              : response.status === 404
+              ? "debug"
+              : "error";
             await logger[level]("api", {
               message: "XCP node error response",
               node: node.name,
@@ -1767,6 +1792,13 @@ export class CounterpartyApiManager {
 
         if (!response.ok) {
           const errorBody = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
+          // A 4xx is the node rejecting the request itself (no open
+          // fairminter, bad quantity): every node will say the same, and the
+          // caller answers it with a 400 carrying the node's reason.
+          if (response.status >= 400 && response.status < 500 && response.status !== 429) {
+            logger.warn("api", { message: "Counterparty rejected fairmint compose", node: node.name, status: response.status, errorBody });
+            return { error: composeErrorMessage(response.data) ?? errorBody };
+          }
           console.error(`Error response body from ${node.name}: ${errorBody}`);
           continue; // Try the next node
         }
