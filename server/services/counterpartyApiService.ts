@@ -1863,13 +1863,19 @@ export class CounterpartyApiManager {
   /**
    * Look up the open fairminter for a single asset. The `price` field determines
    * whether `compose/fairmint` must include `quantity` (free => omit, paid =>
-   * require). Returns null if none is open or all nodes are unreachable.
+   * require).
+   *
+   * Returns null when the node confirms no fairminter is open (the compose
+   * would only be rejected, so the caller can answer 400 without it), and
+   * undefined when the lookup failed for another reason. Throws
+   * UpstreamUnavailableError when the node is rate-limiting or unavailable.
    */
   static async getAssetFairminter(
     asset: string,
-  ): Promise<{ price: number; status: string } | null> {
+  ): Promise<{ price: number; status: string } | null | undefined> {
     const endpoint = `/assets/${encodeURIComponent(asset)}/fairminters`;
     const queryParams = new URLSearchParams({ verbose: "true", status: "open" });
+    let lastUnavailable: UpstreamUnavailableError | null = null;
     for (const node of XCP_V2_NODES) {
       try {
         const response = await httpClient.get(
@@ -1881,11 +1887,13 @@ export class CounterpartyApiManager {
             ? { price: Number(fm.price ?? 0), status: String(fm.status ?? "") }
             : null;
         }
+        lastUnavailable = upstreamUnavailable(response.status, response.data) ?? lastUnavailable;
       } catch (_error) {
         // try the next node
       }
     }
-    return null;
+    if (lastUnavailable) throw lastUnavailable;
+    return undefined;
   }
 
   static async getFairminters(): Promise<Fairminter[]> {
