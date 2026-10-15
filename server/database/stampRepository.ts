@@ -25,6 +25,13 @@ import type { SUBPROTOCOLS } from "$types/base.d.ts";
 import type { XcpBalance } from "$types/services.d.ts";
 import type { StampBalance, StampFilters } from "$types/stamp.d.ts";
 
+const STAMP_COUNT_REFRESH_MS = 5 * 60 * 1000;
+const stampCountState: {
+  count: number | null;
+  at: number;
+  refreshing: Promise<void> | null;
+} = { count: null, at: 0, refreshing: null };
+
 export class StampRepository {
   // Dependency injection support
   private static db: typeof dbManager = dbManager;
@@ -1483,6 +1490,59 @@ export class StampRepository {
     } catch (error) {
       console.error("Error updating creator name:", error);
       return false;
+    }
+  }
+
+  /**
+   * Total stamp count for health/status reporting, served from an in-process
+   * value refreshed in the background every STAMP_COUNT_REFRESH_MS.
+   *
+   * The full-table count with the creator join took over the health check's
+   * 2 s budget on every call in production and never served from cache, so
+   * /api/v2/health reported totalStamps as missing. Health only needs a
+   * recent figure: the first call waits for one count (bounded by the
+   * caller's budget); every later call answers immediately with the last
+   * value while a refresh runs at most once per interval.
+   */
+  static async countTotalStampsForHealth(): Promise<{ isValid: boolean; count: number }> {
+    const now = Date.now();
+    if (now - stampCountState.at > STAMP_COUNT_REFRESH_MS && !stampCountState.refreshing) {
+      stampCountState.refreshing = this.refreshStampCount().finally(() => {
+        stampCountState.refreshing = null;
+      });
+    }
+    if (stampCountState.count === null && stampCountState.refreshing) {
+      await stampCountState.refreshing;
+    }
+    return stampCountState.count === null
+      ? { isValid: false, count: 0 }
+      : { isValid: true, count: stampCountState.count };
+  }
+
+  private static async refreshStampCount(): Promise<void> {
+    const started = performance.now();
+    try {
+      // No creator join: an outer join cannot change a total row count.
+      const result = await this.db.executeQuery(
+        `SELECT COUNT(*) AS total FROM ${STAMP_TABLE}`,
+        [],
+      ) as { rows?: Array<{ total: number | bigint | string }> };
+      const total = Number(result?.rows?.[0]?.total ?? 0);
+      if (total > 0) {
+        stampCountState.count = total;
+        stampCountState.at = Date.now();
+      }
+      logger.info("stamps", {
+        message: "Health stamp count refreshed",
+        total,
+        durationMs: Math.round(performance.now() - started),
+      });
+    } catch (error) {
+      logger.warn("stamps", {
+        message: "Health stamp count refresh failed",
+        error: error instanceof Error ? error.message : String(error),
+        durationMs: Math.round(performance.now() - started),
+      });
     }
   }
 
