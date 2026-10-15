@@ -11,7 +11,13 @@ import {
 } from "$layout";
 import { useTransactionConstructionService } from "$lib/hooks/useTransactionConstructionService.ts";
 import { logger } from "$lib/utils/logger.ts";
-import { mapProgressiveFeeDetails } from "$lib/utils/performance/fees/fee-estimation-utils.ts";
+import {
+  mapProgressiveFeeDetails,
+  parseServiceFeeSats,
+  withServiceFee,
+} from "$lib/utils/performance/fees/fee-estimation-utils.ts";
+import { useConfig } from "$client/hooks/useConfig.ts";
+import type { Config } from "$types/base.d.ts";
 import { StatusMessages } from "$notification";
 import { FeeCalculatorBase } from "$section";
 import { titleNeutral } from "$text";
@@ -34,6 +40,8 @@ export function FairmintTool({ fairminters }: FairmintToolProps) {
     submissionMessage,
     apiError,
   } = useFairmintForm(fairminters || []);
+  // The operator service fee the compose request carries; shown before signing.
+  const { config } = useConfig<Config>();
 
   const [tosAgreed, setTosAgreed] = useState(false);
   const { wallet } = walletContext;
@@ -239,8 +247,9 @@ export function FairmintTool({ fairminters }: FairmintToolProps) {
           buttonName="FAIRMINT"
           tosAgreed={tosAgreed}
           onTosChange={setTosAgreed}
-          feeDetails={mapProgressiveFeeDetails(
-            exactFeeDetails || progressiveFeeDetails,
+          feeDetails={withServiceFee(
+            mapProgressiveFeeDetails(exactFeeDetails || progressiveFeeDetails),
+            parseServiceFeeSats(config?.MINTING_SERVICE_FEE),
           )}
           bitname=""
           progressIndicator={

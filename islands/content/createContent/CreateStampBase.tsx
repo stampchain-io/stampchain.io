@@ -10,6 +10,10 @@
  *  - StampUploadWorkspace:   upload + preview column (classic / posh)
  * Logic lives in `useStampMint` / `useStampFile`.
  */
+import {
+  parseServiceFeeSats,
+  withServiceFee,
+} from "$lib/utils/performance/fees/fee-estimation-utils.ts";
 import { ToggleSwitchButton } from "$button";
 import { StampCard } from "$card";
 import { walletContext } from "$client/wallet/wallet.ts";
@@ -228,13 +232,16 @@ export function StampMintPanel(
           disabled={mint.isConnected ? !mint.isFormValid : false}
           bitname=""
           {...(cpid ? { cpid } : {})}
-          feeDetails={{
-            minerFee: feeDetails?.minerFee || 0,
-            dustValue: feeDetails?.dustValue || 0,
-            totalValue: feeDetails?.totalValue || 0,
-            hasExactFees: feeDetails?.hasExactFees || false,
-            estimatedSize: 300, // Default transaction size for stamps
-          }}
+          feeDetails={withServiceFee(
+            {
+              minerFee: feeDetails?.minerFee || 0,
+              dustValue: feeDetails?.dustValue || 0,
+              totalValue: feeDetails?.totalValue || 0,
+              hasExactFees: feeDetails?.hasExactFees || false,
+              estimatedSize: 300, // Default transaction size for stamps
+            },
+            parseServiceFeeSats(mint.config?.MINTING_SERVICE_FEE),
+          )}
           progressIndicator={
             <ProgressiveEstimationIndicator
               {...mint.estimation}

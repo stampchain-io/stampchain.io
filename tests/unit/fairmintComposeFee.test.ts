@@ -77,3 +77,48 @@ Deno.test({
     }
   },
 });
+
+Deno.test({
+  name:
+    "fairmint compose dryRun: a string service fee is added, not concatenated",
+  sanitizeOps: false,
+  sanitizeResources: false,
+  async fn() {
+    const { restore, stub } = await import("@std/testing/mock");
+    stub(globalThis, "fetch", (input: string | URL | Request) => {
+      const url = String(input instanceof Request ? input.url : input);
+      const result = url.includes("/compose/")
+        ? { rawtransaction: "00" } // the dry run returns before decoding it
+        : [{ price: 0, status: "open" }];
+      return Promise.resolve(
+        new Response(JSON.stringify({ result }), {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        }),
+      );
+    });
+    try {
+      const req = new Request("http://localhost/api/v2/fairmint/compose", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          address: "bc1qzxszplp8v7w0jc89dlrqyct9staqlhwxzy7lkq",
+          asset: "FREEMINT",
+          satsPerVB: 2,
+          service_fee: "2500",
+          dryRun: true,
+        }),
+      });
+      const res = await (handler as any).POST(req, {} as any);
+      const body = await res.json();
+      assertEquals(res.status, 200, JSON.stringify(body));
+      assertEquals(body.service_fee, 2500);
+      assertEquals(
+        body.total_cost,
+        body.est_miner_fee + body.total_dust_value + 2500,
+      );
+    } finally {
+      restore();
+    }
+  },
+});
