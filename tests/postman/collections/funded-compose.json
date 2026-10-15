@@ -1,0 +1,381 @@
+{
+  "info": {
+    "name": "funded-compose",
+    "description": "Success-path compose tests with live funded inputs chosen by scripts/resolve-funded-test-data.ts. Every request returns an unsigned PSBT; nothing is signed or broadcast.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Mint stamp (OLGA)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sourceWallet\": \"{{funded_address}}\",\n  \"filename\": \"ci.png\",\n  \"file\": \"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==\",\n  \"qty\": 1,\n  \"locked\": true,\n  \"divisible\": false,\n  \"satsPerVB\": 2\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v2/olga/mint",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v2",
+            "olga",
+            "mint"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "(function(){",
+              "// Funded compose: the request only builds an UNSIGNED PSBT. Nothing is signed",
+              "// or broadcast, so this runs safely against mainnet with live funded inputs.",
+              "const need = [\"funded_address\"];",
+              "const missing = need.filter((k) => !pm.environment.get(k));",
+              "if (missing.length) {",
+              "  pm.test.skip(`skipped: resolver found no ${missing.join(\", \")}`, () => {});",
+              "  return;",
+              "}",
+              "pm.test(\"composes a transaction (200)\", () => {",
+              "  pm.expect(pm.response.code, pm.response.text().slice(0, 300)).to.equal(200);",
+              "});",
+              "const body = pm.response.json();",
+              "const hex = body.psbtHex || body.hex || body.psbt || \"\";",
+              "pm.test(\"returns an unsigned PSBT\", () => {",
+              "  // PSBT magic \"psbt\\xff\" in hex; a finalized/signed tx would not carry it.",
+              "  pm.expect(hex.toLowerCase().startsWith(\"70736274ff\"), `got: ${String(hex).slice(0, 20)}`).to.be.true;",
+              "});",
+              "pm.test(\"fee is positive and sane\", () => {",
+              "  const fee = Number(body.estimatedFee ?? body.est_miner_fee ?? 0);",
+              "  pm.expect(fee).to.be.above(0).and.below(500000);",
+              "});",
+              "pm.test(\"responds within 5s\", () => pm.expect(pm.response.responseTime).to.be.below(5000));",
+              "})();"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Attach stamp to UTXO",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"address\": \"{{funded_address}}\",\n  \"identifier\": \"{{funded_stamp_cpid}}\",\n  \"quantity\": 1,\n  \"options\": {\n    \"satsPerVB\": 2\n  }\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v2/trx/stampattach",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v2",
+            "trx",
+            "stampattach"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "(function(){",
+              "// Funded compose: the request only builds an UNSIGNED PSBT. Nothing is signed",
+              "// or broadcast, so this runs safely against mainnet with live funded inputs.",
+              "const need = [\"funded_address\", \"funded_stamp_cpid\"];",
+              "const missing = need.filter((k) => !pm.environment.get(k));",
+              "if (missing.length) {",
+              "  pm.test.skip(`skipped: resolver found no ${missing.join(\", \")}`, () => {});",
+              "  return;",
+              "}",
+              "pm.test(\"composes a transaction (200)\", () => {",
+              "  pm.expect(pm.response.code, pm.response.text().slice(0, 300)).to.equal(200);",
+              "});",
+              "const body = pm.response.json();",
+              "const hex = body.psbtHex || body.hex || body.psbt || \"\";",
+              "pm.test(\"returns an unsigned PSBT\", () => {",
+              "  // PSBT magic \"psbt\\xff\" in hex; a finalized/signed tx would not carry it.",
+              "  pm.expect(hex.toLowerCase().startsWith(\"70736274ff\"), `got: ${String(hex).slice(0, 20)}`).to.be.true;",
+              "});",
+              "pm.test(\"fee is positive and sane\", () => {",
+              "  const fee = Number(body.estimatedFee ?? body.est_miner_fee ?? 0);",
+              "  pm.expect(fee).to.be.above(0).and.below(500000);",
+              "});",
+              "pm.test(\"responds within 5s\", () => pm.expect(pm.response.responseTime).to.be.below(5000));",
+              "})();"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Detach stamp from UTXO",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"utxo\": \"{{attached_utxo}}\",\n  \"destination\": \"{{attached_utxo_address}}\",\n  \"options\": {\n    \"satsPerVB\": 2\n  }\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v2/trx/stampdetach",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v2",
+            "trx",
+            "stampdetach"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "(function(){",
+              "// Funded compose: the request only builds an UNSIGNED PSBT. Nothing is signed",
+              "// or broadcast, so this runs safely against mainnet with live funded inputs.",
+              "const need = [\"attached_utxo\", \"attached_utxo_address\"];",
+              "const missing = need.filter((k) => !pm.environment.get(k));",
+              "if (missing.length) {",
+              "  pm.test.skip(`skipped: resolver found no ${missing.join(\", \")}`, () => {});",
+              "  return;",
+              "}",
+              "pm.test(\"composes a transaction (200)\", () => {",
+              "  pm.expect(pm.response.code, pm.response.text().slice(0, 300)).to.equal(200);",
+              "});",
+              "const body = pm.response.json();",
+              "const hex = body.psbtHex || body.hex || body.psbt || \"\";",
+              "pm.test(\"returns an unsigned PSBT\", () => {",
+              "  // PSBT magic \"psbt\\xff\" in hex; a finalized/signed tx would not carry it.",
+              "  pm.expect(hex.toLowerCase().startsWith(\"70736274ff\"), `got: ${String(hex).slice(0, 20)}`).to.be.true;",
+              "});",
+              "pm.test(\"fee is positive and sane\", () => {",
+              "  const fee = Number(body.estimatedFee ?? body.est_miner_fee ?? 0);",
+              "  pm.expect(fee).to.be.above(0).and.below(500000);",
+              "});",
+              "pm.test(\"responds within 5s\", () => pm.expect(pm.response.responseTime).to.be.below(5000));",
+              "})();"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Send stamp",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"address\": \"{{funded_address}}\",\n  \"destination\": \"{{funded_address}}\",\n  \"asset\": \"{{funded_stamp_cpid}}\",\n  \"quantity\": 1,\n  \"satsPerVB\": 2\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v2/create/send",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v2",
+            "create",
+            "send"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "(function(){",
+              "// Funded compose: the request only builds an UNSIGNED PSBT. Nothing is signed",
+              "// or broadcast, so this runs safely against mainnet with live funded inputs.",
+              "const need = [\"funded_address\", \"funded_stamp_cpid\"];",
+              "const missing = need.filter((k) => !pm.environment.get(k));",
+              "if (missing.length) {",
+              "  pm.test.skip(`skipped: resolver found no ${missing.join(\", \")}`, () => {});",
+              "  return;",
+              "}",
+              "pm.test(\"composes a transaction (200)\", () => {",
+              "  pm.expect(pm.response.code, pm.response.text().slice(0, 300)).to.equal(200);",
+              "});",
+              "const body = pm.response.json();",
+              "const hex = body.psbtHex || body.hex || body.psbt || \"\";",
+              "pm.test(\"returns an unsigned PSBT\", () => {",
+              "  // PSBT magic \"psbt\\xff\" in hex; a finalized/signed tx would not carry it.",
+              "  pm.expect(hex.toLowerCase().startsWith(\"70736274ff\"), `got: ${String(hex).slice(0, 20)}`).to.be.true;",
+              "});",
+              "pm.test(\"fee is positive and sane\", () => {",
+              "  const fee = Number(body.estimatedFee ?? body.est_miner_fee ?? 0);",
+              "  pm.expect(fee).to.be.above(0).and.below(500000);",
+              "});",
+              "pm.test(\"responds within 5s\", () => pm.expect(pm.response.responseTime).to.be.below(5000));",
+              "})();"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Buy from dispenser",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"address\": \"{{funded_address}}\",\n  \"dispenser\": \"{{dispenser_address}}\",\n  \"quantity\": {{dispenser_quantity_sats}},\n  \"options\": {\n    \"satsPerVB\": 2\n  }\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v2/create/dispense",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v2",
+            "create",
+            "dispense"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "(function(){",
+              "// Funded compose: the request only builds an UNSIGNED PSBT. Nothing is signed",
+              "// or broadcast, so this runs safely against mainnet with live funded inputs.",
+              "const need = [\"funded_address\", \"dispenser_address\", \"dispenser_quantity_sats\"];",
+              "const missing = need.filter((k) => !pm.environment.get(k));",
+              "if (missing.length) {",
+              "  pm.test.skip(`skipped: resolver found no ${missing.join(\", \")}`, () => {});",
+              "  return;",
+              "}",
+              "pm.test(\"composes a transaction (200)\", () => {",
+              "  pm.expect(pm.response.code, pm.response.text().slice(0, 300)).to.equal(200);",
+              "});",
+              "const body = pm.response.json();",
+              "const hex = body.psbtHex || body.hex || body.psbt || \"\";",
+              "pm.test(\"returns an unsigned PSBT\", () => {",
+              "  // PSBT magic \"psbt\\xff\" in hex; a finalized/signed tx would not carry it.",
+              "  pm.expect(hex.toLowerCase().startsWith(\"70736274ff\"), `got: ${String(hex).slice(0, 20)}`).to.be.true;",
+              "});",
+              "pm.test(\"fee is positive and sane\", () => {",
+              "  const fee = Number(body.estimatedFee ?? body.est_miner_fee ?? 0);",
+              "  pm.expect(fee).to.be.above(0).and.below(500000);",
+              "});",
+              "pm.test(\"responds within 5s\", () => pm.expect(pm.response.responseTime).to.be.below(5000));",
+              "})();"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Fairmint (free)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"address\": \"{{funded_address}}\",\n  \"asset\": \"{{fairmint_asset}}\",\n  \"quantity\": 1,\n  \"satsPerVB\": 2\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v2/fairmint/compose",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v2",
+            "fairmint",
+            "compose"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "(function(){",
+              "// Funded compose: the request only builds an UNSIGNED PSBT. Nothing is signed",
+              "// or broadcast, so this runs safely against mainnet with live funded inputs.",
+              "const need = [\"funded_address\", \"fairmint_asset\"];",
+              "const missing = need.filter((k) => !pm.environment.get(k));",
+              "if (missing.length) {",
+              "  pm.test.skip(`skipped: resolver found no ${missing.join(\", \")}`, () => {});",
+              "  return;",
+              "}",
+              "pm.test(\"composes a transaction (200)\", () => {",
+              "  pm.expect(pm.response.code, pm.response.text().slice(0, 300)).to.equal(200);",
+              "});",
+              "const body = pm.response.json();",
+              "const hex = body.psbtHex || body.hex || body.psbt || \"\";",
+              "pm.test(\"returns an unsigned PSBT\", () => {",
+              "  // PSBT magic \"psbt\\xff\" in hex; a finalized/signed tx would not carry it.",
+              "  pm.expect(hex.toLowerCase().startsWith(\"70736274ff\"), `got: ${String(hex).slice(0, 20)}`).to.be.true;",
+              "});",
+              "pm.test(\"fee is positive and sane\", () => {",
+              "  const fee = Number(body.estimatedFee ?? body.est_miner_fee ?? 0);",
+              "  pm.expect(fee).to.be.above(0).and.below(500000);",
+              "});",
+              "pm.test(\"responds within 5s\", () => pm.expect(pm.response.responseTime).to.be.below(5000));",
+              "})();"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
