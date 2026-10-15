@@ -281,6 +281,30 @@ jobs:
             } >> $GITHUB_STEP_SUMMARY
           fi
 
+      # Success paths with live funded inputs. Every compose endpoint returns
+      # an UNSIGNED PSBT, so nothing is signed or broadcast; the resolver picks
+      # addresses that really hold the BTC and assets at run time.
+      - name: Funded compose tests (unsigned PSBTs, no broadcast)
+        id: funded-compose
+        if: always()
+        run: |
+          set +e
+          deno run --allow-net --allow-write --allow-env \
+            scripts/resolve-funded-test-data.ts reports/funded-compose-env.json
+          docker run --rm \
+            -v "$PWD/tests/postman/collections:/c:ro" \
+            -v "$PWD/reports:/r" \
+            postman/newman:6-alpine run /c/funded-compose.json \
+            -e /r/funded-compose-env.json --timeout-request 30000 \
+            --reporters cli,json --reporter-json-export /r/funded-compose-results.json
+          code=$?
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          {
+            echo "### Funded compose (unsigned PSBTs)"
+            if [ "$code" = "0" ]; then echo "✅ every resolved compose flow returned an unsigned PSBT"; else echo "❌ a funded compose flow failed; see funded-compose-results.json"; fi
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit 0
+
       - name: Check for critical regressions
         id: check-regressions
         if: always()
@@ -311,6 +335,13 @@ jobs:
             echo "❌ Homepage is serving the empty placeholder with HTTP 200"
           fi
           
+          # A success-path compose failing means a user cannot build that
+          # transaction at all.
+          if [ "${{ steps.funded-compose.outputs.exit_code }}" != "0" ]; then
+            critical_issues=$((critical_issues + 1))
+            echo "❌ Funded compose tests failed"
+          fi
+
           echo "critical_issues=$critical_issues" >> $GITHUB_OUTPUT
           echo "warning_issues=$warning_issues" >> $GITHUB_OUTPUT
           
