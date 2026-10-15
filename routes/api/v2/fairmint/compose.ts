@@ -38,11 +38,21 @@ export const handler: Handlers = {
         );
       }
 
-      // Normalize fees (same as before)
-      const normalizedFees = normalizeFeeRate({
-        ...(satsPerKB && { satsPerKB }),
-        ...(satsPerVB && { satsPerVB }),
-      });
+      // normalizeFeeRate throws on a missing or non-positive rate; that is
+      // the caller's input, so answer 400 as the attach/detach/dispense routes do.
+      let normalizedFees;
+      try {
+        normalizedFees = normalizeFeeRate({
+          ...(satsPerKB && { satsPerKB }),
+          ...(satsPerVB && { satsPerVB }),
+        });
+      } catch (error) {
+        return ResponseUtil.badRequest(
+          error instanceof Error
+            ? `${error.message}. Provide satsPerVB or satsPerKB.`
+            : "Invalid or missing fee rate. Provide satsPerVB or satsPerKB.",
+        );
+      }
 
       try {
         // Prepare XCP API options (same as before, but no PSBT-related options)
