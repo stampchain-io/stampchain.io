@@ -1,3 +1,4 @@
+import { UpstreamUnavailableError } from "$lib/utils/api/upstreamUnavailableError.ts";
 // routes/api/v2/dispense.ts
 import { TX_CONSTANTS } from "$constants";
 import { Handlers } from "$fresh/server.ts";
@@ -266,23 +267,27 @@ export const handler: Handlers = {
         const errorMessage = error instanceof Error
           ? error.message
           : "Unknown error during XCP/PSBT processing";
-        logger.error("api", {
+        if (error instanceof UpstreamUnavailableError) {
+          return ApiResponseUtil.internalError(error);
+        }
+        logger.warn("api", {
           message: "Error in dispense XCP/PSBT stage",
           error: errorMessage,
           stack: error instanceof Error ? error.stack : undefined,
         });
+        // The stack stays in the log; response bodies must not carry it.
         return ApiResponseUtil.badRequest(errorMessage, {
           service: "XCP_PSBT_BUILDING",
-          details: error instanceof Error ? error.stack : undefined,
         });
       }
     } catch (error: unknown) {
       const errorMessage = error instanceof Error
         ? error.message
         : "Invalid request format or unexpected error";
-      return ApiResponseUtil.badRequest(errorMessage, {
-        error: error instanceof Error ? error.stack : "Unknown error info",
-      });
+      if (error instanceof UpstreamUnavailableError) {
+        return ApiResponseUtil.internalError(error);
+      }
+      return ApiResponseUtil.badRequest(errorMessage);
     }
   },
 };

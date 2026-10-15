@@ -2,6 +2,7 @@
 
 import { SATS_PER_KB_MULTIPLIER, XCP_V2_NODES } from "$constants";
 import type { Fairminter } from "$lib/types/services.d.ts";
+import { UpstreamUnavailableError } from "$lib/utils/api/upstreamUnavailableError.ts";
 import { logger } from "$lib/utils/logger.ts";
 import { formatSatoshisToBTC } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { dbManager } from "$server/database/databaseManager.ts";
@@ -106,6 +107,12 @@ export function composeErrorMessage(data: unknown): string | undefined {
   if (typeof raw !== "string" || !raw) return undefined;
   const listed = raw.match(/^\[\s*['"](.*)['"]\s*\]$/s);
   return listed ? listed[1] : raw;
+}
+
+/** The node's 429/503 as a typed error the routes answer with 503; else null. */
+function upstreamUnavailable(status: number, data: unknown): UpstreamUnavailableError | null {
+  if (status !== 429 && status !== 503) return null;
+  return new UpstreamUnavailableError("Counterparty", Number(retryAfterFromBody(data) ?? 10));
 }
 
 const httpClient = {
@@ -427,6 +434,7 @@ export async function fetchXcpV2WithCache<T>(
         next_cursor: null,
         result_count: 0,
         error: errorMessage,
+        lastStatusCode,
         fromStaleCache: false,
       } as T };
     })();
@@ -1365,6 +1373,7 @@ export class CounterpartyApiManager {
 
     let lastError: string | null = null;
 
+    let lastUnavailable: UpstreamUnavailableError | null = null;
     for (const node of XCP_V2_NODES) {
       const url = `${node.url}${endpoint}?${queryParams.toString()}`;
 
@@ -1372,6 +1381,11 @@ export class CounterpartyApiManager {
         const response = await httpClient.get(url);
 
         if (!response.ok) {
+          const unavailable = upstreamUnavailable(response.status, response.data);
+          if (unavailable) {
+            lastUnavailable = unavailable;
+            continue;
+          }
           const errorBody = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
           console.error(`Error response body from ${node.name}: ${errorBody}`);
           try {
@@ -1399,6 +1413,7 @@ export class CounterpartyApiManager {
     }
 
     // Throw the last error message instead of generic message
+    if (lastUnavailable) throw lastUnavailable;
     throw new Error(lastError || "All nodes failed to compose dispense transaction.");
   }
 
@@ -1459,6 +1474,7 @@ export class CounterpartyApiManager {
 
     let lastError: string | null = null;
 
+    let lastUnavailable: UpstreamUnavailableError | null = null;
     for (const node of XCP_V2_NODES) {
       const url = `${node.url}${endpoint}?${queryParams.toString()}`;
       console.log(`Attempting to fetch from URL: ${url}`);
@@ -1468,6 +1484,11 @@ export class CounterpartyApiManager {
         console.log(`Response status from ${node.name}: ${response.status}`);
 
         if (!response.ok) {
+          const unavailable = upstreamUnavailable(response.status, response.data);
+          if (unavailable) {
+            lastUnavailable = unavailable;
+            continue;
+          }
           const errorBody = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
           console.error(`Error response body from ${node.name}: ${errorBody}`);
           try {
@@ -1491,6 +1512,7 @@ export class CounterpartyApiManager {
     }
 
     // Throw the last error message instead of generic message
+    if (lastUnavailable) throw lastUnavailable;
     throw new Error(lastError || "All nodes failed to compose dispense transaction.");
   }
 
@@ -1555,6 +1577,8 @@ export class CounterpartyApiManager {
     // fetchXcpV2WithCache handles node iteration and error logging
     const response = await this.fetchXcpV2WithCache<any>(endpoint, queryParams);
 
+    const unavailable = upstreamUnavailable(response.lastStatusCode, response.error);
+    if (unavailable) throw unavailable;
     if (response.error || !response.result) {
         await logger.error("api", {
             message: "[CounterpartyApiManager.composeAttach] Error from Counterparty API",
@@ -1608,6 +1632,7 @@ export class CounterpartyApiManager {
 
     let lastError: string | null = null;
 
+    let lastUnavailable: UpstreamUnavailableError | null = null;
     for (const node of XCP_V2_NODES) {
       const url = `${node.url}${endpoint}?${queryParams.toString()}`;
       console.log(`Attempting to fetch from URL: ${url}`);
@@ -1617,6 +1642,11 @@ export class CounterpartyApiManager {
         console.log(`Response status from ${node.name}: ${response.status}`);
 
         if (!response.ok) {
+          const unavailable = upstreamUnavailable(response.status, response.data);
+          if (unavailable) {
+            lastUnavailable = unavailable;
+            continue;
+          }
           const errorBody = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
           console.error(`Error response body from ${node.name}: ${errorBody}`);
           try {
@@ -1639,6 +1669,7 @@ export class CounterpartyApiManager {
       }
     }
 
+    if (lastUnavailable) throw lastUnavailable;
     throw new Error(lastError || "All nodes failed to compose detach transaction.");
   }
 
@@ -1704,6 +1735,7 @@ export class CounterpartyApiManager {
       }
     }
 
+    let lastUnavailable: UpstreamUnavailableError | null = null;
     for (const node of XCP_V2_NODES) {
       const url = `${node.url}${endpoint}?${queryParams.toString()}`;
       console.log(`Attempting to fetch from URL: ${url}`);
@@ -1713,6 +1745,11 @@ export class CounterpartyApiManager {
         console.log(`Response status from ${node.name}: ${response.status}`);
 
         if (!response.ok) {
+          const unavailable = upstreamUnavailable(response.status, response.data);
+          if (unavailable) {
+            lastUnavailable = unavailable;
+            continue;
+          }
           const errorBody = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
           console.error(`Error response body from ${node.name}: ${errorBody}`);
           continue; // Try the next node
@@ -1727,6 +1764,7 @@ export class CounterpartyApiManager {
       }
     }
 
+    if (lastUnavailable) throw lastUnavailable;
     throw new Error("All nodes failed to compose dispenser transaction.");
   }
 
@@ -1782,6 +1820,7 @@ export class CounterpartyApiManager {
       }
     }
 
+    let lastUnavailable: UpstreamUnavailableError | null = null;
     for (const node of XCP_V2_NODES) {
       const url = `${node.url}${endpoint}?${queryParams.toString()}`;
       console.log(`Attempting to fetch from URL: ${url}`);
@@ -1791,6 +1830,11 @@ export class CounterpartyApiManager {
         console.log(`Response status from ${node.name}: ${response.status}`);
 
         if (!response.ok) {
+          const unavailable = upstreamUnavailable(response.status, response.data);
+          if (unavailable) {
+            lastUnavailable = unavailable;
+            continue;
+          }
           const errorBody = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
           // A 4xx is the node rejecting the request itself (no open
           // fairminter, bad quantity): every node will say the same, and the
@@ -1812,6 +1856,7 @@ export class CounterpartyApiManager {
       }
     }
 
+    if (lastUnavailable) throw lastUnavailable;
     throw new Error("All nodes failed to compose fairmint transaction.");
   }
 

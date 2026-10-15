@@ -224,7 +224,7 @@ export const handler: Handlers<SendResponse | { error: string }> = {
       ) {
         return ApiResponseUtil.badRequest(errorMessage);
       }
-      return ApiResponseUtil.internalError(errorMessage);
+      return ApiResponseUtil.internalError(error, errorMessage);
     }
   },
 };

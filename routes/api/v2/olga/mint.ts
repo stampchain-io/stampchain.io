@@ -388,7 +388,7 @@ export const handler: Handlers<NormalizedMintResponse | { error: string }> = {
       if (userFunds) {
         return ApiResponseUtil.badRequest(errorMessage);
       }
-      return ApiResponseUtil.internalError(errorMessage);
+      return ApiResponseUtil.internalError(error, errorMessage);
     }
   },
 };
