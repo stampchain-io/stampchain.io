@@ -89,22 +89,44 @@ export const DEFAULT_MARA_CONFIG: MaraConfig = {
 };
 
 /**
- * Counterparty API node endpoints with metadata
- * In CI/test environments, override with XCP_API_URL env var to point to mock server
+ * Counterparty API nodes, tried in order.
+ *
+ * - XCP_API_URL (CI/tests): the only node, usually a mock server.
+ * - XCP_PRIMARY_NODE_URL (deploy environment only): our own node, tried
+ *   first, with the public node kept as fallback. Its address is private and
+ *   lives in the task definition, never in this repository.
+ *
+ * Optional per-node limits: maxConcurrency (default XCP_MAX_CONCURRENCY or
+ * 4) and timeoutMs (default 30s). A private node answers in milliseconds, so
+ * it gets a short timeout to fail over quickly when it is down.
  */
-const _xcpApiUrl = typeof Deno !== "undefined"
-  ? Deno.env.get("XCP_API_URL")
-  : undefined;
-export const XCP_V2_NODES: ReadonlyArray<{ name: string; url: string }> =
-  _xcpApiUrl ? [{ name: "mock", url: _xcpApiUrl }] : [
-    // One public node. A second "dev.counterparty.io" entry pointed at this
-    // same URL (dev.counterparty.io does not resolve), so every failover
-    // re-sent the request to the server that had just rate-limited it.
+export interface XcpNode {
+  name: string;
+  url: string;
+  maxConcurrency?: number;
+  timeoutMs?: number;
+}
+const _env = (key: string): string | undefined =>
+  typeof Deno !== "undefined" ? Deno.env.get(key) : undefined;
+const _xcpApiUrl = _env("XCP_API_URL");
+const _xcpPrimaryUrl = _env("XCP_PRIMARY_NODE_URL");
+const XCP_PUBLIC_NODE: XcpNode = {
+  name: "counterparty.io",
+  url: "https://api.counterparty.io:4000/v2",
+};
+export const XCP_V2_NODES: ReadonlyArray<XcpNode> = _xcpApiUrl
+  ? [{ name: "mock", url: _xcpApiUrl }]
+  : _xcpPrimaryUrl
+  ? [
     {
-      name: "counterparty.io",
-      url: "https://api.counterparty.io:4000/v2",
+      name: "primary",
+      url: _xcpPrimaryUrl.replace(/\/+$/, ""),
+      maxConcurrency: Number(_env("XCP_PRIMARY_MAX_CONCURRENCY")) || 8,
+      timeoutMs: Number(_env("XCP_PRIMARY_TIMEOUT_MS")) || 5000,
     },
-  ];
+    XCP_PUBLIC_NODE,
+  ]
+  : [XCP_PUBLIC_NODE];
 
 /**
  * Circuit breaker fallback data for trending tokens
