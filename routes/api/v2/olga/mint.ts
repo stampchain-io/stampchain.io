@@ -1,3 +1,4 @@
+import { isUserFundsError } from "$server/services/src20/userFundsError.ts";
 import { FreshContext, Handlers } from "$fresh/server.ts";
 // MintStampInputData import removed as RawRequestBody is now explicitly defined
 import { ApiResponseUtil } from "$lib/utils/api/responses/apiResponseUtil.ts";
@@ -375,18 +376,16 @@ export const handler: Handlers<NormalizedMintResponse | { error: string }> = {
         estimation_method: "exact_with_real_utxos",
       } as NormalizedMintResponse, { forceNoCache: true });
     } catch (error: unknown) {
-      logger.error("api", {
-        message: "Minting error in API route",
-        error: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-      });
       const errorMessage = error instanceof Error
         ? error.message
         : "An unexpected error occurred during minting";
-      if (
-        errorMessage.toLowerCase().includes("insufficient funds") ||
-        errorMessage.includes("UTXO selection failed")
-      ) {
+      const userFunds = isUserFundsError(errorMessage);
+      (userFunds ? logger.warn : logger.error).call(logger, "api", {
+        message: "Minting error in API route",
+        error: errorMessage,
+        stack: userFunds || !(error instanceof Error) ? undefined : error.stack,
+      });
+      if (userFunds) {
         return ApiResponseUtil.badRequest(errorMessage);
       }
       return ApiResponseUtil.internalError(errorMessage);

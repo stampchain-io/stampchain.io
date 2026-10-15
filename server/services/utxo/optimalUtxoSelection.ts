@@ -145,7 +145,8 @@ export class OptimalUTXOSelection {
         };
       });
 
-      logger.error("transaction-utxo-service", {
+      // The wallet, not the server: the caller answers 400.
+      logger.warn("transaction-utxo-service", {
         message: "No spendable UTXOs - all filtered as dust",
         sessionId,
         feeRate,

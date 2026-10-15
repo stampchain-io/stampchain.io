@@ -1,3 +1,4 @@
+import { isUserFundsError } from "$server/services/src20/userFundsError.ts";
 import { TX_CONSTANTS } from "$constants";
 import { Handlers } from "$fresh/server.ts";
 import { ApiResponseUtil } from "$lib/utils/api/responses/apiResponseUtil.ts";
@@ -238,15 +239,13 @@ export const handler: Handlers = {
       const errorMessage = error instanceof Error
         ? error.message
         : "Failed to process stamp attach request";
-      logger.error("api", {
+      const userFunds = isUserFundsError(errorMessage);
+      (userFunds ? logger.warn : logger.error).call(logger, "api", {
         message: "Error processing stamp attach request",
         error: errorMessage,
         stack: error instanceof Error ? error.stack : undefined,
       });
-      if (
-        errorMessage.toLowerCase().includes("insufficient funds") ||
-        errorMessage.includes("utxo selection failed")
-      ) {
+      if (userFunds) {
         return ApiResponseUtil.badRequest(errorMessage);
       }
       return ApiResponseUtil.internalError(error, errorMessage);
