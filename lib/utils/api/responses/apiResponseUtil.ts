@@ -1,4 +1,5 @@
 import { normalizeHeaders } from "$lib/utils/api/headers/headerUtils.ts";
+import { UpstreamUnavailableError } from "$lib/utils/api/upstreamUnavailableError.ts";
 import { getSecurityHeaders } from "$lib/utils/security/securityHeaders.ts";
 import {
   getCacheConfig,
@@ -291,6 +292,15 @@ export class ApiResponseUtil {
     message: string = "Internal server error",
     options: ApiResponseOptions = {},
   ): Response {
+    if (error instanceof UpstreamUnavailableError) {
+      return this.serviceUnavailable(error.message, undefined, {
+        ...options,
+        headers: {
+          ...options.headers,
+          "Retry-After": String(error.retryAfterSeconds),
+        },
+      });
+    }
     console.error("Internal Error:", error);
 
     // Check if we're in development mode (server-side only)
@@ -316,7 +326,7 @@ export class ApiResponseUtil {
     details?: unknown,
     options: ApiResponseOptions = {},
   ): Response {
-    console.error("Service Unavailable:", message, details || "");
+    console.warn("Service Unavailable:", message, details || "");
     return new Response(
       JSON.stringify(
         this.createErrorResponse(message, "SERVICE_UNAVAILABLE", details),
