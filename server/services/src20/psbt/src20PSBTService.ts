@@ -1,3 +1,4 @@
+import { isUserFundsError } from "$server/services/src20/userFundsError.ts";
 import { FileToAddressUtils } from "$lib/utils/bitcoin/encoding/fileToAddressUtils.ts";
 import type { AncestorInfo } from "$types/base.d.ts";
 import type { PSBTInput } from "$types/src20.d.ts";
@@ -229,9 +230,12 @@ export class SRC20PSBTService {
         }))
       };
     } catch (error) {
-      logger.error("src20", {
+      const message = error instanceof Error ? error.message : String(error);
+      // The wallet having no spendable funds is the user's situation, not a
+      // server fault; the route answers it with a 400.
+      logger[isUserFundsError(message) ? "warn" : "error"]("src20", {
         message: "Error in prepareActionData",
-        error: error instanceof Error ? error.message : String(error)
+        error: message,
       });
       throw error;
     }
@@ -292,9 +296,12 @@ export class SRC20PSBTService {
         chunks: cip33Addresses
       };
     } catch (error) {
-      logger.error("src20", {
+      const message = error instanceof Error ? error.message : String(error);
+      // The wallet having no spendable funds is the user's situation, not a
+      // server fault; the route answers it with a 400.
+      logger[isUserFundsError(message) ? "warn" : "error"]("src20", {
         message: "Error in prepareActionData",
-        error: error instanceof Error ? error.message : String(error)
+        error: message,
       });
       throw error;
     }

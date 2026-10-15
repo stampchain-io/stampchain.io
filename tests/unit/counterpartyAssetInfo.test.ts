@@ -401,3 +401,34 @@ Deno.test({
     }
   },
 });
+
+Deno.test({
+  name: "a 503 with retry_after_seconds in the body triggers the shared cooldown",
+  sanitizeOps: false,
+  sanitizeResources: false,
+  async fn() {
+    const name = unique("A");
+    let n = 0;
+    const calls = countingFetch(() =>
+      ++n === 1
+        ? new Response(
+          JSON.stringify({ error: "counterparty_temporarily_unavailable", retry_after_seconds: 1 }),
+          { status: 503, headers: { "content-type": "application/json" } },
+        )
+        : asset(name)
+    );
+    const previous = _setAssetInfoDeadlineMs(60_000);
+    try {
+      const started = Date.now();
+      const result = await CounterpartyApiManager.getAssetInfo(name);
+      const waited = Date.now() - started;
+      assertEquals(result.asset, name);
+      assertEquals(calls.length, 2);
+      assertEquals(waited >= 900, true, `retried after ${waited}ms, before the 1s hint`);
+    } finally {
+      _setAssetInfoDeadlineMs(previous);
+      _resetXcpCooldown();
+      restore();
+    }
+  },
+});
