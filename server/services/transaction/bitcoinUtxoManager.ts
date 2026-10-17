@@ -47,38 +47,27 @@ export class BitcoinUtxoManager {
       });
     }
 
-    if (options.filterStampUTXOs) {
-      try {
-        logger.debug("transaction-utxo-service", { message: "Filtering stamp UTXOs from basic list", address });
-        const stampBalances = await CounterpartyApiManager.getXcpBalancesByAddress(
-          address,
-          undefined,
-          true,
-        );
-
-        const utxosToExcludeFromStamps = new Set<string>();
-        for (const balance of stampBalances.balances) {
-          if (balance.utxo) {
-            utxosToExcludeFromStamps.add(balance.utxo);
-          }
-        }
-        const preStampFilterCount = basicUtxos.length;
-        basicUtxos = basicUtxos.filter(
-          (utxo) => !utxosToExcludeFromStamps.has(`${utxo.txid}:${utxo.vout}`),
-        );
-        logger.info("transaction-utxo-service", {
-          message: "Filtered stamp UTXOs from basic list",
-          address,
-          stampUtxosExcluded: preStampFilterCount - basicUtxos.length,
-          remainingCount: basicUtxos.length
-        });
-      } catch (error) {
-        logger.error("transaction-utxo-service", {
-          message: "Error fetching stamps balance for UTXO exclusion (from basic list)",
-          address,
-          error: (error as any).message
-        });
-      }
+    // Exclude every UTXO that carries a Counterparty balance (stamps), so a
+    // build never spends one. This used to read one cached page of 50
+    // balances and continue unfiltered when Counterparty failed; it now pages
+    // through all of them, fresh, and fails closed: if Counterparty cannot
+    // answer, the getUtxoAttachedBalanceUtxos call throws
+    // UpstreamUnavailableError and the build is refused (routes answer 503)
+    // rather than risk spending a stamp. An empty wallet needs no check.
+    if (options.filterStampUTXOs && basicUtxos.length > 0) {
+      logger.debug("transaction-utxo-service", { message: "Filtering stamp UTXOs from basic list", address });
+      const stampUtxos = await CounterpartyApiManager.getUtxoAttachedBalanceUtxos(address);
+      const preStampFilterCount = basicUtxos.length;
+      basicUtxos = basicUtxos.filter(
+        (utxo) => !stampUtxos.has(`${utxo.txid}:${utxo.vout}`),
+      );
+      logger.info("transaction-utxo-service", {
+        message: "Filtered stamp UTXOs from basic list",
+        address,
+        stampUtxosKnown: stampUtxos.size,
+        stampUtxosExcluded: preStampFilterCount - basicUtxos.length,
+        remainingCount: basicUtxos.length
+      });
     }
     // Filter out UTXOs with undefined values to ensure BasicUTXO compatibility
     return basicUtxos.filter((utxo): utxo is BasicUTXO => 

@@ -10,9 +10,14 @@ import {
   BLOCKSTREAM_API_BASE_URL,
   MEMPOOL_API_BASE_URL,
 } from "$constants";
+import {
+  providerFetch,
+  utxoLookupBudgetMs,
+  utxoProviderRetries,
+} from "$lib/utils/bitcoin/utxo/providerBudgets.ts";
 
 async function fetchFromBlockstream(tx: string) {
-  const response = await fetch(`${BLOCKSTREAM_API_BASE_URL}/tx/${tx}`);
+  const response = await providerFetch(`${BLOCKSTREAM_API_BASE_URL}/tx/${tx}`);
   if (!response.ok) {
     console.warn(
       `Blockstream failed for tx ${tx}: ${response.status} ${response.statusText}`,
@@ -28,7 +33,7 @@ async function fetchFromBlockstream(tx: string) {
 }
 
 async function fetchFromMempool(tx: string) {
-  const response = await fetch(`${MEMPOOL_API_BASE_URL}/tx/${tx}`);
+  const response = await providerFetch(`${MEMPOOL_API_BASE_URL}/tx/${tx}`);
   if (!response.ok) {
     console.warn(
       `Mempool.space failed for tx ${tx}: ${response.status} ${response.statusText}`,
@@ -317,9 +322,12 @@ async function tryAPIs<T extends UTXO[] | TxInfo>(
     name: string;
     fn: () => Promise<T | null>;
   }>,
-  maxRetries = 3,
+  maxRetries = 1 + utxoProviderRetries(),
+  budgetMs = utxoLookupBudgetMs(),
 ): Promise<T | null> {
   console.log(`\n>>> tryAPIs called with ${endpoints.length} endpoints`);
+  const startedAt = Date.now();
+  const budgetLeft = () => budgetMs - (Date.now() - startedAt);
 
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     console.log(
@@ -327,6 +335,14 @@ async function tryAPIs<T extends UTXO[] | TxInfo>(
     );
 
     for (const endpoint of endpoints) {
+      // Stop starting new provider calls once the lookup budget is spent; a
+      // call already in flight is bounded by its own per-request timeout.
+      if (budgetLeft() <= 0) {
+        console.warn(
+          `>>> tryAPIs: lookup budget of ${budgetMs}ms spent, giving up`,
+        );
+        return null;
+      }
       console.log(`\n>>> Starting attempt with ${endpoint.name}`);
 
       try {
@@ -345,11 +361,13 @@ async function tryAPIs<T extends UTXO[] | TxInfo>(
 
         // If we got a valid result, return it immediately
         if (result !== null) {
+          // An empty UTXO list from a provider that answered is a real
+          // answer (an empty or fully spent wallet), not a failure. Treating
+          // it as one made every empty-wallet lookup query every provider in
+          // every pass before reporting "no UTXOs".
           if (Array.isArray(result) && result.length === 0) {
-            console.log(
-              `>>> ${endpoint.name}: Empty array result, trying next endpoint`,
-            );
-            continue;
+            console.log(`>>> ${endpoint.name}: Empty UTXO list (valid answer)`);
+            return result;
           }
 
           // For TxInfo type results, validate the structure
@@ -387,7 +405,7 @@ async function tryAPIs<T extends UTXO[] | TxInfo>(
 
     // If we get here, all endpoints failed in this attempt
     if (attempt < maxRetries - 1) {
-      const delay = (attempt + 1) * 1000;
+      const delay = Math.min((attempt + 1) * 1000, Math.max(0, budgetLeft()));
       console.log(
         `\n>>> All endpoints failed in attempt ${
           attempt + 1
@@ -415,7 +433,7 @@ export async function getUTXOForAddress(
   specificTxid?: string,
   specificVout?: number,
   includeAncestors = false,
-  retries = 3,
+  retries = 1 + utxoProviderRetries(),
 ): Promise<UTXO[] | TxInfo | null> {
   console.log(`
 >>> getUTXOForAddress called with:
@@ -436,7 +454,7 @@ Retries: ${retries}
             const url = `${MEMPOOL_API_BASE_URL}/tx/${specificTxid}`;
             console.log(">>> MEMPOOL: Fetching from URL:", url);
 
-            const response = await fetch(url);
+            const response = await providerFetch(url);
             console.log(`>>> MEMPOOL: Response status: ${response.status}`);
 
             if (!response.ok) {
@@ -475,7 +493,7 @@ Retries: ${retries}
             return txInfoResult;
           } else {
             // Bulk UTXO fetch - return all UTXOs
-            const response = await fetch(
+            const response = await providerFetch(
               `${MEMPOOL_API_BASE_URL}/address/${address}/utxo`,
             );
             if (!response.ok) return null;
@@ -496,7 +514,7 @@ Retries: ${retries}
         try {
           if (specificTxid && specificVout !== undefined) {
             // Specific UTXO fetch remains the same
-            const response = await fetch(
+            const response = await providerFetch(
               `${BLOCKSTREAM_API_BASE_URL}/tx/${specificTxid}`,
             );
             console.log(`>>> BLOCKSTREAM: Response status: ${response.status}`);
@@ -535,7 +553,7 @@ Retries: ${retries}
 
             return resultBs;
           } else {
-            const response = await fetch(
+            const response = await providerFetch(
               `${BLOCKSTREAM_API_BASE_URL}/address/${address}/utxo`,
             );
             if (!response.ok) return null;
@@ -556,7 +574,7 @@ Retries: ${retries}
         try {
           if (specificTxid && specificVout !== undefined) {
             // Specific UTXO fetch remains the same
-            const response = await fetch(
+            const response = await providerFetch(
               `${BLOCKCHAIN_API_BASE_URL}/rawtx/${specificTxid}`,
             );
             console.log(`>>> BLOCKCHAIN: Response status: ${response.status}`);
@@ -585,7 +603,7 @@ Retries: ${retries}
             return resultBc;
           } else {
             // Bulk UTXO fetch - return all UTXOs
-            const response = await fetch(
+            const response = await providerFetch(
               `${BLOCKCHAIN_API_BASE_URL}/unspent?active=${address}`,
             );
             if (!response.ok) return null;
@@ -608,7 +626,7 @@ Retries: ${retries}
         try {
           if (specificTxid && specificVout !== undefined) {
             // Specific UTXO fetch remains the same
-            const response = await fetch(
+            const response = await providerFetch(
               `${BLOCKCYPHER_API_BASE_URL}/v1/btc/main/txs/${specificTxid}?includeHex=true&includeScript=true`,
             );
             console.log(`>>> BLOCKCYPHER: Response status: ${response.status}`);
@@ -644,7 +662,7 @@ Retries: ${retries}
             return resultBcy;
           } else {
             // Bulk UTXO fetch - return all UTXOs
-            const response = await fetch(
+            const response = await providerFetch(
               `${BLOCKCYPHER_API_BASE_URL}/v1/btc/main/addrs/${address}?unspentOnly=true&includeScript=true`,
             );
             if (!response.ok) return null;

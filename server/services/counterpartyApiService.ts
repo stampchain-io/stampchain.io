@@ -54,6 +54,16 @@ export function _setAssetInfoDeadlineMs(ms: number): number {
 // Re-export XCP nodes from $constants
 export { XCP_V2_NODES as xcp_v2_nodes } from "$constants";
 
+/** Page size and page cap for the stamp-UTXO exclusion listing. */
+const STAMP_FILTER_PAGE_SIZE = Math.max(
+  1,
+  Number(typeof Deno !== "undefined" ? Deno.env.get("XCP_UTXO_BALANCE_PAGE_SIZE") : "") || 500,
+);
+const STAMP_FILTER_MAX_PAGES = Math.max(
+  1,
+  Number(typeof Deno !== "undefined" ? Deno.env.get("XCP_UTXO_BALANCE_MAX_PAGES") : "") || 100,
+);
+
 
 export interface XcpBalanceOptions {
   type?: 'all' | 'send' | 'dispenser' | 'issuance';  // Types of balances
@@ -888,6 +898,107 @@ export class CounterpartyApiManager {
         });
         throw error;
     }
+  }
+
+  /**
+   * Every UTXO (`txid:vout`) of `address` that carries a Counterparty balance
+   * (a stamp or any other asset attached to it), read fresh from the node and
+   * paged to the end.
+   *
+   * Transaction builders exclude these outputs so a mint or SRC-20 build never
+   * spends a stamp-bearing UTXO. The exclusion used to read one cached page of
+   * 50 balances and carry on unfiltered when Counterparty failed, so a wallet
+   * with more balances (or an outage) could put a stamp into a build.
+   *
+   * Fails closed: throws UpstreamUnavailableError (routes answer 503 +
+   * Retry-After) when no node can return a complete answer. Never served from
+   * cache, because a stale answer misses a balance attached minutes ago.
+   */
+  static async getUtxoAttachedBalanceUtxos(address: string): Promise<Set<string>> {
+    const endpoint = `/addresses/${encodeURIComponent(address)}/balances`;
+    const pageSize = STAMP_FILTER_PAGE_SIZE;
+    const utxos = new Set<string>();
+    let cursor: string | null = null;
+
+    for (let page = 0; page < STAMP_FILTER_MAX_PAGES; page++) {
+      const queryParams = new URLSearchParams({
+        type: "utxo",
+        limit: String(pageSize),
+      });
+      if (cursor) queryParams.set("cursor", cursor);
+
+      const data = await this.fetchXcpPageUncached(endpoint, queryParams);
+      const rows = data.result;
+      for (const row of rows) {
+        const utxo = typeof row?.utxo === "string" ? row.utxo : "";
+        if (utxo && Number(row?.quantity ?? 0) > 0) utxos.add(utxo);
+      }
+
+      const next = data.next_cursor;
+      if (next === null || next === undefined || next === "" || rows.length === 0) {
+        return utxos;
+      }
+      cursor = String(next);
+    }
+
+    await logger.warn("api", {
+      message: "UTXO balance listing exceeded the page limit; refusing to build",
+      address,
+      pages: STAMP_FILTER_MAX_PAGES,
+      pageSize,
+    });
+    throw new UpstreamUnavailableError("Counterparty", 10);
+  }
+
+  /**
+   * One uncached Counterparty GET, trying each node in order. Returns the
+   * parsed body only when a node answered 200 with a `result` array; throws
+   * UpstreamUnavailableError otherwise (rate limit, outage, bad body), and a
+   * plain Error for a definitive 4xx rejection.
+   */
+  private static async fetchXcpPageUncached(
+    endpoint: string,
+    queryParams: URLSearchParams,
+  ): Promise<{ result: any[]; next_cursor?: string | number | null }> {
+    let lastStatus: number | null = null;
+    for (const node of XCP_V2_NODES) {
+      const url = `${node.url}${endpoint}?${queryParams.toString()}`;
+      try {
+        const response = await httpClient.get(url);
+        lastStatus = response.status;
+        if (response.ok && Array.isArray(response.data?.result)) {
+          return response.data;
+        }
+        if (!response.ok && isDefinitiveRejection(response.status)) {
+          throw new Error(
+            composeErrorMessage(response.data) ??
+              `Counterparty rejected ${endpoint} (HTTP ${response.status})`,
+          );
+        }
+        await logger.warn("api", {
+          message: "Counterparty node gave no usable answer, trying next",
+          node: node.name,
+          endpoint,
+          status: response.status,
+        });
+      } catch (error) {
+        if (error instanceof Error && error.name !== "XcpNodeRequestError") {
+          throw error;
+        }
+        await logger.warn("api", {
+          message: "Counterparty node request failed, trying next",
+          node: node.name,
+          endpoint,
+          error: error instanceof Error ? error.message : String(error),
+        });
+      }
+    }
+    await logger.warn("api", {
+      message: "No Counterparty node answered",
+      endpoint,
+      lastStatus,
+    });
+    throw new UpstreamUnavailableError("Counterparty", 10);
   }
 
   static async getAllXcpBalancesByAddress(
