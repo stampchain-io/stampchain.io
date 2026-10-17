@@ -75,6 +75,11 @@ describe("SRC20 PSBT Services - New Architecture", () => {
         "getXcpBalancesByAddress",
         () => Promise.resolve({ balances: [], total: 0 }),
       );
+      stub(
+        CounterpartyApiManager,
+        "getUtxoAttachedBalanceUtxos",
+        () => Promise.resolve(new Set<string>()),
+      );
 
       await assertRejects(
         async () => {
@@ -128,6 +133,11 @@ describe("SRC20 PSBT Services - New Architecture", () => {
         CounterpartyApiManager,
         "getXcpBalancesByAddress",
         () => Promise.resolve({ balances: [], total: 0 }),
+      );
+      stub(
+        CounterpartyApiManager,
+        "getUtxoAttachedBalanceUtxos",
+        () => Promise.resolve(new Set<string>()),
       );
 
       // Mock OptimalUTXOSelection to return predictable results
@@ -236,6 +246,11 @@ describe("SRC20 PSBT Services - New Architecture", () => {
         CounterpartyApiManager,
         "getXcpBalancesByAddress",
         () => Promise.resolve({ balances: [], total: 0 }),
+      );
+      stub(
+        CounterpartyApiManager,
+        "getUtxoAttachedBalanceUtxos",
+        () => Promise.resolve(new Set<string>()),
       );
       stub(
         CommonUTXOService.prototype,

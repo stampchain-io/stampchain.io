@@ -19,6 +19,13 @@ export interface HttpRequestConfig {
   retries?: number;
   retryDelay?: number;
   signal?: AbortSignal; // Allow external abort signals
+  /**
+   * Longest this request may sleep before a retry. A retryable status whose
+   * required wait (Retry-After, or the 5 s rate-limit floor for 429) exceeds
+   * it is returned to the caller instead of retried, so a caller with
+   * fallbacks moves on to its next provider. Unset: no cap.
+   */
+  maxBackoffMs?: number;
 }
 
 export interface HttpClient {
@@ -82,14 +89,17 @@ export class FetchHttpClient implements HttpClient {
   private totalRequests: number;
   private totalErrors: number;
   private activeTimeouts: Set<number>; // Track active timeout IDs
+  private defaultMaxBackoffMs: number | undefined;
 
   constructor(
     defaultTimeout: number = 30000,
     defaultRetries: number = 3,
     defaultRetryDelay: number = 1000,
     maxConcurrentRequests: number = 10,
-    maxPoolSize: number = 20
+    maxPoolSize: number = 20,
+    defaultMaxBackoffMs?: number,
   ) {
+    this.defaultMaxBackoffMs = defaultMaxBackoffMs;
     this.defaultTimeout = defaultTimeout;
     this.defaultRetries = defaultRetries;
     this.defaultRetryDelay = defaultRetryDelay;
@@ -256,6 +266,7 @@ export class FetchHttpClient implements HttpClient {
       retries = this.defaultRetries,
       retryDelay = this.defaultRetryDelay,
       signal: externalSignal,
+      maxBackoffMs = this.defaultMaxBackoffMs,
     } = config;
 
     // Check if fetch is available (important for test environments)
@@ -351,6 +362,19 @@ export class FetchHttpClient implements HttpClient {
             // For rate limits, use longer backoff
             if (this.isRateLimitStatus(response.status)) {
               backoffDelay = Math.max(backoffDelay, 5000); // Minimum 5s for rate limits
+            }
+
+            // A capped caller does not wait out a long backoff: hand the
+            // response back so it can try its next provider instead.
+            if (maxBackoffMs !== undefined && backoffDelay > maxBackoffMs) {
+              console.warn(`[HttpClient] Status ${response.status} needs a ${backoffDelay}ms backoff (cap ${maxBackoffMs}ms), not retrying`, {
+                url,
+                method,
+              });
+              return result;
+            }
+
+            if (this.isRateLimitStatus(response.status)) {
               console.warn(`[HttpClient] Rate limited (429), waiting ${backoffDelay}ms before retry ${attempt + 1}/${retries}`, {
                 url,
                 method,
@@ -409,7 +433,10 @@ export class FetchHttpClient implements HttpClient {
 
           // Wait before retrying
           if (attempt < retries) {
-            await this.sleep(retryDelay * Math.pow(2, attempt)); // Exponential backoff
+            const delay = retryDelay * Math.pow(2, attempt); // Exponential backoff
+            await this.sleep(
+              maxBackoffMs !== undefined ? Math.min(delay, maxBackoffMs) : delay,
+            );
           }
         }
       }
