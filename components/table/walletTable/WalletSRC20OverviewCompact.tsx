@@ -58,6 +58,7 @@ export function WalletSRC20OverviewRowCompact(
 ) {
   const tick = unicodeEscapeToEmoji(src20.tick ?? "");
   const imageUrl = getSRC20ImageSrc(src20) ?? null;
+  const isCounterparty = src20.p === "counterparty";
   const href = `/src20/${encodeURIComponent(tick)}`;
   const { text: tickText, emoji: tickEmoji } = splitTextAndEmojis(tick);
 
@@ -66,11 +67,42 @@ export function WalletSRC20OverviewRowCompact(
   const balance = src20.amt !== undefined ? Number(src20.amt) : NaN;
   const value = !isNaN(balance) && priceBtc ? balance * priceBtc : 0;
 
+  const tokenLabel = (
+    <>
+      <div class="flex items-center justify-center w-6.5 h-6.5 rounded-xl overflow-hidden shrink-0">
+        {imageUrl
+          ? (
+            <img
+              src={imageUrl}
+              alt={tick}
+              class="w-6.5 h-6.5 object-contain rounded-xl"
+            />
+          )
+          : (
+            <PlaceholderImage
+              variant="no-image"
+              className="!rounded-xl"
+            />
+          )}
+      </div>
+      <span class={cardRowStampNumber}>
+        {tickText && (
+          <>
+            <span class="font-light pr-0.5">$</span>
+            {tickText.toUpperCase()}
+          </>
+        )}
+        {tickEmoji && <span class="emoji-ticker">{tickEmoji}</span>}
+      </span>
+    </>
+  );
+
   /* ===== RENDER ===== */
   return (
     <tr
       class={`${container2} ${shadowGlowPurple}`}
       onClick={(e) => {
+        if (isCounterparty) return;
         const target = e.target as HTMLElement;
         if (target.closest("button, a")) return;
         if (!e.ctrlKey && !e.metaKey && e.button !== 1) {
@@ -88,33 +120,18 @@ export function WalletSRC20OverviewRowCompact(
       <td
         class={`${cellLeftL2Card} ${cellStickyLeft}`}
       >
-        <a
-          href={href}
-          f-partial={href}
-          target="_top"
-          class="flex items-center gap-4"
-        >
-          <div class="flex items-center justify-center w-6.5 h-6.5 rounded-xl overflow-hidden shrink-0">
-            {imageUrl
-              ? (
-                <img
-                  src={imageUrl}
-                  alt={tick}
-                  class="w-6.5 h-6.5 object-contain rounded-xl"
-                />
-              )
-              : <PlaceholderImage variant="no-image" className="!rounded-xl" />}
-          </div>
-          <span class={cardRowStampNumber}>
-            {tickText && (
-              <>
-                <span class="font-light pr-0.5">$</span>
-                {tickText.toUpperCase()}
-              </>
-            )}
-            {tickEmoji && <span class="emoji-ticker">{tickEmoji}</span>}
-          </span>
-        </a>
+        {isCounterparty
+          ? <div class="flex items-center gap-4">{tokenLabel}</div>
+          : (
+            <a
+              href={href}
+              f-partial={href}
+              target="_top"
+              class="flex items-center gap-4"
+            >
+              {tokenLabel}
+            </a>
+          )}
       </td>
 
       {/* PRICE */}
