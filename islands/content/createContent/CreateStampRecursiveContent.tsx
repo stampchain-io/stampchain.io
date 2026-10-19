@@ -18,9 +18,9 @@ import { InputField } from "$islands/form/InputField.tsx";
 import { CollapsibleSection } from "$islands/layout/CollapsibleSection.tsx";
 import PreviewCodeModal from "$islands/modal/PreviewCodeModal.tsx";
 import PreviewImageModal from "$islands/modal/PreviewImageModal.tsx";
-import { StampCreateRecursiveHowto } from "$islands/section/howto/StampCreateRecursiveHowto.tsx";
 import { openSearchStampPicker } from "$islands/modal/SearchStampPickerModal.tsx";
 import { openModal } from "$islands/modal/states.ts";
+import { StampCreateRecursiveHowto } from "$islands/section/howto/StampCreateRecursiveHowto.tsx";
 import {
   container2,
   container2Hover,
@@ -2501,6 +2501,7 @@ export function CreateStampRecursiveContent(
                       )
                       : <h5 class={labelXs}>NO HTML TITLE</h5>}
                     <ToggleSwitchButton
+                      className="self-start"
                       isActive={includeTitle}
                       onToggle={() => {
                         const next = !includeTitle;

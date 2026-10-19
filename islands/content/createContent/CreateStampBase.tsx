@@ -138,6 +138,7 @@ export function StampCpidToggleRow({ mint }: MintRowProps) {
         isActive={mint.includeCustomCpid}
         onToggle={mint.toggleCustomCpid}
         toggleButtonId="switch-toggle-cpid"
+        className="self-start"
       />
     </div>
   );
@@ -196,9 +197,7 @@ export function StampMintPanel(
 
   return (
     <div class="flex min-h-0 flex-1 flex-col">
-      <ScrollContainer
-        class="flex min-h-0 flex-1 flex-col gap-3 scrollbar-background-layer1"
-      >
+      <ScrollContainer class="flex min-h-0 flex-1 flex-col gap-3 scrollbar-background-layer1">
         <StampEditionsRow mint={mint} />
         {cpidAboveLocked && cpidRow}
         <StampLockedRow mint={mint} />
