@@ -1,5 +1,4 @@
 import { stackConnectWalletModal } from "$islands/layout/ModalStack.tsx";
-import { openModal } from "$islands/modal/states.ts";
 import { logger } from "$lib/utils/logger.ts";
 import { showToast } from "$lib/utils/ui/notifications/toastSignal.ts";
 import type { WalletContext } from "$types/ui.d.ts";
@@ -147,8 +146,7 @@ export const walletContext: WalletContext = {
     return await broadcastPSBT(walletContext.wallet, psbtHex);
   },
   showConnectModal: () => {
-    const { modalContent } = stackConnectWalletModal();
-    openModal(modalContent, "slideUpDown");
+    stackConnectWalletModal();
   },
 };
 

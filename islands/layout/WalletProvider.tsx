@@ -9,7 +9,7 @@ import { checkWalletAvailability } from "$client/wallet/wallet.ts";
 import { wonderProvider } from "$client/wallet/wonder.ts";
 import { xverseProvider } from "$client/wallet/xverse.ts";
 import { WALLET_PROVIDERS } from "$constants";
-import { closeForegroundModal, closeModal } from "$islands/modal/states.ts";
+import { useModalLayer } from "$islands/modal/states.ts";
 import {
   container2Hover,
   containerPill,
@@ -53,6 +53,7 @@ export function WalletProvider(
 
   /* ===== STATE ===== */
   const [isHovered, setIsHovered] = useState(false);
+  const { containerId, close } = useModalLayer();
 
   /* ===== EVENT HANDLERS ===== */
   const handleConnect = async () => {
@@ -86,25 +87,19 @@ export function WalletProvider(
         showToast(message, type);
       });
 
-      const modalContainer = document.getElementById(
-        "animation-modal-container",
-      );
+      const modalContainer = document.getElementById(containerId);
       if (modalContainer) {
         modalContainer.classList.add("out");
       }
 
-      if (onSuccess) {
-        setTimeout(() => {
-          closeForegroundModal();
+      setTimeout(() => {
+        close();
+        if (onSuccess) {
           setTimeout(() => {
-            if (onSuccess) onSuccess();
+            onSuccess();
           }, 1);
-        }, 600);
-      } else {
-        setTimeout(() => {
-          closeModal();
-        }, 600);
-      }
+        }
+      }, 600);
     } catch (unknownError) {
       const error = handleUnknownError(
         unknownError,

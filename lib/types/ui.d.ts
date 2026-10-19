@@ -782,6 +782,8 @@ export interface ModalBaseProps extends BaseComponentProps {
   className?: string;
   contentClassName?: string;
   hideHeader?: boolean;
+  /** Rendered just left of the close icon (for example an info button). */
+  headerAction?: ComponentChildren;
 }
 
 /**
@@ -2565,6 +2567,8 @@ export interface ModalOverlayProps extends BaseComponentProps {
   animation?: ModalAnimation;
   _preventScroll?: boolean;
   handleClose?: () => void;
+  /** `stacked` renders above the base modal and closes on its own. */
+  layer?: "base" | "stacked";
 }
 
 /**

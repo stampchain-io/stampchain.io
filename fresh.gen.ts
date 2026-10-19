@@ -280,6 +280,8 @@ import * as $modal_info_StampCreatePoshInfo from "./islands/modal/info/StampCrea
 import * as $modal_info_StampCreateRecursiveInfo from "./islands/modal/info/StampCreateRecursiveInfo.tsx";
 import * as $modal_info_StampCreateRecursiveShortcuts from "./islands/modal/info/StampCreateRecursiveShortcuts.tsx";
 import * as $modal_states from "./islands/modal/states.ts";
+import * as $modal_tool_SRC20TransferTool from "./islands/modal/tool/SRC20TransferTool.tsx";
+import * as $modal_tool_ToolModal from "./islands/modal/tool/ToolModal.tsx";
 import * as $section_BlockchainStats from "./islands/section/BlockchainStats.tsx";
 import * as $section_FeeCalculatorBase from "./islands/section/FeeCalculatorBase.tsx";
 import * as $section_cta_ContactCta from "./islands/section/cta/ContactCta.tsx";
@@ -692,6 +694,8 @@ const manifest = {
     "./islands/modal/info/StampCreateRecursiveShortcuts.tsx":
       $modal_info_StampCreateRecursiveShortcuts,
     "./islands/modal/states.ts": $modal_states,
+    "./islands/modal/tool/SRC20TransferTool.tsx": $modal_tool_SRC20TransferTool,
+    "./islands/modal/tool/ToolModal.tsx": $modal_tool_ToolModal,
     "./islands/section/BlockchainStats.tsx": $section_BlockchainStats,
     "./islands/section/FeeCalculatorBase.tsx": $section_FeeCalculatorBase,
     "./islands/section/cta/ContactCta.tsx": $section_cta_ContactCta,

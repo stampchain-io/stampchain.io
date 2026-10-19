@@ -7,7 +7,7 @@ import { handleModalClose } from "$components/layout/ModalBase.tsx";
 import { StampImage } from "$content";
 import { RangeSlider } from "$islands/button/RangeSlider.tsx";
 import { stackConnectWalletModal } from "$islands/layout/ModalStack.tsx";
-import { closeModal, openModal } from "$islands/modal/states.ts";
+import { closeModal } from "$islands/modal/states.ts";
 import { ModalBase } from "$layout";
 import { useTransactionConstructionService } from "$lib/hooks/useTransactionConstructionService.ts";
 import { logger } from "$lib/utils/logger.ts";
@@ -202,21 +202,7 @@ const DonateStampModal = ({
   const handleBuyClick = async () => {
     // Check if wallet is connected first
     if (!wallet || !wallet.address) {
-      const { modalContent } = stackConnectWalletModal(() => {
-        // Open the Donate Stamp Modal
-        openModal(
-          <DonateStampModal
-            stamp={stamp}
-            fee={initialFee ?? 1}
-            handleChangeFee={handleChangeFee ?? (() => {})}
-            dispenser={dispenser}
-          />,
-          "slideUpDown",
-        );
-      });
-
-      // Open the Connect Wallet Modal
-      openModal(modalContent, "slideUpDown");
+      stackConnectWalletModal();
       return;
     }
 

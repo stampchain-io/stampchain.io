@@ -75,14 +75,14 @@ export const containerDetailImage = `relative ${container2} p-0.5`;
 export const containerStickyBottom = `sticky bottom-0 mt-auto pb-5`;
 
 // Table card container styles - check if used
-export const containerCardTable = `rounded-3xl ${container1} ${shadowGlowPurple}
-  hover:border-color-purple-light`;
+export const containerCardTable =
+  `rounded-3xl ${container1} ${shadowGlowPurple} hover:border-color-purple-light`;
 
 // Global styles
 export const containerColData = "flex flex-col -space-y-1"; // Data specific
 // Form styles
-export const containerColForm = "flex flex-col w-full gap-5";
-export const containerRowForm = "flex w-full gap-5";
+export const containerColForm = "flex flex-col w-full gap-3";
+export const containerRowForm = "flex w-full gap-3";
 
 /* ===== CARD GRID STYLES ===== */
 // Card-size tiers (Sm/Md/Lg), decoupled from the cardSquare/cardVertical
@@ -145,7 +145,7 @@ export function gridCardWallet(
 // Form styles
 export const rowForm = "flex w-full";
 export const rowResponsiveForm =
-  "flex flex-col min-[420px]:flex-row w-full gap-5 min-[420px]:[&>*]:flex-1";
+  "flex flex-col min-[420px]:flex-row w-full gap-3 min-[420px]:[&>*]:flex-1";
 // Row container styles - used for all gallery (no content) containers
 export const rowContainerBackground =
   `flex items-center justify-center w-full h-[42px] ${container2} px-2`; // update all tables to use this instead of custom code

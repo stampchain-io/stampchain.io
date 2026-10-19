@@ -1,5 +1,12 @@
 import { Icon } from "$icon";
-import { closeModal } from "$islands/modal/states.ts";
+import {
+  closeModal,
+  closeStackedModal,
+  getTopModalContainer,
+  STACKED_MODAL_CONTAINER_ID,
+  stackedModal,
+  useModalLayer,
+} from "$islands/modal/states.ts";
 import { container0, shadow } from "$layout";
 import { logger } from "$lib/utils/logger.ts";
 import { tooltipIcon } from "$notification";
@@ -21,7 +28,9 @@ export function ModalBase({
   className = "",
   contentClassName = "",
   hideHeader = false,
+  headerAction,
 }: ModalBaseProps) {
+  const { layer, containerId, close } = useModalLayer();
   const [isCloseTooltipVisible, setIsCloseTooltipVisible] = useState(false);
   const [allowCloseTooltip, setAllowCloseTooltip] = useState(true);
   const [closeTooltipText, setCloseTooltipText] = useState("CLOSE");
@@ -55,7 +64,7 @@ export function ModalBase({
       component: "ModalBase",
     });
 
-    const modalContainer = document.getElementById("animation-modal-container");
+    const modalContainer = document.getElementById(containerId);
     if (modalContainer) {
       modalContainer.classList.add("out");
     }
@@ -64,21 +73,23 @@ export function ModalBase({
       if (onClose) {
         onClose();
       }
-      closeModal();
+      close();
     }, 600);
   };
 
+  // Only the top-most layer closes. Key repeat is ignored so holding Escape
+  // does not also dismiss the modal underneath once this one unmounts.
   useEffect(() => {
     const handleKeyboardShortcut = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        handleClose();
-      }
+      if (e.key !== "Escape" || e.repeat) return;
+      if (layer === "base" && stackedModal.value.isOpen) return;
+      handleClose();
     };
 
     document.addEventListener("keydown", handleKeyboardShortcut);
     return () =>
       document.removeEventListener("keydown", handleKeyboardShortcut);
-  }, [onClose]);
+  }, [onClose, layer, containerId]);
 
   useEffect(() => {
     return () => {
@@ -101,6 +112,12 @@ export function ModalBase({
       <div class={`relative ${contentClassName}`}>
         {!hideHeader && (
           <>
+            {headerAction && (
+              <div class="absolute -top-2 -left-2">
+                {headerAction}
+              </div>
+            )}
+
             <div
               class="absolute -top-2 -right-2 ms-auto cursor-pointer"
               onMouseEnter={handleCloseMouseEnter}
@@ -157,12 +174,17 @@ export const handleModalClose = () => {
     component: "ModalBase",
   });
 
-  const modalContainer = document.getElementById("animation-modal-container");
+  const modalContainer = getTopModalContainer();
+  const stacked = modalContainer?.id === STACKED_MODAL_CONTAINER_ID;
   if (modalContainer) {
     modalContainer.classList.add("out");
   }
 
   setTimeout(() => {
-    closeModal();
+    if (stacked) {
+      closeStackedModal();
+    } else {
+      closeModal();
+    }
   }, 600);
 };

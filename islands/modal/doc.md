@@ -12,7 +12,7 @@
 * - ModalOverlay.tsx (islands/layout/): Handles modal animations and backdrop
 * - ModalProvider.tsx (islands/layout/): Root-level provider that manages modal state
 * - states.ts (islands/modal/): Centralized state management for modals
-* - ModalStack.tsx (islands/layout/): Manages modal stacking and transformations
+* - ModalStack.tsx (islands/layout/): Opens the connect-wallet modal on the stacked layer
 *
 * Integration
 * ----------
@@ -36,15 +36,25 @@
 *
 * Modal Stacking
 * -------------
-* The system supports stacking of multiple modals:
+* One foreground layer (`stackedModal`) renders above the base modal. The base
+* modal stays mounted, so its state is kept. A second `stackModal` call replaces
+* the foreground content. There is no deeper stack.
 *
-*
-* 2. Stacking Approach:
-*    - Modals stack on top of each other
-*    - Managed through ModalStack.tsx
-*    - Useful for temporary overlays or confirmations
-*    - Each modal in the stack can have its own animation
-*      - looks cleanest with the same animation on background and foreground stacked modal
+* - `stackModal(content, animation)` in states.ts. If no base modal is open it
+*   falls back to `openModal`, so page-level callers behave as before.
+* - `closeStackedModal()` closes only the foreground layer.
+* - `openModal` / `closeModal` also close a leftover foreground layer.
+* - `useModalLayer()` (inside a modal) returns `{ layer, containerId, close }`
+*   bound to the layer the component is rendered in. `ModalBase` uses it, so a
+*   stacked modal's close button and Escape do not dismiss the base modal.
+* - `getTopModalContainer()` is for code that is not a component (the exported
+*   `handleModalClose`). It returns the foreground overlay if mounted.
+* - Escape closes only the top-most open layer. Holding Escape does not also
+*   close the base modal (key repeat is ignored). A second press closes the base.
+* - `ModalSearchBase` and `SearchStampPickerModal.closePicker` are base-only.
+*   They always open with `openModal` and look up `#animation-modal-container`.
+* - Same animation on both layers looks cleanest.
+* - ModalStack.tsx only builds the connect-wallet modal and calls `stackModal`.
 *
 * Animation Types
 * -------------
@@ -88,16 +98,11 @@
 *    openModal(modalContent, "slideUpDown");
 *    ```
 *
-* 4. Transform between modals:
+* 4. Stack the connect-wallet modal on top (the modal underneath stays open):
 *    ```tsx
-*    // Example: Opening wallet connect from buy modal
 *    const handleBuyClick = async () => {
 *      if (!wallet?.address) {
-*        const { modalContent } = stackConnectWalletModal(() => {
-*          // Transform back to buy modal after connection
-*          openModal(<BuyStampModal {...props} />, "slideUpDown");
-*        });
-*        openModal(modalContent, "slideUpDown");
+*        stackConnectWalletModal();
 *        return;
 *      }
 *      // ... rest of buy logic
@@ -112,7 +117,7 @@
 * - ModalBase.tsx (components/layout/): Primary base component for most modals
 * - ModalSearchBase.tsx (components/layout/): Specialized base for search-related modals
 * - WalletProvider.tsx (islands/layout/): Base component for wallet connection functionality
-* - ModalStack.tsx (islands/layout/): Manages modal transformations and stacking
+* - ModalStack.tsx (islands/layout/): `stackConnectWalletModal()` opens connect-wallet on top
 *
 * Active Modals
 * ------------
@@ -186,6 +191,23 @@
 * 17. info/StampCreateRecursiveShortcuts.tsx
 *    - Base: InfoModal
 *    - Purpose: Keyboard shortcuts for the recursive stamp composer
+*
+* 18. info/SRC20TransferInfo.tsx
+*    - Base: InfoModal
+*    - Purpose: How-to for transferring an SRC-20 token
+*
+* 19. tool/ToolModal.tsx
+*    - Base: ModalBase
+*    - Purpose: Shell for tool modals (`title`, `subtitle`, `info`, `children`)
+*    - Note: the info button (`headerAction`, plain InfoButton with `stack`) sits at
+*      the top-left and opens `info` on the foreground layer while the tool stays mounted
+*
+* 20. tool/SRC20TransferTool.tsx
+*    - Base: ToolModal
+*    - Purpose: SRC-20 transfer form, opened from the header Tools menu
+*    - Note: `openSRC20TransferTool()` calls `openToolModal()` (`slideUpDown`). The Tools menu
+*      loads it with a dynamic import. The old page at /tool/src20/transfer is
+*      unchanged and is not linked from the Tools menu.
 *
 * State Management
 * ---------------

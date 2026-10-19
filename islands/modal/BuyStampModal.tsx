@@ -6,7 +6,7 @@ import { inputFieldSquare } from "$form";
 import { UserProfileIcon } from "$icon";
 import { StampImage } from "$islands/content/stampDetailContent/StampImage.tsx";
 import { stackConnectWalletModal } from "$islands/layout/ModalStack.tsx";
-import { closeModal, openModal } from "$islands/modal/states.ts";
+import { closeModal } from "$islands/modal/states.ts";
 import { ModalBase } from "$layout";
 import { useTransactionConstructionService } from "$lib/hooks/useTransactionConstructionService.ts";
 import { handleUnknownError } from "$lib/utils/errorHandling.ts";
@@ -181,18 +181,7 @@ const BuyStampModal = ({
   /* ===== TRANSACTION HANDLING ===== */
   const handleBuyClick = async () => {
     if (!wallet || !wallet.address) {
-      const { modalContent } = stackConnectWalletModal(() => {
-        openModal(
-          <BuyStampModal
-            stamp={stamp}
-            fee={initialFee ?? 1}
-            handleChangeFee={handleChangeFee ?? (() => {})}
-            dispenser={dispenser}
-          />,
-          "slideUpDown",
-        );
-      });
-      openModal(modalContent, "slideUpDown");
+      stackConnectWalletModal();
       return;
     }
 

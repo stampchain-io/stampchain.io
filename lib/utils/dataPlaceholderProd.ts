@@ -28,7 +28,7 @@ import type { StampRow } from "$types/stamp.d.ts";
  * and its parent) — genuine empty arrays / zero counts / explicit error
  * strings, not fake stamp or token content.
  */
-export const DATA_PLACEHOLDER_DEV = false;
+export const DATA_PLACEHOLDER_DEV = true;
 export const LOCAL_HTTPS = false;
 
 /* ===== HOME PAGE (routes/index.tsx) ===== */

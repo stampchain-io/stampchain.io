@@ -1455,7 +1455,7 @@ export function CreateStampRecursiveContent(
         return;
       }
       if (e.key === "Escape") {
-        if (document.getElementById("animation-modal-container")) {
+        if (document.querySelector(".animation-modal-container")) {
           return;
         }
         selectLayer(null);

@@ -1,5 +1,6 @@
 /* ===== CONNECT WALLET MODAL COMPONENT ===== */
 import { showConnectWalletModal } from "$client/wallet/wallet.ts";
+import { useModalLayer } from "$islands/modal/states.ts";
 import { ModalBase } from "$layout";
 import { logger } from "$lib/utils/logger.ts";
 import type { ConnectWalletModalProps } from "$types/ui.d.ts";
@@ -11,6 +12,8 @@ export const ConnectWalletModal = ({
   connectors,
   onClose,
 }: ConnectWalletModalProps) => {
+  const { containerId } = useModalLayer();
+
   /* ===== EVENT HANDLERS ===== */
   const handleModalClose = () => {
     logger.debug("ui", {
@@ -19,7 +22,7 @@ export const ConnectWalletModal = ({
     });
 
     // First trigger the animation
-    const modalContainer = document.getElementById("animation-modal-container");
+    const modalContainer = document.getElementById(containerId);
     if (modalContainer) {
       modalContainer.classList.add("out");
     }
