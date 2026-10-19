@@ -26,6 +26,7 @@ import {
   container2Hover,
   container3,
   containerIcon,
+  ScrollContainer,
   shadowGlowPurpleSm,
   transitionColors,
 } from "$layout";
@@ -902,8 +903,6 @@ export function CreateStampRecursiveContent(
   } = useRecursiveStampState();
 
   const wrapRef = useRef<HTMLDivElement>(null);
-  const composerScrollRef = useRef<HTMLDivElement>(null);
-  const [composerOverflows, setComposerOverflows] = useState(false);
   const canvasRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLCanvasElement>(null);
   const previewCardRef = useRef<HTMLDivElement>(null);
@@ -968,33 +967,6 @@ export function CreateStampRecursiveContent(
       return next;
     });
   };
-
-  useLayoutEffect(() => {
-    const el = composerScrollRef.current;
-    if (!el) return;
-
-    const check = () => {
-      setComposerOverflows(el.scrollHeight > el.clientHeight + 1);
-    };
-
-    check();
-    const observer = new ResizeObserver(check);
-    observer.observe(el);
-    const watchChildren = () => {
-      for (const child of el.children) observer.observe(child);
-    };
-    watchChildren();
-    const mutations = new MutationObserver(() => {
-      watchChildren();
-      check();
-    });
-    mutations.observe(el, { childList: true });
-
-    return () => {
-      observer.disconnect();
-      mutations.disconnect();
-    };
-  }, []);
 
   const [ctxOpen, setCtxOpen] = useState<
     { x: number; y: number } | null
@@ -1831,11 +1803,9 @@ export function CreateStampRecursiveContent(
           <h2 class={`${subtitlePrimary} -mt-2.5`}>
             {mode === "preview" ? "STAMP" : "COMPOSER"}
           </h2>
-          <div
-            ref={composerScrollRef}
+          <ScrollContainer
             class={`flex flex-1 flex-col scrollbar-background-layer1
-              mobileLg:min-h-0 mobileLg:overflow-y-auto
-              ${composerOverflows ? "mobileLg:-mr-[14px] mobileLg:pr-2" : ""}
+              mobileLg:min-h-0
               ${mode === "preview" ? "hidden" : ""}`}
           >
             <CollapsibleSection
@@ -2487,7 +2457,7 @@ export function CreateStampRecursiveContent(
                 </SectionBody>
               </CollapsibleSection>
             )}
-          </div>
+          </ScrollContainer>
           <div
             class={`flex min-h-0 flex-1 flex-col
               ${mode === "preview" ? "" : "hidden"}`}
