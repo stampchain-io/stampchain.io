@@ -6,7 +6,10 @@ import { container1, ModalSearchBase, transitionColors } from "$layout";
 import { generateSearchErrorMessage } from "$lib/utils/data/search/searchInputClassifier.ts";
 import { isValidBitcoinAddress } from "$lib/utils/typeGuards.ts";
 import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
-import { constructStampUrl } from "$lib/utils/ui/media/imageUtils.ts";
+import {
+  constructStampUrl,
+  toCleanSrc20ImageUrl,
+} from "$lib/utils/ui/media/imageUtils.ts";
 import {
   navigateSSRSafe,
   scheduleFocus,
@@ -219,7 +222,9 @@ function SearchContent({
                     >
                       <img
                         src={result.tx_hash
-                          ? constructStampUrl(result.tx_hash)
+                          ? toCleanSrc20ImageUrl(
+                            constructStampUrl(result.tx_hash),
+                          )
                           : "/img/placeholder/broken.png"}
                         alt={result.tick}
                         class="w-10 h-10 rounded object-contain pixelart"

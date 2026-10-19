@@ -28,6 +28,7 @@ import {
 import {
   getStampImageSrc,
   getStampPreviewUrl,
+  isSrc20ImageStamp,
 } from "$lib/utils/ui/media/imageUtils.ts";
 import { showToast } from "$lib/utils/ui/notifications/toastSignal.ts";
 import { tooltipButton, tooltipIcon } from "$notification";
@@ -162,8 +163,10 @@ export function StampCard({
   const fetchStampImage = () => {
     setLoading(true);
     setImageFailed(false);
-    // Use embedded base64 as a data URI when available — works without CDN access
-    if (stamp.stamp_base64) {
+    // Use embedded base64 as a data URI when available — works without CDN access.
+    // SRC-20 base64 is the SVG that still contains the JSON overlay, so those
+    // go through getStampImageSrc and the cleaned token-image route instead.
+    if (stamp.stamp_base64 && !isSrc20ImageStamp(stamp)) {
       const mime = stamp.stamp_mimetype ?? "image/png";
       setSrc(`data:${mime};base64,${stamp.stamp_base64}`);
       setLoading(false);

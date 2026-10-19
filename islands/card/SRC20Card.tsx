@@ -102,11 +102,19 @@ export function SRC20Card(
 
   const tick = unicodeEscapeToEmoji(src20.tick ?? "");
   const op = (src20.op ?? "").toUpperCase() as "DEPLOY" | "MINT" | "TRANSFER";
-  const imageUrl = imgError
-    ? null
-    : (src20.deploy_img || getSRC20ImageSrc(src20) || null);
+  const imageUrl = imgError ? null : (getSRC20ImageSrc(src20) ?? null);
 
   const href = `/src20/${encodeURIComponent(tick)}`;
+  const isCounterparty = src20.p === "counterparty";
+
+  const tokenLink = (className: string, children: ComponentChildren) =>
+    isCounterparty
+      ? <div class={className}>{children}</div>
+      : (
+        <a href={href} target="_top" f-partial={href} class={className}>
+          {children}
+        </a>
+      );
 
   // Unit price in BTC — market_data.price_btc (v2.3) is preferred, falling
   // back to the legacy floor_price_btc field.
@@ -691,16 +699,7 @@ export function SRC20Card(
 
   /* ===== RENDER: HORIZONTAL ROW VARIANT ===== */
   if (variant === "cardHorizontal") {
-    return (
-      <a
-        href={href}
-        target="_top"
-        f-partial={href}
-        class="relative flex w-full"
-      >
-        {renderHorizontal()}
-      </a>
-    );
+    return tokenLink("relative flex w-full", renderHorizontal());
   }
 
   /* ===== RENDER ===== */
@@ -710,35 +709,33 @@ export function SRC20Card(
         variant === "cardVerticalBalance" ? "!h-fit" : "h-full"
       }`}
     >
-      <a
-        href={href}
-        target="_top"
-        f-partial={href}
-        class={`${containerCard} ${
+      {tokenLink(
+        `${containerCard} ${
           variant === "cardVerticalDetail"
             ? "min-h-[260px]"
             : variant === "cardVerticalBalance"
             ? "!h-fit"
             : ""
-        }`}
-      >
-        {variant === "cardSquare"
-          ? renderMinimal()
-          : variant === "cardSquareBalance"
-          ? renderWallet()
-          : variant === "cardVerticalBalance"
-          ? renderWalletVertical()
-          : (
-            <>
-              {op === "TRANSFER" && renderTransfer()}
-              {op === "DEPLOY" && renderDeploy()}
-              {op === "MINT" && renderMint()}
-              {op !== "TRANSFER" && op !== "DEPLOY" && op !== "MINT" && (
-                renderDeploy()
-              )}
-            </>
-          )}
-      </a>
+        }`,
+        <>
+          {variant === "cardSquare"
+            ? renderMinimal()
+            : variant === "cardSquareBalance"
+            ? renderWallet()
+            : variant === "cardVerticalBalance"
+            ? renderWalletVertical()
+            : (
+              <>
+                {op === "TRANSFER" && renderTransfer()}
+                {op === "DEPLOY" && renderDeploy()}
+                {op === "MINT" && renderMint()}
+                {op !== "TRANSFER" && op !== "DEPLOY" && op !== "MINT" && (
+                  renderDeploy()
+                )}
+              </>
+            )}
+        </>,
+      )}
     </div>
   );
 }
