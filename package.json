@@ -44,8 +44,8 @@
     "prepare": "husky || true"
   },
   "dependencies": {
-    "bitcoinjs-lib": "7.0.1",
-    "readable-stream": "4.7.0",
+    "bitcoinjs-lib": "7.0.2",
+    "readable-stream": "4.8.0",
     "tiny-secp256k1": "^2.2.3"
   },
   "devDependencies": {
