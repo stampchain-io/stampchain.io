@@ -17,10 +17,6 @@
  * - SRC20TransferHowto.tsx
  * - StampSendHowTo.tsx
  * - StampingHowto.tsx
- * - StampCreateClassicHowto.tsx (create/classic info modal, renders InfoModal)
- * - StampCreatePoshHowto.tsx (create/posh info modal, renders InfoModal)
- * - StampCreateRecursiveHowto.tsx (create/recursive how-to modal, renders InfoModal)
- * - StampCreateRecursiveShortcuts.tsx (create/recursive keyboard shortcuts modal, renders InfoModal)
  * - doc.md (this documentation)
  *
  * Creating a New Module
@@ -56,13 +52,15 @@
  *
  * Create-page info modals
  * ------------------------
- * The StampCreate* modules wrap their content in `InfoModal`
- * ($islands/modal/InfoModal.tsx) with `title="HOW-TO"` and a `subtitle`, and
- * are opened through `InfoButton` ($islands/button/InfoButton.tsx):
- * - `<InfoButton modal={<StampCreateClassicHowto />} />` (help icon, default)
+ * The StampCreate* modules live in `$islands/modal/info/` and wrap their content
+ * in `InfoModal` ($islands/modal/info/InfoModal.tsx) with `title="HOW-TO"`
+ * and a `subtitle`. They are opened through `InfoButton`
+ * ($islands/button/InfoButton.tsx):
+ * - `<InfoButton modal={<StampCreateClassicInfo />} />` (help icon, default)
  * - `<InfoButton modal={<StampCreateRecursiveShortcuts />} icon="keyboard"
- *   ariaLabel="Keyboard shortcuts" />` (placed at the end of the row in
- *   CreateStampRecursiveHeader.tsx)
+ *   ariaLabel="Keyboard shortcuts" />` (from
+ *   `$islands/modal/info/StampCreateRecursiveShortcuts.tsx`, placed at the
+ *   end of the row in CreateStampRecursiveHeader.tsx)
  * These modules are not exported via "$section"; import them by path.
  *
  * Best Practices

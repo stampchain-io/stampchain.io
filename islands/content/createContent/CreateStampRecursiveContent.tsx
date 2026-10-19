@@ -18,6 +18,7 @@ import { InputField } from "$islands/form/InputField.tsx";
 import { CollapsibleSection } from "$islands/layout/CollapsibleSection.tsx";
 import PreviewCodeModal from "$islands/modal/PreviewCodeModal.tsx";
 import PreviewImageModal from "$islands/modal/PreviewImageModal.tsx";
+import { StampCreateRecursiveInfo } from "$islands/modal/info/StampCreateRecursiveInfo.tsx";
 import { openSearchStampPicker } from "$islands/modal/SearchStampPickerModal.tsx";
 import { openModal } from "$islands/modal/states.ts";
 import { StampCreateRecursiveHowto } from "$islands/section/howto/StampCreateRecursiveHowto.tsx";
@@ -1450,7 +1451,7 @@ export function CreateStampRecursiveContent(
       if (t.isContentEditable) return;
       if (e.key === "?") {
         e.preventDefault();
-        openModal(<StampCreateRecursiveHowto />, "zoomInOut");
+        openModal(<StampCreateRecursiveInfo />, "zoomInOut");
         return;
       }
       if (e.key === "Escape") {

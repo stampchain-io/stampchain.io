@@ -6,7 +6,7 @@ import type { ComponentChildren } from "preact";
 
 /* ===== TYPES ===== */
 interface InfoButtonProps {
-  /** Complete modal, e.g. `<StampCreateClassicHowto />` (renders `ModalBase`). */
+  /** Complete modal, e.g. `<StampCreateClassicInfo />` (renders `ModalBase`). */
   modal: ComponentChildren;
   ariaLabel?: string;
   /** Icon name (defaults to the help icon). */

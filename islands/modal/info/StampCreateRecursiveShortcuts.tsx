@@ -1,6 +1,6 @@
 /* ===== HOW TO RECURSIVE STAMP COMPONENT ===== */
 /* Keyboard shortcuts of the recursive stamp composer. */
-import { InfoModal } from "$islands/modal/InfoModal.tsx";
+import { InfoModal } from "$islands/modal/info/InfoModal.tsx";
 import { textSm } from "$text";
 
 /* ===== DATA ===== */

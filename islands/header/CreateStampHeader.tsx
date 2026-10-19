@@ -1,9 +1,9 @@
 /* ===== CREATE STAMP HEADER ===== */
 import { SelectorButtons } from "$button";
 import { InfoButton } from "$islands/button/InfoButton.tsx";
-import { StampCreateClassicHowto } from "$islands/section/howto/StampCreateClassicHowto.tsx";
-import { StampCreatePoshHowto } from "$islands/section/howto/StampCreatePoshHowto.tsx";
-import { StampCreateRecursiveHowto } from "$islands/section/howto/StampCreateRecursiveHowto.tsx";
+import { StampCreateClassicInfo } from "$islands/modal/info/StampCreateClassicInfo.tsx";
+import { StampCreatePoshInfo } from "$islands/modal/info/StampCreatePoshInfo.tsx";
+import { StampCreateRecursiveInfo } from "$islands/modal/info/StampCreateRecursiveInfo.tsx";
 import { ScrollFadeRow } from "$layout";
 import { useSSRSafeNavigation } from "$lib/hooks/useSSRSafeNavigation.ts";
 import { titlePrimary } from "$text";
@@ -22,9 +22,9 @@ export function CreateStampHeader(
   const { navigate } = useSSRSafeNavigation();
   const stampType = active;
   const howtoByType: Record<CreateStampType, JSX.Element> = {
-    classic: <StampCreateClassicHowto />,
-    posh: <StampCreatePoshHowto />,
-    recursive: <StampCreateRecursiveHowto />,
+    classic: <StampCreateClassicInfo />,
+    posh: <StampCreatePoshInfo />,
+    recursive: <StampCreateRecursiveInfo />,
   };
 
   const handleTypeChange = (value: string) => {

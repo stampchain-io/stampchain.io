@@ -1,10 +1,10 @@
-/* ===== HOW TO RECURSIVE STAMP COMPONENT ===== */
+/* ===== RECURSIVE STAMP INFO ===== */
 /* How-to guide for the recursive stamp composer. */
-import { InfoModal } from "$islands/modal/InfoModal.tsx";
+import { InfoModal } from "$islands/modal/info/InfoModal.tsx";
 import { textSm } from "$text";
 
 /* ===== COMPONENT ===== */
-export const StampCreateRecursiveHowto = () => {
+export const StampCreateRecursiveInfo = () => {
   return (
     <InfoModal title="HOW-TO" subtitle="CREATE A RECURSIVE STAMP">
       <div class="flex flex-col">

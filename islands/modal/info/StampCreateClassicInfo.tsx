@@ -1,9 +1,9 @@
-/* ===== HOW TO STAMP COMPONENT ===== */
-import { InfoModal } from "$islands/modal/InfoModal.tsx";
+/* ===== CLASSIC STAMP INFO ===== */
+import { InfoModal } from "$islands/modal/info/InfoModal.tsx";
 import { textSm } from "$text";
 
 /* ===== COMPONENT ===== */
-export const StampCreateClassicHowto = () => {
+export const StampCreateClassicInfo = () => {
   return (
     <InfoModal title="HOW-TO" subtitle="CREATE A CLASSIC STAMP">
       <div class="flex flex-col">

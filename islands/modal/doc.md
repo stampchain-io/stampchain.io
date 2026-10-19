@@ -165,11 +165,27 @@
 *    - Base: ModalBase
 *    - Purpose: Handles BTC sending transactions
 *
-* 13. InfoModal.tsx
+* 13. info/InfoModal.tsx
 *    - Base: ModalBase
 *    - Purpose: Info / how-to guides (`<InfoModal title="HOW-TO" subtitle="...">`)
 *    - Note: subtitle is optional; sizing constants live in the file; the content scrolls
 *      with scrollbar-background-layer1 and adds horizontal spacing only while overflowing
+*
+* 14. info/StampCreateClassicInfo.tsx
+*    - Base: InfoModal
+*    - Purpose: How-to for creating a classic stamp
+*
+* 15. info/StampCreatePoshInfo.tsx
+*    - Base: InfoModal
+*    - Purpose: How-to for creating a posh stamp
+*
+* 16. info/StampCreateRecursiveInfo.tsx
+*    - Base: InfoModal
+*    - Purpose: How-to for creating a recursive stamp
+*
+* 17. info/StampCreateRecursiveShortcuts.tsx
+*    - Base: InfoModal
+*    - Purpose: Keyboard shortcuts for the recursive stamp composer
 *
 * State Management
 * ---------------

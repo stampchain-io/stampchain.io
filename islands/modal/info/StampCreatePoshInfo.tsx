@@ -1,9 +1,9 @@
-/* ===== HOW TO POSH STAMP COMPONENT ===== */
-import { InfoModal } from "$islands/modal/InfoModal.tsx";
+/* ===== POSH STAMP INFO ===== */
+import { InfoModal } from "$islands/modal/info/InfoModal.tsx";
 import { textSm } from "$text";
 
 /* ===== COMPONENT ===== */
-export const StampCreatePoshHowto = () => {
+export const StampCreatePoshInfo = () => {
   return (
     <InfoModal title="HOW-TO" subtitle="CREATE A POSH STAMP">
       <div class="flex flex-col">
