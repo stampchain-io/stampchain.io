@@ -27,6 +27,7 @@ import {
   container2,
   container3,
   containerIcon,
+  ScrollContainer,
   shadowGlowPurple,
   transitionColors,
 } from "$layout";
@@ -199,20 +200,20 @@ export function StampMintPanel(
 
   return (
     <div class="flex min-h-0 flex-1 flex-col">
-      <div class="flex min-h-0 flex-1 flex-col overflow-hidden">
-        <div class="flex flex-col gap-3">
-          <StampEditionsRow mint={mint} />
-          {cpidAboveLocked && cpidRow}
-          <StampLockedRow mint={mint} />
-          {!cpidAboveLocked && cpidRow}
-          {extraRows && (
-            <>
-              <hr />
-              {extraRows}
-            </>
-          )}
-        </div>
-      </div>
+      <ScrollContainer
+        class="flex min-h-0 flex-1 flex-col gap-3 scrollbar-background-layer1"
+      >
+        <StampEditionsRow mint={mint} />
+        {cpidAboveLocked && cpidRow}
+        <StampLockedRow mint={mint} />
+        {!cpidAboveLocked && cpidRow}
+        {extraRows && (
+          <>
+            <hr />
+            {extraRows}
+          </>
+        )}
+      </ScrollContainer>
       <div class="shrink-0">
         <hr class="my-3" />
         <FeeCalculatorBase
