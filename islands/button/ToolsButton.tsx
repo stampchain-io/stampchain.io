@@ -8,7 +8,11 @@ import {
 } from "$text";
 import { useEffect, useState } from "preact/hooks";
 
-type ToolModalId = "src20-deploy" | "src20-mint" | "src20-transfer";
+type ToolModalId =
+  | "stamp-send"
+  | "src20-deploy"
+  | "src20-mint"
+  | "src20-transfer";
 
 type ToolLink =
   | { title: string; href: string }
@@ -35,7 +39,7 @@ const isModalLink = (
 const toolGroups: readonly ToolGroup[] = [
   {
     heading: "STAMPS",
-    links: [{ title: "Send", href: "/tool/stamp/send" }],
+    links: [{ title: "Send", modal: "stamp-send" }],
   },
   {
     heading: "TOKENS",
@@ -89,6 +93,11 @@ export function ToolsButton(
 
   const openToolModal = (modal: ToolModalId) => {
     onSelectTool?.();
+    if (modal === "stamp-send") {
+      import("$islands/modal/tool/StampSendTool.tsx").then((mod) => {
+        mod.openStampSendTool();
+      });
+    }
     if (modal === "src20-deploy") {
       import("$islands/modal/tool/SRC20DeployTool.tsx").then((mod) => {
         mod.openSRC20DeployTool();

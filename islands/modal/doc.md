@@ -230,6 +230,17 @@
 *      The old page at /tool/src20/mint is unchanged and is not linked from
 *      the Tools menu.
 *
+* 25. info/StampSendInfo.tsx
+*    - Base: InfoModal
+*    - Purpose: How-to for sending a stamp
+*
+* 26. tool/StampSendTool.tsx
+*    - Base: ToolModal
+*    - Purpose: Stamp send form, opened from the header Tools menu
+*    - Note: `openStampSendTool()` calls `openToolModal()` (`slideUpDown`).
+*      The old page at /tool/stamp/send is unchanged and is not linked from
+*      the Tools menu.
+*
 * State Management
 * ---------------
 * - states.ts provides centralized modal state management and operations

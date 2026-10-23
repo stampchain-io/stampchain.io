@@ -238,9 +238,13 @@ export default function App({ Component, state, url }: PageProps<unknown>) {
         <BackgroundTopology />
 
         {/* ===== MAIN CONTENT WRAPPER ===== */}
-        <div class="flex flex-col min-h-screen font-montserrat relative z-[2]">
-          {/* ===== PROVIDERS ===== */}
-          <ToastProvider>
+        {
+          /* ToastProvider wraps the z-[2] wrapper (renders no DOM of its own)
+            so toasts are body-level and stack above the modal overlays */
+        }
+        <ToastProvider>
+          <div class="flex flex-col min-h-screen font-montserrat relative z-[2]">
+            {/* ===== PROVIDERS ===== */}
             <NotificationUpdate />
             <NavigatorProvider>
               <div class="flex flex-col min-h-screen">
@@ -257,8 +261,8 @@ export default function App({ Component, state, url }: PageProps<unknown>) {
                 <Footer />
               </div>
             </NavigatorProvider>
-          </ToastProvider>
-        </div>
+          </div>
+        </ToastProvider>
 
         {/* ===== MODAL LAYER ===== */}
         <ModalProvider />

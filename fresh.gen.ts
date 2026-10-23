@@ -288,6 +288,7 @@ import * as $modal_tool_SRC101RegisterTool from "./islands/modal/tool/SRC101Regi
 import * as $modal_tool_SRC20DeployTool from "./islands/modal/tool/SRC20DeployTool.tsx";
 import * as $modal_tool_SRC20MintTool from "./islands/modal/tool/SRC20MintTool.tsx";
 import * as $modal_tool_SRC20TransferTool from "./islands/modal/tool/SRC20TransferTool.tsx";
+import * as $modal_tool_StampBuyTool from "./islands/modal/tool/StampBuyTool.tsx";
 import * as $modal_tool_StampSendTool from "./islands/modal/tool/StampSendTool.tsx";
 import * as $modal_tool_ToolModal from "./islands/modal/tool/ToolModal.tsx";
 import * as $section_BlockchainStats from "./islands/section/BlockchainStats.tsx";
@@ -712,6 +713,7 @@ const manifest = {
     "./islands/modal/tool/SRC20DeployTool.tsx": $modal_tool_SRC20DeployTool,
     "./islands/modal/tool/SRC20MintTool.tsx": $modal_tool_SRC20MintTool,
     "./islands/modal/tool/SRC20TransferTool.tsx": $modal_tool_SRC20TransferTool,
+    "./islands/modal/tool/StampBuyTool.tsx": $modal_tool_StampBuyTool,
     "./islands/modal/tool/StampSendTool.tsx": $modal_tool_StampSendTool,
     "./islands/modal/tool/ToolModal.tsx": $modal_tool_ToolModal,
     "./islands/section/BlockchainStats.tsx": $section_BlockchainStats,
