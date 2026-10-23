@@ -40,13 +40,13 @@ export const InfoModal = ({ title, subtitle, children }: InfoModalProps) => {
       title={title}
       subtitle={subtitle}
       variant="neutral"
-      className="max-w-[85vw] mobileMd:w-[420px] mobileLg:w-[460px]"
+      className="max-w-[90vw] mobileMd:w-[420px] mobileLg:w-[480px]"
     >
       <div
         ref={scrollRef}
         class={`flex flex-col max-h-[80vh] gap-5
           overflow-y-auto scrollbar-background-layer1
-           ${isOverflowing ? "-mr-3 pr-1.5" : ""}`}
+           ${isOverflowing ? "-mr-3 pr-3" : ""}`}
       >
         {children}
       </div>

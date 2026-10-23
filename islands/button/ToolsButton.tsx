@@ -8,7 +8,7 @@ import {
 } from "$text";
 import { useEffect, useState } from "preact/hooks";
 
-type ToolModalId = "src20-transfer";
+type ToolModalId = "src20-deploy" | "src20-transfer";
 
 type ToolLink =
   | { title: string; href: string }
@@ -40,7 +40,7 @@ const toolGroups: readonly ToolGroup[] = [
   {
     heading: "TOKENS",
     links: [
-      { title: "Deploy", href: "/tool/src20/deploy" },
+      { title: "Deploy", modal: "src20-deploy" },
       { title: "Mint", href: "/tool/src20/mint" },
       { title: "Transfer", modal: "src20-transfer" },
     ],
@@ -89,6 +89,11 @@ export function ToolsButton(
 
   const openToolModal = (modal: ToolModalId) => {
     onSelectTool?.();
+    if (modal === "src20-deploy") {
+      import("$islands/modal/tool/SRC20DeployTool.tsx").then((mod) => {
+        mod.openSRC20DeployTool();
+      });
+    }
     if (modal === "src20-transfer") {
       import("$islands/modal/tool/SRC20TransferTool.tsx").then((mod) => {
         mod.openSRC20TransferTool();

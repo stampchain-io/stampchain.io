@@ -192,17 +192,27 @@
 *    - Base: InfoModal
 *    - Purpose: Keyboard shortcuts for the recursive stamp composer
 *
-* 18. info/SRC20TransferInfo.tsx
+* 18. info/SRC20DeployInfo.tsx
+*    - Base: InfoModal
+*    - Purpose: How-to for deploying an SRC-20 token
+*
+* 19. info/SRC20TransferInfo.tsx
 *    - Base: InfoModal
 *    - Purpose: How-to for transferring an SRC-20 token
 *
-* 19. tool/ToolModal.tsx
+* 20. tool/ToolModal.tsx
 *    - Base: ModalBase
 *    - Purpose: Shell for tool modals (`title`, `subtitle`, `info`, `children`)
 *    - Note: the info button (`headerAction`, plain InfoButton with `stack`) sits at
 *      the top-left and opens `info` on the foreground layer while the tool stays mounted
 *
-* 20. tool/SRC20TransferTool.tsx
+* 21. tool/SRC20DeployTool.tsx
+*    - Base: ToolModal
+*    - Purpose: SRC-20 deploy form, opened from the header Tools menu
+*    - Note: `openSRC20DeployTool()` calls `openToolModal()`. The old page at
+*      /tool/src20/deploy is unchanged and is not linked from the Tools menu.
+*
+* 22. tool/SRC20TransferTool.tsx
 *    - Base: ToolModal
 *    - Purpose: SRC-20 transfer form, opened from the header Tools menu
 *    - Note: `openSRC20TransferTool()` calls `openToolModal()` (`slideUpDown`). The Tools menu

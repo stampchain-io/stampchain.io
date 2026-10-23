@@ -102,7 +102,7 @@ export function ModalBase({
   return (
     <div /* similar to container1 design on the drawers - importing the class consts doesn't display properly */
       className={`
-        relative w-[340px] min-[420px]:w-[360px] mobileMd:w-[380px] p-3
+        relative w-[90vw] min-[420px]:w-[360px] p-3
         ${container0} rounded-3xl
         border border-color-neutral-800
         ${shadow} ${className}

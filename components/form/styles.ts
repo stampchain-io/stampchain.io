@@ -24,7 +24,7 @@ export const inputFieldSquare = `
 `;
 
 export const inputTextarea = `
-  px-3 pt-2 w-full h-[90px] min-h-[90px] resize-none bg-transparent
+  px-3 pt-2 w-full h-[76px] min-h-[76px] resize-none bg-transparent
   ${container2Hover} ${shadowGlowPurpleSm}
   focus:outline-none focus-visible:outline-none
   focus:bg-color-neutral-1000 focus:border-color-hover

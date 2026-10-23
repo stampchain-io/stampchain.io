@@ -157,7 +157,7 @@ export function BlockchainStats(
                   type="icon"
                   name={name}
                   weight="normal"
-                  size="xl"
+                  size="lg"
                   color="neutral500"
                 />
                 <div
