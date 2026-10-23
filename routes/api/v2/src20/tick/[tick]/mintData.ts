@@ -1,10 +1,11 @@
 import { Handlers } from "$fresh/server.ts";
-import { Src20Controller } from "$server/controller/src20Controller.ts";
-import { logger } from "$lib/utils/logger.ts";
-import { ApiResponseUtil } from "$lib/utils/api/responses/apiResponseUtil.ts";
 import type { SRC20MintDataResponse } from "$lib/types/src20.d.ts";
-import { SRC20Service } from "$server/services/src20/index.ts";
+import { ApiResponseUtil } from "$lib/utils/api/responses/apiResponseUtil.ts";
+import { DATA_PLACEHOLDER_DEV } from "$lib/utils/dataPlaceholderProd.ts";
+import { logger } from "$lib/utils/logger.ts";
+import { Src20Controller } from "$server/controller/src20Controller.ts";
 import { RouteType } from "$server/services/infrastructure/cacheService.ts";
+import { SRC20Service } from "$server/services/src20/index.ts";
 
 export const handler: Handlers = {
   async GET(_req, ctx) {
@@ -15,6 +16,15 @@ export const handler: Handlers = {
       }
 
       const normalizedTick = decodeURIComponent(tick);
+
+      if (DATA_PLACEHOLDER_DEV) {
+        const { getDummyMintData } = await import(
+          "$lib/utils/dataPlaceholderDev.ts"
+        );
+        return ApiResponseUtil.success(getDummyMintData(normalizedTick), {
+          forceNoCache: true,
+        });
+      }
 
       const [mintStatus, balanceData] = await Promise.all([
         SRC20Service.QueryService.fetchSrc20MintProgress(normalizedTick),
@@ -45,6 +55,7 @@ export const handler: Handlers = {
       return ApiResponseUtil.internalError(
         error,
         "Error fetching mint data",
+        { forceNoCache: true },
       );
     }
   },

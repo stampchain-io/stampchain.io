@@ -12,7 +12,6 @@ import {
   shadowGlowPurple,
 } from "$layout";
 import {
-  getCurrentUrl,
   isBrowser,
   safeNavigate,
 } from "$lib/utils/navigation/freshNavigationUtils.ts";
@@ -24,7 +23,6 @@ import { getSRC20ImageSrc } from "$lib/utils/ui/media/imageUtils.ts";
 import { cardRowStampNumber, labelXxs, textXs } from "$text";
 import type { SRC20Row } from "$types/src20.d.ts";
 import type { SRC20MintingCompactProps } from "$types/ui.d.ts";
-import type { TargetedEvent } from "preact";
 
 export function SRC20MintingCompact({
   data = [],
@@ -101,39 +99,6 @@ export function SRC20MintingCompact({
                 const href = `/src20/${
                   encodeURIComponent(unicodeEscapeToEmoji(src20.tick ?? ""))
                 }`;
-
-                const mintHref = `/tool/src20/mint?tick=${
-                  encodeURIComponent(src20.tick ?? "")
-                }&trxType=olga`;
-
-                const handleMintClick = (
-                  event: TargetedEvent<HTMLButtonElement>,
-                ) => {
-                  event.preventDefault();
-
-                  if (!isBrowser()) {
-                    return;
-                  }
-
-                  const currentUrl = getCurrentUrl();
-                  const url = new URL(currentUrl);
-                  const isMintPage = url.pathname.includes("/tool/src20/mint");
-
-                  if (isMintPage) {
-                    const newUrl = new URL(currentUrl);
-                    newUrl.searchParams.set("tick", src20.tick ?? "");
-                    newUrl.searchParams.set("trxType", "olga");
-                    globalThis.history.replaceState({}, "", newUrl.toString());
-
-                    globalThis.dispatchEvent(
-                      new CustomEvent("mintTokenSelected", {
-                        detail: { tick: src20.tick ?? "" },
-                      }),
-                    );
-                  } else {
-                    safeNavigate(mintHref);
-                  }
-                };
 
                 return (
                   <tr
@@ -279,9 +244,16 @@ export function SRC20MintingCompact({
                         variant="flat"
                         color="primary"
                         size="xs"
-                        href={mintHref}
-                        onClick={handleMintClick}
-                        class="rounded-xl"
+                        type="button"
+                        onClick={() => {
+                          if (!isBrowser()) return;
+                          const tick = src20.tick ?? "";
+                          import("$islands/modal/tool/SRC20MintTool.tsx").then(
+                            (mod) => {
+                              mod.openSRC20MintTool(tick);
+                            },
+                          );
+                        }}
                       >
                         MINT
                       </Button>

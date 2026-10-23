@@ -17,6 +17,8 @@
  *   /explorer                  routes/explorer/index.tsx
  *   /src20                     routes/src20/index.tsx
  *   /src20/[tick]              routes/src20/[tick].tsx
+ *   /api/v2/src20/tick/[tick]/mintData
+ *                              routes/api/v2/src20/tick/[tick]/mintData.ts
  *   /wallet/[address]          routes/wallet/[address].tsx
  *   /dashboard/[address]       routes/dashboard/[address].tsx
  *
@@ -1312,6 +1314,40 @@ const _DATA_PLACEHOLDER_DEV_TOKEN_DETAIL_PAGES_BY_TICK: Record<
   [DATA_PLACEHOLDER_DEV_TOKEN_PEPE.tick]:
     DATA_PLACEHOLDER_DEV_TOKEN_DETAIL_PAGE_PEPE,
 };
+
+const _dummyMintTokens = [
+  DATA_PLACEHOLDER_DEV_TOKEN_KEVIN,
+  DATA_PLACEHOLDER_DEV_TOKEN_STAMP,
+  DATA_PLACEHOLDER_DEV_TOKEN_PEPE,
+  DATA_PLACEHOLDER_DEV_TOKEN_BOBO,
+];
+
+/** Mint-tool payload for a dummy ticker. Null status when the tick is unknown. */
+export function getDummyMintData(tick: string | undefined) {
+  const token = _dummyMintTokens.find((row) =>
+    row.tick === tick?.toUpperCase()
+  );
+  if (!token) {
+    return { mintStatus: null, holders: 0 };
+  }
+
+  const progress = token.mint_progress;
+  return {
+    mintStatus: {
+      max_supply: progress.max_supply,
+      total_minted: progress.total_minted,
+      limit: progress.limit,
+      total_mints: progress.total_mints,
+      progress: progress.progress,
+      decimals: progress.decimals,
+      tx_hash: progress.tx_hash,
+      tick: token.tick,
+      stamp_url: token.stamp_url,
+      deploy_img: token.deploy_img,
+    },
+    holders: token.holders,
+  };
+}
 
 /** Resolve the dummy token detail page matching the requested tick. */
 export function getDummyTokenDetailPage(

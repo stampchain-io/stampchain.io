@@ -203,10 +203,13 @@ export function SRC20DetailHeader({
       variant="flat"
       color="primary"
       size="sm"
-      href={`/tool/src20/mint?tick=${
-        encodeURIComponent(deployment.tick ?? "")
-      }&trxType=olga`}
-      class="rounded-2xl"
+      type="button"
+      onClick={() => {
+        const tick = deployment.tick ?? "";
+        import("$islands/modal/tool/SRC20MintTool.tsx").then((mod) => {
+          mod.openSRC20MintTool(tick);
+        });
+      }}
     >
       MINT
     </Button>

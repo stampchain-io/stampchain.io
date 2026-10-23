@@ -219,6 +219,17 @@
 *      loads it with a dynamic import. The old page at /tool/src20/transfer is
 *      unchanged and is not linked from the Tools menu.
 *
+* 23. info/SRC20MintInfo.tsx
+*    - Base: InfoModal
+*    - Purpose: How-to for minting an SRC-20 token
+*
+* 24. tool/SRC20MintTool.tsx
+*    - Base: ToolModal
+*    - Purpose: SRC-20 mint form, opened from the Tools menu and Mint buttons
+*    - Note: `openSRC20MintTool(tick?)` calls `openToolModal()` (`slideUpDown`).
+*      The old page at /tool/src20/mint is unchanged and is not linked from
+*      the Tools menu.
+*
 * State Management
 * ---------------
 * - states.ts provides centralized modal state management and operations

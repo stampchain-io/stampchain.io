@@ -12,7 +12,7 @@ export const transitionTransform =
 export const transitionAll =
   "transition-all duration-500 will-change-transform";
 
-// Shadow styles - also used in button/styles.ts
+// Shadow styles - also used in button/styles.ts - rename to neutral/primary
 export const shadow =
   "shadow-[0_4px_8px_rgba(13,11,13,0.2),inset_0_1px_0_rgba(13,11,13,0.1),inset_0_-1px_0_rgba(13,11,13,0.1),inset_0_0_1px_1px_rgba(13,11,13,0.1)]";
 export const shadowL2 =
@@ -76,7 +76,7 @@ export const containerStickyBottom = `sticky bottom-0 mt-auto pb-5`;
 
 // Table card container styles - check if used
 export const containerCardTable =
-  `rounded-3xl ${container1} ${shadowGlowPurple} hover:border-color-purple-light`;
+  `rounded-3xl ${container1} ${shadowGlowPurple} hover:border-color-primary-400-light`;
 
 // Global styles
 export const containerColData = "flex flex-col -space-y-1"; // Data specific
@@ -191,9 +191,11 @@ export const cellStickyLeft2 = `sticky left-10 ${cell} z-10`;
 
 /* ===== IMAGE STYLES ===== */
 export const imagePreviewTool =
-  `flex items-center justify-center min-w-[100px] h-[100px] ${container2}`;
+  `flex items-center justify-center min-w-[76px] h-[76px] ${container2}`;
 export const imageUploadTool =
-  `flex items-center justify-center min-w-[100px] h-[100px] ${container2} hover:bg-color-grey-dark/30 ${transitionColors} cursor-pointer`;
+  `flex items-center justify-center min-w-[76px] h-[76px]
+  ${container2Hover} ${shadowGlowPurpleSm}
+  ${transitionColors} cursor-pointer group`;
 
 /* ===== LOADER STYLES ===== */
 // Text loader styles are defined in /text/styles.ts
@@ -205,14 +207,21 @@ const loaderSpin = "motion-essential animate-spin rounded-full border-b-[2px]";
 export const loaderSkeleton =
   `bg-color-background border border-color-border animate-pulse`;
 // Spinning loader styles
-export const loaderSpinXsGrey = `${loaderSpin} w-3 h-3 border-color-grey`;
-export const loaderSpinSmGrey = `${loaderSpin} w-5 h-5 border-color-grey`;
-export const loaderSpinGrey = `${loaderSpin} w-7 h-7 border-color-grey`;
-export const loaderSpinLgGrey = `${loaderSpin} w-9 h-9 border-color-grey`;
-export const loaderSpinXsPurple = `${loaderSpin} w-3 h-3 border-color-purple`;
-export const loaderSpinSmPurple = `${loaderSpin} w-5 h-5 border-color-purple`;
-export const loaderSpinPurple = `${loaderSpin} w-7 h-7 border-color-purple`;
-export const loaderSpinLgPurple = `${loaderSpin} w-9 h-9 border-color-purple`;
+export const loaderSpinXsGrey =
+  `${loaderSpin} w-3 h-3 border-color-neutral-400`;
+export const loaderSpinSmGrey =
+  `${loaderSpin} w-5 h-5 border-color-neutral-400`;
+export const loaderSpinGrey = `${loaderSpin} w-7 h-7 border-color-neutral-400`;
+export const loaderSpinLgGrey =
+  `${loaderSpin} w-9 h-9 border-color-neutral-400`;
+export const loaderSpinXsPurple =
+  `${loaderSpin} w-3 h-3 border-color-primary-400`;
+export const loaderSpinSmPurple =
+  `${loaderSpin} w-5 h-5 border-color-primary-400`;
+export const loaderSpinPurple =
+  `${loaderSpin} w-7 h-7 border-color-primary-400`;
+export const loaderSpinLgPurple =
+  `${loaderSpin} w-9 h-9 border-color-primary-400`;
 
 /* ===== TYPE DEFINITIONS ===== */
 export type LayoutStyles = {
@@ -283,7 +292,7 @@ export type LayoutStyles = {
   imagePreviewTool: string;
   imageUploadTool: string;
 
-  // Loader styles
+  // Loader styles - rename to neutral/primary
   loaderSpinXsGrey: string;
   loaderSpinSmGrey: string;
   loaderSpinGrey: string;
