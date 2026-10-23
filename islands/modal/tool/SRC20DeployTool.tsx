@@ -5,17 +5,14 @@ import { walletContext } from "$client/wallet/wallet.ts";
 import { ProgressiveEstimationIndicator } from "$components/indicators/ProgressiveEstimationIndicator.tsx";
 import { inputTextarea, SRC20InputField } from "$form";
 import { Icon } from "$icon";
-import { DeployToolSkeleton } from "$indicators";
 import { SRC20DeployInfo } from "$islands/modal/info/SRC20DeployInfo.tsx";
 import { openToolModal, ToolModal } from "$islands/modal/tool/ToolModal.tsx";
 import {
   container2,
-  container2Hover,
   containerColForm,
   containerRowForm,
-  shadowGlowPurpleSm,
+  imageUploadTool,
   transitionAll,
-  transitionColors,
 } from "$layout";
 import { useTransactionConstructionService } from "$lib/hooks/useTransactionConstructionService.ts";
 import type { APIResponse } from "$lib/types/api.ts";
@@ -49,7 +46,6 @@ export function SRC20DeployTool(
     handleChangeFee,
     handleInputChange,
     handleSubmit,
-    config,
     isSubmitting,
     submissionMessage,
     apiError,
@@ -361,19 +357,6 @@ export function SRC20DeployTool(
     };
   }, []);
 
-  /* ===== CONFIG CHECK ===== */
-  if (!config) {
-    return (
-      <ToolModal
-        title="SRC-20"
-        subtitle="DEPLOY"
-        info={<SRC20DeployInfo />}
-      >
-        <DeployToolSkeleton />
-      </ToolModal>
-    );
-  }
-
   /* ===== COMPONENT RENDER ===== */
   return (
     <ToolModal
@@ -397,9 +380,7 @@ export function SRC20DeployTool(
             {/* Image upload preview */}
             <div
               id="image-preview"
-              class={`relative flex flex-col items-center justify-center content-center mx-auto min-h-[76px] min-w-[76px]
-              ${container2} ${container2Hover} ${shadowGlowPurpleSm}
-              ${transitionColors} cursor-pointer group`}
+              class={`${imageUploadTool} relative flex-col content-center mx-auto group`}
               onMouseMove={handleMouseMove}
               onMouseEnter={handleUploadMouseEnter}
               onMouseLeave={handleUploadMouseLeave}
@@ -431,7 +412,7 @@ export function SRC20DeployTool(
               {formState.file === null && (
                 <label
                   for="upload"
-                  class="cursor-pointer h-full flex flex-col items-center justify-center gap-3"
+                  class="cursor-pointer h-full w-full flex flex-col items-center justify-center gap-3 group-hover:[&_svg]:stroke-color-hover"
                 >
                   <Icon
                     type="icon"
@@ -439,7 +420,7 @@ export function SRC20DeployTool(
                     weight="extraLight"
                     size="xl"
                     color="custom"
-                    className="stroke-color-neutral-600 group-hover:stroke-color-hover"
+                    className="stroke-color-neutral-600 hover:stroke-color-hover group-hover:stroke-color-hover"
                   />
                 </label>
               )}

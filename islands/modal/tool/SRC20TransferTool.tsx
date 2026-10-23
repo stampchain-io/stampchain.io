@@ -7,7 +7,6 @@ import {
   inputFieldDropdownHover,
   SRC20InputField,
 } from "$form";
-import { TransferToolSkeleton } from "$indicators";
 import { SRC20TransferInfo } from "$islands/modal/info/SRC20TransferInfo.tsx";
 import { openToolModal, ToolModal } from "$islands/modal/tool/ToolModal.tsx";
 import { container2, containerColForm, rowResponsiveForm } from "$layout";
@@ -41,7 +40,6 @@ export function SRC20TransferTool(
     handleChangeFee,
     handleInputChange,
     handleSubmit,
-    config,
     isSubmitting,
     submissionMessage,
     apiError,
@@ -304,24 +302,11 @@ export function SRC20TransferTool(
     console.log("Token input ref:", tokenInputRef.current);
   }, []);
 
-  /* ===== CONFIG CHECK ===== */
   const connectIfNeeded = () => {
     if (isConnected) return false;
     showConnectModal();
     return true;
   };
-
-  if (!config) {
-    return (
-      <ToolModal
-        title="SRC-20"
-        subtitle="TRANSFER"
-        info={<SRC20TransferInfo />}
-      >
-        <TransferToolSkeleton />
-      </ToolModal>
-    );
-  }
 
   return (
     <ToolModal
