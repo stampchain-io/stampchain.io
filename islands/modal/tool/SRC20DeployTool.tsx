@@ -418,7 +418,7 @@ export function SRC20DeployTool(
                     type="icon"
                     name="uploadImage"
                     weight="extraLight"
-                    size="xl"
+                    size="xxl"
                     color="custom"
                     className="stroke-color-neutral-600 hover:stroke-color-hover group-hover:stroke-color-hover"
                   />
