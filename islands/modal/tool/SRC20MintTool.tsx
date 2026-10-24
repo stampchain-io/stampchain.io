@@ -50,7 +50,7 @@ const MintProgress = (
         {/* Progress information */}
         <h5 class={labelSm}>
           PROGRESS
-          <span class={`${valueSm} !text-color-primary-400 pl-3`}>
+          <span class={`${valueSm} pl-3`}>
             {progress?.toString().match(/^-?\d+(?:\.\d{0,2})?/)?.[0] ?? "0"}
             <span class="font-light">
               %
