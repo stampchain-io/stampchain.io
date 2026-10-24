@@ -8,12 +8,12 @@ export const StampPoshCta = () => {
   return (
     <>
       {/* ===== CONTENT SECTION ===== */}
-      <div class={`${containerBackground} mt-6 mobileLg:mt-12`}>
+      <div class={`${containerBackground} mt-5 mobileLg:mt-7.5`}>
         <h4 class={subtitleNeutral}>
           NAMED ASSETS
         </h4>
         <div
-          class={`flex flex-col mobileLg:flex-row gap-6 tablet:gap-9 ${text}`}
+          class={`flex flex-col mobileLg:flex-row gap-5 tablet:gap-7.5 ${text}`}
         >
           <div class={`flex flex-col w-full mobileLg:w-1/2`}>
             <p class="tablet:mb-0">
@@ -48,8 +48,8 @@ export const StampPoshCta = () => {
           <Button
             variant="outline"
             color="neutral"
-            href="/tool/stamp/create"
-            class="float-right mt-6"
+            href="/create/posh"
+            class="float-right mt-5"
           >
             STAMP
           </Button>
