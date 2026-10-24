@@ -1,8 +1,7 @@
 /* ===== STAMP INFO COMPONENT ===== */
 import { Button } from "$button";
 import { Icon, UserProfileIcon } from "$icon";
-import BuyStampModal from "$islands/modal/BuyStampModal.tsx";
-import { openModal } from "$islands/modal/states.ts";
+import { openStampBuyTool } from "$islands/modal/tool/StampBuyTool.tsx";
 import {
   container3,
   containerIcon,
@@ -113,18 +112,12 @@ export function StampInfo(
       setSelectedDispenser(dispenser);
     }
 
-    // Create modal content
-    const modalContent = (
-      <BuyStampModal
-        stamp={stamp}
-        fee={fee}
-        handleChangeFee={handleChangeFee}
-        dispenser={selectedDispenser || lowestPriceDispenser}
-      />
-    );
-
-    // Show modal with animation
-    openModal(modalContent, "slideUpDown");
+    openStampBuyTool({
+      stamp,
+      fee,
+      handleChangeFee,
+      dispenser: selectedDispenser || lowestPriceDispenser,
+    });
   };
 
   const createdDate = (() => {

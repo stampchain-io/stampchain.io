@@ -1,5 +1,5 @@
 /* ===== TOOL MODAL COMPONENT ===== */
-/* Tool shells: title, optional subtitle, and a how-to opened on top. */
+/* Tool shells: title, optional subtitle, and an optional how-to on top. */
 import { InfoButton } from "$islands/button/InfoButton.tsx";
 import { openModal } from "$islands/modal/states.ts";
 import { ModalBase } from "$layout";
@@ -17,7 +17,7 @@ interface ToolModalProps {
   /** Optional line under the title. */
   subtitle?: string;
   /** Info modal opened from the header button, e.g. `<SRC20TransferInfo />`. */
-  info: ComponentChildren;
+  info?: ComponentChildren;
   children: ComponentChildren;
 }
 
@@ -62,14 +62,18 @@ export function ToolModal(
       title={title}
       subtitle={subtitle}
       variant="primary"
-      headerAction={
-        <InfoButton
-          modal={info}
-          stack
-          variant="plain"
-          ariaLabel={`${title} how-to`}
-        />
-      }
+      {...(info
+        ? {
+          headerAction: (
+            <InfoButton
+              modal={info}
+              stack
+              variant="plain"
+              ariaLabel={`${title} how-to`}
+            />
+          ),
+        }
+        : {})}
     >
       {
         /* Padding is pulled back with a negative margin so hover glows

@@ -121,136 +121,140 @@
 *
 * Active Modals
 * ------------
-* 1. BuyStampModal.tsx
-*    - Base: ModalBase
-*    - Purpose: Handles stamp purchase transactions
-*
-* 2. ConnectWalletModal.tsx
+* 1. ConnectWalletModal.tsx
 *    - Base: ModalBase
 *    - Purpose: Manages wallet connections
 *    - Note: Rendered with a list of WalletProvider connectors (one per supported wallet)
 *
-* 3. DetailSRC101Modal.tsx
+* 2. DetailSRC101Modal.tsx
 *    - Base: ModalBase
 *    - Purpose: Displays SRC101 token details
 *
-* 4. DonateStampModal.tsx
+* 3. DonateStampModal.tsx
 *    - Base: ModalBase
 *    - Purpose: Handles stamp donation transactions
 *
-* 5. EditCreatorNameModal.tsx
+* 4. EditCreatorNameModal.tsx
 *    - Base: ModalBase
 *    - Purpose: Allows a stamp creator to edit/update their display name
 *
-* 6. FilterSRC20Modal.tsx
+* 5. FilterSRC20Modal.tsx
 *    - Base: ModalBase
 *    - Purpose: Provides filtering options for SRC20 tokens
 *
-* 7. PreviewCodeModal.tsx
+* 6. PreviewCodeModal.tsx
 *    - Base: ModalBase
 *    - Purpose: Displays code previews
 *
-* 8. PreviewImageModal.tsx
+* 7. PreviewImageModal.tsx
 *    - Base: ModalBase
 *    - Purpose: Shows image previews
 *
-* 9. RecieveAddyModal.tsx
+* 8. RecieveAddyModal.tsx
 *    - Base: ModalBase
 *    - Purpose: Displays receiving address with QR code
 *
-* 10. SearchSRC20Modal.tsx
+* 9. SearchSRC20Modal.tsx
 *    - Base: ModalSearchBase
 *    - Purpose: Search functionality for SRC20 tokens
 *
-* 11. SearchStampModal.tsx
+* 10. SearchStampModal.tsx
 *    - Base: ModalSearchBase
 *    - Purpose: Search functionality for stamps
 *
-* 12. SendBTCModal.tsx
+* 11. SendBTCModal.tsx
 *    - Base: ModalBase
 *    - Purpose: Handles BTC sending transactions
 *
-* 13. info/InfoModal.tsx
+* 12. info/InfoModal.tsx
 *    - Base: ModalBase
 *    - Purpose: Info / how-to guides (`<InfoModal title="HOW-TO" subtitle="...">`)
 *    - Note: subtitle is optional; sizing constants live in the file; the content scrolls
 *      with scrollbar-background-layer1 and adds horizontal spacing only while overflowing
 *
-* 14. info/StampCreateClassicInfo.tsx
+* 13. info/StampCreateClassicInfo.tsx
 *    - Base: InfoModal
 *    - Purpose: How-to for creating a classic stamp
 *
-* 15. info/StampCreatePoshInfo.tsx
+* 14. info/StampCreatePoshInfo.tsx
 *    - Base: InfoModal
 *    - Purpose: How-to for creating a posh stamp
 *
-* 16. info/StampCreateRecursiveInfo.tsx
+* 15. info/StampCreateRecursiveInfo.tsx
 *    - Base: InfoModal
 *    - Purpose: How-to for creating a recursive stamp
 *
-* 17. info/StampCreateRecursiveShortcuts.tsx
+* 16. info/StampCreateRecursiveShortcuts.tsx
 *    - Base: InfoModal
 *    - Purpose: Keyboard shortcuts for the recursive stamp composer
 *
-* 18. info/SRC20DeployInfo.tsx
+* 17. info/SRC20DeployInfo.tsx
 *    - Base: InfoModal
 *    - Purpose: How-to for deploying an SRC-20 token
 *
-* 19. info/SRC20TransferInfo.tsx
+* 18. info/SRC20TransferInfo.tsx
 *    - Base: InfoModal
 *    - Purpose: How-to for transferring an SRC-20 token
 *
-* 20. tool/ToolModal.tsx
+* 19. tool/ToolModal.tsx
 *    - Base: ModalBase
-*    - Purpose: Shell for tool modals (`title`, `subtitle`, `info`, `children`)
-*    - Note: the info button (`headerAction`, plain InfoButton with `stack`) sits at
-*      the top-left and opens `info` on the foreground layer while the tool stays mounted
+*    - Purpose: Shell for tool modals (`title`, `subtitle`, optional `info`, `children`)
+*    - Note: when `info` is passed, the info button (`headerAction`, plain InfoButton
+*      with `stack`) sits at the top-left and opens it on the foreground layer while
+*      the tool stays mounted. When `info` is omitted, the button is not rendered.
 *
-* 21. tool/SRC20DeployTool.tsx
+* 20. tool/SRC20DeployTool.tsx
 *    - Base: ToolModal
 *    - Purpose: SRC-20 deploy form, opened from the header Tools menu
 *    - Note: `openSRC20DeployTool()` calls `openToolModal()`. The old page at
 *      /tool/src20/deploy is unchanged and is not linked from the Tools menu.
 *
-* 22. tool/SRC20TransferTool.tsx
+* 21. tool/SRC20TransferTool.tsx
 *    - Base: ToolModal
 *    - Purpose: SRC-20 transfer form, opened from the header Tools menu
 *    - Note: `openSRC20TransferTool()` calls `openToolModal()` (`slideUpDown`). The Tools menu
 *      loads it with a dynamic import. The old page at /tool/src20/transfer is
 *      unchanged and is not linked from the Tools menu.
 *
-* 23. info/SRC20MintInfo.tsx
+* 22. info/SRC20MintInfo.tsx
 *    - Base: InfoModal
 *    - Purpose: How-to for minting an SRC-20 token
 *
-* 24. tool/SRC20MintTool.tsx
+* 23. tool/SRC20MintTool.tsx
 *    - Base: ToolModal
 *    - Purpose: SRC-20 mint form, opened from the Tools menu and Mint buttons
 *    - Note: `openSRC20MintTool(tick?)` calls `openToolModal()` (`slideUpDown`).
 *      The old page at /tool/src20/mint is unchanged and is not linked from
 *      the Tools menu.
 *
-* 25. info/StampSendInfo.tsx
+* 24. info/StampSendInfo.tsx
 *    - Base: InfoModal
 *    - Purpose: How-to for sending a stamp
 *
-* 26. tool/StampSendTool.tsx
+* 25. tool/StampSendTool.tsx
 *    - Base: ToolModal
 *    - Purpose: Stamp send form, opened from the header Tools menu
 *    - Note: `openStampSendTool()` calls `openToolModal()` (`slideUpDown`).
 *      The old page at /tool/stamp/send is unchanged and is not linked from
 *      the Tools menu.
 *
-* 27. info/SRC101RegisterInfo.tsx
+* 26. info/SRC101RegisterInfo.tsx
 *    - Base: InfoModal
 *    - Purpose: How-to for registering a bitname
 *
-* 28. tool/SRC101RegisterTool.tsx
+* 27. tool/SRC101RegisterTool.tsx
 *    - Base: ToolModal
 *    - Purpose: Bitname register form, opened from the header Tools menu
 *    - Note: `openSRC101RegisterTool()` calls `openToolModal()` (`slideUpDown`).
 *      The old page at /tool/src101/mint is unchanged and is not linked from
 *      the Tools menu.
+*
+* 28. tool/StampBuyTool.tsx
+*    - Base: ToolModal
+*    - Purpose: Stamp purchase form, opened from listing and stamp detail BUY buttons
+*    - Note: `openStampBuyTool()` calls `openToolModal()` (`slideUpDown`). There is
+*      no how-to modal yet, so the header info button is omitted. Not linked from
+*      the Tools menu; buy always targets a specific stamp and dispenser.
 *
 * State Management
 * ---------------

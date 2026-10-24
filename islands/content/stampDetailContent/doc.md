@@ -47,7 +47,7 @@
 *   `$icon`), stamp type/edition pills, attribute icons (recursive, divisible,
 *   keyburned, locked), an optional collection pill, file stats (`StatItem`: file
 *   type, file size, dimensions, created date, tx hash), and pricing/buy UI
-*   (`StatPrice`, `Button` "BUY" opening `BuyStampModal`) plus an open-dispensers
+*   (`StatPrice`, `Button` "BUY" opening `StampBuyTool`) plus an open-dispensers
 *   listings table (`StampListingsOpenTable`) when 2+ dispensers exist.
 *   Fetches dispensers (`/api/v2/stamps/{cpid}/dispensers`) and SRC-101 detail
 *   (`getSRC101Data`) on mount; computes pricing from v2.3 `marketData` with legacy

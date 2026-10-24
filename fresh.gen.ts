@@ -259,7 +259,6 @@ import * as $layout_NavigatorProvider from "./islands/layout/NavigatorProvider.t
 import * as $layout_PageVisibilityManager from "./islands/layout/PageVisibilityManager.tsx";
 import * as $layout_ScrollFadeRow from "./islands/layout/ScrollFadeRow.tsx";
 import * as $layout_WalletProvider from "./islands/layout/WalletProvider.tsx";
-import * as $modal_BuyStampModal from "./islands/modal/BuyStampModal.tsx";
 import * as $modal_ConnectWalletModal from "./islands/modal/ConnectWalletModal.tsx";
 import * as $modal_DetailSRC101Modal from "./islands/modal/DetailSRC101Modal.tsx";
 import * as $modal_DonateStampModal from "./islands/modal/DonateStampModal.tsx";
@@ -677,7 +676,6 @@ const manifest = {
     "./islands/layout/PageVisibilityManager.tsx": $layout_PageVisibilityManager,
     "./islands/layout/ScrollFadeRow.tsx": $layout_ScrollFadeRow,
     "./islands/layout/WalletProvider.tsx": $layout_WalletProvider,
-    "./islands/modal/BuyStampModal.tsx": $modal_BuyStampModal,
     "./islands/modal/ConnectWalletModal.tsx": $modal_ConnectWalletModal,
     "./islands/modal/DetailSRC101Modal.tsx": $modal_DetailSRC101Modal,
     "./islands/modal/DonateStampModal.tsx": $modal_DonateStampModal,

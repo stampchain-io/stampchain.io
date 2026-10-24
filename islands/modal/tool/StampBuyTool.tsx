@@ -1,13 +1,14 @@
-/* ===== BUY STAMP MODAL COMPONENT ===== */
+/* ===== STAMP BUY TOOL MODAL ===== */
 import { useTransactionForm } from "$client/hooks/useTransactionForm.ts";
 import { walletContext } from "$client/wallet/wallet.ts";
 import { handleModalClose } from "$components/layout/ModalBase.tsx";
-import { inputFieldSquare } from "$form";
 import { UserProfileIcon } from "$icon";
 import { StampImage } from "$islands/content/stampDetailContent/StampImage.tsx";
+import { InputField } from "$islands/form/InputField.tsx";
 import { stackConnectWalletModal } from "$islands/layout/ModalStack.tsx";
 import { closeModal } from "$islands/modal/states.ts";
-import { ModalBase } from "$layout";
+import { openToolModal, ToolModal } from "$islands/modal/tool/ToolModal.tsx";
+import { container2 } from "$layout";
 import { useTransactionConstructionService } from "$lib/hooks/useTransactionConstructionService.ts";
 import { handleUnknownError } from "$lib/utils/errorHandling.ts";
 import { logger } from "$lib/utils/logger.ts";
@@ -15,25 +16,27 @@ import { mapProgressiveFeeDetails } from "$lib/utils/performance/fees/fee-estima
 import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { showToast } from "$lib/utils/ui/notifications/toastSignal.ts";
 import { FeeCalculatorBase } from "$section";
-import { label, labelSm } from "$text";
+import { labelSm, labelXs, valueSm } from "$text";
 import type { BuyStampModalProps } from "$types/ui.d.ts";
 import { useEffect, useState } from "preact/hooks";
-
-/* ===== TYPES ===== */
+/* ===== OPENER ===== */
+export function openStampBuyTool(props: BuyStampModalProps) {
+  openToolModal(<StampBuyTool {...props} />);
+}
 
 /* ===== COMPONENT ===== */
-const BuyStampModal = ({
+export function StampBuyTool({
   stamp,
   fee: initialFee,
   handleChangeFee,
   dispenser,
-}: BuyStampModalProps) => {
+}: BuyStampModalProps) {
   /* ===== CONTEXT ===== */
   const { wallet } = walletContext;
 
   /* ===== STATE ===== */
   const [tosAgreed, setTosAgreed] = useState(false);
-  const [quantity, setQuantity] = useState(1);
+  const [editions, setEditions] = useState("1");
   const [maxQuantity, setMaxQuantity] = useState(1);
   const [_pricePerUnit, setPricePerUnit] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -132,19 +135,21 @@ const BuyStampModal = ({
       );
       setMaxQuantity(maxQty);
       setPricePerUnit(dispenser.satoshirate);
-      setTotalPrice(quantity * dispenser.satoshirate);
+      const count = parseInt(editions, 10) || 1;
+      const priced = maxQty > 0 ? Math.min(count, maxQty) : count;
+      setTotalPrice(priced * dispenser.satoshirate);
     }
-  }, [dispenser, quantity]);
+  }, [dispenser, editions]);
 
   useEffect(() => {
     logger.debug("ui", {
-      message: "BuyStampModal mounted",
-      component: "BuyStampModal",
+      message: "StampBuyTool mounted",
+      component: "StampBuyTool",
     });
     return () => {
       logger.debug("ui", {
-        message: "BuyStampModal unmounting",
-        component: "BuyStampModal",
+        message: "StampBuyTool unmounting",
+        component: "StampBuyTool",
       });
     };
   }, []);
@@ -160,22 +165,22 @@ const BuyStampModal = ({
   useEffect(() => {
     if (feeEstimationError) {
       logger.debug("system", {
-        message: "Fee estimation error in BuyStampModal",
+        message: "Fee estimation error in StampBuyTool",
         error: feeEstimationError,
       });
     }
   }, [feeEstimationError]);
 
   /* ===== EVENT HANDLERS ===== */
+  const editionCount = parseInt(editions, 10) || 1;
+  const pricedQuantity = maxQuantity > 0
+    ? Math.min(editionCount, maxQuantity)
+    : editionCount;
+
   const handleQuantityChange = (e: Event) => {
-    const value = parseInt((e.target as HTMLInputElement).value, 10);
-    if (value > maxQuantity) {
-      setQuantity(maxQuantity);
-    } else if (value < 1 || isNaN(value)) {
-      setQuantity(1);
-    } else {
-      setQuantity(value);
-    }
+    const raw = (e.target as HTMLInputElement).value;
+    if (!/^\d*$/.test(raw)) return;
+    setEditions(raw === "" ? "1" : raw);
   };
 
   /* ===== TRANSACTION HANDLING ===== */
@@ -340,31 +345,24 @@ const BuyStampModal = ({
 
   /* ===== RENDER ===== */
   return (
-    <ModalBase
-      onClose={() => {
-        logger.debug("ui", {
-          message: "Modal closing",
-          component: "BuyStampModal",
-        });
-        closeModal();
-      }}
-      title="BUY"
-    >
+    <ToolModal title="STAMP" subtitle="BUY">
       {/* ===== STAMP DETAILS SECTION ===== */}
       {stamp && (
-        <div className="flex flex-col gap-2">
-          <div className="flex flex-row gap-5">
-            <div className="flex flex-col w-[92px] aspect-square">
+        <div className="flex flex-col gap-3">
+          <div className={`flex flex-row gap-5`}>
+            <div className="flex flex-col w-[92px] aspect-square shrink-0">
               <StampImage
                 stamp={stamp}
                 containerClassName="!p-0.5"
                 flag={false}
               />
             </div>
-            <div className="flex flex-col">
+            <div
+              className={`flex flex-col justify-center`}
+            >
               <h5 className="font-extrabold text-2xl
    text-color-neutral-200 group-hover:text-color-hover
-   tracking-wide pt-2">
+   tracking-wide">
                 <span className="font-light">
                   #
                 </span>
@@ -391,94 +389,94 @@ const BuyStampModal = ({
           </div>
 
           {/* ===== QUANTITY SELECTION ===== */}
-          <div className="flex flex-row pt-2 w-full justify-between items-center">
-            <div className="flex flex-col items-start -space-y-0.5">
-              <h5 class={`${label} !text-color-neutral-200`}>
+          <div class="flex items-center justify-between gap-3 pt-2">
+            <div class="flex flex-col items-start -space-y-0.5">
+              <h5 class={`${valueSm} !text-color-neutral-200`}>
                 EDITIONS
               </h5>
-              <h6 class={labelSm}>
+              <h6 class={labelXs}>
                 MAX {maxQuantity}
               </h6>
             </div>
-            <div className="flex flex-col items-end">
-              <input
-                type="number"
-                min="1"
-                max={maxQuantity}
-                value={quantity}
+            <div
+              class="w-8 shrink-0"
+              style={editions.length > 1
+                ? { width: `calc(${editions.length}ch + 1.5rem + 2px)` }
+                : undefined}
+            >
+              <InputField
+                type="text"
+                inputMode="numeric"
+                value={editions}
                 onChange={handleQuantityChange}
-                className={inputFieldSquare}
+                textAlign="center"
               />
             </div>
           </div>
-          <hr className="w-full mt-2 mb-4.5 border-color-neutral-800 border-t-1" />
         </div>
       )}
 
-      {/* ===== 🎯 PROGRESSIVE FEE STATUS INDICATOR ===== */}
-      {/* Using simplified fee display approach */}
-
       {/* ===== FEE CALCULATOR ===== */}
-      <FeeCalculatorBase
-        fee={formState.fee || 1}
-        handleChangeFee={(newFee: number) => {
-          logger.debug("ui", {
-            message: "Fee changing",
-            newFee,
-            component: "BuyStampModal",
-          });
-          internalHandleChangeFee(newFee);
-        }}
-        type="buy"
-        tosAgreed={tosAgreed}
-        onTosChange={setTosAgreed}
-        amount={totalPrice}
-        price={dispenser ? (dispenser.satoshirate / 100000000) : displayPrice}
-        edition={quantity}
-        fromPage="stamp_buy"
-        BTCPrice={formState.BTCPrice || 0}
-        isSubmitting={isSubmitting}
-        onSubmit={() => {
-          logger.debug("ui", {
-            message: "Submit clicked",
-            component: "BuyStampModal",
-          });
-          handleBuyClick();
-        }}
-        onCancel={() => {
-          handleModalClose();
-        }}
-        buttonName="BUY"
-        // ===== 🚀 PROGRESSIVE FEE DETAILS INTEGRATION =====
-        feeDetails={(() => {
-          const baseFeeDetails = mapProgressiveFeeDetails(
-            exactFeeDetails || progressiveFeeDetails,
-          );
+      <div class={`${container2} p-3 pt-2`}>
+        <FeeCalculatorBase
+          fee={formState.fee || 1}
+          handleChangeFee={(newFee: number) => {
+            logger.debug("ui", {
+              message: "Fee changing",
+              newFee,
+              component: "StampBuyTool",
+            });
+            internalHandleChangeFee(newFee);
+          }}
+          type="buy"
+          tosAgreed={tosAgreed}
+          onTosChange={setTosAgreed}
+          amount={totalPrice}
+          price={dispenser ? (dispenser.satoshirate / 100000000) : displayPrice}
+          edition={pricedQuantity}
+          fromPage="stamp_buy"
+          BTCPrice={formState.BTCPrice || 0}
+          isSubmitting={isSubmitting}
+          onSubmit={() => {
+            logger.debug("ui", {
+              message: "Submit clicked",
+              component: "StampBuyTool",
+            });
+            handleBuyClick();
+          }}
+          onCancel={() => {
+            handleModalClose();
+          }}
+          buttonName="BUY"
+          // ===== 🚀 PROGRESSIVE FEE DETAILS INTEGRATION =====
+          feeDetails={(() => {
+            const baseFeeDetails = mapProgressiveFeeDetails(
+              exactFeeDetails || progressiveFeeDetails,
+            );
 
-          // For buy transactions, add the purchase amount to totalValue
-          // and remove dust since dispense uses OP_RETURN (no dust needed)
-          if (
-            baseFeeDetails && totalPrice > 0 &&
-            baseFeeDetails.minerFee !== undefined
-          ) {
-            // Recalculate totalValue: minerFee only (no dust) + purchase amount
-            const correctedTotalValue = baseFeeDetails.minerFee + totalPrice;
+            // For buy transactions, add the purchase amount to totalValue
+            // and remove dust since dispense uses OP_RETURN (no dust needed)
+            if (
+              baseFeeDetails && totalPrice > 0 &&
+              baseFeeDetails.minerFee !== undefined
+            ) {
+              // Recalculate totalValue: minerFee only (no dust) + purchase amount
+              const correctedTotalValue = baseFeeDetails.minerFee + totalPrice;
 
-            return {
-              ...baseFeeDetails,
-              dustValue: 0, // Dispense transactions use OP_RETURN, no dust needed
-              totalValue: correctedTotalValue,
-              itemPrice: totalPrice, // Add the stamp price for display in details
-              // Add a custom field to indicate this includes purchase amount
-              includesPurchaseAmount: true,
-            };
-          }
+              return {
+                ...baseFeeDetails,
+                dustValue: 0, // Dispense transactions use OP_RETURN, no dust needed
+                totalValue: correctedTotalValue,
+                itemPrice: totalPrice, // Add the stamp price for display in details
+                // Add a custom field to indicate this includes purchase amount
+                includesPurchaseAmount: true,
+              };
+            }
 
-          return baseFeeDetails;
-        })()}
-      />
-    </ModalBase>
+            return baseFeeDetails;
+          })()}
+        />
+      </div>
+    </ToolModal>
   );
-};
-
-export default BuyStampModal;
+}

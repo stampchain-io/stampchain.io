@@ -138,7 +138,7 @@ The Table system provides a comprehensive, scalable solution for displaying tabu
   - **Features**:
     - `useLowestPriceDispenser()` lazily resolves the cheapest open dispenser once the row scrolls into view
     - `ActivityLevelIndicator` for market activity
-    - BUY button re-checks for a fresher dispenser (`getFreshDispenserForPurchase`) and opens `BuyStampModal`
+    - BUY button re-checks for a fresher dispenser (`getFreshDispenserForPurchase`) and opens `StampBuyTool`
   - **Location**: `components/table/marketplaceTable/StampListings.tsx`
 
 - **StampSales.tsx**: Recent marketplace sales

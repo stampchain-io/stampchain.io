@@ -6,8 +6,7 @@ import { ActivityLevelIcon } from "$components/indicators/ActivityLevelIcon.tsx"
 import { ActivityLevelIndicator } from "$components/indicators/ActivityLevelIndicator.tsx";
 import { Icon, LoadingIcon, PlaceholderImage, UserProfileIcon } from "$icon";
 import StampTextContent from "$islands/content/stampDetailContent/StampTextContent.tsx";
-import BuyStampModal from "$islands/modal/BuyStampModal.tsx";
-import { openModal } from "$islands/modal/states.ts";
+import { openStampBuyTool } from "$islands/modal/tool/StampBuyTool.tsx";
 import {
   container3,
   containerCard,
@@ -120,7 +119,7 @@ export function StampCard({
     typeof globalThis !== "undefined" ? globalThis.innerWidth ?? 0 : 0,
   );
 
-  // Buy modal fee state (mirrors StampInfo's fee handling for BuyStampModal)
+  // Buy modal fee state (mirrors StampInfo's fee handling for StampBuyTool)
   const [fee, setFee] = useState<number>(0);
   // Tracks the BUY-click purchase flow (distinct from the passive
   // useLowestPriceDispenser fetch below) — see handleBuyClick.
@@ -565,18 +564,15 @@ export function StampCard({
     ((stamp as any).marketData?.openDispensersCount ?? 0) > 0;
 
   const openBuyModal = (dispenser: unknown) => {
-    // Opening BuyStampModal here also handles the "wallet not connected"
+    // Opening StampBuyTool here also handles the "wallet not connected"
     // case for us: it internally opens the Connect Wallet modal and
     // re-opens this Buy modal once a wallet is connected.
-    openModal(
-      <BuyStampModal
-        stamp={stamp as StampRow}
-        fee={fee}
-        handleChangeFee={setFee}
-        dispenser={dispenser}
-      />,
-      "slideUpDown",
-    );
+    openStampBuyTool({
+      stamp: stamp as StampRow,
+      fee,
+      handleChangeFee: setFee,
+      dispenser,
+    });
   };
 
   // Because BUY constructs a real spend transaction, this re-checks for a

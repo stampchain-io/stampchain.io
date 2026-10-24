@@ -19,7 +19,6 @@ import {
 import { handleUnknownError } from "$lib/utils/errorHandling.ts";
 import type { BaseToast } from "$lib/utils/ui/notifications/toastSignal.ts";
 import { showToast } from "$lib/utils/ui/notifications/toastSignal.ts";
-import { textSmLink } from "$text";
 import type { WalletProviderProps } from "$types/ui.d.ts";
 import { useState } from "preact/hooks";
 
@@ -78,14 +77,17 @@ export function WalletProvider(
             "warning",
             false,
             (
-              <a
-                href={installUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                class={`${textSmLink} underline`}
-              >
-                Install {providerInfo.name} extension
-              </a>
+              <p>
+                Install the{" "}
+                <a
+                  href={installUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="link-neutral-200 hover:text-color-secondary-400"
+                >
+                  {providerInfo.name} webwallet extension
+                </a>.
+              </p>
             ),
           );
         } else {
