@@ -241,6 +241,17 @@
 *      The old page at /tool/stamp/send is unchanged and is not linked from
 *      the Tools menu.
 *
+* 27. info/SRC101RegisterInfo.tsx
+*    - Base: InfoModal
+*    - Purpose: How-to for registering a bitname
+*
+* 28. tool/SRC101RegisterTool.tsx
+*    - Base: ToolModal
+*    - Purpose: Bitname register form, opened from the header Tools menu
+*    - Note: `openSRC101RegisterTool()` calls `openToolModal()` (`slideUpDown`).
+*      The old page at /tool/src101/mint is unchanged and is not linked from
+*      the Tools menu.
+*
 * State Management
 * ---------------
 * - states.ts provides centralized modal state management and operations
