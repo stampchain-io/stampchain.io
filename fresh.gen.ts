@@ -159,7 +159,6 @@ import * as $tool_src101_action_ from "./routes/tool/src101/[action].tsx";
 import * as $tool_src20_action_ from "./routes/tool/src20/[action].tsx";
 import * as $tool_stamp_action_ from "./routes/tool/stamp/[action].tsx";
 import * as $tool_stamp_create from "./routes/tool/stamp/create.tsx";
-import * as $tool_stamp_stamping from "./routes/tool/stamp/stamping.tsx";
 import * as $tool_stamp_trade from "./routes/tool/stamp/trade.tsx";
 import * as $upload_index from "./routes/upload/index.tsx";
 import * as $wallet_address_ from "./routes/wallet/[address].tsx";
@@ -548,7 +547,6 @@ const manifest = {
     "./routes/tool/src20/[action].tsx": $tool_src20_action_,
     "./routes/tool/stamp/[action].tsx": $tool_stamp_action_,
     "./routes/tool/stamp/create.tsx": $tool_stamp_create,
-    "./routes/tool/stamp/stamping.tsx": $tool_stamp_stamping,
     "./routes/tool/stamp/trade.tsx": $tool_stamp_trade,
     "./routes/upload/index.tsx": $upload_index,
     "./routes/wallet/[address].tsx": $wallet_address_,
