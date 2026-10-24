@@ -3129,6 +3129,8 @@ export type ExtendedIconButtonProps = ExtendedButtonProps & {
  */
 export type ExtendedProcessingButtonProps = ExtendedButtonProps & {
   isSubmitting: boolean;
+  /** Label shown next to the spinner while submitting. Default: "PROCESSING" */
+  loadingText?: string;
   type?: "button" | "submit" | "reset";
   ariaLabel?: string;
 };

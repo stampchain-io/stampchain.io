@@ -182,6 +182,7 @@ export function ButtonProcessing({
   size = "md",
   disabled,
   isSubmitting,
+  loadingText = "PROCESSING",
   isActive,
   href,
   "f-partial": fPartial,
@@ -225,7 +226,7 @@ export function ButtonProcessing({
     ? (
       <span class="inline-flex items-center gap-3">
         <div class={`${loaderSpinXsGrey} !border-current`} />
-        PROCESSING
+        {loadingText}
       </span>
     )
     : children;

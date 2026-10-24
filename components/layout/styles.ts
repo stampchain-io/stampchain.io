@@ -159,12 +159,12 @@ export const colContainerBackground =
 // Stamp and SRC20 Table Row Cards - Stamp/tokencards
 // export const cellLeftCard =
 //   `p-3 pl-4 rounded-l-3xl border-y-[1px] border-l-[1px] border-r-0 border-color-border
-//   group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
+//   group-hover:bg-black/30 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
 // export const cellRightCard =
 //   `p-3 pr-4 rounded-r-3xl border-y-[1px] border-r-[1px] border-l-0 border-color-border
-//   group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
+//   group-hover:bg-black/30 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
 // export const cellCenterCard = `p-3 border-y-[1px] border-x-0 border-color-border
-//   group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
+//   group-hover:bg-black/30 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
 
 // Layer 2
 // Marketplace and Explorer pagesStamp and SRC20 Table Row Cards - Stamp/tokencards inside of layer 1
@@ -172,19 +172,19 @@ const cell =
   "bg-gradient-to-b from-color-neutral-800/40 via-color-neutral-900/60 to-neutral-900/80 border-color-neutral-700 whitespace-nowrap";
 export const cellLeftL2Card =
   `p-0.5 ${cell} rounded-l-2xl border-y-[1px] border-l-[1px] border-r-0
-  group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} text-left`;
+  group-hover:bg-black/30 group-hover:border-color-hover ${transitionColors} text-left`;
 export const cellRightL2Card =
   `p-0.5 ${cell} rounded-r-2xl border-y-[1px] border-r-[1px] border-l-0
-  group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} text-right`;
+  group-hover:bg-black/30 group-hover:border-color-hover ${transitionColors} text-right`;
 export const cellCenterL2Card = `p-0.5 ${cell} border-y-[1px] border-x-0
-  group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} text-center`;
+  group-hover:bg-black/30 group-hover:border-color-hover ${transitionColors} text-center`;
 // Stamp and SRC20 Detail pages Table Rows
 export const cellLeftL2Detail =
-  `p-1.5 pl-3 ${cell} rounded-l-2xl border-y-[1px] border-l-[1px] border-r-0 group-hover:bg-black/20 ${transitionColors} whitespace-nowrap text-left`;
+  `p-1.5 pl-3 ${cell} rounded-l-2xl border-y-[1px] border-l-[1px] border-r-0 group-hover:bg-black/30 ${transitionColors} whitespace-nowrap text-left`;
 export const cellRightL2Detail =
-  `p-1.5 pr-3 ${cell} rounded-r-2xl border-y-[1px] border-r-[1px] border-l-0 group-hover:bg-black/20 ${transitionColors} whitespace-nowrap text-right`;
+  `p-1.5 pr-3 ${cell} rounded-r-2xl border-y-[1px] border-r-[1px] border-l-0 group-hover:bg-black/30 ${transitionColors} whitespace-nowrap text-right`;
 export const cellCenterL2Detail =
-  `p-1.5 ${cell} border-y-[1px] border-x-0 group-hover:bg-black/20 ${transitionColors} whitespace-nowrap text-center`;
+  `p-1.5 ${cell} border-y-[1px] border-x-0 group-hover:bg-black/30 ${transitionColors} whitespace-nowrap text-center`;
 /* refactor to base style and rename */
 export const cellStickyLeft = `sticky left-0 ${cell} z-10`;
 export const cellStickyLeft2 = `sticky left-10 ${cell} z-10`;

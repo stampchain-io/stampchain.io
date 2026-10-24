@@ -35,14 +35,14 @@ export const inputTextarea = `
 // Input field dropdown - define height in the component
 export const inputFieldDropdown = `
 absolute top-[100%] left-0 w-full z-dropdown
-bg-gradient-to-b from-color-background/30 to-color-background backdrop-blur-sm
-border border-t-0 border-color-border/75 rounded-b-2xl
+bg-gradient-to-t from-color-neutral-800/40 via-color-neutral-900/60 to-neutral-900/80 backdrop-blur-sm
+border border-t-0 border-color-neutral-700 rounded-b-2xl
 text-color-neutral-200 text-sm font-medium uppercase leading-none
 overflow-y-auto scrollbar-background-layer2 shadow-lg cursor-pointer`;
 
 export const inputFieldDropdownHover = `
 flex justify-between py-2.5 px-3
-border-b-[1px] border-color-border last:border-b-0
+border-b-[1px] border-color-neutral-700 last:border-b-0
 ${container2Hover} uppercase cursor-pointer`;
 
 // Checkbox - used for both checkboxes and radiobuttons
