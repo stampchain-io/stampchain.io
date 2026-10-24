@@ -18,6 +18,11 @@ import { ToggleSwitchButton } from "$button";
 import { StampCard } from "$card";
 import { walletContext } from "$client/wallet/wallet.ts";
 import { ProgressiveEstimationIndicator } from "$components/indicators/ProgressiveEstimationIndicator.tsx";
+import {
+  inputFieldGrow,
+  inputFieldGrowDigits,
+  inputFieldGrowStyle,
+} from "$form";
 import { Icon, PlaceholderImage } from "$icon";
 import { InputField } from "$islands/form/InputField.tsx";
 import PreviewCodeModal from "$islands/modal/PreviewCodeModal.tsx";
@@ -85,19 +90,24 @@ interface MintRowProps {
 
 function StampEditionsRow({ mint }: MintRowProps) {
   const { issuance } = mint;
+  const handleIssuanceChange = (e: Event) => {
+    const input = e.target as HTMLInputElement;
+    const digits = inputFieldGrowDigits(input);
+    const next = digits === "" ? "1" : digits;
+    if (input.value !== next) input.value = next;
+    mint.handleIssuanceChange(e);
+  };
   return (
     <div class="flex items-center justify-between gap-3">
       <h5 class={textSm}>EDITIONS</h5>
       <div
-        class="w-8 shrink-0"
-        style={issuance.length > 1
-          ? { width: `calc(${issuance.length}ch + 1.5rem + 2px)` }
-          : undefined}
+        class={inputFieldGrow}
+        style={inputFieldGrowStyle(issuance.length)}
       >
         <InputField
           type="text"
           value={issuance}
-          onChange={mint.handleIssuanceChange}
+          onChange={handleIssuanceChange}
           error={mint.issuanceError}
           textAlign="center"
         />

@@ -2,6 +2,11 @@
 import { useTransactionForm } from "$client/hooks/useTransactionForm.ts";
 import { walletContext } from "$client/wallet/wallet.ts";
 import { handleModalClose } from "$components/layout/ModalBase.tsx";
+import {
+  inputFieldGrow,
+  inputFieldGrowDigits,
+  inputFieldGrowStyle,
+} from "$form";
 import { UserProfileIcon } from "$icon";
 import { StampImage } from "$islands/content/stampDetailContent/StampImage.tsx";
 import { InputField } from "$islands/form/InputField.tsx";
@@ -178,9 +183,11 @@ export function StampBuyTool({
     : editionCount;
 
   const handleQuantityChange = (e: Event) => {
-    const raw = (e.target as HTMLInputElement).value;
-    if (!/^\d*$/.test(raw)) return;
-    setEditions(raw === "" ? "1" : raw);
+    const input = e.target as HTMLInputElement;
+    const digits = inputFieldGrowDigits(input);
+    const next = digits === "" ? "1" : digits;
+    if (input.value !== next) input.value = next;
+    setEditions(next);
   };
 
   /* ===== TRANSACTION HANDLING ===== */
@@ -399,10 +406,8 @@ export function StampBuyTool({
               </h6>
             </div>
             <div
-              class="w-8 shrink-0"
-              style={editions.length > 1
-                ? { width: `calc(${editions.length}ch + 1.5rem + 2px)` }
-                : undefined}
+              class={inputFieldGrow}
+              style={inputFieldGrowStyle(editions.length)}
             >
               <InputField
                 type="text"

@@ -23,6 +23,23 @@ export const inputFieldSquare = `
   font-normal text-xs text-color-neutral-200 text-center
 `;
 
+export const inputFieldGrow = "w-8 shrink-0";
+
+/** Wider than one digit. 1.5rem matches inputField px-3, 2px the border. */
+export function inputFieldGrowStyle(
+  length: number,
+): { width: string } | undefined {
+  if (length <= 1) return undefined;
+  return { width: `calc(${length}ch + 1.5rem + 2px)` };
+}
+
+/** Digits only, written back so other characters never stay visible. */
+export function inputFieldGrowDigits(input: HTMLInputElement): string {
+  const digits = input.value.replace(/\D/g, "");
+  if (input.value !== digits) input.value = digits;
+  return digits;
+}
+
 export const inputTextarea = `
   px-3 pt-2 w-full h-[76px] min-h-[76px] resize-none bg-transparent
   ${container2Hover} ${shadowGlowPurpleSm}

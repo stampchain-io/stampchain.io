@@ -2,7 +2,13 @@
 import { useTransactionForm } from "$client/hooks/useTransactionForm.ts";
 import { walletContext } from "$client/wallet/wallet.ts";
 import { ProgressiveEstimationIndicator } from "$components/indicators/ProgressiveEstimationIndicator.tsx";
-import { inputField, inputFieldDropdown } from "$form";
+import {
+  inputField,
+  inputFieldDropdown,
+  inputFieldGrow,
+  inputFieldGrowDigits,
+  inputFieldGrowStyle,
+} from "$form";
 import { Icon, PlaceholderImage } from "$icon";
 import { StampSendInfo } from "$islands/modal/info/StampSendInfo.tsx";
 import { openToolModal, ToolModal } from "$islands/modal/tool/ToolModal.tsx";
@@ -311,12 +317,10 @@ export function StampSendTool() {
   };
 
   const handleQuantityChange = (e: Event) => {
-    e.preventDefault();
-
-    const raw = (e.target as HTMLInputElement).value;
-    if (!/^\d*$/.test(raw)) return;
-
-    const next = !raw || raw === "0" ? "1" : raw;
+    const input = e.target as HTMLInputElement;
+    const digits = inputFieldGrowDigits(input);
+    const next = !digits || digits === "0" ? "1" : digits;
+    if (input.value !== next) input.value = next;
     setQuantity(parseInt(next, 10));
   };
 
@@ -676,12 +680,8 @@ export function StampSendTool() {
                 </h6>
               </div>
               <div
-                class="w-8 shrink-0"
-                style={String(quantity).length > 1
-                  ? {
-                    width: `calc(${String(quantity).length}ch + 1.5rem + 2px)`,
-                  }
-                  : undefined}
+                class={inputFieldGrow}
+                style={inputFieldGrowStyle(String(quantity).length)}
               >
                 <input
                   type="text"
