@@ -19,6 +19,7 @@ import {
 import { handleUnknownError } from "$lib/utils/errorHandling.ts";
 import type { BaseToast } from "$lib/utils/ui/notifications/toastSignal.ts";
 import { showToast } from "$lib/utils/ui/notifications/toastSignal.ts";
+import { textSmLink } from "$text";
 import type { WalletProviderProps } from "$types/ui.d.ts";
 import { useState } from "preact/hooks";
 
@@ -41,6 +42,10 @@ const walletConnectors = {
   xverse: xverseProvider.connectXverse,
   wonder: wonderProvider.connectWonder,
 } satisfies Record<string, WalletConnectFn>;
+
+function isHttpInstallUrl(url: string): boolean {
+  return url.startsWith("https://") || url.startsWith("http://");
+}
 
 /* ===== MODAL COMPONENT ===== */
 export function WalletProvider(
@@ -67,12 +72,22 @@ export function WalletProvider(
       // Check if wallet extension is installed before attempting connection
       if (!checkWalletAvailability(providerKey)) {
         const installUrl = providerInfo.installUrl;
-        if (installUrl) {
+        if (installUrl && isHttpInstallUrl(installUrl)) {
           showToast(
-            `${providerInfo.name} wallet not detected.\nOpening install page...`,
-            "info",
+            `${providerInfo.name} wallet not detected.`,
+            "warning",
+            false,
+            (
+              <a
+                href={installUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class={`${textSmLink} underline`}
+              >
+                Install {providerInfo.name} extension
+              </a>
+            ),
           );
-          globalThis.open(installUrl, "_blank", "noopener,noreferrer");
         } else {
           showToast(
             `${providerInfo.name} wallet not detected.\nPlease install the ${providerInfo.name} extension.`,
