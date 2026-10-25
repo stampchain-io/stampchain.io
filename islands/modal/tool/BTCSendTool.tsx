@@ -5,7 +5,7 @@ import { handleModalClose } from "$components/layout/ModalBase.tsx";
 import { inputField } from "$form";
 import { stackConnectWalletModal } from "$islands/layout/ModalStack.tsx";
 import { closeModal } from "$islands/modal/states.ts";
-import { openToolModal, ToolModal } from "$islands/modal/tool/ToolModal.tsx";
+import { openModalTool, ModalTool } from "$islands/modal/tool/ModalTool.tsx";
 import { container2, containerPill } from "$layout";
 import { useTransactionConstructionService } from "$lib/hooks/useTransactionConstructionService.ts";
 import { logger } from "$lib/utils/logger.ts";
@@ -18,7 +18,7 @@ import { useEffect, useRef, useState } from "preact/hooks";
 
 /* ===== OPENER ===== */
 export function openBTCSendTool(props: BTCSendToolProps = {}) {
-  openToolModal(<BTCSendTool {...props} />);
+  openModalTool(<BTCSendTool {...props} />);
 }
 
 /* ===== HELPERS ===== */
@@ -448,7 +448,7 @@ export function BTCSendTool({
 
   /* ===== RENDER ===== */
   return (
-    <ToolModal title="BITCOIN" subtitle="SEND">
+    <ModalTool title="BITCOIN" subtitle="SEND">
       <div class="flex flex-col items-center text-center">
         <div class="flex justify-center items-center w-full">
           <div class="inline-flex items-baseline text-2xl">
@@ -548,6 +548,6 @@ export function BTCSendTool({
           onTosChange={setTosAgreed}
         />
       </div>
-    </ToolModal>
+    </ModalTool>
   );
 }

@@ -1,4 +1,4 @@
-/* ===== TOOL MODAL COMPONENT ===== */
+/* ===== MODAL TOOL COMPONENT ===== */
 /* Tool shells: title, optional subtitle, and an optional how-to on top. */
 import { InfoButton } from "$islands/button/InfoButton.tsx";
 import { openModal } from "$islands/modal/states.ts";
@@ -7,12 +7,12 @@ import type { ComponentChildren } from "preact";
 import { useLayoutEffect, useRef, useState } from "preact/hooks";
 
 /** Open a tool modal. Slides up on open and down on close. */
-export function openToolModal(content: ComponentChildren) {
+export function openModalTool(content: ComponentChildren) {
   openModal(content, "slideUpDown");
 }
 
 /* ===== TYPES ===== */
-interface ToolModalProps {
+interface ModalToolProps {
   title: string;
   /** Optional line under the title. */
   subtitle?: string;
@@ -22,8 +22,8 @@ interface ToolModalProps {
 }
 
 /* ===== COMPONENT ===== */
-export function ToolModal(
-  { title, subtitle, info, children }: ToolModalProps,
+export function ModalTool(
+  { title, subtitle, info, children }: ModalToolProps,
 ) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isOverflowing, setIsOverflowing] = useState(false);

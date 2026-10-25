@@ -8,16 +8,17 @@ import {
 } from "$text";
 import { useEffect, useState } from "preact/hooks";
 
-type ToolModalId =
+type ModalToolId =
   | "stamp-send"
   | "src20-deploy"
   | "src20-mint"
   | "src20-transfer"
-  | "src101-register";
+  | "src101-register"
+  | "btc-send";
 
 type ToolLink =
   | { title: string; href: string }
-  | { title: string; modal: ToolModalId };
+  | { title: string; modal: ModalToolId };
 
 interface ToolGroup {
   heading: string;
@@ -32,7 +33,7 @@ interface ToolsButtonProps {
 
 const isModalLink = (
   link: ToolLink,
-): link is { title: string; modal: ToolModalId } => {
+): link is { title: string; modal: ModalToolId } => {
   return "modal" in link;
 };
 
@@ -52,7 +53,10 @@ const toolGroups: readonly ToolGroup[] = [
   },
   {
     heading: "BITNAME",
-    links: [{ title: "Register", modal: "src101-register" }],
+    links: [
+      { title: "Register", modal: "src101-register" },
+      { title: "TEST MODAL", modal: "btc-send" },
+    ],
   },
 ];
 
@@ -92,7 +96,7 @@ export function ToolsButton(
     return currentPath === href || currentPath.startsWith(`${href}/`);
   };
 
-  const openToolModal = (modal: ToolModalId) => {
+  const openModalTool = (modal: ModalToolId) => {
     onSelectTool?.();
     if (modal === "stamp-send") {
       import("$islands/modal/tool/StampSendTool.tsx").then((mod) => {
@@ -119,6 +123,11 @@ export function ToolsButton(
         mod.openSRC101RegisterTool();
       });
     }
+    if (modal === "btc-send") {
+      import("$islands/modal/tool/BTCSendTool.tsx").then((mod) => {
+        mod.openBTCSendTool();
+      });
+    }
   };
 
   const renderToolEntry = (
@@ -132,7 +141,7 @@ export function ToolsButton(
           key={link.modal}
           type="button"
           class={`${idle} text-left`}
-          onClick={() => openToolModal(link.modal)}
+          onClick={() => openModalTool(link.modal)}
         >
           {link.title}
         </button>

@@ -6,7 +6,7 @@ import { ProgressiveEstimationIndicator } from "$components/indicators/Progressi
 import { inputTextarea, SRC20InputField } from "$form";
 import { Icon } from "$icon";
 import { SRC20DeployInfo } from "$islands/modal/info/SRC20DeployInfo.tsx";
-import { openToolModal, ToolModal } from "$islands/modal/tool/ToolModal.tsx";
+import { openModalTool, ModalTool } from "$islands/modal/tool/ModalTool.tsx";
 import {
   container2,
   containerColForm,
@@ -26,7 +26,7 @@ import { useEffect, useRef, useState } from "preact/hooks";
 
 /* ===== OPENER ===== */
 export function openSRC20DeployTool() {
-  openToolModal(<SRC20DeployTool />);
+  openModalTool(<SRC20DeployTool />);
 }
 
 /* ===== INTERFACE DEFINITIONS ===== */
@@ -359,7 +359,7 @@ export function SRC20DeployTool(
 
   /* ===== COMPONENT RENDER ===== */
   return (
-    <ToolModal
+    <ModalTool
       title="SRC-20"
       subtitle="DEPLOY"
       info={<SRC20DeployInfo />}
@@ -645,6 +645,6 @@ export function SRC20DeployTool(
           {tooltipText}
         </div>
       </div>
-    </ToolModal>
+    </ModalTool>
   );
 }

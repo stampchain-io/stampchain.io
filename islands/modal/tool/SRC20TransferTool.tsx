@@ -8,7 +8,7 @@ import {
   SRC20InputField,
 } from "$form";
 import { SRC20TransferInfo } from "$islands/modal/info/SRC20TransferInfo.tsx";
-import { openToolModal, ToolModal } from "$islands/modal/tool/ToolModal.tsx";
+import { openModalTool, ModalTool } from "$islands/modal/tool/ModalTool.tsx";
 import { container2, containerColForm, rowResponsiveForm } from "$layout";
 import { useTransactionConstructionService } from "$lib/hooks/useTransactionConstructionService.ts";
 import { logger } from "$lib/utils/logger.ts";
@@ -20,7 +20,7 @@ import { useEffect, useRef, useState } from "preact/hooks";
 
 /* ===== OPENER ===== */
 export function openSRC20TransferTool() {
-  openToolModal(<SRC20TransferTool />);
+  openModalTool(<SRC20TransferTool />);
 }
 
 /* ===== INTERFACE DEFINITIONS ===== */
@@ -309,7 +309,7 @@ export function SRC20TransferTool(
   };
 
   return (
-    <ToolModal
+    <ModalTool
       title="SRC-20"
       subtitle="TRANSFER"
       info={<SRC20TransferInfo />}
@@ -452,6 +452,6 @@ export function SRC20TransferTool(
         submissionMessage={submissionMessage}
         apiError={apiError}
       />
-    </ToolModal>
+    </ModalTool>
   );
 }

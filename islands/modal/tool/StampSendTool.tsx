@@ -11,7 +11,7 @@ import {
 } from "$form";
 import { Icon, PlaceholderImage } from "$icon";
 import { StampSendInfo } from "$islands/modal/info/StampSendInfo.tsx";
-import { openToolModal, ToolModal } from "$islands/modal/tool/ToolModal.tsx";
+import { openModalTool, ModalTool } from "$islands/modal/tool/ModalTool.tsx";
 import {
   container2,
   container2Hover,
@@ -36,7 +36,7 @@ import { useEffect, useRef, useState } from "preact/hooks";
 
 /* ===== OPENER ===== */
 export function openStampSendTool() {
-  openToolModal(<StampSendTool />);
+  openModalTool(<StampSendTool />);
 }
 
 /* ===== COMPONENT ===== */
@@ -555,7 +555,7 @@ export function StampSendTool() {
 
   /* ===== RENDER ===== */
   return (
-    <ToolModal
+    <ModalTool
       title="STAMP"
       subtitle="SEND"
       info={<StampSendInfo />}
@@ -786,6 +786,6 @@ export function StampSendTool() {
           {successMessage}
         </div>
       )}
-    </ToolModal>
+    </ModalTool>
   );
 }

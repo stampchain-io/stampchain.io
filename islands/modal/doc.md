@@ -196,7 +196,7 @@
 *    - Base: InfoModal
 *    - Purpose: How-to for transferring an SRC-20 token
 *
-* 19. tool/ToolModal.tsx
+* 19. tool/ModalTool.tsx
 *    - Base: ModalBase
 *    - Purpose: Shell for tool modals (`title`, `subtitle`, optional `info`, `children`)
 *    - Note: when `info` is passed, the info button (`headerAction`, plain InfoButton
@@ -204,15 +204,15 @@
 *      the tool stays mounted. When `info` is omitted, the button is not rendered.
 *
 * 20. tool/SRC20DeployTool.tsx
-*    - Base: ToolModal
+*    - Base: ModalTool
 *    - Purpose: SRC-20 deploy form, opened from the header Tools menu
-*    - Note: `openSRC20DeployTool()` calls `openToolModal()`. The old page at
+*    - Note: `openSRC20DeployTool()` calls `openModalTool()`. The old page at
 *      /tool/src20/deploy is unchanged and is not linked from the Tools menu.
 *
 * 21. tool/SRC20TransferTool.tsx
-*    - Base: ToolModal
+*    - Base: ModalTool
 *    - Purpose: SRC-20 transfer form, opened from the header Tools menu
-*    - Note: `openSRC20TransferTool()` calls `openToolModal()` (`slideUpDown`). The Tools menu
+*    - Note: `openSRC20TransferTool()` calls `openModalTool()` (`slideUpDown`). The Tools menu
 *      loads it with a dynamic import. The old page at /tool/src20/transfer is
 *      unchanged and is not linked from the Tools menu.
 *
@@ -221,9 +221,9 @@
 *    - Purpose: How-to for minting an SRC-20 token
 *
 * 23. tool/SRC20MintTool.tsx
-*    - Base: ToolModal
+*    - Base: ModalTool
 *    - Purpose: SRC-20 mint form, opened from the Tools menu and Mint buttons
-*    - Note: `openSRC20MintTool(tick?)` calls `openToolModal()` (`slideUpDown`).
+*    - Note: `openSRC20MintTool(tick?)` calls `openModalTool()` (`slideUpDown`).
 *      The old page at /tool/src20/mint is unchanged and is not linked from
 *      the Tools menu.
 *
@@ -232,9 +232,9 @@
 *    - Purpose: How-to for sending a stamp
 *
 * 25. tool/StampSendTool.tsx
-*    - Base: ToolModal
+*    - Base: ModalTool
 *    - Purpose: Stamp send form, opened from the header Tools menu
-*    - Note: `openStampSendTool()` calls `openToolModal()` (`slideUpDown`).
+*    - Note: `openStampSendTool()` calls `openModalTool()` (`slideUpDown`).
 *      The old page at /tool/stamp/send is unchanged and is not linked from
 *      the Tools menu.
 *
@@ -243,16 +243,16 @@
 *    - Purpose: How-to for registering a bitname
 *
 * 27. tool/SRC101RegisterTool.tsx
-*    - Base: ToolModal
+*    - Base: ModalTool
 *    - Purpose: Bitname register form, opened from the header Tools menu
-*    - Note: `openSRC101RegisterTool()` calls `openToolModal()` (`slideUpDown`).
+*    - Note: `openSRC101RegisterTool()` calls `openModalTool()` (`slideUpDown`).
 *      The old page at /tool/src101/mint is unchanged and is not linked from
 *      the Tools menu.
 *
 * 28. tool/StampBuyTool.tsx
-*    - Base: ToolModal
+*    - Base: ModalTool
 *    - Purpose: Stamp purchase form, opened from listing and stamp detail BUY buttons
-*    - Note: `openStampBuyTool()` calls `openToolModal()` (`slideUpDown`). There is
+*    - Note: `openStampBuyTool()` calls `openModalTool()` (`slideUpDown`). There is
 *      no how-to modal yet, so the header info button is omitted. Not linked from
 *      the Tools menu; buy always targets a specific stamp and dispenser.
 *

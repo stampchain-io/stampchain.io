@@ -1,7 +1,7 @@
 /* ===== BITCOIN ADDRESS TOOL MODAL ===== */
 import { walletContext } from "$client/wallet/wallet.ts";
 import { Icon } from "$icon";
-import { openToolModal, ToolModal } from "$islands/modal/tool/ToolModal.tsx";
+import { openModalTool, ModalTool } from "$islands/modal/tool/ModalTool.tsx";
 import { tooltipIcon } from "$notification";
 import type { BTCAddressToolProps } from "$types/ui.d.ts";
 import QRCodeStyling from "https://esm.sh/qr-code-styling@1.6.0-rc.1";
@@ -10,7 +10,7 @@ import { useEffect, useRef, useState } from "preact/hooks";
 
 /* ===== OPENER ===== */
 export function openBTCAddressTool(props: BTCAddressToolProps = {}) {
-  openToolModal(<BTCAddressTool {...props} />);
+  openModalTool(<BTCAddressTool {...props} />);
 }
 
 /* ===== HELPERS ===== */
@@ -137,7 +137,7 @@ export function BTCAddressTool({ address }: BTCAddressToolProps) {
 
   /* ===== RENDER ===== */
   return (
-    <ToolModal title="BITCOIN" subtitle="ADDRESS">
+    <ModalTool title="BITCOIN" subtitle="ADDRESS">
       <div class="flex flex-col items-center">
         <div
           ref={qrRef}
@@ -176,6 +176,6 @@ export function BTCAddressTool({ address }: BTCAddressToolProps) {
           </div>
         </div>
       </div>
-    </ToolModal>
+    </ModalTool>
   );
 }

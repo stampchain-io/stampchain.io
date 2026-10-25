@@ -12,7 +12,7 @@ import { StampImage } from "$islands/content/stampDetailContent/StampImage.tsx";
 import { InputField } from "$islands/form/InputField.tsx";
 import { stackConnectWalletModal } from "$islands/layout/ModalStack.tsx";
 import { closeModal } from "$islands/modal/states.ts";
-import { openToolModal, ToolModal } from "$islands/modal/tool/ToolModal.tsx";
+import { openModalTool, ModalTool } from "$islands/modal/tool/ModalTool.tsx";
 import { container2 } from "$layout";
 import { useTransactionConstructionService } from "$lib/hooks/useTransactionConstructionService.ts";
 import { handleUnknownError } from "$lib/utils/errorHandling.ts";
@@ -26,7 +26,7 @@ import type { StampBuyToolProps } from "$types/ui.d.ts";
 import { useEffect, useState } from "preact/hooks";
 /* ===== OPENER ===== */
 export function openStampBuyTool(props: StampBuyToolProps) {
-  openToolModal(<StampBuyTool {...props} />);
+  openModalTool(<StampBuyTool {...props} />);
 }
 
 /* ===== COMPONENT ===== */
@@ -352,7 +352,7 @@ export function StampBuyTool({
 
   /* ===== RENDER ===== */
   return (
-    <ToolModal title="STAMP" subtitle="BUY">
+    <ModalTool title="STAMP" subtitle="BUY">
       {/* ===== STAMP DETAILS SECTION ===== */}
       {stamp && (
         <div className="flex flex-col gap-3">
@@ -482,6 +482,6 @@ export function StampBuyTool({
           })()}
         />
       </div>
-    </ToolModal>
+    </ModalTool>
   );
 }

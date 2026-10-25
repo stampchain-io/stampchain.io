@@ -9,7 +9,7 @@ import {
 } from "$form";
 import { Icon } from "$icon";
 import { SRC20MintInfo } from "$islands/modal/info/SRC20MintInfo.tsx";
-import { openToolModal, ToolModal } from "$islands/modal/tool/ToolModal.tsx";
+import { openModalTool, ModalTool } from "$islands/modal/tool/ModalTool.tsx";
 import {
   container2,
   containerColForm,
@@ -32,7 +32,7 @@ import { useEffect, useRef, useState } from "preact/hooks";
 
 /* ===== OPENER ===== */
 export function openSRC20MintTool(tick?: string) {
-  openToolModal(
+  openModalTool(
     <SRC20MintTool {...(tick ? { tick } : {})} />,
   );
 }
@@ -447,7 +447,7 @@ export function SRC20MintTool({
 
   /* ===== COMPONENT RENDER ===== */
   return (
-    <ToolModal
+    <ModalTool
       title="SRC-20"
       subtitle="MINT"
       info={<SRC20MintInfo />}
@@ -647,6 +647,6 @@ export function SRC20MintTool({
           apiError={apiError}
         />
       </div>
-    </ToolModal>
+    </ModalTool>
   );
 }

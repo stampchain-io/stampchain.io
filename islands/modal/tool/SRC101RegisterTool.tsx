@@ -8,7 +8,7 @@ import { inputFieldDropdown } from "$form";
 import { InputField } from "$islands/form/InputField.tsx";
 import { SRC101RegisterInfo } from "$islands/modal/info/SRC101RegisterInfo.tsx";
 import { openSRC101DetailTool } from "$islands/modal/tool/SRC101DetailTool.tsx";
-import { openToolModal, ToolModal } from "$islands/modal/tool/ToolModal.tsx";
+import { openModalTool, ModalTool } from "$islands/modal/tool/ModalTool.tsx";
 import {
   container2,
   container2Hover,
@@ -26,7 +26,7 @@ import { useEffect, useRef, useState } from "preact/hooks";
 
 /* ===== OPENER ===== */
 export function openSRC101RegisterTool() {
-  openToolModal(<SRC101RegisterTool />);
+  openModalTool(<SRC101RegisterTool />);
 }
 
 /* ===== COMPONENT ===== */
@@ -254,7 +254,7 @@ export function SRC101RegisterTool(
   const bitname = (formState.toAddress?.toLowerCase() ?? "") + formState.root;
 
   return (
-    <ToolModal
+    <ModalTool
       title="SRC-101"
       subtitle="BITNAME REGISTRATION"
       info={<SRC101RegisterInfo />}
@@ -408,6 +408,6 @@ export function SRC101RegisterTool(
           SELECT TOP LEVEL DOMAIN
         </div>
       </div>
-    </ToolModal>
+    </ModalTool>
   );
 }

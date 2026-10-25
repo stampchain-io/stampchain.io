@@ -1,6 +1,6 @@
 /* ===== SRC-101 DETAIL TOOL MODAL ===== */
 import { UserProfileIcon } from "$icon";
-import { openToolModal, ToolModal } from "$islands/modal/tool/ToolModal.tsx";
+import { openModalTool, ModalTool } from "$islands/modal/tool/ModalTool.tsx";
 import { container2 } from "$layout";
 import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { cardCreator, cardStampNumber } from "$text";
@@ -8,7 +8,7 @@ import type { SRC101DetailToolProps } from "$types/ui.d.ts";
 
 /* ===== OPENER ===== */
 export function openSRC101DetailTool(props: SRC101DetailToolProps) {
-  openToolModal(<SRC101DetailTool {...props} />);
+  openModalTool(<SRC101DetailTool {...props} />);
 }
 
 const TEST_SRC101_DETAIL = {
@@ -27,7 +27,7 @@ export function SRC101DetailTool(
   { img, name, root, owner }: SRC101DetailToolProps,
 ) {
   return (
-    <ToolModal title="SRC-101" subtitle="BITNAME DETAILS">
+    <ModalTool title="SRC-101" subtitle="BITNAME DETAILS">
       <div class="flex flex-col justify-center gap-3">
         <div class={`w-full ${container2}`}>
           <img src={img} alt="" class="w-full h-auto rounded-2xl p-0.5" />
@@ -47,6 +47,6 @@ export function SRC101DetailTool(
           )}
         </div>
       </div>
-    </ToolModal>
+    </ModalTool>
   );
 }
