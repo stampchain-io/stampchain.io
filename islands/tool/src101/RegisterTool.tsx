@@ -7,8 +7,7 @@ import { ROOT_DOMAINS } from "$constants";
 import { inputFieldDropdown, inputFieldDropdownHover } from "$form";
 import { RegisterToolSkeleton } from "$indicators";
 import { InputField } from "$islands/form/InputField.tsx";
-import DetailSRC101Modal from "$islands/modal/DetailSRC101Modal.tsx";
-import { openModal } from "$islands/modal/states.ts";
+import { openSRC101DetailTool } from "$islands/modal/tool/SRC101DetailTool.tsx";
 import {
   bodyTool,
   container2Hover,
@@ -217,14 +216,12 @@ export function SRC101RegisterTool({
 
   /* ===== MODAL HANDLERS ===== */
   const handleOpenDetailModal = (data: SRC101Balance) => {
-    const modalContent = (
-      <DetailSRC101Modal
-        img={data.img}
-        name={data.tokenid_utf8}
-        owner={data.owner}
-      />
-    );
-    openModal(modalContent, "zoomInOut");
+    openSRC101DetailTool({
+      img: data.img,
+      name: data.tokenid_utf8,
+      root: formState.root,
+      owner: data.owner,
+    });
   };
 
   /* ===== SUBMISSION HANDLERS ===== */

@@ -6,9 +6,8 @@ import { ProgressiveEstimationIndicator } from "$components/indicators/Progressi
 import { ROOT_DOMAINS } from "$constants";
 import { inputFieldDropdown } from "$form";
 import { InputField } from "$islands/form/InputField.tsx";
-import DetailSRC101Modal from "$islands/modal/DetailSRC101Modal.tsx";
 import { SRC101RegisterInfo } from "$islands/modal/info/SRC101RegisterInfo.tsx";
-import { openModal } from "$islands/modal/states.ts";
+import { openSRC101DetailTool } from "$islands/modal/tool/SRC101DetailTool.tsx";
 import { openToolModal, ToolModal } from "$islands/modal/tool/ToolModal.tsx";
 import {
   container2,
@@ -205,14 +204,12 @@ export function SRC101RegisterTool(
   };
 
   const handleOpenDetailModal = (data: SRC101Balance) => {
-    openModal(
-      <DetailSRC101Modal
-        img={data.img}
-        name={data.tokenid_utf8}
-        owner={data.owner}
-      />,
-      "zoomInOut",
-    );
+    openSRC101DetailTool({
+      img: data.img,
+      name: data.tokenid_utf8,
+      root: formState.root,
+      owner: data.owner,
+    });
   };
 
   const checkAvailability = async (): Promise<boolean> => {
@@ -258,8 +255,8 @@ export function SRC101RegisterTool(
 
   return (
     <ToolModal
-      title="BITNAME"
-      subtitle="REGISTER"
+      title="SRC-101"
+      subtitle="BITNAME REGISTRATION"
       info={<SRC101RegisterInfo />}
     >
       <form
@@ -283,7 +280,7 @@ export function SRC101RegisterTool(
             />
           </div>
 
-          <div class="relative w-[72px] shrink-0" ref={tldDropdownRef}>
+          <div class="relative w-[64px] shrink-0" ref={tldDropdownRef}>
             <div
               class={`h-8 px-3 ${container2Hover} ${shadowGlowPurpleSm}
                 font-normal text-xs text-color-neutral-200 text-right
@@ -342,7 +339,7 @@ export function SRC101RegisterTool(
           <ButtonProcessing
             type="button"
             variant="outline"
-            color="primary"
+            color="neutral"
             size="md"
             class="shrink-0"
             isSubmitting={isChecking}
