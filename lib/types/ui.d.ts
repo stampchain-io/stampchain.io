@@ -210,6 +210,7 @@ export interface TableProps<T = any> {
 //   ConnectWalletModalProps,
 //   ContainerProps,
 //   ConvenienceProviderProps,
+//   BTCDonateToolProps,
 //   DonateStampModalProps,
 //   EmptyStateProps,
 //   EnhancedSortButtonProps,
@@ -219,7 +220,6 @@ export interface TableProps<T = any> {
 //   ExtendedComponentProps,
 //   FairmintToolProps,
 //   FaqAccordionProps,
-//   FilterSRC20ModalProps,
 //   FlexboxProps,
 //   FormControlProps,
 //   SRC20GalleryWalletProps,
@@ -2489,6 +2489,16 @@ export interface BTCSendToolProps {
   handleChangeFee?: (fee: number) => void;
 }
 /**
+ * Bitcoin donate tool component props.
+ * Donation amount is set with the slider and paid through the stamp dispenser.
+ */
+export interface BTCDonateToolProps {
+  stamp?: StampRow;
+  fee?: number;
+  handleChangeFee?: (fee: number) => void;
+  dispenser?: any;
+}
+/**
  * Donate Stamp Modal component props
  */
 export interface DonateStampModalProps {
@@ -2500,21 +2510,6 @@ export interface DonateStampModalProps {
   fee?: number;
   handleChangeFee?: (fee: number) => void;
   dispenser?: any;
-}
-/**
- * Filter SRC-20 Modal component props
- */
-export interface FilterSRC20ModalProps extends ModalBaseProps {
-  currentFilters?: {
-    minHolders?: number;
-    maxHolders?: number;
-    status?: string;
-    type?: string;
-  };
-  onApplyFilters?: (filters: any) => void;
-  loading?: boolean;
-  error?: string;
-  filterOptions?: any;
 }
 /**
  * Receive Address Modal component props

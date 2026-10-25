@@ -652,11 +652,6 @@ export type FilterType = "stamp" | "src20" | "explorer";
 export type AllFilters = StampFilters | SRC20Filters;
 
 /**
- * FilterTypes - Migrated from FilterSRC20Modal.tsx
- */
-export type FilterTypesSRC20Modal = "status" | "market" | "trending" | "all";
-
-/**
  * SortingErrorBoundaryProps - Migrated from SortingErrorBoundary.tsx
  */
 export interface SortingErrorBoundaryProps {

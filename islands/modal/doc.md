@@ -138,118 +138,114 @@
 *    - Base: ModalBase
 *    - Purpose: Allows a stamp creator to edit/update their display name
 *
-* 5. FilterSRC20Modal.tsx
-*    - Base: ModalBase
-*    - Purpose: Provides filtering options for SRC20 tokens
-*
-* 6. PreviewCodeModal.tsx
+* 5. PreviewCodeModal.tsx
 *    - Base: ModalBase
 *    - Purpose: Displays code previews
 *
-* 7. PreviewImageModal.tsx
+* 6. PreviewImageModal.tsx
 *    - Base: ModalBase
 *    - Purpose: Shows image previews
 *
-* 8. RecieveAddyModal.tsx
+* 7. RecieveAddyModal.tsx
 *    - Base: ModalBase
 *    - Purpose: Displays receiving address with QR code
 *
-* 9. SearchSRC20Modal.tsx
+* 8. SearchSRC20Modal.tsx
 *    - Base: ModalSearchBase
 *    - Purpose: Search functionality for SRC20 tokens
 *
-* 10. SearchStampModal.tsx
+* 9. SearchStampModal.tsx
 *    - Base: ModalSearchBase
 *    - Purpose: Search functionality for stamps
 *
-* 11. SendBTCModal.tsx
+* 10. SendBTCModal.tsx
 *    - Base: ModalBase
 *    - Purpose: Handles BTC sending transactions
 *
-* 12. info/ModalInfo.tsx
+* 11. info/ModalInfo.tsx
 *    - Base: ModalBase
 *    - Purpose: Info / how-to guides (`<ModalInfo title="HOW-TO" subtitle="...">`)
 *    - Note: subtitle is optional; sizing constants live in the file; the content scrolls
 *      with scrollbar-background-layer1 and adds horizontal spacing only while overflowing
 *
-* 13. info/StampCreateClassicInfo.tsx
+* 12. info/StampCreateClassicInfo.tsx
 *    - Base: ModalInfo
 *    - Purpose: How-to for creating a classic stamp
 *
-* 14. info/StampCreatePoshInfo.tsx
+* 13. info/StampCreatePoshInfo.tsx
 *    - Base: ModalInfo
 *    - Purpose: How-to for creating a posh stamp
 *
-* 15. info/StampCreateRecursiveInfo.tsx
+* 14. info/StampCreateRecursiveInfo.tsx
 *    - Base: ModalInfo
 *    - Purpose: How-to for creating a recursive stamp
 *
-* 16. info/StampCreateRecursiveShortcuts.tsx
+* 15. info/StampCreateRecursiveShortcuts.tsx
 *    - Base: ModalInfo
 *    - Purpose: Keyboard shortcuts for the recursive stamp composer
 *
-* 17. info/SRC20DeployInfo.tsx
+* 16. info/SRC20DeployInfo.tsx
 *    - Base: ModalInfo
 *    - Purpose: How-to for deploying an SRC-20 token
 *
-* 18. info/SRC20TransferInfo.tsx
+* 17. info/SRC20TransferInfo.tsx
 *    - Base: ModalInfo
 *    - Purpose: How-to for transferring an SRC-20 token
 *
-* 19. tool/ModalTool.tsx
+* 18. tool/ModalTool.tsx
 *    - Base: ModalBase
 *    - Purpose: Shell for tool modals (`title`, `subtitle`, optional `info`, `children`)
 *    - Note: when `info` is passed, the info button (`headerAction`, plain InfoButton
 *      with `stack`) sits at the top-left and opens it on the foreground layer while
 *      the tool stays mounted. When `info` is omitted, the button is not rendered.
 *
-* 20. tool/SRC20DeployTool.tsx
+* 19. tool/SRC20DeployTool.tsx
 *    - Base: ModalTool
 *    - Purpose: SRC-20 deploy form, opened from the header Tools menu
 *    - Note: `openSRC20DeployTool()` calls `openModalTool()`. The old page at
 *      /tool/src20/deploy is unchanged and is not linked from the Tools menu.
 *
-* 21. tool/SRC20TransferTool.tsx
+* 20. tool/SRC20TransferTool.tsx
 *    - Base: ModalTool
 *    - Purpose: SRC-20 transfer form, opened from the header Tools menu
 *    - Note: `openSRC20TransferTool()` calls `openModalTool()` (`slideUpDown`). The Tools menu
 *      loads it with a dynamic import. The old page at /tool/src20/transfer is
 *      unchanged and is not linked from the Tools menu.
 *
-* 22. info/SRC20MintInfo.tsx
+* 21. info/SRC20MintInfo.tsx
 *    - Base: ModalInfo
 *    - Purpose: How-to for minting an SRC-20 token
 *
-* 23. tool/SRC20MintTool.tsx
+* 22. tool/SRC20MintTool.tsx
 *    - Base: ModalTool
 *    - Purpose: SRC-20 mint form, opened from the Tools menu and Mint buttons
 *    - Note: `openSRC20MintTool(tick?)` calls `openModalTool()` (`slideUpDown`).
 *      The old page at /tool/src20/mint is unchanged and is not linked from
 *      the Tools menu.
 *
-* 24. info/StampSendInfo.tsx
+* 23. info/StampSendInfo.tsx
 *    - Base: ModalInfo
 *    - Purpose: How-to for sending a stamp
 *
-* 25. tool/StampSendTool.tsx
+* 24. tool/StampSendTool.tsx
 *    - Base: ModalTool
 *    - Purpose: Stamp send form, opened from the header Tools menu
 *    - Note: `openStampSendTool()` calls `openModalTool()` (`slideUpDown`).
 *      The old page at /tool/stamp/send is unchanged and is not linked from
 *      the Tools menu.
 *
-* 26. info/SRC101RegisterInfo.tsx
+* 25. info/SRC101RegisterInfo.tsx
 *    - Base: ModalInfo
 *    - Purpose: How-to for registering a bitname
 *
-* 27. tool/SRC101RegisterTool.tsx
+* 26. tool/SRC101RegisterTool.tsx
 *    - Base: ModalTool
 *    - Purpose: Bitname register form, opened from the header Tools menu
 *    - Note: `openSRC101RegisterTool()` calls `openModalTool()` (`slideUpDown`).
 *      The old page at /tool/src101/mint is unchanged and is not linked from
 *      the Tools menu.
 *
-* 28. tool/StampBuyTool.tsx
+* 27. tool/StampBuyTool.tsx
 *    - Base: ModalTool
 *    - Purpose: Stamp purchase form, opened from listing and stamp detail BUY buttons
 *    - Note: `openStampBuyTool()` calls `openModalTool()` (`slideUpDown`). There is
