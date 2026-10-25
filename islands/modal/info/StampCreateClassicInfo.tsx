@@ -1,11 +1,11 @@
 /* ===== CLASSIC STAMP INFO ===== */
-import { InfoModal } from "$islands/modal/info/InfoModal.tsx";
+import { ModalInfo } from "$islands/modal/info/ModalInfo.tsx";
 import { textSm } from "$text";
 
 /* ===== COMPONENT ===== */
 export const StampCreateClassicInfo = () => {
   return (
-    <InfoModal title="HOW-TO" subtitle="CREATE A CLASSIC STAMP">
+    <ModalInfo title="HOW-TO" subtitle="CREATE A CLASSIC STAMP">
       <div class="flex flex-col">
         <p class={textSm}>
           <ul class="list-disc pl-5 space-y-2 mb-0">
@@ -69,6 +69,6 @@ export const StampCreateClassicInfo = () => {
           <b>toggle</b>.
         </p>
       </div>
-    </InfoModal>
+    </ModalInfo>
   );
 };

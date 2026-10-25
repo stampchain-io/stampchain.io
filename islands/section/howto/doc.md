@@ -53,7 +53,7 @@
  * Create-page info modals
  * ------------------------
  * The StampCreate* modules live in `$islands/modal/info/` and wrap their content
- * in `InfoModal` ($islands/modal/info/InfoModal.tsx) with `title="HOW-TO"`
+ * in `ModalInfo` ($islands/modal/info/ModalInfo.tsx) with `title="HOW-TO"`
  * and a `subtitle`. They are opened through `InfoButton`
  * ($islands/button/InfoButton.tsx):
  * - `<InfoButton modal={<StampCreateClassicInfo />} />` (help icon, default)

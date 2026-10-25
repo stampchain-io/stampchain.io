@@ -28,7 +28,7 @@ export function ModalTool(
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
 
-  /* Same gap as InfoModal: padding between content and the scrollbar,
+  /* Same gap as ModalInfo: padding between content and the scrollbar,
      only while the content is taller than the modal. */
   useLayoutEffect(() => {
     const el = scrollRef.current;

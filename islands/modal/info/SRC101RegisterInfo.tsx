@@ -1,11 +1,11 @@
 /* ===== SRC-101 REGISTER INFO ===== */
-import { InfoModal } from "$islands/modal/info/InfoModal.tsx";
+import { ModalInfo } from "$islands/modal/info/ModalInfo.tsx";
 import { textSm } from "$text";
 
 /* ===== COMPONENT ===== */
 export const SRC101RegisterInfo = () => {
   return (
-    <InfoModal title="HOW-TO" subtitle="REGISTER YOUR BITNAME">
+    <ModalInfo title="HOW-TO" subtitle="REGISTER YOUR BITNAME">
       <div class="flex flex-col">
         <div class={textSm}>
           <ul class="list-disc pl-5 space-y-2 mb-4.5">
@@ -64,6 +64,6 @@ export const SRC101RegisterInfo = () => {
           </p>
         </div>
       </div>
-    </InfoModal>
+    </ModalInfo>
   );
 };

@@ -1,12 +1,12 @@
 /* ===== RECURSIVE STAMP INFO ===== */
 /* How-to guide for the recursive stamp composer. */
-import { InfoModal } from "$islands/modal/info/InfoModal.tsx";
+import { ModalInfo } from "$islands/modal/info/ModalInfo.tsx";
 import { textSm } from "$text";
 
 /* ===== COMPONENT ===== */
 export const StampCreateRecursiveInfo = () => {
   return (
-    <InfoModal title="HOW-TO" subtitle="CREATE A RECURSIVE STAMP">
+    <ModalInfo title="HOW-TO" subtitle="CREATE A RECURSIVE STAMP">
       <div class="flex flex-col">
         <p class={textSm}>
           A recursive stamp is a small HTML file that composes existing stamps
@@ -128,6 +128,6 @@ export const StampCreateRecursiveInfo = () => {
           <b>toggle</b>.
         </p>
       </div>
-    </InfoModal>
+    </ModalInfo>
   );
 };

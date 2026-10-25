@@ -1,11 +1,11 @@
 /* ===== SRC-20 TRANSFER INFO ===== */
-import { InfoModal } from "$islands/modal/info/InfoModal.tsx";
+import { ModalInfo } from "$islands/modal/info/ModalInfo.tsx";
 import { textSm } from "$text";
 
 /* ===== COMPONENT ===== */
 export const SRC20TransferInfo = () => {
   return (
-    <InfoModal title="HOW-TO" subtitle="TRANSFER A TOKEN">
+    <ModalInfo title="HOW-TO" subtitle="TRANSFER A TOKEN">
       <div class="flex flex-col">
         <div class={textSm}>
           <ul class="list-disc pl-5 space-y-2 mb-4.5">
@@ -47,6 +47,6 @@ export const SRC20TransferInfo = () => {
           All related costs are listed in the <b>details</b> section.<br />
         </p>
       </div>
-    </InfoModal>
+    </ModalInfo>
   );
 };

@@ -166,34 +166,34 @@
 *    - Base: ModalBase
 *    - Purpose: Handles BTC sending transactions
 *
-* 12. info/InfoModal.tsx
+* 12. info/ModalInfo.tsx
 *    - Base: ModalBase
-*    - Purpose: Info / how-to guides (`<InfoModal title="HOW-TO" subtitle="...">`)
+*    - Purpose: Info / how-to guides (`<ModalInfo title="HOW-TO" subtitle="...">`)
 *    - Note: subtitle is optional; sizing constants live in the file; the content scrolls
 *      with scrollbar-background-layer1 and adds horizontal spacing only while overflowing
 *
 * 13. info/StampCreateClassicInfo.tsx
-*    - Base: InfoModal
+*    - Base: ModalInfo
 *    - Purpose: How-to for creating a classic stamp
 *
 * 14. info/StampCreatePoshInfo.tsx
-*    - Base: InfoModal
+*    - Base: ModalInfo
 *    - Purpose: How-to for creating a posh stamp
 *
 * 15. info/StampCreateRecursiveInfo.tsx
-*    - Base: InfoModal
+*    - Base: ModalInfo
 *    - Purpose: How-to for creating a recursive stamp
 *
 * 16. info/StampCreateRecursiveShortcuts.tsx
-*    - Base: InfoModal
+*    - Base: ModalInfo
 *    - Purpose: Keyboard shortcuts for the recursive stamp composer
 *
 * 17. info/SRC20DeployInfo.tsx
-*    - Base: InfoModal
+*    - Base: ModalInfo
 *    - Purpose: How-to for deploying an SRC-20 token
 *
 * 18. info/SRC20TransferInfo.tsx
-*    - Base: InfoModal
+*    - Base: ModalInfo
 *    - Purpose: How-to for transferring an SRC-20 token
 *
 * 19. tool/ModalTool.tsx
@@ -217,7 +217,7 @@
 *      unchanged and is not linked from the Tools menu.
 *
 * 22. info/SRC20MintInfo.tsx
-*    - Base: InfoModal
+*    - Base: ModalInfo
 *    - Purpose: How-to for minting an SRC-20 token
 *
 * 23. tool/SRC20MintTool.tsx
@@ -228,7 +228,7 @@
 *      the Tools menu.
 *
 * 24. info/StampSendInfo.tsx
-*    - Base: InfoModal
+*    - Base: ModalInfo
 *    - Purpose: How-to for sending a stamp
 *
 * 25. tool/StampSendTool.tsx
@@ -239,7 +239,7 @@
 *      the Tools menu.
 *
 * 26. info/SRC101RegisterInfo.tsx
-*    - Base: InfoModal
+*    - Base: ModalInfo
 *    - Purpose: How-to for registering a bitname
 *
 * 27. tool/SRC101RegisterTool.tsx

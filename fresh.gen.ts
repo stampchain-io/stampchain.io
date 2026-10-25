@@ -268,7 +268,7 @@ import * as $modal_PreviewImageModal from "./islands/modal/PreviewImageModal.tsx
 import * as $modal_SearchSRC20Modal from "./islands/modal/SearchSRC20Modal.tsx";
 import * as $modal_SearchStampModal from "./islands/modal/SearchStampModal.tsx";
 import * as $modal_SearchStampPickerModal from "./islands/modal/SearchStampPickerModal.tsx";
-import * as $modal_info_InfoModal from "./islands/modal/info/InfoModal.tsx";
+import * as $modal_info_ModalInfo from "./islands/modal/info/ModalInfo.tsx";
 import * as $modal_info_SRC101RegisterInfo from "./islands/modal/info/SRC101RegisterInfo.tsx";
 import * as $modal_info_SRC20DeployInfo from "./islands/modal/info/SRC20DeployInfo.tsx";
 import * as $modal_info_SRC20MintInfo from "./islands/modal/info/SRC20MintInfo.tsx";
@@ -685,7 +685,7 @@ const manifest = {
     "./islands/modal/SearchSRC20Modal.tsx": $modal_SearchSRC20Modal,
     "./islands/modal/SearchStampModal.tsx": $modal_SearchStampModal,
     "./islands/modal/SearchStampPickerModal.tsx": $modal_SearchStampPickerModal,
-    "./islands/modal/info/InfoModal.tsx": $modal_info_InfoModal,
+    "./islands/modal/info/ModalInfo.tsx": $modal_info_ModalInfo,
     "./islands/modal/info/SRC101RegisterInfo.tsx":
       $modal_info_SRC101RegisterInfo,
     "./islands/modal/info/SRC20DeployInfo.tsx": $modal_info_SRC20DeployInfo,

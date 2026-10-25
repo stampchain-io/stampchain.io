@@ -1,11 +1,11 @@
 /* ===== POSH STAMP INFO ===== */
-import { InfoModal } from "$islands/modal/info/InfoModal.tsx";
+import { ModalInfo } from "$islands/modal/info/ModalInfo.tsx";
 import { textSm } from "$text";
 
 /* ===== COMPONENT ===== */
 export const StampCreatePoshInfo = () => {
   return (
-    <InfoModal title="HOW-TO" subtitle="CREATE A POSH STAMP">
+    <ModalInfo title="HOW-TO" subtitle="CREATE A POSH STAMP">
       <div class="flex flex-col">
         <p class={textSm}>
           A posh stamp carries a <b>named asset</b>{" "}
@@ -83,6 +83,6 @@ export const StampCreatePoshInfo = () => {
           <b>toggle</b>.
         </p>
       </div>
-    </InfoModal>
+    </ModalInfo>
   );
 };
