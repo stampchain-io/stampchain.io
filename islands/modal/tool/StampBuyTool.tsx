@@ -22,10 +22,10 @@ import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { showToast } from "$lib/utils/ui/notifications/toastSignal.ts";
 import { FeeCalculatorBase } from "$section";
 import { labelSm, labelXs, valueSm } from "$text";
-import type { BuyStampModalProps } from "$types/ui.d.ts";
+import type { StampBuyToolProps } from "$types/ui.d.ts";
 import { useEffect, useState } from "preact/hooks";
 /* ===== OPENER ===== */
-export function openStampBuyTool(props: BuyStampModalProps) {
+export function openStampBuyTool(props: StampBuyToolProps) {
   openToolModal(<StampBuyTool {...props} />);
 }
 
@@ -35,7 +35,7 @@ export function StampBuyTool({
   fee: initialFee,
   handleChangeFee,
   dispenser,
-}: BuyStampModalProps) {
+}: StampBuyToolProps) {
   /* ===== CONTEXT ===== */
   const { wallet } = walletContext;
 

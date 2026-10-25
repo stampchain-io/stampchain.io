@@ -196,7 +196,6 @@ export interface TableProps<T = any> {
 //   BTCValueDisplayProps,
 //   BTCValueSummaryProps,
 //   ButtonElementProps,
-//   BuyStampModalProps,
 //   CarouselHomeProps,
 //   CarouselProps,
 //   ChartWidgetProps,
@@ -211,7 +210,6 @@ export interface TableProps<T = any> {
 //   ConnectWalletModalProps,
 //   ContainerProps,
 //   ConvenienceProviderProps,
-//   DetailSRC101ModalProps,
 //   DonateStampModalProps,
 //   EmptyStateProps,
 //   EnhancedSortButtonProps,
@@ -286,6 +284,7 @@ export interface TableProps<T = any> {
 //   SortingProviderWithURLProps,
 //   SortProps,
 //   SpinnerProps,
+//   SRC101DetailToolProps,
 //   SRC101RegisterToolProps,
 //   SRC20MintingCompactProps,
 //   SRC20DetailPageProps,
@@ -298,6 +297,7 @@ export interface TableProps<T = any> {
 //   SRC20OverviewHeaderProps,
 //   SRC20TransfersProps,
 //   StampBTCValueProps,
+//   StampBuyToolProps,
 //   StampDetailPageProps,
 //   StampGalleryProps,
 //   StampInfoProps,
@@ -2466,9 +2466,9 @@ export interface FaqAccordionProps extends BaseComponentProps {
  */
 
 /**
- * Buy Stamp Modal component props
+ * Stamp buy tool component props
  */
-export interface BuyStampModalProps {
+export interface StampBuyToolProps {
   stamp?: StampRow | undefined;
   onBuy?: (stampId: number) => void;
   disabled?: boolean;
@@ -2513,15 +2513,17 @@ export interface FilterSRC20ModalProps extends ModalBaseProps {
  * Send BTC Modal component props
  */
 /**
- * Detail SRC-101 Modal component props
+ * SRC-101 detail tool component props
  */
-export interface DetailSRC101ModalProps {
+export interface SRC101DetailToolProps {
   detail?: any; // TODO(#type-migration): Replace with concrete SRC-101 detail type
   onAction?: (actionType: string) => void;
   loading?: boolean;
   error?: string;
   img?: string;
   name?: string;
+  /** Chosen bitname TLD, including the dot, e.g. ".btc". */
+  root?: string;
   owner?: string;
 }
 /**
