@@ -259,7 +259,6 @@ export interface TableProps<T = any> {
 //   RadioProps,
 //   RangeInputProps,
 //   ReadAllButtonProps,
-//   ReceiveAddyModalProps,
 //   RecentSaleCardProps,
 //   RecentSalesGalleryProps,
 //   ResponsiveProps,
@@ -270,6 +269,8 @@ export interface TableProps<T = any> {
 //   SelectFieldProps,
 //   SelectorButtonsProps,
 //   SelectProps,
+//   BTCAddressToolProps,
+//   BTCSendToolProps,
 //   SendBTCModalProps,
 //   SettingProps,
 //   SharedListProps,
@@ -1432,13 +1433,6 @@ export interface SendBTCModalProps {
   onClose?: () => void;
 }
 
-export interface ReceiveAddyModalProps {
-  _isOpen?: boolean;
-  onClose?: () => void;
-  address?: string;
-  title?: string;
-}
-
 export interface ResponsiveProps {
   mobile?: any;
   tablet?: any;
@@ -2477,6 +2471,22 @@ export interface StampBuyToolProps {
   fee?: number;
   handleChangeFee?: (fee: number) => void;
   dispenser?: any;
+}
+/**
+ * Bitcoin address tool component props.
+ * `address` is the receive address. Omit it to use the connected wallet.
+ */
+export interface BTCAddressToolProps {
+  address?: string;
+}
+/**
+ * Bitcoin send tool component props.
+ * `balance` is confirmed BTC. Omit it to load the connected wallet balance.
+ */
+export interface BTCSendToolProps {
+  fee?: number;
+  balance?: number | null;
+  handleChangeFee?: (fee: number) => void;
 }
 /**
  * Donate Stamp Modal component props

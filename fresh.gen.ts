@@ -106,11 +106,9 @@ import * as $modal_EditCreatorNameModal from "./islands/modal/EditCreatorNameMod
 import * as $modal_FilterSRC20Modal from "./islands/modal/FilterSRC20Modal.tsx";
 import * as $modal_PreviewCodeModal from "./islands/modal/PreviewCodeModal.tsx";
 import * as $modal_PreviewImageModal from "./islands/modal/PreviewImageModal.tsx";
-import * as $modal_RecieveAddyModal from "./islands/modal/RecieveAddyModal.tsx";
 import * as $modal_SearchSRC20Modal from "./islands/modal/SearchSRC20Modal.tsx";
 import * as $modal_SearchStampModal from "./islands/modal/SearchStampModal.tsx";
 import * as $modal_SearchStampPickerModal from "./islands/modal/SearchStampPickerModal.tsx";
-import * as $modal_SendBTCModal from "./islands/modal/SendBTCModal.tsx";
 import * as $modal_info_InfoModal from "./islands/modal/info/InfoModal.tsx";
 import * as $modal_info_SRC101RegisterInfo from "./islands/modal/info/SRC101RegisterInfo.tsx";
 import * as $modal_info_SRC20DeployInfo from "./islands/modal/info/SRC20DeployInfo.tsx";
@@ -122,7 +120,7 @@ import * as $modal_info_StampCreateRecursiveInfo from "./islands/modal/info/Stam
 import * as $modal_info_StampCreateRecursiveShortcuts from "./islands/modal/info/StampCreateRecursiveShortcuts.tsx";
 import * as $modal_info_StampSendInfo from "./islands/modal/info/StampSendInfo.tsx";
 import * as $modal_states from "./islands/modal/states.ts";
-import * as $modal_tool_BTCRecieveTool from "./islands/modal/tool/BTCRecieveTool.tsx";
+import * as $modal_tool_BTCAddressTool from "./islands/modal/tool/BTCAddressTool.tsx";
 import * as $modal_tool_BTCSendTool from "./islands/modal/tool/BTCSendTool.tsx";
 import * as $modal_tool_SRC101DetailTool from "./islands/modal/tool/SRC101DetailTool.tsx";
 import * as $modal_tool_SRC101RegisterTool from "./islands/modal/tool/SRC101RegisterTool.tsx";
@@ -684,11 +682,9 @@ const manifest = {
     "./islands/modal/FilterSRC20Modal.tsx": $modal_FilterSRC20Modal,
     "./islands/modal/PreviewCodeModal.tsx": $modal_PreviewCodeModal,
     "./islands/modal/PreviewImageModal.tsx": $modal_PreviewImageModal,
-    "./islands/modal/RecieveAddyModal.tsx": $modal_RecieveAddyModal,
     "./islands/modal/SearchSRC20Modal.tsx": $modal_SearchSRC20Modal,
     "./islands/modal/SearchStampModal.tsx": $modal_SearchStampModal,
     "./islands/modal/SearchStampPickerModal.tsx": $modal_SearchStampPickerModal,
-    "./islands/modal/SendBTCModal.tsx": $modal_SendBTCModal,
     "./islands/modal/info/InfoModal.tsx": $modal_info_InfoModal,
     "./islands/modal/info/SRC101RegisterInfo.tsx":
       $modal_info_SRC101RegisterInfo,
@@ -705,7 +701,7 @@ const manifest = {
       $modal_info_StampCreateRecursiveShortcuts,
     "./islands/modal/info/StampSendInfo.tsx": $modal_info_StampSendInfo,
     "./islands/modal/states.ts": $modal_states,
-    "./islands/modal/tool/BTCRecieveTool.tsx": $modal_tool_BTCRecieveTool,
+    "./islands/modal/tool/BTCAddressTool.tsx": $modal_tool_BTCAddressTool,
     "./islands/modal/tool/BTCSendTool.tsx": $modal_tool_BTCSendTool,
     "./islands/modal/tool/SRC101DetailTool.tsx": $modal_tool_SRC101DetailTool,
     "./islands/modal/tool/SRC101RegisterTool.tsx":
