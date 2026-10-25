@@ -13,8 +13,7 @@ type ModalToolId =
   | "src20-deploy"
   | "src20-mint"
   | "src20-transfer"
-  | "src101-register"
-  | "btc-send";
+  | "src101-register";
 
 type ToolLink =
   | { title: string; href: string }
@@ -53,10 +52,7 @@ const toolGroups: readonly ToolGroup[] = [
   },
   {
     heading: "BITNAME",
-    links: [
-      { title: "Register", modal: "src101-register" },
-      { title: "TEST MODAL", modal: "btc-send" },
-    ],
+    links: [{ title: "Register", modal: "src101-register" }],
   },
 ];
 
@@ -121,11 +117,6 @@ export function ToolsButton(
     if (modal === "src101-register") {
       import("$islands/modal/tool/SRC101RegisterTool.tsx").then((mod) => {
         mod.openSRC101RegisterTool();
-      });
-    }
-    if (modal === "btc-send") {
-      import("$islands/modal/tool/BTCSendTool.tsx").then((mod) => {
-        mod.openBTCSendTool();
       });
     }
   };
