@@ -280,6 +280,7 @@ import * as $modal_info_StampCreateRecursiveShortcuts from "./islands/modal/info
 import * as $modal_info_StampSendInfo from "./islands/modal/info/StampSendInfo.tsx";
 import * as $modal_states from "./islands/modal/states.ts";
 import * as $modal_tool_BTCAddressTool from "./islands/modal/tool/BTCAddressTool.tsx";
+import * as $modal_tool_BTCDonateTool from "./islands/modal/tool/BTCDonateTool.tsx";
 import * as $modal_tool_BTCSendTool from "./islands/modal/tool/BTCSendTool.tsx";
 import * as $modal_tool_ModalTool from "./islands/modal/tool/ModalTool.tsx";
 import * as $modal_tool_SRC101DetailTool from "./islands/modal/tool/SRC101DetailTool.tsx";
@@ -702,6 +703,7 @@ const manifest = {
     "./islands/modal/info/StampSendInfo.tsx": $modal_info_StampSendInfo,
     "./islands/modal/states.ts": $modal_states,
     "./islands/modal/tool/BTCAddressTool.tsx": $modal_tool_BTCAddressTool,
+    "./islands/modal/tool/BTCDonateTool.tsx": $modal_tool_BTCDonateTool,
     "./islands/modal/tool/BTCSendTool.tsx": $modal_tool_BTCSendTool,
     "./islands/modal/tool/ModalTool.tsx": $modal_tool_ModalTool,
     "./islands/modal/tool/SRC101DetailTool.tsx": $modal_tool_SRC101DetailTool,

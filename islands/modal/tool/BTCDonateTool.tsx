@@ -1,37 +1,52 @@
-/* ===== DONATE STAMP MODAL COMPONENT ===== */
+/* ===== BITCOIN DONATE TOOL MODAL ===== */
 import { useTransactionForm } from "$client/hooks/useTransactionForm.ts";
 import { walletContext } from "$client/wallet/wallet.ts";
-import type { DonateStampModalProps } from "$types/ui.d.ts";
-// Using simplified fee display approach
 import { handleModalClose } from "$components/layout/ModalBase.tsx";
 import { StampImage } from "$content";
 import { RangeSlider } from "$islands/button/RangeSlider.tsx";
 import { stackConnectWalletModal } from "$islands/layout/ModalStack.tsx";
 import { closeModal } from "$islands/modal/states.ts";
-import { ModalBase } from "$layout";
+import { ModalTool, openModalTool } from "$islands/modal/tool/ModalTool.tsx";
+import { container2 } from "$layout";
 import { useTransactionConstructionService } from "$lib/hooks/useTransactionConstructionService.ts";
 import { logger } from "$lib/utils/logger.ts";
 import { mapProgressiveFeeDetails } from "$lib/utils/performance/fees/fee-estimation-utils.ts";
 import { showToast } from "$lib/utils/ui/notifications/toastSignal.ts";
 import { tooltipImage } from "$notification";
 import { FeeCalculatorBase } from "$section";
+import { labelXs } from "$text";
+import type { BTCDonateToolProps } from "$types/ui.d.ts";
 import { useEffect, useRef, useState } from "preact/hooks";
 
-/* ===== TYPES ===== */
+/* ===== OPENER ===== */
+export function openBTCDonateTool(props: BTCDonateToolProps = {}) {
+  openModalTool(<BTCDonateTool {...props} />);
+}
+
+/* ===== HELPERS ===== */
+const amountToSliderPos = (amount: number) =>
+  amount <= 20 ? (amount / 20) * 66.67 : 66.67 + ((amount - 20) / 480) * 33.33;
+
+const sliderPosToAmount = (pos: number) => {
+  if (pos <= 66.67) {
+    return Math.round((pos / 66.67) * 20);
+  }
+  const value = 20 + ((pos - 66.67) / 33.33) * 480;
+  return Math.min(500, Math.round(value));
+};
 
 /* ===== COMPONENT ===== */
-const DonateStampModal = ({
+export function BTCDonateTool({
   stamp,
   fee: initialFee,
   handleChangeFee,
   dispenser,
-}: DonateStampModalProps) => {
+}: BTCDonateToolProps) {
   /* ===== CONTEXT ===== */
   const { wallet } = walletContext;
 
   /* ===== STATE ===== */
   const [quantity, setQuantity] = useState(1);
-  // const [maxQuantity, setMaxQuantity] = useState(1);
   const [totalPrice, setTotalPrice] = useState(0);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [isAmountTooltipVisible, setIsAmountTooltipVisible] = useState(false);
@@ -39,6 +54,7 @@ const DonateStampModal = ({
 
   /* ===== REFS ===== */
   const amountTooltipTimeoutRef = useRef<number | null>(null);
+  const tooltipOriginRef = useRef<HTMLDivElement>(null);
 
   /* ===== FORM HANDLING ===== */
   const {
@@ -53,7 +69,7 @@ const DonateStampModal = ({
     ...(initialFee !== undefined && { initialFee }),
   });
 
-  /* ===== 🚀 PROGRESSIVE FEE ESTIMATION INTEGRATION ===== */
+  /* ===== PROGRESSIVE FEE ESTIMATION ===== */
   const {
     getBestEstimate,
     isEstimating,
@@ -61,40 +77,36 @@ const DonateStampModal = ({
     currentPhase,
     error: feeEstimationError,
   } = useTransactionConstructionService({
-    toolType: "stamp", // Donate uses stamp toolType for dispense transactions
+    toolType: "stamp",
     feeRate: isSubmitting ? 0 : formState.fee,
-    walletAddress: wallet?.address || "", // Provide empty string instead of undefined
-    isConnected: !!wallet && !isSubmitting,
+    walletAddress: wallet?.address || "",
+    isConnected: !!wallet?.address && !isSubmitting,
     isSubmitting,
-    // Donation-specific parameters - include the value being sent to dispenser
     recipientAddress: dispenser?.source || "",
-    amount: totalPrice ? (totalPrice / 100000000).toFixed(8) : "0", // Convert satoshis to BTC string
-    // Additional dispenser info for context
+    amount: totalPrice ? (totalPrice / 100000000).toFixed(8) : "0",
     ...(dispenser && {
       dispenserSource: dispenser.source,
       purchaseQuantity: totalPrice.toString(),
     }),
   });
 
-  // Get the best available fee estimate
   const progressiveFeeDetails = getBestEstimate();
 
-  // Local state for exact fee details (updated when Phase 3 completes) - StampingTool pattern
   const [exactFeeDetails, setExactFeeDetails] = useState<
     typeof progressiveFeeDetails | null
   >(null);
 
-  // Reset exactFeeDetails when fee rate changes to allow slider updates - StampingTool pattern
+  const donationBtc = (totalPrice / 100000000).toFixed(8);
+
+  /* ===== EFFECTS ===== */
   useEffect(() => {
-    // Clear exact fee details when fee rate changes so slider updates work
     setExactFeeDetails(null);
   }, [formState.fee]);
 
-  /* ===== FEE DETAILS SYNCHRONIZATION ===== */
   useEffect(() => {
     if (progressiveFeeDetails && !isEstimating) {
       logger.debug("stamps", {
-        message: "DonateStamp progressive fee details update",
+        message: "Donate progressive fee details update",
         data: {
           phase: currentPhase,
           hasExactFees: progressiveFeeDetails.hasExactFees,
@@ -105,26 +117,18 @@ const DonateStampModal = ({
     }
   }, [progressiveFeeDetails, isEstimating, currentPhase]);
 
-  /* ===== EFFECTS ===== */
-  // Sync fee state with parent
   useEffect(() => {
     if (handleChangeFee && formState.fee !== undefined) {
       handleChangeFee(formState.fee);
     }
   }, [formState.fee, handleChangeFee]);
 
-  // Update total price when dispenser or quantity changes
   useEffect(() => {
     if (dispenser) {
-      // const maxQty = Math.floor(
-      //   dispenser.give_remaining / dispenser.give_quantity,
-      // );
-      // setMaxQuantity(maxQty);
       setTotalPrice(quantity * dispenser.satoshirate);
     }
   }, [dispenser, quantity]);
 
-  // Cleanup tooltip timeout
   useEffect(() => {
     return () => {
       if (amountTooltipTimeoutRef.current) {
@@ -133,22 +137,6 @@ const DonateStampModal = ({
     };
   }, []);
 
-  // Debug logging
-  useEffect(() => {
-    logger.debug("ui", {
-      message: "DonateStampModal mounted",
-      component: "DonateStampModal",
-    });
-
-    return () => {
-      logger.debug("ui", {
-        message: "DonateStampModal unmounting",
-        component: "DonateStampModal",
-      });
-    };
-  }, []);
-
-  // Handle form errors with toast notifications
   useEffect(() => {
     if (formHookError) {
       showToast(formHookError, "error");
@@ -156,23 +144,41 @@ const DonateStampModal = ({
     }
   }, [formHookError, setFormHookError]);
 
-  // Handle fee estimation errors
   useEffect(() => {
     if (feeEstimationError) {
       logger.debug("system", {
-        message: "Fee estimation error in DonateStampModal",
+        message: "Fee estimation error in BTCDonateTool",
         error: feeEstimationError,
       });
     }
   }, [feeEstimationError]);
 
   /* ===== EVENT HANDLERS ===== */
-  const handleMouseMove = (e: MouseEvent) => {
-    setTooltipPosition({
-      x: e.clientX,
-      y: e.clientY,
-    });
+  /* The modal card is transformed, so viewport coordinates are converted
+     to coordinates relative to the tooltip's origin anchor. */
+  const toTooltipPosition = (e: { clientX: number; clientY: number }) => {
+    const origin = tooltipOriginRef.current?.getBoundingClientRect();
+    return {
+      x: e.clientX - (origin?.left ?? 0),
+      y: e.clientY - (origin?.top ?? 0),
+    };
   };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    setTooltipPosition(toTooltipPosition(e));
+  };
+
+  useEffect(() => {
+    if (!isAmountTooltipVisible) return;
+
+    const handleGlobalMouseMove = (e: globalThis.MouseEvent) => {
+      setTooltipPosition(toTooltipPosition(e));
+    };
+
+    document.addEventListener("mousemove", handleGlobalMouseMove);
+    return () =>
+      document.removeEventListener("mousemove", handleGlobalMouseMove);
+  }, [isAmountTooltipVisible]);
 
   const handleAmountMouseEnter = () => {
     if (amountTooltipTimeoutRef.current) {
@@ -199,21 +205,19 @@ const DonateStampModal = ({
   };
 
   /* ===== TRANSACTION HANDLING ===== */
-  const handleBuyClick = async () => {
-    // Check if wallet is connected first
-    if (!wallet || !wallet.address) {
+  const handleDonateClick = async () => {
+    if (!wallet?.address) {
       stackConnectWalletModal();
       return;
     }
 
     await handleSubmit(async () => {
-      // Get exact fee estimation before submitting - StampingTool pattern
       try {
         const exactEstimate = await estimateExact();
         if (exactEstimate) {
           setExactFeeDetails(exactEstimate);
           logger.debug("stamps", {
-            message: "DonateStamp exact fee estimation completed",
+            message: "Donate exact fee estimation completed",
             data: {
               minerFee: exactEstimate.minerFee,
               totalValue: exactEstimate.totalValue,
@@ -224,17 +228,14 @@ const DonateStampModal = ({
       } catch (error) {
         logger.warn("stamps", {
           message:
-            "DonateStamp exact fee estimation failed, using progressive estimate",
+            "Donate exact fee estimation failed, using progressive estimate",
           error: error instanceof Error ? error.message : String(error),
         });
       }
 
-      // Convert fee rate from sat/vB to sat/kB
-      const feeRateKB = formState.fee * 1000;
-
       const options = {
         return_psbt: true,
-        fee_per_kb: feeRateKB,
+        fee_per_kb: formState.fee * 1000,
       };
 
       const response = await fetch("/api/v2/create/dispense", {
@@ -275,7 +276,7 @@ const DonateStampModal = ({
         wallet,
         responseData.psbt,
         responseData.inputsToSign,
-        true, // Enable RBF
+        true,
       );
 
       if (signResult.signed) {
@@ -294,7 +295,7 @@ const DonateStampModal = ({
             );
             if (broadcastTxid && typeof broadcastTxid === "string") {
               showToast(
-                ` Broadcasted.\n${broadcastTxid.substring(0, 10)}...`,
+                `Broadcasted.\n${broadcastTxid.substring(0, 10)}...`,
                 "success",
                 false,
               );
@@ -351,160 +352,126 @@ const DonateStampModal = ({
     });
   };
 
-  /* ===== HELPER FUNCTIONS ===== */
-  const amountToSliderPos = (amount: number) =>
-    amount <= 20
-      ? (amount / 20) * 66.67
-      : 66.67 + ((amount - 20) / 480) * 33.33;
-
-  const sliderPosToAmount = (pos: number) => {
-    if (pos <= 66.67) {
-      return Math.round((pos / 66.67) * 20); // 1-20 with 1.0 steps
-    }
-    const value = 20 + ((pos - 66.67) / 33.33) * 480;
-    return Math.min(500, Math.round(value)); // 20-500 with 1.0 steps
-  };
-
   /* ===== RENDER ===== */
   return (
-    <ModalBase
-      onClose={() => {
-        logger.debug("ui", {
-          message: "Modal closing",
-          component: "DonateStampModal",
-        });
-        closeModal();
-      }}
-      title="DONATE"
-    >
-      {/* ===== PRICE DISPLAY ===== */}
-      <div className="mb-6">
-        <h6 className="font-extrabold text-3xl text-color-neutral-200 text-center">
-          {(totalPrice / 100000000).toFixed(8)}{" "}
-          <span className="font-extralight">BTC</span>
-        </h6>
+    <ModalTool title="DONATE" subtitle="TO THE DEV FUND">
+      <div class="flex justify-center items-center w-full">
+        <div class="inline-flex items-center gap-1 text-2xl">
+          <span class="font-extrabold text-color-neutral-200">
+            {donationBtc}
+          </span>
+          <span class="font-extralight text-color-neutral-200">
+            BTC
+          </span>
+        </div>
       </div>
 
-      {/* Using simplified fee display approach */}
+      <div class="flex flex-col w-full gap-0.5">
+        <h6 class={labelXs}>
+          DONATION AMOUNT
+        </h6>
+        <div class="w-full">
+          <RangeSlider
+            value={quantity}
+            onChange={(newQuantity) => {
+              setQuantity(Math.max(1, newQuantity));
+            }}
+            valueToPosition={amountToSliderPos}
+            positionToValue={sliderPosToAmount}
+            onMouseEnter={handleAmountMouseEnter}
+            onMouseLeave={handleAmountMouseLeave}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+          />
+        </div>
+      </div>
 
-      {/* ===== STAMP DETAILS ===== */}
       {stamp && (
-        <div className="flex flex-row gap-6">
-          <div className="flex flex-col w-[156px] mobileLg:w-[164px]">
+        <div class="flex flex-row gap-5">
+          <div class="flex flex-col w-[42px] shrink-0">
             <StampImage
               stamp={stamp}
-              className=""
+              containerClassName="!p-0.5 !rounded-xl"
               flag={false}
             />
           </div>
 
-          {/* ===== QUANTITY SELECTION ===== */}
-          <div className="flex flex-col w-full">
-            <div className="flex flex-col items-start pt-0.5 -space-y-0.5">
-              <h6 className="font-light text-sm text-color-neutral-400">
+          <div class="flex flex-col w-full min-w-0 justify-center">
+            <div class="flex flex-col items-start -space-y-0.5">
+              <h6 class={labelXs}>
                 RECEIVE
               </h6>
-              <h6 className="font-light text-lg text-color-neutral-200">
-                <span className="font-bold">{quantity * 1000}</span> USDSTAMPS
-                {quantity * 1000 > 1 ? "" : ""}
+              <h6 class="font-light text-sm text-color-neutral-200 tracking-wider">
+                <span class="font-bold">{quantity * 1000}</span> USDSTAMPS
               </h6>
-            </div>
-
-            {/* ===== AMOUNT SLIDER ===== */}
-            <div className="mt-[18px]">
-              <div className="relative w-full">
-                <RangeSlider
-                  value={quantity}
-                  onChange={(newQuantity) => {
-                    setQuantity(Math.max(1, newQuantity));
-                  }}
-                  valueToPosition={amountToSliderPos}
-                  positionToValue={sliderPosToAmount}
-                  onMouseEnter={handleAmountMouseEnter}
-                  onMouseLeave={handleAmountMouseLeave}
-                  onMouseDown={handleMouseDown}
-                  onMouseMove={handleMouseMove}
-                />
-                <div
-                  className={`${tooltipImage} ${
-                    isAmountTooltipVisible ? "opacity-100" : "opacity-0"
-                  }`}
-                  style={{
-                    left: `${tooltipPosition.x}px`,
-                    top: `${tooltipPosition.y - 6}px`,
-                    transform: "translate(-50%, -100%)",
-                  }}
-                >
-                  SELECT AMOUNT
-                </div>
-              </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* ===== FEE CALCULATOR ===== */}
-      <FeeCalculatorBase
-        fee={formState.fee || 1}
-        handleChangeFee={(newFee: number) => {
-          logger.debug("ui", {
-            message: "Fee changing",
-            newFee,
-            component: "DonateStampModal",
-          });
-          internalHandleChangeFee(newFee);
-        }}
-        type="buy"
-        tosAgreed={tosAgreed}
-        onTosChange={setTosAgreed}
-        amount={totalPrice}
-        price={0} // Donation has no price
-        edition={quantity * 1000} // USDSTAMPS received
-        fromPage="donate"
-        BTCPrice={formState.BTCPrice || 0}
-        isSubmitting={isSubmitting}
-        onSubmit={() => {
-          logger.debug("ui", {
-            message: "Submit clicked",
-            component: "DonateStampModal",
-          });
-          handleBuyClick();
-        }}
-        onCancel={() => {
-          handleModalClose();
-        }}
-        buttonName={wallet?.address ? "DONATE" : "CONNECT WALLET"}
-        className="pt-9 mobileLg:pt-12"
-        // ===== 🚀 PROGRESSIVE FEE DETAILS INTEGRATION =====
-        feeDetails={(() => {
-          const baseFeeDetails = mapProgressiveFeeDetails(
-            exactFeeDetails || progressiveFeeDetails,
-          );
+      <div class={`${container2} p-3 pt-2`}>
+        <FeeCalculatorBase
+          fee={formState.fee || 1}
+          handleChangeFee={internalHandleChangeFee}
+          type="buy"
+          tosAgreed={tosAgreed}
+          onTosChange={setTosAgreed}
+          amount={totalPrice}
+          price={0}
+          edition={quantity * 1000}
+          fromPage="donate"
+          BTCPrice={formState.BTCPrice || 0}
+          isSubmitting={isSubmitting}
+          onSubmit={handleDonateClick}
+          onCancel={handleModalClose}
+          buttonName={wallet?.address ? "DONATE" : "CONNECT WALLET"}
+          feeDetails={(() => {
+            const baseFeeDetails = mapProgressiveFeeDetails(
+              exactFeeDetails || progressiveFeeDetails,
+            );
 
-          // For donate transactions, add the donation amount to totalValue
-          // and remove dust since dispense uses OP_RETURN (no dust needed)
-          if (
-            baseFeeDetails && totalPrice > 0 &&
-            baseFeeDetails.minerFee !== undefined
-          ) {
-            // Recalculate totalValue: minerFee only (no dust) + donation amount
-            const correctedTotalValue = baseFeeDetails.minerFee + totalPrice;
+            if (
+              baseFeeDetails && totalPrice > 0 &&
+              baseFeeDetails.minerFee !== undefined
+            ) {
+              const correctedTotalValue = baseFeeDetails.minerFee + totalPrice;
 
-            return {
-              ...baseFeeDetails,
-              dustValue: 0, // Dispense transactions use OP_RETURN, no dust needed
-              totalValue: correctedTotalValue,
-              itemPrice: totalPrice, // Add the donation amount for display in details
-              // Add a custom field to indicate this includes donation amount
-              includesDonationAmount: true,
-            };
-          }
+              return {
+                ...baseFeeDetails,
+                dustValue: 0,
+                totalValue: correctedTotalValue,
+                itemPrice: totalPrice,
+                includesDonationAmount: true,
+              };
+            }
 
-          return baseFeeDetails;
-        })()}
-      />
-    </ModalBase>
+            return baseFeeDetails;
+          })()}
+        />
+      </div>
+
+      {
+        /* Zero-size anchor pinned to the modal card's top-left corner.
+          The slider tooltip is positioned from it so the scrolling content
+          area does not clip it. */
+      }
+      <div
+        ref={tooltipOriginRef}
+        class="fixed top-0 left-0 w-0 h-0 pointer-events-none z-tooltip"
+      >
+        <div
+          class={`${tooltipImage} ${
+            isAmountTooltipVisible ? "opacity-100" : "opacity-0"
+          }`}
+          style={{
+            left: `${tooltipPosition.x}px`,
+            top: `${tooltipPosition.y}px`,
+            transform: "translate(-50%, calc(-100% - 6px))",
+          }}
+        >
+          SELECT AMOUNT
+        </div>
+      </div>
+    </ModalTool>
   );
-};
-
-export default DonateStampModal;
+}
