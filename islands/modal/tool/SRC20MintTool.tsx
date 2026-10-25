@@ -9,11 +9,12 @@ import {
 } from "$form";
 import { Icon } from "$icon";
 import { SRC20MintInfo } from "$islands/modal/info/SRC20MintInfo.tsx";
-import { openModalTool, ModalTool } from "$islands/modal/tool/ModalTool.tsx";
+import { ModalTool, openModalTool } from "$islands/modal/tool/ModalTool.tsx";
 import {
   container2,
   containerColForm,
   containerRowForm,
+  handleModalClose,
   imagePreviewTool,
   loaderSpinSmGrey,
 } from "$layout";
@@ -623,6 +624,7 @@ export function SRC20MintTool({
           )}
           isSubmitting={isSubmitting}
           onSubmit={handleMint}
+          onCancel={handleModalClose}
           buttonName={isConnected ? "MINT" : "CONNECT WALLET"}
           tosAgreed={tosAgreed}
           onTosChange={setTosAgreed}

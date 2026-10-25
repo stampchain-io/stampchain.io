@@ -8,8 +8,13 @@ import {
   SRC20InputField,
 } from "$form";
 import { SRC20TransferInfo } from "$islands/modal/info/SRC20TransferInfo.tsx";
-import { openModalTool, ModalTool } from "$islands/modal/tool/ModalTool.tsx";
-import { container2, containerColForm, rowResponsiveForm } from "$layout";
+import { ModalTool, openModalTool } from "$islands/modal/tool/ModalTool.tsx";
+import {
+  container2,
+  containerColForm,
+  handleModalClose,
+  rowResponsiveForm,
+} from "$layout";
 import { useTransactionConstructionService } from "$lib/hooks/useTransactionConstructionService.ts";
 import { logger } from "$lib/utils/logger.ts";
 import { mapProgressiveFeeDetails } from "$lib/utils/performance/fees/fee-estimation-utils.ts";
@@ -417,6 +422,7 @@ export function SRC20TransferTool(
           BTCPrice={formState.BTCPrice}
           isSubmitting={isSubmitting}
           onSubmit={handleTransferWithExactFees}
+          onCancel={handleModalClose}
           buttonName={isConnected ? "TRANSFER" : "CONNECT WALLET"}
           tosAgreed={tosAgreed}
           onTosChange={setTosAgreed}

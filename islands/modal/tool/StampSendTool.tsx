@@ -11,12 +11,13 @@ import {
 } from "$form";
 import { Icon, PlaceholderImage } from "$icon";
 import { StampSendInfo } from "$islands/modal/info/StampSendInfo.tsx";
-import { openModalTool, ModalTool } from "$islands/modal/tool/ModalTool.tsx";
+import { ModalTool, openModalTool } from "$islands/modal/tool/ModalTool.tsx";
 import {
   container2,
   container2Hover,
   containerColForm,
   containerRowForm,
+  handleModalClose,
   imagePreviewTool,
   loaderSpinGrey,
   rowForm,
@@ -730,6 +731,7 @@ export function StampSendTool() {
             );
             handleSendWithExactFees();
           }}
+          onCancel={handleModalClose}
           buttonName={wallet?.address ? "SEND" : "CONNECT WALLET"}
           tosAgreed={tosAgreed}
           onTosChange={setTosAgreed}

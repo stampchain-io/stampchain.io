@@ -8,11 +8,12 @@ import { inputFieldDropdown } from "$form";
 import { InputField } from "$islands/form/InputField.tsx";
 import { SRC101RegisterInfo } from "$islands/modal/info/SRC101RegisterInfo.tsx";
 import { openSRC101DetailTool } from "$islands/modal/tool/SRC101DetailTool.tsx";
-import { openModalTool, ModalTool } from "$islands/modal/tool/ModalTool.tsx";
+import { ModalTool, openModalTool } from "$islands/modal/tool/ModalTool.tsx";
 import {
   container2,
   container2Hover,
   containerColForm,
+  handleModalClose,
   shadowGlowPurpleSm,
 } from "$layout";
 import { useTransactionConstructionService } from "$lib/hooks/useTransactionConstructionService.ts";
@@ -363,6 +364,7 @@ export function SRC101RegisterTool(
           BTCPrice={formState.BTCPrice}
           isSubmitting={isSubmitting}
           onSubmit={handleRegisterWithExactFees}
+          onCancel={handleModalClose}
           buttonName={isConnected ? "REGISTER" : "CONNECT WALLET"}
           tosAgreed={tosAgreed}
           onTosChange={setTosAgreed}

@@ -6,11 +6,12 @@ import { ProgressiveEstimationIndicator } from "$components/indicators/Progressi
 import { inputTextarea, SRC20InputField } from "$form";
 import { Icon } from "$icon";
 import { SRC20DeployInfo } from "$islands/modal/info/SRC20DeployInfo.tsx";
-import { openModalTool, ModalTool } from "$islands/modal/tool/ModalTool.tsx";
+import { ModalTool, openModalTool } from "$islands/modal/tool/ModalTool.tsx";
 import {
   container2,
   containerColForm,
   containerRowForm,
+  handleModalClose,
   imageUploadTool,
   transitionAll,
 } from "$layout";
@@ -581,6 +582,7 @@ export function SRC20DeployTool(
           BTCPrice={formState.BTCPrice}
           isSubmitting={isSubmitting}
           onSubmit={handleDeployWithExactFees}
+          onCancel={handleModalClose}
           buttonName={isConnected ? "DEPLOY" : "CONNECT WALLET"}
           tosAgreed={tosAgreed}
           onTosChange={setTosAgreed}
