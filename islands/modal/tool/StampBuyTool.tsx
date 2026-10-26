@@ -12,7 +12,7 @@ import { StampImage } from "$islands/content/stampDetailContent/StampImage.tsx";
 import { InputField } from "$islands/form/InputField.tsx";
 import { stackConnectWalletModal } from "$islands/layout/ModalStack.tsx";
 import { closeModal } from "$islands/modal/states.ts";
-import { openModalTool, ModalTool } from "$islands/modal/tool/ModalTool.tsx";
+import { ModalTool, openModalTool } from "$islands/modal/tool/ModalTool.tsx";
 import { container2 } from "$layout";
 import { useTransactionConstructionService } from "$lib/hooks/useTransactionConstructionService.ts";
 import { handleUnknownError } from "$lib/utils/errorHandling.ts";
@@ -184,8 +184,18 @@ export function StampBuyTool({
 
   const handleQuantityChange = (e: Event) => {
     const input = e.target as HTMLInputElement;
-    const digits = inputFieldGrowDigits(input);
-    const next = digits === "" ? "1" : digits;
+    const value = parseInt(inputFieldGrowDigits(input), 10);
+    // Clamp the input itself (as the pre-modal BuyStampModal did) so the
+    // displayed edition count always equals the count that gets priced.
+    let clamped: number;
+    if (maxQuantity > 0 && value > maxQuantity) {
+      clamped = maxQuantity;
+    } else if (value < 1 || isNaN(value)) {
+      clamped = 1;
+    } else {
+      clamped = value;
+    }
+    const next = clamped.toString();
     if (input.value !== next) input.value = next;
     setEditions(next);
   };
