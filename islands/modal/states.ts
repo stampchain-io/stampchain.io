@@ -111,6 +111,24 @@ export function stackModal(
   };
 }
 
+/* ===== KEYBOARD ===== */
+/** True when `layer` is the top-most open layer. */
+export function isTopModalLayer(layer: ModalLayer): boolean {
+  return layer === "stacked" || !stackedModal.value.isOpen;
+}
+
+/**
+ * Whether a keydown should close `layer`. Only the top-most layer reacts,
+ * and key repeat is ignored so holding Escape does not also dismiss the
+ * modal underneath once the top layer unmounts.
+ */
+export function shouldCloseLayerOnKey(
+  layer: ModalLayer,
+  e: Pick<KeyboardEvent, "key" | "repeat">,
+): boolean {
+  return e.key === "Escape" && !e.repeat && isTopModalLayer(layer);
+}
+
 /* ===== LAYER CONTEXT ===== */
 const baseModalLayer: ModalLayerValue = {
   layer: "base",

@@ -5,8 +5,8 @@ import {
   closeModal,
   closeStackedModal,
   ModalLayerContext,
+  shouldCloseLayerOnKey,
   STACKED_MODAL_CONTAINER_ID,
-  stackedModal,
 } from "$islands/modal/states.ts";
 import type { ModalOverlayProps } from "$types/ui.d.ts";
 import { useEffect, useRef, useState } from "preact/hooks";
@@ -50,8 +50,7 @@ export default function ModalOverlay({
   // Escape (key repeat) must not also close the modal underneath.
   useEffect(() => {
     const handleKeyboardShortcut = (e: KeyboardEvent) => {
-      if (e.key !== "Escape" || e.repeat) return;
-      if (layer === "base" && stackedModal.value.isOpen) return;
+      if (!shouldCloseLayerOnKey(layer, e)) return;
       handleModalClose();
     };
 

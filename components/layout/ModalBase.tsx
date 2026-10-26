@@ -3,8 +3,8 @@ import {
   closeModal,
   closeStackedModal,
   getTopModalContainer,
+  shouldCloseLayerOnKey,
   STACKED_MODAL_CONTAINER_ID,
-  stackedModal,
   useModalLayer,
 } from "$islands/modal/states.ts";
 import { container0, shadow } from "$layout";
@@ -81,8 +81,7 @@ export function ModalBase({
   // does not also dismiss the modal underneath once this one unmounts.
   useEffect(() => {
     const handleKeyboardShortcut = (e: KeyboardEvent) => {
-      if (e.key !== "Escape" || e.repeat) return;
-      if (layer === "base" && stackedModal.value.isOpen) return;
+      if (!shouldCloseLayerOnKey(layer, e)) return;
       handleClose();
     };
 
