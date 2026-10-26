@@ -7,7 +7,12 @@ import { logger } from "$lib/utils/logger.ts";
 import { formatSatoshisToBTC } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { dbManager } from "$server/database/databaseManager.ts";
 import { isUserFundsError } from "$server/services/src20/userFundsError.ts";
-import type { DispenseEvent, Dispenser, DispenserFilter, XcpBalance } from "$types/services.d.ts";
+import type {
+  DispenseEvent,
+  Dispenser,
+  DispenserFilter,
+  XcpBalance,
+} from "$types/services.d.ts";
 
 import {
   _resetXcpCooldown,
@@ -39,9 +44,15 @@ export function composeErrorMessage(data: unknown): string | undefined {
 }
 
 /** The node's 429/503 as a typed error the routes answer with 503; else null. */
-function upstreamUnavailable(status: number, data: unknown): UpstreamUnavailableError | null {
+function upstreamUnavailable(
+  status: number,
+  data: unknown,
+): UpstreamUnavailableError | null {
   if (status !== 429 && status !== 503) return null;
-  return new UpstreamUnavailableError("Counterparty", Number(retryAfterFromBody(data) ?? 10));
+  return new UpstreamUnavailableError(
+    "Counterparty",
+    Number(retryAfterFromBody(data) ?? 10),
+  );
 }
 
 /** Test hook: override the asset-info render deadline; returns the previous value. */
@@ -54,15 +65,32 @@ export function _setAssetInfoDeadlineMs(ms: number): number {
 // Re-export XCP nodes from $constants
 export { XCP_V2_NODES as xcp_v2_nodes } from "$constants";
 
+/** Page size and page cap for the stamp-UTXO exclusion listing. */
+const STAMP_FILTER_PAGE_SIZE = Math.max(
+  1,
+  Number(
+    typeof Deno !== "undefined"
+      ? Deno.env.get("XCP_UTXO_BALANCE_PAGE_SIZE")
+      : "",
+  ) || 500,
+);
+const STAMP_FILTER_MAX_PAGES = Math.max(
+  1,
+  Number(
+    typeof Deno !== "undefined"
+      ? Deno.env.get("XCP_UTXO_BALANCE_MAX_PAGES")
+      : "",
+  ) || 100,
+);
 
 export interface XcpBalanceOptions {
-  type?: 'all' | 'send' | 'dispenser' | 'issuance';  // Types of balances
-  cursor?: string;      // Last index for cursor-based pagination
-  limit?: number;       // Max results per request
-  offset?: number;      // Skip count (overrides cursor)
-  sort?: string;        // Sort order (overrides cursor)
-  verbose?: boolean;    // Include additional info
-  showUnconfirmed?: boolean;  // Include mempool results
+  type?: "all" | "send" | "dispenser" | "issuance"; // Types of balances
+  cursor?: string; // Last index for cursor-based pagination
+  limit?: number; // Max results per request
+  offset?: number; // Skip count (overrides cursor)
+  sort?: string; // Sort order (overrides cursor)
+  verbose?: boolean; // Include additional info
+  showUnconfirmed?: boolean; // Include mempool results
 }
 
 export function normalizeFeeRate(params: {
@@ -93,7 +121,7 @@ export function normalizeFeeRate(params: {
 
     return {
       normalizedSatsPerVB,
-      normalizedSatsPerKB: normalizedSatsPerVB * SATS_PER_KB_MULTIPLIER
+      normalizedSatsPerKB: normalizedSatsPerVB * SATS_PER_KB_MULTIPLIER,
     };
   } catch (error) {
     throw error instanceof Error ? error.message : String(error);
@@ -111,14 +139,19 @@ const assetInfoInFlight = new Map<string, Promise<any>>();
 const xcpV2InFlight = new Map<string, Promise<unknown>>();
 const DEADLINE_HIT = Symbol("asset-info-deadline");
 let ASSET_INFO_DEADLINE_MS = Number(
-  (typeof Deno !== "undefined" ? Deno.env.get("XCP_ASSET_INFO_DEADLINE_MS") : undefined) ?? 4000,
+  (typeof Deno !== "undefined"
+    ? Deno.env.get("XCP_ASSET_INFO_DEADLINE_MS")
+    : undefined) ?? 4000,
 ) || 4000;
 
 /**
  * In-memory stale cache for XCP API responses
  * This provides a fallback when Redis cache expires and API is unavailable
  */
-const staleXcpCache = new Map<string, { data: any; timestamp: number; maxStaleAge: number }>();
+const staleXcpCache = new Map<
+  string,
+  { data: any; timestamp: number; maxStaleAge: number }
+>();
 const MAX_STALE_ENTRIES = 1000;
 
 /**
@@ -146,7 +179,11 @@ function cleanStaleCache(): void {
 /**
  * Store data in stale cache for fallback
  */
-function setStaleCache<T>(key: string, data: T, maxStaleAge: number = STALE_IF_ERROR_TTL): void {
+function setStaleCache<T>(
+  key: string,
+  data: T,
+  maxStaleAge: number = STALE_IF_ERROR_TTL,
+): void {
   cleanStaleCache();
   staleXcpCache.set(key, {
     data,
@@ -184,7 +221,7 @@ export async function fetchXcpV2WithCache<T>(
     endpoint,
     queryParams: queryParams.toString(),
     cacheKey,
-    cacheTimeout
+    cacheTimeout,
   });
 
   // Only successful responses are cached. This used to go through
@@ -210,7 +247,7 @@ export async function fetchXcpV2WithCache<T>(
           node: node.name,
           url,
           endpoint,
-          queryParams: queryParams.toString()
+          queryParams: queryParams.toString(),
         });
 
         try {
@@ -222,7 +259,7 @@ export async function fetchXcpV2WithCache<T>(
             node: node.name,
             status: response.status,
             ok: response.ok,
-            url
+            url,
           });
 
           // Check for rate limiting
@@ -239,7 +276,9 @@ export async function fetchXcpV2WithCache<T>(
           }
 
           if (!response.ok) {
-            const errorBody = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
+            const errorBody = typeof response.data === "string"
+              ? response.data
+              : JSON.stringify(response.data);
             // An unavailable upstream is handled (stale data or the minimal
             // fallback below), so it is a warning; a 404 is an ordinary miss.
             // An unfundable wallet is the user's problem, not ours. Only other
@@ -254,9 +293,9 @@ export async function fetchXcpV2WithCache<T>(
               node: node.name,
               status: response.status,
               errorBody,
-              url
+              url,
             });
-            errorMessage = errorBody
+            errorMessage = errorBody;
             // A 4xx settles it; the next node would say the same.
             if (isDefinitiveRejection(response.status)) break;
             continue; // Try the next node
@@ -266,7 +305,7 @@ export async function fetchXcpV2WithCache<T>(
           await logger.debug("api", {
             message: "XCP node successful response",
             node: node.name,
-            url
+            url,
           });
 
           // Store successful response in stale cache for fallback
@@ -274,10 +313,15 @@ export async function fetchXcpV2WithCache<T>(
 
           return { data: data as T, ok: true };
         } catch (error) {
-          const errorMsg = error instanceof Error ? error.message : String(error);
+          const errorMsg = error instanceof Error
+            ? error.message
+            : String(error);
 
           // Check if error message indicates rate limiting
-          if (errorMsg.includes('429') || errorMsg.toLowerCase().includes('rate limit')) {
+          if (
+            errorMsg.includes("429") ||
+            errorMsg.toLowerCase().includes("rate limit")
+          ) {
             isRateLimited = true;
           }
 
@@ -286,7 +330,7 @@ export async function fetchXcpV2WithCache<T>(
             node: node.name,
             error: errorMsg,
             url,
-            stack: error instanceof Error ? error.stack : undefined
+            stack: error instanceof Error ? error.stack : undefined,
           });
           errorMessage = errorMsg;
           // Continue to the next node
@@ -308,7 +352,8 @@ export async function fetchXcpV2WithCache<T>(
 
       // No stale data available, return minimal structure
       await logger.warn("api", {
-        message: "All XCP nodes failed, no stale data available, returning minimal data structure",
+        message:
+          "All XCP nodes failed, no stale data available, returning minimal data structure",
         endpoint,
         queryParams: queryParams.toString(),
         error: errorMessage,
@@ -316,14 +361,17 @@ export async function fetchXcpV2WithCache<T>(
         lastStatusCode,
       });
 
-      return { ok: false, data: {
-        result: [],
-        next_cursor: null,
-        result_count: 0,
-        error: errorMessage,
-        lastStatusCode,
-        fromStaleCache: false,
-      } as T };
+      return {
+        ok: false,
+        data: {
+          result: [],
+          next_cursor: null,
+          result_count: 0,
+          error: errorMessage,
+          lastStatusCode,
+          fromStaleCache: false,
+        } as T,
+      };
     })();
     if (outcome.ok) {
       await dbManager.setCacheValue(cacheKey, outcome.data, cacheTimeout);
@@ -340,14 +388,13 @@ export async function fetchXcpV2WithCache<T>(
 }
 
 export class CounterpartyDispenserService {
-
   static async getDispensersByCpid(
     cpid: string,
     page?: number,
     limit?: number,
     cacheTimeout?: number,
-    filter: DispenserFilter = "all"
-  ): Promise<{ dispensers: any[], total: number }> {
+    filter: DispenserFilter = "all",
+  ): Promise<{ dispensers: any[]; total: number }> {
     const endpoint = `/assets/${cpid}/dispensers`;
     let allDispensers: any[] = [];
     let cursor: string | null = null;
@@ -358,102 +405,105 @@ export class CounterpartyDispenserService {
     const effectiveLimit = limit || 50;
 
     await logger.debug("api", {
-        message: "Fetching dispensers",
-        cpid,
-        page,
-        limit: effectiveLimit,
-        filter
+      message: "Fetching dispensers",
+      cpid,
+      page,
+      limit: effectiveLimit,
+      filter,
     });
 
     do {
-        const queryParams = new URLSearchParams({
-            limit: apiLimit.toString(),
-            status: filter
+      const queryParams = new URLSearchParams({
+        limit: apiLimit.toString(),
+        status: filter,
+      });
+
+      if (cursor) {
+        queryParams.append("cursor", cursor);
+      }
+
+      try {
+        const response = await fetchXcpV2WithCache<{
+          result: any[];
+          next_cursor: string | null;
+          result_count: number;
+        }>(endpoint, queryParams, cacheTimeout);
+
+        if (!response || !Array.isArray(response.result)) {
+          break;
+        }
+
+        const dispensers = response.result.map((dispenser: any) => ({
+          tx_hash: dispenser.tx_hash,
+          block_index: dispenser.block_index,
+          source: dispenser.source,
+          cpid: dispenser.asset,
+          give_quantity: dispenser.give_quantity,
+          give_remaining: dispenser.give_remaining,
+          escrow_quantity: dispenser.escrow_quantity,
+          satoshirate: dispenser.satoshirate,
+          btcrate: Number(
+            formatSatoshisToBTC(dispenser.satoshirate, {
+              includeSymbol: false,
+            }),
+          ),
+          origin: dispenser.origin,
+          confirmed: dispenser.confirmed,
+          close_block_index: dispenser.close_block_index,
+          status: dispenser.give_remaining > 0 ? "open" : "closed",
+          asset_info: dispenser.asset_info,
+          dispenser_info: dispenser.dispenser_info,
+        }));
+
+        allDispensers = allDispensers.concat(dispensers);
+
+        // Break if we have enough items for the requested page
+        if (limit && allDispensers.length >= skipCount + limit) {
+          break;
+        }
+
+        // Update cursor for next iteration
+        cursor = response.next_cursor;
+
+        // Break if no more results
+        if (!cursor) {
+          break;
+        }
+      } catch (error) {
+        await logger.error("api", {
+          message: "Error fetching dispensers",
+          cpid,
+          error: error instanceof Error ? error.message : String(error),
+          stack: error instanceof Error ? error.stack : undefined,
         });
-
-        if (cursor) {
-            queryParams.append("cursor", cursor);
-        }
-
-        try {
-            const response = await fetchXcpV2WithCache<{
-                result: any[];
-                next_cursor: string | null;
-                result_count: number;
-            }>(endpoint, queryParams, cacheTimeout);
-
-            if (!response || !Array.isArray(response.result)) {
-                break;
-            }
-
-            const dispensers = response.result.map((dispenser: any) => ({
-                tx_hash: dispenser.tx_hash,
-                block_index: dispenser.block_index,
-                source: dispenser.source,
-                cpid: dispenser.asset,
-                give_quantity: dispenser.give_quantity,
-                give_remaining: dispenser.give_remaining,
-                escrow_quantity: dispenser.escrow_quantity,
-                satoshirate: dispenser.satoshirate,
-                btcrate: Number(formatSatoshisToBTC(dispenser.satoshirate, { includeSymbol: false })),
-                origin: dispenser.origin,
-                confirmed: dispenser.confirmed,
-                close_block_index: dispenser.close_block_index,
-                status: dispenser.give_remaining > 0 ? "open" : "closed",
-                asset_info: dispenser.asset_info,
-                dispenser_info: dispenser.dispenser_info
-            }));
-
-            allDispensers = allDispensers.concat(dispensers);
-
-            // Break if we have enough items for the requested page
-            if (limit && allDispensers.length >= skipCount + limit) {
-                break;
-            }
-
-            // Update cursor for next iteration
-            cursor = response.next_cursor;
-
-            // Break if no more results
-            if (!cursor) {
-                break;
-            }
-
-        } catch (error) {
-            await logger.error("api", {
-                message: "Error fetching dispensers",
-                cpid,
-                error: error instanceof Error ? error.message : String(error),
-                stack: error instanceof Error ? error.stack : undefined
-            });
-            break;
-        }
+        break;
+      }
     } while (cursor);
 
     // Filter results if needed
     const filteredDispensers = filter === "all"
-        ? allDispensers
-        : allDispensers.filter(dispenser =>
-            filter === "open"
-                ? dispenser.give_remaining > 0
-                : dispenser.give_remaining === 0
-        );
+      ? allDispensers
+      : allDispensers.filter((dispenser) =>
+        filter === "open"
+          ? dispenser.give_remaining > 0
+          : dispenser.give_remaining === 0
+      );
 
     // Apply pagination to the final results
     const paginatedDispensers = limit
-        ? filteredDispensers.slice(skipCount, skipCount + effectiveLimit)
-        : filteredDispensers;
+      ? filteredDispensers.slice(skipCount, skipCount + effectiveLimit)
+      : filteredDispensers;
 
     await logger.debug("api", {
-        message: "Dispensers fetched",
-        cpid,
-        totalCount: filteredDispensers.length,
-        returnedCount: paginatedDispensers.length
+      message: "Dispensers fetched",
+      cpid,
+      totalCount: filteredDispensers.length,
+      returnedCount: paginatedDispensers.length,
     });
 
     return {
-        dispensers: paginatedDispensers,
-        total: filteredDispensers.length
+      dispensers: paginatedDispensers,
+      total: filteredDispensers.length,
     };
   }
 
@@ -461,8 +511,8 @@ export class CounterpartyDispenserService {
     cpid: string,
     page: number = 1,
     limit: number = 50,
-    cacheTimeout?: number
-  ): Promise<{ dispenses: any[], total: number }> {
+    cacheTimeout?: number,
+  ): Promise<{ dispenses: any[]; total: number }> {
     const endpoint = `/assets/${cpid}/dispenses`;
     let allDispenses: any[] = [];
     let cursor: string | null = null;
@@ -472,7 +522,8 @@ export class CounterpartyDispenserService {
     let processedCount = 0;
 
     logger.debug("api", {
-        message: `Fetching dispenses for CPID: ${cpid}, Page: ${page}, Limit: ${limit}`
+      message:
+        `Fetching dispenses for CPID: ${cpid}, Page: ${page}, Limit: ${limit}`,
     });
 
     while (true) {
@@ -492,7 +543,7 @@ export class CounterpartyDispenserService {
         }>(
           endpoint,
           queryParams,
-          cacheTimeout
+          cacheTimeout,
         );
 
         if (!response || !Array.isArray(response.result)) {
@@ -547,7 +598,7 @@ export class CounterpartyDispenserService {
 
     return {
       dispenses: paginatedDispenses,
-      total
+      total,
     };
   }
 }
@@ -555,34 +606,34 @@ export class CounterpartyDispenserService {
 // Update only the ComposeAttachOptions interface
 export interface ComposeAttachOptions {
   // Fee parameters
-  fee_per_kb?: number;  // Optional - can be provided by caller or handled by API
+  fee_per_kb?: number; // Optional - can be provided by caller or handled by API
 
   // Optional parameters
   destination_vout?: number;
-  inputs_set?: string;  // txid:vout format for specifying UTXO
-  encoding?: string;    // default: 'auto'
-  regular_dust_size?: number;    // default: 546
-  multisig_dust_size?: number;   // default: 1000
+  inputs_set?: string; // txid:vout format for specifying UTXO
+  encoding?: string; // default: 'auto'
+  regular_dust_size?: number; // default: 546
+  multisig_dust_size?: number; // default: 1000
   pubkeys?: string;
-  allow_unconfirmed_inputs?: boolean;  // default: false
+  allow_unconfirmed_inputs?: boolean; // default: false
   exact_fee?: number;
-  fee_provided?: number;         // default: 0
+  fee_provided?: number; // default: 0
   unspent_tx_hash?: string;
   dust_return_pubkey?: string | false;
-  disable_utxo_locks?: boolean;  // default: false
+  disable_utxo_locks?: boolean; // default: false
   p2sh_pretx_txid?: string;
-  segwit?: boolean;             // default: false
-  confirmation_target?: number;  // default: 3
+  segwit?: boolean; // default: false
+  confirmation_target?: number; // default: 3
   exclude_utxos?: string;
-  return_psbt?: boolean;        // default: false (API v2 only)
-  return_only_data?: boolean;   // default: false (API v2 only)
-  extended_tx_info?: boolean;   // default: false (API v1 only)
-  old_style_api?: boolean;      // default: false (API v1 only)
-  use_utxos_with_balances?: boolean;    // default: false
+  return_psbt?: boolean; // default: false (API v2 only)
+  return_only_data?: boolean; // default: false (API v2 only)
+  extended_tx_info?: boolean; // default: false (API v1 only)
+  old_style_api?: boolean; // default: false (API v1 only)
+  use_utxos_with_balances?: boolean; // default: false
   exclude_utxos_with_balances?: boolean; // default: false
-  validate?: boolean;           // default: true
-  verbose?: boolean;            // default: false
-  show_unconfirmed?: boolean;   // default: false
+  validate?: boolean; // default: true
+  verbose?: boolean; // default: false
+  show_unconfirmed?: boolean; // default: false
 }
 
 // Also add ComposeDetachOptions since it's used in stampdetach.ts
@@ -673,22 +724,25 @@ export class CounterpartyApiManager {
 
       return response;
     } catch (error) {
-      console.error(`Error fetching asset info for cpid ${cpid}:`, error instanceof Error ? error.message : String(error));
+      console.error(
+        `Error fetching asset info for cpid ${cpid}:`,
+        error instanceof Error ? error.message : String(error),
+      );
       throw error;
     }
   }
-
-
 
   static async getAllXcpHoldersByCpid(
     cpid: string,
     page: number = 1,
     limit: number = 50,
-    cacheTimeout?: number
-  ): Promise<{ holders: import("$lib/types/wallet.d.ts").HolderRow[], total: number }> {
+    cacheTimeout?: number,
+  ): Promise<
+    { holders: import("$lib/types/wallet.d.ts").HolderRow[]; total: number }
+  > {
     const endpoint = `/assets/${cpid}/balances`;
     let cursor: string | null = null;
-    const apiLimit = 1000;  // FIXME: need to handle this more gracefully getAllXcpBalancesByAddress is a better example for fetching all
+    const apiLimit = 1000; // FIXME: need to handle this more gracefully getAllXcpBalancesByAddress is a better example for fetching all
 
     // Use a Map to aggregate quantities by address
     const holderMap = new Map<string, number>();
@@ -698,7 +752,8 @@ export class CounterpartyApiManager {
     let processedCount = 0;
 
     logger.info("api", {
-        message: `Fetching ALL XCP holders for CPID: ${cpid} up to api limit: ${apiLimit}`
+      message:
+        `Fetching ALL XCP holders for CPID: ${cpid} up to api limit: ${apiLimit}`,
     });
 
     while (true) {
@@ -717,7 +772,7 @@ export class CounterpartyApiManager {
         }>(
           endpoint,
           queryParams,
-          cacheTimeout
+          cacheTimeout,
         );
 
         if (!response || !Array.isArray(response.result)) {
@@ -734,7 +789,10 @@ export class CounterpartyApiManager {
             if (effectiveAddress) {
               // Add to existing quantity or create new entry
               const currentQuantity = holderMap.get(effectiveAddress) || 0;
-              holderMap.set(effectiveAddress, currentQuantity + holder.quantity);
+              holderMap.set(
+                effectiveAddress,
+                currentQuantity + holder.quantity,
+              );
             }
           });
 
@@ -746,7 +804,10 @@ export class CounterpartyApiManager {
         }
         cursor = response.next_cursor;
       } catch (error) {
-        console.error(`Error fetching holders for cpid ${cpid}:`, error instanceof Error ? error.message : String(error));
+        console.error(
+          `Error fetching holders for cpid ${cpid}:`,
+          error instanceof Error ? error.message : String(error),
+        );
         break;
       }
     }
@@ -756,7 +817,7 @@ export class CounterpartyApiManager {
       .map(([address, quantity]) => ({
         address,
         quantity,
-        divisible: false // Default to false as we don't have this info from the API
+        divisible: false, // Default to false as we don't have this info from the API
       }))
       .sort((a, b) => b.quantity - a.quantity);
 
@@ -766,16 +827,15 @@ export class CounterpartyApiManager {
 
     return {
       holders: paginatedHolders,
-      total
+      total,
     };
   }
-
 
   static async getXcpBalancesByAddress(
     address: string,
     cpid?: string,
     utxoOnly: boolean = false,
-    options: XcpBalanceOptions = {}
+    options: XcpBalanceOptions = {},
   ): Promise<{ balances: XcpBalance[]; total: number; next_cursor?: string }> {
     const baseEndpoint = `/addresses/${address}/balances`;
     const endpoint = cpid ? `${baseEndpoint}/${cpid}` : baseEndpoint;
@@ -786,113 +846,251 @@ export class CounterpartyApiManager {
 
     // Handle pagination options
     if (options.cursor) {
-        defaultParams.append("cursor", options.cursor);
+      defaultParams.append("cursor", options.cursor);
     }
     if (options.verbose) {
-        defaultParams.append("verbose", "true");
+      defaultParams.append("verbose", "true");
     }
 
     await logger.debug("api", {
-        message: "[CounterpartyApiManager] Fetching balances",
-        endpoint,
-        params: Object.fromEntries(defaultParams),
-        address
+      message: "[CounterpartyApiManager] Fetching balances",
+      endpoint,
+      params: Object.fromEntries(defaultParams),
+      address,
     });
 
     try {
-        const response = await fetchXcpV2WithCache<any>(endpoint, defaultParams);
+      const response = await fetchXcpV2WithCache<any>(endpoint, defaultParams);
 
-        if (!response || !response.result) {
-            await logger.warn("api", {
-                message: "Unexpected response structure",
-                address,
-                response
-            });
-            return { balances: [], total: 0 };
-        }
+      if (!response || !response.result) {
+        await logger.warn("api", {
+          message: "Unexpected response structure",
+          address,
+          response,
+        });
+        return { balances: [], total: 0 };
+      }
 
-        // Handle the response based on whether it's a single balance or multiple balances
-        let balances: XcpBalance[] = [];
-        let total = 0;
+      // Handle the response based on whether it's a single balance or multiple balances
+      let balances: XcpBalance[] = [];
+      let total = 0;
 
-        if (Array.isArray(response.result)) {
-            const balanceMap = new Map<string, XcpBalance>();
+      if (Array.isArray(response.result)) {
+        const balanceMap = new Map<string, XcpBalance>();
 
-            response.result
-                .filter((balance: any) => balance.quantity > 0)
-                .forEach((balance: any,index:number) => {
-                    const effectiveAddress = balance.address || balance.utxo_address;
+        response.result
+          .filter((balance: any) => balance.quantity > 0)
+          .forEach((balance: any, index: number) => {
+            const effectiveAddress = balance.address || balance.utxo_address;
 
-                    if (effectiveAddress) {
-                        const key = `${effectiveAddress}-${balance.asset}-${index}`;
-                        const existing = balanceMap.get(key);
+            if (effectiveAddress) {
+              const key = `${effectiveAddress}-${balance.asset}-${index}`;
+              const existing = balanceMap.get(key);
 
-                        if (existing) {
-                            existing.quantity += balance.quantity;
-                        } else {
-                            balanceMap.set(key, {
-                                address: effectiveAddress,
-                                cpid: balance.asset,
-                                quantity: balance.quantity,
-                                utxo: balance.utxo || "",
-                                utxo_address: balance.utxo_address || "",
-                                divisible: balance.divisible || false,
-                                assetName: balance.asset,
-                                balance: balance.quantity,
-                            });
-                        }
-                    }
+              if (existing) {
+                existing.quantity += balance.quantity;
+              } else {
+                balanceMap.set(key, {
+                  address: effectiveAddress,
+                  cpid: balance.asset,
+                  quantity: balance.quantity,
+                  utxo: balance.utxo || "",
+                  utxo_address: balance.utxo_address || "",
+                  divisible: balance.divisible || false,
+                  assetName: balance.asset,
+                  balance: balance.quantity,
                 });
+              }
+            }
+          });
 
-            balances = Array.from(balanceMap.values());
-            total = balances.length;
-        } else if (response.result.quantity > 0) {
-            // Single balance response
-            balances = [{
-                address: response.result.address || response.result.utxo_address,
-                cpid: response.result.asset,
-                quantity: response.result.quantity,
-                utxo: response.result.utxo || "",
-                utxo_address: response.result.utxo_address || "",
-                assetName: response.result.asset,
-                balance: response.result.quantity,
-                divisible: response.result.divisible || false,
-            }];
-            total = 1;
-        }
+        balances = Array.from(balanceMap.values());
+        total = balances.length;
+      } else if (response.result.quantity > 0) {
+        // Single balance response
+        balances = [{
+          address: response.result.address || response.result.utxo_address,
+          cpid: response.result.asset,
+          quantity: response.result.quantity,
+          utxo: response.result.utxo || "",
+          utxo_address: response.result.utxo_address || "",
+          assetName: response.result.asset,
+          balance: response.result.quantity,
+          divisible: response.result.divisible || false,
+        }];
+        total = 1;
+      }
 
-        // Apply UTXO-only filter if requested
-        if (utxoOnly) {
-            balances = balances.filter(balance => balance.utxo !== "");
-        }
+      // Apply UTXO-only filter if requested
+      if (utxoOnly) {
+        balances = balances.filter((balance) => balance.utxo !== "");
+      }
 
-        await logger.debug("api", {
-            message: "[CounterpartyApiManager] Balances fetched",
-            balancesCount: balances.length,
-            total,
-            nextCursor: response.next_cursor,
-            address
-        });
+      await logger.debug("api", {
+        message: "[CounterpartyApiManager] Balances fetched",
+        balancesCount: balances.length,
+        total,
+        nextCursor: response.next_cursor,
+        address,
+      });
 
-        return {
-            balances,
-            total: response.total || total, // Use response.total if available
-            next_cursor: response.next_cursor
-        };
+      return {
+        balances,
+        total: response.total || total, // Use response.total if available
+        next_cursor: response.next_cursor,
+      };
     } catch (error) {
-        await logger.error("api", {
-            message: "Error fetching balances",
-            error: error instanceof Error ? error.message : String(error),
-            address,
-            stack: error instanceof Error ? error.stack : undefined
-        });
-        throw error;
+      await logger.error("api", {
+        message: "Error fetching balances",
+        error: error instanceof Error ? error.message : String(error),
+        address,
+        stack: error instanceof Error ? error.stack : undefined,
+      });
+      throw error;
     }
+  }
+
+  /**
+   * Every UTXO (`txid:vout`) of `address` that carries a Counterparty balance
+   * (a stamp or any other asset attached to it), read fresh from the node and
+   * paged to the end.
+   *
+   * Transaction builders exclude these outputs so a mint or SRC-20 build never
+   * spends a stamp-bearing UTXO. The exclusion used to read one cached page of
+   * 50 balances and carry on unfiltered when Counterparty failed, so a wallet
+   * with more balances (or an outage) could put a stamp into a build.
+   *
+   * Fails closed: throws UpstreamUnavailableError (routes answer 503 +
+   * Retry-After) when no node can return a complete answer. Never served from
+   * cache, because a stale answer misses a balance attached minutes ago.
+   */
+  static async getUtxoAttachedBalanceUtxos(
+    address: string,
+  ): Promise<Set<string>> {
+    // Read the whole listing from ONE node. Cursors are node-local: a page 2
+    // fetched from a different node than page 1 (different height, different
+    // row order) can skip rows, and a skipped row is a stamp UTXO the filter
+    // would let through. When any page fails, restart from page 1 on the next
+    // node rather than continuing with the old cursor.
+    let lastError: unknown = null;
+    for (const node of XCP_V2_NODES) {
+      try {
+        return await this.listUtxoBalancesFromNode(node, address);
+      } catch (error) {
+        if (!(error instanceof UpstreamUnavailableError)) throw error;
+        lastError = error;
+        await logger.warn("api", {
+          message:
+            "UTXO balance listing failed on this node; restarting on the next",
+          node: node.name,
+          address,
+        });
+      }
+    }
+    throw lastError ?? new UpstreamUnavailableError("Counterparty", 10);
+  }
+
+  private static async listUtxoBalancesFromNode(
+    node: (typeof XCP_V2_NODES)[number],
+    address: string,
+  ): Promise<Set<string>> {
+    const endpoint = `/addresses/${encodeURIComponent(address)}/balances`;
+    const pageSize = STAMP_FILTER_PAGE_SIZE;
+    const utxos = new Set<string>();
+    let cursor: string | null = null;
+
+    for (let page = 0; page < STAMP_FILTER_MAX_PAGES; page++) {
+      const queryParams = new URLSearchParams({
+        type: "utxo",
+        limit: String(pageSize),
+      });
+      if (cursor) queryParams.set("cursor", cursor);
+
+      const data = await this.fetchXcpPageUncached(endpoint, queryParams, [
+        node,
+      ]);
+      const rows = data.result;
+      for (const row of rows) {
+        const utxo = typeof row?.utxo === "string" ? row.utxo : "";
+        if (utxo && Number(row?.quantity ?? 0) > 0) utxos.add(utxo);
+      }
+
+      const next = data.next_cursor;
+      if (
+        next === null || next === undefined || next === "" || rows.length === 0
+      ) {
+        return utxos;
+      }
+      cursor = String(next);
+    }
+
+    await logger.warn("api", {
+      message:
+        "UTXO balance listing exceeded the page limit; refusing to build",
+      address,
+      node: node.name,
+      pages: STAMP_FILTER_MAX_PAGES,
+      pageSize,
+    });
+    throw new UpstreamUnavailableError("Counterparty", 10);
+  }
+
+  /**
+   * One uncached Counterparty GET, trying each of `nodes` in order (all
+   * configured nodes by default). Returns the
+   * parsed body only when a node answered 200 with a `result` array; throws
+   * UpstreamUnavailableError otherwise (rate limit, outage, bad body), and a
+   * plain Error for a definitive 4xx rejection.
+   */
+  private static async fetchXcpPageUncached(
+    endpoint: string,
+    queryParams: URLSearchParams,
+    nodes: ReadonlyArray<(typeof XCP_V2_NODES)[number]> = XCP_V2_NODES,
+  ): Promise<{ result: any[]; next_cursor?: string | number | null }> {
+    let lastStatus: number | null = null;
+    for (const node of nodes) {
+      const url = `${node.url}${endpoint}?${queryParams.toString()}`;
+      try {
+        const response = await httpClient.get(url);
+        lastStatus = response.status;
+        if (response.ok && Array.isArray(response.data?.result)) {
+          return response.data;
+        }
+        if (!response.ok && isDefinitiveRejection(response.status)) {
+          throw new Error(
+            composeErrorMessage(response.data) ??
+              `Counterparty rejected ${endpoint} (HTTP ${response.status})`,
+          );
+        }
+        await logger.warn("api", {
+          message: "Counterparty node gave no usable answer, trying next",
+          node: node.name,
+          endpoint,
+          status: response.status,
+        });
+      } catch (error) {
+        if (error instanceof Error && error.name !== "XcpNodeRequestError") {
+          throw error;
+        }
+        await logger.warn("api", {
+          message: "Counterparty node request failed, trying next",
+          node: node.name,
+          endpoint,
+          error: error instanceof Error ? error.message : String(error),
+        });
+      }
+    }
+    await logger.warn("api", {
+      message: "No Counterparty node answered",
+      endpoint,
+      lastStatus,
+    });
+    throw new UpstreamUnavailableError("Counterparty", 10);
   }
 
   static async getAllXcpBalancesByAddress(
     address: string,
-    utxoOnly: boolean = false
+    utxoOnly: boolean = false,
   ): Promise<{ balances: XcpBalance[]; total: number }> {
     try {
       const MAX_RETRIES = 3;
@@ -904,7 +1102,7 @@ export class CounterpartyApiManager {
           attempt: attempt + 1,
           maxRetries: MAX_RETRIES,
           address,
-          utxoOnly
+          utxoOnly,
         });
 
         // Initialize collection for all balances
@@ -917,7 +1115,7 @@ export class CounterpartyApiManager {
           const options: XcpBalanceOptions = {
             type: "all",
             limit: 500,
-            verbose: true
+            verbose: true,
           };
 
           if (cursor) {
@@ -928,7 +1126,7 @@ export class CounterpartyApiManager {
             address,
             undefined,
             utxoOnly,
-            options
+            options,
           );
 
           // Set expected total from first response's aggregated count
@@ -947,7 +1145,7 @@ export class CounterpartyApiManager {
             expectedTotal,
             cursor,
             nextCursor: result.next_cursor,
-            address
+            address,
           });
 
           cursor = result.next_cursor || null;
@@ -961,7 +1159,6 @@ export class CounterpartyApiManager {
           if (!cursor) {
             break;
           }
-
         } while (cursor);
 
         // Simplified success check - if we have balances, consider it successful
@@ -972,16 +1169,21 @@ export class CounterpartyApiManager {
             message: "[CounterpartyApiManager] Successfully fetched balances",
             finalCount: allBalances.length,
             expectedTotal,
-            address
+            address,
           });
           // Use actual aggregated count for total
           return { balances: allBalances, total: allBalances.length };
         }
       }
 
-      throw new Error(`Failed to fetch complete balance set after ${MAX_RETRIES} attempts`);
+      throw new Error(
+        `Failed to fetch complete balance set after ${MAX_RETRIES} attempts`,
+      );
     } catch (error) {
-      console.error(`Error fetching all balances for address ${address}:`, error);
+      console.error(
+        `Error fetching all balances for address ${address}:`,
+        error,
+      );
       throw error;
     }
   }
@@ -990,8 +1192,10 @@ export class CounterpartyApiManager {
     cpid: string,
     page: number = 1,
     limit: number = 50,
-    cacheTimeout?: number
-  ): Promise<{ sends: import("$lib/types/transaction.d.ts").SendRow[], total: number }> {
+    cacheTimeout?: number,
+  ): Promise<
+    { sends: import("$lib/types/transaction.d.ts").SendRow[]; total: number }
+  > {
     const endpoint = `/assets/${cpid}/sends`;
     let allSends: import("$lib/types/transaction.d.ts").SendRow[] = [];
     let cursor: string | null = null;
@@ -1001,7 +1205,9 @@ export class CounterpartyApiManager {
     const skipCount = (page - 1) * limit;
     let processedCount = 0;
 
-    console.log(`Fetching XCP sends for CPID: ${cpid}, Page: ${page}, Limit: ${limit}`);
+    console.log(
+      `Fetching XCP sends for CPID: ${cpid}, Page: ${page}, Limit: ${limit}`,
+    );
 
     while (true) {
       const queryParams = new URLSearchParams({
@@ -1020,7 +1226,7 @@ export class CounterpartyApiManager {
         }>(
           endpoint,
           queryParams,
-          cacheTimeout
+          cacheTimeout,
         );
 
         if (!response || !Array.isArray(response.result)) {
@@ -1033,7 +1239,9 @@ export class CounterpartyApiManager {
           return {
             tx_hash: send.tx_hash,
             block_index: send.block_index,
-            block_time: send.block_time ? new Date(send.block_time * 1000) : new Date(), // Convert timestamp to Date
+            block_time: send.block_time
+              ? new Date(send.block_time * 1000)
+              : new Date(), // Convert timestamp to Date
             source: send.source,
             destination: send.destination,
             quantity: send.quantity,
@@ -1060,7 +1268,10 @@ export class CounterpartyApiManager {
         }
         cursor = response.next_cursor;
       } catch (error) {
-        console.error(`Error fetching sends for cpid ${cpid}:`, error instanceof Error ? error.message : String(error));
+        console.error(
+          `Error fetching sends for cpid ${cpid}:`,
+          error instanceof Error ? error.message : String(error),
+        );
         break;
       }
     }
@@ -1075,7 +1286,7 @@ export class CounterpartyApiManager {
 
     return {
       sends: paginatedSends,
-      total
+      total,
     };
   }
 
@@ -1120,8 +1331,7 @@ export class CounterpartyApiManager {
 
       const validEvents = response.result.filter(
         (event): event is DispenseEvent => {
-          const isValid = (
-            typeof event === "object" &&
+          const isValid = typeof event === "object" &&
             event !== null &&
             typeof event.event_index === "number" &&
             event.event === "DISPENSE" &&
@@ -1138,19 +1348,20 @@ export class CounterpartyApiManager {
             typeof event.params.tx_hash === "string" &&
             typeof event.params.tx_index === "number" &&
             typeof event.tx_hash === "string" &&
-            typeof event.block_index === "number"
-          );
+            typeof event.block_index === "number";
 
           if (isValid) {
             // Convert btc_amount to BTC if it's in satoshis
-            event.params.btc_amount = Number(formatSatoshisToBTC(event.params.btc_amount, {
-              includeSymbol: false,
-              stripZeros: false
-            }));
+            event.params.btc_amount = Number(
+              formatSatoshisToBTC(event.params.btc_amount, {
+                includeSymbol: false,
+                stripZeros: false,
+              }),
+            );
           }
 
           return isValid;
-        }
+        },
       );
 
       allEvents = allEvents.concat(validEvents);
@@ -1228,34 +1439,38 @@ export class CounterpartyApiManager {
       // This CounterpartyApiManager method will just pass what it's given, preferring sat_per_vbyte.
       // If route sends options.fee_per_kb, it will be iterated below unless we exclude.
       // Let's ensure we only send one fee type.
-      if (options.fee_per_kb !== undefined && options.sat_per_vbyte === undefined) {
-         finalApiOptions.fee_per_kb = options.fee_per_kb; // Send deprecated if new one not present
+      if (
+        options.fee_per_kb !== undefined && options.sat_per_vbyte === undefined
+      ) {
+        finalApiOptions.fee_per_kb = options.fee_per_kb; // Send deprecated if new one not present
       }
     }
 
     // Copy other relevant options, EXCLUDING deprecated ones explicitly
     for (const [key, value] of Object.entries(options)) {
       if (value !== undefined && value !== null) {
-        if (key === 'regular_dust_size') continue; // Skip deprecated
-        if (key === 'fee_per_kb' && options.sat_per_vbyte !== undefined) continue; // Skip if sat_per_vbyte is used
+        if (key === "regular_dust_size") continue; // Skip deprecated
+        if (key === "fee_per_kb" && options.sat_per_vbyte !== undefined) {
+          continue; // Skip if sat_per_vbyte is used
+        }
 
         // If key is already set (like sat_per_vbyte from fee_per_kb), don't override from generic options spread
         if (!(key in finalApiOptions)) {
-            finalApiOptions[key] = value.toString();
+          finalApiOptions[key] = value.toString();
         }
       }
     }
 
     // Ensure return_psbt is explicitly set based on what the route wants (which is now false)
     if (options.return_psbt !== undefined) {
-        finalApiOptions.return_psbt = options.return_psbt;
+      finalApiOptions.return_psbt = options.return_psbt;
     } else {
-        finalApiOptions.return_psbt = false; // Default if not specified by caller
+      finalApiOptions.return_psbt = false; // Default if not specified by caller
     }
 
     // Append final processed options to queryParams
     for (const [key, value] of Object.entries(finalApiOptions)) {
-        queryParams.append(key, String(value));
+      queryParams.append(key, String(value));
     }
 
     let lastError: string | null = null;
@@ -1268,15 +1483,22 @@ export class CounterpartyApiManager {
         const response = await httpClient.get(url);
 
         if (!response.ok) {
-          const unavailable = upstreamUnavailable(response.status, response.data);
+          const unavailable = upstreamUnavailable(
+            response.status,
+            response.data,
+          );
           if (unavailable) {
             lastUnavailable = unavailable;
             continue;
           }
-          const errorBody = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
+          const errorBody = typeof response.data === "string"
+            ? response.data
+            : JSON.stringify(response.data);
           console.error(`Error response body from ${node.name}: ${errorBody}`);
           try {
-            const errorJson = typeof response.data === 'string' ? JSON.parse(response.data) : response.data;
+            const errorJson = typeof response.data === "string"
+              ? JSON.parse(response.data)
+              : response.data;
             if (errorJson.error) {
               lastError = errorJson.error;
             }
@@ -1292,7 +1514,9 @@ export class CounterpartyApiManager {
 
         const data = response.data;
         // DETAILED LOGGING OF THE RAW RESPONSE FROM COUNTERPARTY
-        console.log(`[CounterpartyApiManager.createDispense] RAW RESPONSE from ${node.name} for dispense:`);
+        console.log(
+          `[CounterpartyApiManager.createDispense] RAW RESPONSE from ${node.name} for dispense:`,
+        );
         console.log(JSON.stringify(data, null, 2));
         // END DETAILED LOGGING
 
@@ -1305,7 +1529,9 @@ export class CounterpartyApiManager {
 
     // Throw the last error message instead of generic message
     if (lastUnavailable) throw lastUnavailable;
-    throw new Error(lastError || "All nodes failed to compose dispense transaction.");
+    throw new Error(
+      lastError || "All nodes failed to compose dispense transaction.",
+    );
   }
 
   static async createSend(
@@ -1375,15 +1601,22 @@ export class CounterpartyApiManager {
         console.log(`Response status from ${node.name}: ${response.status}`);
 
         if (!response.ok) {
-          const unavailable = upstreamUnavailable(response.status, response.data);
+          const unavailable = upstreamUnavailable(
+            response.status,
+            response.data,
+          );
           if (unavailable) {
             lastUnavailable = unavailable;
             continue;
           }
-          const errorBody = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
+          const errorBody = typeof response.data === "string"
+            ? response.data
+            : JSON.stringify(response.data);
           console.error(`Error response body from ${node.name}: ${errorBody}`);
           try {
-            const errorJson = typeof response.data === 'string' ? JSON.parse(response.data) : response.data;
+            const errorJson = typeof response.data === "string"
+              ? JSON.parse(response.data)
+              : response.data;
             if (errorJson.error) {
               lastError = errorJson.error;
             }
@@ -1408,14 +1641,16 @@ export class CounterpartyApiManager {
 
     // Throw the last error message instead of generic message
     if (lastUnavailable) throw lastUnavailable;
-    throw new Error(lastError || "All nodes failed to compose dispense transaction.");
+    throw new Error(
+      lastError || "All nodes failed to compose dispense transaction.",
+    );
   }
 
   static async composeAttach(
     address: string,
     asset: string,
     quantity: number,
-    options: ComposeAttachOptions = {}
+    options: ComposeAttachOptions = {},
   ): Promise<any> {
     const endpoint = `/addresses/${address}/compose/attach`;
     const queryParams = new URLSearchParams();
@@ -1431,9 +1666,9 @@ export class CounterpartyApiManager {
     // Default return_psbt to false if not specified by the caller for this new flow
     // If the caller wants a PSBT directly from CP, they can set options.return_psbt = true
     if (options.return_psbt === undefined) {
-        queryParams.append("return_psbt", "false");
+      queryParams.append("return_psbt", "false");
     } else {
-        queryParams.append("return_psbt", options.return_psbt.toString());
+      queryParams.append("return_psbt", options.return_psbt.toString());
     }
 
     // Handle fee_per_kb: XCP API for compose operations often requires fee_per_kb.
@@ -1441,7 +1676,10 @@ export class CounterpartyApiManager {
     // For this call, if options.fee_per_kb is provided, use it. Otherwise, a default might be needed
     // or the CP API might error. For now, assume if not provided, CP uses a default or handles it.
     if (options.fee_per_kb) {
-      queryParams.append("fee_per_kb", Math.floor(options.fee_per_kb).toString());
+      queryParams.append(
+        "fee_per_kb",
+        Math.floor(options.fee_per_kb).toString(),
+      );
     }
     // Do not add default fee_per_kb here, let the caller (route) decide if a nominal one is needed for CP.
 
@@ -1454,7 +1692,7 @@ export class CounterpartyApiManager {
     for (const [key, value] of Object.entries(options)) {
       if (value !== undefined && value !== null) {
         // Avoid re-appending already handled options or ensure they are consistent
-        if (key === 'asset' || key === 'quantity') continue;
+        if (key === "asset" || key === "quantity") continue;
         if (queryParams.has(key)) continue; // If already set by defaults/specific logic above
         queryParams.append(key, String(value));
       }
@@ -1464,31 +1702,42 @@ export class CounterpartyApiManager {
     // if (!options.multisig_dust_size) queryParams.delete("multisig_dust_size"); // Example: if you don't want default
 
     await logger.debug("api", {
-        message: "[CounterpartyApiManager.composeAttach] Calling Counterparty API",
-        endpoint,
-        queryParams: queryParams.toString()
+      message:
+        "[CounterpartyApiManager.composeAttach] Calling Counterparty API",
+      endpoint,
+      queryParams: queryParams.toString(),
     });
 
     // fetchXcpV2WithCache handles node iteration and error logging
     const response = await this.fetchXcpV2WithCache<any>(endpoint, queryParams);
 
-    const unavailable = upstreamUnavailable(response.lastStatusCode, response.error);
+    const unavailable = upstreamUnavailable(
+      response.lastStatusCode,
+      response.error,
+    );
     if (unavailable) throw unavailable;
     if (response.error || !response.result) {
-        const level = isUserFundsError(String(response.error ?? "")) ? "warn" : "error";
-        await logger[level]("api", {
-            message: "[CounterpartyApiManager.composeAttach] Error from Counterparty API",
-            error: response.error,
-            result: response.result
-        });
-        throw new Error(response.error?.message || response.error?.description || response.error || "Failed to compose attach transaction with XCP.");
+      const level = isUserFundsError(String(response.error ?? ""))
+        ? "warn"
+        : "error";
+      await logger[level]("api", {
+        message:
+          "[CounterpartyApiManager.composeAttach] Error from Counterparty API",
+        error: response.error,
+        result: response.result,
+      });
+      throw new Error(
+        response.error?.message || response.error?.description ||
+          response.error || "Failed to compose attach transaction with XCP.",
+      );
     }
 
     // The response.result could contain .psbt, .rawtransaction, or other fields.
     // The caller (route handler) will be responsible for checking for .rawtransaction.
     await logger.debug("api", {
-        message: "[CounterpartyApiManager.composeAttach] Response from Counterparty API",
-        result: response.result // Log the whole result for inspection
+      message:
+        "[CounterpartyApiManager.composeAttach] Response from Counterparty API",
+      result: response.result, // Log the whole result for inspection
     });
     return response.result; // Return the entire result object
   }
@@ -1521,7 +1770,7 @@ export class CounterpartyApiManager {
 
     // Append all provided options to query parameters, except fee_per_kb which we handled above
     for (const [key, value] of Object.entries(options)) {
-      if (value !== undefined && value !== null && key !== 'fee_per_kb') {
+      if (value !== undefined && value !== null && key !== "fee_per_kb") {
         queryParams.append(key, value.toString());
       }
     }
@@ -1538,15 +1787,22 @@ export class CounterpartyApiManager {
         console.log(`Response status from ${node.name}: ${response.status}`);
 
         if (!response.ok) {
-          const unavailable = upstreamUnavailable(response.status, response.data);
+          const unavailable = upstreamUnavailable(
+            response.status,
+            response.data,
+          );
           if (unavailable) {
             lastUnavailable = unavailable;
             continue;
           }
-          const errorBody = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
+          const errorBody = typeof response.data === "string"
+            ? response.data
+            : JSON.stringify(response.data);
           console.error(`Error response body from ${node.name}: ${errorBody}`);
           try {
-            const errorJson = typeof response.data === 'string' ? JSON.parse(response.data) : response.data;
+            const errorJson = typeof response.data === "string"
+              ? JSON.parse(response.data)
+              : response.data;
             if (errorJson.error) {
               lastError = errorJson.error;
             }
@@ -1570,7 +1826,9 @@ export class CounterpartyApiManager {
     }
 
     if (lastUnavailable) throw lastUnavailable;
-    throw new Error(lastError || "All nodes failed to compose detach transaction.");
+    throw new Error(
+      lastError || "All nodes failed to compose detach transaction.",
+    );
   }
 
   static async composeDispenser(
@@ -1645,12 +1903,17 @@ export class CounterpartyApiManager {
         console.log(`Response status from ${node.name}: ${response.status}`);
 
         if (!response.ok) {
-          const unavailable = upstreamUnavailable(response.status, response.data);
+          const unavailable = upstreamUnavailable(
+            response.status,
+            response.data,
+          );
           if (unavailable) {
             lastUnavailable = unavailable;
             continue;
           }
-          const errorBody = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
+          const errorBody = typeof response.data === "string"
+            ? response.data
+            : JSON.stringify(response.data);
           console.error(`Error response body from ${node.name}: ${errorBody}`);
           if (isDefinitiveRejection(response.status)) {
             lastUnavailable = null; // the rejection, not an earlier outage, is the answer
@@ -1734,17 +1997,30 @@ export class CounterpartyApiManager {
         console.log(`Response status from ${node.name}: ${response.status}`);
 
         if (!response.ok) {
-          const unavailable = upstreamUnavailable(response.status, response.data);
+          const unavailable = upstreamUnavailable(
+            response.status,
+            response.data,
+          );
           if (unavailable) {
             lastUnavailable = unavailable;
             continue;
           }
-          const errorBody = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
+          const errorBody = typeof response.data === "string"
+            ? response.data
+            : JSON.stringify(response.data);
           // A 4xx is the node rejecting the request itself (no open
           // fairminter, bad quantity): every node will say the same, and the
           // caller answers it with a 400 carrying the node's reason.
-          if (response.status >= 400 && response.status < 500 && response.status !== 429) {
-            logger.warn("api", { message: "Counterparty rejected fairmint compose", node: node.name, status: response.status, errorBody });
+          if (
+            response.status >= 400 && response.status < 500 &&
+            response.status !== 429
+          ) {
+            logger.warn("api", {
+              message: "Counterparty rejected fairmint compose",
+              node: node.name,
+              status: response.status,
+              errorBody,
+            });
             return { error: composeErrorMessage(response.data) ?? errorBody };
           }
           console.error(`Error response body from ${node.name}: ${errorBody}`);
@@ -1778,7 +2054,10 @@ export class CounterpartyApiManager {
     asset: string,
   ): Promise<{ price: number; status: string } | null | undefined> {
     const endpoint = `/assets/${encodeURIComponent(asset)}/fairminters`;
-    const queryParams = new URLSearchParams({ verbose: "true", status: "open" });
+    const queryParams = new URLSearchParams({
+      verbose: "true",
+      status: "open",
+    });
     let lastUnavailable: UpstreamUnavailableError | null = null;
     for (const node of XCP_V2_NODES) {
       try {
@@ -1791,7 +2070,8 @@ export class CounterpartyApiManager {
             ? { price: Number(fm.price ?? 0), status: String(fm.status ?? "") }
             : null;
         }
-        lastUnavailable = upstreamUnavailable(response.status, response.data) ?? lastUnavailable;
+        lastUnavailable = upstreamUnavailable(response.status, response.data) ??
+          lastUnavailable;
       } catch (_error) {
         // try the next node
       }
@@ -1877,7 +2157,7 @@ export class CounterpartyApiManager {
     address: string,
     asset: string,
     quantity: number,
-    options: IssuanceOptions = {}
+    options: IssuanceOptions = {},
   ): Promise<any> {
     // Validate address (sourceWallet in original)
     if (typeof address !== "string") {
@@ -1886,23 +2166,37 @@ export class CounterpartyApiManager {
 
     // Validate asset (assetName in original)
     if (asset !== undefined && typeof asset !== "string") {
-      throw new Error("Invalid asset parameter. Expected a string or undefined.");
+      throw new Error(
+        "Invalid asset parameter. Expected a string or undefined.",
+      );
     }
 
     // Validate quantity (qty in original)
-    const validatedQuantity = typeof quantity === "string" ? Number(quantity) : quantity;
-    if (isNaN(validatedQuantity) || !Number.isInteger(validatedQuantity) || validatedQuantity <= 0) {
-      throw new Error("Invalid quantity parameter. Expected a positive integer.");
+    const validatedQuantity = typeof quantity === "string"
+      ? Number(quantity)
+      : quantity;
+    if (
+      isNaN(validatedQuantity) || !Number.isInteger(validatedQuantity) ||
+      validatedQuantity <= 0
+    ) {
+      throw new Error(
+        "Invalid quantity parameter. Expected a positive integer.",
+      );
     }
 
     // Validate options
     if (options.lock !== undefined && typeof options.lock !== "boolean") {
       throw new Error("Invalid lock parameter. Expected a boolean.");
     }
-    if (options.divisible !== undefined && typeof options.divisible !== "boolean") {
+    if (
+      options.divisible !== undefined && typeof options.divisible !== "boolean"
+    ) {
       throw new Error("Invalid divisible parameter. Expected a boolean.");
     }
-    if (options.description !== undefined && typeof options.description !== "string") {
+    if (
+      options.description !== undefined &&
+      typeof options.description !== "string"
+    ) {
       throw new Error("Invalid description parameter. Expected a string.");
     }
 
@@ -1911,7 +2205,9 @@ export class CounterpartyApiManager {
       ? Number(options.fee_per_kb)
       : options.fee_per_kb;
     if (feePerKB !== undefined && (isNaN(feePerKB) || feePerKB <= 0)) {
-      throw new Error("Invalid fee_per_kb parameter. Expected a positive number.");
+      throw new Error(
+        "Invalid fee_per_kb parameter. Expected a positive number.",
+      );
     }
 
     const endpoint = `/addresses/${address}/compose/issuance`;
@@ -1926,7 +2222,7 @@ export class CounterpartyApiManager {
 
     // Add optional parameters if they exist
     for (const [key, value] of Object.entries(options)) {
-      if (value !== undefined && key !== 'encoding') { // Skip encoding as we set it above
+      if (value !== undefined && key !== "encoding") { // Skip encoding as we set it above
         queryParams.append(key, value.toString());
       }
     }
@@ -1947,12 +2243,16 @@ export class CounterpartyApiManager {
       return await this.fetchXcpV2WithCache<any>(endpoint, queryParams);
     } catch (error) {
       console.error("Error in createIssuance:", error);
-      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorMessage = error instanceof Error
+        ? error.message
+        : String(error);
       if (errorMessage?.includes("Insufficient")) {
         throw error;
       }
       if (errorMessage?.includes("invalid base58")) {
-        throw new Error("Invalid address format. Please use a supported Bitcoin address format.");
+        throw new Error(
+          "Invalid address format. Please use a supported Bitcoin address format.",
+        );
       }
       throw new Error(errorMessage || "Failed to create issuance transaction");
     }
@@ -1982,7 +2282,11 @@ export class CounterpartyApiManager {
       const outcome = await this.fetchAssetInfoUncached(asset);
       if (outcome.kind === "found") {
         setStaleCache(key, outcome.result, STALE_IF_ERROR_TTL);
-        await dbManager.setCacheValue(key, { result: outcome.result }, ASSET_INFO_TTL);
+        await dbManager.setCacheValue(
+          key,
+          { result: outcome.result },
+          ASSET_INFO_TTL,
+        );
         return outcome.result;
       }
       if (outcome.kind === "missing") {
@@ -2016,7 +2320,8 @@ export class CounterpartyApiManager {
       const first = await Promise.race([lookup, deadline]);
       if (first !== DEADLINE_HIT) return first;
       await logger.warn("api", {
-        message: "XCP asset lookup exceeded deadline, rendering with fallback values",
+        message:
+          "XCP asset lookup exceeded deadline, rendering with fallback values",
         asset,
         deadlineMs: ASSET_INFO_DEADLINE_MS,
       });
@@ -2072,7 +2377,9 @@ export class CounterpartyApiManager {
         if (data && data.result) return { kind: "found", result: data.result };
         return { kind: "missing" };
       } catch (err) {
-        error = `${node.name}: ${err instanceof Error ? err.message : String(err)}`;
+        error = `${node.name}: ${
+          err instanceof Error ? err.message : String(err)
+        }`;
       }
     }
     return { kind: "failed", status, error };
@@ -2089,19 +2396,21 @@ export class CounterpartyApiManager {
       sort?: string;
       verbose?: boolean;
       show_unconfirmed?: boolean;
-    } = {}
+    } = {},
   ): Promise<{ dispensers: Dispenser[]; total: number }> {
     const endpoint = `/addresses/${address}/dispensers`;
     const queryParams = new URLSearchParams();
 
     // Add optional parameters if they exist
-    if (options.status) queryParams.append('status', options.status);
-    if (options.cursor) queryParams.append('cursor', options.cursor);
-    if (options.limit) queryParams.append('limit', options.limit.toString());
-    if (options.offset) queryParams.append('offset', options.offset.toString());
-    if (options.sort) queryParams.append('sort', options.sort);
-    if (options.verbose) queryParams.append('verbose', 'true');
-    if (options.show_unconfirmed) queryParams.append('show_unconfirmed', 'true');
+    if (options.status) queryParams.append("status", options.status);
+    if (options.cursor) queryParams.append("cursor", options.cursor);
+    if (options.limit) queryParams.append("limit", options.limit.toString());
+    if (options.offset) queryParams.append("offset", options.offset.toString());
+    if (options.sort) queryParams.append("sort", options.sort);
+    if (options.verbose) queryParams.append("verbose", "true");
+    if (options.show_unconfirmed) {
+      queryParams.append("show_unconfirmed", "true");
+    }
 
     // Handle pagination
     const page = options.page || 1;
@@ -2112,27 +2421,33 @@ export class CounterpartyApiManager {
       // First, get total count by fetching with a large limit
       // FIXME: This is a hack to get the total count of dispensers for pagination
       const countParams = new URLSearchParams(queryParams);
-      countParams.set('limit', '1000'); // Use a larger limit for counting
-      const countResponse = await this.fetchXcpV2WithCache<any>(endpoint, countParams);
+      countParams.set("limit", "1000"); // Use a larger limit for counting
+      const countResponse = await this.fetchXcpV2WithCache<any>(
+        endpoint,
+        countParams,
+      );
       const totalCount = countResponse?.result?.length || 0;
 
       console.log("[CounterpartyApiManager] Total dispenser count:", {
         address,
         totalCount,
         page,
-        limit
+        limit,
       });
 
       // Then fetch the actual page
       const pageParams = new URLSearchParams(queryParams);
-      pageParams.set('limit', limit.toString());
-      pageParams.set('offset', skipCount.toString());
-      const response = await this.fetchXcpV2WithCache<any>(endpoint, pageParams);
+      pageParams.set("limit", limit.toString());
+      pageParams.set("offset", skipCount.toString());
+      const response = await this.fetchXcpV2WithCache<any>(
+        endpoint,
+        pageParams,
+      );
 
       if (!response || !Array.isArray(response.result)) {
         return {
           dispensers: [],
-          total: 0
+          total: 0,
         };
       }
 
@@ -2145,13 +2460,15 @@ export class CounterpartyApiManager {
         give_remaining: dispenser.give_remaining,
         escrow_quantity: dispenser.escrow_quantity,
         satoshirate: dispenser.satoshirate,
-        btcrate: Number(formatSatoshisToBTC(dispenser.satoshirate, { includeSymbol: false })),
+        btcrate: Number(
+          formatSatoshisToBTC(dispenser.satoshirate, { includeSymbol: false }),
+        ),
         origin: dispenser.origin,
         confirmed: dispenser.confirmed,
         close_block_index: dispenser.close_block_index,
         status: String(dispenser.status || "unknown").toLowerCase(),
         asset_info: dispenser.asset_info,
-        dispenser_info: dispenser.dispenser_info
+        dispenser_info: dispenser.dispenser_info,
       }));
 
       console.log("[CounterpartyApiManager] Returning dispensers:", {
@@ -2159,18 +2476,18 @@ export class CounterpartyApiManager {
         dispensersCount: dispensers?.length ?? 0,
         totalCount,
         page,
-        limit
+        limit,
       });
 
       return {
         dispensers,
-        total: totalCount
+        total: totalCount,
       };
     } catch (error) {
       console.error(`Error fetching dispensers for address ${address}:`, error);
       return {
         dispensers: [],
-        total: 0
+        total: 0,
       };
     }
   }
@@ -2184,10 +2501,12 @@ export class CounterpartyApiManager {
       // Health checks should be cached for less time than regular API calls
       const cacheTime = cacheTimeout || 60000; // Default to 1 minute cache for health checks
 
-      const response = await this.fetchXcpV2WithCache<{ result: { status: string } }>(
+      const response = await this.fetchXcpV2WithCache<
+        { result: { status: string } }
+      >(
         endpoint,
         queryParams,
-        cacheTime
+        cacheTime,
       );
 
       return response?.result?.status === "Healthy";

@@ -1,3 +1,4 @@
+import { withComposeDeadline } from "$lib/utils/api/composeDeadline.ts";
 import { isUserFundsError } from "$server/services/src20/userFundsError.ts";
 import { FreshContext, Handlers } from "$fresh/server.ts";
 // MintStampInputData import removed as RawRequestBody is now explicitly defined
@@ -21,7 +22,7 @@ import type {
   TransactionInput,
 } from "$types/api.d.ts";
 
-export const handler: Handlers<NormalizedMintResponse | { error: string }> = {
+const composeHandler: Handlers<NormalizedMintResponse | { error: string }> = {
   async POST(req: Request, _ctx: FreshContext) {
     // Dynamic import of bitcoinjs-lib to exclude from build-time static analysis
     const bitcoin = await import("bitcoinjs-lib");
@@ -391,4 +392,9 @@ export const handler: Handlers<NormalizedMintResponse | { error: string }> = {
       return ApiResponseUtil.internalError(error, errorMessage);
     }
   },
+};
+
+// Answer 503 + Retry-After instead of hanging when upstreams are slow (#1287).
+export const handler: Handlers<NormalizedMintResponse | { error: string }> = {
+  POST: withComposeDeadline("olga/mint", composeHandler.POST!),
 };

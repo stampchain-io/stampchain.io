@@ -1,3 +1,4 @@
+import { withComposeDeadline } from "$lib/utils/api/composeDeadline.ts";
 import { isUserFundsError } from "$server/services/src20/userFundsError.ts";
 import { TX_CONSTANTS } from "$constants";
 import { Handlers } from "$fresh/server.ts";
@@ -37,7 +38,7 @@ interface StampAttachInput {
   service_fee_address?: string; // Allow top-level override
 }
 
-export const handler: Handlers = {
+const composeHandler: Handlers = {
   async POST(req: Request) {
     const commonUtxoService = new CommonUTXOService();
     try {
@@ -251,4 +252,9 @@ export const handler: Handlers = {
       return ApiResponseUtil.internalError(error, errorMessage);
     }
   },
+};
+
+// Answer 503 + Retry-After instead of hanging when upstreams are slow (#1287).
+export const handler: Handlers = {
+  POST: withComposeDeadline("trx/stampattach", composeHandler.POST!),
 };

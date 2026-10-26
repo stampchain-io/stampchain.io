@@ -1,4 +1,5 @@
 // routes/api/v2/create/send.ts
+import { withComposeDeadline } from "$lib/utils/api/composeDeadline.ts";
 import { Handlers } from "$fresh/server.ts";
 import { ApiResponseUtil } from "$lib/utils/api/responses/apiResponseUtil.ts";
 import { logger } from "$lib/utils/logger.ts";
@@ -11,7 +12,7 @@ import { CommonUTXOService } from "$server/services/utxo/commonUtxoService.ts";
 import type { SendRequestBody, SendResponse } from "$types/api.d.ts";
 import { Buffer } from "node:buffer";
 
-export const handler: Handlers<SendResponse | { error: string }> = {
+const composeHandler: Handlers<SendResponse | { error: string }> = {
   async POST(req) {
     try {
       // Dynamic import of bitcoinjs-lib to exclude from build-time static analysis
@@ -227,4 +228,9 @@ export const handler: Handlers<SendResponse | { error: string }> = {
       return ApiResponseUtil.internalError(error, errorMessage);
     }
   },
+};
+
+// Answer 503 + Retry-After instead of hanging when upstreams are slow (#1287).
+export const handler: Handlers<SendResponse | { error: string }> = {
+  POST: withComposeDeadline("create/send", composeHandler.POST!),
 };

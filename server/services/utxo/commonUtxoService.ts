@@ -12,7 +12,25 @@ import { fetchFromEsplora } from "$server/services/utxo/esploraFetch.ts";
 import { UTXOOptions as QuicknodeInternalUTXOOptions, QuicknodeUTXOService } from "$server/services/quicknode/quicknodeUTXOService.ts";
 import type {ICommonUTXOService, UTXOFetchOptions} from "$server/services/utxo/utxoServiceInterface.d.ts";
 
-const httpClient = new FetchHttpClient();
+import {
+  UTXO_PROVIDER_MAX_BACKOFF_MS,
+  UTXO_PROVIDER_RETRIES,
+  UTXO_PROVIDER_TIMEOUT_MS,
+} from "$lib/utils/bitcoin/utxo/providerBudgets.ts";
+import { UpstreamUnavailableError } from "$lib/utils/api/upstreamUnavailableError.ts";
+
+// Esplora (mempool.space -> blockstream.info) client. Fail fast and fail over:
+// a per-call timeout, one retry, and no long sleeps on 429 — a provider that
+// asks for a long wait is skipped so the next one is tried (#1287). These used
+// to be the FetchHttpClient defaults: 30 s timeout, 3 retries, >= 5 s per 429.
+const httpClient = new FetchHttpClient(
+  UTXO_PROVIDER_TIMEOUT_MS,
+  UTXO_PROVIDER_RETRIES,
+  500, // retry delay; capped by UTXO_PROVIDER_MAX_BACKOFF_MS
+  10,
+  20,
+  UTXO_PROVIDER_MAX_BACKOFF_MS,
+);
 
 /**
  * Raw tx hex and a transaction's outputs (value + scriptPubKey) are immutable
@@ -170,9 +188,23 @@ export class CommonUTXOService implements ICommonUTXOService {
     }
 
     logger.debug("common-utxo-service", { message: "Falling back to public APIs for getSpendableUTXOs (basic list)", address });
+    let publicUtxosResult: Awaited<ReturnType<typeof getUTXOsFromPublicAPIsForAddress>>;
     try {
-      const publicUtxosResult = await getUTXOsFromPublicAPIsForAddress(address, undefined, undefined, false, 3);
+      publicUtxosResult = await getUTXOsFromPublicAPIsForAddress(address, undefined, undefined, false);
+    } catch (error) {
+      publicUtxosResult = null;
+      logger.error("common-utxo-service", { message: "Error fetching basic UTXOs from public APIs", address, error: error instanceof Error ? error.message : String(error) });
+    }
 
+    // null means no provider answered (an empty wallet comes back as []).
+    // Reporting that as "no UTXOs" told users they had no funds while the
+    // providers were simply down; answer it as a temporary upstream outage.
+    if (publicUtxosResult === null || publicUtxosResult === undefined) {
+      logger.warn("common-utxo-service", { message: "No UTXO provider answered for getSpendableUTXOs", address });
+      throw new UpstreamUnavailableError("Bitcoin UTXO providers", 10);
+    }
+
+    try {
       if (Array.isArray(publicUtxosResult)) {
         logger.info("common-utxo-service", { message: "Successfully fetched basic UTXOs from public APIs", address, count: publicUtxosResult.length });
         return publicUtxosResult.map(utxo => ({

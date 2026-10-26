@@ -1,3 +1,4 @@
+import { withComposeDeadline } from "$lib/utils/api/composeDeadline.ts";
 import { UpstreamUnavailableError } from "$lib/utils/api/upstreamUnavailableError.ts";
 // routes/api/v2/dispense.ts
 import { TX_CONSTANTS } from "$constants";
@@ -29,7 +30,7 @@ interface DispenseInput {
   };
 }
 
-export const handler: Handlers = {
+const composeHandler: Handlers = {
   async POST(req) {
     const commonUtxoService = new CommonUTXOService();
     try {
@@ -290,4 +291,9 @@ export const handler: Handlers = {
       return ApiResponseUtil.badRequest(errorMessage);
     }
   },
+};
+
+// Answer 503 + Retry-After instead of hanging when upstreams are slow (#1287).
+export const handler: Handlers = {
+  POST: withComposeDeadline("create/dispense", composeHandler.POST!),
 };

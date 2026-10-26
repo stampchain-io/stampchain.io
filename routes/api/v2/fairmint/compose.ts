@@ -1,3 +1,4 @@
+import { withComposeDeadline } from "$lib/utils/api/composeDeadline.ts";
 import { TX_CONSTANTS } from "$constants";
 import { Handlers } from "$fresh/server.ts";
 import { ResponseUtil } from "$lib/utils/api/responses/responseUtil.ts";
@@ -33,7 +34,7 @@ const XCP_FAIRMINT_PASSTHROUGH = [
   "show_unconfirmed",
 ] as const;
 
-export const handler: Handlers = {
+const composeHandler: Handlers = {
   async POST(req) {
     const commonUtxoService = new CommonUTXOService();
     try {
@@ -317,4 +318,9 @@ export const handler: Handlers = {
       );
     }
   },
+};
+
+// Answer 503 + Retry-After instead of hanging when upstreams are slow (#1287).
+export const handler: Handlers = {
+  POST: withComposeDeadline("fairmint/compose", composeHandler.POST!),
 };

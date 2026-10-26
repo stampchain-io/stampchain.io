@@ -35,6 +35,9 @@ const {
 const { xcpHttpClient } = await import(
   "$server/services/counterparty/xcpNodeClient.ts"
 );
+// The node list is fixed at import. Unset the variable so it cannot leak
+// into other test files sharing this process.
+Deno.env.delete("XCP_PRIMARY_NODE_URL");
 
 let seq = 0;
 const unique = (p: string) => `${p}${Date.now()}${seq++}`;

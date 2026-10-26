@@ -511,12 +511,19 @@ describe("utxoUtils", () => {
       assertEquals(result, null);
     });
 
-    it("should handle empty UTXO arrays", async () => {
-      const localFetchStub = () => Promise.resolve(createMockResponse([]));
+    it("should treat an empty UTXO list as a valid answer", async () => {
+      // An empty wallet is an answer, not a provider failure: return [] from
+      // the first provider instead of querying every provider in every pass.
+      let calls = 0;
+      const localFetchStub = () => {
+        calls++;
+        return Promise.resolve(createMockResponse([]));
+      };
       globalThis.fetch = localFetchStub as typeof fetch;
 
       const result = await getUTXOForAddress(TEST_ADDRESS);
-      assertEquals(result, null);
+      assertEquals(result, []);
+      assertEquals(calls, 1);
     });
 
     it("should construct script from address when missing", async () => {
