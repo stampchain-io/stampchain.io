@@ -1,6 +1,6 @@
 /* ===== SRC-101 DETAIL TOOL MODAL ===== */
 import { UserProfileIcon } from "$icon";
-import { openModalTool, ModalTool } from "$islands/modal/tool/ModalTool.tsx";
+import { ModalTool, openModalTool } from "$islands/modal/tool/ModalTool.tsx";
 import { container2 } from "$layout";
 import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { cardCreator, cardStampNumber } from "$text";
@@ -9,17 +9,6 @@ import type { SRC101DetailToolProps } from "$types/ui.d.ts";
 /* ===== OPENER ===== */
 export function openSRC101DetailTool(props: SRC101DetailToolProps) {
   openModalTool(<SRC101DetailTool {...props} />);
-}
-
-const TEST_SRC101_DETAIL = {
-  img: "/img/logo/favicon/web-app-manifest-512x512.png",
-  name: "stampchain",
-  root: ".btc",
-  owner: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
-};
-
-export function openSRC101DetailTestModal() {
-  openSRC101DetailTool(TEST_SRC101_DETAIL);
 }
 
 /* ===== COMPONENT ===== */
