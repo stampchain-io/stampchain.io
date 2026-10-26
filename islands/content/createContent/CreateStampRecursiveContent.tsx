@@ -21,7 +21,6 @@ import PreviewImageModal from "$islands/modal/PreviewImageModal.tsx";
 import { StampCreateRecursiveInfo } from "$islands/modal/info/StampCreateRecursiveInfo.tsx";
 import { openSearchStampPicker } from "$islands/modal/SearchStampPickerModal.tsx";
 import { openModal } from "$islands/modal/states.ts";
-import { StampCreateRecursiveHowto } from "$islands/section/howto/StampCreateRecursiveHowto.tsx";
 import {
   container2,
   container2Hover,
