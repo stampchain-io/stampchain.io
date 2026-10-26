@@ -319,10 +319,12 @@ export function StampSendTool() {
 
   const handleQuantityChange = (e: Event) => {
     const input = e.target as HTMLInputElement;
-    const digits = inputFieldGrowDigits(input);
-    const next = !digits || digits === "0" ? "1" : digits;
+    const parsed = parseInt(inputFieldGrowDigits(input), 10);
+    // Empty input or anything that parses to 0 ("0", "000") resets to 1.
+    const value = !parsed || parsed < 1 ? 1 : parsed;
+    const next = value.toString();
     if (input.value !== next) input.value = next;
-    setQuantity(parseInt(next, 10));
+    setQuantity(value);
   };
 
   const handleTransferSubmit = async () => {
