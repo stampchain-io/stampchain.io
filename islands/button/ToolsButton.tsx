@@ -1,4 +1,6 @@
 import { Icon } from "$icon";
+import { logger } from "$lib/utils/logger.ts";
+import { showToast } from "$lib/utils/ui/notifications/toastSignal.ts";
 import {
   eyebrowNeutral,
   navLinkActiveMobile,
@@ -34,6 +36,31 @@ const isModalLink = (
   link: ToolLink,
 ): link is { title: string; modal: ModalToolId } => {
   return "modal" in link;
+};
+
+/* ===== MODAL TOOL LOADERS ===== */
+// Tool modals are code-split; each loader fetches its chunk and opens it.
+const modalToolLoaders: Record<ModalToolId, () => Promise<void>> = {
+  "stamp-send": () =>
+    import("$islands/modal/tool/StampSendTool.tsx").then((mod) =>
+      mod.openStampSendTool()
+    ),
+  "src20-deploy": () =>
+    import("$islands/modal/tool/SRC20DeployTool.tsx").then((mod) =>
+      mod.openSRC20DeployTool()
+    ),
+  "src20-mint": () =>
+    import("$islands/modal/tool/SRC20MintTool.tsx").then((mod) =>
+      mod.openSRC20MintTool()
+    ),
+  "src20-transfer": () =>
+    import("$islands/modal/tool/SRC20TransferTool.tsx").then((mod) =>
+      mod.openSRC20TransferTool()
+    ),
+  "src101-register": () =>
+    import("$islands/modal/tool/SRC101RegisterTool.tsx").then((mod) =>
+      mod.openSRC101RegisterTool()
+    ),
 };
 
 /* ===== TOOLS CONFIGURATION ===== */
@@ -94,31 +121,18 @@ export function ToolsButton(
 
   const openModalTool = (modal: ModalToolId) => {
     onSelectTool?.();
-    if (modal === "stamp-send") {
-      import("$islands/modal/tool/StampSendTool.tsx").then((mod) => {
-        mod.openStampSendTool();
+    modalToolLoaders[modal]().catch((error: unknown) => {
+      logger.error("ui", {
+        message: "Failed to load modal tool",
+        modal,
+        error: error instanceof Error ? error.message : String(error),
+        errorName: error instanceof Error ? error.name : typeof error,
       });
-    }
-    if (modal === "src20-deploy") {
-      import("$islands/modal/tool/SRC20DeployTool.tsx").then((mod) => {
-        mod.openSRC20DeployTool();
-      });
-    }
-    if (modal === "src20-mint") {
-      import("$islands/modal/tool/SRC20MintTool.tsx").then((mod) => {
-        mod.openSRC20MintTool();
-      });
-    }
-    if (modal === "src20-transfer") {
-      import("$islands/modal/tool/SRC20TransferTool.tsx").then((mod) => {
-        mod.openSRC20TransferTool();
-      });
-    }
-    if (modal === "src101-register") {
-      import("$islands/modal/tool/SRC101RegisterTool.tsx").then((mod) => {
-        mod.openSRC101RegisterTool();
-      });
-    }
+      showToast(
+        "Failed to open the tool. Please check your connection and try again.",
+        "error",
+      );
+    });
   };
 
   const renderToolEntry = (
