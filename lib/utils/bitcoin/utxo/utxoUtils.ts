@@ -1,9 +1,6 @@
 import type { UTXO } from "$types/index.d.ts";
-import { decodeBase58 } from "@std/encoding/base58";
-import {
-  detectScriptType,
-  getScriptTypeInfo,
-} from "$lib/utils/bitcoin/scripts/scriptTypeUtils.ts";
+import * as bitcoin from "bitcoinjs-lib";
+import { getScriptTypeInfo } from "$lib/utils/bitcoin/scripts/scriptTypeUtils.ts";
 import {
   BLOCKCHAIN_API_BASE_URL,
   BLOCKCYPHER_API_BASE_URL,
@@ -262,56 +259,36 @@ function isValidScript(script: string): boolean {
 }
 
 // Update script construction for all address types
-function constructScriptFromAddress(address: string): string | null {
+/**
+ * The output script (hex) an address pays to. Used when a provider's UTXO
+ * listing omits the script (mempool.space's /address/:a/utxo does).
+ *
+ * This used to hand-build the script, and for bech32 addresses it pasted the
+ * address characters after "0014"/"5120" instead of decoding them. That is not
+ * hex, so every native-segwit and taproot UTXO from mempool.space was dropped
+ * as invalid, and those wallets looked empty.
+ */
+export function constructScriptFromAddress(address: string): string | null {
+  const hex = (bytes: Uint8Array) =>
+    Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
   try {
-    console.log("Constructing script for address:", address);
-    const scriptType = detectScriptType(address);
-
-    // Helper function to convert Uint8Array to hex string
-    const toHexString = (bytes: Uint8Array): string =>
-      Array.from(bytes)
-        .map((b) => b.toString(16).padStart(2, "0"))
-        .join("");
-
-    switch (scriptType) {
-      case "P2WPKH": {
-        // For P2WPKH addresses (bc1q...)
-        if (!address.startsWith("bc1q")) {
-          throw new Error("Invalid P2WPKH address");
-        }
-        // Extract the witness program (20 bytes after bc1q)
-        const decoded = address.slice(4);
-        return `0014${decoded}`;
-      }
-      case "P2TR": {
-        // For P2TR addresses (bc1p...)
-        if (!address.startsWith("bc1p")) {
-          throw new Error("Invalid P2TR address");
-        }
-        // Extract the witness program (32 bytes after bc1p)
-        const decoded = address.slice(4);
-        return `5120${decoded}`;
-      }
-      case "P2SH": {
-        // For P2SH addresses (3...)
-        const decoded = decodeBase58(address);
-        // Skip version byte (1) and checksum (4)
-        const pubKeyHash = decoded.slice(1, -4);
-        return `a914${toHexString(pubKeyHash)}87`;
-      }
-      case "P2PKH": {
-        // For P2PKH addresses (1...)
-        const decoded = decodeBase58(address);
-        // Skip version byte (1) and checksum (4)
-        const pubKeyHash = decoded.slice(1, -4);
-        return `76a914${toHexString(pubKeyHash)}88ac`;
-      }
-      default:
-        console.log("Unknown address format:", address);
+    if (/^bc1/i.test(address)) {
+      // Decode bech32/bech32m directly: toOutputScript would need an ECC
+      // library initialised just to check a taproot key, and we only need
+      // the witness program.
+      const { version, prefix, data } = bitcoin.address.fromBech32(address);
+      if (prefix !== "bc" || version > 16) return null;
+      if (version === 0 && data.length !== 20 && data.length !== 32) {
         return null;
+      }
+      if (version === 1 && data.length !== 32) return null;
+      const op = version === 0 ? 0x00 : 0x50 + version; // OP_0 / OP_1..OP_16
+      return hex(new Uint8Array([op, data.length, ...data]));
     }
-  } catch (error) {
-    console.warn("Failed to construct script from address:", error);
+    return hex(
+      bitcoin.address.toOutputScript(address, bitcoin.networks.bitcoin),
+    );
+  } catch {
     return null;
   }
 }
