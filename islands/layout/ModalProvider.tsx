@@ -1,6 +1,11 @@
-import { Fragment } from "preact";
-import { closeModal, globalModal } from "$islands/modal/states.ts";
 import ModalOverlay from "$islands/layout/ModalOverlay.tsx";
+import {
+  closeModal,
+  closeStackedModal,
+  globalModal,
+  stackedModal,
+} from "$islands/modal/states.ts";
+import { Fragment } from "preact";
 
 export default function ModalProvider() {
   // Debug logging
@@ -9,6 +14,8 @@ export default function ModalProvider() {
     console.log(
       "ModalProvider rendering with globalModal.value:",
       globalModal.value,
+      "stackedModal.value:",
+      stackedModal.value,
     );
   }
 
@@ -18,8 +25,18 @@ export default function ModalProvider() {
         <ModalOverlay
           handleClose={closeModal}
           animation={globalModal.value.animation}
+          layer="base"
         >
           {globalModal.value.content}
+        </ModalOverlay>
+      )}
+      {stackedModal.value.isOpen && stackedModal.value.content && (
+        <ModalOverlay
+          handleClose={closeStackedModal}
+          animation={stackedModal.value.animation}
+          layer="stacked"
+        >
+          {stackedModal.value.content}
         </ModalOverlay>
       )}
     </Fragment>

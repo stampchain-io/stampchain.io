@@ -2,8 +2,7 @@
 import { Button } from "$button";
 import { StampImage } from "$content";
 import { Icon } from "$icon";
-import BuyStampModal from "$islands/modal/BuyStampModal.tsx";
-import { openModal } from "$islands/modal/states.ts";
+import { openStampBuyTool } from "$islands/modal/tool/StampBuyTool.tsx";
 import { containerBackground, StatItem, StatPrice, StatTitle } from "$layout";
 import type { WalletOverviewInfo } from "$lib/types/wallet.d.ts";
 import { formatEditionCount } from "$lib/utils/ui/formatting/formatEditionCount.ts";
@@ -287,15 +286,12 @@ function DispenserStats({
   const firstDispenser = (dispensers as any)?.items?.[0];
 
   const handleOpenBuyModal = () => {
-    const modalContent = (
-      <BuyStampModal
-        stamp={firstDispenser.stamp}
-        fee={fee}
-        handleChangeFee={setFee}
-        dispenser={firstDispenser}
-      />
-    );
-    openModal(modalContent, "slideUpDown");
+    openStampBuyTool({
+      stamp: firstDispenser.stamp,
+      fee,
+      handleChangeFee: setFee,
+      dispenser: firstDispenser,
+    });
   };
 
   /* ===== RENDER ===== */

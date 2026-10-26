@@ -12,7 +12,7 @@ export const transitionTransform =
 export const transitionAll =
   "transition-all duration-500 will-change-transform";
 
-// Shadow styles - also used in button/styles.ts
+// Shadow styles - also used in button/styles.ts - rename to neutral/primary
 export const shadow =
   "shadow-[0_4px_8px_rgba(13,11,13,0.2),inset_0_1px_0_rgba(13,11,13,0.1),inset_0_-1px_0_rgba(13,11,13,0.1),inset_0_0_1px_1px_rgba(13,11,13,0.1)]";
 export const shadowL2 =
@@ -75,14 +75,14 @@ export const containerDetailImage = `relative ${container2} p-0.5`;
 export const containerStickyBottom = `sticky bottom-0 mt-auto pb-5`;
 
 // Table card container styles - check if used
-export const containerCardTable = `rounded-3xl ${container1} ${shadowGlowPurple}
-  hover:border-color-purple-light`;
+export const containerCardTable =
+  `rounded-3xl ${container1} ${shadowGlowPurple} hover:border-color-primary-400-light`;
 
 // Global styles
 export const containerColData = "flex flex-col -space-y-1"; // Data specific
 // Form styles
-export const containerColForm = "flex flex-col w-full gap-5";
-export const containerRowForm = "flex w-full gap-5";
+export const containerColForm = "flex flex-col w-full gap-3";
+export const containerRowForm = "flex w-full gap-3";
 
 /* ===== CARD GRID STYLES ===== */
 // Card-size tiers (Sm/Md/Lg), decoupled from the cardSquare/cardVertical
@@ -145,7 +145,7 @@ export function gridCardWallet(
 // Form styles
 export const rowForm = "flex w-full";
 export const rowResponsiveForm =
-  "flex flex-col min-[420px]:flex-row w-full gap-5 min-[420px]:[&>*]:flex-1";
+  "flex flex-col min-[420px]:flex-row w-full gap-3 min-[420px]:[&>*]:flex-1";
 // Row container styles - used for all gallery (no content) containers
 export const rowContainerBackground =
   `flex items-center justify-center w-full h-[42px] ${container2} px-2`; // update all tables to use this instead of custom code
@@ -159,12 +159,12 @@ export const colContainerBackground =
 // Stamp and SRC20 Table Row Cards - Stamp/tokencards
 // export const cellLeftCard =
 //   `p-3 pl-4 rounded-l-3xl border-y-[1px] border-l-[1px] border-r-0 border-color-border
-//   group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
+//   group-hover:bg-black/30 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
 // export const cellRightCard =
 //   `p-3 pr-4 rounded-r-3xl border-y-[1px] border-r-[1px] border-l-0 border-color-border
-//   group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
+//   group-hover:bg-black/30 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
 // export const cellCenterCard = `p-3 border-y-[1px] border-x-0 border-color-border
-//   group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
+//   group-hover:bg-black/30 group-hover:border-color-hover ${transitionColors} whitespace-nowrap`;
 
 // Layer 2
 // Marketplace and Explorer pagesStamp and SRC20 Table Row Cards - Stamp/tokencards inside of layer 1
@@ -172,28 +172,30 @@ const cell =
   "bg-gradient-to-b from-color-neutral-800/40 via-color-neutral-900/60 to-neutral-900/80 border-color-neutral-700 whitespace-nowrap";
 export const cellLeftL2Card =
   `p-0.5 ${cell} rounded-l-2xl border-y-[1px] border-l-[1px] border-r-0
-  group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} text-left`;
+  group-hover:bg-black/30 group-hover:border-color-hover ${transitionColors} text-left`;
 export const cellRightL2Card =
   `p-0.5 ${cell} rounded-r-2xl border-y-[1px] border-r-[1px] border-l-0
-  group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} text-right`;
+  group-hover:bg-black/30 group-hover:border-color-hover ${transitionColors} text-right`;
 export const cellCenterL2Card = `p-0.5 ${cell} border-y-[1px] border-x-0
-  group-hover:bg-black/20 group-hover:border-color-hover ${transitionColors} text-center`;
+  group-hover:bg-black/30 group-hover:border-color-hover ${transitionColors} text-center`;
 // Stamp and SRC20 Detail pages Table Rows
 export const cellLeftL2Detail =
-  `p-1.5 pl-3 ${cell} rounded-l-2xl border-y-[1px] border-l-[1px] border-r-0 group-hover:bg-black/20 ${transitionColors} whitespace-nowrap text-left`;
+  `p-1.5 pl-3 ${cell} rounded-l-2xl border-y-[1px] border-l-[1px] border-r-0 group-hover:bg-black/30 ${transitionColors} whitespace-nowrap text-left`;
 export const cellRightL2Detail =
-  `p-1.5 pr-3 ${cell} rounded-r-2xl border-y-[1px] border-r-[1px] border-l-0 group-hover:bg-black/20 ${transitionColors} whitespace-nowrap text-right`;
+  `p-1.5 pr-3 ${cell} rounded-r-2xl border-y-[1px] border-r-[1px] border-l-0 group-hover:bg-black/30 ${transitionColors} whitespace-nowrap text-right`;
 export const cellCenterL2Detail =
-  `p-1.5 ${cell} border-y-[1px] border-x-0 group-hover:bg-black/20 ${transitionColors} whitespace-nowrap text-center`;
+  `p-1.5 ${cell} border-y-[1px] border-x-0 group-hover:bg-black/30 ${transitionColors} whitespace-nowrap text-center`;
 /* refactor to base style and rename */
 export const cellStickyLeft = `sticky left-0 ${cell} z-10`;
 export const cellStickyLeft2 = `sticky left-10 ${cell} z-10`;
 
 /* ===== IMAGE STYLES ===== */
 export const imagePreviewTool =
-  `flex items-center justify-center min-w-[100px] h-[100px] ${container2}`;
+  `flex items-center justify-center min-w-[76px] h-[76px] ${container2}`;
 export const imageUploadTool =
-  `flex items-center justify-center min-w-[100px] h-[100px] ${container2} hover:bg-color-grey-dark/30 ${transitionColors} cursor-pointer`;
+  `flex items-center justify-center min-w-[76px] h-[76px]
+  ${container2Hover} ${shadowGlowPurpleSm}
+  ${transitionColors} cursor-pointer group`;
 
 /* ===== LOADER STYLES ===== */
 // Text loader styles are defined in /text/styles.ts
@@ -205,14 +207,21 @@ const loaderSpin = "motion-essential animate-spin rounded-full border-b-[2px]";
 export const loaderSkeleton =
   `bg-color-background border border-color-border animate-pulse`;
 // Spinning loader styles
-export const loaderSpinXsGrey = `${loaderSpin} w-3 h-3 border-color-grey`;
-export const loaderSpinSmGrey = `${loaderSpin} w-5 h-5 border-color-grey`;
-export const loaderSpinGrey = `${loaderSpin} w-7 h-7 border-color-grey`;
-export const loaderSpinLgGrey = `${loaderSpin} w-9 h-9 border-color-grey`;
-export const loaderSpinXsPurple = `${loaderSpin} w-3 h-3 border-color-purple`;
-export const loaderSpinSmPurple = `${loaderSpin} w-5 h-5 border-color-purple`;
-export const loaderSpinPurple = `${loaderSpin} w-7 h-7 border-color-purple`;
-export const loaderSpinLgPurple = `${loaderSpin} w-9 h-9 border-color-purple`;
+export const loaderSpinXsGrey =
+  `${loaderSpin} w-3 h-3 border-color-neutral-400`;
+export const loaderSpinSmGrey =
+  `${loaderSpin} w-5 h-5 border-color-neutral-400`;
+export const loaderSpinGrey = `${loaderSpin} w-7 h-7 border-color-neutral-400`;
+export const loaderSpinLgGrey =
+  `${loaderSpin} w-9 h-9 border-color-neutral-400`;
+export const loaderSpinXsPurple =
+  `${loaderSpin} w-3 h-3 border-color-primary-400`;
+export const loaderSpinSmPurple =
+  `${loaderSpin} w-5 h-5 border-color-primary-400`;
+export const loaderSpinPurple =
+  `${loaderSpin} w-7 h-7 border-color-primary-400`;
+export const loaderSpinLgPurple =
+  `${loaderSpin} w-9 h-9 border-color-primary-400`;
 
 /* ===== TYPE DEFINITIONS ===== */
 export type LayoutStyles = {
@@ -283,7 +292,7 @@ export type LayoutStyles = {
   imagePreviewTool: string;
   imageUploadTool: string;
 
-  // Loader styles
+  // Loader styles - rename to neutral/primary
   loaderSpinXsGrey: string;
   loaderSpinSmGrey: string;
   loaderSpinGrey: string;

@@ -4,8 +4,7 @@ import { ActivityLevelIndicator } from "$components/indicators/ActivityLevelIndi
 import { colGroup } from "$components/layout/types.ts";
 import { PlaceholderImage } from "$icon";
 import StampTextContent from "$islands/content/stampDetailContent/StampTextContent.tsx";
-import BuyStampModal from "$islands/modal/BuyStampModal.tsx";
-import { openModal } from "$islands/modal/states.ts";
+import { openStampBuyTool } from "$islands/modal/tool/StampBuyTool.tsx";
 import {
   cellCenterL2Card,
   cellLeftL2Card,
@@ -62,7 +61,7 @@ export function StampListingsRow({ stamp }: StampListingsRowProps) {
   // view (per stampchain.io#1209 / btc_stamps#939 — see the hook for why
   // this can't be a bulk server-side fetch). `dispenser` is a DispenserRow,
   // so its fields (source, origin, give_remaining, tx_hash, ...) can be
-  // read directly and passed straight to BuyStampModal.
+  // read directly and passed straight to StampBuyTool.
   const { dispenser, isLoading: isDispenserLoading } = useLowestPriceDispenser(
     stamp,
     rowRef,
@@ -95,7 +94,7 @@ export function StampListingsRow({ stamp }: StampListingsRowProps) {
     : formatSupply(stamp.supply ?? 0, stamp.divisible);
 
   // Opens the Buy modal instead of navigating to the stamp detail page.
-  // BuyStampModal handles the "wallet not connected" flow internally
+  // StampBuyTool handles the "wallet not connected" flow internally
   // (opens Connect Wallet, then re-opens this modal once connected).
   // Because BUY constructs a real spend transaction, this re-checks for a
   // fresher dispenser (getFreshDispenserForPurchase treats a cache hit
@@ -114,15 +113,12 @@ export function StampListingsRow({ stamp }: StampListingsRowProps) {
         showToast("This stamp is no longer listed for sale.", "info");
         return;
       }
-      openModal(
-        <BuyStampModal
-          stamp={stamp}
-          fee={fee}
-          handleChangeFee={setFee}
-          dispenser={liveDispenser}
-        />,
-        "slideUpDown",
-      );
+      openStampBuyTool({
+        stamp,
+        fee,
+        handleChangeFee: setFee,
+        dispenser: liveDispenser,
+      });
     } finally {
       setIsPurchasing(false);
     }

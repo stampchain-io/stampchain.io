@@ -1,4 +1,4 @@
-#animation-modal-container {
+.animation-modal-container {
   /* Common variables */
   /*  --animation-duration-modal: 0s;
 --animation-delay-background: 0s;
@@ -20,6 +20,12 @@ defined individually
   z-index: 50;
 }
 
+/* Above the base overlay. Lighter dim so two backdrops don't go near-black. */
+#animation-modal-container-stacked {
+  z-index: 51;
+  --animation-bg: #17171759;
+}
+
 /* ===== FLATTENED SELECTORS =====
    Native CSS nesting (the "&" syntax) is not supported on Safari/iOS < 16.5
    (e.g. iPhone 7, capped at iOS 15.8.x) or Chrome < 112 / Firefox < 117.
@@ -31,84 +37,84 @@ defined individually
    browsers. Keep this file flattened - no "&" nesting. */
 
 /* Common styles for all slide/zoom animations */
-#animation-modal-container.slideUpDown,
-#animation-modal-container.slideDownUp,
-#animation-modal-container.zoomInOut {
+.animation-modal-container.slideUpDown,
+.animation-modal-container.slideDownUp,
+.animation-modal-container.zoomInOut {
   transform: scale(1);
 }
 
-#animation-modal-container.slideUpDown .animation-modal-background,
-#animation-modal-container.slideDownUp .animation-modal-background,
-#animation-modal-container.zoomInOut .animation-modal-background {
+.animation-modal-container.slideUpDown .animation-modal-background,
+.animation-modal-container.slideDownUp .animation-modal-background,
+.animation-modal-container.zoomInOut .animation-modal-background {
   animation: fadeModalIn var(--animation-duration-background) var(--animation-timing) forwards;
 }
 
-#animation-modal-container.slideUpDown .animation-modal-background .animation-modal,
-#animation-modal-container.slideDownUp .animation-modal-background .animation-modal,
-#animation-modal-container.zoomInOut .animation-modal-background .animation-modal {
+.animation-modal-container.slideUpDown .animation-modal-background .animation-modal,
+.animation-modal-container.slideDownUp .animation-modal-background .animation-modal,
+.animation-modal-container.zoomInOut .animation-modal-background .animation-modal {
   opacity: 0;
 }
 
-#animation-modal-container.slideUpDown + .content,
-#animation-modal-container.slideDownUp + .content,
-#animation-modal-container.zoomInOut + .content {
+.animation-modal-container.slideUpDown + .content,
+.animation-modal-container.slideDownUp + .content,
+.animation-modal-container.zoomInOut + .content {
   animation: scaleContentBack var(--animation-duration-background) var(--animation-timing) forwards;
 }
 
-#animation-modal-container.slideUpDown.out .animation-modal-background,
-#animation-modal-container.slideDownUp.out .animation-modal-background,
-#animation-modal-container.zoomInOut.out .animation-modal-background {
+.animation-modal-container.slideUpDown.out .animation-modal-background,
+.animation-modal-container.slideDownUp.out .animation-modal-background,
+.animation-modal-container.zoomInOut.out .animation-modal-background {
   animation: fadeModalOut var(--animation-duration-background) var(--animation-timing) forwards;
 }
 
-#animation-modal-container.slideUpDown.out + .content,
-#animation-modal-container.slideDownUp.out + .content,
-#animation-modal-container.zoomInOut.out + .content {
+.animation-modal-container.slideUpDown.out + .content,
+.animation-modal-container.slideDownUp.out + .content,
+.animation-modal-container.zoomInOut.out + .content {
   animation: scaleContentForward var(--animation-duration-background) var(--animation-timing) forwards;
 }
 
 /* Specific animation variants */
-#animation-modal-container.slideUpDown .animation-modal {
+.animation-modal-container.slideUpDown .animation-modal {
   animation: slideBottomUp 0.3s var(--animation-timing) forwards;
 }
 
-#animation-modal-container.slideUpDown.out {
+.animation-modal-container.slideUpDown.out {
   animation: slideBottomDown 0.3s var(--animation-timing) forwards;
 }
 
-#animation-modal-container.slideUpDown.out .animation-modal {
+.animation-modal-container.slideUpDown.out .animation-modal {
   animation: slideBottomDown 0.3s var(--animation-timing) forwards;
 }
 
-#animation-modal-container.slideDownUp .animation-modal-background {
+.animation-modal-container.slideDownUp .animation-modal-background {
   vertical-align: top;
 }
 
-#animation-modal-container.slideDownUp .animation-modal {
+.animation-modal-container.slideDownUp .animation-modal {
   animation: slideTopDown 0.3s var(--animation-timing) forwards;
 }
 
-#animation-modal-container.slideDownUp.out {
+.animation-modal-container.slideDownUp.out {
   animation: slideTopUp 0.3s var(--animation-timing) forwards;
 }
 
-#animation-modal-container.slideDownUp.out .animation-modal {
+.animation-modal-container.slideDownUp.out .animation-modal {
   animation: slideTopUp 0.3s var(--animation-timing) forwards;
 }
 
-#animation-modal-container.zoomInOut .animation-modal {
+.animation-modal-container.zoomInOut .animation-modal {
   animation: zoomCenterIn 0.3s var(--animation-timing) forwards;
 }
 
-#animation-modal-container.zoomInOut.out {
+.animation-modal-container.zoomInOut.out {
   animation: zoomCenterOut 0.3s var(--animation-timing) forwards;
 }
 
-#animation-modal-container.zoomInOut.out .animation-modal {
+.animation-modal-container.zoomInOut.out .animation-modal {
   animation: zoomCenterOut 0.3s var(--animation-timing) forwards;
 }
 
-#animation-modal-container .animation-modal-background {
+.animation-modal-container .animation-modal-background {
   display: table-cell;
   background: var(--animation-bg);
   /* backdrop-filter will be animated in keyframes */
@@ -116,7 +122,7 @@ defined individually
   vertical-align: middle;
 }
 
-#animation-modal-container .animation-modal-background .animation-modal {
+.animation-modal-container .animation-modal-background .animation-modal {
   display: inline-block;
   position: relative;
   text-align: left;

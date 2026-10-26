@@ -1,4 +1,6 @@
 import { Icon } from "$icon";
+import { logger } from "$lib/utils/logger.ts";
+import { showToast } from "$lib/utils/ui/notifications/toastSignal.ts";
 import {
   eyebrowNeutral,
   navLinkActiveMobile,
@@ -8,10 +10,16 @@ import {
 } from "$text";
 import { useEffect, useState } from "preact/hooks";
 
-interface ToolLink {
-  title: string;
-  href: string;
-}
+type ModalToolId =
+  | "stamp-send"
+  | "src20-deploy"
+  | "src20-mint"
+  | "src20-transfer"
+  | "src101-register";
+
+type ToolLink =
+  | { title: string; href: string }
+  | { title: string; modal: ModalToolId };
 
 interface ToolGroup {
   heading: string;
@@ -20,29 +28,64 @@ interface ToolGroup {
 
 interface ToolsButtonProps {
   onOpenDrawer: (content: "tools") => void;
+  /** Closes the tools dropdown or drawer before a modal tool opens. */
+  onSelectTool?: () => void;
 }
+
+const isModalLink = (
+  link: ToolLink,
+): link is { title: string; modal: ModalToolId } => {
+  return "modal" in link;
+};
+
+/* ===== MODAL TOOL LOADERS ===== */
+// Tool modals are code-split; each loader fetches its chunk and opens it.
+const modalToolLoaders: Record<ModalToolId, () => Promise<void>> = {
+  "stamp-send": () =>
+    import("$islands/modal/tool/StampSendTool.tsx").then((mod) =>
+      mod.openStampSendTool()
+    ),
+  "src20-deploy": () =>
+    import("$islands/modal/tool/SRC20DeployTool.tsx").then((mod) =>
+      mod.openSRC20DeployTool()
+    ),
+  "src20-mint": () =>
+    import("$islands/modal/tool/SRC20MintTool.tsx").then((mod) =>
+      mod.openSRC20MintTool()
+    ),
+  "src20-transfer": () =>
+    import("$islands/modal/tool/SRC20TransferTool.tsx").then((mod) =>
+      mod.openSRC20TransferTool()
+    ),
+  "src101-register": () =>
+    import("$islands/modal/tool/SRC101RegisterTool.tsx").then((mod) =>
+      mod.openSRC101RegisterTool()
+    ),
+};
 
 /* ===== TOOLS CONFIGURATION ===== */
 const toolGroups: readonly ToolGroup[] = [
   {
     heading: "STAMPS",
-    links: [{ title: "Send", href: "/tool/stamp/send" }],
+    links: [{ title: "Send", modal: "stamp-send" }],
   },
   {
     heading: "TOKENS",
     links: [
-      { title: "Deploy", href: "/tool/src20/deploy" },
-      { title: "Mint", href: "/tool/src20/mint" },
-      { title: "Transfer", href: "/tool/src20/transfer" },
+      { title: "Deploy", modal: "src20-deploy" },
+      { title: "Mint", modal: "src20-mint" },
+      { title: "Transfer", modal: "src20-transfer" },
     ],
   },
   {
     heading: "BITNAME",
-    links: [{ title: "Register", href: "/tool/src101/mint" }],
+    links: [{ title: "Register", modal: "src101-register" }],
   },
 ];
 
-export function ToolsButton({ onOpenDrawer }: ToolsButtonProps) {
+export function ToolsButton(
+  { onOpenDrawer, onSelectTool }: ToolsButtonProps,
+) {
   const [currentPath, setCurrentPath] = useState<string | null>(null);
 
   /* ===== PATH TRACKING EFFECT ===== */
@@ -76,6 +119,56 @@ export function ToolsButton({ onOpenDrawer }: ToolsButtonProps) {
     return currentPath === href || currentPath.startsWith(`${href}/`);
   };
 
+  const openModalTool = (modal: ModalToolId) => {
+    onSelectTool?.();
+    modalToolLoaders[modal]().catch((error: unknown) => {
+      logger.error("ui", {
+        message: "Failed to load modal tool",
+        modal,
+        error: error instanceof Error ? error.message : String(error),
+        errorName: error instanceof Error ? error.name : typeof error,
+      });
+      showToast(
+        "Failed to open the tool. Please check your connection and try again.",
+        "error",
+      );
+    });
+  };
+
+  const renderToolEntry = (
+    link: ToolLink,
+    variant: "desktop" | "drawer",
+  ) => {
+    if (isModalLink(link)) {
+      const idle = variant === "desktop" ? navSublinkDesktop : navLinkMobile;
+      return (
+        <button
+          key={link.modal}
+          type="button"
+          class={`${idle} text-left`}
+          onClick={() => openModalTool(link.modal)}
+        >
+          {link.title}
+        </button>
+      );
+    }
+
+    const active = variant === "desktop"
+      ? navSublinkActiveDesktop
+      : navLinkActiveMobile;
+    const idle = variant === "desktop" ? navSublinkDesktop : navLinkMobile;
+    return (
+      <a
+        key={link.href}
+        href={link.href}
+        onClick={() => setCurrentPath(link.href)}
+        class={isActive(link.href) ? active : idle}
+      >
+        {link.title}
+      </a>
+    );
+  };
+
   const tools = () => {
     return (
       <div class="flex flex-col w-full">
@@ -88,20 +181,9 @@ export function ToolsButton({ onOpenDrawer }: ToolsButtonProps) {
             >
               {group.heading}
             </h6>
-            {group.links.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={() => {
-                  setCurrentPath(link.href);
-                }}
-                class={isActive(link.href)
-                  ? navLinkActiveMobile
-                  : navLinkMobile}
-              >
-                {link.title}
-              </a>
-            ))}
+            {group.links.map((link) =>
+              renderToolEntry(link, "drawer")
+            )}
           </div>
         ))}
       </div>
@@ -131,20 +213,9 @@ export function ToolsButton({ onOpenDrawer }: ToolsButtonProps) {
             <h6 class={`${eyebrowNeutral} -my-0.5`}>
               {group.heading}
             </h6>
-            {group.links.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={() => {
-                  setCurrentPath(link.href);
-                }}
-                class={isActive(link.href)
-                  ? navSublinkActiveDesktop
-                  : navSublinkDesktop}
-              >
-                {link.title}
-              </a>
-            ))}
+            {group.links.map((link) =>
+              renderToolEntry(link, "desktop")
+            )}
           </div>
         ))}
       </div>

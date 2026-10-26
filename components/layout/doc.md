@@ -137,9 +137,9 @@ The app UI is inspired by Apple design principles, with dark themed multilayered
 
 - **ModalBase.tsx**: Base modal component with consistent styling and behavior
   - **Purpose**: Reusable modal foundation for all modal dialogs
-  - **Key Features**: Container overlay styling, keyboard shortcuts (Escape), close button with delayed tooltip, animation support, responsive width
-  - **Props**: `onClose`, `title`, `children`, `className`, `contentClassName`, `hideHeader`
-  - **Also exports**: `handleModalClose()` — standalone helper that triggers the same close animation/timing as the in-component close handler, for callers that need to close the modal without rendering `ModalBase`'s own close button
+  - **Key Features**: Container overlay styling, keyboard shortcuts (Escape closes only this layer; ignored on the base layer while a stacked modal is open, and key-repeat is ignored), close button with delayed tooltip, optional `headerAction` rendered at the top-left, opposite the close icon, animation support, responsive width. Close is bound to the layer via `useModalLayer()`
+  - **Props**: `onClose`, `title`, `subtitle`, `variant`, `children`, `className`, `contentClassName`, `hideHeader`, `headerAction`
+  - **Also exports**: `handleModalClose()` — standalone helper that triggers the same close animation/timing as the in-component close handler, for callers that need to close the modal without rendering `ModalBase`'s own close button. It closes the top-most mounted layer (`getTopModalContainer`)
 
 - **ModalSearchBase.tsx**: Specialized search modal container
   - **Purpose**: Modal container specifically for search functionality
@@ -215,7 +215,7 @@ The app UI is inspired by Apple design principles, with dark themed multilayered
 - **ChartWidget.tsx**: Chart display and visualization component
 - **WalletProvider.tsx**: Wallet connection and state management
 - **ModalOverlay.tsx**: Modal backdrop and overlay management
-- **ModalStack.tsx**: Modal stacking and z-index management
+- **ModalStack.tsx**: `stackConnectWalletModal()` opens the connect-wallet modal on the foreground layer (`stackModal` in `islands/modal/states.ts`). The modal underneath stays mounted
 - **CollapsibleSection.tsx**: Expandable/collapsible content sections
 
 ## Type Definitions

@@ -1,7 +1,7 @@
 /* ===== CREATE STAMP RECURSIVE HEADER ===== */
 import { Icon } from "$icon";
 import { InfoButton } from "$islands/button/InfoButton.tsx";
-import { StampCreateRecursiveShortcuts } from "$islands/section/howto/StampCreateRecursiveShortcuts.tsx";
+import { StampCreateRecursiveShortcuts } from "$islands/modal/info/StampCreateRecursiveShortcuts.tsx";
 import { containerIcon, ScrollFadeRow } from "$layout";
 import {
   redo,

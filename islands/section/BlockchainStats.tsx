@@ -114,7 +114,7 @@ export function BlockchainStats(
 
   return (
     <div class={`w-full ${labelXs} ${className}`}>
-      <div class="flex flex-col items-start w-full gap-2">
+      <div class="flex flex-col items-start w-full gap-3">
         {/* Latest block + BTC price */}
         <div class="flex flex-row items-center justify-between w-full whitespace-nowrap">
           {statValue(
@@ -144,20 +144,15 @@ export function BlockchainStats(
         </div>
 
         {/* Priority fees - 4 column layout */}
-        <div class="flex flex-col w-full space-y-1">
-          <h6
-            class={`${eyebrowNeutral} text-center`}
-          >
-            TRANSACTION FEES
-          </h6>
-          <div class="flex justify-between">
+        <div class="flex flex-col w-full space-y-0.5">
+          <div class="relative flex justify-between">
             {FEE_SPEEDS.map(({ name, label, align }) => (
               <div key={name} class="relative group flex">
                 <Icon
                   type="icon"
                   name={name}
                   weight="normal"
-                  size="xl"
+                  size="lg"
                   color="neutral500"
                 />
                 <div
@@ -167,6 +162,12 @@ export function BlockchainStats(
                 </div>
               </div>
             ))}
+            <h6
+              class={`${eyebrowNeutral} leading-none absolute inset-0 flex
+                items-center justify-center pointer-events-none`}
+            >
+              TX FEES
+            </h6>
           </div>
           <div class="flex justify-between font-medium text-color-neutral-400">
             {FEE_SPEEDS.map(({ feeKey }, index) => (
@@ -188,7 +189,7 @@ export function BlockchainStats(
       </div>
 
       {/* Optional content (e.g. recommended fee), above the divider */}
-      {children && <div class="mt-3">{children}</div>}
+      {children && <div class="mt-2">{children}</div>}
 
       <hr class="mt-3 mb-3" />
     </div>

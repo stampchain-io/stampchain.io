@@ -1,5 +1,12 @@
 import { Icon } from "$icon";
-import { closeModal } from "$islands/modal/states.ts";
+import {
+  closeModal,
+  closeStackedModal,
+  getTopModalContainer,
+  shouldCloseLayerOnKey,
+  STACKED_MODAL_CONTAINER_ID,
+  useModalLayer,
+} from "$islands/modal/states.ts";
 import { container0, shadow } from "$layout";
 import { logger } from "$lib/utils/logger.ts";
 import { tooltipIcon } from "$notification";
@@ -21,7 +28,9 @@ export function ModalBase({
   className = "",
   contentClassName = "",
   hideHeader = false,
+  headerAction,
 }: ModalBaseProps) {
+  const { layer, containerId, close } = useModalLayer();
   const [isCloseTooltipVisible, setIsCloseTooltipVisible] = useState(false);
   const [allowCloseTooltip, setAllowCloseTooltip] = useState(true);
   const [closeTooltipText, setCloseTooltipText] = useState("CLOSE");
@@ -55,7 +64,7 @@ export function ModalBase({
       component: "ModalBase",
     });
 
-    const modalContainer = document.getElementById("animation-modal-container");
+    const modalContainer = document.getElementById(containerId);
     if (modalContainer) {
       modalContainer.classList.add("out");
     }
@@ -64,21 +73,22 @@ export function ModalBase({
       if (onClose) {
         onClose();
       }
-      closeModal();
+      close();
     }, 600);
   };
 
+  // Only the top-most layer closes. Key repeat is ignored so holding Escape
+  // does not also dismiss the modal underneath once this one unmounts.
   useEffect(() => {
     const handleKeyboardShortcut = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        handleClose();
-      }
+      if (!shouldCloseLayerOnKey(layer, e)) return;
+      handleClose();
     };
 
     document.addEventListener("keydown", handleKeyboardShortcut);
     return () =>
       document.removeEventListener("keydown", handleKeyboardShortcut);
-  }, [onClose]);
+  }, [onClose, layer, containerId]);
 
   useEffect(() => {
     return () => {
@@ -91,7 +101,7 @@ export function ModalBase({
   return (
     <div /* similar to container1 design on the drawers - importing the class consts doesn't display properly */
       className={`
-        relative w-[340px] min-[420px]:w-[360px] mobileMd:w-[380px] p-3
+        relative w-[90vw] min-[420px]:w-[360px] p-3
         ${container0} rounded-3xl
         border border-color-neutral-800
         ${shadow} ${className}
@@ -101,6 +111,12 @@ export function ModalBase({
       <div class={`relative ${contentClassName}`}>
         {!hideHeader && (
           <>
+            {headerAction && (
+              <div class="absolute -top-2 -left-2">
+                {headerAction}
+              </div>
+            )}
+
             <div
               class="absolute -top-2 -right-2 ms-auto cursor-pointer"
               onMouseEnter={handleCloseMouseEnter}
@@ -157,12 +173,17 @@ export const handleModalClose = () => {
     component: "ModalBase",
   });
 
-  const modalContainer = document.getElementById("animation-modal-container");
+  const modalContainer = getTopModalContainer();
+  const stacked = modalContainer?.id === STACKED_MODAL_CONTAINER_ID;
   if (modalContainer) {
     modalContainer.classList.add("out");
   }
 
   setTimeout(() => {
-    closeModal();
+    if (stacked) {
+      closeStackedModal();
+    } else {
+      closeModal();
+    }
   }, 600);
 };

@@ -1,16 +1,16 @@
 import { DEFAULT_CACHE_DURATION, MAX_PAGINATION_LIMIT } from "$constants";
-import type { DispenserRow, StampFilters, StampRow } from "$types/stamp.d.ts";
 import type {
-    CacheStatus,
-    CollectionMarketData,
-    SRC20MarketData,
-    SRC20MarketDataRow,
-    StampHolderCache,
-    StampHolderCacheRow,
-    StampMarketData,
-    StampMarketDataRow,
-    StampWithMarketData,
+  CacheStatus,
+  CollectionMarketData,
+  SRC20MarketData,
+  SRC20MarketDataRow,
+  StampHolderCache,
+  StampHolderCacheRow,
+  StampMarketData,
+  StampMarketDataRow,
+  StampWithMarketData,
 } from "$types/marketData.d.ts";
+import type { DispenserRow, StampFilters, StampRow } from "$types/stamp.d.ts";
 // Local utility functions for market data parsing
 function getCacheStatus(cacheAgeMinutes?: number): any {
   if (!cacheAgeMinutes) return "UNKNOWN";
@@ -47,7 +47,7 @@ function parseExchangeSources(sources: any): string[] {
  * come back as strings, same as last_sale_btc_amount elsewhere in this
  * file — parsed here as raw satoshi integers (not divided by 1e8), matching
  * DispenserRow.satoshirate's existing convention across the app (see
- * BuyStampModal.tsx, which divides by 1e8 itself when displaying BTC).
+ * StampBuyTool.tsx, which divides by 1e8 itself when displaying BTC).
  *
  * Fields the indexer doesn't store per #939's proposal (block_index,
  * confirmed, close_block_index, status) are filled with sensible defaults

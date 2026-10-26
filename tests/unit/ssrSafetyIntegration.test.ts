@@ -10,7 +10,6 @@ import { describe, it } from "jsr:@std/testing@1.0.14/bdd";
 // Test actual component files for SSR safety
 describe("SSR Safety Integration Tests", () => {
   const testFiles = [
-    "islands/modal/FilterSRC20Modal.tsx",
     "components/table/src20OverviewTable/SRC20Minting.tsx",
     "components/table/src20OverviewTable/SRC20MintingCompact.tsx",
     "lib/utils/navigation/freshNavigationUtils.ts",
@@ -193,21 +192,6 @@ describe("SSR Safety Validation Script", () => {
 
 // Test specific patterns found in the codebase
 describe("SSR Safety Pattern Recognition", () => {
-  it("should recognize FilterSRC20Modal safety pattern", async () => {
-    const filePath = "../islands/modal/FilterSRC20Modal.tsx";
-    if (!existsSync(filePath)) return;
-
-    const content = await Deno.readTextFile(filePath);
-
-    // Should contain the safety check
-    assertStringIncludes(content, 'typeof globalThis === "undefined"');
-    assertStringIncludes(content, "!globalThis?.location");
-    assertStringIncludes(content, "Cannot navigate during SSR");
-
-    // Should contain the navigation
-    assertStringIncludes(content, "globalThis.location.href");
-  });
-
   it("should recognize SRC20Minting safety pattern", async () => {
     const filePath =
       "../components/table/src20OverviewTable/SRC20Minting.tsx";

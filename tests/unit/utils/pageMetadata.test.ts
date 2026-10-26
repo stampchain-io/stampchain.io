@@ -1,4 +1,3 @@
-import { assert, assertEquals, assertNotEquals } from "@std/assert";
 import {
   DEFAULT_METADATA,
   getPageMetadata,
@@ -7,6 +6,7 @@ import {
   NOT_FOUND_METADATA,
   STATIC_PAGE_METADATA,
 } from "$lib/utils/pageMetadata.ts";
+import { assert, assertEquals, assertNotEquals } from "@std/assert";
 
 // Regression coverage for the identical-title defect: MetaTags defaulted
 // `title` to "Bitcoin Stamps" and _app.tsx never passed one, so all 41 routes
@@ -155,7 +155,14 @@ Deno.test("trailing slashes and unknown paths resolve sensibly", () => {
 // its own <Head><title>, the _app title rendered alongside it, and the page
 // shipped two. Verified in served HTML, not in source.
 Deno.test("unmatched paths get the not-found entry, not the home page's", () => {
-  for (const path of ["/no/such/page", "/faq/nope", "/marketplace/nope"]) {
+  for (
+    const path of [
+      "/no/such/page",
+      "/faq/nope",
+      "/marketplace/nope",
+      "/tool/stamp/stamping",
+    ]
+  ) {
     assertEquals(getPageMetadata(path).title, NOT_FOUND_METADATA.title);
     assertNotEquals(getPageMetadata(path).title, DEFAULT_METADATA.title);
   }

@@ -196,7 +196,6 @@ export interface TableProps<T = any> {
 //   BTCValueDisplayProps,
 //   BTCValueSummaryProps,
 //   ButtonElementProps,
-//   BuyStampModalProps,
 //   CarouselHomeProps,
 //   CarouselProps,
 //   ChartWidgetProps,
@@ -211,7 +210,7 @@ export interface TableProps<T = any> {
 //   ConnectWalletModalProps,
 //   ContainerProps,
 //   ConvenienceProviderProps,
-//   DetailSRC101ModalProps,
+//   BTCDonateToolProps,
 //   DonateStampModalProps,
 //   EmptyStateProps,
 //   EnhancedSortButtonProps,
@@ -221,7 +220,6 @@ export interface TableProps<T = any> {
 //   ExtendedComponentProps,
 //   FairmintToolProps,
 //   FaqAccordionProps,
-//   FilterSRC20ModalProps,
 //   FlexboxProps,
 //   FormControlProps,
 //   SRC20GalleryWalletProps,
@@ -261,7 +259,6 @@ export interface TableProps<T = any> {
 //   RadioProps,
 //   RangeInputProps,
 //   ReadAllButtonProps,
-//   ReceiveAddyModalProps,
 //   RecentSaleCardProps,
 //   RecentSalesGalleryProps,
 //   ResponsiveProps,
@@ -272,6 +269,8 @@ export interface TableProps<T = any> {
 //   SelectFieldProps,
 //   SelectorButtonsProps,
 //   SelectProps,
+//   BTCAddressToolProps,
+//   BTCSendToolProps,
 //   SendBTCModalProps,
 //   SettingProps,
 //   SharedListProps,
@@ -286,6 +285,7 @@ export interface TableProps<T = any> {
 //   SortingProviderWithURLProps,
 //   SortProps,
 //   SpinnerProps,
+//   SRC101DetailToolProps,
 //   SRC101RegisterToolProps,
 //   SRC20MintingCompactProps,
 //   SRC20DetailPageProps,
@@ -298,6 +298,7 @@ export interface TableProps<T = any> {
 //   SRC20OverviewHeaderProps,
 //   SRC20TransfersProps,
 //   StampBTCValueProps,
+//   StampBuyToolProps,
 //   StampDetailPageProps,
 //   StampGalleryProps,
 //   StampInfoProps,
@@ -782,6 +783,8 @@ export interface ModalBaseProps extends BaseComponentProps {
   className?: string;
   contentClassName?: string;
   hideHeader?: boolean;
+  /** Rendered just left of the close icon (for example an info button). */
+  headerAction?: ComponentChildren;
 }
 
 /**
@@ -1428,13 +1431,6 @@ export interface SendBTCModalProps {
   title?: string;
   children?: ComponentChildren;
   onClose?: () => void;
-}
-
-export interface ReceiveAddyModalProps {
-  _isOpen?: boolean;
-  onClose?: () => void;
-  address?: string;
-  title?: string;
 }
 
 export interface ResponsiveProps {
@@ -2464,14 +2460,40 @@ export interface FaqAccordionProps extends BaseComponentProps {
  */
 
 /**
- * Buy Stamp Modal component props
+ * Stamp buy tool component props
  */
-export interface BuyStampModalProps {
+export interface StampBuyToolProps {
   stamp?: StampRow | undefined;
   onBuy?: (stampId: number) => void;
   disabled?: boolean;
   loading?: boolean;
   error?: string;
+  fee?: number;
+  handleChangeFee?: (fee: number) => void;
+  dispenser?: any;
+}
+/**
+ * Bitcoin address tool component props.
+ * `address` is the receive address. Omit it to use the connected wallet.
+ */
+export interface BTCAddressToolProps {
+  address?: string;
+}
+/**
+ * Bitcoin send tool component props.
+ * `balance` is confirmed BTC. Omit it to load the connected wallet balance.
+ */
+export interface BTCSendToolProps {
+  fee?: number;
+  balance?: number | null;
+  handleChangeFee?: (fee: number) => void;
+}
+/**
+ * Bitcoin donate tool component props.
+ * Donation amount is set with the slider and paid through the stamp dispenser.
+ */
+export interface BTCDonateToolProps {
+  stamp?: StampRow;
   fee?: number;
   handleChangeFee?: (fee: number) => void;
   dispenser?: any;
@@ -2490,36 +2512,23 @@ export interface DonateStampModalProps {
   dispenser?: any;
 }
 /**
- * Filter SRC-20 Modal component props
- */
-export interface FilterSRC20ModalProps extends ModalBaseProps {
-  currentFilters?: {
-    minHolders?: number;
-    maxHolders?: number;
-    status?: string;
-    type?: string;
-  };
-  onApplyFilters?: (filters: any) => void;
-  loading?: boolean;
-  error?: string;
-  filterOptions?: any;
-}
-/**
  * Receive Address Modal component props
  */
 /**
  * Send BTC Modal component props
  */
 /**
- * Detail SRC-101 Modal component props
+ * SRC-101 detail tool component props
  */
-export interface DetailSRC101ModalProps {
+export interface SRC101DetailToolProps {
   detail?: any; // TODO(#type-migration): Replace with concrete SRC-101 detail type
   onAction?: (actionType: string) => void;
   loading?: boolean;
   error?: string;
   img?: string;
   name?: string;
+  /** Chosen bitname TLD, including the dot, e.g. ".btc". */
+  root?: string;
   owner?: string;
 }
 /**
@@ -2565,6 +2574,8 @@ export interface ModalOverlayProps extends BaseComponentProps {
   animation?: ModalAnimation;
   _preventScroll?: boolean;
   handleClose?: () => void;
+  /** `stacked` renders above the base modal and closes on its own. */
+  layer?: "base" | "stacked";
 }
 
 /**
@@ -3125,6 +3136,8 @@ export type ExtendedIconButtonProps = ExtendedButtonProps & {
  */
 export type ExtendedProcessingButtonProps = ExtendedButtonProps & {
   isSubmitting: boolean;
+  /** Label shown next to the spinner while submitting. Default: "PROCESSING" */
+  loadingText?: string;
   type?: "button" | "submit" | "reset";
   ariaLabel?: string;
 };

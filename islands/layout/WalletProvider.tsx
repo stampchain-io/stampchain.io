@@ -9,7 +9,7 @@ import { checkWalletAvailability } from "$client/wallet/wallet.ts";
 import { wonderProvider } from "$client/wallet/wonder.ts";
 import { xverseProvider } from "$client/wallet/xverse.ts";
 import { WALLET_PROVIDERS } from "$constants";
-import { closeForegroundModal, closeModal } from "$islands/modal/states.ts";
+import { useModalLayer } from "$islands/modal/states.ts";
 import {
   container2Hover,
   containerPill,
@@ -42,6 +42,10 @@ const walletConnectors = {
   wonder: wonderProvider.connectWonder,
 } satisfies Record<string, WalletConnectFn>;
 
+function isHttpInstallUrl(url: string): boolean {
+  return url.startsWith("https://") || url.startsWith("http://");
+}
+
 /* ===== MODAL COMPONENT ===== */
 export function WalletProvider(
   { providerKey, onSuccess }: WalletProviderProps,
@@ -53,6 +57,7 @@ export function WalletProvider(
 
   /* ===== STATE ===== */
   const [isHovered, setIsHovered] = useState(false);
+  const { containerId, close } = useModalLayer();
 
   /* ===== EVENT HANDLERS ===== */
   const handleConnect = async () => {
@@ -66,12 +71,25 @@ export function WalletProvider(
       // Check if wallet extension is installed before attempting connection
       if (!checkWalletAvailability(providerKey)) {
         const installUrl = providerInfo.installUrl;
-        if (installUrl) {
+        if (installUrl && isHttpInstallUrl(installUrl)) {
           showToast(
-            `${providerInfo.name} wallet not detected.\nOpening install page...`,
-            "info",
+            `${providerInfo.name} wallet not detected.`,
+            "warning",
+            false,
+            (
+              <p>
+                Install the{" "}
+                <a
+                  href={installUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="link-neutral-200 hover:text-color-secondary-400"
+                >
+                  {providerInfo.name} webwallet extension
+                </a>.
+              </p>
+            ),
           );
-          globalThis.open(installUrl, "_blank", "noopener,noreferrer");
         } else {
           showToast(
             `${providerInfo.name} wallet not detected.\nPlease install the ${providerInfo.name} extension.`,
@@ -86,25 +104,19 @@ export function WalletProvider(
         showToast(message, type);
       });
 
-      const modalContainer = document.getElementById(
-        "animation-modal-container",
-      );
+      const modalContainer = document.getElementById(containerId);
       if (modalContainer) {
         modalContainer.classList.add("out");
       }
 
-      if (onSuccess) {
-        setTimeout(() => {
-          closeForegroundModal();
+      setTimeout(() => {
+        close();
+        if (onSuccess) {
           setTimeout(() => {
-            if (onSuccess) onSuccess();
+            onSuccess();
           }, 1);
-        }, 600);
-      } else {
-        setTimeout(() => {
-          closeModal();
-        }, 600);
-      }
+        }
+      }, 600);
     } catch (unknownError) {
       const error = handleUnknownError(
         unknownError,

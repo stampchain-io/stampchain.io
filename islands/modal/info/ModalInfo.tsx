@@ -1,11 +1,11 @@
-/* ===== INFO MODAL COMPONENT ===== */
+/* ===== MODAL INFO COMPONENT ===== */
 /* Info / how-to guides: title, optional subtitle, scrollable content. */
 import { ModalBase } from "$layout";
 import type { ComponentChildren } from "preact";
 import { useLayoutEffect, useRef, useState } from "preact/hooks";
 
 /* ===== TYPES ===== */
-interface InfoModalProps {
+interface ModalInfoProps {
   title: string;
   /** Optional line under the title. */
   subtitle?: string;
@@ -13,7 +13,7 @@ interface InfoModalProps {
 }
 
 /* ===== COMPONENT ===== */
-export const InfoModal = ({ title, subtitle, children }: InfoModalProps) => {
+export const ModalInfo = ({ title, subtitle, children }: ModalInfoProps) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
 
@@ -40,13 +40,13 @@ export const InfoModal = ({ title, subtitle, children }: InfoModalProps) => {
       title={title}
       subtitle={subtitle}
       variant="neutral"
-      className="max-w-[85vw] mobileMd:w-[420px] mobileLg:w-[460px]"
+      className="max-w-[90vw] mobileMd:w-[420px] mobileLg:w-[480px]"
     >
       <div
         ref={scrollRef}
         class={`flex flex-col max-h-[80vh] gap-5
           overflow-y-auto scrollbar-background-layer1
-           ${isOverflowing ? "-mr-3 pr-1.5" : ""}`}
+           ${isOverflowing ? "-mr-3 pr-3" : ""}`}
       >
         {children}
       </div>

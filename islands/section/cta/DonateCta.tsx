@@ -2,9 +2,8 @@
 import { Button } from "$button";
 import { StampCard } from "$card";
 import { Icon } from "$icon";
-import DonateStampModal from "$islands/modal/DonateStampModal.tsx";
-import RecieveAddyModal from "$islands/modal/RecieveAddyModal.tsx";
-import { openModal } from "$islands/modal/states.ts";
+import { openBTCAddressTool } from "$islands/modal/tool/BTCAddressTool.tsx";
+import { openBTCDonateTool } from "$islands/modal/tool/BTCDonateTool.tsx";
 import {
   containerBackground,
   DonateStampData,
@@ -275,25 +274,16 @@ export default function DonateCta() {
   };
 
   const handleOpen = () => {
-    const modalContent = (
-      <DonateStampModal
-        stamp={DONATE_STAMP as unknown as StampRow}
-        fee={fee}
-        handleChangeFee={handleChangeFee}
-        dispenser={dispenser}
-      />
-    );
-    openModal(modalContent, "slideUpDown");
+    openBTCDonateTool({
+      stamp: DONATE_STAMP as unknown as StampRow,
+      fee,
+      handleChangeFee,
+      ...(dispenser ? { dispenser } : {}),
+    });
   };
 
   const handleOpenReceiveModal = () => {
-    const modalContent = (
-      <RecieveAddyModal
-        address={DONATE_ADDRESS}
-        title="DONATE"
-      />
-    );
-    openModal(modalContent, "slideUpDown");
+    openBTCAddressTool({ address: DONATE_ADDRESS });
   };
 
   /* ===== SUBCOMPONENTS ===== */

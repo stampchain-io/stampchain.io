@@ -191,10 +191,6 @@ export function SRC20Minting({
               data.map((src20: SRC20Row) => {
                 const imageUrl = getSRC20ImageSrc(src20) || null;
 
-                const mintHref = `/tool/src20/mint?tick=${
-                  encodeURIComponent(src20.tick ?? "")
-                }&trxType=olga`;
-
                 return (
                   <tr
                     key={src20.tx_hash}
@@ -357,8 +353,16 @@ export function SRC20Minting({
                         variant="flat"
                         color="primary"
                         size="xs"
-                        href={mintHref}
-                        class="rounded-xl"
+                        type="button"
+                        onClick={() => {
+                          if (!isBrowser()) return;
+                          const tick = src20.tick ?? "";
+                          import("$islands/modal/tool/SRC20MintTool.tsx").then(
+                            (mod) => {
+                              mod.openSRC20MintTool(tick);
+                            },
+                          );
+                        }}
                       >
                         MINT
                       </Button>

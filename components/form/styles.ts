@@ -23,8 +23,25 @@ export const inputFieldSquare = `
   font-normal text-xs text-color-neutral-200 text-center
 `;
 
+export const inputFieldGrow = "w-8 shrink-0";
+
+/** Wider than one digit. 1.5rem matches inputField px-3, 2px the border. */
+export function inputFieldGrowStyle(
+  length: number,
+): { width: string } | undefined {
+  if (length <= 1) return undefined;
+  return { width: `calc(${length}ch + 1.5rem + 2px)` };
+}
+
+/** Digits only, written back so other characters never stay visible. */
+export function inputFieldGrowDigits(input: HTMLInputElement): string {
+  const digits = input.value.replace(/\D/g, "");
+  if (input.value !== digits) input.value = digits;
+  return digits;
+}
+
 export const inputTextarea = `
-  px-3 pt-2 w-full h-[90px] min-h-[90px] resize-none bg-transparent
+  px-3 pt-2 w-full h-[76px] min-h-[76px] resize-none bg-transparent
   ${container2Hover} ${shadowGlowPurpleSm}
   focus:outline-none focus-visible:outline-none
   focus:bg-color-neutral-1000 focus:border-color-hover
@@ -35,14 +52,14 @@ export const inputTextarea = `
 // Input field dropdown - define height in the component
 export const inputFieldDropdown = `
 absolute top-[100%] left-0 w-full z-dropdown
-bg-gradient-to-b from-color-background/30 to-color-background backdrop-blur-sm
-border border-t-0 border-color-border/75 rounded-b-2xl
+bg-gradient-to-t from-color-neutral-800/40 via-color-neutral-900/60 to-neutral-900/80 backdrop-blur-sm
+border border-t-0 border-color-neutral-700 rounded-b-2xl
 text-color-neutral-200 text-sm font-medium uppercase leading-none
 overflow-y-auto scrollbar-background-layer2 shadow-lg cursor-pointer`;
 
 export const inputFieldDropdownHover = `
 flex justify-between py-2.5 px-3
-border-b-[1px] border-color-border last:border-b-0
+border-b-[1px] border-color-neutral-700 last:border-b-0
 ${container2Hover} uppercase cursor-pointer`;
 
 // Checkbox - used for both checkboxes and radiobuttons

@@ -317,11 +317,6 @@ const EXTRA_STATIC: Record<string, PageMetadata> = {
     description:
       "Every stamp issued on Bitcoin, newest first. Filter by type, sort by stamp number or price, and open any piece for its full on-chain history.",
   },
-  "/tool/stamp/stamping": {
-    title: "Stamping Machine | Create Bitcoin Stamps",
-    description:
-      "Stamp art into Bitcoin with custom CPID or posh naming. Upload a file, set editions, adjust the fee and sign the transaction in your wallet.",
-  },
   "/tool/stamp/trade": {
     title: "Trade Bitcoin Stamps | Dispensers and Offers",
     description:
@@ -401,11 +396,17 @@ function normalize(pathname: string): string {
 
 /* ===== PUBLIC API ===== */
 /**
- * Resolve metadata for a pathname. Exact static entry wins, then the extra
- * static list, then the longest matching prefix rule, then the not-found entry.
+ * Resolve metadata for a pathname. Retired paths use the not-found entry.
+ * Otherwise an exact static entry wins, then the extra static list, then the
+ * longest matching prefix rule, then the not-found entry.
  */
+/** Paths that still match a route pattern but render the 404 page. */
+const RETIRED_PATHS = new Set(["/tool/stamp/stamping"]);
+
 export function getPageMetadata(pathname: string): PageMetadata {
   const path = normalize(pathname);
+
+  if (RETIRED_PATHS.has(path)) return NOT_FOUND_METADATA;
 
   const exact = STATIC_PAGE_METADATA[path] ?? EXTRA_STATIC[path];
   if (exact) return exact;

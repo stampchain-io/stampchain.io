@@ -1,9 +1,8 @@
 /* ===== WALLET DASHBOARD DETAILS COMPONENT ===== */
 /* @baba - cleanup button/icon code */
 import { Icon } from "$icon";
-import RecieveAddyModal from "$islands/modal/RecieveAddyModal.tsx";
-import SendBTCModal from "$islands/modal/SendBTCModal.tsx";
-import { openModal } from "$islands/modal/states.ts";
+import { openBTCAddressTool } from "$islands/modal/tool/BTCAddressTool.tsx";
+import { openBTCSendTool } from "$islands/modal/tool/BTCSendTool.tsx";
 import {
   containerBackground,
   containerColData,
@@ -682,24 +681,17 @@ export default function WalletDashboardDetails({
 
   /* ===== MODAL HANDLERS ===== */
   const handleOpenSendModal = () => {
-    const modalContent = (
-      <SendBTCModal
-        fee={fee}
-        balance={walletData.balance}
-        handleChangeFee={setFee}
-      />
-    );
-    openModal(modalContent, "slideUpDown");
+    openBTCSendTool({
+      fee,
+      balance: walletData.balance,
+      handleChangeFee: setFee,
+    });
   };
 
   const handleOpenReceiveModal = () => {
-    const modalContent = (
-      <RecieveAddyModal
-        address={walletData.address}
-        title="RECEIVE"
-      />
-    );
-    openModal(modalContent, "slideUpDown");
+    openBTCAddressTool({
+      address: walletData.address,
+    });
   };
 
   /* ===== RENDER ===== */

@@ -173,7 +173,7 @@ export function ErrorDisplay({
               <summary class="text-xs text-gray-400 cursor-pointer hover:text-gray-300">
                 Technical Details
               </summary>
-              <pre class="text-xs mt-2 p-2 bg-black/20 rounded overflow-auto">
+              <pre class="text-xs mt-2 p-2 bg-black/30 rounded overflow-auto">
                 {errorInfo.details}
               </pre>
             </details>

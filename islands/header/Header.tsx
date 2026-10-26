@@ -405,6 +405,11 @@ export function Header() {
     }, 300); // 300ms hover delay that works as a bridge between icon button and dropdown
   };
 
+  const handleSelectTool = () => {
+    closeMenu();
+    handleDropdownMouseLeave();
+  };
+
   // Create a single wallet button instance to prevent state pollution
   const walletButtonInstance = useMemo(() => {
     return WalletButton({
@@ -427,7 +432,10 @@ export function Header() {
             onCloseDrawer: closeMenu,
           }).drawer;
         case "tools":
-          return ToolsButton({ onOpenDrawer: openDrawer }).drawer;
+          return ToolsButton({
+            onOpenDrawer: openDrawer,
+            onSelectTool: handleSelectTool,
+          }).drawer;
       }
     };
 
@@ -586,7 +594,10 @@ export function Header() {
           {/* Right: Search, Tools, Wallet and Menu Buttons */}
           <div class="flex items-center gap-1 -mr-2">
             <SearchButton />
-            {ToolsButton({ onOpenDrawer: openDrawer }).icon}
+            {ToolsButton({
+              onOpenDrawer: openDrawer,
+              onSelectTool: handleSelectTool,
+            }).icon}
             {WalletButton({
               onOpenDrawer: openDrawer,
               onCloseDrawer: closeMenu,
@@ -630,7 +641,10 @@ export function Header() {
               onMouseEnter={handleToolsMouseEnter}
               onMouseLeave={handleDropdownMouseLeave}
             >
-              {ToolsButton({ onOpenDrawer: openDrawer }).icon}
+              {ToolsButton({
+                onOpenDrawer: openDrawer,
+                onSelectTool: handleSelectTool,
+              }).icon}
             </div>
             <div
               class="relative group"
@@ -688,7 +702,10 @@ export function Header() {
             }}
             onMouseLeave={handleDropdownMouseLeave}
           >
-            {ToolsButton({ onOpenDrawer: openDrawer }).dropdown}
+            {ToolsButton({
+              onOpenDrawer: openDrawer,
+              onSelectTool: handleSelectTool,
+            }).dropdown}
           </div>,
           document.body,
         );
