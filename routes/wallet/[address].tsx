@@ -10,10 +10,21 @@ import WalletContentDispenser from "$islands/content/WalletContentDispenser.tsx"
 import WalletHeader from "$islands/header/WalletHeader.tsx";
 import { getBTCBalanceInfo } from "$lib/utils/data/processing/balanceUtils.ts";
 import { DATA_PLACEHOLDER_DEV } from "$lib/utils/dataPlaceholderProd.ts";
+import {
+  buildXcpBalanceRow,
+  xcpQuantityFromBalances,
+  xcpSupplyFromAsset,
+} from "$lib/utils/xcp/xcpWalletBalance.ts";
 import { CollectionController } from "$server/controller/collectionController.ts";
 import { Src20Controller } from "$server/controller/src20Controller.ts";
 import { StampController } from "$server/controller/stampController.ts";
+import { CounterpartyApiManager } from "$server/services/counterpartyApiService.ts";
+import { timedCheck } from "$lib/utils/api/timedCheck.ts";
+
+/** Longest the wallet page waits on each optional XCP lookup. */
+const XCP_WALLET_BUDGET_MS = 1500;
 import { CreatorService } from "$server/services/creator/creatorService.ts";
+import { XcpPriceService } from "$server/services/price/xcpPriceService.ts";
 import { SRC20Service } from "$server/services/src20/index.ts";
 import type {
   WalletContentTabId,
@@ -237,6 +248,7 @@ export const handler: Handlers = {
         createdStampsResponse,
         collectionsResponse,
         createdSrc20Response,
+        xcpBalanceResponse,
       ] = await Promise.allSettled([
         // Balance stamps via the enhanced API endpoint, with fallback
         fetch(
@@ -397,6 +409,18 @@ export const handler: Handlers = {
             sortBy: tokensSortBy,
           })
           : Promise.resolve(null),
+
+        // Native Counterparty XCP, only when the tokens section is shown, and
+        // bounded: a slow node must not hold up the whole wallet page. A
+        // failed or late call leaves the SRC-20 list as-is.
+        tokensVisible
+          ? timedCheck(
+            "xcp-balance",
+            () =>
+              CounterpartyApiManager.getXcpBalancesByAddress(address, "XCP"),
+            XCP_WALLET_BUDGET_MS,
+          ).then((t) => t.value ?? null)
+          : Promise.resolve(null),
       ]);
 
       /* ===== DATA PROCESSING ===== */
@@ -428,7 +452,7 @@ export const handler: Handlers = {
         };
 
       // Calculate total SRC20 value from enriched tokens
-      const src20Value = Array.isArray(baseSrc20Data.data)
+      let src20Value = Array.isArray(baseSrc20Data.data)
         ? baseSrc20Data.data.reduce((total: number, token: any) => {
           try {
             const marketData = token.market_data;
@@ -447,6 +471,36 @@ export const handler: Handlers = {
           return total;
         }, 0)
         : 0;
+
+      const xcpQuantity = xcpBalanceResponse.status === "fulfilled"
+        ? xcpQuantityFromBalances(xcpBalanceResponse.value?.balances ?? [])
+        : 0;
+      let xcpRow = null;
+      if (xcpQuantity > 0) {
+        const [priceResult, assetResult] = await Promise.allSettled([
+          timedCheck(
+            "xcp-price",
+            () => XcpPriceService.getPrice(),
+            XCP_WALLET_BUDGET_MS,
+          )
+            .then((t) => t.value ?? null),
+          timedCheck(
+            "xcp-asset",
+            () => CounterpartyApiManager.getAssetInfo("XCP"),
+            XCP_WALLET_BUDGET_MS,
+          ).then((t) => t.value ?? null),
+        ]);
+        xcpRow = buildXcpBalanceRow({
+          quantity: xcpQuantity,
+          supply: xcpSupplyFromAsset(
+            assetResult.status === "fulfilled" ? assetResult.value : null,
+          ),
+          price: priceResult.status === "fulfilled" ? priceResult.value : null,
+        });
+        const xcpPrice = xcpRow?.market_data?.floor_price_btc;
+        const xcpAmt = Number(xcpRow?.amt);
+        if (xcpPrice && xcpAmt) src20Value += xcpPrice * xcpAmt;
+      }
 
       const marketDataStatus = {
         stampsMarketData: balanceStampsResponse.status === "fulfilled" &&
@@ -592,6 +646,18 @@ export const handler: Handlers = {
           total: r?.total ?? 0,
           totalPages: r?.totalPages ?? 0,
         };
+      } else if (xcpRow) {
+        const total = tokensPagination.total + 1;
+        tokensPagination = {
+          ...tokensPagination,
+          total,
+          // Keep the SRC-20 page count. Page 1 holds one extra card, so an
+          // exact page of SRC-20 rows must not grow into an empty last page.
+          totalPages: Math.max(tokensPagination.totalPages, 1),
+        };
+        if (tokensPage === 1 && tokensVisible) {
+          tokensData = [xcpRow, ...tokensData];
+        }
       }
 
       /* ===== RESPONSE RENDERING ===== */
@@ -599,7 +665,7 @@ export const handler: Handlers = {
         address,
         walletData,
         stampsTotal: balanceStamps.total,
-        src20Total: baseSrc20Data.total ?? 0,
+        src20Total: (baseSrc20Data.total ?? 0) + (xcpRow ? 1 : 0),
         stampsCreated: stampsCreatedCountResponse.status === "fulfilled"
           ? stampsCreatedCountResponse.value
           : 0,

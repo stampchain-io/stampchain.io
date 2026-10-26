@@ -153,6 +153,7 @@ import * as $test_horizon_psbt_html from "./routes/test/horizon-psbt.html.ts";
 import * as $test_horizon_html from "./routes/test/horizon.html.ts";
 import * as $test_horizon from "./routes/test/horizon.tsx";
 import * as $test_test_image from "./routes/test/test-image.ts";
+import * as $token_image_txHash_ from "./routes/token-image/[txHash].ts";
 import * as $tool_fairmint_index from "./routes/tool/fairmint/index.tsx";
 import * as $tool_src101_action_ from "./routes/tool/src101/[action].tsx";
 import * as $tool_src20_action_ from "./routes/tool/src20/[action].tsx";
@@ -529,6 +530,7 @@ const manifest = {
     "./routes/test/horizon.html.ts": $test_horizon_html,
     "./routes/test/horizon.tsx": $test_horizon,
     "./routes/test/test-image.ts": $test_test_image,
+    "./routes/token-image/[txHash].ts": $token_image_txHash_,
     "./routes/tool/fairmint/index.tsx": $tool_fairmint_index,
     "./routes/tool/src101/[action].tsx": $tool_src101_action_,
     "./routes/tool/src20/[action].tsx": $tool_src20_action_,

@@ -104,9 +104,11 @@ export default function SRC20DeploysGallery(): JSX.Element {
             {transactions.map((stamp, index) => (
               <StampCard
                 key={index}
-                stamp={stamp.stamp_url ? stamp : {
+                stamp={{
                   ...stamp,
-                  stamp_url: constructStampUrl(stamp.tx_hash, "svg"),
+                  ident: "SRC-20",
+                  stamp_url: stamp.stamp_url ||
+                    constructStampUrl(stamp.tx_hash, "svg"),
                 }}
                 isRecentSale={false}
                 variant="cardSquare"
