@@ -19,6 +19,10 @@ import { CollectionController } from "$server/controller/collectionController.ts
 import { Src20Controller } from "$server/controller/src20Controller.ts";
 import { StampController } from "$server/controller/stampController.ts";
 import { CounterpartyApiManager } from "$server/services/counterpartyApiService.ts";
+import { timedCheck } from "$lib/utils/api/timedCheck.ts";
+
+/** Longest the wallet page waits on each optional XCP lookup. */
+const XCP_WALLET_BUDGET_MS = 1500;
 import { CreatorService } from "$server/services/creator/creatorService.ts";
 import { XcpPriceService } from "$server/services/price/xcpPriceService.ts";
 import { SRC20Service } from "$server/services/src20/index.ts";
@@ -406,8 +410,17 @@ export const handler: Handlers = {
           })
           : Promise.resolve(null),
 
-        // Native Counterparty XCP. A failed call leaves the SRC-20 list as-is.
-        CounterpartyApiManager.getXcpBalancesByAddress(address, "XCP"),
+        // Native Counterparty XCP, only when the tokens section is shown, and
+        // bounded: a slow node must not hold up the whole wallet page. A
+        // failed or late call leaves the SRC-20 list as-is.
+        tokensVisible
+          ? timedCheck(
+            "xcp-balance",
+            () =>
+              CounterpartyApiManager.getXcpBalancesByAddress(address, "XCP"),
+            XCP_WALLET_BUDGET_MS,
+          ).then((t) => t.value ?? null)
+          : Promise.resolve(null),
       ]);
 
       /* ===== DATA PROCESSING ===== */
@@ -465,8 +478,17 @@ export const handler: Handlers = {
       let xcpRow = null;
       if (xcpQuantity > 0) {
         const [priceResult, assetResult] = await Promise.allSettled([
-          XcpPriceService.getPrice(),
-          CounterpartyApiManager.getAssetInfo("XCP"),
+          timedCheck(
+            "xcp-price",
+            () => XcpPriceService.getPrice(),
+            XCP_WALLET_BUDGET_MS,
+          )
+            .then((t) => t.value ?? null),
+          timedCheck(
+            "xcp-asset",
+            () => CounterpartyApiManager.getAssetInfo("XCP"),
+            XCP_WALLET_BUDGET_MS,
+          ).then((t) => t.value ?? null),
         ]);
         xcpRow = buildXcpBalanceRow({
           quantity: xcpQuantity,
