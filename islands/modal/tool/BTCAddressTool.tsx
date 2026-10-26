@@ -1,7 +1,7 @@
 /* ===== BITCOIN ADDRESS TOOL MODAL ===== */
 import { walletContext } from "$client/wallet/wallet.ts";
 import { Icon } from "$icon";
-import { openModalTool, ModalTool } from "$islands/modal/tool/ModalTool.tsx";
+import { ModalTool, openModalTool } from "$islands/modal/tool/ModalTool.tsx";
 import { tooltipIcon } from "$notification";
 import type { BTCAddressToolProps } from "$types/ui.d.ts";
 import QRCodeStyling from "https://esm.sh/qr-code-styling@1.6.0-rc.1";

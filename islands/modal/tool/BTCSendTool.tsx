@@ -5,7 +5,7 @@ import { handleModalClose } from "$components/layout/ModalBase.tsx";
 import { inputField } from "$form";
 import { stackConnectWalletModal } from "$islands/layout/ModalStack.tsx";
 import { closeModal } from "$islands/modal/states.ts";
-import { openModalTool, ModalTool } from "$islands/modal/tool/ModalTool.tsx";
+import { ModalTool, openModalTool } from "$islands/modal/tool/ModalTool.tsx";
 import { container2, containerPill } from "$layout";
 import { useTransactionConstructionService } from "$lib/hooks/useTransactionConstructionService.ts";
 import { logger } from "$lib/utils/logger.ts";
