@@ -87,9 +87,10 @@ export function SRC20TransferTool(
   /* ===== WALLET CONTEXT ===== */
   const { wallet, isConnected, showConnectModal } = walletContext;
 
-  /* Modal only: open connect-wallet on top of the modal instead of submitting. */
+  /* No wallet yet: open connect-wallet (on top of the modal, or in the base
+     slot on the page) instead of submitting. */
   const connectIfNeeded = () => {
-    if (!isModal || isConnected) return false;
+    if (isConnected) return false;
     showConnectModal();
     return true;
   };

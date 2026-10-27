@@ -122,11 +122,10 @@ export function SRC101RegisterTool({
     setExactFeeDetails(null);
   }, [formState.fee]);
 
-  /* The modal opens connect-wallet (stacked above it) instead of submitting
-     without a wallet. The page submits and the form hook reports the
-     missing wallet. */
+  /* No wallet yet: open connect-wallet (stacked above the modal, or in the
+     base slot on the page) instead of submitting without one. */
   const connectIfNeeded = () => {
-    if (!isModal || isConnected) return false;
+    if (isConnected) return false;
     showConnectModal();
     return true;
   };

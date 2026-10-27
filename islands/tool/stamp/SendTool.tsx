@@ -186,9 +186,9 @@ export function StampSendTool({ variant = "page" }: StampSendToolProps = {}) {
   }, [formState.fee]);
 
   const handleSendWithExactFees = async () => {
-    // Modal: open connect-wallet on top of the modal before any fee work.
-    // Page: handleSubmit (useTransactionForm) handles the disconnected case.
-    if (isModal && !wallet?.address) {
+    // No wallet yet: open connect-wallet before any fee work (on top of the
+    // modal, or in the base slot on the page).
+    if (!wallet?.address) {
       showConnectModal();
       return;
     }

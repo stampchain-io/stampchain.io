@@ -106,6 +106,18 @@ export function Header() {
     createPos: null,
   });
   const toolsButtonRef = useRef<HTMLDivElement>(null);
+  // The desktop Tools menu is portalled to <body>, outside the trigger, so
+  // keyboard users need explicit wiring to open it and move into it.
+  const toolsDropdownRef = useRef<HTMLDivElement>(null);
+  // Set while Escape returns focus to the icon, so that focus does not
+  // immediately reopen the menu it just closed.
+  const suppressToolsFocusOpen = useRef(false);
+  const isDesktopToolsMenu = () =>
+    typeof globalThis !== "undefined" && globalThis.innerWidth >= 1024;
+  const focusIsInToolsMenu = (node: EventTarget | null) =>
+    node instanceof Node &&
+    (!!toolsButtonRef.current?.contains(node) ||
+      !!toolsDropdownRef.current?.contains(node));
   const walletButtonRef = useRef<HTMLDivElement>(null);
   const createButtonRef = useRef<HTMLDivElement>(null);
 
@@ -640,6 +652,31 @@ export function Header() {
               ref={toolsButtonRef}
               onMouseEnter={handleToolsMouseEnter}
               onMouseLeave={handleDropdownMouseLeave}
+              // Keyboard: focusing the icon opens the menu like hover does;
+              // Enter or ArrowDown moves into it; leaving both closes it.
+              onFocusIn={() => {
+                if (suppressToolsFocusOpen.current) {
+                  suppressToolsFocusOpen.current = false;
+                  return;
+                }
+                if (isDesktopToolsMenu()) handleToolsMouseEnter();
+              }}
+              onFocusOut={(e: FocusEvent) => {
+                if (!focusIsInToolsMenu(e.relatedTarget)) {
+                  handleDropdownMouseLeave();
+                }
+              }}
+              onKeyDown={(e: KeyboardEvent) => {
+                if (!isDesktopToolsMenu()) return;
+                if (e.key !== "Enter" && e.key !== "ArrowDown") return;
+                e.preventDefault();
+                handleToolsMouseEnter();
+                requestAnimationFrame(() =>
+                  toolsDropdownRef.current?.querySelector<HTMLElement>(
+                    "button, a[href]",
+                  )?.focus()
+                );
+              }}
             >
               {ToolsButton({
                 onOpenDrawer: openDrawer,
@@ -680,6 +717,23 @@ export function Header() {
 
         return shouldRenderTools && createPortal(
           <div
+            ref={toolsDropdownRef}
+            role="menu"
+            aria-label="Tools"
+            onFocusOut={(e: FocusEvent) => {
+              if (!focusIsInToolsMenu(e.relatedTarget)) {
+                handleDropdownMouseLeave();
+              }
+            }}
+            onKeyDown={(e: KeyboardEvent) => {
+              if (e.key !== "Escape") return;
+              e.preventDefault();
+              handleDropdownMouseLeave();
+              suppressToolsFocusOpen.current = true;
+              toolsButtonRef.current?.querySelector<HTMLElement>(
+                "[tabindex], a[href], button",
+              )?.focus();
+            }}
             class={`hidden tablet:block !fixed z-dropdown min-w-[150px] px-5 py-3.5 whitespace-nowrap ${container1} ${animationClass}`}
             style={{
               top: `${dropdownState.toolsPos!.top}px`,

@@ -299,6 +299,21 @@ export function Icon(props: IconVariants) {
         {...(fPartial !== undefined ? { "f-partial": fPartial } : {})}
         role={role || "button"}
         aria-label={ariaLabel || name}
+        {
+          // Without an href an <a> is not focusable, so keyboard users could not
+          // reach icon buttons (e.g. the header Tools menu). Make it a proper
+          // button: Tab stop, and Enter/Space activate it.
+          ...(!href && onClick
+            ? {
+              tabIndex: 0,
+              onKeyDown: (e: { key: string; preventDefault(): void }) => {
+                if (e.key !== "Enter" && e.key !== " ") return;
+                e.preventDefault();
+                (onClick as (ev: unknown) => void)(e);
+              },
+            }
+            : {})
+        }
         onClick={onClick}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}

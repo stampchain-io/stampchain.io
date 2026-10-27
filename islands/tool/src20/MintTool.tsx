@@ -468,9 +468,9 @@ export function SRC20MintTool({
 
   // Wrapper function for minting that gets exact fees first - StampingTool pattern
   const handleMint = async () => {
-    // The modal opens connect-wallet on top of itself; the page keeps its
-    // existing flow (handleSubmit reports the missing wallet).
-    if (isModal && !isConnected) {
+    // No wallet yet: the "CONNECT WALLET" button opens connect-wallet (on top
+    // of the modal, or in the base slot on the page) instead of erroring.
+    if (!isConnected) {
       showConnectModal();
       return;
     }
