@@ -1,5 +1,7 @@
 /* ===== ERROR 404 PAGE ===== */
 import { Button } from "$button";
+import { brandText } from "$lib/utils/chain/brand.ts";
+import { getChainId } from "$server/services/chain/chainProfile.ts";
 import { containerBackground } from "$layout";
 import { subtitleNeutral, titleNeutral } from "$text";
 
@@ -18,7 +20,7 @@ export default function Error404Page() {
         <img
           class="w-[240px] mobileMd:w-[300px] mobileLg:w-[280px] tablet:w-[260px] mt-3 mb-5"
           src="/img/placeholder/broken.png"
-          alt="Bitcoin Stamps"
+          alt={brandText("Bitcoin Stamps", getChainId())}
         />
         <div class={subtitleNeutral}>SORRY ABOUT THAT</div>
         <div class="flex gap-6 mt-3">

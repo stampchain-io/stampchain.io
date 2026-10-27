@@ -4,6 +4,7 @@
  * editions / lock / CPID state, fee sync, progressive fee estimation and the
  * mint -> sign -> broadcast flow. The caller supplies the file payload.
  */
+import { txExplorerUrl } from "$lib/utils/chain/clientChain.ts";
 import { useConfig } from "$client/hooks/useConfig.ts";
 import { walletContext } from "$client/wallet/wallet.ts";
 import { getWalletProvider } from "$client/wallet/walletHelper.ts";
@@ -332,6 +333,7 @@ export function useStampMint(options: UseStampMintOptions) {
     /* ----- Standard: the wallet already broadcast ----- */
     if (result.txid) {
       const txid = result.txid;
+      const txUrl = txExplorerUrl(txid);
       showToast(
         "Transaction broadcasted successfully.",
         "success",
@@ -340,12 +342,14 @@ export function useStampMint(options: UseStampMintOptions) {
           Fragment,
           null,
           "Transaction hash: ",
-          h("a", {
-            href: `https://mempool.space/tx/${txid}`,
-            target: "_blank",
-            rel: "noopener noreferrer",
-            class: "underline hover:opacity-80",
-          }, `${txid.substring(0, 12)}...`),
+          txUrl
+            ? h("a", {
+              href: txUrl,
+              target: "_blank",
+              rel: "noopener noreferrer",
+              class: "underline hover:opacity-80",
+            }, `${txid.substring(0, 12)}...`)
+            : `${txid.substring(0, 12)}...`,
         ),
       );
     } else {

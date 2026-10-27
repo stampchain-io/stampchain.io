@@ -1,5 +1,7 @@
 /* ===== WALLET DASHBOARD DETAILS COMPONENT ===== */
 /* @baba - cleanup button/icon code */
+import { ExplorerLink } from "$components/layout/ExplorerLink.tsx";
+import { addressExplorerUrl } from "$lib/utils/chain/clientChain.ts";
 import { Icon } from "$icon";
 import { openBTCAddressTool } from "$islands/modal/tool/BTCAddressTool.tsx";
 import { openBTCSendTool } from "$islands/modal/tool/BTCSendTool.tsx";
@@ -379,8 +381,9 @@ function WalletOverview(
           onMouseEnter={handleHistoryMouseEnter}
           onMouseLeave={handleHistoryMouseLeave}
         >
-          <a
-            href={`https://mempool.space/address/${walletData.address}`}
+          <ExplorerLink
+            href={addressExplorerUrl(walletData.address)}
+            fallback="none"
             target="_blank"
             onClick={() => setIsHistoryTooltipVisible(false)}
           >
@@ -391,7 +394,7 @@ function WalletOverview(
               size="xl"
               color="neutral400"
             />
-          </a>
+          </ExplorerLink>
           <div
             class={`${tooltipIcon} ${
               isHistoryTooltipVisible ? "opacity-100" : "opacity-0"

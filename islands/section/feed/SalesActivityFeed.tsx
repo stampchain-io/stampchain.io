@@ -1,4 +1,9 @@
 /* ===== SALES ACTIVITY FEED COMPONENT ===== */
+import { ExplorerLink } from "$components/layout/ExplorerLink.tsx";
+import {
+  addressExplorerUrl,
+  txExplorerUrl,
+} from "$lib/utils/chain/clientChain.ts";
 import { Icon, LoadingIcon } from "$icon";
 import { container2, transitionColors } from "$layout";
 import {
@@ -70,8 +75,6 @@ export default function SalesActivityFeed({
 
   /* ===== DATA PROCESSING ===== */
   const displayedSales = sales.slice(0, maxItems);
-  const explorerBaseUrl = "https://mempool.space/tx/";
-  const addressExplorerUrl = "https://mempool.space/address/";
 
   /* ===== RENDER HELPERS ===== */
   const renderSaleItem = (sale: StampWithEnhancedSaleData, index: number) => {
@@ -136,30 +139,30 @@ export default function SalesActivityFeed({
                   {saleData.buyer_address && (
                     <div class="flex items-center gap-1">
                       <span>to</span>
-                      <a
-                        href={`${addressExplorerUrl}${saleData.buyer_address}`}
+                      <ExplorerLink
+                        href={addressExplorerUrl(saleData.buyer_address)}
                         target="_blank"
                         rel="noopener noreferrer"
                         class="text-blue-400 hover:text-blue-300 font-mono"
                         onClick={(e) => e.stopPropagation()}
                       >
                         {abbreviateAddress(saleData.buyer_address, 4)}
-                      </a>
+                      </ExplorerLink>
                     </div>
                   )}
 
                   {saleData.dispenser_address && (
                     <div class="flex items-center gap-1">
                       <span>via</span>
-                      <a
-                        href={`${addressExplorerUrl}${saleData.dispenser_address}`}
+                      <ExplorerLink
+                        href={addressExplorerUrl(saleData.dispenser_address)}
                         target="_blank"
                         rel="noopener noreferrer"
                         class="text-purple-400 hover:text-purple-300 font-mono"
                         onClick={(e) => e.stopPropagation()}
                       >
                         {abbreviateAddress(saleData.dispenser_address, 4)}
-                      </a>
+                      </ExplorerLink>
                     </div>
                   )}
 
@@ -181,8 +184,9 @@ export default function SalesActivityFeed({
 
               {/* Action buttons */}
               <div class="flex items-center gap-1">
-                <a
-                  href={`${explorerBaseUrl}${saleData.tx_hash}`}
+                <ExplorerLink
+                  href={txExplorerUrl(saleData.tx_hash)}
+                  fallback="none"
                   target="_blank"
                   rel="noopener noreferrer"
                   class={`p-1 text-blue-400 hover:text-blue-300 ${transitionColors}`}
@@ -196,7 +200,7 @@ export default function SalesActivityFeed({
                     weight="normal"
                     color="custom"
                   />
-                </a>
+                </ExplorerLink>
                 {!compact && (
                   <button
                     type="button"
