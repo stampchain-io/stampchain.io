@@ -6,6 +6,7 @@ import { FileToAddressUtils } from "$lib/utils/bitcoin/encoding/fileToAddressUti
 import { estimateMintingTransactionSize } from "$lib/utils/bitcoin/minting/transactionSizes.ts";
 import { estimateMARATransactionSize } from "$lib/utils/bitcoin/minting/maraTransactionSizeEstimator.ts";
 import { extractOutputs } from "$lib/utils/bitcoin/minting/transactionUtils.ts";
+import { applyReplayProtection } from "$server/services/chain/chainProfile.ts";
 import {
   formatInputsSet,
   opReturnDecodesFromInput,
@@ -776,6 +777,10 @@ export class StampCreationService {
           vin0: `${inputs[0].txid}:${inputs[0].vout}`,
         });
       }
+
+      // ECX: replay marker (no-op on Bitcoin). After the ARC4 guard: locktime
+      // and sequence are outside the Counterparty message and do not move vin[0].
+      applyReplayProtection(psbt);
 
       return {
         psbt,

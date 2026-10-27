@@ -1,6 +1,7 @@
 // was previously // lib/utils/minting/src20/tx.ts
 
 import * as bitcoin from "bitcoinjs-lib";
+import { applyReplayProtection } from "$server/services/chain/chainProfile.ts";
 // Conditionally import tiny-secp256k1
 let ecc: any = null;
 const isBuildMode = Deno.args.includes("build");
@@ -301,6 +302,8 @@ export class SRC20MultisigPSBTService {
         change: changeAmount.toString(),
         fee: BigInt(fee).toString()
       });
+
+      applyReplayProtection(psbt); // ECX replay marker; no-op on Bitcoin
 
       return {
         psbtHex: psbt.toHex(),
