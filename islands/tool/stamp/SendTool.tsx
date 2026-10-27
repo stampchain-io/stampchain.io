@@ -1,17 +1,28 @@
-/* ===== SEND TOOL COMPONENT ===== */
+/* ===== STAMP SEND TOOL ===== */
+/* Single implementation for /tool/stamp/send (variant "page") and the
+   STAMP SEND modal (variant "modal", islands/modal/tool/StampSendTool.tsx). */
 import { useTransactionForm } from "$client/hooks/useTransactionForm.ts";
 import { walletContext } from "$client/wallet/wallet.ts";
 import { ProgressiveEstimationIndicator } from "$components/indicators/ProgressiveEstimationIndicator.tsx";
-import { inputField, inputFieldDropdown, inputFieldSquare } from "$form";
+import {
+  inputField,
+  inputFieldDropdown,
+  inputFieldGrow,
+  inputFieldGrowDigits,
+  inputFieldGrowStyle,
+  inputFieldSquare,
+} from "$form";
 import { Icon, PlaceholderImage } from "$icon";
 import { SendToolSkeleton } from "$indicators";
 import {
   bodyTool,
+  container2,
   container2Hover,
   containerBackground,
   containerColForm,
   containerGap,
   containerRowForm,
+  handleModalClose,
   imagePreviewTool,
   loaderSpinGrey,
   rowForm,
@@ -23,18 +34,30 @@ import {
   handleImageError,
   processSVG,
 } from "$lib/utils/ui/media/imageUtils.ts";
+import {
+  buildStampSendRequest,
+  normalizeSendQuantity,
+} from "$lib/utils/stamps/sendHelpers.ts";
 import { FeeCalculatorBase } from "$section";
-import { labelLg, labelSm, titleNeutral } from "$text";
+import { labelLg, labelSm, labelXs, titleNeutral, valueSm } from "$text";
 import type { StampRow } from "$types/stamp.d.ts";
 import type { JSX, TargetedEvent } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
 
+/* ===== TYPES ===== */
+export interface StampSendToolProps {
+  /** "page" renders the /tool page layout; "modal" renders the body only,
+      for use inside ModalTool. */
+  variant?: "page" | "modal";
+}
+
 /* ===== COMPONENT ===== */
-export function StampSendTool() {
+export function StampSendTool({ variant = "page" }: StampSendToolProps = {}) {
   console.log("SENDTOOL: Component rendering - TOP LEVEL");
+  const isModal = variant === "modal";
 
   /* ===== CONTEXT ===== */
-  const { wallet } = walletContext;
+  const { wallet, showConnectModal } = walletContext;
 
   /* ===== STATE ===== */
   const [maxQuantity, setMaxQuantity] = useState(1);
@@ -163,6 +186,12 @@ export function StampSendTool() {
   }, [formState.fee]);
 
   const handleSendWithExactFees = async () => {
+    // Modal: open connect-wallet on top of the modal before any fee work.
+    // Page: handleSubmit (useTransactionForm) handles the disconnected case.
+    if (isModal && !wallet?.address) {
+      showConnectModal();
+      return;
+    }
     try {
       const exactFees = await estimateExact();
       if (exactFees) {
@@ -303,13 +332,15 @@ export function StampSendTool() {
   };
 
   const handleQuantityChange = (e: Event) => {
-    e.preventDefault();
-
     const input = e.target as HTMLInputElement;
-    if (!input.value || input.value === "0") {
-      input.value = "1";
-    }
-    setQuantity(parseInt(input.value));
+    // The modal field is free text, so strip non-digits first. Empty input or
+    // anything that parses to 0 or less ("0", "000") resets to 1.
+    const value = normalizeSendQuantity(
+      isModal ? inputFieldGrowDigits(input) : input.value,
+    );
+    const next = value.toString();
+    if (input.value !== next) input.value = next;
+    setQuantity(value);
   };
 
   const handleTransferSubmit = async () => {
@@ -355,20 +386,13 @@ export function StampSendTool() {
           throw new Error("Invalid quantity specified.");
         }
 
-        const feeRateKB = formState.fee * 1000;
-
-        const requestBody = {
+        const requestBody = buildStampSendRequest({
           address: wallet.address,
           destination: formState.recipientAddress,
           asset: selectedStamp.cpid,
-          quantity: quantity,
-          satsPerVB: formState.fee,
-          options: {
-            return_psbt: true,
-            fee_per_kb: feeRateKB,
-            allow_unconfirmed_inputs: true,
-          },
-        };
+          quantity,
+          feeRate: formState.fee,
+        });
 
         console.log(
           "SENDTOOL: Preparing stamp send request (SendTool)",
@@ -472,9 +496,13 @@ export function StampSendTool() {
           type="icon"
           name="previewImage"
           weight="extraLight"
-          size="xl"
-          color="custom"
-          className="stroke-color-grey-dark"
+          {...(isModal
+            ? { size: "xxl" as const, color: "neutral600" as const }
+            : {
+              size: "xl" as const,
+              color: "custom" as const,
+              className: "stroke-color-grey-dark",
+            })}
         />
       );
     }
@@ -543,7 +571,9 @@ export function StampSendTool() {
   };
 
   /* ===== EARLY RETURN FOR LOADING STATE ===== */
-  if (isLoadingStamps) {
+  /* Page only. The modal keeps its layout and shows "Loading stamps" in the
+     dropdown trigger instead. */
+  if (isLoadingStamps && !isModal) {
     return (
       <div class={`${bodyTool} ${containerGap}`}>
         <h1 class={`${titleNeutral} mx-auto -mb-2 mobileLg:-mb-4`}>
@@ -554,23 +584,27 @@ export function StampSendTool() {
     );
   }
 
-  /* ===== RENDER ===== */
-  return (
-    <div class={`${bodyTool} ${containerGap}`}>
-      <h1 class={`${titleNeutral} mx-auto -mb-2 mobileLg:-mb-4`}>
-        SEND
-      </h1>
+  /* ===== VARIANT STYLES ===== */
+  const muted = isModal ? "text-color-neutral-500" : "text-color-grey-semidark";
+  const stampLabel = isModal
+    ? "text-color-neutral-400"
+    : "text-color-grey-light";
 
+  /* ===== RENDER ===== */
+  const content = (
+    <>
       {/* ===== STAMP SELECTION SECTION ===== */}
       <form
-        class={`${containerBackground} relative`}
+        class={isModal
+          ? "relative flex flex-col w-full"
+          : `${containerBackground} relative`}
         onSubmit={(e) => {
           e.preventDefault();
         }}
         aria-label="Send stamp"
         novalidate
       >
-        <div class={`${containerRowForm} mb-5`}>
+        <div class={`${containerRowForm} ${isModal ? "mb-3" : "mb-5"}`}>
           <div class={imagePreviewTool}>
             {renderStampContent()}
           </div>
@@ -585,7 +619,9 @@ export function StampSendTool() {
             >
               {/* Trigger */}
               <div
-                class={`${container2Hover} h-10 px-5 w-full flex items-center gap-3 select-none ${
+                class={`${container2Hover} ${
+                  isModal ? "h-8 px-3 text-xs" : "h-10 px-5"
+                } w-full flex items-center gap-3 select-none ${
                   !wallet?.address || stamps.data.length === 0
                     ? "cursor-default"
                     : "cursor-pointer"
@@ -601,24 +637,30 @@ export function StampSendTool() {
               >
                 {selectedStamp
                   ? (
-                    <span class="font-medium text-color-grey-light">
+                    <span class={`font-medium ${stampLabel}`}>
                       #{selectedStamp.stamp}
                     </span>
                   )
                   : !wallet?.address
                   ? (
-                    <span class="font-light text-color-grey-semidark uppercase">
+                    <span class={`font-light ${muted} uppercase`}>
                       Connect your wallet
+                    </span>
+                  )
+                  : isLoadingStamps
+                  ? (
+                    <span class={`font-light ${muted} uppercase`}>
+                      Loading stamps
                     </span>
                   )
                   : stamps.data.length === 0
                   ? (
-                    <span class="font-light text-color-grey-semidark uppercase">
+                    <span class={`font-light ${muted} uppercase`}>
                       No stamps in wallet
                     </span>
                   )
                   : (
-                    <span class="font-light text-color-grey-semidark uppercase">
+                    <span class={`font-light ${muted} uppercase`}>
                       Select stamp
                     </span>
                   )}
@@ -652,10 +694,16 @@ export function StampSendTool() {
                         onError={handleImageError}
                       />
                       <div class="flex items-center justify-between flex-1 min-w-0">
-                        <span class="text-sm font-medium text-color-grey-light">
+                        <span class={`text-sm font-medium ${stampLabel}`}>
                           #{stamp.stamp}
                         </span>
-                        <span class="hidden min-[480px]:block text-xs font-normal text-color-grey">
+                        <span
+                          class={`hidden min-[480px]:block text-xs font-normal ${
+                            isModal
+                              ? "text-color-neutral-500"
+                              : "text-color-grey"
+                          }`}
+                        >
                           {stamp.unbound_quantity} EDITIONS
                         </span>
                       </div>
@@ -665,24 +713,46 @@ export function StampSendTool() {
               )}
             </div>
 
-            <div class="flex w-full justify-end items-center -my-[3px] gap-5">
+            <div
+              class={`flex w-full justify-end items-center ${
+                isModal ? "" : "-my-[3px] "
+              }gap-5`}
+            >
               <div class="flex flex-col justify-start -space-y-0.5">
-                <h5 class={`${labelLg} !text-color-grey`}>
+                <h5 class={isModal ? valueSm : `${labelLg} !text-color-grey`}>
                   EDITIONS
                 </h5>
-                <h6 class={labelSm}>
+                <h6 class={isModal ? labelXs : labelSm}>
                   MAX {maxQuantity}
                 </h6>
               </div>
-              <input
-                type="number"
-                min="1"
-                max={maxQuantity}
-                value={quantity}
-                onChange={handleQuantityChange}
-                class={inputFieldSquare}
-                aria-label="Number of editions to send"
-              />
+              {isModal
+                ? (
+                  <div
+                    class={inputFieldGrow}
+                    style={inputFieldGrowStyle(String(quantity).length)}
+                  >
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      value={quantity}
+                      onChange={handleQuantityChange}
+                      class={`${inputField} text-center`}
+                      aria-label="Number of editions to send"
+                    />
+                  </div>
+                )
+                : (
+                  <input
+                    type="number"
+                    min="1"
+                    max={maxQuantity}
+                    value={quantity}
+                    onChange={handleQuantityChange}
+                    class={inputFieldSquare}
+                    aria-label="Number of editions to send"
+                  />
+                )}
             </div>
           </div>
         </div>
@@ -708,7 +778,7 @@ export function StampSendTool() {
       </form>
 
       {/* ===== FEE CALCULATOR SECTION ===== */}
-      <div class={containerBackground}>
+      <div class={isModal ? `${container2} p-3 pt-2` : containerBackground}>
         <FeeCalculatorBase
           fee={formState.fee}
           handleChangeFee={internalHandleChangeFee}
@@ -721,6 +791,7 @@ export function StampSendTool() {
             );
             handleSendWithExactFees();
           }}
+          {...(isModal ? { onCancel: handleModalClose } : {})}
           buttonName={wallet?.address ? "SEND" : "CONNECT WALLET"}
           tosAgreed={tosAgreed}
           onTosChange={setTosAgreed}
@@ -777,6 +848,18 @@ export function StampSendTool() {
           {successMessage}
         </div>
       )}
+    </>
+  );
+
+  if (isModal) return content;
+
+  return (
+    <div class={`${bodyTool} ${containerGap}`}>
+      <h1 class={`${titleNeutral} mx-auto -mb-2 mobileLg:-mb-4`}>
+        SEND
+      </h1>
+
+      {content}
     </div>
   );
 }
