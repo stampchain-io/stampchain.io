@@ -405,6 +405,14 @@ interface TxInfo {
   };
 }
 
+const ESPLORA_PROVIDERS = new Set(["mempool.space", "blockstream.info"]);
+
+/** True when the server runs the ECX chain profile (read per call). */
+function isEcxChain(): boolean {
+  return typeof Deno !== "undefined" &&
+    (Deno.env.get("CHAIN") ?? "").trim().toLowerCase() === "ecx";
+}
+
 export async function getUTXOForAddress(
   address: string,
   specificTxid?: string,
@@ -658,5 +666,11 @@ Retries: ${retries}
   ];
 
   console.log(`>>> Starting tryAPIs with ${endpoints.length} endpoints`);
-  return await tryAPIs(endpoints, retries);
+  // ECX (CHAIN=ecx): only the esplora-compatible providers, which follow
+  // MEMPOOL_API_URL / BLOCKSTREAM_API_URL. blockchain.info and blockcypher
+  // are Bitcoin-only and would answer with Bitcoin UTXOs.
+  const usable = isEcxChain()
+    ? endpoints.filter((e) => ESPLORA_PROVIDERS.has(e.name))
+    : endpoints;
+  return await tryAPIs(usable, retries);
 }
