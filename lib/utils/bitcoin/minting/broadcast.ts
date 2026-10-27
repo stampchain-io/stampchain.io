@@ -10,9 +10,29 @@ const BROADCAST_ENDPOINTS = [
   "https://api.blockcypher.com/v1/btc/main/txs/push",
 ] as const;
 
+/**
+ * The chain the page was served for, from the `data-chain` attribute that
+ * routes/_app.tsx renders on <html> only under CHAIN=ecx. Absent means Bitcoin.
+ */
+export function getPageChain(): "bitcoin" | "ecx" {
+  const chain = (globalThis as { document?: Document }).document
+    ?.documentElement?.dataset?.chain;
+  return chain === "ecx" ? "ecx" : "bitcoin";
+}
+
+export const ECX_BROWSER_BROADCAST_REFUSED =
+  "Broadcasting from the browser is disabled on ECX: the built-in broadcast " +
+  "endpoints are Bitcoin nodes. The transaction was signed but not sent.";
+
 export async function broadcastTransaction(
   signedPsbtHex: string,
 ): Promise<string> {
+  // ECX transactions must never reach the Bitcoin endpoints below. There is
+  // no ECX broadcast endpoint yet, so refuse before converting or sending.
+  if (getPageChain() === "ecx") {
+    throw new Error(ECX_BROWSER_BROADCAST_REFUSED);
+  }
+
   // We need a special case for build mode, but this never runs in production
   if (Deno.args.includes("build")) {
     logger.warn("broadcast", {
