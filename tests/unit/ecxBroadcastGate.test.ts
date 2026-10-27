@@ -2,10 +2,11 @@
  * ECX broadcast gate: assertBroadcastAllowed plus every server site that
  * sends or accepts a signed transaction (MaraSlipstreamService.submitTransaction
  * and POST /api/internal/mara-submit), plus the browser broadcaster in
- * lib/utils/bitcoin/minting/broadcast.ts and the /config chain field.
+ * lib/utils/bitcoin/minting/broadcast.ts (which hands ECX transactions to the
+ * server) and the /config chain field.
  *
  * Network is stubbed at FetchHttpClient.prototype.post; refusals must leave
- * it uncalled. Every test restores Deno.env.
+ * it uncalled. No test writes Deno.env, which the parallel workers share.
  */
 import { assert, assertEquals, assertInstanceOf, assertRejects, assertThrows } from "@std/assert";
 import { restore, stub } from "@std/testing@1.0.14/mock";
@@ -26,6 +27,7 @@ import { assertValidMaraConfig } from "$server/config/maraConfigValidator.ts";
 import { getClientConfig } from "$server/config/config.ts";
 import {
   broadcastTransaction,
+  ECX_BROADCAST_PATH,
   ECX_BROWSER_BROADCAST_REFUSED,
   getPageChain,
 } from "$lib/utils/minting/broadcast.ts";
@@ -141,19 +143,29 @@ Deno.test("assertBroadcastAllowed: ecx enabled checks the replay marker", () => 
   assertEquals([garbage.status, garbage.reason], [400, "invalid_transaction"]);
 });
 
-Deno.test("assertBroadcastAllowed reads Deno.env at call time", () => {
-  // Synchronous on purpose: Deno.env is shared with parallel test workers, so
-  // keep the window in which CHAIN=ecx is visible as short as possible.
-  const saved = ["CHAIN", "ECX_BROADCAST_ENABLED"].map((k) => [k, Deno.env.get(k)] as const);
-  try {
-    Deno.env.set("CHAIN", "ecx");
-    Deno.env.delete("ECX_BROADCAST_ENABLED");
-    assertThrows(() => assertBroadcastAllowed(PROTECTED), BroadcastRefusedError);
+Deno.test("assertBroadcastAllowed reads Deno.env at call time", async () => {
+  // In a child process: Deno.env is shared with the parallel test workers, and
+  // CHAIN=ecx visible there even briefly makes modules that read it at import
+  // (lib/constants/serverConstants.ts) throw in another file.
+  const code = `
+    const { assertBroadcastAllowed } = await import("./server/services/chain/chainProfile.ts");
+    const hex = ${JSON.stringify(PROTECTED)};
+    const outcome = () => { try { assertBroadcastAllowed(hex); return "allowed"; } catch (e) { return e.status; } };
+    const off = outcome();
     Deno.env.set("ECX_BROADCAST_ENABLED", "true");
-    assertBroadcastAllowed(PROTECTED);
-  } finally {
-    for (const [k, v] of saved) v === undefined ? Deno.env.delete(k) : Deno.env.set(k, v);
-  }
+    console.log(JSON.stringify({ off, on: outcome() }));`;
+  const out = await new Deno.Command(Deno.execPath(), {
+    args: ["eval", "--no-check", code],
+    cwd: new URL("../..", import.meta.url).pathname,
+    env: { HOME: Deno.env.get("HOME") ?? "", NO_COLOR: "1", CHAIN: "ecx" },
+    clearEnv: true,
+    stdout: "piped",
+    stderr: "piped",
+  }).output();
+  const text = new TextDecoder().decode(out.stdout) + new TextDecoder().decode(out.stderr);
+  assertEquals(out.code, 0, text);
+  const last = text.trim().split("\n").filter((l) => l.startsWith("{")).pop();
+  assertEquals(JSON.parse(last ?? "null"), { off: 403, on: "allowed" });
 });
 
 // ------------------------------------------- site: MaraSlipstreamService
@@ -291,7 +303,12 @@ async function withBrowser(chain: string | undefined, fn: (calls: string[]) => P
   g.document = { documentElement: { dataset: chain === undefined ? {} : { chain } } };
   stub(globalThis, "fetch", (input: string | URL | Request) => {
     calls.push(String(input));
-    return Promise.resolve(new Response(MARA_TXID, { status: 200 }));
+    // The ECX hand-off route answers JSON; Bitcoin endpoints answer the txid.
+    return Promise.resolve(
+      String(input) === ECX_BROADCAST_PATH
+        ? Response.json({ txid: MARA_TXID })
+        : new Response(MARA_TXID, { status: 200 }),
+    );
   });
   try {
     await fn(calls);
@@ -310,12 +327,26 @@ Deno.test("broadcastTransaction: bitcoin page broadcasts exactly as before", asy
   });
 });
 
-Deno.test("broadcastTransaction: ecx page refuses and sends nothing", async () => {
+Deno.test("broadcastTransaction: ecx page hands off to the server route only", async () => {
+  // The server's gate decides (an unmarked tx is refused there with 400);
+  // the browser never sends either one to a Bitcoin endpoint.
   for (const hex of [PROTECTED, UNPROTECTED]) {
     await withBrowser("ecx", async (calls) => {
       assertEquals(getPageChain(), "ecx");
-      await assertRejects(() => broadcastTransaction(hex), Error, ECX_BROWSER_BROADCAST_REFUSED);
-      assertEquals(calls, []);
+      assertEquals(await broadcastTransaction(hex), MARA_TXID);
+      assertEquals(calls, [ECX_BROADCAST_PATH]);
     });
   }
+});
+
+Deno.test("broadcastTransaction: ecx page refuses when the server has no ECX route (404)", async () => {
+  await withBrowser("ecx", async (calls) => {
+    restore();
+    stub(globalThis, "fetch", (input: string | URL | Request) => {
+      calls.push(String(input));
+      return Promise.resolve(Response.json({ error: "Resource not found" }, { status: 404 }));
+    });
+    await assertRejects(() => broadcastTransaction(PROTECTED), Error, ECX_BROWSER_BROADCAST_REFUSED);
+    assertEquals(calls, [ECX_BROADCAST_PATH]);
+  });
 });
