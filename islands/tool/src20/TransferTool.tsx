@@ -1,4 +1,6 @@
-/* ===== TRANSFER CONTENT COMPONENT ===== */
+/* ===== SRC-20 TRANSFER TOOL ===== */
+/* Single implementation for the /tool/src20/transfer page and the
+   SRC-20 transfer modal (islands/modal/tool/SRC20TransferTool.tsx). */
 import { useSRC20Form } from "$client/hooks/useSRC20Form.ts";
 import { walletContext } from "$client/wallet/wallet.ts";
 import { ProgressiveEstimationIndicator } from "$components/indicators/ProgressiveEstimationIndicator.tsx";
@@ -10,11 +12,14 @@ import {
 import { TransferToolSkeleton } from "$indicators";
 import {
   bodyTool,
+  container2,
   containerBackground,
   containerColForm,
   containerGap,
+  handleModalClose,
   rowResponsiveForm,
 } from "$layout";
+import { clampTransferAmount } from "$lib/utils/bitcoin/src20/transferAmount.ts";
 import { useTransactionConstructionService } from "$lib/hooks/useTransactionConstructionService.ts";
 import { logger } from "$lib/utils/logger.ts";
 import { mapProgressiveFeeDetails } from "$lib/utils/performance/fees/fee-estimation-utils.ts";
@@ -30,10 +35,25 @@ interface Balance {
   amt: string;
 }
 
+export interface SRC20TransferToolProps {
+  trxType?: "olga" | "multisig";
+  /**
+   * "page" renders the full tool page with its own heading and config
+   * skeleton. "modal" renders only the body; the caller supplies the
+   * ModalTool chrome.
+   */
+  variant?: "page" | "modal";
+}
+
 /* ===== COMPONENT IMPLEMENTATION ===== */
 export function SRC20TransferTool(
-  { trxType = "olga" }: { trxType?: "olga" | "multisig" } = { trxType: "olga" },
+  { trxType = "olga", variant = "page" }: SRC20TransferToolProps = {
+    trxType: "olga",
+    variant: "page",
+  },
 ) {
+  const isModal = variant === "modal";
+
   /* ===== FORM STATE AND HANDLERS ===== */
   const {
     formState,
@@ -65,7 +85,14 @@ export function SRC20TransferTool(
   const animationTimeoutRef = useRef<number | null>(null);
 
   /* ===== WALLET CONTEXT ===== */
-  const { wallet, isConnected } = walletContext;
+  const { wallet, isConnected, showConnectModal } = walletContext;
+
+  /* Modal only: open connect-wallet on top of the modal instead of submitting. */
+  const connectIfNeeded = () => {
+    if (!isModal || isConnected) return false;
+    showConnectModal();
+    return true;
+  };
 
   /* ===== PROGRESSIVE FEE ESTIMATION INTEGRATION ===== */
   const {
@@ -107,6 +134,7 @@ export function SRC20TransferTool(
 
   // Wrapper function for transferring that gets exact fees first - StampingTool pattern
   const handleTransferWithExactFees = async () => {
+    if (connectIfNeeded()) return;
     try {
       // Get exact fees before final submission
       const exactFees = await estimateExact();
@@ -270,15 +298,7 @@ export function SRC20TransferTool(
 
   /* ===== AMOUNT INPUT HANDLER ===== */
   const handleAmountChange = (value: string) => {
-    const inputAmount = Number(value);
-    const maxAmount = Number(formState.maxAmount);
-
-    if (!isNaN(inputAmount) && !isNaN(maxAmount) && inputAmount > maxAmount) {
-      handleInputChange(maxAmount.toString(), "amt");
-      return;
-    }
-
-    handleInputChange(value, "amt");
+    handleInputChange(clampTransferAmount(value, formState.maxAmount), "amt");
   };
 
   /* ===== TOKEN CHANGE HANDLER ===== */
@@ -301,7 +321,8 @@ export function SRC20TransferTool(
   }, []);
 
   /* ===== CONFIG CHECK ===== */
-  if (!config) {
+  // The page waits for config behind a skeleton; the modal renders at once.
+  if (!config && !isModal) {
     return (
       <div class={`${bodyTool} ${containerGap}`}>
         <h1 class={`${titleNeutral} mx-auto -mb-2 mobileLg:-mb-4`}>
@@ -312,24 +333,34 @@ export function SRC20TransferTool(
     );
   }
 
-  return (
-    <div class={`${bodyTool} ${containerGap}`}>
-      <h1 class={`${titleNeutral} mx-auto -mb-2 mobileLg:-mb-4`}>
-        TRANSFER
-      </h1>
+  const statusMessages = (
+    <StatusMessages
+      submissionMessage={submissionMessage}
+      apiError={apiError}
+    />
+  );
 
+  const body = (
+    <>
       {/* ===== FORM  ===== */}
       <form
-        class={`${containerBackground} ${containerColForm} relative z-dropdown`}
+        class={isModal
+          ? `${containerColForm} relative z-dropdown`
+          : `${containerBackground} ${containerColForm} relative z-dropdown`}
         onSubmit={(e) => {
           e.preventDefault();
+          if (connectIfNeeded()) return;
           handleSubmit();
         }}
         aria-label="Transfer SRC20 tokens"
         novalidate
       >
         {/* ===== TOKEN AND AMOUNT INPUTS ===== */}
-        <div class={rowResponsiveForm}>
+        <div
+          class={isModal
+            ? `${rowResponsiveForm} min-w-0 [&>*]:min-w-0`
+            : rowResponsiveForm}
+        >
           {/* Token Input with Dropdown */}
           <div
             class={`relative ${
@@ -413,13 +444,14 @@ export function SRC20TransferTool(
       </form>
 
       {/* ===== FEE CALCULATOR ===== */}
-      <div class={containerBackground}>
+      <div class={isModal ? `${container2} p-3 pt-2` : containerBackground}>
         <FeeCalculatorBase
           fee={formState.fee}
           handleChangeFee={handleChangeFee}
           BTCPrice={formState.BTCPrice}
           isSubmitting={isSubmitting}
           onSubmit={handleTransferWithExactFees}
+          {...(isModal ? { onCancel: handleModalClose } : {})}
           buttonName={isConnected ? "TRANSFER" : "CONNECT WALLET"}
           tosAgreed={tosAgreed}
           onTosChange={setTosAgreed}
@@ -449,12 +481,24 @@ export function SRC20TransferTool(
           }
         />
 
-        {/* ===== STATUS MESSAGES ===== */}
-        <StatusMessages
-          submissionMessage={submissionMessage}
-          apiError={apiError}
-        />
+        {/* ===== STATUS MESSAGES (page: inside the fee box) ===== */}
+        {!isModal && statusMessages}
       </div>
+
+      {/* ===== STATUS MESSAGES (modal: below the fee box) ===== */}
+      {isModal && statusMessages}
+    </>
+  );
+
+  if (isModal) return body;
+
+  return (
+    <div class={`${bodyTool} ${containerGap}`}>
+      <h1 class={`${titleNeutral} mx-auto -mb-2 mobileLg:-mb-4`}>
+        TRANSFER
+      </h1>
+
+      {body}
     </div>
   );
 }
