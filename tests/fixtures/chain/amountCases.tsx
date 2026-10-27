@@ -286,6 +286,12 @@ const COMPONENT_CASES: Case[] = [
   ["SRC20CardVertical", "../../../islands/card/SRC20Card.tsx", "SRC20Card", {
     src20: src20Row,
   }],
+  ...["cardSquareBalance", "cardVerticalBalance"].map((variant): Case => [
+    `SRC20Card.${variant}`,
+    "../../../islands/card/SRC20Card.tsx",
+    "SRC20Card",
+    { src20: src20Row, variant },
+  ]),
   [
     "WalletSRC20Overview",
     "../../../components/table/walletTable/WalletSRC20Overview.tsx",
