@@ -8,6 +8,7 @@ import { stackConnectWalletModal } from "$islands/layout/ModalStack.tsx";
 import { closeModal } from "$islands/modal/states.ts";
 import { ModalTool, openModalTool } from "$islands/modal/tool/ModalTool.tsx";
 import { container2 } from "$layout";
+import { coinUnit } from "$lib/utils/chain/clientChain.ts";
 import { useTransactionConstructionService } from "$lib/hooks/useTransactionConstructionService.ts";
 import { logger } from "$lib/utils/logger.ts";
 import { mapProgressiveFeeDetails } from "$lib/utils/performance/fees/fee-estimation-utils.ts";
@@ -361,7 +362,7 @@ export function BTCDonateTool({
             {donationBtc}
           </span>
           <span class="font-extralight text-color-neutral-200">
-            BTC
+            {coinUnit()}
           </span>
         </div>
       </div>

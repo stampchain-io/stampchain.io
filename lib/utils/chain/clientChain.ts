@@ -13,8 +13,9 @@ import type { BrandChain } from "$lib/utils/chain/brand.ts";
 export interface ClientChainInfo {
   CHAIN: "ecx";
   /**
-   * Esplora/mempool-style web explorer for the chain (paths /tx/:id and
-   * /address/:a), or "" when none is configured. Links are hidden when empty.
+   * Mempool-style web explorer for the chain (paths /tx/:txid,
+   * /address/:address and /block/:hash), or "" when there is none. Links are
+   * hidden when empty.
    */
   EXPLORER_BASE_URL: string;
 }
@@ -42,10 +43,11 @@ const BITCOIN_TX_BASE: Record<BitcoinExplorer, string> = {
   "blockchain.com": "https://www.blockchain.com/explorer/transactions/btc/",
 };
 const BITCOIN_ADDRESS_BASE = "https://mempool.space/address/";
+const BITCOIN_BLOCK_BASE = "https://mempool.space/block/";
 const BITCOIN_EXPLORER_HOME = "https://mempool.space/";
 
-function chainExplorerBase(): string {
-  return (current?.EXPLORER_BASE_URL ?? "").replace(/\/+$/, "");
+function chainExplorerBase(info: ClientChainInfo | null = current): string {
+  return (info?.EXPLORER_BASE_URL ?? "").replace(/\/+$/, "");
 }
 
 /** Transaction link, or null on a chain with no configured explorer. */
@@ -65,9 +67,71 @@ export function addressExplorerUrl(address: string): string | null {
   return base ? `${base}/address/${address}` : null;
 }
 
+/**
+ * Block link by hash or height, or null on a chain with no configured
+ * explorer. `info` defaults to the published chain; server code that renders
+ * before the Header island (the chain banner) passes it explicitly.
+ */
+export function blockExplorerUrl(
+  block: string | number,
+  info: ClientChainInfo | null = current,
+): string | null {
+  if (!info) return `${BITCOIN_BLOCK_BASE}${block}`;
+  const base = chainExplorerBase(info);
+  return base ? `${base}/block/${block}` : null;
+}
+
 /** Explorer home page, or null on a chain with no configured explorer. */
 export function explorerHomeUrl(): string | null {
   if (!current) return BITCOIN_EXPLORER_HOME;
   const base = chainExplorerBase();
   return base ? `${base}/` : null;
+}
+
+/* ===== AMOUNTS AND MARKET DATA ===== */
+/** Unit for on-chain amounts the site shows: "BTC" on Bitcoin. */
+export type CoinUnit = "BTC" | "ECX";
+
+/** Amount unit, e.g. the suffix in "0.0042 BTC". */
+export function coinUnit(chain: BrandChain = getClientChainId()): CoinUnit {
+  return chain === "ecx" ? "ECX" : "BTC";
+}
+
+/** Compact unit mark: "₿" on Bitcoin. ECX has no symbol, so its ticker. */
+export function coinSymbol(chain: BrandChain = getClientChainId()): string {
+  return chain === "ecx" ? "ECX" : "₿";
+}
+
+/**
+ * The one switch for market data: USD values, the BTC/USD toggle, floor
+ * price, market cap, volume, 24h change, value columns and charts. Off on
+ * ECX, which has no price feed; the API still returns the fields.
+ */
+export function showMarketData(
+  chain: BrandChain = getClientChainId(),
+): boolean {
+  return chain === "bitcoin";
+}
+
+/** Table columns that carry market data, as their header text reads. */
+export const MARKET_DATA_COLUMNS: ReadonlySet<string> = new Set([
+  "PRICE",
+  "CHANGE",
+  "VOLUME",
+  "MARKETCAP",
+  "VALUE",
+]);
+
+/**
+ * Drop the market-data columns from a list aligned with `headers` (the
+ * headers themselves, colgroup widths). Returns `items` itself when market
+ * data is shown, so Bitcoin tables are unchanged.
+ */
+export function withoutMarketColumns<T>(
+  items: T[],
+  headers: readonly string[],
+  chain: BrandChain = getClientChainId(),
+): T[] {
+  if (showMarketData(chain)) return items;
+  return items.filter((_, i) => !MARKET_DATA_COLUMNS.has(headers[i] ?? ""));
 }

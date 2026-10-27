@@ -6,6 +6,7 @@ import {
   containerPill,
   shadowGlowPurple,
 } from "$layout";
+import { showMarketData } from "$lib/utils/chain/clientChain.ts";
 import {
   abbreviateAddress,
   formatBTC,
@@ -186,14 +187,18 @@ export function CollectionCard(
       >
         {stampCount}
       </PillWithTooltip>
-      <PillWithTooltip
-        label="FLOOR PRICE"
-        className={`${containerPill} ${cardPrice}`}
-      >
-        {collection.marketData?.floorPriceBTC
-          ? formatBTC(collection.marketData.floorPriceBTC)
-          : "N/A"} BTC
-      </PillWithTooltip>
+      {showMarketData() && (
+        <>
+          <PillWithTooltip
+            label="FLOOR PRICE"
+            className={`${containerPill} ${cardPrice}`}
+          >
+            {collection.marketData?.floorPriceBTC
+              ? formatBTC(collection.marketData.floorPriceBTC)
+              : "N/A"} BTC
+          </PillWithTooltip>
+        </>
+      )}
     </>
   );
 
@@ -387,15 +392,19 @@ export function CollectionCardVertical(
             </PillWithTooltip>
           </div>
 
-          {/* Row 2: Floor price (centered) */}
-          <div class="flex items-center justify-center gap-2 mt-2 w-full">
-            <PillWithTooltip
-              label="FLOOR PRICE"
-              className={`${containerPill} ${cardPrice}`}
-            >
-              {floorPriceBTC ? formatBTC(floorPriceBTC) : "N/A"} BTC
-            </PillWithTooltip>
-          </div>
+          {showMarketData() && (
+            <>
+              {/* Row 2: Floor price (centered) */}
+              <div class="flex items-center justify-center gap-2 mt-2 w-full">
+                <PillWithTooltip
+                  label="FLOOR PRICE"
+                  className={`${containerPill} ${cardPrice}`}
+                >
+                  {floorPriceBTC ? formatBTC(floorPriceBTC) : "N/A"} BTC
+                </PillWithTooltip>
+              </div>
+            </>
+          )}
         </div>
       </a>
     </div>
@@ -469,7 +478,7 @@ export function CollectionCardHorizontal(
       {holderCount ?? "N/A"}
     </PillWithTooltip>
   );
-  const floorPricePill = (
+  const floorPricePill = showMarketData() && (
     <PillWithTooltip
       label="FLOOR PRICE"
       className={`${containerPill} ${cardPrice}`}

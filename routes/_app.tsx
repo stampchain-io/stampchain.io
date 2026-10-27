@@ -280,6 +280,7 @@ export default function App({ Component, state, url }: PageProps<unknown>) {
                     label={chainLabel.label}
                     height={chainLabel.height}
                     blockHash={chainLabel.blockHash}
+                    chain={clientChain}
                   />
                 )}
                 {clientChain ? <Header chain={clientChain} /> : <Header />}

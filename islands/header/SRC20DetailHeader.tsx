@@ -1,6 +1,6 @@
 /* ===== SRC20 DETAIL HEADER COMPONENT ===== */
 import { ExplorerLink } from "$components/layout/ExplorerLink.tsx";
-import { txExplorerUrl } from "$lib/utils/chain/clientChain.ts";
+import { showMarketData, txExplorerUrl } from "$lib/utils/chain/clientChain.ts";
 import { Button } from "$button";
 import { Icon, PlaceholderImage } from "$icon";
 import {
@@ -140,7 +140,11 @@ export function SRC20DetailHeader({
     </div>
   );
 
-  const pricePill = (
+  // Floor price, 24h change, volume and market cap are market data, which
+  // ECX does not have.
+  const market = showMarketData();
+
+  const pricePill = market && (
     <div class="relative group/price">
       <div class={`${containerPill} ${cardPrice}`}>
         {floorPriceSatsFormatted}
@@ -153,7 +157,7 @@ export function SRC20DetailHeader({
     </div>
   );
 
-  const changePill = (
+  const changePill = market && (
     <div class="relative group/change">
       <div
         class={`${containerPill} font-medium text-xs select-none whitespace-nowrap ${
@@ -284,20 +288,24 @@ export function SRC20DetailHeader({
                 )
                 : (
                   <>
-                    <div class="flex-1">
-                      <StatItem
-                        label="VOLUME"
-                        value={volume24hBTCFormatted}
-                        align="left"
-                      />
-                    </div>
-                    <div class="flex-1">
-                      <StatItem
-                        label="MARKET CAP"
-                        value={marketCapBTCFormatted}
-                        align="center"
-                      />
-                    </div>
+                    {market && (
+                      <>
+                        <div class="flex-1">
+                          <StatItem
+                            label="VOLUME"
+                            value={volume24hBTCFormatted}
+                            align="left"
+                          />
+                        </div>
+                        <div class="flex-1">
+                          <StatItem
+                            label="MARKET CAP"
+                            value={marketCapBTCFormatted}
+                            align="center"
+                          />
+                        </div>
+                      </>
+                    )}
                     <div class="flex-1 flex justify-end">
                       <StatItem
                         label="SUPPLY"
@@ -359,16 +367,20 @@ export function SRC20DetailHeader({
 
                     {/* ===== VOLUME + MARKET CAP + SUPPLY ===== */}
                     <div class="flex items-center pr-5 gap-5">
-                      <StatItem
-                        label="VOLUME"
-                        value={volume24hBTCFormatted}
-                        align="left"
-                      />
-                      <StatItem
-                        label="MARKET CAP"
-                        value={marketCapBTCFormatted}
-                        align="center"
-                      />
+                      {market && (
+                        <>
+                          <StatItem
+                            label="VOLUME"
+                            value={volume24hBTCFormatted}
+                            align="left"
+                          />
+                          <StatItem
+                            label="MARKET CAP"
+                            value={marketCapBTCFormatted}
+                            align="center"
+                          />
+                        </>
+                      )}
                       <StatItem
                         label="SUPPLY"
                         value={supplyValue}

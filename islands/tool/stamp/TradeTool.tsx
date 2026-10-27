@@ -23,6 +23,7 @@ import { useCallback, useEffect, useState } from "preact/hooks";
 import { Button } from "$button";
 import { InputField } from "$form";
 import { bodyTool, containerBackground, containerGap } from "$layout";
+import { coinUnit } from "$lib/utils/chain/clientChain.ts";
 import type { UTXO, XcpBalance } from "$lib/types/index.d.ts";
 import { normalizeFeeRate } from "$lib/utils/fees.ts";
 import { StatusMessages } from "$notification";
@@ -771,7 +772,7 @@ export function StampTradeTool() {
 
           <InputField
             type="number"
-            placeholder="Sale Price (BTC)"
+            placeholder={`Sale Price (${coinUnit()})`}
             value={tradeFormState.salePrice}
             onChange={(e) => handleTradeInputChange(e, "salePrice")}
             step="0.00000001"

@@ -9,6 +9,10 @@ import {
   EmptyState,
   shadowGlowPurple,
 } from "$layout";
+import {
+  showMarketData,
+  withoutMarketColumns,
+} from "$lib/utils/chain/clientChain.ts";
 import { safeNavigate } from "$lib/utils/navigation/freshNavigationUtils.ts";
 import {
   splitTextAndEmojis,
@@ -57,7 +61,7 @@ export function SRC20OverviewCompact({
     return isNaN(parsed) ? 0 : parsed;
   }
 
-  const headers = fromPage === "wallet"
+  const allHeaders = fromPage === "wallet"
     ? [
       "TOKEN",
       "BALANCE",
@@ -73,6 +77,9 @@ export function SRC20OverviewCompact({
       "VOLUME",
       "MARKETCAP",
     ];
+  // Price, change, volume and market cap are market data (none on ECX).
+  const market = showMarketData();
+  const headers = withoutMarketColumns(allHeaders, allHeaders);
 
   // VOLUME is last visible col on tablet (MARKETCAP hidden); center on desktop
   const cellVolume =
@@ -84,7 +91,7 @@ export function SRC20OverviewCompact({
         class={`w-full border-separate border-spacing-y-3 ${textXs}`}
       >
         <colgroup>
-          {colGroup(
+          {colGroup(withoutMarketColumns(
             fromPage === "wallet"
               ? [
                 {
@@ -129,7 +136,8 @@ export function SRC20OverviewCompact({
                     "min-w-[110px] w-auto tablet:hidden desktop:table-cell",
                 }, // MARKETCAP
               ],
-          ).map((col) => <col key={col.key} class={col.className} />)}
+            allHeaders,
+          )).map((col) => <col key={col.key} class={col.className} />)}
         </colgroup>
         <thead>
           <tr class={container2}>
@@ -260,109 +268,117 @@ export function SRC20OverviewCompact({
                         })()}
                       </td>
                     )}
-                    {/* PRICE */}
-                    <td
-                      class={`${cellCenterL2Card} text-color-secondary-400`}
-                    >
-                      {(() => {
-                        const priceInBtc = getPrice(src20);
-                        if (priceInBtc === 0) {
-                          return "0 SATS";
-                        }
-                        const priceInSats = priceInBtc * 1e8;
+                    {market && (
+                      <>
+                        {/* PRICE */}
+                        <td
+                          class={`${cellCenterL2Card} text-color-secondary-400`}
+                        >
+                          {(() => {
+                            const priceInBtc = getPrice(src20);
+                            if (priceInBtc === 0) {
+                              return "0 SATS";
+                            }
+                            const priceInSats = priceInBtc * 1e8;
 
-                        if (priceInSats < 0.0001) {
-                          return priceInSats.toFixed(6) + " SATS";
-                        } else if (priceInSats < 1) {
-                          return priceInSats.toFixed(4) + " SATS";
-                        } else if (priceInSats < 10) {
-                          return priceInSats.toFixed(2) + " SATS";
-                        } else if (priceInSats < 100) {
-                          return priceInSats.toFixed(1) + " SATS";
-                        } else if (priceInSats < 1000) {
-                          return Math.round(priceInSats).toLocaleString() +
-                            " SATS";
-                        } else {
-                          return Math.round(priceInSats).toLocaleString() +
-                            " SATS";
-                        }
-                      })()}
-                    </td>
-                    {/* CHANGE */}
-                    <td
-                      class={cellCenterL2Card}
-                    >
-                      {(() => {
-                        const change = src20.market_data?.change_24h_percent;
-                        if (change !== undefined && change !== null) {
-                          const changeNum = Number(change);
-                          if (!isNaN(changeNum)) {
+                            if (priceInSats < 0.0001) {
+                              return priceInSats.toFixed(6) + " SATS";
+                            } else if (priceInSats < 1) {
+                              return priceInSats.toFixed(4) + " SATS";
+                            } else if (priceInSats < 10) {
+                              return priceInSats.toFixed(2) + " SATS";
+                            } else if (priceInSats < 100) {
+                              return priceInSats.toFixed(1) + " SATS";
+                            } else if (priceInSats < 1000) {
+                              return Math.round(priceInSats).toLocaleString() +
+                                " SATS";
+                            } else {
+                              return Math.round(priceInSats).toLocaleString() +
+                                " SATS";
+                            }
+                          })()}
+                        </td>
+                        {/* CHANGE */}
+                        <td
+                          class={cellCenterL2Card}
+                        >
+                          {(() => {
+                            const change = src20.market_data
+                              ?.change_24h_percent;
+                            if (change !== undefined && change !== null) {
+                              const changeNum = Number(change);
+                              if (!isNaN(changeNum)) {
+                                return (
+                                  <span
+                                    class={changeNum > 0
+                                      ? valuePositive
+                                      : changeNum < 0
+                                      ? valueNegative
+                                      : valueNeutral}
+                                  >
+                                    {changeNum > 0 ? "+" : ""}
+                                    {changeNum.toFixed(2)}%
+                                  </span>
+                                );
+                              }
+                            }
                             return (
-                              <span
-                                class={changeNum > 0
-                                  ? valuePositive
-                                  : changeNum < 0
-                                  ? valueNegative
-                                  : valueNeutral}
-                              >
-                                {changeNum > 0 ? "+" : ""}
-                                {changeNum.toFixed(2)}%
-                              </span>
+                              <span class="text-color-neutral-500">N/A</span>
                             );
-                          }
-                        }
-                        return <span class="text-color-neutral-500">N/A</span>;
-                      })()}
-                    </td>
-                    {/* VOLUME */}
-                    <td
-                      class={cellVolume}
-                    >
-                      {(() => {
-                        const volume = getVolume24h(src20);
-                        if (volume === 0) {
-                          return "0 BTC";
-                        }
+                          })()}
+                        </td>
+                        {/* VOLUME */}
+                        <td
+                          class={cellVolume}
+                        >
+                          {(() => {
+                            const volume = getVolume24h(src20);
+                            if (volume === 0) {
+                              return "0 BTC";
+                            }
 
-                        if (volume < 0.0001) {
-                          return volume.toFixed(6) + " BTC";
-                        } else if (volume < 0.01) {
-                          return volume.toFixed(4) + " BTC";
-                        } else if (volume < 0.1) {
-                          return volume.toFixed(3) + " BTC";
-                        } else if (volume < 1) {
-                          return volume.toFixed(2) + " BTC";
-                        } else if (volume < 100) {
-                          return volume.toFixed(2) + " BTC";
-                        } else {
-                          return Math.round(volume).toLocaleString() + " BTC";
-                        }
-                      })()}
-                    </td>
-                    {/* MARKETCAP */}
-                    <td
-                      class={`${cellRightL2Card} !pr-3
+                            if (volume < 0.0001) {
+                              return volume.toFixed(6) + " BTC";
+                            } else if (volume < 0.01) {
+                              return volume.toFixed(4) + " BTC";
+                            } else if (volume < 0.1) {
+                              return volume.toFixed(3) + " BTC";
+                            } else if (volume < 1) {
+                              return volume.toFixed(2) + " BTC";
+                            } else if (volume < 100) {
+                              return volume.toFixed(2) + " BTC";
+                            } else {
+                              return Math.round(volume).toLocaleString() +
+                                " BTC";
+                            }
+                          })()}
+                        </td>
+                        {/* MARKETCAP */}
+                        <td
+                          class={`${cellRightL2Card} !pr-3
                       tablet:hidden desktop:table-cell
                     `}
-                    >
-                      {(() => {
-                        const marketCap = getMarketCap(src20);
-                        if (marketCap === 0) {
-                          return "0 BTC";
-                        }
+                        >
+                          {(() => {
+                            const marketCap = getMarketCap(src20);
+                            if (marketCap === 0) {
+                              return "0 BTC";
+                            }
 
-                        if (marketCap < 1) {
-                          return marketCap.toFixed(2) + " BTC";
-                        } else if (marketCap < 100) {
-                          return marketCap.toFixed(2) + " BTC";
-                        } else if (marketCap < 1000) {
-                          return marketCap.toFixed(1) + " BTC";
-                        } else {
-                          return Math.round(marketCap).toLocaleString() +
-                            " BTC";
-                        }
-                      })()}
-                    </td>
+                            if (marketCap < 1) {
+                              return marketCap.toFixed(2) + " BTC";
+                            } else if (marketCap < 100) {
+                              return marketCap.toFixed(2) + " BTC";
+                            } else if (marketCap < 1000) {
+                              return marketCap.toFixed(1) + " BTC";
+                            } else {
+                              return Math.round(marketCap).toLocaleString() +
+                                " BTC";
+                            }
+                          })()}
+                        </td>
+                      </>
+                    )}
                   </tr>
                 );
               })

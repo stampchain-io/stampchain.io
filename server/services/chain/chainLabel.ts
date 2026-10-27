@@ -73,13 +73,23 @@ export async function getChainLabel(chain: ChainId = getChainId()): Promise<Chai
   return { chain, label: chain.toUpperCase(), ...tip };
 }
 
-/** What islands need to know about the chain; null on Bitcoin. */
+/**
+ * ECX block explorer used when ECX_EXPLORER_URL is unset. A mempool fork:
+ * /tx/:txid, /address/:address and /block/:hash (or height).
+ */
+export const ECX_DEFAULT_EXPLORER_URL = "https://explorer.ecash.ninja";
+
+/**
+ * What islands need to know about the chain; null on Bitcoin.
+ * ECX_EXPLORER_URL overrides the explorer; set it to "" to hide the links.
+ */
 export function getClientChainInfo(
   chain: ChainId = getChainId(),
   env: Pick<typeof Deno.env, "get"> = Deno.env,
 ): ClientChainInfo | null {
   if (chain === "bitcoin") return null;
-  return { CHAIN: chain, EXPLORER_BASE_URL: (env.get("ECX_EXPLORER_URL") ?? "").trim() };
+  const explorer = env.get("ECX_EXPLORER_URL") ?? ECX_DEFAULT_EXPLORER_URL;
+  return { CHAIN: chain, EXPLORER_BASE_URL: explorer.trim() };
 }
 
 /**
