@@ -13,6 +13,13 @@ import { ToastProvider } from "$islands/Toast/ToastProvider.tsx";
 import WebVitalsReporter from "$islands/WebVitalsReporter.tsx";
 import { Footer, NavigatorProvider } from "$layout";
 import { getPageMetadata } from "$lib/utils/pageMetadata.ts";
+import { brandPageMetadata } from "$lib/utils/chain/brand.ts";
+import { ChainBanner } from "$components/layout/ChainBanner.tsx";
+import { getChainId } from "$server/services/chain/chainProfile.ts";
+import {
+  type ChainLabel,
+  getClientChainInfo,
+} from "$server/services/chain/chainLabel.ts";
 
 /* ===== ROOT COMPONENT ===== */
 export default function App({ Component, state, url }: PageProps<unknown>) {
@@ -27,7 +34,18 @@ export default function App({ Component, state, url }: PageProps<unknown>) {
   /* Per-route <title> and description. Without this every route rendered the
     MetaTags default ("Bitcoin Stamps"), so all 41 routes shipped an identical
     title and search results could not tell the FAQ from the explorer. */
-  const pageMeta = getPageMetadata(url.pathname);
+  const chain = getChainId();
+  const pageMeta = brandPageMetadata(
+    getPageMetadata(url.pathname),
+    url.pathname,
+    chain,
+  );
+  /* Off Bitcoin only: routes/_middleware.ts puts the indexed tip in state,
+    and Header gets the chain as a prop so islands in the browser know it.
+    On Bitcoin both are absent and the markup is unchanged. */
+  const chainLabel = (state as { chainLabel?: ChainLabel | null } | undefined)
+    ?.chainLabel;
+  const clientChain = getClientChainInfo(chain);
 
   /* ===== RENDER ===== */
   return (
@@ -48,6 +66,7 @@ export default function App({ Component, state, url }: PageProps<unknown>) {
           skipOgMeta={isStampPage}
           canonicalUrl={`https://stampchain.io${url.pathname}`}
           ogUrl={`https://stampchain.io${url.pathname}`}
+          chain={chain}
         />
 
         {/* ===== ENHANCED RESOURCE PRELOADING ===== */}
@@ -249,7 +268,14 @@ export default function App({ Component, state, url }: PageProps<unknown>) {
             <NavigatorProvider>
               <div class="flex flex-col min-h-screen">
                 {/* ===== LAYOUT STRUCTURE ===== */}
-                <Header />
+                {chainLabel && (
+                  <ChainBanner
+                    label={chainLabel.label}
+                    height={chainLabel.height}
+                    blockHash={chainLabel.blockHash}
+                  />
+                )}
+                {clientChain ? <Header chain={clientChain} /> : <Header />}
                 <main
                   class="flex flex-col flex-grow w-full max-w-desktop mx-auto px-shell-mobile mobileLg:px-shell-tablet tablet:px-shell-desktop"
                   f-client-nav

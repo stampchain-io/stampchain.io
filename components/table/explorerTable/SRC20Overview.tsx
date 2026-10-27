@@ -1,4 +1,6 @@
 /* ===== SRC20 EXPLORER TABLE COMPONENT ===== */
+import { ExplorerLink } from "$components/layout/ExplorerLink.tsx";
+import { txExplorerUrl } from "$lib/utils/chain/clientChain.ts";
 import { colGroup } from "$components/layout/types.ts";
 import { Icon, PlaceholderImage } from "$icon";
 import {
@@ -174,14 +176,14 @@ export function SRC20OverviewRow({ src20 }: SRC20OverviewRowProps) {
       <td
         class={`${cellCenterL2Card} text-color-neutral-400`}
       >
-        <a
-          href={`https://mempool.space/tx/${src20.tx_hash}`}
+        <ExplorerLink
+          href={txExplorerUrl(src20.tx_hash)}
           target="_blank"
           rel="noopener noreferrer"
           class="link-neutral-400"
         >
           {abbreviateAddress(src20.tx_hash, 6)}
-        </a>
+        </ExplorerLink>
       </td>
 
       {/* BLOCK */}

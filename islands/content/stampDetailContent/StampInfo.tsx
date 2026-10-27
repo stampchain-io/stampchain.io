@@ -1,4 +1,10 @@
 /* ===== STAMP INFO COMPONENT ===== */
+import { brandText } from "$lib/utils/chain/brand.ts";
+import { ExplorerLink } from "$components/layout/ExplorerLink.tsx";
+import {
+  getClientChainId,
+  txExplorerUrl,
+} from "$lib/utils/chain/clientChain.ts";
 import { Button } from "$button";
 import { Icon, UserProfileIcon } from "$icon";
 import { openStampBuyTool } from "$islands/modal/tool/StampBuyTool.tsx";
@@ -701,20 +707,23 @@ export function StampInfo(
 
   const txHashValue = stamp.tx_hash !== null
     ? (
-      <a
-        href={`https://www.blockchain.com/explorer/transactions/btc/${stamp.tx_hash}`}
+      <ExplorerLink
+        href={txExplorerUrl(stamp.tx_hash, "blockchain.com")}
         target="_blank"
         rel="noopener noreferrer"
         className={`link-neutral-400 ${transitionColors}`}
       >
         {abbreviateAddress(stamp.tx_hash, 8)}
-      </a>
+      </ExplorerLink>
     )
     : "N/A";
 
   // Effect to handle document title updates
   useEffect(() => {
-    document.title = `Bitcoin Stamp #${stamp.stamp} - stampchain.io`;
+    document.title = brandText(
+      `Bitcoin Stamp #${stamp.stamp} - stampchain.io`,
+      getClientChainId(),
+    );
     return () => {
       document.title = "stampchain.io";
     };

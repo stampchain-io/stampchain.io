@@ -1,4 +1,6 @@
 /* ===== SRC20 DETAIL HEADER COMPONENT ===== */
+import { ExplorerLink } from "$components/layout/ExplorerLink.tsx";
+import { txExplorerUrl } from "$lib/utils/chain/clientChain.ts";
 import { Button } from "$button";
 import { Icon, PlaceholderImage } from "$icon";
 import {
@@ -417,14 +419,14 @@ export function SRC20DetailInfo({ deployment }: SRC20DetailInfoProps) {
 
   const txHashLink = deployment.tx_hash
     ? (
-      <a
-        href={`https://www.blockchain.com/explorer/transactions/btc/${deployment.tx_hash}`}
+      <ExplorerLink
+        href={txExplorerUrl(deployment.tx_hash, "blockchain.com")}
         target="_blank"
         rel="noopener noreferrer"
         class="link-neutral-200"
       >
         {abbreviateAddress(deployment.tx_hash, 7)}
-      </a>
+      </ExplorerLink>
     )
     : "N/A";
 

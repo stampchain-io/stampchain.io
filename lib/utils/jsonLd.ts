@@ -6,6 +6,7 @@
  */
 
 import type { StampRow } from "$types/stamp.d.ts";
+import { type BrandChain, brandText } from "$lib/utils/chain/brand.ts";
 
 /** Satoshis per BTC for price conversion */
 const SATS_PER_BTC = 100_000_000;
@@ -31,11 +32,12 @@ export function generateStampJsonLd(
     collection_description: string;
   } | null,
   lowestPriceDispenser?: { satoshirate: number } | null | undefined,
+  chain: BrandChain = "bitcoin",
 ): object {
   const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": ["ImageObject", "CreativeWork"],
-    name: `Bitcoin Stamp #${stamp.stamp}`,
+    name: brandText(`Bitcoin Stamp #${stamp.stamp}`, chain),
     contentUrl: metaInfo.url,
     thumbnailUrl: `${metaInfo.baseUrl}/${stamp.stamp}.png`,
     creator: {

@@ -1,6 +1,13 @@
 import { FreshContext } from "$fresh/server.ts";
 import { WebResponseUtil } from "$utils/api/responses/webResponseUtil.ts";
 import { serverConfig } from "$server/config/config.ts";
+import { getChainId } from "$server/services/chain/chainProfile.ts";
+import {
+  getChainLabel,
+  getClientChainInfo,
+  withChainHeaders,
+} from "$server/services/chain/chainLabel.ts";
+import { setClientChain } from "$lib/utils/chain/clientChain.ts";
 
 // Route configuration constants
 const ROUTE_CONFIG = {
@@ -75,10 +82,18 @@ export async function handler(
   ctx.state.route = url.pathname;
   ctx.state.baseUrl = getBaseUrl(req);
 
+  const chain = getChainId();
+
   // Early return for API routes
   if (
     ROUTE_CONFIG.API_ROUTES.some((prefix) => url.pathname.startsWith(prefix))
   ) {
+    // Off Bitcoin, every /api response names the chain and indexed tip in
+    // headers. Done here rather than in routes/api/_middleware.ts so that
+    // unmatched /api paths (served by routes/[...path].ts) are labelled too.
+    if (chain !== "bitcoin" && url.pathname.startsWith("/api/")) {
+      return await withChainHeaders(await ctx.next(), chain);
+    }
     return ctx.next();
   }
 
@@ -133,6 +148,14 @@ export async function handler(
     ROUTE_CONFIG.DIRECT_ROUTES.some((prefix) => url.pathname.startsWith(prefix))
   ) {
     ctx.state.skipAppLayout = true;
+  }
+
+  // Off Bitcoin, hand _app.tsx the chain label for the page header, and make
+  // the chain visible to islands rendered on the server (the browser gets it
+  // through the Header island's props).
+  if (chain !== "bitcoin" && !ctx.state.skipAppLayout) {
+    setClientChain(getClientChainInfo(chain));
+    ctx.state.chainLabel = await getChainLabel(chain);
   }
 
   // Process request and add final timing
