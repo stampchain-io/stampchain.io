@@ -2,6 +2,7 @@
 import { ExplorerLink } from "$components/layout/ExplorerLink.tsx";
 import {
   addressExplorerUrl,
+  showMarketData,
   txExplorerUrl,
 } from "$lib/utils/chain/clientChain.ts";
 import { Icon, LoadingIcon } from "$icon";
@@ -125,9 +126,15 @@ export default function SalesActivityFeed({
                   </span>
                   <span class="text-gray-400 text-xs">sold for</span>
                   <span class="text-green-400 font-mono font-bold text-sm">
-                    {formatBTCAmount(saleData.btc_amount)} BTC
+                    {formatBTCAmount(saleData.btc_amount)}
+                    {
+                      /* formatBTCAmount already appends the unit; Bitcoin
+                        keeps its historical doubled "BTC" suffix byte for
+                        byte, other chains get it once. */
+                      showMarketData() && " BTC"
+                    }
                   </span>
-                  {usdValue && (
+                  {usdValue && showMarketData() && (
                     <span class="text-gray-400 text-xs">
                       (${usdValue.toFixed(2)})
                     </span>

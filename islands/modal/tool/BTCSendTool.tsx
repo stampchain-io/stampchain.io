@@ -7,6 +7,7 @@ import { stackConnectWalletModal } from "$islands/layout/ModalStack.tsx";
 import { closeModal } from "$islands/modal/states.ts";
 import { ModalTool, openModalTool } from "$islands/modal/tool/ModalTool.tsx";
 import { container2, containerPill } from "$layout";
+import { coinUnit, showMarketData } from "$lib/utils/chain/clientChain.ts";
 import { useTransactionConstructionService } from "$lib/hooks/useTransactionConstructionService.ts";
 import { logger } from "$lib/utils/logger.ts";
 import { mapProgressiveFeeDetails } from "$lib/utils/performance/fees/fee-estimation-utils.ts";
@@ -483,20 +484,22 @@ export function BTCSendTool({
               />
             </span>
             <span class="font-extralight text-color-neutral-200">
-              BTC
+              {coinUnit()}
             </span>
           </div>
         </div>
 
-        <div class="-mt-0.5 font-light text-sm text-color-neutral-500">
-          {formState.amount && formState.BTCPrice
-            ? (parseFloat(formState.amount) * formState.BTCPrice)
-              .toLocaleString("en-US", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })
-            : "0.00"} USD
-        </div>
+        {showMarketData() && (
+          <div class="-mt-0.5 font-light text-sm text-color-neutral-500">
+            {formState.amount && formState.BTCPrice
+              ? (parseFloat(formState.amount) * formState.BTCPrice)
+                .toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })
+              : "0.00"} USD
+          </div>
+        )}
 
         <div
           class={`relative mt-2.5 mb-0.5 ${containerPill} font-medium text-xs text-color-neutral-400

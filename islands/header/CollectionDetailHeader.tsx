@@ -8,6 +8,7 @@ import {
   StatItem,
   transitionColors,
 } from "$layout";
+import { showMarketData } from "$lib/utils/chain/clientChain.ts";
 import {
   abbreviateAddress,
   formatBTC,
@@ -134,7 +135,11 @@ export const CollectionDetailHeader = (
     </div>
   );
 
-  const floorPricePill = (
+  // Floor and average price, market cap and volume are market data, which
+  // ECX does not have.
+  const market = showMarketData();
+
+  const floorPricePill = market && (
     <div class="relative group/floor">
       <div class={`${containerPill} ${cardPrice}`}>
         {formatBTC(floorPriceBTC)} BTC
@@ -147,7 +152,7 @@ export const CollectionDetailHeader = (
     </div>
   );
 
-  const avgPricePill = (
+  const avgPricePill = market && (
     <div class="relative group/avg">
       <div class={`${containerPill} ${cardFileSize}`}>
         {formatBTC(avgPriceBTC)} BTC
@@ -195,7 +200,7 @@ export const CollectionDetailHeader = (
     </div>
   );
 
-  const marketCapStat = (
+  const marketCapStat = market && (
     <StatItem
       label="MARKET CAP"
       value={marketCapBTC !== null
@@ -216,7 +221,7 @@ export const CollectionDetailHeader = (
     />
   );
 
-  const volumeStat = (
+  const volumeStat = market && (
     <StatItem
       label="VOLUME"
       value={`${formatBTC(totalVolumeBTC)} BTC`}

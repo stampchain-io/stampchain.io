@@ -8,6 +8,7 @@ import { RangeSlider } from "$islands/button/RangeSlider.tsx";
 import { BlockchainStats } from "$islands/section/BlockchainStats.tsx";
 import { transitionAll, transitionColors, transitionTransform } from "$layout";
 import type { ExtendedBaseFeeCalculatorProps } from "$lib/types/base.d.ts";
+import { coinUnit, showMarketData } from "$lib/utils/chain/clientChain.ts";
 import { estimateTransactionSizeForType } from "$lib/utils/bitcoin/transactions/transactionSizeEstimator.ts";
 import { logger } from "$lib/utils/logger.ts";
 import {
@@ -80,6 +81,11 @@ export function FeeCalculatorBase({
   const [allowHover, setAllowHover] = useState(true);
   const [isTxSizeTooltipVisible, setIsTxSizeTooltipVisible] = useState(false);
   const txSizeTooltipTimeoutRef = useRef<number | null>(null);
+  // coinType stays "BTC" (the native coin) internally; this is what the
+  // page shows for it. Without a price feed (ECX) there is no USDT toggle.
+  const unit = coinUnit();
+  const coinLabel = coinType === "BTC" ? unit : coinType;
+  const coinToggle = showCoinToggle && showMarketData();
 
   useEffect(() => {
     logger.debug("ui", {
@@ -368,13 +374,13 @@ export function FeeCalculatorBase({
                       includeSymbol: false,
                     })
                     : formatSatoshisToUSD(feeDetails.minerFee, BTCPrice)}{" "}
-                  <span class="font-light">{coinType}</span>
+                  <span class="font-light">{coinLabel}</span>
                 </>
               )
               : (
                 <>
                   <span class="animate-pulse">0.00000000</span>{" "}
-                  <span class="font-light">{coinType}</span>
+                  <span class="font-light">{coinLabel}</span>
                 </>
               )}
           </h6>
@@ -402,7 +408,7 @@ export function FeeCalculatorBase({
                   includeSymbol: false,
                 })
                 : formatSatoshisToUSD(feeDetails.serviceFee, BTCPrice)}{" "}
-              <span class="font-light">{coinType}</span>
+              <span class="font-light">{coinLabel}</span>
             </h6>
           )}
 
@@ -422,7 +428,7 @@ export function FeeCalculatorBase({
                       : formatSatoshisToUSD(
                         feeDetails.dustValue,
                         BTCPrice,
-                      )} <span class="font-light">{coinType}</span>
+                      )} <span class="font-light">{coinLabel}</span>
                   </>
                 )
                 : <span class="animate-pulse">0.00000000</span>}
@@ -465,13 +471,13 @@ export function FeeCalculatorBase({
                       : formatSatoshisToUSD(
                         feeDetails.itemPrice ?? 0,
                         BTCPrice,
-                      )} <span class="font-light">{coinType}</span>
+                      )} <span class="font-light">{coinLabel}</span>
                   </>
                 )
                 : (
                   <>
                     <span class="animate-pulse">0.00000000</span>{" "}
-                    <span class="font-light">{coinType}</span>
+                    <span class="font-light">{coinLabel}</span>
                   </>
                 )}
             </h6>
@@ -505,13 +511,13 @@ export function FeeCalculatorBase({
                       : formatSatoshisToUSD(
                         feeDetails.itemPrice ?? 0,
                         BTCPrice,
-                      )} <span class="font-light">{coinType}</span>
+                      )} <span class="font-light">{coinLabel}</span>
                   </>
                 )
                 : (
                   <>
                     <span class="animate-pulse">0.00000000</span>{" "}
-                    <span class="font-light">{coinType}</span>
+                    <span class="font-light">{coinLabel}</span>
                   </>
                 )}
             </h6>
@@ -650,7 +656,7 @@ export function FeeCalculatorBase({
                   </>
                 )
                 : <span class="animate-pulse">0.00000000</span>}{" "}
-              <span class="font-light">{coinType}</span>
+              <span class="font-light">{coinLabel}</span>
             </span>
           </h6>
         </div>
@@ -726,7 +732,7 @@ export function FeeCalculatorBase({
                           })}
                         </span>{" "}
                         <span class="font-light">
-                          BTC
+                          {unit}
                         </span>
                       </>
                     )
@@ -738,7 +744,7 @@ export function FeeCalculatorBase({
                             : "N/A"}
                         </span>{" "}
                         <span class="font-light">
-                          {coinType}
+                          {coinLabel}
                         </span>
                       </>
                     );
@@ -749,13 +755,13 @@ export function FeeCalculatorBase({
               <>
                 <span class="font-bold animate-pulse">0.00000000</span>{" "}
                 <span class="font-light text-color-neutral-500">
-                  {coinType}
+                  {coinLabel}
                 </span>
               </>
             )}
         </h6>
 
-        {showCoinToggle && (
+        {coinToggle && (
           <div className="flex gap-1 items-center justify-end">
             <div className="relative">
               <ToggleSwitchButton

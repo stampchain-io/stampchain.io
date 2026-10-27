@@ -1,5 +1,6 @@
 import { Icon } from "$icon";
 import { useFees } from "$lib/hooks/useFees.ts";
+import { showMarketData } from "$lib/utils/chain/clientChain.ts";
 import { formatUSDValue } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { tooltipButton } from "$notification";
 import { eyebrowNeutral, labelXs } from "$text";
@@ -43,7 +44,7 @@ interface BlockchainStatsProps {
 }
 
 /* ===== BLOCKCHAIN STATS ===== */
-// Latest indexed block, BTC price and mempool priority fees.
+// Latest indexed block, BTC price (Bitcoin only) and mempool priority fees.
 // Full-width, no container; ends with an <hr> divider.
 export function BlockchainStats(
   { className = "", children }: BlockchainStatsProps,
@@ -117,7 +118,7 @@ export function BlockchainStats(
       <div class="flex flex-col items-start w-full gap-3">
         {/* Latest block + BTC price */}
         <div class="flex flex-row items-center justify-between w-full whitespace-nowrap">
-          {statValue(
+          {showMarketData() && statValue(
             "bitcoin",
             isLoading
               ? (
