@@ -3,6 +3,7 @@ import { FileToAddressUtils } from "$lib/utils/bitcoin/encoding/fileToAddressUti
 import type { AncestorInfo } from "$types/base.d.ts";
 import type { PSBTInput } from "$types/src20.d.ts";
 import * as bitcoin from "bitcoinjs-lib";
+import { applyReplayProtection } from "$server/services/chain/chainProfile.ts";
 const { networks, address, Psbt } = bitcoin;
 // Removed unused imports: calculateDust, calculateMiningFee, estimateTransactionSize, msgpack
 import { hex2bin } from "$lib/utils/data/binary/baseUtils.ts";
@@ -162,6 +163,7 @@ export class SRC20PSBTService {
       if (change > TX_CONSTANTS.SRC20_DUST) {
         psbt.addOutput({ script: address.toOutputScript(effectiveChangeAddress, network), value: BigInt(change) });
       }
+      applyReplayProtection(psbt); // ECX replay marker; no-op on Bitcoin
       const finalTotalInputValue = inputs.reduce((sum: any, input: any) => sum + Number(input.value ?? 0), 0);
       const finalTotalOutputAmount = outputs.reduce((sum: any, out: any) => sum + (out.value ?? 0), 0) + (change > TX_CONSTANTS.SRC20_DUST ? change : 0);
       const actualFee = finalTotalInputValue - finalTotalOutputAmount;
