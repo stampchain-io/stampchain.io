@@ -8,17 +8,6 @@ import {
 import { Fragment } from "preact";
 
 export default function ModalProvider() {
-  // Debug logging
-  // Development-only logging
-  if (globalThis.location?.hostname === "localhost") {
-    console.log(
-      "ModalProvider rendering with globalModal.value:",
-      globalModal.value,
-      "stackedModal.value:",
-      stackedModal.value,
-    );
-  }
-
   return (
     <Fragment>
       {globalModal.value.isOpen && globalModal.value.content && (

@@ -1,5 +1,6 @@
 /// <reference lib="dom" />
 /// <reference lib="dom.iterable" />
+import { focusableWithin, nextFocusTarget } from "./focusTrap.ts";
 
 /* ===== ACCESSIBILITY UTILITIES ===== */
 
@@ -227,34 +228,28 @@ export class AccessibilityUtils {
      * Create focus trap for modal-like components
      */
     createTrap: (containerSelector: string): (() => void) | null => {
+      // Same rule the modal overlay uses (focusTrap.ts). Focusable elements
+      // are re-read on every Tab, so content rendered after the trap is set
+      // up is still covered.
       try {
-        const container = globalThis.document?.querySelector(containerSelector);
-        if (!container) return null;
-
-        const focusableElements = container.querySelectorAll(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        const container = globalThis.document?.querySelector<HTMLElement>(
+          containerSelector,
         );
-
-        if (focusableElements.length === 0) return null;
-
-        const firstElement = focusableElements[0] as HTMLElement;
-        const lastElement =
-          focusableElements[focusableElements.length - 1] as HTMLElement;
+        if (!container) return null;
+        // Keep the existing contract: nothing to trap means no trap.
+        if (focusableWithin(container).length === 0) return null;
 
         const handleTabKey = (e: KeyboardEvent) => {
           if (e.key !== "Tab") return;
-
-          if (e.shiftKey) {
-            if (globalThis.document?.activeElement === firstElement) {
-              lastElement.focus();
-              e.preventDefault();
-            }
-          } else {
-            if (globalThis.document?.activeElement === lastElement) {
-              firstElement.focus();
-              e.preventDefault();
-            }
-          }
+          const target = nextFocusTarget(
+            focusableWithin(container),
+            globalThis.document?.activeElement as HTMLElement | null,
+            e.shiftKey,
+            (el) => !!el && el !== container && container.contains(el),
+          );
+          if (target === null) return;
+          e.preventDefault();
+          (target === "dialog" ? container : target).focus();
         };
 
         globalThis.document?.addEventListener("keydown", handleTabKey);

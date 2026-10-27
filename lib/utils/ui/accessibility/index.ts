@@ -6,3 +6,4 @@
  */
 
 export * from "./accessibilityUtils.ts";
+export * from "./focusTrap.ts";
