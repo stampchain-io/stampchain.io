@@ -30,6 +30,18 @@ const { ApiResponseUtil } = await import(
 );
 const label = await import("$server/services/chain/chainLabel.ts");
 const { Header } = await import("$islands/header/Header.tsx");
+const { ChainBanner } = await import("$components/layout/ChainBanner.tsx");
+const fmt = await import("$lib/utils/ui/formatting/formatUtils.ts");
+const { formatAmounts, renderAmountComponents } = await import(
+  "../fixtures/chain/amountCases.tsx"
+);
+const amountBaseline = JSON.parse(
+  await Deno.readTextFile(
+    new URL("../fixtures/chain/bitcoinAmountsBaseline.json", import.meta.url),
+  ),
+);
+const ECX_EXPLORER = "https://explorer.ecash.ninja";
+const ECX_CHAIN = { CHAIN: "ecx", EXPLORER_BASE_URL: ECX_EXPLORER } as const;
 
 /* ===== ENV-DEPENDENT CASES, ONE CLEAN CHILD PROCESS PER CHAIN ===== */
 const CHILD = new URL("../fixtures/chain/chainEnvCases.tsx", import.meta.url);
@@ -210,7 +222,13 @@ Deno.test({
       label.getClientChainInfo("ecx", { get: () => " https://ecx.example " }),
       { CHAIN: "ecx", EXPLORER_BASE_URL: "https://ecx.example" },
     );
+    // unset: the default ECX explorer; set to "": no explorer, links hidden
     assertEquals(label.getClientChainInfo("ecx", { get: () => undefined }), {
+      CHAIN: "ecx",
+      EXPLORER_BASE_URL: ECX_EXPLORER,
+    });
+    assertEquals(label.ECX_DEFAULT_EXPLORER_URL, ECX_EXPLORER);
+    assertEquals(label.getClientChainInfo("ecx", { get: () => "" }), {
       CHAIN: "ecx",
       EXPLORER_BASE_URL: "",
     });
@@ -327,5 +345,269 @@ Deno.test({
     } finally {
       clientChain.setClientChain(null);
     }
+  },
+});
+
+/* ===== AMOUNTS AND MARKET DATA ===== */
+// Components whose output shows an on-chain amount (and so a unit).
+const AMOUNT_CASES = [
+  "StatPrice",
+  "StatPriceActivity",
+  "StatPriceNoUsd",
+  "FeeCalculatorStampBuy",
+  "FeeCalculatorDonate",
+  "StampCard.cardVerticalListing",
+  "StampCard.cardHorizontalListing",
+  "StampCard.cardHorizontalListingCompact",
+  "StampCard.cardVerticalDetail",
+  "StampCard.recentSale",
+  "WalletHeader",
+  "RangeSliderDualPrice",
+  "StampSalesDetail",
+  "StampListings",
+  "StampListingsOpen",
+  "StampInfo",
+  "WalletDashboardDetails",
+  "WalletDashboardContent",
+];
+const BTC_UNIT = /BTC|₿/;
+// USD values, the coin toggle and market statistics, as rendered on Bitcoin.
+const MARKET = [
+  /\bUSDT?\b/,
+  /\$\d/,
+  /currency-toggle/,
+  /FLOOR PRICE/,
+  /MARKET ?CAP/,
+  /VOLUME/,
+  /CHANGE/,
+  /AVERAGE PRICE/,
+  />VALUE</,
+  /\d SATS/, // SRC-20 unit prices
+  /[+-]?\d+\.\d\d%/, // 24h change
+  />0\.05 /, // the fixture collection's floor price (tooltip-only label)
+];
+// Cases that render market data on Bitcoin, so the ECX check is not vacuous.
+const MARKET_CASES = [
+  "StatPrice",
+  "StatPriceActivity",
+  "FeeCalculatorStampBuy",
+  "FeeCalculatorDonate",
+  "BlockchainStats",
+  "StampCard.cardVerticalListing",
+  "StampCard.recentSale",
+  "SRC20Overview",
+  "SRC20OverviewCompact",
+  "SRC20DetailHeader",
+  "SRC20CardHorizontal",
+  "SRC20Card.cardSquareBalance",
+  "SRC20Card.cardVerticalBalance",
+  "WalletSRC20Overview",
+  "WalletSRC20OverviewCompact",
+  "WalletStampOverview",
+  "WalletStampOverviewCompact",
+  "CollectionCard",
+  "CollectionCardHorizontal",
+  "CollectionDetailHeader",
+  "WalletHeader",
+  "StampInfo",
+  "WalletDashboardDetails",
+];
+
+Deno.test({
+  ...opts,
+  name: "bitcoin: amount helpers and market-data components match main's bytes",
+  async fn() {
+    clientChain.setClientChain(null);
+    assertEquals(clientChain.coinUnit(), "BTC");
+    assertEquals(clientChain.coinSymbol(), "₿");
+    assertEquals(clientChain.showMarketData(), true);
+    const cols = ["TOKEN", "PRICE", "VALUE"];
+    assertStrictEquals(clientChain.withoutMarketColumns(cols, cols), cols);
+    assertEquals(
+      clientChain.blockExplorerUrl(TIP.block_hash),
+      `https://mempool.space/block/${TIP.block_hash}`,
+    );
+    assertEquals(await formatAmounts(), amountBaseline.helpers);
+    const rendered = await renderAmountComponents();
+    assertEquals(Object.keys(rendered), Object.keys(amountBaseline.components));
+    for (const [name, html] of Object.entries(rendered)) {
+      assertEquals(html, amountBaseline.components[name], name);
+    }
+  },
+});
+
+Deno.test({
+  ...opts,
+  name: "ecx: amounts say ECX, through the shared helpers",
+  async fn() {
+    clientChain.setClientChain(ECX_CHAIN);
+    try {
+      assertEquals(clientChain.coinUnit(), "ECX");
+      assertEquals(clientChain.coinSymbol(), "ECX");
+      assertEquals(clientChain.coinUnit("bitcoin"), "BTC");
+      assertEquals(fmt.formatBTCAmount(0.5), "0.5 ECX");
+      assertEquals(fmt.formatSatoshisToBTC(150_000_000), "1.5 ECX");
+      assertEquals(fmt.formatBTC(0.5, { includeSymbol: true }), "0.5 ECX");
+      assertEquals(fmt.formatBTCAmount(1, { unit: "BTC" }), "1 BTC");
+      // Only the unit changes: every helper output is Bitcoin's with ECX.
+      const helpers = await formatAmounts();
+      for (const [k, btc] of Object.entries(amountBaseline.helpers)) {
+        assertEquals(helpers[k], (btc as string).replace(/ BTC$/, " ECX"), k);
+      }
+
+      const html = await renderAmountComponents();
+      for (const name of AMOUNT_CASES) {
+        assert(html[name].includes("ECX"), `${name} shows no ECX amount`);
+        assert(
+          BTC_UNIT.test(amountBaseline.components[name]),
+          `${name}: Bitcoin baseline shows no BTC, test is vacuous`,
+        );
+      }
+      for (const [name, out] of Object.entries(html)) {
+        assert(!BTC_UNIT.test(out), `${name} still says BTC or ₿`);
+      }
+      assert(html.StatPrice.includes('<span class="font-light">ECX</span>'));
+      assert(html.FeeCalculatorStampBuy.includes(">ECX</span>"));
+      assert(html.RangeSliderDualPrice.includes(" ECX"));
+      assert(html["StampCard.cardVerticalDetail"].includes('aria-label="ECX"'));
+    } finally {
+      clientChain.setClientChain(null);
+    }
+  },
+});
+
+Deno.test({
+  ...opts,
+  name: "ecx: market data and USD values are absent, the rest stays",
+  async fn() {
+    clientChain.setClientChain(ECX_CHAIN);
+    try {
+      assertEquals(clientChain.showMarketData(), false);
+      const cols = ["TOKEN", "PRICE", "CHANGE", "VOLUME", "MARKETCAP", "VALUE"];
+      assertEquals(clientChain.withoutMarketColumns(cols, cols), ["TOKEN"]);
+      const html = await renderAmountComponents();
+      for (const name of MARKET_CASES) {
+        assert(
+          MARKET.some((re) => re.test(amountBaseline.components[name])),
+          `${name}: Bitcoin baseline shows no market data, test is vacuous`,
+        );
+      }
+      for (const [name, out] of Object.entries(html)) {
+        for (const re of MARKET) {
+          // The dashboard's dispenser card totals price x escrow: an on-chain
+          // amount labelled VALUE, not a market valuation.
+          if (name === "WalletDashboardContent" && String(re) === "/>VALUE</") {
+            continue;
+          }
+          assert(!re.test(out), `${name} still renders ${re}`);
+        }
+      }
+      // The non-market columns and data stay.
+      const ths = (s: string) =>
+        [...s.matchAll(/<th[^>]*>(?:<span[^>]*>)?([A-Z #]+)/g)].map((m) =>
+          m[1].trim()
+        );
+      assertEquals(ths(html.SRC20Overview), [
+        "TOKEN",
+        "HOLDERS",
+        "CREATOR",
+        "DEPLOY",
+        "TRADE",
+      ]);
+      assertEquals(ths(html.WalletSRC20Overview), [
+        "TOKEN",
+        "CREATOR",
+        "SUPPLY",
+        "BALANCE",
+      ]);
+      assertEquals(ths(html.WalletStampOverview), [
+        "IMAGE",
+        "STAMP #",
+        "CPID",
+        "CREATOR",
+        "BALANCE",
+      ]);
+      assertEquals(
+        (html.SRC20Overview.match(/<col /g) ?? []).length,
+        5,
+        "colgroup follows the headers",
+      );
+      assert(html.SRC20DetailHeader.includes("SUPPLY"));
+      assert(html.CollectionDetailHeader.includes("HOLDERS"));
+      assert(html.WalletHeader.includes("0.01234"));
+      assert(html.BlockchainStats.includes("TX FEES"));
+    } finally {
+      clientChain.setClientChain(null);
+    }
+  },
+});
+
+Deno.test({
+  ...opts,
+  name: "ecx: explorer links default to explorer.ecash.ninja with its paths",
+  async fn() {
+    const info = label.getClientChainInfo("ecx", { get: () => undefined });
+    assertEquals(info, ECX_CHAIN);
+    clientChain.setClientChain(info);
+    try {
+      assertEquals(clientChain.txExplorerUrl(TX), `${ECX_EXPLORER}/tx/${TX}`);
+      assertEquals(
+        clientChain.txExplorerUrl(TX, "blockchain.com"),
+        `${ECX_EXPLORER}/tx/${TX}`,
+      );
+      assertEquals(
+        clientChain.addressExplorerUrl(ADDR),
+        `${ECX_EXPLORER}/address/${ADDR}`,
+      );
+      assertEquals(
+        clientChain.blockExplorerUrl(TIP.block_hash),
+        `${ECX_EXPLORER}/block/${TIP.block_hash}`,
+      );
+      assertEquals(
+        clientChain.blockExplorerUrl(973_800),
+        `${ECX_EXPLORER}/block/973800`,
+      );
+      assertEquals(clientChain.explorerHomeUrl(), `${ECX_EXPLORER}/`);
+      const links = await renderLinks();
+      assert(links.StampTransfers.includes(`href="${ECX_EXPLORER}/tx/${TX}"`));
+      assert(
+        links.StampOverviewRow.includes(`href="${ECX_EXPLORER}/tx/${TX}"`),
+      );
+      assert(
+        links.SalesActivityFeed.includes(
+          `href="${ECX_EXPLORER}/address/${ADDR}"`,
+        ),
+      );
+      for (const [name, html] of Object.entries(links)) {
+        assert(
+          !/mempool\.space|blockchain\.com/.test(html),
+          `${name} still links to a Bitcoin explorer`,
+        );
+      }
+    } finally {
+      clientChain.setClientChain(null);
+    }
+
+    // The banner renders before the Header island, so it takes the chain.
+    const banner = (chain: typeof ECX_CHAIN | null) =>
+      renderToString(
+        h(ChainBanner, {
+          label: "ECX",
+          height: 973_800,
+          blockHash: TIP.block_hash,
+          chain,
+        }),
+      );
+    assert(
+      banner(ECX_CHAIN).includes(
+        `href="${ECX_EXPLORER}/block/${TIP.block_hash}"`,
+      ),
+    );
+    assert(
+      !banner({ CHAIN: "ecx", EXPLORER_BASE_URL: "" } as any).includes(
+        "href=",
+      ),
+    );
+    assert(banner(null).includes(`>${TIP.block_hash}</span>`));
   },
 });
