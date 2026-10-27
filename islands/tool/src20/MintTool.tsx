@@ -1,4 +1,7 @@
 /* ===== SRC20 TOKEN MINTING COMPONENT ===== */
+/* Single implementation for the /tool/src20/mint page and the SRC-20 mint
+   modal (islands/modal/tool/SRC20MintTool.tsx renders it with
+   variant="modal" inside ModalTool). */
 import { useSRC20Form } from "$client/hooks/useSRC20Form.ts";
 import { walletContext } from "$client/wallet/wallet.ts";
 import { ProgressiveEstimationIndicator } from "$components/indicators/ProgressiveEstimationIndicator.tsx";
@@ -16,17 +19,33 @@ import {
   containerColForm,
   containerGap,
   containerRowForm,
+  handleModalClose,
   imagePreviewTool,
   loaderSpinGrey,
+  loaderSpinSmGrey,
 } from "$layout";
 import { useTransactionConstructionService } from "$lib/hooks/useTransactionConstructionService.ts";
 import { extractSRC20ErrorMessage } from "$lib/utils/bitcoin/src20/errorHandling.tsx";
+import {
+  buildMintDataUrl,
+  formatMintProgress,
+  mintProgressWidth,
+} from "$lib/utils/bitcoin/src20/mintTool.ts";
+import { DATA_PLACEHOLDER_DEV } from "$lib/utils/dataPlaceholderProd.ts";
 import { logger } from "$lib/utils/logger.ts";
 import { mapProgressiveFeeDetails } from "$lib/utils/performance/fees/fee-estimation-utils.ts";
 import { getSRC20ImageSrc } from "$lib/utils/ui/media/imageUtils.ts";
 import { StatusMessages } from "$notification";
 import { FeeCalculatorBase } from "$section";
-import { label, labelXs, titleNeutral, value, valueXs } from "$text";
+import {
+  label,
+  labelSm,
+  labelXs,
+  titleNeutral,
+  value,
+  valueSm,
+  valueXs,
+} from "$text";
 import type { MintProgressProps } from "$types/ui.d.ts";
 import axiod from "axiod";
 import { useEffect, useRef, useState } from "preact/hooks";
@@ -35,9 +54,64 @@ import { useEffect, useRef, useState } from "preact/hooks";
 
 /* ===== MINT PROGRESS SUBCOMPONENT ===== */
 
+type MintToolVariant = "page" | "modal";
+
 const MintProgress = (
-  { progress, progressWidth, maxSupply, limit, minters }: MintProgressProps,
+  { progress, progressWidth, maxSupply, limit, minters, layout }:
+    & MintProgressProps
+    & { layout: MintToolVariant },
 ) => {
+  const progressText = formatMintProgress(progress);
+  const stats = (
+    <>
+      <h5 class={labelXs}>
+        SUPPLY <span class={`${valueXs} pl-1.5`}>{maxSupply}</span>
+      </h5>
+      <h5 class={labelXs}>
+        LIMIT <span class={`${valueXs} pl-1.5`}>{limit}</span>
+      </h5>
+      <h5 class={labelXs}>
+        MINTERS <span class={`${valueXs} pl-1.5`}>{minters}</span>
+      </h5>
+    </>
+  );
+
+  if (layout === "modal") {
+    return (
+      <div class={`flex flex-col w-full gap-1 ${container2} p-3 pt-2`}>
+        <div class="flex flex-row justify-between items-end gap-3">
+          {/* Progress information */}
+          <h5 class={labelSm}>
+            PROGRESS
+            <span class={`${valueSm} pl-3`}>
+              {progressText}
+              <span class="font-light">
+                %
+              </span>
+            </span>
+          </h5>
+
+          {/* Supply and limit information */}
+          <div
+            class={`flex flex-col w-fit justify-end items-end mb-[1px]`}
+          >
+            {stats}
+          </div>
+        </div>
+
+        {/* Progress bar */}
+        <div
+          class={`relative w-full h-2 tablet:h-1.5 rounded-full bg-color-neutral-800`}
+        >
+          <div
+            class="absolute top-[0px] left-[0px] right-[0px] h-2 tablet:h-1.5 bg-gradient-to-r from-color-primary-500 via-color-primary-400 to-color-primary-300 rounded-full"
+            style={{ width: progressWidth }}
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div class="flex flex-col min-[480px]:flex-row
     min-[480px]:justify-between min-[480px]:items-end
@@ -47,7 +121,7 @@ const MintProgress = (
         <h5 class={label}>
           PROGRESS
           <span class={`${value} !text-color-primary-400 pl-3`}>
-            {progress?.toString().match(/^-?\d+(?:\.\d{0,2})?/)?.[0] ?? "0"}
+            {progressText}
             <span class="font-light">
               %
             </span>
@@ -69,15 +143,7 @@ const MintProgress = (
         class={`flex flex-col w-full items-start mt-2 -mb-1
         min-[480px]:w-[45%] min-[480px]:justify-end min-[480px]:items-end`}
       >
-        <h5 class={labelXs}>
-          SUPPLY <span class={`${valueXs} pl-1.5`}>{maxSupply}</span>
-        </h5>
-        <h5 class={labelXs}>
-          LIMIT <span class={`${valueXs} pl-1.5`}>{limit}</span>
-        </h5>
-        <h5 class={labelXs}>
-          MINTERS <span class={`${valueXs} pl-1.5`}>{minters}</span>
-        </h5>
+        {stats}
       </div>
     </div>
   );
@@ -96,6 +162,8 @@ interface SRC20MintToolProps {
   tick?: string;
   mintStatus?: any;
   holders?: any;
+  /** "page" (default) for /tool/src20/mint; "modal" inside ModalTool. */
+  variant?: MintToolVariant;
 }
 
 /* ===== MINT CONTENT COMPONENT IMPLEMENTATION ===== */
@@ -104,7 +172,10 @@ export function SRC20MintTool({
   tick,
   mintStatus: initialMintStatus,
   holders: initialHolders,
+  variant = "page",
 }: SRC20MintToolProps = { trxType: "olga" }) {
+  const isModal = variant === "modal";
+
   /* ===== FORM HOOK AND STATE ===== */
   const {
     formState,
@@ -130,7 +201,7 @@ export function SRC20MintTool({
   const [tosAgreed, setTosAgreed] = useState(false);
 
   /* ===== WALLET CONTEXT ===== */
-  const { isConnected, wallet } = walletContext;
+  const { isConnected, wallet, showConnectModal } = walletContext;
 
   /* ===== SEARCH & DROPDOWN STATE ===== */
   const [searchTerm, setSearchTerm] = useState("");
@@ -295,8 +366,17 @@ export function SRC20MintTool({
       setIsImageLoading(true);
       setError(null);
 
-      const response = await axiod.get(`/api/v2/src20/tick/${tick}/mintData`);
-      const data = response.data;
+      // A failed lookup is cached as immutable. While dummy data is on,
+      // reload so the browser does not keep serving that error.
+      const mintDataUrl = buildMintDataUrl(tick);
+      const data = DATA_PLACEHOLDER_DEV
+        ? await (async () => {
+          const response = await fetch(mintDataUrl, { cache: "reload" });
+          const body = await response.json();
+          if (!response.ok) throw body;
+          return body;
+        })()
+        : (await axiod.get(mintDataUrl)).data;
 
       if (!data || data.error || !data.mintStatus) {
         setError("Token not deployed");
@@ -343,7 +423,7 @@ export function SRC20MintTool({
 
   /* ===== MINT PROGRESS CALCULATIONS ===== */
   const progress = mintStatus ? mintStatus.progress : "0";
-  const progressWidth = `${isNaN(Number(progress)) ? 0 : Number(progress)}%`;
+  const progressWidth = mintProgressWidth(progress);
   const maxSupply = Number(mintStatus?.max_supply ?? 0);
   const limit = Number(mintStatus?.limit ?? 0);
   const minters = holders ? holders.toString() : "0";
@@ -388,6 +468,12 @@ export function SRC20MintTool({
 
   // Wrapper function for minting that gets exact fees first - StampingTool pattern
   const handleMint = async () => {
+    // The modal opens connect-wallet on top of itself; the page keeps its
+    // existing flow (handleSubmit reports the missing wallet).
+    if (isModal && !isConnected) {
+      showConnectModal();
+      return;
+    }
     try {
       // Get exact fees before final submission
       const exactFees = await estimateExact();
@@ -429,7 +515,8 @@ export function SRC20MintTool({
   }, [progressiveFeeDetails, isEstimating, currentPhase]);
 
   /* ===== CONFIG CHECK ===== */
-  if (!config) {
+  // Page only: the modal renders its form straight away.
+  if (!isModal && !config) {
     return (
       <div class={`${bodyTool} ${containerGap}`}>
         <h1 class={`${titleNeutral} mx-auto -mb-2 mobileLg:-mb-4`}>
@@ -440,13 +527,9 @@ export function SRC20MintTool({
     );
   }
 
-  /* ===== COMPONENT RENDER ===== */
-  return (
-    <div class={`${bodyTool} ${containerGap}`}>
-      <h1 class={`${titleNeutral} mx-auto -mb-2 mobileLg:-mb-4`}>
-        MINT
-      </h1>
-
+  /* ===== TOOL BODY ===== */
+  const body = (
+    <>
       {/* ===== ERROR MESSAGE DISPLAY ===== */}
       {error && (
         <div class="w-full text-red-500 text-center font-bold">
@@ -455,7 +538,9 @@ export function SRC20MintTool({
       )}
 
       <form
-        class={`${containerBackground} relative z-dropdown`}
+        class={isModal
+          ? "relative z-dropdown flex flex-col w-full"
+          : `${containerBackground} relative z-dropdown`}
         onSubmit={(e) => {
           e.preventDefault();
           handleMint();
@@ -471,7 +556,7 @@ export function SRC20MintTool({
             class={imagePreviewTool}
           >
             {isImageLoading
-              ? <div class={loaderSpinGrey} />
+              ? <div class={isModal ? loaderSpinSmGrey : loaderSpinGrey} />
               : selectedTokenImage
               ? (
                 <img
@@ -488,7 +573,7 @@ export function SRC20MintTool({
                   type="icon"
                   name="previewImage"
                   weight="extraLight"
-                  size="xl"
+                  size={isModal ? "xxl" : "xl"}
                   color="neutral600"
                 />
               )}
@@ -598,11 +683,12 @@ export function SRC20MintTool({
           minters={minters}
           current={Math.floor((Number(progress) * maxSupply) / 100)}
           total={maxSupply}
+          layout={variant}
         />
       </form>
 
       {/* ===== FEE CALCULATOR ===== */}
-      <div class={containerBackground}>
+      <div class={isModal ? `${container2} p-3 pt-2` : containerBackground}>
         <FeeCalculatorBase
           fee={formState.fee}
           handleChangeFee={handleChangeFee}
@@ -618,6 +704,7 @@ export function SRC20MintTool({
           )}
           isSubmitting={isSubmitting}
           onSubmit={handleMint}
+          {...(isModal ? { onCancel: handleModalClose } : {})}
           buttonName={isConnected ? "MINT" : "CONNECT WALLET"}
           tosAgreed={tosAgreed}
           onTosChange={setTosAgreed}
@@ -642,6 +729,20 @@ export function SRC20MintTool({
           apiError={apiError}
         />
       </div>
+    </>
+  );
+
+  /* ===== COMPONENT RENDER ===== */
+  // The modal wrapper supplies the ModalTool chrome (title, info, scroll).
+  if (isModal) return body;
+
+  return (
+    <div class={`${bodyTool} ${containerGap}`}>
+      <h1 class={`${titleNeutral} mx-auto -mb-2 mobileLg:-mb-4`}>
+        MINT
+      </h1>
+
+      {body}
     </div>
   );
 }
