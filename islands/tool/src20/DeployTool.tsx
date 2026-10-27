@@ -1,4 +1,7 @@
 /* ===== SRC20 TOKEN DEPLOYMENT COMPONENT ===== */
+/* One implementation for both entry points: the /tool/src20/deploy page
+   (variant "page") and the tools modal (variant "modal", wrapped in
+   ModalTool by islands/modal/tool/SRC20DeployTool.tsx). */
 import { ToggleSwitchButton } from "$button";
 import { useSRC20Form } from "$client/hooks/useSRC20Form.ts";
 import { walletContext } from "$client/wallet/wallet.ts";
@@ -14,6 +17,8 @@ import {
   containerColForm,
   containerGap,
   containerRowForm,
+  handleModalClose,
+  imageUploadTool,
   transitionAll,
   transitionColors,
 } from "$layout";
@@ -22,6 +27,12 @@ import type { APIResponse } from "$lib/types/api.ts";
 import { logger } from "$lib/utils/logger.ts";
 import { mapProgressiveFeeDetails } from "$lib/utils/performance/fees/fee-estimation-utils.ts";
 import { getCSRFToken } from "$lib/utils/security/clientSecurityUtils.ts";
+import {
+  isValidDeployCoverSize,
+  normalizeExternalImageRef,
+  toOriginRelative,
+  topCenterRelative,
+} from "$lib/utils/src20/deployTool.ts";
 import { StatusMessages, tooltipButton, tooltipImage } from "$notification";
 import { FeeCalculatorBase } from "$section";
 import { titleNeutral } from "$text";
@@ -33,11 +44,22 @@ interface UploadResponse extends APIResponse {
   url?: string;
 }
 
+export interface SRC20DeployToolProps {
+  trxType?: "olga" | "multisig";
+  /** "page" renders the full tool page; "modal" renders the body for
+   * ModalTool. Defaults to "page". */
+  variant?: "page" | "modal";
+}
+
 /* ===== COMPONENT IMPLEMENTATION ===== */
 export function SRC20DeployTool(
-  { trxType = "olga" }: { trxType?: "olga" | "multisig" } = { trxType: "olga" },
+  { trxType = "olga", variant = "page" }: SRC20DeployToolProps = {
+    trxType: "olga",
+    variant: "page",
+  },
 ) {
   console.log("SRC20DeployTool trxType:", trxType);
+  const isModal = variant === "modal";
   /* ===== FORM HOOK AND STATE ===== */
   const {
     formState,
@@ -62,7 +84,15 @@ export function SRC20DeployTool(
   const uploadTooltipTimeoutRef = useRef<number | null>(null);
   const toggleTooltipTimeoutRef = useRef<number | null>(null);
   const [tooltipText, setTooltipText] = useState("OPTIONAL FIELDS");
-  const { isConnected, wallet } = walletContext;
+  // Modal only: the zero-size anchor tooltips are positioned from, and the
+  // toggle the toggle tooltip is centered over.
+  const tooltipOriginRef = useRef<HTMLDivElement>(null);
+  const toggleWrapperRef = useRef<HTMLDivElement>(null);
+  const [toggleTooltipPosition, setToggleTooltipPosition] = useState({
+    x: 0,
+    y: 0,
+  });
+  const { isConnected, wallet, showConnectModal } = walletContext;
 
   /* ===== PROGRESSIVE FEE ESTIMATION INTEGRATION ===== */
   const {
@@ -105,6 +135,14 @@ export function SRC20DeployTool(
 
   // Wrapper function for deploying that gets exact fees first - StampingTool pattern
   const handleDeployWithExactFees = async () => {
+    // The fee calculator button reads "CONNECT WALLET" while disconnected,
+    // so a click opens the connect modal (stacked above the tool modal when
+    // there is one) instead of submitting.
+    if (!isConnected) {
+      showConnectModal();
+      return;
+    }
+
     try {
       // Get exact fees before final submission
       const exactFees = await estimateExact();
@@ -132,7 +170,7 @@ export function SRC20DeployTool(
     if (file) {
       const img = new Image();
       img.onload = () => {
-        if (img.width === 420 && img.height === 420) {
+        if (isValidDeployCoverSize(img.width, img.height)) {
           setFormState((prev) => ({ ...prev, file }));
         } else {
           setFileUploadError("Image must be exactly 420x420 pixels.");
@@ -255,11 +293,17 @@ export function SRC20DeployTool(
   };
 
   /* ===== TOOLTIP HANDLERS ===== */
+  // On the page the tooltip is fixed to the viewport. The modal card is
+  // transformed, so there viewport coordinates are converted to
+  // coordinates relative to the tooltip's origin anchor.
+  const toTooltipPosition = (e: { clientX: number; clientY: number }) =>
+    toOriginRelative(
+      e,
+      isModal ? tooltipOriginRef.current?.getBoundingClientRect() : null,
+    );
+
   const handleMouseMove = (e: MouseEvent) => {
-    setTooltipPosition({
-      x: e.clientX, // Viewport coordinates for fixed positioning
-      y: e.clientY,
-    });
+    setTooltipPosition(toTooltipPosition(e));
   };
 
   // Track global mouse movement when tooltip is visible
@@ -267,10 +311,7 @@ export function SRC20DeployTool(
     if (!isUploadTooltipVisible) return;
 
     const handleGlobalMouseMove = (e: globalThis.MouseEvent) => {
-      setTooltipPosition({
-        x: e.clientX,
-        y: e.clientY,
-      });
+      setTooltipPosition(toTooltipPosition(e));
     };
 
     document.addEventListener("mousemove", handleGlobalMouseMove);
@@ -300,6 +341,21 @@ export function SRC20DeployTool(
       setTooltipText(
         showAdvancedOptions ? "REQUIRED FIELDS" : "OPTIONAL FIELDS",
       );
+
+      if (isModal) {
+        // The toggle sits on the first row of the scrolling area, so a
+        // tooltip rendered next to it would be clipped. Center it over the
+        // toggle from the tooltip origin instead.
+        const toggle = toggleWrapperRef.current?.getBoundingClientRect();
+        if (toggle) {
+          setToggleTooltipPosition(
+            topCenterRelative(
+              toggle,
+              tooltipOriginRef.current?.getBoundingClientRect(),
+            ),
+          );
+        }
+      }
 
       if (toggleTooltipTimeoutRef.current) {
         globalThis.clearTimeout(toggleTooltipTimeoutRef.current);
@@ -332,7 +388,9 @@ export function SRC20DeployTool(
   }, []);
 
   /* ===== CONFIG CHECK ===== */
-  if (!config) {
+  // The page shows a skeleton until config loads; the modal renders the
+  // form straight away (config is not used to build the deploy).
+  if (!config && !isModal) {
     return (
       <div class={`${bodyTool} ${containerGap}`}>
         <h1 class={`${titleNeutral} mx-auto -mb-2 mobileLg:-mb-4`}>
@@ -344,14 +402,10 @@ export function SRC20DeployTool(
   }
 
   /* ===== COMPONENT RENDER ===== */
-  return (
-    <div class={`${bodyTool} ${containerGap}`}>
-      <h1 class={`${titleNeutral} mx-auto -mb-2 mobileLg:-mb-4`}>
-        Deploy
-      </h1>
-
+  const content = (
+    <>
       <form
-        class={containerBackground}
+        class={isModal ? "flex flex-col w-full" : containerBackground}
         onSubmit={(e) => {
           e.preventDefault();
           handleSubmitWithUpload();
@@ -366,7 +420,9 @@ export function SRC20DeployTool(
             {/* Image upload preview */}
             <div
               id="image-preview"
-              class={`relative flex flex-col items-center justify-center content-center mx-auto min-h-[100px] min-w-[100px]
+              class={isModal
+                ? `${imageUploadTool} relative flex-col content-center mx-auto group`
+                : `relative flex flex-col items-center justify-center content-center mx-auto min-h-[100px] min-w-[100px]
               ${container2} ${container2Hover}
               ${transitionColors} cursor-pointer group`}
               onMouseMove={handleMouseMove}
@@ -400,18 +456,33 @@ export function SRC20DeployTool(
               {formState.file === null && (
                 <label
                   for="upload"
-                  class="cursor-pointer h-full flex flex-col items-center justify-center gap-3"
+                  class={isModal
+                    ? "cursor-pointer h-full w-full flex flex-col items-center justify-center gap-3 group-hover:[&_svg]:stroke-color-hover"
+                    : "cursor-pointer h-full flex flex-col items-center justify-center gap-3"}
                 >
-                  <Icon
-                    type="icon"
-                    name="uploadImage"
-                    weight="extraLight"
-                    size="xl"
-                    color="custom"
-                    className="stroke-color-neutral-600 group-hover:stroke-color-hover"
-                    colorAccent="var(--color-neutral-500)"
-                    colorAccentHover="var(--color-primary-300)"
-                  />
+                  {isModal
+                    ? (
+                      <Icon
+                        type="icon"
+                        name="uploadImage"
+                        weight="extraLight"
+                        size="xxl"
+                        color="custom"
+                        className="stroke-color-neutral-600 hover:stroke-color-hover group-hover:stroke-color-hover"
+                      />
+                    )
+                    : (
+                      <Icon
+                        type="icon"
+                        name="uploadImage"
+                        weight="extraLight"
+                        size="xl"
+                        color="custom"
+                        className="stroke-color-neutral-600 group-hover:stroke-color-hover"
+                        colorAccent="var(--color-neutral-500)"
+                        colorAccentHover="var(--color-primary-300)"
+                      />
+                    )}
                 </label>
               )}
             </div>
@@ -448,7 +519,7 @@ export function SRC20DeployTool(
                 isUppercase
               />
               {/* Advanced options toggle */}
-              <div class="relative" tabIndex={0}>
+              <div ref={toggleWrapperRef} class="relative" tabIndex={0}>
                 <ToggleSwitchButton
                   isActive={showAdvancedOptions}
                   onToggle={() => {
@@ -464,13 +535,15 @@ export function SRC20DeployTool(
                     e.stopPropagation();
                   }}
                 />
-                <div
-                  class={`${tooltipButton} ${
-                    isToggleTooltipVisible ? "opacity-100" : "opacity-0"
-                  }`}
-                >
-                  {tooltipText}
-                </div>
+                {!isModal && (
+                  <div
+                    class={`${tooltipButton} ${
+                      isToggleTooltipVisible ? "opacity-100" : "opacity-0"
+                    }`}
+                  >
+                    {tooltipText}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -501,11 +574,18 @@ export function SRC20DeployTool(
 
         {/* ===== ADVANCED OPTIONS SECTION ===== */}
         <div
-          class={`overflow-hidden ${transitionAll} ${
-            showAdvancedOptions
-              ? "max-h-[320px] opacity-100 mt-5"
-              : "max-h-0 opacity-0 mt-0"
-          }`}
+          class={isModal
+            ? `box-content w-full -mx-3 px-3 overflow-hidden
+            ${transitionAll} ${
+              showAdvancedOptions
+                ? "max-h-[360px] opacity-100 mt-0 -mb-3 py-3"
+                : "max-h-0 opacity-0 mt-0"
+            }`
+            : `overflow-hidden ${transitionAll} ${
+              showAdvancedOptions
+                ? "max-h-[320px] opacity-100 mt-5"
+                : "max-h-0 opacity-0 mt-0"
+            }`}
         >
           <div class={containerColForm}>
             <textarea
@@ -549,11 +629,11 @@ export function SRC20DeployTool(
               placeholder="EXTERNAL IMAGE LINK"
               value={formState.img || ""}
               onChange={(e) => {
-                const value = (e.target as HTMLInputElement).value;
+                const input = e.target as HTMLInputElement;
                 // If it's an st: reference and longer than allowed, normalize it
-                if (value.startsWith("st:") && value.length > 23) {
-                  const normalizedValue = `st:${value.substring(3, 23)}`;
-                  (e.target as HTMLInputElement).value = normalizedValue;
+                const normalizedValue = normalizeExternalImageRef(input.value);
+                if (normalizedValue !== input.value) {
+                  input.value = normalizedValue;
                 }
                 handleInputChange(e, "img");
               }}
@@ -564,7 +644,7 @@ export function SRC20DeployTool(
       </form>
 
       {/* ===== FEE CALCULATOR AND STATUS MESSAGES ===== */}
-      <div class={containerBackground}>
+      <div class={isModal ? `${container2} p-3 pt-2` : containerBackground}>
         <FeeCalculatorBase
           fee={formState.fee}
           ticker={formState.token}
@@ -580,6 +660,7 @@ export function SRC20DeployTool(
           buttonName={isConnected ? "DEPLOY" : "CONNECT WALLET"}
           tosAgreed={tosAgreed}
           onTosChange={setTosAgreed}
+          {...(isModal ? { onCancel: handleModalClose } : {})}
           bitname=""
           feeDetails={mapProgressiveFeeDetails(
             exactFeeDetails || progressiveFeeDetails,
@@ -606,19 +687,69 @@ export function SRC20DeployTool(
         />
       </div>
 
-      {/* Tooltip outside backdrop-blur container to avoid stacking context issues */}
-      <div
-        class={`${tooltipImage} ${
-          isUploadTooltipVisible ? "opacity-100" : "opacity-0"
-        }`}
-        style={{
-          left: `${tooltipPosition.x}px`,
-          top: `${tooltipPosition.y - 6}px`,
-          transform: "translate(-50%, -100%)",
-        }}
-      >
-        UPLOAD COVER IMAGE
-      </div>
+      {isModal
+        ? (
+          /* Zero-size anchor pinned to the modal card's top-left corner. The
+            upload tooltip (above the cursor) and the toggle tooltip (above the
+            toggle) are positioned from it, so neither is clipped by the
+            scrolling content area. */
+          <div
+            ref={tooltipOriginRef}
+            class="fixed top-0 left-0 w-0 h-0 pointer-events-none z-tooltip"
+          >
+            <div
+              class={`${tooltipImage} ${
+                isUploadTooltipVisible ? "opacity-100" : "opacity-0"
+              }`}
+              style={{
+                left: `${tooltipPosition.x}px`,
+                top: `${tooltipPosition.y}px`,
+                transform: "translate(-50%, calc(-100% - 6px))",
+              }}
+            >
+              UPLOAD COVER IMAGE
+            </div>
+            <div
+              class={`${tooltipImage} ${
+                isToggleTooltipVisible ? "opacity-100" : "opacity-0"
+              }`}
+              style={{
+                left: `${toggleTooltipPosition.x}px`,
+                top: `${toggleTooltipPosition.y}px`,
+                transform: "translate(-50%, calc(-100% - 6px))",
+              }}
+            >
+              {tooltipText}
+            </div>
+          </div>
+        )
+        : (
+          /* Tooltip outside backdrop-blur container to avoid stacking context issues */
+          <div
+            class={`${tooltipImage} ${
+              isUploadTooltipVisible ? "opacity-100" : "opacity-0"
+            }`}
+            style={{
+              left: `${tooltipPosition.x}px`,
+              top: `${tooltipPosition.y - 6}px`,
+              transform: "translate(-50%, -100%)",
+            }}
+          >
+            UPLOAD COVER IMAGE
+          </div>
+        )}
+    </>
+  );
+
+  if (isModal) return content;
+
+  return (
+    <div class={`${bodyTool} ${containerGap}`}>
+      <h1 class={`${titleNeutral} mx-auto -mb-2 mobileLg:-mb-4`}>
+        Deploy
+      </h1>
+
+      {content}
     </div>
   );
 }
