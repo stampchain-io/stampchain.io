@@ -174,6 +174,14 @@ const composeHandler: Handlers<SendResponse | { error: string }> = {
         });
       }
 
+      // ECX replay marker (no-op on Bitcoin): before the wallet signs. Only
+      // locktime / vin[0]'s sequence change; input order (vin[0] = ARC4 key)
+      // is untouched.
+      const { applyReplayProtection } = await import(
+        "$server/services/chain/chainProfile.ts"
+      );
+      applyReplayProtection(psbt);
+
       // For dryRun, we might return estimated fees based on CP's tx or our own calculation if adjusted.
       // This part needs more thought if we are not doing our own fee calculation yet.
       if (isEffectivelyDryRun) {
