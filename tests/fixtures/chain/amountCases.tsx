@@ -276,7 +276,11 @@ const COMPONENT_CASES: Case[] = [
         change_24h: 4.2,
         holder_count: 321,
       },
-      _mintStatus: { progress: "100", total_minted: "1000000", total_mints: 1000 },
+      _mintStatus: {
+        progress: "100",
+        total_minted: "1000000",
+        total_mints: 1000,
+      },
     },
   ],
   ["SRC20CardHorizontal", "../../../islands/card/SRC20Card.tsx", "SRC20Card", {
@@ -316,9 +320,14 @@ const COMPONENT_CASES: Case[] = [
     "WalletStampOverviewTableCompact",
     { stamps: [marketStamp] },
   ],
-  ["CollectionCard", "../../../components/card/CollectionCard.tsx", "CollectionCard", {
-    collection,
-  }],
+  [
+    "CollectionCard",
+    "../../../components/card/CollectionCard.tsx",
+    "CollectionCard",
+    {
+      collection,
+    },
+  ],
   [
     "CollectionCardHorizontal",
     "../../../components/card/CollectionCard.tsx",

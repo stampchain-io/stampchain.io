@@ -29,6 +29,14 @@ const { ApiResponseUtil } = await import(
   "$lib/utils/api/responses/apiResponseUtil.ts"
 );
 const label = await import("$server/services/chain/chainLabel.ts");
+const { formatAmounts, renderAmountComponents } = await import(
+  "./amountCases.tsx"
+);
+const amountBaseline = JSON.parse(
+  await Deno.readTextFile(
+    new URL("./bitcoinAmountsBaseline.json", import.meta.url),
+  ),
+);
 
 const CHAIN = Deno.env.get("CHAIN");
 const isEcx = CHAIN === "ecx";
@@ -68,6 +76,8 @@ if (!isEcx) {
         assertEquals(renderApp(App, p), baseline.app[p], `_app ${p}`);
       }
       assertEquals(await renderLinks(), baseline.links);
+      assertEquals(await formatAmounts(), amountBaseline.helpers);
+      assertEquals(await renderAmountComponents(), amountBaseline.components);
       assertEquals(clientChain.getClientChain(), null);
     },
   });
@@ -183,6 +193,11 @@ if (!isEcx) {
       assert(html.includes(">ECX</span>"));
       assert(html.includes("973,800"));
       assert(html.includes(`>${TIP.block_hash}</span>`));
+      // ECX_EXPLORER_URL (https://ecx.example/ in this child) overrides the
+      // default explorer, and the banner links the tip block there.
+      assert(
+        html.includes(`href="https://ecx.example/block/${TIP.block_hash}"`),
+      );
       assert(html.includes("ECX</span> STAMPS"));
       assert(!html.includes("STAMP</span>CHAIN"));
       // _app passed the chain to the Header island as a prop (Fresh
