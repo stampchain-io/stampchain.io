@@ -116,6 +116,24 @@ export function detectAnimation(rawHtml: string): AnimationDetection {
   return { isAnimated: patterns.length > 0, patterns };
 }
 
+/**
+ * HTML that must be screenshotted from a stampchain origin so
+ * root-relative /s/ paths resolve. Quoted and unquoted forms both
+ * count: src="/s/…", url(/s/…), src=/s/…. A letter before the slash
+ * leaves absolute https://host/s/… URLs on the inline path.
+ */
+function isRecursiveStampHtml(rawHtml: string): boolean {
+  const hasIframe = rawHtml.includes("<iframe");
+  const hasExternalRef = rawHtml.includes("ordinals.com/") ||
+    rawHtml.includes("arweave.net/") ||
+    rawHtml.includes("github.io/");
+  const hasRelativeScriptSrc = /src\s*=\s*["']\//.test(rawHtml);
+  const hasStampContentRef = /(?:^|[^A-Za-z0-9])\/s\//.test(rawHtml) ||
+    /["']A\d{10,}["']/.test(rawHtml);
+  return hasIframe || hasExternalRef || hasRelativeScriptSrc ||
+    hasStampContentRef;
+}
+
 // Cloudflare Browser Rendering Worker configuration
 const CF_WORKER_URL = serverConfig.CF_PREVIEW_WORKER_URL;
 const CF_WORKER_SECRET = serverConfig.CF_PREVIEW_WORKER_SECRET;
@@ -790,19 +808,10 @@ async function renderHtmlPreview(
 
     const rawHtml = await htmlResponse.text();
 
-    // Detect if HTML contains iframes, external references, or relative
-    // script/resource loads that require a proper origin to resolve.
+    // Iframes, external hosts, and root-relative /s/ (quoted or CSS url(/s/))
+    // need a stampchain origin so those paths resolve before the screenshot.
     const hasIframe = rawHtml.includes("<iframe");
-    const hasExternalRef = rawHtml.includes("ordinals.com/") ||
-      rawHtml.includes("arweave.net/") ||
-      rawHtml.includes("github.io/");
-    // Stamps loading other stamps via relative /s/ paths (e.g. <script src="/s/...">)
-    // or CPID references (e.g. Append().js(["A1234..."]))
-    const hasRelativeScriptSrc = /src\s*=\s*["']\//.test(rawHtml);
-    const hasStampContentRef = /["']\/s\//.test(rawHtml) ||
-      /["']A\d{10,}["']/.test(rawHtml);
-    const isRecursive = hasIframe || hasExternalRef || hasRelativeScriptSrc ||
-      hasStampContentRef;
+    const isRecursive = isRecursiveStampHtml(rawHtml);
 
     // Differentiate delay by content complexity:
     // - Simple iframe wrappers: parent JS is synchronous, done by networkidle2. 3s is enough.
@@ -1435,16 +1444,8 @@ async function handleS3GifPreview(
       ? `https://stampchain.io/content/${txHash}`
       : stampData.stamp_url;
 
-    // Determine render mode: recursive stamps use URL mode, inline use HTML mode.
-    // Same logic as the PNG path in renderHtmlPreview().
-    const hasIframe = rawHtml.includes("<iframe");
-    const hasExternalRef = rawHtml.includes("ordinals.com/") ||
-      rawHtml.includes("arweave.net/");
-    const hasRelativeScriptSrc = /src\s*=\s*["']\//.test(rawHtml);
-    const hasStampContentRef = /["']\/s\//.test(rawHtml) ||
-      /["']A\d{10,}["']/.test(rawHtml);
-    const isRecursive = hasIframe || hasExternalRef ||
-      hasRelativeScriptSrc || hasStampContentRef;
+    // Same check as renderHtmlPreview(), including unquoted url(/s/…).
+    const isRecursive = isRecursiveStampHtml(rawHtml);
 
     // Capture multiple frames from CF Worker.
     // 10 frames at 200ms = 2s of animation at 5fps — good balance of
