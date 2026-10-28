@@ -802,24 +802,27 @@ export function FeeCalculatorBase({
 
       <div class="flex flex-col items-end mt-7.5 gap-3">
         <div class="relative flex items-center">
-          <input
-            type="checkbox"
-            id="tosAgreed"
-            checked={tosAgreed}
-            onChange={(e) => {
-              const target = e.target as HTMLInputElement;
-              onTosChange(target.checked);
-              setAllowHover(false);
-              setCanHoverSelected(false);
-            }}
-            className="absolute w-0 h-0 opacity-0"
-          />
+          {
+            /* Nested, with no id. A shared id is document-wide, so a tool
+              modal opened over a page that already has a calculator would
+              toggle the page checkbox instead of its own. */
+          }
           <label
-            htmlFor="tosAgreed"
             className="flex items-center cursor-pointer group"
             onMouseEnter={handleCheckboxMouseEnter}
             onMouseLeave={handleCheckboxMouseLeave}
           >
+            <input
+              type="checkbox"
+              checked={tosAgreed}
+              onChange={(e) => {
+                const target = e.target as HTMLInputElement;
+                onTosChange(target.checked);
+                setAllowHover(false);
+                setCanHoverSelected(false);
+              }}
+              className="absolute w-0 h-0 opacity-0"
+            />
             <div
               className={`
                 relative flex items-center justify-center
