@@ -110,6 +110,14 @@ const _env = (key: string): string | undefined =>
   typeof Deno !== "undefined" ? Deno.env.get(key) : undefined;
 const _xcpApiUrl = _env("XCP_API_URL");
 const _xcpPrimaryUrl = _env("XCP_PRIMARY_NODE_URL");
+// ECX (CHAIN=ecx): our own node only. The public node indexes Bitcoin, so a
+// fallback to it would answer ECX requests with Bitcoin state.
+const _isEcx = (_env("CHAIN") ?? "").trim().toLowerCase() === "ecx";
+if (_isEcx && !_xcpApiUrl && !_xcpPrimaryUrl) {
+  throw new Error(
+    "CHAIN=ecx requires XCP_PRIMARY_NODE_URL (an ECX Counterparty node); there is no public ECX fallback",
+  );
+}
 const XCP_PUBLIC_NODE: XcpNode = {
   name: "counterparty.io",
   url: "https://api.counterparty.io:4000/v2",
@@ -124,7 +132,7 @@ export const XCP_V2_NODES: ReadonlyArray<XcpNode> = _xcpApiUrl
       maxConcurrency: Number(_env("XCP_PRIMARY_MAX_CONCURRENCY")) || 8,
       timeoutMs: Number(_env("XCP_PRIMARY_TIMEOUT_MS")) || 5000,
     },
-    XCP_PUBLIC_NODE,
+    ...(_isEcx ? [] : [XCP_PUBLIC_NODE]),
   ]
   : [XCP_PUBLIC_NODE];
 
