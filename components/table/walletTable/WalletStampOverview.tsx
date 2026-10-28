@@ -13,6 +13,10 @@ import {
   shadowGlowPurple,
 } from "$layout";
 import {
+  showMarketData,
+  withoutMarketColumns,
+} from "$lib/utils/chain/clientChain.ts";
+import {
   isBrowser,
   safeNavigate,
 } from "$lib/utils/navigation/freshNavigationUtils.ts";
@@ -88,6 +92,8 @@ export function WalletStampOverviewRow({ stamp }: WalletStampOverviewRowProps) {
   const mcap = floor * toRealUnits(issued, divisible);
 
   /* ===== RENDER ===== */
+  // Floor price, market cap, change and value are market data (none on ECX).
+  const market = showMarketData();
   return (
     <tr
       class={`${container2} ${shadowGlowPurple}`}
@@ -170,39 +176,49 @@ export function WalletStampOverviewRow({ stamp }: WalletStampOverviewRowProps) {
         </a>
       </td>
 
-      {/* PRICE */}
-      <td
-        class={`${cellCenterL2Card} text-color-secondary-400`}
-      >
-        {floor > 0
-          ? formatBTCAmount(floor, { includeSymbol: true, decimals: 8 })
-          : <span class="text-color-neutral-500">N/A</span>}
-      </td>
+      {market && (
+        <>
+          {/* PRICE */}
+          <td
+            class={`${cellCenterL2Card} text-color-secondary-400`}
+          >
+            {floor > 0
+              ? formatBTCAmount(floor, { includeSymbol: true, decimals: 8 })
+              : <span class="text-color-neutral-500">N/A</span>}
+          </td>
 
-      {/* MARKETCAP */}
-      <td
-        class={`${cellCenterL2Card} text-color-neutral-400`}
-      >
-        {mcap > 0
-          ? formatBTCAmount(mcap, { includeSymbol: true, decimals: 4 })
-          : <span class="text-color-neutral-500">N/A</span>}
-      </td>
+          {/* MARKETCAP */}
+          <td
+            class={`${cellCenterL2Card} text-color-neutral-400`}
+          >
+            {mcap > 0
+              ? formatBTCAmount(mcap, { includeSymbol: true, decimals: 4 })
+              : <span class="text-color-neutral-500">N/A</span>}
+          </td>
+        </>
+      )}
 
       {/* BALANCE */}
       <td
-        class={`${cellCenterL2Card} text-color-primary-400`}
+        class={`${
+          market ? cellCenterL2Card : cellRightL2Card
+        } text-color-primary-400`}
       >
         {balanceDisplay}
       </td>
 
-      {/* VALUE */}
-      <td
-        class={`${cellRightL2Card} text-color-neutral-200 pr-3`}
-      >
-        {value > 0
-          ? formatBTCAmount(value, { includeSymbol: true, decimals: 8 })
-          : <span class="text-color-neutral-500">N/A</span>}
-      </td>
+      {market && (
+        <>
+          {/* VALUE */}
+          <td
+            class={`${cellRightL2Card} text-color-neutral-200 pr-3`}
+          >
+            {value > 0
+              ? formatBTCAmount(value, { includeSymbol: true, decimals: 8 })
+              : <span class="text-color-neutral-500">N/A</span>}
+          </td>
+        </>
+      )}
     </tr>
   );
 }
@@ -215,13 +231,14 @@ interface WalletStampOverviewTableProps {
 export function WalletStampOverviewTable(
   { stamps }: WalletStampOverviewTableProps,
 ) {
+  const headers = withoutMarketColumns(HEADERS, HEADERS);
   return (
     <div class="overflow-x-auto tablet:overflow-x-visible scrollbar-hide -my-3">
       <table
         class={`w-full border-separate border-spacing-y-3 ${textXs}`}
       >
         <colgroup>
-          {colGroup([
+          {colGroup(withoutMarketColumns([
             { width: "w-10" }, // IMAGE (fixed for sticky left-0 anchor)
             { width: "min-w-[90px] w-auto" }, // STAMP #
             { width: "min-w-[180px] w-auto" }, // CPID
@@ -230,13 +247,18 @@ export function WalletStampOverviewTable(
             { width: "min-w-[100px] w-auto" }, // MARKETCAP
             { width: "min-w-[100px] w-auto" }, // BALANCE
             { width: "min-w-[100px] w-auto" }, // VALUE
-          ]).map((col) => <col key={col.key} class={col.className} />)}
+          ], HEADERS)).map((col) => (
+            <col
+              key={col.key}
+              class={col.className}
+            />
+          ))}
         </colgroup>
         <thead>
           <tr class={`${container2}`}>
-            {HEADERS.map((header, i) => {
+            {headers.map((header, i) => {
               const isFirst = i === 0;
-              const isLast = i === HEADERS.length - 1;
+              const isLast = i === headers.length - 1;
               const rowClass = isFirst
                 ? cellLeftL2Card
                 : isLast
@@ -265,7 +287,7 @@ export function WalletStampOverviewTable(
             ))
             : (
               <tr>
-                <td colSpan={HEADERS.length}>
+                <td colSpan={headers.length}>
                   <EmptyState label="NO STAMPS IN WALLET" icon="artStamps" />
                 </td>
               </tr>

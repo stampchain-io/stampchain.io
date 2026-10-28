@@ -8,6 +8,7 @@ import { SortButton } from "$islands/button/SortButton.tsx";
 import SRC20GalleryWallet from "$islands/section/gallery/SRC20GalleryWallet.tsx";
 import { StampGalleryWallet } from "$islands/section/gallery/StampGalleryWallet.tsx";
 import { container1, shadowGlowPurple } from "$layout";
+import { coinUnit } from "$lib/utils/chain/clientChain.ts";
 import {
   createPaginationHandler,
   getCurrentUrl,
@@ -346,7 +347,7 @@ function DispenserRow(
                   includeSymbol: false,
                 })}
               </span>{" "}
-              <span class="text-color-grey-semilight">BTC</span>
+              <span class="text-color-grey-semilight">{coinUnit()}</span>
             </p>
             <p
               class={`text-xl mobileMd:text-2xl text-color-grey-semilight font-bold -mt-1 ${
@@ -356,7 +357,10 @@ function DispenserRow(
               {formatBTCAmount(
                 Number(dispenser.btcrate) * Number(dispenser.escrow_quantity),
                 { includeSymbol: false },
-              )} <span class="text-color-grey-semilight font-light">BTC</span>
+              )}{" "}
+              <span class="text-color-grey-semilight font-light">
+                {coinUnit()}
+              </span>
             </p>
           </div>
         </div>

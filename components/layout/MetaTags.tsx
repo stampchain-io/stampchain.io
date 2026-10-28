@@ -1,9 +1,10 @@
 import type { MetaTagsProps } from "$types/ui.d.ts";
+import { brandText, getChainBrand } from "$lib/utils/chain/brand.ts";
 
 const OPENGRAPH_IMAGE = "https://stampchain.io/img/logo/opengraph-1200x630.png";
 
 export function MetaTags({
-  title = "Bitcoin Stamps",
+  title,
   description = "Unprunable UTXO Art, Because Sats Don't Exist",
   image = OPENGRAPH_IMAGE,
   skipImage = false,
@@ -12,7 +13,15 @@ export function MetaTags({
   skipOgMeta = false,
   canonicalUrl,
   ogUrl,
+  chain = "bitcoin",
 }: MetaTagsProps) {
+  // Every brand string below passes through brandText, which is the identity
+  // on Bitcoin; the Bitcoin page head is unchanged byte for byte.
+  const b = (text: string) => brandText(text, chain);
+  title ??= b("Bitcoin Stamps");
+  const siteName = chain === "ecx"
+    ? getChainBrand(chain).productName
+    : "stampchain.io";
   const resolvedCanonical = canonicalUrl || "https://stampchain.io";
   const resolvedOgUrl = ogUrl || resolvedCanonical;
 
@@ -31,7 +40,9 @@ export function MetaTags({
       <meta name="description" content={description} />
       <meta
         name="keywords"
-        content="Bitcoin Stamps, SRC-20, SRC-721, UTXO Art, Bitcoin NFT, block explorer, on-chain art, unprunable, stampchain"
+        content={b(
+          "Bitcoin Stamps, SRC-20, SRC-721, UTXO Art, Bitcoin NFT, block explorer, on-chain art, unprunable, stampchain",
+        )}
       />
       <meta name="author" content="stampchain.io" />
       <meta name="robots" content="index, follow" />
@@ -123,7 +134,7 @@ export function MetaTags({
           />
           <meta
             property="og:image:alt"
-            content="stampchain.io — Bitcoin Stamps block explorer"
+            content={b("stampchain.io — Bitcoin Stamps block explorer")}
             key="og:image:alt"
           />
         </>
@@ -139,7 +150,7 @@ export function MetaTags({
           <meta property="og:locale" content="en_US" key="og-locale" />
           <meta
             property="og:site_name"
-            content="stampchain.io"
+            content={siteName}
             key="og-site-name"
           />
         </>
@@ -186,10 +197,11 @@ export function MetaTags({
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "WebSite",
-            "name": "stampchain.io",
+            "name": siteName,
             "url": "https://stampchain.io",
-            "description":
+            "description": b(
               "Official Bitcoin Stamps block explorer and API. Search stamps, SRC-20 tokens, blocks, and transactions on the Bitcoin blockchain.",
+            ),
             "potentialAction": {
               "@type": "SearchAction",
               "target": "https://stampchain.io/stamp/{search_term_string}",

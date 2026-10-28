@@ -981,6 +981,8 @@ export interface MetaTagsProps {
   skipTitle?: boolean;
   skipDescription?: boolean;
   skipOgMeta?: boolean;
+  /** Chain the site serves; "ecx" switches brand strings. Default bitcoin. */
+  chain?: "bitcoin" | "ecx";
 }
 
 // =============================================================================

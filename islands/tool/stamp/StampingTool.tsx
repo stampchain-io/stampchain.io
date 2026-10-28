@@ -1,4 +1,6 @@
 /* ===== STAMPING COMPONENT ===== */
+import { ExplorerLink } from "$components/layout/ExplorerLink.tsx";
+import { txExplorerUrl } from "$lib/utils/chain/clientChain.ts";
 import {
   parseServiceFeeSats,
   withServiceFee,
@@ -1452,14 +1454,14 @@ function StampingToolMain({ config }: { config: Config }) {
             false,
             <>
               Transaction hash:{" "}
-              <a
-                href={`https://mempool.space/tx/${result.txid}`}
+              <ExplorerLink
+                href={txExplorerUrl(result.txid)}
                 target="_blank"
                 rel="noopener noreferrer"
                 class="underline hover:opacity-80"
               >
                 {result.txid.substring(0, 12)}...
-              </a>
+              </ExplorerLink>
             </>,
           );
           setApiError("");

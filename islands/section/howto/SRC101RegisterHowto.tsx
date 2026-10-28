@@ -1,4 +1,6 @@
 /* ===== HOW TO REGISTER BITNAME COMPONENT ===== */
+import { ExplorerLink } from "$components/layout/ExplorerLink.tsx";
+import { explorerHomeUrl } from "$lib/utils/chain/clientChain.ts";
 import { containerBackground } from "$layout";
 import { subtitleNeutral, text, titleNeutral } from "$text";
 
@@ -56,14 +58,14 @@ export const SRC101RegisterHowto = () => {
           by switching the toggle.<br />
           You can check the progress of the registration by viewing your tx hash
           in a{" "}
-          <a
-            href="https://mempool.space/"
+          <ExplorerLink
+            href={explorerHomeUrl()}
             target="_blank"
             rel="noopener noreferrer"
             class="link-neutral-200-bold"
           >
             blockchain explorer
-          </a>.
+          </ExplorerLink>.
         </p>
       </div>
       {/* <ReadAllButton href="/howto/registerbitname" /> */}

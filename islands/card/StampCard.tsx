@@ -18,6 +18,7 @@ import {
   useLowestPriceDispenser,
 } from "$lib/hooks/useLowestPriceDispenser.ts";
 import { isAtomicIconVisible } from "$lib/utils/bitcoin/stamps/stampUtils.ts";
+import { coinUnit, showMarketData } from "$lib/utils/chain/clientChain.ts";
 import {
   abbreviateAddress,
   formatFileSize,
@@ -460,7 +461,7 @@ export function StampCard({
 
   const displayPriceBTC = () => {
     const formatPriceBTC = (amount: number) =>
-      `${Number(amount).toFixed(8)} BTC`;
+      `${Number(amount).toFixed(8)} ${coinUnit()}`;
 
     if (isRecentSale && saleData) {
       return {
@@ -1039,7 +1040,7 @@ export function StampCard({
                       size="md"
                       color="custom"
                       className="stroke-color-secondary-400"
-                      ariaLabel="BTC"
+                      ariaLabel={coinUnit()}
                     />
                   </IconWithTooltip>
                 )}
@@ -1150,12 +1151,14 @@ export function StampCard({
                         (it's hidden below 420px, and absent entirely for
                         COLD listings) */
                     }
-                    <div class="font-normal text-xs text-color-neutral-500 text-nowrap ml-auto">
-                      {displayPriceUSD()?.toLocaleString("en-US", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })} USD
-                    </div>
+                    {showMarketData() && (
+                      <div class="font-normal text-xs text-color-neutral-500 text-nowrap ml-auto">
+                        {displayPriceUSD()?.toLocaleString("en-US", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })} USD
+                      </div>
+                    )}
                   </div>
                   <div class={`${cardPrice} min-[420px]:!text-sm text-right`}>
                     {displayPriceBTC().text}
@@ -1256,7 +1259,7 @@ export function StampCard({
                       size="md"
                       color="custom"
                       className="stroke-color-secondary-400"
-                      ariaLabel="BTC"
+                      ariaLabel={coinUnit()}
                     />
                   </IconWithTooltip>
                 )}
@@ -1434,18 +1437,20 @@ export function StampCard({
               </div>
             )}
 
-            {/* Row 2: Sale info containers: sale price USD / sale price BTC */}
+            {/* Row 2: Sale info containers: sale price USD (Bitcoin only) / sale price */}
             {saleData && (
               <>
                 <div
                   class={`flex flex-col items-end w-full mt-2 px-2.5 py-1 ${container3} cursor-pointer`}
                 >
-                  <div class="font-normal text-xs text-color-neutral-500 text-nowrap">
-                    {displayPriceUSD()?.toLocaleString("en-US", {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })} USD
-                  </div>
+                  {showMarketData() && (
+                    <div class="font-normal text-xs text-color-neutral-500 text-nowrap">
+                      {displayPriceUSD()?.toLocaleString("en-US", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })} USD
+                    </div>
+                  )}
                   <div class={`${cardPrice} min-[420px]:!text-sm`}>
                     {displayPriceBTC().text}
                   </div>

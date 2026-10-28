@@ -1,5 +1,7 @@
 /* ===== STATUS MESSAGES ===== */
 /*@baba-move file*/
+import { ExplorerLink } from "$components/layout/ExplorerLink.tsx";
+import { txExplorerUrl } from "$lib/utils/chain/clientChain.ts";
 import { container1, transitionColors } from "$layout";
 import type { StatusMessagesProps } from "$types/ui.d.ts";
 
@@ -34,14 +36,14 @@ export function StatusMessages({
           {txid && (
             <div class="overflow-x-auto mt-2" style={{ maxWidth: "100%" }}>
               <span class="text-green-300">TXID:&nbsp;</span>
-              <a
-                href={`https://mempool.space/tx/${txid}`}
+              <ExplorerLink
+                href={txExplorerUrl(txid)}
                 target="_blank"
                 rel="noopener noreferrer"
                 class={`text-green-400 underline whitespace-nowrap hover:text-green-300 ${transitionColors}`}
               >
                 {txid}
-              </a>
+              </ExplorerLink>
             </div>
           )}
         </div>

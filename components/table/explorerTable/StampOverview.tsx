@@ -1,4 +1,6 @@
 /* ===== STAMP EXPLORER TABLE COMPONENT ===== */
+import { ExplorerLink } from "$components/layout/ExplorerLink.tsx";
+import { txExplorerUrl } from "$lib/utils/chain/clientChain.ts";
 import { colGroup } from "$components/layout/types.ts";
 import { Icon, PlaceholderImage } from "$icon";
 import StampTextContent from "$islands/content/stampDetailContent/StampTextContent.tsx";
@@ -185,14 +187,14 @@ export function StampOverviewRow({ stamp }: StampOverviewRowProps) {
       <td
         class={`${cellCenterL2Card} text-color-neutral-400`}
       >
-        <a
-          href={`https://mempool.space/tx/${stamp.tx_hash}`}
+        <ExplorerLink
+          href={txExplorerUrl(stamp.tx_hash)}
           target="_blank"
           rel="noopener noreferrer"
           class="link-neutral-400"
         >
           {abbreviateAddress(stamp.tx_hash, 6)}
-        </a>
+        </ExplorerLink>
       </td>
 
       {/* BLOCK */}
