@@ -2,7 +2,8 @@
  * Shared inputs for the chain labelling tests (tests/unit/chainLabelling.test.tsx
  * and its env-isolated child, ./chainEnvCases.tsx). bitcoinBaseline.json was
  * rendered from exactly these inputs by the code before chain labelling
- * existed (main at 956b9aa08, #1301), with CHAIN unset and TZ=UTC.
+ * existed (main at 37d0d9ab7, after #1306), with CHAIN unset and TZ=UTC,
+ * by ./captureBitcoinBaseline.ts.
  *
  * Importing this module installs the DB stub, so import it before anything
  * that captures dbManager.

@@ -1,11 +1,14 @@
 /**
  * Inputs for the amount and market-data cases of the chain labelling tests.
  * bitcoinAmountsBaseline.json was rendered from exactly these inputs by main
- * at 956b9aa08 (before ECX amounts and market-data hiding existed), with
+ * at 37d0d9ab7, after #1306 (before ECX amounts and market-data hiding existed), with
  * CHAIN unset and TZ=UTC, by ./captureBitcoinAmounts.ts.
  *
  * This module imports components by path only and uses no chain helper, so
  * the same file runs against the pre-change code for the capture.
+ *
+ * Dates are over a year old on purpose: StampInfo shows "N HOURS AGO" for a
+ * block under 24 h old, which would make the fixture depend on the clock.
  */
 import { h } from "preact";
 import { renderToString } from "preact-render-to-string";
@@ -56,7 +59,7 @@ const marketStamp: any = {
   stamp_mimetype: "image/png",
   stamp_url: "",
   file_size_bytes: 1024,
-  block_time: "2026-10-27T12:00:00Z",
+  block_time: "2025-10-27T12:00:00Z",
   balance: 2,
   floorPrice: 0.0042,
   marketData: {
@@ -101,7 +104,7 @@ const src20Row: any = {
   creator: ADDR,
   creator_name: null,
   destination: ADDR,
-  block_time: "2026-10-27T12:00:00Z",
+  block_time: "2025-10-27T12:00:00Z",
   holders: 321,
   progress: "100",
   market_data: {
@@ -366,7 +369,7 @@ const COMPONENT_CASES: Case[] = [
         btc_amount: 0.0042,
         tx_hash: TX,
         block_index: 973800,
-        block_time: "2026-10-27T12:00:00Z",
+        block_time: "2025-10-27T12:00:00Z",
       }],
     },
   ],

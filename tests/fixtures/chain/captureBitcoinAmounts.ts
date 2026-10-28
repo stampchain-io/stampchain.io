@@ -6,7 +6,7 @@
  *   cd tests && TZ=UTC DENO_ENV=test SKIP_REDIS_CONNECTION=true \
  *     deno run --allow-all --no-check fixtures/chain/captureBitcoinAmounts.ts
  *
- * The committed fixture came from main at 956b9aa08 with this file and
+ * The committed fixture came from main at 37d0d9ab7 (after #1306) with this file and
  * amountCases.tsx copied in unchanged.
  */
 import "./chainCases.tsx"; // installs the DB stub before components load
