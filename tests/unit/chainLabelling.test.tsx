@@ -60,6 +60,11 @@ async function runChild(chain: string | undefined) {
     if (v !== undefined) env[k] = v;
   }
   if (chain !== undefined) env.CHAIN = chain;
+  /* #1302: CHAIN=ecx refuses to start without an ECX esplora. */
+  if (chain === "ecx") {
+    env.MEMPOOL_API_URL = "https://esplora.ecash.ninja";
+    env.XCP_PRIMARY_NODE_URL = "http://127.0.0.1:4000/v2";
+  }
   const { code, stdout, stderr } = await new Deno.Command(Deno.execPath(), {
     args: ["test", "--allow-all", "--no-check", CHILD.pathname],
     cwd: TESTS_DIR.pathname,
