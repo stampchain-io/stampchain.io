@@ -4,11 +4,11 @@ import { useSRC101Form } from "$client/hooks/userSRC101Form.ts";
 import { walletContext } from "$client/wallet/wallet.ts";
 import { ProgressiveEstimationIndicator } from "$components/indicators/ProgressiveEstimationIndicator.tsx";
 import { ROOT_DOMAINS } from "$constants";
-import { inputFieldDropdown } from "$form";
+import { inputFieldDropdown, inputFieldDropdownHover } from "$form";
 import { InputField } from "$islands/form/InputField.tsx";
 import { SRC101RegisterInfo } from "$islands/modal/info/SRC101RegisterInfo.tsx";
-import { openSRC101DetailTool } from "$islands/modal/tool/SRC101DetailTool.tsx";
 import { ModalTool, openModalTool } from "$islands/modal/tool/ModalTool.tsx";
+import { openSRC101DetailTool } from "$islands/modal/tool/SRC101DetailTool.tsx";
 import {
   container2,
   container2Hover,
@@ -306,7 +306,7 @@ export function SRC101RegisterTool(
             </div>
             {(openTldDropdown || dropdownAnimation === "exit") && (
               <ul
-                class={`${inputFieldDropdown} max-h-[112px] ${
+                class={`${inputFieldDropdown} max-h-[146px] ${
                   dropdownAnimation === "exit"
                     ? "dropdown-exit pointer-events-none"
                     : dropdownAnimation === "enter"
@@ -317,7 +317,7 @@ export function SRC101RegisterTool(
                 {ROOT_DOMAINS.map((tld) => (
                   <li
                     key={tld}
-                    class={`flex justify-end px-3 py-1.5 text-xs lowercase hover:bg-black/30`}
+                    class={`${inputFieldDropdownHover} !justify-end !lowercase`}
                     onClick={() => handleTldSelect(tld)}
                     onMouseDown={(e) => e.preventDefault()}
                     role="option"

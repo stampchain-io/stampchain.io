@@ -58,9 +58,9 @@ text-color-neutral-200 text-xs font-medium uppercase leading-none
 overflow-y-auto scrollbar-background-layer2 shadow-lg cursor-pointer`;
 
 export const inputFieldDropdownHover = `
-flex justify-between py-2.5 px-3
+flex justify-between px-3 py-2 hover:bg-black/30
 border-b-[1px] border-color-neutral-700 last:border-b-0
-${container2Hover} uppercase cursor-pointer`;
+uppercase cursor-pointer`;
 
 // Checkbox - used for both checkboxes and radiobuttons
 export const inputCheckbox = (
