@@ -19,6 +19,7 @@ import {
   handleImageError,
 } from "$lib/utils/ui/media/imageUtils.ts";
 import { tooltipIcon } from "$notification";
+import { getClientChain } from "$lib/utils/chain/clientChain.ts";
 import type { StampRow } from "$types/stamp.d.ts";
 import { VNode } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
@@ -97,7 +98,13 @@ function RightPanel(
   }
 
   /* ===== SHARING CONFIGURATION ===== */
-  const url = `https://stampchain.io/stamp/${stamp.stamp}`;
+  // ECX shares the ECX page; the same number on stampchain.io can be a
+  // different stamp. Bitcoin keeps the fixed stampchain.io link.
+  const url = `${
+    getClientChain() && typeof location !== "undefined"
+      ? location.origin
+      : "https://stampchain.io"
+  }/stamp/${stamp.stamp}`;
   const text = "Check out what I found @Stampchain";
 
   const shareContent = async () => {

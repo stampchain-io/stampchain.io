@@ -105,6 +105,9 @@ export const handler: Handlers = {
             cpid: sale.cpid,
             stamp: sale.stamp,
             block_index: sale.block_index,
+            // ECX only: the stamp's creation block (block_index is the sale's).
+            ...(sale.stamp_block_index !== undefined &&
+              { stamp_block_index: sale.stamp_block_index }),
             timestamp: sale.timestamp,
             stamp_url: sale.stamp_url,
             stamp_mimetype: sale.stamp_mimetype,

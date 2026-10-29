@@ -20,6 +20,7 @@ import { getCacheConfig, RouteType } from "$server/services/infrastructure/cache
 import { BTCPriceService } from "$server/services/price/btcPriceService.ts";
 import type { StampMarketData, XcpBalance } from "$types/index.d.ts";
 import type { BlockFloor } from "$lib/utils/chain/ecxView.ts";
+import { getChainId } from "$server/services/chain/chainProfile.ts";
 
 interface StampServiceOptions {
   cacheType: RouteType;
@@ -396,6 +397,11 @@ export class StampService {
     const btcPriceUSD = btcPriceData.price;
 
     // Transform the data to match schema (EnhancedStampSale format)
+    // ECX only: block_index on a sale row is the sale's block, so the card
+    // needs the stamp's creation block separately to tell an ECX-native
+    // stamp ("ECX #") from an inherited one. Absent on Bitcoin, so its
+    // response shape is unchanged.
+    const isEcx = getChainId() === "ecx";
     const recentSales = result.stamps.map((stamp: any, index: number) => {
       // Debug: Check stamp data before transformation
       if (!stamp.stamp_url) {
@@ -436,6 +442,7 @@ export class StampService {
         // Core transaction info
         tx_hash: txHash,
         block_index: blockIndex,
+        ...(isEcx && { stamp_block_index: stamp.block_index ?? null }),
         timestamp: saleTime.toISOString(),
         // Raw unix-seconds counterpart to `timestamp` — routes need this to
         // build a nested `sale_data.sale_time` without re-parsing the ISO

@@ -1,7 +1,7 @@
 import { Handlers } from "$fresh/server.ts";
 import { WebResponseUtil } from "$lib/utils/api/responses/webResponseUtil.ts";
 
-const SITE_URL = "https://stampchain.io";
+import { siteOrigin } from "$server/services/chain/chainProfile.ts";
 
 // Sitemap is regenerated on every request (lastmod = today), so cap all
 // cache layers at one hour instead of the 1-year immutable default.
@@ -44,13 +44,13 @@ const STATIC_PAGES: Array<{
   { path: "/termsofservice", priority: "0.3", changefreq: "yearly" },
 ];
 
-function generateSitemapXml(): string {
+function generateSitemapXml(siteUrl: string = siteOrigin()): string {
   const today = new Date().toISOString().split("T")[0];
 
   const urls = STATIC_PAGES.map(
     (page) =>
       `  <url>
-    <loc>${SITE_URL}${page.path}</loc>
+    <loc>${siteUrl}${page.path}</loc>
     <lastmod>${today}</lastmod>
     <changefreq>${page.changefreq}</changefreq>
     <priority>${page.priority}</priority>

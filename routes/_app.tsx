@@ -16,7 +16,11 @@ import { getPageMetadata } from "$lib/utils/pageMetadata.ts";
 import { getClientConfig } from "$server/config/config.ts";
 import { brandPageMetadata, chainStylesheet } from "$lib/utils/chain/brand.ts";
 import { ChainBanner } from "$components/layout/ChainBanner.tsx";
-import { chainEnv, getChainId } from "$server/services/chain/chainProfile.ts";
+import {
+  chainEnv,
+  getChainId,
+  siteOrigin,
+} from "$server/services/chain/chainProfile.ts";
 import { ECX_FORK_BLOCK } from "$lib/utils/chain/ecxView.ts";
 import {
   type ChainLabel,
@@ -37,6 +41,8 @@ export default function App({ Component, state, url }: PageProps<unknown>) {
     MetaTags default ("Bitcoin Stamps"), so all 41 routes shipped an identical
     title and search results could not tell the FAQ from the explorer. */
   const chain = getChainId();
+  /* https://stampchain.io on Bitcoin; https://APP_DOMAIN on ECX. */
+  const origin = siteOrigin();
   const pageMeta = brandPageMetadata(
     getPageMetadata(url.pathname),
     url.pathname,
@@ -73,8 +79,9 @@ export default function App({ Component, state, url }: PageProps<unknown>) {
           skipTitle={isStampPage}
           skipDescription={isStampPage}
           skipOgMeta={isStampPage}
-          canonicalUrl={`https://stampchain.io${url.pathname}`}
-          ogUrl={`https://stampchain.io${url.pathname}`}
+          canonicalUrl={`${origin}${url.pathname}`}
+          ogUrl={`${origin}${url.pathname}`}
+          origin={origin}
           chain={chain}
         />
 
