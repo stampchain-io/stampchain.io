@@ -20,9 +20,9 @@ import {
 import { isAtomicIconVisible } from "$lib/utils/bitcoin/stamps/stampUtils.ts";
 import {
   coinUnit,
-  getClientChainId,
   showMarketData,
   stampPrefix,
+  stampPrefixClass,
 } from "$lib/utils/chain/clientChain.ts";
 import {
   abbreviateAddress,
@@ -105,14 +105,6 @@ function IconWithTooltip(
 
 /* ===== COMPONENT ===== */
 
-/**
- * Class for the mark before a card's stamp number. On ECX the mark ("ECX #")
- * is set as a small label above the number (static/estamps.css), so long
- * numbers are not cut off in narrow cards. Bitcoin keeps "font-light".
- */
-const stampPrefixClass = () =>
-  getClientChainId() === "ecx" ? "font-light estamps-num-prefix" : "font-light";
-
 export function StampCard({
   stamp,
   isRecentSale = false,
@@ -124,6 +116,12 @@ export function StampCard({
   variant?: StampCardVariant;
   previewHtml?: string;
 }) {
+  // Creation block for the "ECX #" mark. Sale rows put the sale's block in
+  // block_index, so for them it is unknown and the plain "#" stays.
+  const prefixBlock = isRecentSale || variant === "cardVerticalSale" ||
+      variant === "cardVerticalSaleCompact"
+    ? null
+    : stamp.block_index;
   /* ===== STATE ===== */
   const [loading, setLoading] = useState<boolean>(true);
   const [imageFailed, setImageFailed] = useState<boolean>(false);
@@ -650,7 +648,9 @@ export function StampCard({
               <div class="flex flex-col min-w-0">
                 <div class={`${cardStampNumber} !text-lg`}>
                   {displayStampHash && (
-                    <span class={stampPrefixClass()}>{stampPrefix()}</span>
+                    <span class={stampPrefixClass(prefixBlock)}>
+                      {stampPrefix(prefixBlock)}
+                    </span>
                   )}
                   {stampValue}
                 </div>
@@ -839,7 +839,9 @@ export function StampCard({
               <div class="flex flex-col min-w-0">
                 <div class={`${cardStampNumber} !text-lg`}>
                   {displayStampHash && (
-                    <span class={stampPrefixClass()}>{stampPrefix()}</span>
+                    <span class={stampPrefixClass(prefixBlock)}>
+                      {stampPrefix(prefixBlock)}
+                    </span>
                   )}
                   {stampValue}
                 </div>
@@ -983,7 +985,9 @@ export function StampCard({
               ${cardStampNumber}`}
             >
               {displayStampHash && (
-                <span class={stampPrefixClass()}>{stampPrefix()}</span>
+                <span class={stampPrefixClass(prefixBlock)}>
+                  {stampPrefix(prefixBlock)}
+                </span>
               )}
               {stampValue}
             </div>
@@ -1244,7 +1248,9 @@ export function StampCard({
               ${cardStampNumber}`}
             >
               {displayStampHash && (
-                <span class={stampPrefixClass()}>{stampPrefix()}</span>
+                <span class={stampPrefixClass(prefixBlock)}>
+                  {stampPrefix(prefixBlock)}
+                </span>
               )}
               {stampValue}
             </div>
@@ -1410,7 +1416,9 @@ export function StampCard({
               ${cardStampNumber}`}
             >
               {displayStampHash && (
-                <span class={stampPrefixClass()}>{stampPrefix()}</span>
+                <span class={stampPrefixClass(prefixBlock)}>
+                  {stampPrefix(prefixBlock)}
+                </span>
               )}
               {stampValue}
             </div>
@@ -1519,7 +1527,9 @@ export function StampCard({
               class={`flex items-center justify-center mt-1 ${cardStampNumberCompact}`}
             >
               {displayStampHash && (
-                <span class={stampPrefixClass()}>{stampPrefix()}</span>
+                <span class={stampPrefixClass(prefixBlock)}>
+                  {stampPrefix(prefixBlock)}
+                </span>
               )}
               {stampValue}
             </div>

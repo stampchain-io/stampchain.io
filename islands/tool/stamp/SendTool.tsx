@@ -639,7 +639,7 @@ export function StampSendTool({ variant = "page" }: StampSendToolProps = {}) {
                 {selectedStamp
                   ? (
                     <span class={`font-medium ${stampLabel}`}>
-                      {stampPrefix()}
+                      {stampPrefix(selectedStamp.block_index)}
                       {selectedStamp.stamp}
                     </span>
                   )
@@ -697,7 +697,7 @@ export function StampSendTool({ variant = "page" }: StampSendToolProps = {}) {
                       />
                       <div class="flex items-center justify-between flex-1 min-w-0">
                         <span class={`text-sm font-medium ${stampLabel}`}>
-                          {stampPrefix()}
+                          {stampPrefix(stamp.block_index)}
                           {stamp.stamp}
                         </span>
                         <span

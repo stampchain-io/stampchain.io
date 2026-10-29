@@ -169,7 +169,7 @@ function StampSearchCell(
             class={`${containerPill} font-semibold text-xs
             text-color-neutral-200 !px-1.5 !py-0.5`}
           >
-            <span class="font-light">{stampPrefix()}</span>
+            <span class="font-light">{stampPrefix(null)}</span>
             {cell.stamp}
           </div>
         </div>

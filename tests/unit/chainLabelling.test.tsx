@@ -154,12 +154,9 @@ Deno.test("ecx: brand helpers say eSTAMPS by Stampchain", () => {
   assertEquals(brandText("Bitcoin Stamps", "ecx"), "eSTAMPS");
   assertEquals(brandText("BITCOIN STAMPS", "ecx"), "eSTAMPS");
   assertEquals(brandText("Bitcoin Stamp", "ecx"), "eSTAMP");
-  // stamp numbers read "ECX #12"
-  assertEquals(brandText("Bitcoin Stamp #12", "ecx"), "ECX #12");
-  assertEquals(
-    brandText("Bitcoin Stamp #12 - stampchain.io", "ecx"),
-    "ECX #12 - stampchain.io",
-  );
+  // brandText has no block, so a number keeps its plain "#" (an inherited
+  // stamp); ECX-native titles come from stampTitle (tests/unit/estamps).
+  assertEquals(brandText("Bitcoin Stamp #12", "ecx"), "eSTAMP #12");
   assertEquals(
     brandText("Stamp artwork into Bitcoin. Bitcoin block 5 on Bitcoin", "ecx"),
     "Stamp artwork into ECX. ECX block 5 on ECX",

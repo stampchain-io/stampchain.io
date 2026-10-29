@@ -513,7 +513,7 @@ function AssetPreviewCard(
           <div class="flex flex-col min-w-0 flex-1 gap-0.5">
             <div class={cardStampNumber}>
               {stamp.stamp != null && (
-                <span class="font-light">{stampPrefix()}</span>
+                <span class="font-light">{stampPrefix(stamp.block_index)}</span>
               )}
               {stamp.stamp != null
                 ? stamp.stamp.toLocaleString("en-US")

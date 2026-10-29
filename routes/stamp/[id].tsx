@@ -1,7 +1,7 @@
 /* ===== STAMP DETAIL PAGE ===== */
 /*@baba-365+390*/
 
-import { brandText } from "$lib/utils/chain/brand.ts";
+import { stampTitle } from "$lib/utils/chain/brand.ts";
 import { getChainId } from "$server/services/chain/chainProfile.ts";
 import { StampImage, StampInfo } from "$content";
 import { Head } from "$fresh/runtime.ts";
@@ -267,7 +267,7 @@ export default function StampDetailPage(props: StampDetailPageProps) {
   const title = htmlTitle
     ? htmlTitle.toUpperCase()
     : stamp?.cpid?.startsWith("A")
-    ? brandText(`Bitcoin Stamp #${stamp?.stamp ?? ""}`, getChainId())
+    ? stampTitle(stamp?.stamp, getChainId(), stamp?.block_index)
     : stamp?.cpid ?? "Stamp Not Found";
 
   // Update the getMetaImageInfo and add dimension handling
@@ -406,9 +406,10 @@ export default function StampDetailPage(props: StampDetailPageProps) {
         <meta name="twitter:image" content={metaInfo.url} key="twitter:image" />
         <meta
           name="twitter:image:alt"
-          content={brandText(
-            `Bitcoin Stamp #${stamp?.stamp || ""}`,
+          content={stampTitle(
+            stamp?.stamp || "",
             getChainId(),
+            stamp?.block_index,
           )}
           key="twitter:image:alt"
         />

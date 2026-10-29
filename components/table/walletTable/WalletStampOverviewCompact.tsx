@@ -131,7 +131,7 @@ export function WalletStampOverviewRowCompact(
           {stamp.stamp != null
             ? (
               <>
-                <span class="font-light">{stampPrefix()}</span>
+                <span class="font-light">{stampPrefix(stamp.block_index)}</span>
                 {stamp.stamp}
               </>
             )

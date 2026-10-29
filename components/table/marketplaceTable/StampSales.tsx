@@ -153,7 +153,8 @@ export function MarketplaceSalesRow({ stamp }: MarketplaceSalesRowProps) {
           {stamp.stamp != null
             ? (
               <>
-                <span class="font-light">{stampPrefix()}</span>
+                {/* Sale rows: block_index is the sale block, not the creation block. */}
+                <span class="font-light">{stampPrefix(null)}</span>
                 {stamp.stamp}
               </>
             )

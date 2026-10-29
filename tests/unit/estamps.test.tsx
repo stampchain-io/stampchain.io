@@ -14,7 +14,12 @@
 import { assert, assertEquals, assertStrictEquals } from "@std/assert";
 import { h } from "preact";
 import { renderToString } from "preact-render-to-string";
-import { opts, renderLinks, TIP } from "../fixtures/chain/chainCases.tsx";
+import {
+  LINK_STAMP,
+  opts,
+  renderLinks,
+  TIP,
+} from "../fixtures/chain/chainCases.tsx";
 import {
   captureSql,
   NON_SRC20_IDENTS,
@@ -42,7 +47,7 @@ const { ExplorerPage } = await import("../../routes/explorer/index.tsx");
 const { notificationUpdateMessage, NOTIFICATION_UPDATE_MESSAGE } = await import(
   "$lib/utils/ui/notifications/updateAnnouncement.ts"
 );
-const { renderAmountComponents } = await import(
+const { AMOUNT_STAMPS, renderAmountComponents } = await import(
   "../fixtures/chain/amountCases.tsx"
 );
 const { StampRepository } = await import("$server/database/stampRepository.ts");
@@ -88,10 +93,16 @@ Deno.test("bitcoin: update announcement, prefixes and brand are unchanged", () =
     notificationUpdateMessage("bitcoin"),
     baseline.notification,
   );
-  assertEquals(clientChain.stampPrefix(), "#");
-  assertEquals(clientChain.stampPrefix("Stamp"), "Stamp #");
+  assertEquals(clientChain.stampPrefix(973_800), "#");
+  assertEquals(clientChain.stampPrefix(973_800, "Stamp"), "Stamp #");
+  assertEquals(clientChain.stampPrefixClass(973_800), "font-light");
   assertEquals(brand.stampNumberPrefix(), "#");
+  assertEquals(brand.stampNumberPrefix("bitcoin", 973_800), "#");
   assertEquals(brand.formatStampNumber(4242), "#4242");
+  assertEquals(
+    brand.stampTitle(4242, "bitcoin", 973_800),
+    "Bitcoin Stamp #4242",
+  );
   assertEquals(brand.getChainBrand("bitcoin").attribution, null);
   // HomeHeader's default and explicit Bitcoin forms are the same markup
   assertEquals(
@@ -140,47 +151,75 @@ Deno.test("ecx: eSTAMPS styles load on ECX only, and only match ECX pages", asyn
 });
 
 /* ===== ECX: BRAND AND STAMP NUMBERS ===== */
-Deno.test("ecx: stamp numbers display as ECX #<n>", () => {
-  assertEquals(brand.stampNumberPrefix("ecx"), "ECX #");
-  assertEquals(brand.formatStampNumber(4242, "ecx"), "ECX #4242");
-  assertEquals(clientChain.stampPrefix("Stamp", "ecx"), "ECX #");
-  assertEquals(clientChain.stampPrefix("", "ecx"), "ECX #");
+Deno.test("ecx: only ECX-native stamps (block >= 973728) read ECX #<n>", () => {
+  // native: created at or after the fork
+  assertEquals(brand.stampNumberPrefix("ecx", FORK), "ECX #");
+  assertEquals(brand.formatStampNumber(4242, "ecx", 973_800), "ECX #4242");
+  assertEquals(clientChain.stampPrefix(FORK, "Stamp", "ecx"), "ECX #");
+  assertEquals(clientChain.stampPrefix("973800", "", "ecx"), "ECX #");
+  assertEquals(
+    clientChain.stampPrefixClass(FORK, "ecx"),
+    "font-light estamps-num-prefix",
+  );
+  assertEquals(brand.stampTitle(4242, "ecx", FORK), "ECX #4242");
+  // inherited, sale rows (null) and unknown blocks: what Bitcoin shows
+  for (const block of [FORK - 1, 0, null, undefined, "x"]) {
+    assertEquals(brand.stampNumberPrefix("ecx", block as any), "#");
+    assertEquals(clientChain.stampPrefix(block as any, "", "ecx"), "#");
+    assertEquals(
+      clientChain.stampPrefix(block as any, "Stamp", "ecx"),
+      "Stamp #",
+    );
+    assertEquals(
+      clientChain.stampPrefixClass(block as any, "ecx"),
+      "font-light",
+    );
+  }
+  assertEquals(brand.stampTitle(12, "ecx", FORK - 1), "eSTAMP #12");
+  assertEquals(brand.stampTitle(12, "ecx"), "eSTAMP #12");
 });
+
+// Rows whose block_index is the stamp's creation block.
+const NATIVE_NUMBERED = [
+  "StampCard.cardVerticalListing",
+  "StampCard.cardHorizontalListing",
+  "StampCard.cardVerticalDetail",
+  "WalletStampOverview",
+  "WalletStampOverviewCompact",
+  "StampListings",
+  "StampInfo",
+  "StampOverviewRow",
+];
+// Sale rows: block_index is the sale's block, so the mark stays plain.
+const SALE_NUMBERED = [
+  "StampCard.recentSale",
+  "MarketplaceSales",
+  "SalesActivityFeed",
+];
+
+async function renderNumbered() {
+  return { ...await renderAmountComponents(), ...await renderLinks() };
+}
 
 Deno.test({
   ...opts,
-  name: "ecx: cards, tables and the detail view show ECX #, data unchanged",
+  name: "ecx: native stamps show ECX # in cards, tables and the detail view",
   async fn() {
     clientChain.setClientChain(ECX_CHAIN);
     try {
-      const html = {
-        ...await renderAmountComponents(),
-        ...await renderLinks(),
-      };
-      const NUMBERED = [
-        "StampCard.cardVerticalListing",
-        "StampCard.cardHorizontalListing",
-        "StampCard.cardVerticalDetail",
-        "StampCard.recentSale",
-        "WalletStampOverview",
-        "WalletStampOverviewCompact",
-        "StampListings",
-        "StampInfo",
-        "StampOverviewRow",
-        "MarketplaceSales",
-        "SalesActivityFeed",
-      ];
-      for (const name of NUMBERED) {
+      const html = await renderNumbered();
+      for (const name of NATIVE_NUMBERED) {
         assert(html[name].includes("ECX #"), `${name} shows no ECX #`);
         assert(
           !html[name].includes(">#</span>"),
           `${name} still shows a bare #`,
         );
-        assert(!/Stamp #\d/.test(html[name]), `${name} still says Stamp #`);
       }
       // In cards the mark is a small label above the number, so long
       // numbers are not cut off; tables keep it inline.
-      for (const name of NUMBERED.filter((n) => n.startsWith("StampCard."))) {
+      for (
+        const name of NATIVE_NUMBERED.filter((n) => n.startsWith("StampCard."))
+      ) {
         assert(
           html[name].includes(
             '<span class="font-light estamps-num-prefix">ECX #</span>',
@@ -189,9 +228,47 @@ Deno.test({
         );
       }
       assert(!html.StampOverviewRow.includes("estamps-num-prefix"));
-      // The number itself and the links to it stay as they were.
+      for (const name of SALE_NUMBERED) {
+        assert(!html[name].includes("ECX #"), `${name}: sale row says ECX #`);
+      }
       assert(html.StampOverviewRow.includes('href="/stamp/'));
     } finally {
+      clientChain.setClientChain(null);
+    }
+  },
+});
+
+Deno.test({
+  ...opts,
+  name: "ecx: inherited stamps keep the plain # Bitcoin shows",
+  async fn() {
+    const stamps = [...AMOUNT_STAMPS, LINK_STAMP];
+    const saved = stamps.map((s) => s.block_index);
+    stamps.forEach((s) => s.block_index = FORK - 1);
+    try {
+      clientChain.setClientChain(ECX_CHAIN);
+      const ecx = await renderNumbered();
+      clientChain.setClientChain(null);
+      const btc = await renderNumbered();
+      const marks = (h: string) =>
+        [...h.matchAll(
+          /<span class="font-light">(#)<\/span>|(Stamp #|STAMP #)/g,
+        )]
+          .length;
+      for (const name of [...NATIVE_NUMBERED, ...SALE_NUMBERED]) {
+        assert(
+          !ecx[name].includes("ECX #"),
+          `${name} says ECX # for an inherited stamp`,
+        );
+        assert(!ecx[name].includes("estamps-num-prefix"), name);
+        assert(
+          marks(btc[name]) > 0,
+          `${name}: no # on Bitcoin, test is vacuous`,
+        );
+        assertEquals(marks(ecx[name]), marks(btc[name]), name);
+      }
+    } finally {
+      stamps.forEach((s, i) => s.block_index = saved[i]);
       clientChain.setClientChain(null);
     }
   },

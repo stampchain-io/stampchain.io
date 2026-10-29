@@ -13,6 +13,18 @@
 /** First ECX block. Mirrors the note in server/services/chain/chainProfile.ts. */
 export const ECX_FORK_BLOCK = 973_728;
 
+/**
+ * True when a stamp's creation block is at or after the fork: an ECX-native
+ * stamp. Unknown or unparseable blocks count as inherited, so they keep the
+ * plain "#" Bitcoin shows for the same number.
+ */
+export function isEcxNativeBlock(
+  blockIndex: number | string | null | undefined,
+): boolean {
+  const n = typeof blockIndex === "string" ? Number(blockIndex) : blockIndex;
+  return typeof n === "number" && Number.isFinite(n) && n >= ECX_FORK_BLOCK;
+}
+
 /** Query parameter that switches an ECX stamp list to all history. */
 export const ECX_HISTORY_PARAM = "history";
 export const ECX_HISTORY_INHERITED = "inherited";

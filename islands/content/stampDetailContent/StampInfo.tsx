@@ -1,5 +1,5 @@
 /* ===== STAMP INFO COMPONENT ===== */
-import { brandText } from "$lib/utils/chain/brand.ts";
+import { stampTitle } from "$lib/utils/chain/brand.ts";
 import { ExplorerLink } from "$components/layout/ExplorerLink.tsx";
 import {
   getClientChainId,
@@ -721,10 +721,9 @@ export function StampInfo(
 
   // Effect to handle document title updates
   useEffect(() => {
-    document.title = brandText(
-      `Bitcoin Stamp #${stamp.stamp} - stampchain.io`,
-      getClientChainId(),
-    );
+    document.title = `${
+      stampTitle(stamp.stamp, getClientChainId(), stamp.block_index)
+    } - stampchain.io`;
     return () => {
       document.title = "stampchain.io";
     };
@@ -761,7 +760,9 @@ export function StampInfo(
                   : isSrc20Stamp()
                   ? (
                     <>
-                      <span className="font-light">{stampPrefix()}</span>
+                      <span className="font-light">
+                        {stampPrefix(stamp.block_index)}
+                      </span>
                       <span className="font-black">{stamp.stamp}</span>
                     </>
                   )
@@ -773,7 +774,9 @@ export function StampInfo(
                   )
                   : (
                     <>
-                      <span className="font-light">{stampPrefix()}</span>
+                      <span className="font-light">
+                        {stampPrefix(stamp.block_index)}
+                      </span>
                       <span className="font-black">{stamp.stamp}</span>
                     </>
                   )}
@@ -787,7 +790,7 @@ export function StampInfo(
 
               {(!isSrc20Stamp() && isPoshStamp(stamp.cpid)) && (
                 <h5 className={`${subtitlePrimary} -mt-1.5 block`}>
-                  {stampPrefix()}
+                  {stampPrefix(stamp.block_index)}
                   {stamp.stamp}
                 </h5>
               )}

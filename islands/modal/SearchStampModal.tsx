@@ -247,7 +247,7 @@ function SearchContent({
                       />
                       <div class="flex flex-col flex-1">
                         <span class="text-sm font-medium text-color-neutral-400">
-                          {stampPrefix()}
+                          {stampPrefix(result.block_index)}
                           {result.stamp} - {result.cpid}
                         </span>
                         <span class="text-xs text-color-neutral-500 truncate">

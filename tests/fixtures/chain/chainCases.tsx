@@ -51,7 +51,7 @@ export const renderApp = (
 
 export const TX = "ab".repeat(32);
 export const ADDR = "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh";
-const stamp: any = {
+export const LINK_STAMP: any = {
   stamp: 1,
   cpid: "A123",
   tx_hash: TX,
@@ -109,7 +109,7 @@ const LINK_CASES: Array<[string, string, string, unknown]> = [
     "StampOverviewRow",
     "../../../components/table/explorerTable/StampOverview.tsx",
     "StampOverviewTable",
-    { stamps: [stamp] },
+    { stamps: [LINK_STAMP] },
   ],
   [
     "SRC20OverviewRow",
@@ -121,7 +121,7 @@ const LINK_CASES: Array<[string, string, string, unknown]> = [
     "MarketplaceSales",
     "../../../components/table/marketplaceTable/StampSales.tsx",
     "MarketplaceSalesTable",
-    { stamps: [stamp] },
+    { stamps: [LINK_STAMP] },
   ],
   [
     "StampTransfers",
@@ -162,7 +162,7 @@ const LINK_CASES: Array<[string, string, string, unknown]> = [
     "SalesActivityFeed",
     "../../../islands/section/feed/SalesActivityFeed.tsx",
     "default",
-    { sales: [stamp] },
+    { sales: [LINK_STAMP] },
   ],
   [
     "SRC101RegisterInfo",

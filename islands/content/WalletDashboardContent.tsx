@@ -270,7 +270,9 @@ function DispenserRow(
                 href={`/stamp/${dispenser.stamp.stamp}`}
                 class="!inline-block text-2xl mobileLg:text-4xl font-black bg-gradient-to-r color-primary-gradient color-gradient-hover"
               >
-                {`${stampPrefix()}${dispenser.stamp.stamp}`}
+                {`${
+                  stampPrefix(dispenser.stamp.block_index)
+                }${dispenser.stamp.stamp}`}
               </a>
             </div>
           </div>

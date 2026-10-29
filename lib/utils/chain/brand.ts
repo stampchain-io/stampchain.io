@@ -9,28 +9,53 @@
  * same bytes it did before chain labelling existed.
  */
 import type { PageMetadata } from "$lib/utils/pageMetadata.ts";
+import { isEcxNativeBlock } from "$lib/utils/chain/ecxView.ts";
 
 /** Mirrors `ChainId` in server/services/chain/chainProfile.ts. */
 export type BrandChain = "bitcoin" | "ecx";
 
 /* ===== STAMP NUMBERS ===== */
 /**
- * What goes in front of a stamp number on ECX pages: "ECX #4242". Display
- * only; API data and database values keep the bare number.
+ * What goes in front of an ECX-native stamp's number: "ECX #4242". Stamps
+ * created before the fork (block 973728) keep the plain "#" they have on
+ * Bitcoin, where they carry the same numbers. Display only; API data and
+ * database values keep the bare number.
  */
-const ECX_STAMP_NUMBER_PREFIX = "ECX #";
+export const ECX_STAMP_NUMBER_PREFIX = "ECX #";
 
-/** "#" on Bitcoin, "ECX #" on ECX. */
-export function stampNumberPrefix(chain: BrandChain = "bitcoin"): string {
-  return chain === "ecx" ? ECX_STAMP_NUMBER_PREFIX : "#";
+/** "ECX #" for an ECX-native stamp on ECX; "#" otherwise. */
+export function stampNumberPrefix(
+  chain: BrandChain = "bitcoin",
+  blockIndex?: number | string | null,
+): string {
+  return chain === "ecx" && isEcxNativeBlock(blockIndex)
+    ? ECX_STAMP_NUMBER_PREFIX
+    : "#";
 }
 
-/** "#4242" on Bitcoin, "ECX #4242" on ECX. */
+/** "#4242", or "ECX #4242" for an ECX-native stamp on ECX. */
 export function formatStampNumber(
   stamp: number | string | null | undefined,
   chain: BrandChain = "bitcoin",
+  blockIndex?: number | string | null,
 ): string {
-  return `${stampNumberPrefix(chain)}${stamp ?? ""}`;
+  return `${stampNumberPrefix(chain, blockIndex)}${stamp ?? ""}`;
+}
+
+/**
+ * Page title for a stamp: "Bitcoin Stamp #4242" on Bitcoin. On ECX an
+ * ECX-native stamp is "ECX #4242"; an inherited one keeps its plain number
+ * under the product name, "eSTAMP #4242".
+ */
+export function stampTitle(
+  stamp: number | string | null | undefined,
+  chain: BrandChain = "bitcoin",
+  blockIndex?: number | string | null,
+): string {
+  if (chain === "ecx" && isEcxNativeBlock(blockIndex)) {
+    return `${ECX_STAMP_NUMBER_PREFIX}${stamp ?? ""}`;
+  }
+  return brandText(`Bitcoin Stamp #${stamp ?? ""}`, chain);
 }
 
 export interface ChainBrand {
@@ -78,14 +103,12 @@ export function chainStylesheet(chain: BrandChain = "bitcoin"): string | null {
 
 /**
  * Rewrites that turn copy which names Bitcoin as the chain into ECX copy.
- * Order matters: stamp numbers go first ("Bitcoin Stamp #12" is "ECX #12"),
- * then the product name, so "Bitcoin Stamps" never becomes "ECX Stamps" by
+ * Order matters: the product name goes first, so "Bitcoin Stamps" never becomes "ECX Stamps" by
  * way of a generic "Bitcoin" rule. "BTC" amounts and historical references
  * ("the Bitcoin Stamps meta-protocol") are left alone; see
  * ECX_UNBRANDED_PATHS.
  */
 const ECX_REWRITES: ReadonlyArray<readonly [RegExp, string]> = [
-  [/\bBitcoin Stamp #/g, ECX_STAMP_NUMBER_PREFIX],
   // "a Bitcoin Stamp" -> "an eSTAMP", "a Bitcoin block" -> "an ECX block":
   // both names start with a vowel sound.
   [/\b([Aa]) Bitcoin Stamp\b/g, "$1n eSTAMP"],
