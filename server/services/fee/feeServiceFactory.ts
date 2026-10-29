@@ -73,7 +73,11 @@ class MempoolFeeProvider implements FeeProvider {
 // ECX (CHAIN=ecx): our ECX node's estimatesmartfee, floored at 1 sat/vB.
 // Blocks are erratic after the fork, so estimates stay noisy for a while;
 // the user's fee cap stays in charge.
-class EcxNodeFeeProvider implements FeeProvider {
+export class EcxNodeFeeProvider implements FeeProvider {
+  constructor(
+    private readonly estimate: typeof estimateEcxFeeSatPerVb = estimateEcxFeeSatPerVb,
+  ) {}
+
   getName(): string {
     return "ecx-node";
   }
@@ -85,11 +89,18 @@ class EcxNodeFeeProvider implements FeeProvider {
     hourFee: number;
     minimumFee: number;
     confidence: "high" | "medium" | "low";
+    debug_feesResponse: {
+      fastestFee: number;
+      halfHourFee: number;
+      hourFee: number;
+      economyFee: number;
+      minimumFee: number;
+    };
   }> {
     const [fast, half, hour] = await Promise.all([
-      estimateEcxFeeSatPerVb(1),
-      estimateEcxFeeSatPerVb(3),
-      estimateEcxFeeSatPerVb(6),
+      this.estimate(1),
+      this.estimate(3),
+      this.estimate(6),
     ]);
     return {
       recommendedFee: fast.satPerVb,
@@ -99,6 +110,16 @@ class EcxNodeFeeProvider implements FeeProvider {
       minimumFee: ECX_MIN_FEE_SAT_PER_VB,
       // No node estimate yet means the floor, not a measured rate.
       confidence: fast.fromNode ? "medium" : "low",
+      // FeeServiceDI forwards only debug_feesResponse to the browser, and the
+      // fee panels (10/30/60 min, economy) read their tiers from it, the same
+      // shape mempool.space's /v1/fees/recommended gives the Bitcoin provider.
+      debug_feesResponse: {
+        fastestFee: fast.satPerVb,
+        halfHourFee: half.satPerVb,
+        hourFee: hour.satPerVb,
+        economyFee: hour.satPerVb,
+        minimumFee: ECX_MIN_FEE_SAT_PER_VB,
+      },
     };
   }
 }
