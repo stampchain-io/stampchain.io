@@ -1,4 +1,6 @@
 /* ===== SRC20 MINTS TABLE COMPONENT ===== */
+import { ExplorerLink } from "$components/layout/ExplorerLink.tsx";
+import { txExplorerUrl } from "$lib/utils/chain/clientChain.ts";
 import { colGroup } from "$components/layout/types.ts";
 import {
   cellCenterL2Detail,
@@ -106,15 +108,12 @@ export function SRC20MintsTable(
                 <td
                   class={cellCenterL2Detail}
                 >
-                  <a
-                    href={`https://www.blockchain.com/explorer/transactions/btc/${mint.tx_hash}`}
+                  <ExplorerLink
+                    href={txExplorerUrl(mint.tx_hash, "blockchain.com")}
                     target="_blank"
                     onClick={(e) => {
                       e.preventDefault();
-                      globalThis.open(
-                        `https://www.blockchain.com/explorer/transactions/btc/${mint.tx_hash}`,
-                        "_blank",
-                      );
+                      globalThis.open(e.currentTarget.href, "_blank");
                     }}
                     className="link-neutral-200"
                   >
@@ -124,7 +123,7 @@ export function SRC20MintsTable(
                     <span class="hidden tablet:inline">
                       {abbreviateAddress(mint.tx_hash, 6)}
                     </span>
-                  </a>
+                  </ExplorerLink>
                 </td>
                 {/* BLOCK */}
                 <td

@@ -1,4 +1,6 @@
 /* ===== MARKETPLACE SALES TABLE COMPONENT ===== */
+import { ExplorerLink } from "$components/layout/ExplorerLink.tsx";
+import { txExplorerUrl } from "$lib/utils/chain/clientChain.ts";
 import { colGroup } from "$components/layout/types.ts";
 import { PlaceholderImage } from "$icon";
 import StampTextContent from "$islands/content/stampDetailContent/StampTextContent.tsx";
@@ -230,14 +232,14 @@ export function MarketplaceSalesRow({ stamp }: MarketplaceSalesRowProps) {
       >
         {sale?.tx_hash
           ? (
-            <a
-              href={`https://mempool.space/tx/${sale.tx_hash}`}
+            <ExplorerLink
+              href={txExplorerUrl(sale.tx_hash)}
               target="_blank"
               rel="noopener noreferrer"
               class="link-neutral-400"
             >
               {abbreviateAddress(sale.tx_hash, 6)}
-            </a>
+            </ExplorerLink>
           )
           : "N/A"}
       </td>

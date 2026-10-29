@@ -6,6 +6,7 @@ import {
   containerPill,
   transitionAll,
 } from "$layout";
+import { showMarketData } from "$lib/utils/chain/clientChain.ts";
 import { unicodeEscapeToEmoji } from "$lib/utils/ui/formatting/emojiUtils.ts";
 import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { getSRC20ImageSrc } from "$lib/utils/ui/media/imageUtils.ts";
@@ -155,39 +156,47 @@ export function SRC20Card(
         </div>
       </div>
 
-      {/* Price */}
-      <div
-        class={`hidden min-[420px]:flex ${cardFileType} text-right shrink-0`}
-      >
-        {formatPriceSats(priceBtc)}
-      </div>
+      {showMarketData() && (
+        <>
+          {/* Price */}
+          <div
+            class={`hidden min-[420px]:flex ${cardFileType} text-right shrink-0`}
+          >
+            {formatPriceSats(priceBtc)}
+          </div>
 
-      {/* Change (24H) */}
-      <div
-        class={`hidden mobileMd:flex tablet:hidden ${cardFileType} text-right shrink-0 ${
-          change24h == null
-            ? valueNeutral
-            : change24h > 0
-            ? valuePositive
-            : change24h < 0
-            ? valueNegative
-            : valueNeutral
-        }`}
-      >
-        {change24h == null
-          ? "N/A"
-          : `${change24h > 0 ? "+" : ""}${change24h.toFixed(2)}%`}
-      </div>
+          {/* Change (24H) */}
+          <div
+            class={`hidden mobileMd:flex tablet:hidden ${cardFileType} text-right shrink-0 ${
+              change24h == null
+                ? valueNeutral
+                : change24h > 0
+                ? valuePositive
+                : change24h < 0
+                ? valueNegative
+                : valueNeutral
+            }`}
+          >
+            {change24h == null
+              ? "N/A"
+              : `${change24h > 0 ? "+" : ""}${change24h.toFixed(2)}%`}
+          </div>
+        </>
+      )}
 
       {/* Balance */}
       <div class={`${cardSupply} text-right shrink-0`}>
         {formatAmount(src20.amt)}
       </div>
 
-      {/* Value */}
-      <div class={`hidden mobileMd:flex ${cardPrice} text-right shrink-0`}>
-        {formatValueBtc(valueBtc)}
-      </div>
+      {showMarketData() && (
+        <>
+          {/* Value */}
+          <div class={`hidden mobileMd:flex ${cardPrice} text-right shrink-0`}>
+            {formatValueBtc(valueBtc)}
+          </div>
+        </>
+      )}
     </div>
   );
 
@@ -549,18 +558,22 @@ export function SRC20Card(
         {/* spacer 1 */}
         <div class="flex-[0_1_8px]" />
 
-        {/* price */}
-        <div class="flex justify-center">
-          <PillWithTooltip
-            label="PRICE"
-            className={`w-fit ${containerPill} ${cardPrice}`}
-          >
-            {formatPriceSats(priceBtc)}
-          </PillWithTooltip>
-        </div>
+        {showMarketData() && (
+          <>
+            {/* price */}
+            <div class="flex justify-center">
+              <PillWithTooltip
+                label="PRICE"
+                className={`w-fit ${containerPill} ${cardPrice}`}
+              >
+                {formatPriceSats(priceBtc)}
+              </PillWithTooltip>
+            </div>
 
-        {/* spacer 2 */}
-        <div class="flex-[0_1_8px]" />
+            {/* spacer 2 */}
+            <div class="flex-[0_1_8px]" />
+          </>
+        )}
 
         {/* balance */}
         <div class="flex justify-center mt-auto">
@@ -572,18 +585,22 @@ export function SRC20Card(
           </PillWithTooltip>
         </div>
 
-        {/* spacer 3 */}
-        <div class="flex-[0_1_8px]" />
+        {showMarketData() && (
+          <>
+            {/* spacer 3 */}
+            <div class="flex-[0_1_8px]" />
 
-        {/* value */}
-        <div class="flex justify-center">
-          <PillWithTooltip
-            label="VALUE"
-            className={`w-fit ${containerPill} ${cardFileType}`}
-          >
-            {formatValueBtc(valueBtc)}
-          </PillWithTooltip>
-        </div>
+            {/* value */}
+            <div class="flex justify-center">
+              <PillWithTooltip
+                label="VALUE"
+                className={`w-fit ${containerPill} ${cardFileType}`}
+              >
+                {formatValueBtc(valueBtc)}
+              </PillWithTooltip>
+            </div>
+          </>
+        )}
       </div>
     </>
   );
@@ -623,41 +640,45 @@ export function SRC20Card(
       {/* spacer 1 */}
       <div class="flex-[0_1_8px]" />
 
-      {/* price */}
-      <div class="flex justify-center">
-        <PillWithTooltip
-          label="PRICE"
-          className={`w-fit ${containerPill} ${cardPrice}`}
-        >
-          {formatPriceSats(priceBtc)}
-        </PillWithTooltip>
-      </div>
+      {showMarketData() && (
+        <>
+          {/* price */}
+          <div class="flex justify-center">
+            <PillWithTooltip
+              label="PRICE"
+              className={`w-fit ${containerPill} ${cardPrice}`}
+            >
+              {formatPriceSats(priceBtc)}
+            </PillWithTooltip>
+          </div>
 
-      {/* spacer 2 */}
-      <div class="flex-[0_1_8px]" />
+          {/* spacer 2 */}
+          <div class="flex-[0_1_8px]" />
 
-      {/* 24h change */}
-      <div class="flex justify-center">
-        <PillWithTooltip
-          label="24H CHANGE"
-          className={`w-fit ${containerPill} ${cardFileType} ${
-            change24h == null
-              ? valueNeutral
-              : change24h > 0
-              ? valuePositive
-              : change24h < 0
-              ? valueNegative
-              : valueNeutral
-          }`}
-        >
-          {change24h == null
-            ? "N/A"
-            : `${change24h > 0 ? "+" : ""}${change24h.toFixed(2)}%`}
-        </PillWithTooltip>
-      </div>
+          {/* 24h change */}
+          <div class="flex justify-center">
+            <PillWithTooltip
+              label="24H CHANGE"
+              className={`w-fit ${containerPill} ${cardFileType} ${
+                change24h == null
+                  ? valueNeutral
+                  : change24h > 0
+                  ? valuePositive
+                  : change24h < 0
+                  ? valueNegative
+                  : valueNeutral
+              }`}
+            >
+              {change24h == null
+                ? "N/A"
+                : `${change24h > 0 ? "+" : ""}${change24h.toFixed(2)}%`}
+            </PillWithTooltip>
+          </div>
 
-      {/* spacer 3 */}
-      <div class="flex-[0_1_8px]" />
+          {/* spacer 3 */}
+          <div class="flex-[0_1_8px]" />
+        </>
+      )}
 
       {/* holders */}
       <div class="flex justify-center">
@@ -682,18 +703,22 @@ export function SRC20Card(
         </PillWithTooltip>
       </div>
 
-      {/* spacer 5 */}
-      <div class="flex-[0_1_8px]" />
+      {showMarketData() && (
+        <>
+          {/* spacer 5 */}
+          <div class="flex-[0_1_8px]" />
 
-      {/* value */}
-      <div class="flex justify-center">
-        <PillWithTooltip
-          label="VALUE"
-          className={`w-fit ${containerPill} ${cardFileType}`}
-        >
-          {formatValueBtc(valueBtc)}
-        </PillWithTooltip>
-      </div>
+          {/* value */}
+          <div class="flex justify-center">
+            <PillWithTooltip
+              label="VALUE"
+              className={`w-fit ${containerPill} ${cardFileType}`}
+            >
+              {formatValueBtc(valueBtc)}
+            </PillWithTooltip>
+          </div>
+        </>
+      )}
     </>
   );
 

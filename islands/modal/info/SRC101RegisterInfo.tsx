@@ -1,4 +1,6 @@
 /* ===== SRC-101 REGISTER INFO ===== */
+import { ExplorerLink } from "$components/layout/ExplorerLink.tsx";
+import { explorerHomeUrl } from "$lib/utils/chain/clientChain.ts";
 import { ModalInfo } from "$islands/modal/info/ModalInfo.tsx";
 import { textSm } from "$text";
 
@@ -53,14 +55,14 @@ export const SRC101RegisterInfo = () => {
             by switching the toggle.<br />
             You can check the progress of the registration by viewing your tx
             hash in a{" "}
-            <a
-              href="https://mempool.space/"
+            <ExplorerLink
+              href={explorerHomeUrl()}
               target="_blank"
               rel="noopener noreferrer"
               class="link-neutral-200-bold"
             >
               blockchain explorer
-            </a>.
+            </ExplorerLink>.
           </p>
         </div>
       </div>

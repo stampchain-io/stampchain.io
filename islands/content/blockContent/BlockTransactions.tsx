@@ -2,6 +2,7 @@
 import { useFees } from "$fees";
 import { Icon } from "$icon";
 import { containerBackground, transitionAll } from "$layout";
+import { showMarketData } from "$lib/utils/chain/clientChain.ts";
 import { unicodeEscapeToEmoji } from "$lib/utils/ui/formatting/emojiUtils.ts";
 import { text, text2xl } from "$text";
 import { useState } from "preact/hooks";
@@ -41,7 +42,8 @@ function usdForFee(
   satPerVb: number | undefined,
   btcPrice: number | null | undefined,
 ) {
-  if (satPerVb == null || !btcPrice) return "";
+  // No USD estimate without a price feed (ECX).
+  if (satPerVb == null || !btcPrice || !showMarketData()) return "";
   const usd = (satPerVb * 140 / 1e8) * btcPrice;
   return `$${usd.toFixed(2)}`;
 }

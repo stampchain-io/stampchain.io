@@ -1,6 +1,7 @@
 /* ===== STAT DISPLAY COMPONENTS ===== */
 import { ActivityLevelIndicator } from "$components/indicators/ActivityLevelIndicator.tsx";
 import { alignmentClasses, transitionColors } from "$layout";
+import { coinUnit, showMarketData } from "$lib/utils/chain/clientChain.ts";
 import { cardPrice, labelXs, valueSm, valueXl } from "$text";
 import type {
   StatItemProps,
@@ -80,6 +81,8 @@ export function StatPrice({
   class: customClass,
 }: StatPriceProps) {
   const alignmentClass = alignmentClasses[align];
+  // No USD line without a price feed (ECX); the amount keeps its own unit.
+  const usd = showMarketData() ? priceUSD : null;
   // COLD renders nothing from ActivityLevelIndicator, so treat it the same
   // as "no activity level" — otherwise the justify-between row below would
   // collapse to a single child and lose its intended alignment.
@@ -94,26 +97,26 @@ export function StatPrice({
               level={activityLevel}
               className="!cursor-default"
             />
-            {priceUSD == null ? null : (
+            {usd == null ? null : (
               <div
                 class={`font-normal text-xs text-color-neutral-500 text-nowrap ${alignmentClass}`}
               >
-                {priceUSD} USD
+                {usd} USD
               </div>
             )}
           </div>
         )
-        : priceUSD == null
+        : usd == null
         ? null
         : (
           <div
             class={`font-normal text-xs text-color-neutral-500 text-nowrap ${alignmentClass}`}
           >
-            {priceUSD} USD
+            {usd} USD
           </div>
         )}
       <div class={`${cardPrice} !text-sm ${alignmentClass}`}>
-        {priceBTC} <span class="font-light">BTC</span>
+        {priceBTC} <span class="font-light">{coinUnit()}</span>
       </div>
     </div>
   );

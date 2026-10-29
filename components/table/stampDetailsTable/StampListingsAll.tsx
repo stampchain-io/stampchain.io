@@ -1,4 +1,6 @@
 /* ===== STAMP LISTINGS ALL TABLE COMPONENT ===== */
+import { ExplorerLink } from "$components/layout/ExplorerLink.tsx";
+import { txExplorerUrl } from "$lib/utils/chain/clientChain.ts";
 import { colGroup } from "$components/layout/types.ts";
 import {
   cellCenterL2Detail,
@@ -156,14 +158,17 @@ export function StampListingsAllTable(
                         "OPEN"
                       )
                       : (
-                        <a
-                          href={`https://www.blockchain.com/explorer/transactions/btc/${dispenser.tx_hash}`}
+                        <ExplorerLink
+                          href={txExplorerUrl(
+                            dispenser.tx_hash,
+                            "blockchain.com",
+                          )}
                           target="_blank"
                           rel="noopener noreferrer"
                           class="link-neutral-500"
                         >
                           CLOSED
-                        </a>
+                        </ExplorerLink>
                       )}
                   </td>
                 </tr>
