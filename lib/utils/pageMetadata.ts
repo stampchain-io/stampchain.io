@@ -177,12 +177,6 @@ export const STATIC_PAGE_METADATA: Record<string, PageMetadata> = {
       "Build a recursive Bitcoin Stamp from stamps already on-chain. Arrange the layers, name the piece, then sign and broadcast.",
   },
 
-  "/tool/fairmint": {
-    title: "Fairmint Counterparty Assets | Stampchain",
-    description:
-      "Fairmint an open Counterparty asset. Pick a fairminter or enter an asset name, set the quantity, check the estimated fee and sign in your wallet.",
-  },
-
   "/media": {
     title: "Bitcoin Stamps in the Media | Press and Video",
     description:
@@ -285,9 +279,9 @@ const EXTRA_STATIC: Record<string, PageMetadata> = {
       "Every stamp issued on Bitcoin, newest first. Filter by type, sort by stamp number or price, and open any piece for its full on-chain history.",
   },
   "/tool/stamp/trade": {
-    title: "Trade Bitcoin Stamps | Dispensers and Offers",
+    title: "Trade Bitcoin Stamps with a PSBT",
     description:
-      "Open or take a stamp dispenser on Bitcoin. Set the price and quantity, review the fee estimate and sign the transaction in your wallet.",
+      "Attach a stamp to a new UTXO, set a BTC price, and complete the sale by signing a PSBT in your wallet.",
   },
 };
 

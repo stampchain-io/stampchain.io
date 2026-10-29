@@ -37,7 +37,6 @@ const SITEMAP_PATHS = [
   "/howto/leatherconnect",
   "/howto/leathercreate",
   "/howto/transferbitname",
-  "/tool/fairmint",
   "/media",
   "/presskit",
   "/upload",
@@ -152,6 +151,14 @@ Deno.test("trailing slashes and unknown paths resolve sensibly", () => {
 // for an unmatched path IS the 404 page's title. Before this, _404.tsx carried
 // its own <Head><title>, the _app title rendered alongside it, and the page
 // shipped two. Verified in served HTML, not in source.
+Deno.test("trade tool metadata describes a PSBT sale", () => {
+  const meta = getPageMetadata("/tool/stamp/trade");
+  assert(meta.title.length <= MAX_TITLE_LENGTH, meta.title);
+  assert(meta.description.length <= MAX_DESCRIPTION_LENGTH, meta.description);
+  assert(meta.title.toLowerCase().includes("psbt"));
+  assert(!meta.description.toLowerCase().includes("dispenser"));
+});
+
 Deno.test("unmatched paths get the not-found entry, not the home page's", () => {
   for (
     const path of [

@@ -246,13 +246,10 @@ export const signPSBT = async (
 
   try {
     console.log("Calling provider.signPSBT");
-    const inputIndexToSign = inputsToSign.map((input) => ({
-      index: input.index,
-    }));
-    console.log("input Index to Sign", inputIndexToSign);
+    console.log("inputs to sign", inputsToSign);
     const result = await provider.signPSBT(
       psbtHex,
-      inputIndexToSign,
+      inputsToSign,
       enableRBF,
       sighashTypes,
       autoBroadcast,

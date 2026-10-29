@@ -1,21 +1,11 @@
-/* ===== TRADE CONTENT COMPONENT ===== */
 /*
- * 🚨 MIGRATION NEEDED: This component needs to be aligned with the unified fee estimation system.
+ * Attach a stamp to a new UTXO, then build a seller PSBT the buyer completes.
  *
- * Current State: Uses 3 separate useTransactionConstructionService instances for attach/detach/dispense operations
- * Required Changes:
- * 1. Remove '_' prefixes from unused variables in all 3 estimator instances
- * 2. Add exact fee handling wrappers (handleAttachWithExactFees, handleDetachWithExactFees, handleDispenseWithExactFees)
- * 3. Add exactFeeDetails state management for each operation
- * 4. Update FeeCalculatorBase props to use mapProgressiveFeeDetails(exactFeeDetails || progressiveFeeDetails)
- * 5. Add 3-phase indicators for each operation
- * 6. Add error handling for feeEstimationError and clearError
- *
- * Reference: See StampingTool.tsx, SendTool.tsx, MintTool.tsx for the unified pattern
- * Priority: LOW - Component is not actively used in production
+ * Fee display is the attach response's estimatedFee. The stamp-mint fee
+ * estimator prices a different transaction, so it is not used here. The buyer
+ * swap preview lands with the PSBT layout rebuild.
  */
 import { walletContext } from "$client/wallet/wallet.ts";
-import { useTransactionConstructionService } from "$lib/hooks/useTransactionConstructionService.ts";
 import { logger } from "$lib/utils/logger.ts";
 import { showToast } from "$lib/utils/ui/notifications/toastSignal.ts";
 import { useCallback, useEffect, useState } from "preact/hooks";
@@ -24,36 +14,75 @@ import { Button } from "$button";
 import { InputField } from "$form";
 import { bodyTool, containerBackground, containerGap } from "$layout";
 import type { UTXO, XcpBalance } from "$lib/types/index.d.ts";
-import { normalizeFeeRate } from "$lib/utils/fees.ts";
+import { btcToSats, normalizeFeeRate } from "$lib/utils/fees.ts";
 import { StatusMessages } from "$notification";
 import { subtitleNeutral, titleNeutral } from "$text";
 import type { ComposeAttachOptions } from "$types/services.d.ts";
+import type { PSBTInputToSign } from "$types/wallet.d.ts";
 
 /* ===== CONSTANTS ===== */
 const SIGHASH_SINGLE = 0x03;
 const SIGHASH_ANYONECANPAY = 0x80;
 const SIGHASH_SINGLE_ANYONECANPAY = SIGHASH_SINGLE | SIGHASH_ANYONECANPAY; // 131
-const MAX_FEE_RATE_VB = 500; // maximum sat/vB
-const MIN_UTXO_VALUE = 546; // Minimum UTXO value in satoshis
+const MAX_FEE_RATE_VB = 500;
+const MIN_UTXO_VALUE = 546;
 
 /* ===== TYPES ===== */
-interface InputToSign {
-  index: number;
-}
-
 interface StatusMessageType {
   message: string;
   txid?: string;
 }
 
+interface AttachResponse {
+  psbtHex?: string;
+  inputsToSign?: PSBTInputToSign[];
+  estimatedFee?: number;
+  attachDestinationVout?: number;
+  error?: string;
+}
+
+/* ===== HELPERS ===== */
+function formatSaleHint(salePrice: string, btcPrice: number): string | null {
+  if (!salePrice.trim()) return null;
+  let sats: number;
+  try {
+    sats = btcToSats(Number(salePrice));
+  } catch {
+    return null;
+  }
+  const satsLabel = `${sats.toLocaleString("en-US")} sats`;
+  if (!(btcPrice > 0)) return satsLabel;
+  const usd = (sats / 1e8) * btcPrice;
+  const usdLabel = usd.toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: usd >= 100 ? 0 : 2,
+  });
+  return `${satsLabel} · ${usdLabel}`;
+}
+
+function shortUtxo(utxo: string): string {
+  const [txid, vout] = utxo.split(":");
+  if (!txid || vout === undefined) return utxo;
+  return `${txid.slice(0, 8)}...:${vout}`;
+}
+
 /* ===== COMPONENT ===== */
 export function StampTradeTool() {
   /* ===== STATE ===== */
-  const [availableAssets, setAvailableAssets] = useState<XcpBalance[]>([]);
+  const [attachAssets, setAttachAssets] = useState<XcpBalance[]>([]);
   const [isLoadingAssets, setIsLoadingAssets] = useState(false);
-  const [_maxQuantity, setMaxQuantity] = useState<number | null>(null);
-  const [availableUtxos, setAvailableUtxos] = useState<UTXO[]>([]);
+  const [maxQuantity, setMaxQuantity] = useState<number | null>(null);
+  const [fundingUtxos, setFundingUtxos] = useState<UTXO[]>([]);
   const [isLoadingUtxos, setIsLoadingUtxos] = useState(false);
+  const [offerAssets, setOfferAssets] = useState<XcpBalance[]>([]);
+  const [isLoadingOffers, setIsLoadingOffers] = useState(false);
+  const [attachEstimatedFee, setAttachEstimatedFee] = useState<number | null>(
+    null,
+  );
+  const [attachedAssetUtxo, setAttachedAssetUtxo] = useState<string | null>(
+    null,
+  );
   const { wallet, isConnected, showConnectModal } = walletContext;
   const address = wallet.address;
 
@@ -75,104 +104,29 @@ export function StampTradeTool() {
   const [buyerFormState, setBuyerFormState] = useState({
     sellerPsbtHex: "",
     buyerUtxo: "",
-    salePrice: "",
     feeRate: "",
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submissionMessage, setSubmissionMessage] = useState<
-    StatusMessageType | null
-  >(null);
-  const [apiError, setApiError] = useState<string | null>(null);
+  const [createSubmitting, setCreateSubmitting] = useState(false);
+  const [attachSubmitting, setAttachSubmitting] = useState(false);
+  const [swapSubmitting, setSwapSubmitting] = useState(false);
+  const [createMessage, setCreateMessage] = useState<StatusMessageType | null>(
+    null,
+  );
+  const [attachMessage, setAttachMessage] = useState<StatusMessageType | null>(
+    null,
+  );
+  const [swapMessage, setSwapMessage] = useState<StatusMessageType | null>(
+    null,
+  );
+  const [createError, setCreateError] = useState<string | null>(null);
+  const [attachError, setAttachError] = useState<string | null>(null);
+  const [swapError, setSwapError] = useState<string | null>(null);
 
-  /* ===== 🚀 PROGRESSIVE FEE ESTIMATION - CREATE PSBT ===== */
-  const {
-    getBestEstimate: getCreatePsbtBestEstimate,
-    isEstimating: _createPsbtIsEstimating,
-    isPreFetching: createPsbtIsPreFetching,
-    estimateExact: _createPsbtEstimateExact,
-    // Phase-specific results
-    phase1: createPsbtPhase1,
-    phase2: _createPsbtPhase2,
-    phase3: createPsbtPhase3,
-    currentPhase: _createPsbtPhase,
-    error: createPsbtFeeError,
-    clearError: _createPsbtClearError,
-  } = useTransactionConstructionService({
-    toolType: "stamp", // Trade operations use stamp toolType
-    feeRate: isSubmitting ? 0 : 1, // Default to 1 sat/vB for trades
-    walletAddress: wallet?.address || "", // Provide empty string instead of undefined
-    isConnected: !!wallet && !isSubmitting,
-    isSubmitting,
-    // Trade-specific parameters for PSBT creation
-    ...(tradeFormState.utxo && { utxoString: tradeFormState.utxo }),
-    ...(tradeFormState.salePrice && {
-      saleAmount: parseFloat(tradeFormState.salePrice) * 100000000, // Convert BTC to sats
-    }),
-  });
-
-  // Get the best available fee estimate
-  const createPsbtFeeDetails = getCreatePsbtBestEstimate();
-
-  /* ===== 🚀 PROGRESSIVE FEE ESTIMATION - UTXO ATTACH ===== */
-  const {
-    getBestEstimate: getAttachBestEstimate,
-    isEstimating: _attachIsEstimating,
-    isPreFetching: attachIsPreFetching,
-    estimateExact: _attachEstimateExact,
-    // Phase-specific results
-    phase1: attachPhase1,
-    phase2: _attachPhase2,
-    phase3: attachPhase3,
-    currentPhase: _attachPhase,
-    error: attachFeeError,
-    clearError: _attachClearError,
-  } = useTransactionConstructionService({
-    toolType: "stamp", // Attach operations use stamp toolType
-    feeRate: attachFormState.feeRateVB
-      ? parseInt(attachFormState.feeRateVB)
-      : 0,
-    walletAddress: wallet?.address || "", // Provide empty string instead of undefined
-    isConnected: !!wallet && !isSubmitting,
-    isSubmitting,
-    // Attach-specific parameters
-    ...(attachFormState.cpid && { asset: attachFormState.cpid }),
-    ...(attachFormState.quantity &&
-      { quantity: parseInt(attachFormState.quantity) }),
-    ...(attachFormState.utxo && { utxoString: attachFormState.utxo }),
-  });
-
-  // Get the best available fee estimate
-  const attachFeeDetails = getAttachBestEstimate();
-
-  /* ===== 🚀 PROGRESSIVE FEE ESTIMATION - COMPLETE SWAP ===== */
-  const {
-    getBestEstimate: getSwapBestEstimate,
-    isEstimating: _swapIsEstimating,
-    isPreFetching: swapIsPreFetching,
-    estimateExact: _swapEstimateExact,
-    // Phase-specific results
-    phase1: swapPhase1,
-    phase2: _swapPhase2,
-    phase3: swapPhase3,
-    currentPhase: _swapPhase,
-    error: swapFeeError,
-    clearError: _swapClearError,
-  } = useTransactionConstructionService({
-    toolType: "stamp", // Swap completion uses stamp toolType
-    feeRate: buyerFormState.feeRate ? parseInt(buyerFormState.feeRate) : 0,
-    walletAddress: wallet?.address || "", // Provide empty string instead of undefined
-    isConnected: !!wallet && !isSubmitting,
-    isSubmitting,
-    // Swap-specific parameters
-    ...(buyerFormState.buyerUtxo && { utxoString: buyerFormState.buyerUtxo }),
-    ...(buyerFormState.sellerPsbtHex && {
-      psbtSize: buyerFormState.sellerPsbtHex.length / 2, // Hex to bytes
-    }),
-  });
-
-  // Get the best available fee estimate
-  const swapFeeDetails = getSwapBestEstimate();
+  const saleHint = formatSaleHint(
+    tradeFormState.salePrice,
+    tradeFormState.BTCPrice,
+  );
 
   /* ===== EFFECTS ===== */
   useEffect(() => {
@@ -195,7 +149,6 @@ export function StampTradeTool() {
     fetchPrice();
   }, []);
 
-  // Component mount/unmount logging
   useEffect(() => {
     logger.debug("ui", {
       message: "TradeTool mounted",
@@ -209,36 +162,6 @@ export function StampTradeTool() {
     };
   }, []);
 
-  // Handle fee estimation errors for Create PSBT
-  useEffect(() => {
-    if (createPsbtFeeError) {
-      logger.debug("system", {
-        message: "Fee estimation error in TradeTool - Create PSBT",
-        error: createPsbtFeeError,
-      });
-    }
-  }, [createPsbtFeeError]);
-
-  // Handle fee estimation errors for UTXO Attach
-  useEffect(() => {
-    if (attachFeeError) {
-      logger.debug("system", {
-        message: "Fee estimation error in TradeTool - UTXO Attach",
-        error: attachFeeError,
-      });
-    }
-  }, [attachFeeError]);
-
-  // Handle fee estimation errors for Complete Swap
-  useEffect(() => {
-    if (swapFeeError) {
-      logger.debug("system", {
-        message: "Fee estimation error in TradeTool - Complete Swap",
-        error: swapFeeError,
-      });
-    }
-  }, [swapFeeError]);
-
   /* ===== EVENT HANDLERS ===== */
   const handleTradeInputChange = (e: Event, field: string) => {
     const value = (e.target as HTMLInputElement).value;
@@ -248,6 +171,7 @@ export function StampTradeTool() {
   const handleAttachInputChange = (e: Event, field: string) => {
     const value = (e.target as HTMLInputElement).value;
     setAttachFormState((prev) => ({ ...prev, [field]: value }));
+    if (field === "cpid") setMaxQuantity(null);
   };
 
   const handleBuyerInputChange = (e: Event, field: string) => {
@@ -262,55 +186,64 @@ export function StampTradeTool() {
       return;
     }
 
-    setIsSubmitting(true);
-    setSubmissionMessage({ message: "Please wait..." });
-    setApiError(null);
+    setCreateSubmitting(true);
+    setCreateMessage({ message: "Please wait..." });
+    setCreateError(null);
 
     try {
       const { utxo, salePrice } = tradeFormState;
 
-      // Validate inputs
       if (!utxo || !salePrice) {
-        showToast(
-          "Please fill in all fields with valid values.",
-          "error",
-          false,
-        );
-        setIsSubmitting(false);
+        const message = "Please fill in all fields with valid values.";
+        showToast(message, "error", false);
+        setCreateError(message);
+        setCreateSubmitting(false);
         return;
       }
 
-      // Create PSBT by calling the backend API
+      try {
+        btcToSats(Number(salePrice));
+      } catch (error) {
+        const message = error instanceof Error
+          ? error.message
+          : "Invalid sale price";
+        showToast(message, "error", false);
+        setCreateError(message);
+        setCreateSubmitting(false);
+        return;
+      }
+
       const response = await fetch("/api/v2/trx/create_psbt", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           utxo,
-          salePrice: parseFloat(salePrice),
+          salePrice: Number(salePrice),
           sellerAddress: address,
         }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        showToast(`Error creating PSBT.\n${errorData.error}`, "error");
-        setIsSubmitting(false);
+        const message = `Error creating PSBT.\n${errorData.error}`;
+        showToast(message, "error");
+        setCreateError(errorData.error || "Error creating PSBT");
+        setCreateSubmitting(false);
         return;
       }
 
       const data = await response.json();
-      const psbtHex = data.psbt; // PSBT is now in hex format
+      const psbtHex = data.psbt;
 
       console.log("Received PSBT hex:", psbtHex);
 
-      // Sign PSBT using wallet connect
       const walletResult = await walletContext.signPSBT(
         wallet,
         psbtHex,
-        [{ index: 0 }], // Inputs to sign (seller's input at index 0)
-        true, // Enable RBF
+        [{ index: 0 }],
+        true,
         [SIGHASH_SINGLE_ANYONECANPAY],
-        false, // Set autoBroadcast to false
+        false,
       );
 
       if (walletResult.signed) {
@@ -319,28 +252,29 @@ export function StampTradeTool() {
           "success",
           false,
         );
-        setSubmissionMessage({
+        setCreateMessage({
           message: "PSBT signed successfully. Here's the signed PSBT hex:",
         });
         setTradeFormState((prev) => ({ ...prev, psbtHex: walletResult.psbt }));
       } else if (walletResult.cancelled) {
         showToast("PSBT signing cancelled by user.", "warning");
-        setSubmissionMessage({
+        setCreateMessage({
           message: "PSBT signing cancelled by user.",
         });
       } else {
         showToast(`PSBT signing failed.\n${walletResult.error}`, "error");
-        setSubmissionMessage({
+        setCreateMessage({
           message: `PSBT signing failed.\n${walletResult.error}`,
         });
+        setCreateError(walletResult.error || "PSBT signing failed");
       }
     } catch (error) {
       console.error("Error creating or signing PSBT:", error);
-      setApiError(
+      setCreateError(
         "An unexpected error occurred during PSBT creation or signing.",
       );
     } finally {
-      setIsSubmitting(false);
+      setCreateSubmitting(false);
     }
   };
 
@@ -350,42 +284,54 @@ export function StampTradeTool() {
       return;
     }
 
-    setIsSubmitting(true);
-    setSubmissionMessage({ message: "Please wait..." });
-    setApiError(null);
+    setAttachSubmitting(true);
+    setAttachMessage({ message: "Please wait..." });
+    setAttachError(null);
+    setAttachedAssetUtxo(null);
 
     try {
       const { cpid, quantity, feeRateVB, utxo } = attachFormState;
 
-      // Validate required inputs first
       if (!cpid || !quantity || !feeRateVB || !utxo || !address) {
-        setApiError("Please fill in all fields with valid values.");
-        setIsSubmitting(false);
+        setAttachError("Please fill in all fields with valid values.");
+        setAttachSubmitting(false);
         return;
       }
 
-      // Normalize fee rate first - this includes validation
+      if (!/^\d+$/.test(quantity) || parseInt(quantity, 10) < 1) {
+        setAttachError("Quantity must be a whole number of at least 1.");
+        setAttachSubmitting(false);
+        return;
+      }
+
+      const parsedQuantity = parseInt(quantity, 10);
+      if (maxQuantity !== null && parsedQuantity > maxQuantity) {
+        setAttachError(
+          `Quantity cannot exceed the available balance of ${maxQuantity}.`,
+        );
+        setAttachSubmitting(false);
+        return;
+      }
+
       let normalizedFees;
       try {
         normalizedFees = normalizeFeeRate({
           satsPerVB: Number(feeRateVB),
         });
       } catch (error) {
-        setApiError(
+        setAttachError(
           error instanceof Error ? error.message : "Invalid fee rate",
         );
-        setIsSubmitting(false);
+        setAttachSubmitting(false);
         return;
       }
 
-      // Additional fee rate bounds checking if needed
       if (normalizedFees.normalizedSatsPerVB > MAX_FEE_RATE_VB) {
-        setApiError(`Fee rate should not exceed ${MAX_FEE_RATE_VB} sat/vB`);
-        setIsSubmitting(false);
+        setAttachError(`Fee rate should not exceed ${MAX_FEE_RATE_VB} sat/vB`);
+        setAttachSubmitting(false);
         return;
       }
 
-      // Prepare the request body for new endpoint
       const requestBody: {
         address: string;
         identifier: string;
@@ -395,7 +341,7 @@ export function StampTradeTool() {
       } = {
         address,
         identifier: cpid,
-        quantity: parseInt(quantity, 10),
+        quantity: parsedQuantity,
         inputs_set: utxo,
         options: {
           fee_per_kb: normalizedFees.normalizedSatsPerKB,
@@ -405,7 +351,6 @@ export function StampTradeTool() {
         },
       };
 
-      // Call the new endpoint
       const response = await fetch("/api/v2/trx/stampattach", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -414,52 +359,80 @@ export function StampTradeTool() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        setApiError(`Error creating PSBT: ${errorData.error}`);
-        setIsSubmitting(false);
+        setAttachError(`Error creating PSBT: ${errorData.error}`);
+        setAttachSubmitting(false);
         return;
       }
 
-      const data = await response.json();
-      const psbtHex = data.psbt;
-      const inputsToSign: InputToSign[] = data.inputsToSign.map((
-        input: { index: number },
+      const data: AttachResponse = await response.json();
+      const psbtHex = data.psbtHex;
+      if (!psbtHex) {
+        setAttachError("Attach response did not include a PSBT.");
+        setAttachSubmitting(false);
+        return;
+      }
+      if (typeof data.estimatedFee === "number") {
+        setAttachEstimatedFee(data.estimatedFee);
+      }
+
+      const inputsToSign: PSBTInputToSign[] = (data.inputsToSign ?? []).map((
+        input,
       ) => ({
         index: input.index,
+        ...(input.address ? { address: input.address } : {}),
+        ...(input.sighashTypes ? { sighashTypes: input.sighashTypes } : {}),
       }));
 
       console.log("Received PSBT hex:", psbtHex);
 
-      // Sign PSBT using wallet connect
       const walletResult = await walletContext.signPSBT(
         wallet,
         psbtHex,
         inputsToSign,
-        true, // Enable RBF
-        undefined, // Omit sighashTypes to use default
-        true, // Set autoBroadcast to true
+        true,
+        undefined,
+        true,
       );
 
       if (walletResult.signed) {
-        setSubmissionMessage({
-          message: "Transaction signed and broadcast successfully!",
-        });
-        setAttachFormState((prev) => ({ ...prev, psbtHex: walletResult.psbt }));
+        const destinationVout = data.attachDestinationVout;
+        if (walletResult.txid && Number.isInteger(destinationVout)) {
+          const assetUtxo = `${walletResult.txid}:${destinationVout}`;
+          setAttachedAssetUtxo(assetUtxo);
+          setAttachMessage({
+            message:
+              "Attach broadcast. The stamp sits on the new UTXO after it confirms and is indexed.",
+            txid: walletResult.txid,
+          });
+        } else {
+          setAttachMessage({
+            message: walletResult.txid
+              ? "Transaction signed and broadcast successfully!"
+              : "Transaction signed. Broadcast did not return a txid.",
+            ...(walletResult.txid ? { txid: walletResult.txid } : {}),
+          });
+        }
+        setAttachFormState((prev) => ({
+          ...prev,
+          psbtHex: walletResult.psbt || psbtHex,
+        }));
       } else if (walletResult.cancelled) {
-        setSubmissionMessage({
+        setAttachMessage({
           message: "PSBT signing cancelled by user.",
         });
       } else {
-        setSubmissionMessage({
+        setAttachMessage({
           message: `PSBT signing failed: ${walletResult.error}`,
         });
+        setAttachError(walletResult.error || "PSBT signing failed");
       }
     } catch (error: unknown) {
       console.error("Error creating or signing PSBT:", error);
-      setApiError(
+      setAttachError(
         error instanceof Error ? error.message : "An unexpected error occurred",
       );
     } finally {
-      setIsSubmitting(false);
+      setAttachSubmitting(false);
     }
   };
 
@@ -469,35 +442,33 @@ export function StampTradeTool() {
       return;
     }
 
-    setIsSubmitting(true);
-    setSubmissionMessage({ message: "Please wait..." });
-    setApiError("");
+    setSwapSubmitting(true);
+    setSwapMessage({ message: "Please wait..." });
+    setSwapError(null);
 
     try {
       const { sellerPsbtHex, buyerUtxo, feeRate } = buyerFormState;
 
-      // Field validation
       if (!sellerPsbtHex.trim()) {
-        setApiError("Seller PSBT Hex is required.");
-        setIsSubmitting(false);
+        setSwapError("Seller PSBT Hex is required.");
+        setSwapSubmitting(false);
         return;
       }
 
       if (!buyerUtxo.trim()) {
-        setApiError("Your UTXO is required.");
-        setIsSubmitting(false);
+        setSwapError("Your UTXO is required.");
+        setSwapSubmitting(false);
         return;
       }
 
       if (!feeRate || isNaN(Number(feeRate)) || Number(feeRate) <= 0) {
-        setApiError("Fee Rate must be a positive number.");
-        setIsSubmitting(false);
+        setSwapError("Fee Rate must be a positive number.");
+        setSwapSubmitting(false);
         return;
       }
 
       const parsedFeeRate = Number(feeRate);
 
-      // Call the API to complete the PSBT
       const response = await fetch("/api/v2/trx/complete_psbt", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -521,14 +492,13 @@ export function StampTradeTool() {
         throw new Error("Received empty PSBT from server");
       }
 
-      // Sign the completed PSBT with the wallet
       const signResult = await walletContext.signPSBT(
         wallet,
         completedPsbt,
-        [{ index: 1 }], // Buyer's input is at index 1
-        true, // Enable RBF
-        [SIGHASH_SINGLE_ANYONECANPAY], // Use the same sighash as seller
-        true, // autoBroadcast
+        [{ index: 1 }],
+        true,
+        [SIGHASH_SINGLE_ANYONECANPAY],
+        true,
       );
 
       if (!signResult.signed) {
@@ -536,16 +506,17 @@ export function StampTradeTool() {
         throw new Error(signResult.error || "Failed to sign PSBT");
       }
 
-      setSubmissionMessage({
+      setSwapMessage({
         message: "Swap completed and broadcast successfully!",
+        ...(signResult.txid ? { txid: signResult.txid } : {}),
       });
     } catch (error: unknown) {
       console.error("Complete swap error:", error);
-      setApiError(
+      setSwapError(
         error instanceof Error ? error.message : "An unexpected error occurred",
       );
     } finally {
-      setIsSubmitting(false);
+      setSwapSubmitting(false);
     }
   };
 
@@ -557,12 +528,12 @@ export function StampTradeTool() {
     }
 
     setIsLoadingUtxos(true);
-    setApiError(null);
+    setAttachError(null);
 
     try {
-      console.log("Querying UTXOs for address:", address);
+      console.log("Querying spendable UTXOs for address:", address);
       const response = await fetch(
-        `/api/internal/utxoquery?address=${address}`,
+        `/api/internal/utxoquery?address=${address}&spendableOnly=true`,
       );
 
       if (!response.ok) {
@@ -573,19 +544,16 @@ export function StampTradeTool() {
       const data = await response.json();
       console.log("Raw response data:", data);
 
-      // Validate the response structure
       if (!data || !data.utxos) {
         console.error("Invalid response structure:", data);
         throw new Error("Invalid response format from server");
       }
 
-      // Ensure we have an array of UTXOs
       if (!Array.isArray(data.utxos)) {
         console.error("UTXOs is not an array:", data.utxos);
         throw new Error("Server returned invalid UTXO format");
       }
 
-      // Filter UTXOs >= 546 sats and sort them
       const filteredAndSortedUtxos = [...data.utxos]
         .filter((utxo: UTXO) =>
           utxo.value !== undefined && utxo.value >= MIN_UTXO_VALUE
@@ -598,17 +566,17 @@ export function StampTradeTool() {
       );
 
       if (filteredAndSortedUtxos.length === 0) {
-        setApiError(`No UTXOs found with value >= ${MIN_UTXO_VALUE} sats`);
+        setAttachError(`No UTXOs found with value >= ${MIN_UTXO_VALUE} sats`);
         return;
       }
 
-      setAvailableUtxos(filteredAndSortedUtxos);
+      setFundingUtxos(filteredAndSortedUtxos);
       console.log(
         `Successfully set ${filteredAndSortedUtxos.length} spendable UTXOs`,
       );
     } catch (error) {
       console.error("Error fetching UTXOs:", error);
-      setApiError(
+      setAttachError(
         error instanceof Error ? error.message : "Failed to fetch UTXOs",
       );
     } finally {
@@ -623,15 +591,15 @@ export function StampTradeTool() {
     }
 
     if (!address) {
-      setApiError("No wallet address available");
+      setAttachError("No wallet address available");
       return;
     }
 
     setIsLoadingAssets(true);
-    setApiError(null);
+    setAttachError(null);
 
     try {
-      console.log("Querying assets for address:", address);
+      console.log("Querying unattached assets for address:", address);
       const response = await fetch(
         `/api/v2/balance/getStampsBalance?address=${
           encodeURIComponent(address)
@@ -651,27 +619,90 @@ export function StampTradeTool() {
         throw new Error("Invalid response format from server");
       }
 
-      // Sort assets by CPID
-      const sortedAssets = [...data.stampBalance].sort((a, b) =>
+      const unattached = (data.stampBalance as XcpBalance[]).filter((asset) =>
+        !asset.utxo
+      );
+      const sortedAssets = [...unattached].sort((a, b) =>
         a.cpid.localeCompare(b.cpid)
       );
 
-      console.log(`Received ${sortedAssets.length} assets`);
+      console.log(`Received ${sortedAssets.length} unattached assets`);
 
       if (sortedAssets.length === 0) {
-        setApiError("No assets found for this address");
+        setAttachError(
+          data.stampBalance.length > 0
+            ? "Every stamp on this address is already attached. Use Create PSBT to sell one."
+            : "No assets found for this address",
+        );
+        setAttachAssets([]);
         return;
       }
 
-      setAvailableAssets(sortedAssets);
+      setAttachAssets(sortedAssets);
       console.log(`Successfully set ${sortedAssets.length} assets`);
     } catch (error) {
       console.error("Error fetching assets:", error);
-      setApiError(
+      setAttachError(
         error instanceof Error ? error.message : "Failed to fetch assets",
       );
     } finally {
       setIsLoadingAssets(false);
+    }
+  }, [address, isConnected]);
+
+  const handleQueryOffers = useCallback(async () => {
+    if (!isConnected) {
+      showConnectModal();
+      return;
+    }
+
+    if (!address) {
+      setCreateError("No wallet address available");
+      return;
+    }
+
+    setIsLoadingOffers(true);
+    setCreateError(null);
+
+    try {
+      const response = await fetch(
+        `/api/v2/balance/getStampsBalance?address=${
+          encodeURIComponent(address)
+        }&utxoOnly=true`,
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to fetch attached stamps");
+      }
+
+      const data = await response.json();
+      if (!data.stampBalance || !Array.isArray(data.stampBalance)) {
+        throw new Error("Invalid response format from server");
+      }
+
+      const attached = (data.stampBalance as XcpBalance[])
+        .filter((asset) => asset.utxo)
+        .sort((a, b) => a.cpid.localeCompare(b.cpid));
+
+      if (attached.length === 0) {
+        setOfferAssets([]);
+        setCreateError(
+          "No stamps are attached to a UTXO yet. Attach one first.",
+        );
+        return;
+      }
+
+      setOfferAssets(attached);
+    } catch (error) {
+      console.error("Error fetching attached stamps:", error);
+      setCreateError(
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch attached stamps",
+      );
+    } finally {
+      setIsLoadingOffers(false);
     }
   }, [address, isConnected]);
 
@@ -685,15 +716,23 @@ export function StampTradeTool() {
     setAttachFormState((prev) => ({
       ...prev,
       cpid: asset.cpid,
-      quantity: "", // Clear the quantity field instead of auto-filling
+      quantity: "",
     }));
     setMaxQuantity(asset.quantity);
+  };
+
+  const handleOfferSelection = (asset: XcpBalance) => {
+    setTradeFormState((prev) => ({ ...prev, utxo: asset.utxo }));
+  };
+
+  const useAttachedUtxo = () => {
+    if (!attachedAssetUtxo) return;
+    setTradeFormState((prev) => ({ ...prev, utxo: attachedAssetUtxo }));
   };
 
   /* ===== RENDER ===== */
   return (
     <div class={`${bodyTool} ${containerGap}`}>
-      {/* ===== SELLER SECTION ===== */}
       <h1 class={`${titleNeutral} mx-auto -mb-2 mobileLg:-mb-4`}>
         TRADE
       </h1>
@@ -705,69 +744,50 @@ export function StampTradeTool() {
           CREATE PSBT
         </h3>
 
-        {/* ===== 🎯 INLINE FEE STATUS DISPLAY - CREATE PSBT ===== */}
-        {createPsbtFeeDetails && (
-          <div className="mb-4 p-3 bg-color-grey-semidark/50 rounded-2xl border border-color-grey-light/10">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-sm text-color-grey-light">
-                Estimated Fees:
-              </span>
-              {/* Phase indicators following StampingTool pattern */}
-              <div className="flex items-center gap-1">
-                <div
-                  className={`w-1.5 h-1.5 rounded-full ${
-                    createPsbtPhase1 ? "bg-green-400" : "bg-color-grey-light/30"
-                  }`}
-                  title="Phase 1: Instant estimate"
-                >
-                </div>
-                <div
-                  className={`w-1.5 h-1.5 rounded-full ${
-                    createPsbtIsPreFetching
-                      ? "bg-blue-400 animate-pulse"
-                      : "bg-color-grey-light/30"
-                  }`}
-                  title="Phase 2: Smart UTXO estimate"
-                >
-                </div>
-                <div
-                  className={`w-1.5 h-1.5 rounded-full ${
-                    createPsbtPhase3 ? "bg-green-400" : "bg-color-grey-light/30"
-                  }`}
-                  title="Phase 3: Exact estimate"
-                >
-                </div>
+        <div class="flex flex-col gap-5">
+          <div class="flex flex-col gap-5">
+            <div class="flex gap-5 items-start">
+              <div class="flex-grow">
+                <InputField
+                  type="text"
+                  placeholder="Asset UTXO (txid:vout)"
+                  value={tradeFormState.utxo}
+                  onChange={(e) => handleTradeInputChange(e, "utxo")}
+                />
               </div>
+              <Button
+                variant="outline"
+                color="neutral"
+                onClick={handleQueryOffers}
+                disabled={createSubmitting || isLoadingOffers}
+              >
+                {isLoadingOffers ? "LOADING..." : "QUERY"}
+              </Button>
             </div>
-            <div className="grid grid-cols-2 gap-4 text-xs">
-              <div>
-                <span className="text-color-grey-light">Miner Fee:</span>
-                <span className="ml-2 text-white">
-                  {createPsbtFeeDetails.minerFee} sats
-                </span>
-              </div>
-              <div>
-                <span className="text-color-grey-light">Total Value:</span>
-                <span className="ml-2 text-white">
-                  {createPsbtFeeDetails.totalValue} sats
-                </span>
-              </div>
-            </div>
-            {createPsbtIsPreFetching && (
-              <div className="mt-2 text-xs text-blue-400 animate-pulse">
-                💡 Smart UTXO analysis in progress...
+
+            {offerAssets.length > 0 && (
+              <div class="max-h-40 overflow-y-auto bg-gray-800 rounded-2xl p-3">
+                <h4 class="text-sm font-medium mb-2">Attached stamps:</h4>
+                {offerAssets.map((asset) => (
+                  <div
+                    key={`${asset.cpid}:${asset.utxo}`}
+                    class="flex justify-between items-center p-2 hover:bg-gray-700 cursor-pointer rounded"
+                    onClick={() => handleOfferSelection(asset)}
+                  >
+                    <span class="text-sm">
+                      {asset.cpid}
+                      <span class="text-xs text-gray-400 ml-2">
+                        {shortUtxo(asset.utxo)}
+                      </span>
+                    </span>
+                    <span class="text-xs text-gray-400">
+                      {asset.quantity} attached
+                    </span>
+                  </div>
+                ))}
               </div>
             )}
           </div>
-        )}
-
-        <div class="flex flex-col gap-5">
-          <InputField
-            type="text"
-            placeholder="UTXO (e.g., txid:vout)"
-            value={tradeFormState.utxo}
-            onChange={(e) => handleTradeInputChange(e, "utxo")}
-          />
 
           <InputField
             type="number"
@@ -777,6 +797,9 @@ export function StampTradeTool() {
             step="0.00000001"
             min="0"
           />
+          {saleHint && (
+            <p class="text-xs text-color-grey-light -mt-3">{saleHint}</p>
+          )}
         </div>
 
         <div class="flex justify-end mt-5">
@@ -784,15 +807,15 @@ export function StampTradeTool() {
             variant="flat"
             color="neutral"
             onClick={handleCreatePSBT}
-            disabled={isSubmitting}
+            disabled={createSubmitting}
           >
-            {isSubmitting ? "PROCESSING" : "CREATE PSBT"}
+            {createSubmitting ? "PROCESSING" : "CREATE PSBT"}
           </Button>
         </div>
 
         <StatusMessages
-          submissionMessage={submissionMessage}
-          apiError={apiError}
+          submissionMessage={createMessage}
+          apiError={createError}
           walletError={null}
         />
 
@@ -815,67 +838,20 @@ export function StampTradeTool() {
       <div class={containerBackground}>
         <h2 class={`${subtitleNeutral} mx-auto`}>SELLER</h2>
         <h3 class=" font-bold text-xl text-color-grey-semilight mb-2">
-          ATTACH TO UTXO
+          ATTACH TO A NEW UTXO
         </h3>
+        <p class="text-sm text-color-grey-light mb-4">
+          The funding UTXO pays for the attach. The stamp is credited to a new
+          output, not to that UTXO.
+        </p>
 
-        {/* ===== 🎯 INLINE FEE STATUS DISPLAY - UTXO ATTACH ===== */}
-        {attachFeeDetails && (
-          <div className="mb-4 p-3 bg-color-grey-semidark/50 rounded-2xl border border-color-grey-light/10">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-sm text-color-grey-light">
-                Estimated Fees:
-              </span>
-              {/* Phase indicators following StampingTool pattern */}
-              <div className="flex items-center gap-1">
-                <div
-                  className={`w-1.5 h-1.5 rounded-full ${
-                    attachPhase1 ? "bg-green-400" : "bg-color-grey-light/30"
-                  }`}
-                  title="Phase 1: Instant estimate"
-                >
-                </div>
-                <div
-                  className={`w-1.5 h-1.5 rounded-full ${
-                    attachIsPreFetching
-                      ? "bg-blue-400 animate-pulse"
-                      : "bg-color-grey-light/30"
-                  }`}
-                  title="Phase 2: Smart UTXO estimate"
-                >
-                </div>
-                <div
-                  className={`w-1.5 h-1.5 rounded-full ${
-                    attachPhase3 ? "bg-green-400" : "bg-color-grey-light/30"
-                  }`}
-                  title="Phase 3: Exact estimate"
-                >
-                </div>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4 text-xs">
-              <div>
-                <span className="text-color-grey-light">Miner Fee:</span>
-                <span className="ml-2 text-white">
-                  {attachFeeDetails.minerFee} sats
-                </span>
-              </div>
-              <div>
-                <span className="text-color-grey-light">Total Value:</span>
-                <span className="ml-2 text-white">
-                  {attachFeeDetails.totalValue} sats
-                </span>
-              </div>
-            </div>
-            {attachIsPreFetching && (
-              <div className="mt-2 text-xs text-blue-400 animate-pulse">
-                💡 Smart UTXO analysis in progress...
-              </div>
-            )}
-          </div>
+        {attachEstimatedFee !== null && (
+          <p class="text-sm text-color-grey-light mb-4">
+            Estimated fee: {attachEstimatedFee.toLocaleString("en-US")} sats
+          </p>
         )}
 
         <div class="flex flex-col gap-5">
-          {/* Asset (CPID) section with query button */}
           <div class="flex flex-col gap-5">
             <div class="flex gap-5 items-start">
               <div class="flex-grow">
@@ -890,17 +866,16 @@ export function StampTradeTool() {
                 variant="outline"
                 color="neutral"
                 onClick={handleQueryAssets}
-                disabled={isSubmitting || isLoadingAssets}
+                disabled={attachSubmitting || isLoadingAssets}
               >
                 {isLoadingAssets ? "LOADING..." : "QUERY"}
               </Button>
             </div>
 
-            {/* Asset selection results */}
-            {availableAssets.length > 0 && (
+            {attachAssets.length > 0 && (
               <div class="max-h-40 overflow-y-auto bg-gray-800 rounded-2xl p-3">
-                <h4 class="text-sm font-medium mb-2">Available Assets:</h4>
-                {availableAssets.map((asset) => (
+                <h4 class="text-sm font-medium mb-2">Unattached stamps:</h4>
+                {attachAssets.map((asset) => (
                   <div
                     key={asset.cpid}
                     class="flex justify-between items-center p-2 hover:bg-gray-700 cursor-pointer rounded"
@@ -923,6 +898,11 @@ export function StampTradeTool() {
             onChange={(e) => handleAttachInputChange(e, "quantity")}
             min="1"
           />
+          {maxQuantity !== null && (
+            <p class="text-xs text-color-grey-light -mt-3">
+              {maxQuantity.toLocaleString("en-US")} available
+            </p>
+          )}
 
           <InputField
             type="number"
@@ -933,13 +913,12 @@ export function StampTradeTool() {
             min="1"
           />
 
-          {/* UTXO section with query button */}
           <div class="flex flex-col gap-5">
             <div class="flex gap-5 items-start">
               <div class="flex-grow">
                 <InputField
                   type="text"
-                  placeholder="UTXO (e.g., txid:vout)"
+                  placeholder="Funding UTXO (txid:vout)"
                   value={attachFormState.utxo}
                   onChange={(e) => handleAttachInputChange(e, "utxo")}
                 />
@@ -948,17 +927,16 @@ export function StampTradeTool() {
                 variant="outline"
                 color="neutral"
                 onClick={handleQueryUtxos}
-                disabled={isSubmitting || isLoadingUtxos}
+                disabled={attachSubmitting || isLoadingUtxos}
               >
                 {isLoadingUtxos ? "LOADING..." : "QUERY"}
               </Button>
             </div>
 
-            {/* UTXO selection results */}
-            {availableUtxos.length > 0 && (
+            {fundingUtxos.length > 0 && (
               <div class="max-h-40 overflow-y-auto bg-gray-800 rounded-2xl p-3">
-                <h4 class="text-sm font-medium mb-2">Available UTXOs:</h4>
-                {availableUtxos.map((utxo) => (
+                <h4 class="text-sm font-medium mb-2">Spendable UTXOs:</h4>
+                {fundingUtxos.map((utxo) => (
                   <div
                     key={`${utxo.txid}:${utxo.vout}`}
                     class="flex justify-between items-center p-2 hover:bg-gray-700 cursor-pointer rounded"
@@ -982,17 +960,37 @@ export function StampTradeTool() {
             variant="flat"
             color="neutral"
             onClick={handleUtxoAttach}
-            disabled={isSubmitting}
+            disabled={attachSubmitting}
           >
-            {isSubmitting ? "PROCESSING" : "ATTACH UTXO"}
+            {attachSubmitting ? "PROCESSING" : "ATTACH UTXO"}
           </Button>
         </div>
 
         <StatusMessages
-          submissionMessage={submissionMessage}
-          apiError={apiError}
+          submissionMessage={attachMessage}
+          apiError={attachError}
           walletError={null}
         />
+
+        {attachedAssetUtxo && (
+          <div class={`${containerBackground} break-words mt-6`}>
+            <h2 class="text-xl font-bold mb-2">New asset UTXO</h2>
+            <p class="text-sm font-mono break-all">{attachedAssetUtxo}</p>
+            <p class="mt-2 text-sm">
+              Use this in Create PSBT after the attach confirms and the stamp
+              shows as attached to it.
+            </p>
+            <div class="flex justify-end mt-4">
+              <Button
+                variant="outline"
+                color="neutral"
+                onClick={useAttachedUtxo}
+              >
+                USE IN CREATE PSBT
+              </Button>
+            </div>
+          </div>
+        )}
 
         {attachFormState.psbtHex && (
           <div class={`${containerBackground} break-words mt-6`}>
@@ -1007,68 +1005,11 @@ export function StampTradeTool() {
       </div>
 
       {/* ===== BUYER SECTION ===== */}
-      {/* ===== COMPLETE SWAP FORM ===== */}
       <div class={containerBackground}>
         <h2 class={`${subtitleNeutral} mx-auto`}>BUYER</h2>
         <h3 class=" font-bold text-xl text-color-grey-semilight mb-2">
           COMPLETE SWAP
         </h3>
-
-        {/* ===== 🎯 INLINE FEE STATUS DISPLAY - COMPLETE SWAP ===== */}
-        {swapFeeDetails && (
-          <div className="mb-4 p-3 bg-color-grey-semidark/50 rounded-2xl border border-color-grey-light/10">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-sm text-color-grey-light">
-                Estimated Fees:
-              </span>
-              {/* Phase indicators following StampingTool pattern */}
-              <div className="flex items-center gap-1">
-                <div
-                  className={`w-1.5 h-1.5 rounded-full ${
-                    swapPhase1 ? "bg-green-400" : "bg-color-grey-light/30"
-                  }`}
-                  title="Phase 1: Instant estimate"
-                >
-                </div>
-                <div
-                  className={`w-1.5 h-1.5 rounded-full ${
-                    swapIsPreFetching
-                      ? "bg-blue-400 animate-pulse"
-                      : "bg-color-grey-light/30"
-                  }`}
-                  title="Phase 2: Smart UTXO estimate"
-                >
-                </div>
-                <div
-                  className={`w-1.5 h-1.5 rounded-full ${
-                    swapPhase3 ? "bg-green-400" : "bg-color-grey-light/30"
-                  }`}
-                  title="Phase 3: Exact estimate"
-                >
-                </div>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4 text-xs">
-              <div>
-                <span className="text-color-grey-light">Miner Fee:</span>
-                <span className="ml-2 text-white">
-                  {swapFeeDetails.minerFee} sats
-                </span>
-              </div>
-              <div>
-                <span className="text-color-grey-light">Total Value:</span>
-                <span className="ml-2 text-white">
-                  {swapFeeDetails.totalValue} sats
-                </span>
-              </div>
-            </div>
-            {swapIsPreFetching && (
-              <div className="mt-2 text-xs text-blue-400 animate-pulse">
-                💡 Smart UTXO analysis in progress...
-              </div>
-            )}
-          </div>
-        )}
 
         <div class="flex flex-col gap-5">
           <InputField
@@ -1079,11 +1020,10 @@ export function StampTradeTool() {
           />
           <InputField
             type="text"
-            placeholder="Your UTXO (e.g., txid:vout)"
+            placeholder="Your UTXO (txid:vout)"
             value={buyerFormState.buyerUtxo}
             onChange={(e) => handleBuyerInputChange(e, "buyerUtxo")}
           />
-          {/* Add this input field in the buyer section */}
           <InputField
             type="number"
             placeholder="Fee Rate (sat/vB)"
@@ -1097,11 +1037,17 @@ export function StampTradeTool() {
             variant="flat"
             color="neutral"
             onClick={handleCompleteSwap}
-            disabled={isSubmitting}
+            disabled={swapSubmitting}
           >
-            {isSubmitting ? "PROCESSING" : "COMPLETE SWAP"}
+            {swapSubmitting ? "PROCESSING" : "COMPLETE SWAP"}
           </Button>
         </div>
+
+        <StatusMessages
+          submissionMessage={swapMessage}
+          apiError={swapError}
+          walletError={null}
+        />
       </div>
     </div>
   );

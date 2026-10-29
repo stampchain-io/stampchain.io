@@ -1,5 +1,6 @@
 import { Handlers } from "$fresh/server.ts";
 import { ApiResponseUtil } from "$lib/utils/api/responses/apiResponseUtil.ts";
+import { btcToSats } from "$lib/utils/fees.ts";
 import { logger } from "$lib/utils/logger.ts";
 import {
   createBitcoinTransactionBuilder,
@@ -20,9 +21,14 @@ export const handler: Handlers = {
         return ApiResponseUtil.badRequest("Missing parameters");
       }
 
-      // Additional validation can be added here
-      if (isNaN(salePrice) || salePrice <= 0) {
-        return ApiResponseUtil.badRequest("Invalid salePrice value");
+      // salePrice is BTC, same as the trade form. Reject before the builder
+      // so a dust or over-precise amount is a 400, not a 500.
+      try {
+        btcToSats(salePrice);
+      } catch (error) {
+        return ApiResponseUtil.badRequest(
+          error instanceof Error ? error.message : "Invalid salePrice value",
+        );
       }
 
       // const isOwner = await validateUTXOOwnership(utxo, sellerAddress);

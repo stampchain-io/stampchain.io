@@ -4,6 +4,7 @@ import { estimateFee } from "$lib/utils/bitcoin/minting/feeCalculations.ts";
 import { getScriptTypeInfo } from "$lib/utils/bitcoin/scripts/scriptTypeUtils.ts";
 import { getUTXOForAddress as getUTXOForAddressFromUtils } from "$lib/utils/bitcoin/utxo/utxoUtils.ts";
 import { bytesToHex, hex2bin } from "$lib/utils/data/binary/baseUtils.ts";
+import { btcToSats } from "$lib/utils/fees.ts";
 import { logger } from "$lib/utils/logger.ts";
 import { CommonUTXOService } from "$server/services/utxo/commonUtxoService.ts";
 import * as bitcoin from "bitcoinjs-lib";
@@ -90,7 +91,7 @@ export class BitcoinTransactionBuilderImpl {
     const utxoDetails = txInfo.utxo;
     logger.debug("psbt-service", { message: "UTXO Details", utxoDetails });
 
-    const satoshiAmount = BigInt(Math.floor(salePrice * 100000000));
+    const satoshiAmount = BigInt(btcToSats(salePrice));
 
     // Get the raw transaction hex for the input
     const rawTxHex = await this.dependencies.commonUtxoService.getRawTransactionHex(txid);
@@ -390,7 +391,7 @@ export class BitcoinTransactionBuilder {
     psbt.addInput(input);
 
     // Add output for sale price
-    const salePriceSats = BigInt(Math.round(salePrice * 1e8)); // Use BigInt
+    const salePriceSats = BigInt(btcToSats(salePrice));
     psbt.addOutput({
       address: sellerAddress,
       value: salePriceSats,

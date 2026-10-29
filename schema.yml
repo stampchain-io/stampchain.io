@@ -3118,8 +3118,9 @@ paths:
         - Stamps
       summary: Attach stamp by ID
       description: |
-        Creates a PSBT transaction to attach a stamp using its identifier (cpid, stamp number, or tx_hash).
-        The stamp will be attached to the specified address. Optionally, a specific UTXO can be specified using inputs_set.
+        Creates a PSBT that attaches a stamp (by cpid, stamp number, or tx_hash) to a new output.
+        inputs_set is the funding UTXO that pays for the attach, not the output that receives the stamp.
+        The stamp output index is returned as attachDestinationVout.
       requestBody:
         required: true
         content:
@@ -3146,7 +3147,7 @@ paths:
                   example: 1
                 inputs_set:
                   type: string
-                  description: Specific UTXO to attach to (txid:vout format)
+                  description: Funding UTXO in txid:vout format. Pays for the attach. The stamp is credited to a new output.
                   example: "10f8e495a5088dd90a731f4b2657bfb4e94b1f59d3961cbc960900d4e5ba44e5:0"
                 options:
                   type: object
@@ -3171,11 +3172,42 @@ paths:
                       default: true
       responses:
         "200":
-          description: Successful response with PSBT transaction
+          description: Unsigned attach PSBT
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/MintResponse"
+                type: object
+                required:
+                  - psbtHex
+                  - inputsToSign
+                  - attachDestinationVout
+                properties:
+                  psbtHex:
+                    type: string
+                    description: Hex-encoded unsigned PSBT
+                  inputsToSign:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - index
+                      properties:
+                        index:
+                          type: integer
+                        address:
+                          type: string
+                        sighashTypes:
+                          type: array
+                          items:
+                            type: integer
+                  estimatedFee:
+                    type: number
+                    description: Miner fee plus service fee, in satoshis
+                  estimatedVsize:
+                    type: integer
+                  attachDestinationVout:
+                    type: integer
+                    description: Output index that receives the attached stamp. Pending until the attach confirms and is indexed.
         "400":
           $ref: "#/components/responses/BadRequest"
         "404":
@@ -3319,7 +3351,7 @@ paths:
       summary: Create a seller-side PSBT for a UTXO sale
       description: |
         Builds a partially signed transaction offering the given UTXO for salePrice
-        satoshis payable to sellerAddress. The buyer completes it via /api/v2/trx/complete_psbt.
+        BTC payable to sellerAddress. The buyer completes it via /api/v2/trx/complete_psbt.
       requestBody:
         required: true
         content:
@@ -3337,8 +3369,8 @@ paths:
                   example: "10f8e495a5088dd90a731f4b2657bfb4e94b1f59d3961cbc960900d4e5ba44e5:0"
                 salePrice:
                   type: number
-                  description: Sale price in satoshis (must be > 0)
-                  example: 100000
+                  description: Sale price in BTC. At most 8 decimal places, and at least 0.00000546 BTC (546 sats).
+                  example: 0.001
                 sellerAddress:
                   type: string
                   description: Address that receives the sale proceeds

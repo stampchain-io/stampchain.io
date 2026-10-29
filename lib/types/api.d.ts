@@ -696,7 +696,9 @@ export interface NormalizedMintResponse {
  * Input parameters for creating Bitcoin PSBTs
  */
 export interface CreatePSBTInput {
+  /** UTXO offered for sale, txid:vout. */
   utxo: string;
+  /** Sale price in BTC. See btcToSats. */
   salePrice: number;
   sellerAddress: string;
 }
