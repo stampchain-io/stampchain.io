@@ -1,4 +1,6 @@
 /* ===== STAMP TRANSFERS TABLE COMPONENT ===== */
+import { ExplorerLink } from "$components/layout/ExplorerLink.tsx";
+import { txExplorerUrl } from "$lib/utils/chain/clientChain.ts";
 import { colGroup } from "$components/layout/types.ts";
 import {
   cellCenterL2Detail,
@@ -130,15 +132,12 @@ export function StampTransfersTable(
                 <td
                   class={cellCenterL2Detail}
                 >
-                  <a
-                    href={`https://www.blockchain.com/explorer/transactions/btc/${send.tx_hash}`}
+                  <ExplorerLink
+                    href={txExplorerUrl(send.tx_hash, "blockchain.com")}
                     target="_blank"
                     onClick={(e) => {
                       e.preventDefault();
-                      globalThis.open(
-                        `https://www.blockchain.com/explorer/transactions/btc/${send.tx_hash}`,
-                        "_blank",
-                      );
+                      globalThis.open(e.currentTarget.href, "_blank");
                     }}
                     className="link-neutral-200"
                   >
@@ -148,7 +147,7 @@ export function StampTransfersTable(
                     <span class="hidden tablet:inline">
                       {abbreviateAddress(send.tx_hash, 6)}
                     </span>
-                  </a>
+                  </ExplorerLink>
                 </td>
                 {/* DATE */}
                 <td

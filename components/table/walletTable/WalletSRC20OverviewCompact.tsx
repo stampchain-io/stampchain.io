@@ -16,6 +16,10 @@ import {
   shadowGlowPurple,
 } from "$layout";
 import {
+  showMarketData,
+  withoutMarketColumns,
+} from "$lib/utils/chain/clientChain.ts";
+import {
   isBrowser,
   safeNavigate,
 } from "$lib/utils/navigation/freshNavigationUtils.ts";
@@ -98,6 +102,8 @@ export function WalletSRC20OverviewRowCompact(
   );
 
   /* ===== RENDER ===== */
+  // Floor price, market cap, change and value are market data (none on ECX).
+  const market = showMarketData();
   return (
     <tr
       class={`${container2} ${shadowGlowPurple}`}
@@ -134,51 +140,61 @@ export function WalletSRC20OverviewRowCompact(
           )}
       </td>
 
-      {/* PRICE */}
-      <td
-        class={`${cellCenterL2Card} text-color-secondary-400`}
-      >
-        {formatPriceSats(priceBtc)}
-      </td>
+      {market && (
+        <>
+          {/* PRICE */}
+          <td
+            class={`${cellCenterL2Card} text-color-secondary-400`}
+          >
+            {formatPriceSats(priceBtc)}
+          </td>
 
-      {/* CHANGE */}
-      <td
-        class={cellCenterL2Card}
-      >
-        {change !== undefined && change !== null && !isNaN(Number(change))
-          ? (
-            <span
-              class={Number(change) > 0
-                ? valuePositive
-                : Number(change) < 0
-                ? valueNegative
-                : valueNeutral}
-            >
-              {Number(change) > 0 ? "+" : ""}
-              {Number(change).toFixed(2)}%
-            </span>
-          )
-          : <span class="text-color-neutral-500">N/A</span>}
-      </td>
+          {/* CHANGE */}
+          <td
+            class={cellCenterL2Card}
+          >
+            {change !== undefined && change !== null && !isNaN(Number(change))
+              ? (
+                <span
+                  class={Number(change) > 0
+                    ? valuePositive
+                    : Number(change) < 0
+                    ? valueNegative
+                    : valueNeutral}
+                >
+                  {Number(change) > 0 ? "+" : ""}
+                  {Number(change).toFixed(2)}%
+                </span>
+              )
+              : <span class="text-color-neutral-500">N/A</span>}
+          </td>
+        </>
+      )}
 
       {/* BALANCE */}
       <td
-        class={`${cellBalanceCompact} text-color-primary-400`}
+        class={`${
+          market ? cellBalanceCompact : cellRightL2Card
+        } text-color-primary-400`}
       >
         {!isNaN(balance) ? balance.toLocaleString() : "0"}
       </td>
 
-      {
-        /* VALUE — hidden from tablet+ up, BALANCE takes over the last-
+      {market && (
+        <>
+          {
+            /* VALUE — hidden from tablet+ up, BALANCE takes over the last-
        * column styling at that breakpoint (see cellBalanceCompact). */
-      }
-      <td
-        class={`${cellRightL2Card} text-color-neutral-200 pr-3 tablet:hidden`}
-      >
-        {value > 0
-          ? formatValueBtc(value)
-          : <span class="text-color-neutral-500">N/A</span>}
-      </td>
+          }
+          <td
+            class={`${cellRightL2Card} text-color-neutral-200 pr-3 tablet:hidden`}
+          >
+            {value > 0
+              ? formatValueBtc(value)
+              : <span class="text-color-neutral-500">N/A</span>}
+          </td>
+        </>
+      )}
     </tr>
   );
 }
@@ -191,13 +207,14 @@ interface WalletSRC20OverviewTableCompactProps {
 export function WalletSRC20OverviewTableCompact(
   { src20s }: WalletSRC20OverviewTableCompactProps,
 ) {
+  const headers = withoutMarketColumns(HEADERS, HEADERS);
   return (
     <div class="overflow-x-auto tablet:overflow-x-visible scrollbar-hide -my-3">
       <table
         class={`w-full border-separate border-spacing-y-3 ${textXs}`}
       >
         <colgroup>
-          {colGroup([
+          {colGroup(withoutMarketColumns([
             {
               width:
                 "min-w-[140px] max-w-[150px] w-auto sticky left-0 mobileLg:static",
@@ -206,18 +223,23 @@ export function WalletSRC20OverviewTableCompact(
             { width: "min-w-[90px] w-auto" }, // CHANGE
             { width: "min-w-[90px] w-auto" }, // BALANCE
             { width: "min-w-[90px] w-auto tablet:hidden" }, // VALUE
-          ]).map((col) => <col key={col.key} class={col.className} />)}
+          ], HEADERS)).map((col) => (
+            <col
+              key={col.key}
+              class={col.className}
+            />
+          ))}
         </colgroup>
         <thead>
           <tr class={`${container2}`}>
-            {HEADERS.map((header, i) => {
+            {headers.map((header, i) => {
               const isFirst = i === 0;
-              const isLast = i === HEADERS.length - 1;
+              const isLast = i === headers.length - 1;
               const isBalance = header === "BALANCE";
               const rowClass = header === "VALUE"
                 ? `${cellRightL2Card} tablet:hidden`
                 : isBalance
-                ? cellBalanceCompact
+                ? (isLast ? cellRightL2Card : cellBalanceCompact)
                 : isFirst
                 ? cellLeftL2Card
                 : isLast
@@ -245,7 +267,7 @@ export function WalletSRC20OverviewTableCompact(
             ))
             : (
               <tr>
-                <td colSpan={HEADERS.length}>
+                <td colSpan={headers.length}>
                   <EmptyState label="NO TOKENS IN WALLET" icon="src20Tokens" />
                 </td>
               </tr>

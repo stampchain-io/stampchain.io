@@ -1,5 +1,6 @@
 /// <reference lib="dom" />
 /// <reference lib="dom.iterable" />
+import { coinUnit } from "$lib/utils/chain/clientChain.ts";
 import { focusableWithin, nextFocusTarget } from "./focusTrap.ts";
 
 /* ===== ACCESSIBILITY UTILITIES ===== */
@@ -32,7 +33,7 @@ export class AccessibilityUtils {
       ? ` to buyer ${saleData.buyer_address.slice(0, 8)}...`
       : "";
 
-    return `Stamp ${stampId} sold for ${btcAmount} BTC ${timeAgo}${buyerInfo}`;
+    return `Stamp ${stampId} sold for ${btcAmount} ${coinUnit()} ${timeAgo}${buyerInfo}`;
   }
 
   /**

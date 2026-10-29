@@ -11,6 +11,7 @@ import {
   transitionColors,
 } from "$layout";
 import type { WalletOverviewInfo } from "$lib/types/wallet.d.ts";
+import { showMarketData } from "$lib/utils/chain/clientChain.ts";
 import {
   abbreviateAddress,
   formatBTCAmount,
@@ -354,6 +355,8 @@ export default function WalletHeader({
       return;
     }
 
+    // ECX has no market data, so there is nothing to warn about.
+    if (!showMarketData()) return;
     const status = (walletData as any).marketDataStatus;
     if (!status || status.overallStatus === "full") return;
 

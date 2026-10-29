@@ -1,5 +1,10 @@
 /* ===== WALLET DASHBOARD DETAILS COMPONENT ===== */
 /* @baba - cleanup button/icon code */
+import { ExplorerLink } from "$components/layout/ExplorerLink.tsx";
+import {
+  addressExplorerUrl,
+  showMarketData,
+} from "$lib/utils/chain/clientChain.ts";
 import { Icon } from "$icon";
 import { openBTCAddressTool } from "$islands/modal/tool/BTCAddressTool.tsx";
 import { openBTCSendTool } from "$islands/modal/tool/BTCSendTool.tsx";
@@ -379,8 +384,9 @@ function WalletOverview(
           onMouseEnter={handleHistoryMouseEnter}
           onMouseLeave={handleHistoryMouseLeave}
         >
-          <a
-            href={`https://mempool.space/address/${walletData.address}`}
+          <ExplorerLink
+            href={addressExplorerUrl(walletData.address)}
+            fallback="none"
             target="_blank"
             onClick={() => setIsHistoryTooltipVisible(false)}
           >
@@ -391,7 +397,7 @@ function WalletOverview(
               size="xl"
               color="neutral400"
             />
-          </a>
+          </ExplorerLink>
           <div
             class={`${tooltipIcon} ${
               isHistoryTooltipVisible ? "opacity-100" : "opacity-0"
@@ -557,13 +563,17 @@ function StampStats(
       <div class="flex justify-between">
         <StatItem label="EDITIONS" value="239" />
         <StatItem label="CREATED" value={stampsCreated.toString()} />
-        <div class={`${containerColData} items-end`}>
-          <h5 class={`${labelXs} text-right`}>VALUE</h5>
-          <StatPrice
-            priceBTC={stampValue > 0 ? stampValue.toFixed(8) : "N/A"}
-            align="right"
-          />
-        </div>
+        {showMarketData() && (
+          <>
+            <div class={`${containerColData} items-end`}>
+              <h5 class={`${labelXs} text-right`}>VALUE</h5>
+              <StatPrice
+                priceBTC={stampValue > 0 ? stampValue.toFixed(8) : "N/A"}
+                align="right"
+              />
+            </div>
+          </>
+        )}
       </div>
       <div class="flex justify-between">
         <StatItem label="COLLECTIONS" value="8" />
@@ -621,13 +631,17 @@ function TokenStats(
       </div>
 
       <div class="flex justify-between">
-        <div class={containerColData}>
-          <h5 class={labelXs}>VALUE</h5>
-          <StatPrice
-            priceBTC={totalValue > 0 ? totalValue.toFixed(8) : "N/A"}
-          />
-        </div>
-        <StatItem label="24H CHANGE" value="+/- 0.00%" align="right" />
+        {showMarketData() && (
+          <>
+            <div class={containerColData}>
+              <h5 class={labelXs}>VALUE</h5>
+              <StatPrice
+                priceBTC={totalValue > 0 ? totalValue.toFixed(8) : "N/A"}
+              />
+            </div>
+            <StatItem label="24H CHANGE" value="+/- 0.00%" align="right" />
+          </>
+        )}
       </div>
       <div class="flex justify-between">
         <StatItem
@@ -652,17 +666,21 @@ function TokenStats(
           align="center"
         />
 
-        <StatItem
-          label="VALUE"
-          value={
-            <>
-              234.34 USD<br />
-              5,886.98 USD<br />
-              532.39 USD
-            </>
-          }
-          align="right"
-        />
+        {showMarketData() && (
+          <>
+            <StatItem
+              label="VALUE"
+              value={
+                <>
+                  234.34 USD<br />
+                  5,886.98 USD<br />
+                  532.39 USD
+                </>
+              }
+              align="right"
+            />
+          </>
+        )}
       </div>
     </div>
   );

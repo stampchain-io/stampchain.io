@@ -1,5 +1,10 @@
 /* ===== HEADER COMPONENT ===== */
 import { Icon, LogoIcon } from "$icon";
+import { getChainBrand } from "$lib/utils/chain/brand.ts";
+import {
+  type ClientChainInfo,
+  setClientChain,
+} from "$lib/utils/chain/clientChain.ts";
 import { MenuButton } from "$islands/button/MenuButton.tsx";
 import { SearchButton } from "$islands/button/SearchButton.tsx";
 import { ToolsButton } from "$islands/button/ToolsButton.tsx";
@@ -77,7 +82,16 @@ const NAV_ICONS = false;
 const NAV_POSITION: "center" | "right" = "center";
 
 /* ===== MAIN HEADER COMPONENT ===== */
-export function Header() {
+interface HeaderProps {
+  /** Set by _app.tsx off Bitcoin only; absent on Bitcoin. */
+  chain?: ClientChainInfo;
+}
+
+export function Header({ chain }: HeaderProps = {}) {
+  // Header is the first island on every app-layout page, so publishing the
+  // chain here, during render, reaches every island hydrated after it.
+  setClientChain(chain);
+  const brand = getChainBrand(chain?.CHAIN);
   const [open, setOpen] = useState(false);
   const [currentPath, setCurrentPath] = useState<string | null>(null);
   const [drawerContent, setDrawerContent] = useState<
@@ -454,7 +468,7 @@ export function Header() {
     const getTitle = () => {
       switch (type) {
         case "menu":
-          return "STAMPCHAIN";
+          return brand.drawerTitle;
         case "wallet":
           return "WALLET";
         case "tools":
@@ -584,8 +598,9 @@ export function Header() {
     >
       <span class={`${logoHeader} hidden tablet:inline`}>
         <span class={`group-hover:text-color-hover ${transitionColors}`}>
-          STAMP
-        </span>CHAIN
+          {brand.logo.lead}
+        </span>
+        {brand.logo.tail}
       </span>
     </LogoIcon>
   );

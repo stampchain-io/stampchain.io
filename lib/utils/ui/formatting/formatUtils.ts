@@ -1,4 +1,5 @@
 import { SATOSHIS_PER_BTC } from "$constants";
+import { coinUnit } from "$lib/utils/chain/clientChain.ts";
 import { BigFloat } from "bigfloat/mod.ts";
 // @ts-ignore - esm.sh's dayjs type declaration uses `export =`, so it
 // has no `default` export per its .d.ts, even though the runtime module does.
@@ -15,6 +16,10 @@ export function abbreviateAddress(address: string, length = 4): string {
   return `${address.slice(0, length)}...${address.slice(-length)}`;
 }
 
+/**
+ * Format an on-chain amount in whole coins. The suffix is the chain's unit
+ * (`coinUnit()`: "BTC" on Bitcoin, "ECX" on ECX) unless `unit` is given.
+ */
 export function formatBTCAmount(
   btc: number,
   options: {
@@ -22,6 +27,7 @@ export function formatBTCAmount(
     decimals?: number;
     stripZeros?: boolean;
     excludeSuffix?: boolean;
+    unit?: string;
   } = {},
 ): string {
   const {
@@ -33,7 +39,9 @@ export function formatBTCAmount(
 
   const formatted = btc.toFixed(decimals);
   const result = stripZeros ? stripTrailingZeros(formatted) : formatted;
-  return includeSymbol && !excludeSuffix ? `${result} BTC` : result;
+  return includeSymbol && !excludeSuffix
+    ? `${result} ${options.unit ?? coinUnit()}`
+    : result;
 }
 
 export function formatSatoshisToBTC(
@@ -42,6 +50,7 @@ export function formatSatoshisToBTC(
     includeSymbol?: boolean;
     decimals?: number;
     stripZeros?: boolean;
+    unit?: string;
   } = {},
 ): string {
   // Check if the number already appears to be in BTC (has decimal places)
@@ -357,6 +366,8 @@ export function formatBTC(btc: number | null | undefined, options: {
   includeSymbol?: boolean;
   decimals?: number;
   fallback?: string;
+  /** Suffix when includeSymbol; defaults to the chain's `coinUnit()`. */
+  unit?: string;
 } = {}): string {
   const {
     includeSymbol = false,
@@ -379,7 +390,9 @@ export function formatBTC(btc: number | null | undefined, options: {
   }
 
   const formatted = btc.toFixed(actualDecimals).replace(/\.?0+$/, "");
-  return includeSymbol ? `${formatted} BTC` : formatted;
+  return includeSymbol
+    ? `${formatted} ${options.unit ?? coinUnit()}`
+    : formatted;
 }
 
 /**

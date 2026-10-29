@@ -1,6 +1,8 @@
 /* ===== STAMP DETAIL PAGE ===== */
 /*@baba-365+390*/
 
+import { brandText } from "$lib/utils/chain/brand.ts";
+import { getChainId } from "$server/services/chain/chainProfile.ts";
 import { StampImage, StampInfo } from "$content";
 import { Head } from "$fresh/runtime.ts";
 import { Handlers } from "$fresh/server.ts";
@@ -265,7 +267,7 @@ export default function StampDetailPage(props: StampDetailPageProps) {
   const title = htmlTitle
     ? htmlTitle.toUpperCase()
     : stamp?.cpid?.startsWith("A")
-    ? `Bitcoin Stamp #${stamp?.stamp ?? ""}`
+    ? brandText(`Bitcoin Stamp #${stamp?.stamp ?? ""}`, getChainId())
     : stamp?.cpid ?? "Stamp Not Found";
 
   // Update the getMetaImageInfo and add dimension handling
@@ -312,6 +314,7 @@ export default function StampDetailPage(props: StampDetailPageProps) {
       { url: metaInfo.url, baseUrl },
       collectionInfo,
       lowestPriceDispenser,
+      getChainId(),
     )
     : null;
 
@@ -403,7 +406,10 @@ export default function StampDetailPage(props: StampDetailPageProps) {
         <meta name="twitter:image" content={metaInfo.url} key="twitter:image" />
         <meta
           name="twitter:image:alt"
-          content={`Bitcoin Stamp #${stamp?.stamp || ""}`}
+          content={brandText(
+            `Bitcoin Stamp #${stamp?.stamp || ""}`,
+            getChainId(),
+          )}
           key="twitter:image:alt"
         />
         {/* Always use 1200x1200 for all stamps */}

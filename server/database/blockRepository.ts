@@ -56,6 +56,23 @@ export class BlockRepository {
     );
   }
 
+  /**
+   * Height and hash of the newest indexed block, for the chain label on
+   * pages and API responses. Same 30 s cache as getLastBlockFromDb.
+   */
+  static async getLastBlockWithHashFromDb() {
+    return await this.db.executeQueryWithCache(
+      `
+      SELECT block_index, block_hash
+      FROM blocks
+      ORDER BY block_index DESC
+      LIMIT 1;
+      `,
+      [],
+      30,
+    );
+  }
+
   static async getLastXBlocksFromDb(num = 10) {
     try {
       const result = await this.db.executeQueryWithCache(

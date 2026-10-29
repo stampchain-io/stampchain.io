@@ -1,5 +1,6 @@
 import { sliderBar, sliderKnob, trackFill } from "$button";
 import { transitionColors } from "$layout";
+import { coinSymbol } from "$lib/utils/chain/clientChain.ts";
 import { formatNumberWithCommas } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 
@@ -82,7 +83,7 @@ export const RangeSliderDual = ({
         return value.toFixed(
           // Use appropriate decimal places based on value range
           value < 0.0001 ? 6 : value < 0.01 ? 5 : 3,
-        ) + " ₿";
+        ) + ` ${coinSymbol()}`;
       },
     },
     // range configuration
