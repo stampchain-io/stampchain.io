@@ -1,8 +1,9 @@
 /**
- * Test for StampingTool page load scenario
+ * Stamp create page load.
  *
- * Simulates stamp estimation when no file is selected yet,
- * the state that used to produce "Bad Request: Missing required fields".
+ * /create/classic, /create/posh, and /create/recursive estimate through
+ * useStampMint with toolType "stamp" before a file is chosen. That used to
+ * send "Bad Request: Missing required fields".
  */
 
 import {
@@ -12,7 +13,7 @@ import {
 import { assertEquals, assertExists } from "@std/assert";
 import { describe, it } from "jsr:@std/testing@1.0.14/bdd";
 
-describe("StampingTool Page Load Scenario", () => {
+describe("Stamp create page load", () => {
   const estimator = new TransactionConstructionService();
 
   it("should simulate exact page load conditions", () => {
