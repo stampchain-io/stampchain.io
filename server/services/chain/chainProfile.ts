@@ -18,7 +18,7 @@ export const ECX_REPLAY_LOCKTIME = 499_999_998;
 export const SEQUENCE_FINAL = 0xffffffff;
 export const SEQUENCE_RBF = 0xfffffffd;
 
-export function getChainId(env: Pick<typeof Deno.env, "get"> = Deno.env): ChainId {
+export function getChainId(env: Pick<typeof Deno.env, "get"> = chainEnv()): ChainId {
   const raw = (env.get("CHAIN") ?? "bitcoin").trim().toLowerCase();
   if (raw === "" || raw === "bitcoin") return "bitcoin";
   if (raw === "ecx") return "ecx";
@@ -79,11 +79,22 @@ export class BroadcastRefusedError extends Error {
 }
 
 type EnvReader = Pick<typeof Deno.env, "get">;
-let chainEnvSource: EnvReader = Deno.env;
 
-/** The env the broadcast gate and /config read. Deno.env unless a test swapped it. */
+/**
+ * The process env, read lazily. This module is reachable from the browser
+ * bundle (server/config/config.ts is imported by shared lib/ code), so it
+ * must not touch `Deno` at module load: that threw "Deno is not defined" on
+ * every page. In the browser there is no env, which reads as Bitcoin.
+ */
+const processEnv: EnvReader = {
+  get: (key: string) =>
+    typeof Deno !== "undefined" ? Deno.env.get(key) : undefined,
+};
+let chainEnvSource: EnvReader | null = null;
+
+/** The env the broadcast gate and /config read. The process env unless a test swapped it. */
 export function chainEnv(): EnvReader {
-  return chainEnvSource;
+  return chainEnvSource ?? processEnv;
 }
 
 /**
