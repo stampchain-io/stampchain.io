@@ -25,6 +25,28 @@ export function getChainId(env: Pick<typeof Deno.env, "get"> = chainEnv()): Chai
   throw new Error(`Unsupported CHAIN=${raw}; expected "bitcoin" or "ecx"`);
 }
 
+/** Public origin of the Bitcoin site. */
+export const BITCOIN_SITE_ORIGIN = "https://stampchain.io";
+/** Public origin of the ECX site when APP_DOMAIN is unset. */
+export const ECX_DEFAULT_SITE_ORIGIN = "https://ecx.stampchain.io";
+
+/**
+ * Public origin for canonical links, og:url, structured data and the
+ * sitemap. Bitcoin always returns https://stampchain.io, so its pages are
+ * unchanged. ECX returns https://APP_DOMAIN, so ECX pages stop pointing
+ * search engines at the Bitcoin site, where the same number can be a
+ * different stamp.
+ */
+export function siteOrigin(
+  env: Pick<typeof Deno.env, "get"> = chainEnv(),
+): string {
+  if (getChainId(env) !== "ecx") return BITCOIN_SITE_ORIGIN;
+  const domain = (env.get("APP_DOMAIN") ?? "").trim()
+    .replace(/^https?:\/\//, "")
+    .replace(/\/+$/, "");
+  return domain ? `https://${domain}` : ECX_DEFAULT_SITE_ORIGIN;
+}
+
 /**
  * Apply the chain's replay protection to an UNSIGNED psbt, in place.
  * Bitcoin: no-op. ECX: set the marker locktime and make vin[0] non-final if

@@ -983,6 +983,8 @@ export interface MetaTagsProps {
   skipOgMeta?: boolean;
   /** Chain the site serves; "ecx" switches brand strings. Default bitcoin. */
   chain?: "bitcoin" | "ecx";
+  /** Public site origin for site-level links. Default https://stampchain.io. */
+  origin?: string;
 }
 
 // =============================================================================

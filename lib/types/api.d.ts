@@ -413,6 +413,7 @@ export interface SRC20TrxRequestParams {
   stampMin?: number; // filter: st.stamp >= stampMin (custom range lower bound)
   stampMax?: number; // filter: st.stamp < stampMax (preset or custom range upper bound)
   amtMax?: string; // filter: CAST(src20.amt AS DECIMAL) <= amtMax
+  blockFrom?: number; // filter: src20.block_index >= blockFrom (ECX-native view)
 }
 
 /**

@@ -62,6 +62,8 @@ import { useEffect, useRef, useState } from "preact/hooks";
 interface StampWithSaleData extends Omit<StampRow, "stamp_base64"> {
   sale_data?: StampSaleData;
   stamp_base64?: string;
+  /** ECX only: creation block on a sale row (block_index is the sale's). */
+  stamp_block_index?: number | null;
 }
 
 /* ===== PILL WITH TOOLTIP (instant on hover, no delay/timeout) ===== */
@@ -117,10 +119,11 @@ export function StampCard({
   previewHtml?: string;
 }) {
   // Creation block for the "ECX #" mark. Sale rows put the sale's block in
-  // block_index, so for them it is unknown and the plain "#" stays.
+  // block_index; on ECX the sales API also sends stamp_block_index, the
+  // creation block. Without it the plain "#" stays.
   const prefixBlock = isRecentSale || variant === "cardVerticalSale" ||
       variant === "cardVerticalSaleCompact"
-    ? null
+    ? stamp.stamp_block_index ?? null
     : stamp.block_index;
   /* ===== STATE ===== */
   const [loading, setLoading] = useState<boolean>(true);

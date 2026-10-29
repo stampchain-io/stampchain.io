@@ -153,8 +153,13 @@ export function MarketplaceSalesRow({ stamp }: MarketplaceSalesRowProps) {
           {stamp.stamp != null
             ? (
               <>
-                {/* Sale rows: block_index is the sale block, not the creation block. */}
-                <span class="font-light">{stampPrefix(null)}</span>
+                {
+                  /* Sale rows: block_index is the sale block. ECX sends the
+                  creation block as stamp_block_index; Bitcoin does not. */
+                }
+                <span class="font-light">
+                  {stampPrefix(stamp.stamp_block_index ?? null)}
+                </span>
                 {stamp.stamp}
               </>
             )

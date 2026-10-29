@@ -109,12 +109,15 @@ export const handler: Handlers = {
       | "stamps"
       | "tokens";
 
-    /* ECX only: stamp lists default to ECX-native stamps (block 973728 and
-      later); ?history=inherited shows everything. Token-only lists keep all
-      history. On Bitcoin both stay undefined, so queries and render data are
-      unchanged. */
-    const ecxView = getChainId() === "ecx" && section !== "tokens"
-      ? ecxViewState(url, getEcxStampView(url))
+    /* ECX only: stamp and token lists default to ECX-native rows (block
+      973728 and later); ?history=inherited shows everything. On Bitcoin both
+      stay undefined, so queries and render data are unchanged. */
+    const ecxView = getChainId() === "ecx"
+      ? ecxViewState(
+        url,
+        getEcxStampView(url),
+        section === "tokens" ? "tokens" : "stamps",
+      )
       : undefined;
     const floorFrom = ecxView ? ecxBlockFloor(ecxView.view) : undefined;
     const blockFloor = floorFrom !== undefined
@@ -532,6 +535,7 @@ export const handler: Handlers = {
               ...(stampMax != null && { stampMax }),
               ...(stampMin != null && { stampMin }),
               ...(amtMax && { amtMax }),
+              ...(blockFloor && { blockFrom: blockFloor.from }),
             }).then(extractSrc20Rows),
             15000,
             "DB timeout after 15000ms",

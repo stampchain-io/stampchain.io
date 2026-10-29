@@ -171,6 +171,7 @@ export class SRC20Repository {
       stampMin,
       stampMax,
       amtMax,
+      blockFrom,
     } = params;
 
     const queryParams = [];
@@ -202,6 +203,11 @@ export class SRC20Repository {
     if (block_index !== null) {
       whereConditions.push(`block_index = ?`);
       queryParams.push(block_index);
+    }
+
+    if (blockFrom != null) {
+      whereConditions.push(`src20.block_index >= ?`);
+      queryParams.push(blockFrom);
     }
 
     if (address !== null) {
@@ -295,6 +301,7 @@ export class SRC20Repository {
       stampMin,
       stampMax,
       amtMax,
+      blockFrom,
     } = params;
 
     const queryParams = [];
@@ -303,6 +310,11 @@ export class SRC20Repository {
     if (block_index != null) {
       whereClauses.push(`src20.block_index = ?`);
       queryParams.push(block_index);
+    }
+
+    if (blockFrom != null) {
+      whereClauses.push(`src20.block_index >= ?`);
+      queryParams.push(blockFrom);
     }
 
     if (tick != null) {

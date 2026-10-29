@@ -1,4 +1,5 @@
 import { Handlers } from "$fresh/server.ts";
+import { siteOrigin } from "$server/services/chain/chainProfile.ts";
 
 export const handler: Handlers = {
   GET(_req: Request, _ctx) {
@@ -10,7 +11,7 @@ export const handler: Handlers = {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Stampchain API Docs | Bitcoin Stamps REST API</title>
         <meta name="description" content="Reference for the Stampchain v2 API. Endpoints for stamps, SRC-20 balances, collections, blocks and addresses, with v2.2 and v2.3 request schemas.">
-        <link rel="canonical" href="https://stampchain.io/docs">
+        <link rel="canonical" href="${siteOrigin()}/docs">
         <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@4.5.0/swagger-ui.css">
         <style>
           body {

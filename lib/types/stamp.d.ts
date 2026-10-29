@@ -1168,6 +1168,11 @@ export interface WalletContext {
 export interface StampWithSaleData extends Omit<StampRow, "stamp_base64"> {
   sale_data?: StampSaleData;
   stamp_base64?: string;
+  /**
+   * ECX only: the stamp's creation block on a sale row, where block_index is
+   * the sale's block. Absent on Bitcoin.
+   */
+  stamp_block_index?: number | null;
 }
 
 // StampErrorCode enum moved to constants/stampConstants.ts
@@ -1517,6 +1522,8 @@ export interface RecentSaleData {
  */
 export interface StampWithEnhancedSaleData extends StampRow {
   sale_data?: StampSaleData;
+  /** ECX only: creation block on a sale row (block_index is the sale's). */
+  stamp_block_index?: number | null;
   marketData?: StampMarketData;
   activity_level?: StampDispenserActivityLevel | null;
   last_activity_time?: number;

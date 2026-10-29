@@ -14,6 +14,7 @@ export function MetaTags({
   canonicalUrl,
   ogUrl,
   chain = "bitcoin",
+  origin = "https://stampchain.io",
 }: MetaTagsProps) {
   // Every brand string below passes through brandText, which is the identity
   // on Bitcoin; the Bitcoin page head is unchanged byte for byte.
@@ -22,7 +23,7 @@ export function MetaTags({
   const siteName = chain === "ecx"
     ? getChainBrand(chain).productName
     : "stampchain.io";
-  const resolvedCanonical = canonicalUrl || "https://stampchain.io";
+  const resolvedCanonical = canonicalUrl || origin;
   const resolvedOgUrl = ogUrl || resolvedCanonical;
 
   return (
@@ -98,7 +99,7 @@ export function MetaTags({
       <link
         rel="alternate"
         type="text/plain"
-        href="https://stampchain.io/llms.txt"
+        href={`${origin}/llms.txt`}
         title="LLM-readable site summary"
       />
 
@@ -198,13 +199,13 @@ export function MetaTags({
             "@context": "https://schema.org",
             "@type": "WebSite",
             "name": siteName,
-            "url": "https://stampchain.io",
+            "url": origin,
             "description": b(
               "Official Bitcoin Stamps block explorer and API. Search stamps, SRC-20 tokens, blocks, and transactions on the Bitcoin blockchain.",
             ),
             "potentialAction": {
               "@type": "SearchAction",
-              "target": "https://stampchain.io/stamp/{search_term_string}",
+              "target": `${origin}/stamp/{search_term_string}`,
               "query-input": "required name=search_term_string",
             },
           }),
