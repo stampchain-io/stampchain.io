@@ -51,7 +51,7 @@ export default function App({ Component, state, url }: PageProps<unknown>) {
   /* Chain marker for browser code that cannot read the server env (the
     broadcast guard in lib/utils/bitcoin/minting/broadcast.ts). Undefined under
     Bitcoin, so the attribute is not rendered and the HTML is unchanged. */
-  const chain = getClientConfig().CHAIN;
+  const htmlChain = getClientConfig().CHAIN;
 
   /* ===== RENDER ===== */
   return (
@@ -59,7 +59,7 @@ export default function App({ Component, state, url }: PageProps<unknown>) {
       lang="en"
       data-page-type={isStampPage ? "stamp" : "other"}
       data-pathname={url.pathname}
-      data-chain={chain}
+      data-chain={htmlChain}
     >
       {/* ===== HEAD SECTION ===== */}
       <Head>

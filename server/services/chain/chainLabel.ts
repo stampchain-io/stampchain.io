@@ -29,6 +29,8 @@ export const CHAIN_BLOCK_HASH_HEADER = "X-Chain-Block-Hash";
  * trails the indexer by at most one cache window plus this.
  */
 const MEMO_MS = 10_000;
+/** Longest a page or API response waits for the tip before labelling without it. */
+export const TIP_BUDGET_MS = 750;
 let memo: { at: number; value: Promise<{ height: number | null; blockHash: string | null }> } | null =
   null;
 
@@ -47,7 +49,18 @@ async function getTip(): Promise<{ height: number | null; blockHash: string | nu
     memo = { at: now, value: lookupTip() };
   }
   try {
-    return await memo.value;
+    // Bounded: the label runs on every ECX page and API response, so a slow
+    // or unreachable indexer DB must not hold them up. On timeout, label the
+    // chain without a tip; the lookup keeps running and fills the memo.
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const late = new Promise<{ height: null; blockHash: null }>((resolve) => {
+      timer = setTimeout(() => resolve({ height: null, blockHash: null }), TIP_BUDGET_MS);
+    });
+    try {
+      return await Promise.race([memo.value, late]);
+    } finally {
+      clearTimeout(timer);
+    }
   } catch (error) {
     // The label must not take a page or an API response down with it. Drop
     // the memo so the next request retries, and label the chain without a tip.

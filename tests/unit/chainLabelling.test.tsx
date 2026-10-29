@@ -616,3 +616,26 @@ Deno.test({
     assert(banner(null).includes(`>${TIP.block_hash}</span>`));
   },
 });
+
+Deno.test({
+  name: "ECX: a hung tip lookup does not hold up the label (bounded wait)",
+  sanitizeOps: false,
+  sanitizeResources: false,
+  async fn() {
+    const { BlockRepository } = await import("$server/database/blockRepository.ts");
+    const mod = await import("$server/services/chain/chainLabel.ts");
+    const { stub } = await import("@std/testing/mock");
+    mod.resetChainLabelCache();
+    const s = stub(BlockRepository, "getLastBlockWithHashFromDb", () => new Promise(() => {}) as never);
+    try {
+      const started = Date.now();
+      const label = await mod.getChainLabel("ecx");
+      const waited = Date.now() - started;
+      if (!label || label.chain !== "ecx" || label.height !== null) throw new Error(JSON.stringify(label));
+      if (waited > mod.TIP_BUDGET_MS + 500) throw new Error(`waited ${waited}ms`);
+    } finally {
+      s.restore();
+      mod.resetChainLabelCache();
+    }
+  },
+});
