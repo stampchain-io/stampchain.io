@@ -7,15 +7,11 @@ import { unisatProvider } from "$client/wallet/unisat.ts";
 import { wonderProvider } from "$client/wallet/wonder.ts";
 import { xverseProvider } from "$client/wallet/xverse.ts";
 import { logger } from "$lib/utils/logger.ts";
-import {
-  broadcastViaEcxServer,
-  getPageChain,
-} from "$lib/utils/minting/broadcast.ts";
 import { walletOwnsAddress } from "$lib/utils/wallet/ownership.ts";
 import type { SignPSBTResult, Wallet } from "$types/index.d.ts";
 import type { PSBTInputToSign } from "$types/wallet.d.ts";
 
-export interface WalletProvider {
+interface WalletProvider {
   /**
    * Sign `message`. `address` (optional) selects which of the wallet's own
    * addresses signs; providers that expose a single address may ignore it —
@@ -167,7 +163,7 @@ export function handleWalletError(
   };
 }
 
-const getBaseWalletProvider = (
+export const getWalletProvider = (
   provider: string | undefined,
 ): WalletProvider => {
   logger.debug("ui", {
@@ -198,89 +194,6 @@ const getBaseWalletProvider = (
     default:
       throw new Error(`Unsupported wallet provider: ${provider}`);
   }
-};
-
-/**
- * ECX wrapper around a wallet adapter: the wallet only signs, the server
- * broadcasts. Every signPSBT asks the adapter for sign-only (autoBroadcast
- * false, which each adapter maps to its wallet's no-broadcast option). When
- * the caller wanted a broadcast, the signed output is finalized and POSTed to
- * the server's ECX route, and that txid is returned exactly where a wallet
- * broadcast would put it. broadcastRawTX / broadcastPSBT go to the same route
- * instead of the wallet's push methods, which send to Bitcoin nodes.
- */
-export function withEcxServerBroadcast(
-  base: WalletProvider,
-  walletName: string,
-  fetchImpl: typeof fetch = fetch,
-): WalletProvider {
-  return {
-    ...base,
-    signPSBT: async (
-      psbtHex,
-      inputsToSign,
-      enableRBF,
-      sighashTypes,
-      autoBroadcast = true,
-    ) => {
-      const result = await base.signPSBT(
-        psbtHex,
-        inputsToSign,
-        enableRBF,
-        sighashTypes,
-        false,
-      );
-      if (!result?.signed) return result;
-
-      // A txid here would mean the wallet broadcast on its own, to Bitcoin
-      // nodes, which reject the replay-marked transaction. Only the server's
-      // txid counts on ECX.
-      const { txid: walletTxid, ...signed } = result;
-      if (walletTxid) {
-        logger.warn("ui", {
-          message: "Wallet returned a txid for a sign-only request on ECX",
-          data: { wallet: walletName },
-        });
-      }
-      if (!signed.psbt) {
-        return {
-          signed: false,
-          error:
-            `${walletName} returned no signed transaction to broadcast on ECX`,
-        };
-      }
-      if (!autoBroadcast) return signed;
-
-      try {
-        const txid = await broadcastViaEcxServer(signed.psbt, fetchImpl);
-        return { signed: true, psbt: signed.psbt, txid };
-      } catch (error) {
-        return {
-          signed: true,
-          psbt: signed.psbt,
-          error: `Transaction signed but broadcast failed: ${
-            error instanceof Error ? error.message : String(error)
-          }`,
-        };
-      }
-    },
-    broadcastRawTX: (rawTx) => broadcastViaEcxServer(rawTx, fetchImpl),
-    broadcastPSBT: (psbtHex) => broadcastViaEcxServer(psbtHex, fetchImpl),
-  };
-}
-
-/**
- * The adapter for `provider`. On ECX pages (`<html data-chain="ecx">`) it is
- * wrapped so the wallet only signs and the server broadcasts; on Bitcoin the
- * adapter itself is returned, unchanged.
- */
-export const getWalletProvider = (
-  provider: string | undefined,
-): WalletProvider => {
-  const base = getBaseWalletProvider(provider);
-  return getPageChain() === "ecx"
-    ? withEcxServerBroadcast(base, provider ?? "wallet")
-    : base;
 };
 
 /**
