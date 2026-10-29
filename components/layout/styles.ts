@@ -199,7 +199,7 @@ export const imageUploadTool =
 
 /* ===== LOADER STYLES ===== */
 // Text loader styles are defined in /text/styles.ts
-// Skeleton loader styles are defined in /layout/SkeletonLoader.tsx
+// loaderSkeleton is kept for later skeleton UI
 // Base loader style
 // motion-essential: the spin is the "work in progress" cue, so it is exempt
 // from the global reduced-motion override in routes/_app.tsx.

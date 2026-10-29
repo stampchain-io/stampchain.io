@@ -6,18 +6,7 @@ export { ActivityLevelIcon } from "./ActivityLevelIcon.tsx";
 
 // Progress and loading indicators
 export {
-  FeeSkeletonLoader,
   ProgressIndicator,
   Spinner,
   TransactionProgress,
 } from "./ProgressIndicator.tsx";
-
-// Skeleton loader components
-export {
-  FeeCalculatorSkeleton,
-  SkeletonButton,
-  SkeletonContainer,
-  SkeletonImage,
-  SkeletonInput,
-  SkeletonText,
-} from "./SkeletonLoader.tsx";
