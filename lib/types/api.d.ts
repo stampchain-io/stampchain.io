@@ -1470,10 +1470,18 @@ export interface OlgaMintResponse {
  */
 export interface CreatePSBTResponse {
   psbt: string;
+  /** Buyer pays the miner fee. This stays 0 on the seller offer. */
   fee: number;
   inputCount: number;
   outputCount: number;
   estimatedSize: number;
+  inputsToSign: Array<{
+    index: number;
+    address: string;
+    sighashTypes: number[];
+  }>;
+  /** Payment locked to output 1, in satoshis. */
+  salePriceSats: number;
 }
 
 export interface CompletePSBTResponse {

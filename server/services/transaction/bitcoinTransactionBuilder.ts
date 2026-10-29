@@ -5,6 +5,7 @@ import { getScriptTypeInfo } from "$lib/utils/bitcoin/scripts/scriptTypeUtils.ts
 import { getUTXOForAddress as getUTXOForAddressFromUtils } from "$lib/utils/bitcoin/utxo/utxoUtils.ts";
 import { bytesToHex, hex2bin } from "$lib/utils/data/binary/baseUtils.ts";
 import { btcToSats } from "$lib/utils/fees.ts";
+import { addSellerOffer, assembleCompletedSale, readSellerOffer } from "$lib/utils/bitcoin/psbt/tradeOffer.ts";
 import { logger } from "$lib/utils/logger.ts";
 import { CommonUTXOService } from "$server/services/utxo/commonUtxoService.ts";
 import * as bitcoin from "bitcoinjs-lib";
@@ -91,78 +92,36 @@ export class BitcoinTransactionBuilderImpl {
     const utxoDetails = txInfo.utxo;
     logger.debug("psbt-service", { message: "UTXO Details", utxoDetails });
 
-    const satoshiAmount = BigInt(btcToSats(salePrice));
-
-    // Get the raw transaction hex for the input
-    const rawTxHex = await this.dependencies.commonUtxoService.getRawTransactionHex(txid);
-    if (!rawTxHex) {
-      throw new Error(`Could not fetch raw transaction for ${txid}`);
-    }
-    const rawTxBuffer = Buffer.from(rawTxHex, 'hex');
-
-    // Determine the script type and add appropriate input
-    const script = Buffer.from(utxoDetails.script ?? '', 'hex');
+    const salePriceSats = BigInt(btcToSats(salePrice));
+    const script = Buffer.from(utxoDetails.script ?? "", "hex");
     const scriptTypeInfo = getScriptTypeInfo(script);
-
-    const inputData: any = {
-      hash: txid,
-      index: vout,
-      sequence: 0xfffffffd, // RBF enabled
-    };
-
-    // Add witness or non-witness UTXO based on script type
-    if (scriptTypeInfo.isWitness) {
-      inputData.witnessUtxo = {
-        script: script,
-        value: BigInt(utxoDetails.value ?? 0),
-      };
-    } else {
-      inputData.nonWitnessUtxo = rawTxBuffer;
+    let assetRawTx: Uint8Array | undefined;
+    if (!scriptTypeInfo.isWitness) {
+      const rawTxHex = await this.dependencies.commonUtxoService
+        .getRawTransactionHex(txid);
+      if (!rawTxHex) {
+        throw new Error("Missing raw transaction for a legacy UTXO");
+      }
+      assetRawTx = Buffer.from(rawTxHex, "hex");
     }
 
-    // Add redeem script for P2SH (if we can determine the inner script type)
-    // TODO(@dev): Implement proper P2SH redeem script detection
-
-    psbt.addInput(inputData);
-
-    // Add outputs
-    psbt.addOutput({
-      address: sellerAddress,
-      value: satoshiAmount,
+    // Placeholder at index 0, signed stamp input and payment at index 1.
+    // The buyer replaces slot 0 so the stamp's first output is theirs.
+    addSellerOffer(psbt, {
+      assetTxid: txid,
+      assetVout: vout,
+      assetValue: BigInt(utxoDetails.value ?? 0),
+      assetScript: script,
+      ...(assetRawTx ? { assetRawTx } : {}),
+      isWitness: scriptTypeInfo.isWitness,
+      sellerAddress,
+      salePriceSats,
     });
 
-    // Calculate and add change output if needed
-    const feeRate = 10; // sats/vbyte
-    const estimatedFee = this.dependencies.estimateFee(
-      [{ address: sellerAddress, value: Number(satoshiAmount) }],
-      feeRate,
-      1 // one input
-    );
-
-    const changeAmount = BigInt(utxoDetails.value ?? 0) - satoshiAmount - BigInt(estimatedFee);
-    console.log("BitcoinTransactionBuilder DEBUG - Change calculation:", {
-      utxoValue: utxoDetails.value,
-      satoshiAmount: satoshiAmount.toString(),
-      estimatedFee,
-      changeAmount: changeAmount.toString(),
-      dustLimit: TX_CONSTANTS.SRC20_DUST,
-      shouldAddChange: changeAmount > BigInt(TX_CONSTANTS.SRC20_DUST)
+    logger.debug("psbt-service", {
+      message: "Created sale offer PSBT",
+      psbt: formatPsbtForLogging(psbt),
     });
-
-    if (changeAmount < 0n) {
-      throw new Error(`Insufficient funds: need ${satoshiAmount + BigInt(estimatedFee)} satoshis but only have ${utxoDetails.value ?? 0} satoshis`);
-    } else if (changeAmount > BigInt(TX_CONSTANTS.SRC20_DUST)) {
-      // Add change output back to seller
-      psbt.addOutput({
-        address: sellerAddress,
-        value: changeAmount,
-      });
-      console.log("BitcoinTransactionBuilder DEBUG - Added change output");
-    } else {
-      console.log("BitcoinTransactionBuilder DEBUG - No change output added, amount too small");
-    }
-
-    logger.debug("psbt-service", { message: "Created PSBT", psbt: formatPsbtForLogging(psbt) });
 
     return psbt.toHex();
   }
@@ -353,68 +312,15 @@ export class BitcoinTransactionBuilder {
     salePrice: number,
     sellerAddress: string,
   ): Promise<string> {
-    const [txid, voutStr] = utxo.split(":");
-    const vout = parseInt(voutStr, 10);
-
-    const network = BitcoinTransactionBuilder.getAddressNetwork(sellerAddress);
-    const psbt = new Psbt({ network });
-
-    // Fetch specific UTXO details (no ancestor info needed)
-    const txInfo = await getUTXOForAddressFromUtils(sellerAddress, txid, vout);
-
-    // Type guard to check if txInfo has utxo property
-    if (!txInfo || Array.isArray(txInfo) || !('utxo' in txInfo) || !txInfo.utxo) {
-      throw new Error(`Invalid UTXO details for ${txid}:${vout}`);
-    }
-
-    const utxoDetails = txInfo.utxo;
-    console.log("UTXO Details:", utxoDetails);
-
-    if (!utxoDetails || !utxoDetails.value || !utxoDetails.script) {
-      throw new Error(`Invalid UTXO details for ${txid}:${vout}`);
-    }
-
-    const inputAmount = utxoDetails.value;
-
-    const input: any = {
-      hash: txid,
-      index: vout,
-      sequence: 0xfffffffd, // Enable RBF
-      witnessUtxo: {
-        script: new Uint8Array(hex2bin(utxoDetails.script)), // Use hex2bin and be explicit with Uint8Array
-        value: BigInt(inputAmount), // Use BigInt for values
-      },
-      sighashType: bitcoin.Transaction.SIGHASH_SINGLE | bitcoin.Transaction.SIGHASH_ANYONECANPAY,
-    };
-
-    // Add input
-    psbt.addInput(input);
-
-    // Add output for sale price
-    const salePriceSats = BigInt(btcToSats(salePrice));
-    psbt.addOutput({
-      address: sellerAddress,
-      value: salePriceSats,
-    });
-
-    const addressType = BitcoinTransactionBuilder.getAddressType(sellerAddress, network);
-
-    if (addressType === 'p2sh-p2wpkh') {
-      const p2wpkh = payments.p2wpkh({ address: sellerAddress, network });
-      const p2sh = payments.p2sh({ redeem: p2wpkh, network });
-      if (p2sh.redeem?.output) {
-        psbt.updateInput(0, {
-          redeemScript: new Uint8Array(p2sh.redeem.output) // Be explicit with Uint8Array
-        });
-      }
-    }
-
-    // Return the PSBT as a hex string
-    return psbt.toHex();
+    return await createBitcoinTransactionBuilder().createPSBT(
+      utxo,
+      salePrice,
+      sellerAddress,
+    );
   }
 
   // Make sure all helper functions are static class methods
-  private static getAddressType(address: string, network: typeof networks.bitcoin): string {
+  static getAddressType(address: string, network: typeof networks.bitcoin): string {
     try {
       // First check if it's a valid address
       bjsAddress.toOutputScript(address, network);
@@ -466,7 +372,7 @@ export class BitcoinTransactionBuilder {
     }
   }
 
-  private static getAddressFromScript(script: Uint8Array, network: typeof networks.bitcoin): string {
+  static getAddressFromScript(script: Uint8Array, network: typeof networks.bitcoin): string {
     try {
       // Use bjsAddress.fromOutputScript which handles multiple script types
       return bjsAddress.fromOutputScript(Buffer.from(script), network);
@@ -531,125 +437,77 @@ export class BitcoinTransactionBuilder {
     buyerUtxoString: string,
     buyerAddress: string,
     feeRate: number,
-  ): Promise<string> {
-    console.log(`Starting completePSBT with feeRate: ${feeRate} sat/vB`);
-
+  ) {
     const network = BitcoinTransactionBuilder.getAddressNetwork(buyerAddress);
+    const offer = readSellerOffer(sellerPsbtHex, network);
+    const [assetTxid, assetVoutStr] = offer.assetUtxo.split(":");
+    const assetVout = parseInt(assetVoutStr, 10);
 
-    // Parse the seller's PSBT
-    const psbt = Psbt.fromHex(sellerPsbtHex, { network });
-
-    // **Validate Seller's UTXO**
-    const sellerTxInput = psbt.txInputs[0];
-    if (!sellerTxInput) {
-      throw new Error("Seller's txInput not found in PSBT");
-    }
-
-    // Extract seller's input details
-    const sellerInputTxid = Array.from(sellerTxInput.hash)
-      .reverse()
-      .map(b => b.toString(16).padStart(2, "0"))
-      .join("");
-    const sellerInputVout = sellerTxInput.index;
-
-    // Get seller's address from witnessUtxo
-    const sellerWitnessUtxo = psbt.data.inputs[0].witnessUtxo;
-    if (!sellerWitnessUtxo) {
-      throw new Error("Seller's witnessUtxo not found");
-    }
-
-    const sellerAddress = BitcoinTransactionBuilder.getAddressFromScript(
-      new Uint8Array(sellerWitnessUtxo.script), // Be explicit with Uint8Array
-      network
-    );
-
-    // Validate seller's UTXO
     const sellerUtxoInfo = await getUTXOForAddressFromUtils(
-      sellerAddress,
-      sellerInputTxid,
-      sellerInputVout,
+      offer.sellerAddress,
+      assetTxid,
+      assetVout,
     );
-
-    if (!sellerUtxoInfo || Array.isArray(sellerUtxoInfo) || !('utxo' in sellerUtxoInfo) || !sellerUtxoInfo.utxo) {
+    if (
+      !sellerUtxoInfo || Array.isArray(sellerUtxoInfo) ||
+      !("utxo" in sellerUtxoInfo) || !sellerUtxoInfo.utxo
+    ) {
       throw new Error("Seller's UTXO not found or already spent");
     }
 
-    // **Process Buyer's UTXO**
     const [buyerTxid, buyerVoutStr] = buyerUtxoString.split(":");
     const buyerVout = parseInt(buyerVoutStr, 10);
+    if (!buyerTxid || Number.isNaN(buyerVout) || buyerVout < 0) {
+      throw new Error("Invalid buyer UTXO. Expected format: 'txid:vout'");
+    }
 
-    // Validate buyer's UTXO
     const buyerUtxoInfo = await getUTXOForAddressFromUtils(
       buyerAddress,
       buyerTxid,
       buyerVout,
     );
-
-    if (!buyerUtxoInfo || Array.isArray(buyerUtxoInfo) || !('utxo' in buyerUtxoInfo) || !buyerUtxoInfo.utxo) {
+    if (
+      !buyerUtxoInfo || Array.isArray(buyerUtxoInfo) ||
+      !("utxo" in buyerUtxoInfo) || !buyerUtxoInfo.utxo
+    ) {
       throw new Error("Buyer's UTXO not found or already spent");
     }
 
     const buyerUtxo = buyerUtxoInfo.utxo;
-
     if (!buyerUtxo.script || buyerUtxo.value === undefined) {
       throw new Error("Incomplete buyer UTXO data.");
     }
 
-    // Add buyer's input to the PSBT
-    psbt.addInput({
-      hash: buyerTxid,
-      index: buyerVout,
-      sequence: 0xfffffffd, // Enable RBF
-      witnessUtxo: {
-        script: new Uint8Array(hex2bin(buyerUtxo.script)), // Use hex2bin and be explicit
-        value: BigInt(buyerUtxo.value ?? 0), // Use BigInt
+    const scriptInfo = getScriptTypeInfo(buyerUtxo.script);
+    let rawTxHex: string | undefined;
+    if (!scriptInfo.isWitness) {
+      const hex = await BitcoinTransactionBuilder.commonUtxoService
+        .getRawTransactionHex(buyerTxid);
+      if (!hex) {
+        throw new Error("Missing raw transaction for a legacy funding UTXO");
+      }
+      rawTxHex = hex;
+    }
+
+    const assetValue = Number(
+      sellerUtxoInfo.utxo.value ?? offer.assetValueSats ?? 0,
+    );
+
+    return assembleCompletedSale(
+      sellerPsbtHex,
+      {
+        txid: buyerTxid,
+        vout: buyerVout,
+        value: Number(buyerUtxo.value),
+        scriptHex: buyerUtxo.script,
+        ...(rawTxHex ? { rawTxHex } : {}),
+        isWitness: scriptInfo.isWitness,
       },
-    });
-
-    // **Calculate Total Input and Output Values**
-    const totalInputValue = psbt.data.inputs.reduce(
-      (sum, input) => sum + BigInt(input.witnessUtxo?.value || 0),
-      BigInt(0)
-    );
-
-    const totalOutputValue = psbt.txOutputs.reduce(
-      (sum, output) => sum + BigInt(output.value),
-      BigInt(0)
-    );
-
-    // **Prepare Outputs Array for Fee Estimation**
-    const outputs = psbt.txOutputs.map((output) => {
-      return {
-        script: output.script.toString(),
-        value: Number(output.value),
-      };
-    });
-
-    // **Estimate the Fee**
-    const estimatedFee = estimateFee(
-      outputs,
+      buyerAddress,
       feeRate,
-      psbt.txInputs.length,
-      buyerUtxo.ancestor ? [buyerUtxo.ancestor] : undefined
+      assetValue,
+      network,
     );
-
-    // **Calculate Change**
-    const changeValue = totalInputValue - totalOutputValue - BigInt(estimatedFee);
-
-    if (changeValue < 0) {
-      throw new Error("Insufficient funds to cover outputs and fees.");
-    }
-
-    // **Add Change Output if Necessary**
-    if (changeValue > 0) {
-      psbt.addOutput({
-        address: buyerAddress,
-        value: changeValue,
-      });
-    }
-
-    // Return the updated PSBT hex without signing
-    return psbt.toHex();
   }
 
   /**

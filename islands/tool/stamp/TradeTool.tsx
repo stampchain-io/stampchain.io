@@ -15,6 +15,7 @@ import { InputField } from "$form";
 import { bodyTool, containerBackground, containerGap } from "$layout";
 import type { UTXO, XcpBalance } from "$lib/types/index.d.ts";
 import { btcToSats, normalizeFeeRate } from "$lib/utils/fees.ts";
+import { walletCanSignSaleOffer } from "$lib/utils/bitcoin/psbt/saleWallets.ts";
 import { StatusMessages } from "$notification";
 import { subtitleNeutral, titleNeutral } from "$text";
 import type { ComposeAttachOptions } from "$types/services.d.ts";
@@ -31,6 +32,16 @@ const MIN_UTXO_VALUE = 546;
 interface StatusMessageType {
   message: string;
   txid?: string;
+}
+
+interface SalePreviewView {
+  sellerAddress: string;
+  salePriceSats: number;
+  assetUtxo: string;
+  assetValueSats: number;
+  buyerFeeSats: number;
+  changeSats: number;
+  assets: Array<{ cpid: string; quantity: number }>;
 }
 
 interface AttachResponse {
@@ -105,7 +116,11 @@ export function StampTradeTool() {
     sellerPsbtHex: "",
     buyerUtxo: "",
     feeRate: "",
+    expectedCpid: "",
   });
+  const [swapPreview, setSwapPreview] = useState<SalePreviewView | null>(null);
+  const [completedPsbt, setCompletedPsbt] = useState<string | null>(null);
+  const [swapInputs, setSwapInputs] = useState<PSBTInputToSign[]>([]);
 
   const [createSubmitting, setCreateSubmitting] = useState(false);
   const [attachSubmitting, setAttachSubmitting] = useState(false);
@@ -177,6 +192,8 @@ export function StampTradeTool() {
   const handleBuyerInputChange = (e: Event, field: string) => {
     const value = (e.target as HTMLInputElement).value;
     setBuyerFormState((prev) => ({ ...prev, [field]: value }));
+    setSwapPreview(null);
+    setCompletedPsbt(null);
   };
 
   /* ===== PSBT HANDLERS ===== */
@@ -234,13 +251,26 @@ export function StampTradeTool() {
 
       const data = await response.json();
       const psbtHex = data.psbt;
+      const inputsToSign: PSBTInputToSign[] = data.inputsToSign ?? [{
+        index: 1,
+        sighashTypes: [SIGHASH_SINGLE_ANYONECANPAY],
+      }];
+
+      if (!walletCanSignSaleOffer(wallet.provider)) {
+        const message =
+          "This wallet cannot sign a partial sale. Use Unisat, OKX, Phantom, Leather, Wonder, or TapWallet.";
+        showToast(message, "error", false);
+        setCreateError(message);
+        setCreateSubmitting(false);
+        return;
+      }
 
       console.log("Received PSBT hex:", psbtHex);
 
       const walletResult = await walletContext.signPSBT(
         wallet,
         psbtHex,
-        [{ index: 0 }],
+        inputsToSign,
         true,
         [SIGHASH_SINGLE_ANYONECANPAY],
         false,
@@ -436,38 +466,37 @@ export function StampTradeTool() {
     }
   };
 
-  const handleCompleteSwap = async () => {
+  const handleReviewSwap = async () => {
     if (!isConnected) {
       showConnectModal();
       return;
     }
 
     setSwapSubmitting(true);
-    setSwapMessage({ message: "Please wait..." });
+    setSwapMessage({ message: "Checking the sale..." });
     setSwapError(null);
+    setSwapPreview(null);
+    setCompletedPsbt(null);
 
     try {
-      const { sellerPsbtHex, buyerUtxo, feeRate } = buyerFormState;
+      const { sellerPsbtHex, buyerUtxo, feeRate, expectedCpid } =
+        buyerFormState;
 
       if (!sellerPsbtHex.trim()) {
         setSwapError("Seller PSBT Hex is required.");
         setSwapSubmitting(false);
         return;
       }
-
       if (!buyerUtxo.trim()) {
         setSwapError("Your UTXO is required.");
         setSwapSubmitting(false);
         return;
       }
-
       if (!feeRate || isNaN(Number(feeRate)) || Number(feeRate) <= 0) {
         setSwapError("Fee Rate must be a positive number.");
         setSwapSubmitting(false);
         return;
       }
-
-      const parsedFeeRate = Number(feeRate);
 
       const response = await fetch("/api/v2/trx/complete_psbt", {
         method: "POST",
@@ -476,45 +505,71 @@ export function StampTradeTool() {
           sellerPsbtHex,
           buyerUtxo,
           buyerAddress: address,
-          feeRate: parsedFeeRate,
+          feeRate: Number(feeRate),
+          ...(expectedCpid.trim() ? { expectedCpid: expectedCpid.trim() } : {}),
         }),
       });
 
-      if (!response.ok) {
-        const text = await response.text();
-        throw new Error(`Server error: ${text}`);
-      }
-
       const data = await response.json();
-      const completedPsbt = data.completedPsbt;
-
-      if (!completedPsbt) {
-        throw new Error("Received empty PSBT from server");
+      if (!response.ok) {
+        throw new Error(data.error || "Could not review the swap");
+      }
+      if (!data.completedPsbt || !data.preview) {
+        throw new Error("Received an incomplete swap from the server");
       }
 
-      const signResult = await walletContext.signPSBT(
-        wallet,
-        completedPsbt,
-        [{ index: 1 }],
-        true,
-        [SIGHASH_SINGLE_ANYONECANPAY],
-        true,
-      );
-
-      if (!signResult.signed) {
-        console.error("Sign result:", signResult);
-        throw new Error(signResult.error || "Failed to sign PSBT");
-      }
-
-      setSwapMessage({
-        message: "Swap completed and broadcast successfully!",
-        ...(signResult.txid ? { txid: signResult.txid } : {}),
-      });
+      setCompletedPsbt(data.completedPsbt);
+      setSwapInputs(data.inputsToSign ?? [{ index: 0 }]);
+      setSwapPreview(data.preview);
+      setSwapMessage(null);
     } catch (error: unknown) {
       console.error("Complete swap error:", error);
       setSwapError(
         error instanceof Error ? error.message : "An unexpected error occurred",
       );
+      setSwapMessage(null);
+    } finally {
+      setSwapSubmitting(false);
+    }
+  };
+
+  const handleConfirmSwap = async () => {
+    if (!completedPsbt) return;
+    if (!isConnected) {
+      showConnectModal();
+      return;
+    }
+
+    setSwapSubmitting(true);
+    setSwapError(null);
+    setSwapMessage({ message: "Waiting for your wallet..." });
+
+    try {
+      const signResult = await walletContext.signPSBT(
+        wallet,
+        completedPsbt,
+        swapInputs,
+        true,
+        [1],
+        true,
+      );
+
+      if (!signResult.signed) {
+        throw new Error(signResult.error || "Failed to sign PSBT");
+      }
+
+      setSwapMessage({
+        message: "Swap signed and broadcast.",
+        ...(signResult.txid ? { txid: signResult.txid } : {}),
+      });
+      setSwapPreview(null);
+      setCompletedPsbt(null);
+    } catch (error: unknown) {
+      console.error("Confirm swap error:", error);
+      setSwapError(
+        error instanceof Error ? error.message : "An unexpected error occurred",
+      );
+      setSwapMessage(null);
     } finally {
       setSwapSubmitting(false);
     }
@@ -1014,13 +1069,13 @@ export function StampTradeTool() {
         <div class="flex flex-col gap-5">
           <InputField
             type="text"
-            placeholder="Seller's PSBT (Hex)"
+            placeholder="Seller's signed PSBT (Hex)"
             value={buyerFormState.sellerPsbtHex}
             onChange={(e) => handleBuyerInputChange(e, "sellerPsbtHex")}
           />
           <InputField
             type="text"
-            placeholder="Your UTXO (txid:vout)"
+            placeholder="Funding UTXO (txid:vout)"
             value={buyerFormState.buyerUtxo}
             onChange={(e) => handleBuyerInputChange(e, "buyerUtxo")}
           />
@@ -1031,17 +1086,69 @@ export function StampTradeTool() {
             onChange={(e) => handleBuyerInputChange(e, "feeRate")}
             min="1"
           />
+          <InputField
+            type="text"
+            placeholder="Expected stamp (CPID, optional)"
+            value={buyerFormState.expectedCpid}
+            onChange={(e) => handleBuyerInputChange(e, "expectedCpid")}
+          />
         </div>
         <div class="flex justify-end mt-5">
           <Button
             variant="flat"
             color="neutral"
-            onClick={handleCompleteSwap}
+            onClick={handleReviewSwap}
             disabled={swapSubmitting}
           >
-            {swapSubmitting ? "PROCESSING" : "COMPLETE SWAP"}
+            {swapSubmitting ? "CHECKING" : "REVIEW SWAP"}
           </Button>
         </div>
+
+        {swapPreview && (
+          <div class="mt-5 text-sm text-color-grey-light flex flex-col gap-2">
+            <p>
+              Pay {(swapPreview.salePriceSats / 1e8).toLocaleString("en-US", {
+                maximumFractionDigits: 8,
+              })} BTC
+              {tradeFormState.BTCPrice > 0 &&
+                ` · ${
+                  ((swapPreview.salePriceSats / 1e8) * tradeFormState.BTCPrice)
+                    .toLocaleString("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                      maximumFractionDigits: 2,
+                    })
+                }`} to {swapPreview.sellerAddress}
+            </p>
+            <p class="break-all">
+              Stamp UTXO {swapPreview.assetUtxo} (
+              {swapPreview.assetValueSats.toLocaleString("en-US")}{" "}
+              sats) moves to you.
+            </p>
+            <p>
+              {swapPreview.assets.map((asset) =>
+                `${asset.cpid} × ${asset.quantity.toLocaleString("en-US")}`
+              ).join(", ")}
+            </p>
+            <p>
+              Fee {swapPreview.buyerFeeSats.toLocaleString("en-US")} sats
+              {swapPreview.changeSats > 0 &&
+                `, change ${
+                  swapPreview.changeSats.toLocaleString("en-US")
+                } sats`}
+            </p>
+            <div class="flex justify-end mt-2">
+              <Button
+                variant="flat"
+                color="neutral"
+                onClick={handleConfirmSwap}
+                disabled={swapSubmitting || !completedPsbt}
+              >
+                {swapSubmitting ? "SIGNING" : "CONFIRM AND SIGN"}
+              </Button>
+            </div>
+          </div>
+        )}
 
         <StatusMessages
           submissionMessage={swapMessage}

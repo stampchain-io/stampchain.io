@@ -112,13 +112,11 @@ describe("BitcoinTransactionBuilder with Fixture-Based Mocks", {
 
       // Verify PSBT structure
       const psbt = Psbt.fromHex(psbtHex);
-      assertEquals(psbt.inputCount, 1);
-      assertEquals(psbt.txOutputs.length, 2); // Payment output + change output
-      assertEquals(psbt.txOutputs[0].value, 100000n); // 0.001 BTC in satoshis
-
-      // Verify change output exists
-      assertExists(psbt.txOutputs[1]);
-      assertEquals(psbt.txOutputs[1].value > 0n, true); // Change amount should be positive
+      assertEquals(psbt.inputCount, 2);
+      assertEquals(psbt.txOutputs.length, 2);
+      assertEquals(psbt.txOutputs[0].value, 546n);
+      assertEquals(psbt.txOutputs[1].value, 100000n);
+      assertEquals(psbt.data.inputs[1].sighashType, 131);
     });
 
     // Skip P2WSH test as it requires proper address handling
@@ -241,20 +239,10 @@ describe("BitcoinTransactionBuilder with Fixture-Based Mocks", {
 
       const psbt = Psbt.fromHex(psbtHex);
 
-      // UTXO value is 44089800 satoshis (from fixture)
-      // Sale price is 40000000 satoshis
-      // Change should be ~4089800 minus fees
-
-      const inputValue = 44089800n;
-      const outputValue = psbt.txOutputs[0].value;
-      assertEquals(outputValue, 40000000n); // Sale price output
-
-      // Should have change output if enough left after fees
-      if (psbt.txOutputs.length > 1) {
-        const changeValue = psbt.txOutputs[1].value;
-        const totalOutput = outputValue + changeValue;
-        assertEquals(totalOutput < inputValue, true); // Fees deducted
-      }
+      // Output 0 is the placeholder the buyer replaces. Output 1 is the price.
+      assertEquals(psbt.txOutputs[1].value, 40000000n);
+      assertEquals(psbt.txOutputs[0].value, 546n);
+      assertEquals(psbt.inputCount, 2);
     });
   });
 

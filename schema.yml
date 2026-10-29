@@ -3389,14 +3389,35 @@ paths:
                     description: Hex-encoded PSBT
                   fee:
                     type: number
-                    description: Fee in satoshis (currently a placeholder value)
+                    description: Always 0. The buyer pays the miner fee when completing the swap.
                   inputCount:
                     type: integer
+                    description: 2. Index 0 is an unsigned placeholder. Index 1 is the stamp UTXO.
                   outputCount:
                     type: integer
+                    description: 2. Index 0 is the placeholder the buyer replaces. Index 1 is the seller payment.
                   estimatedSize:
                     type: integer
-                    description: Estimated size in bytes (currently a placeholder value)
+                    description: PSBT byte length
+                  inputsToSign:
+                    type: array
+                    description: Sign input 1 only, with SIGHASH_SINGLE|ANYONECANPAY (131). Do not broadcast.
+                    items:
+                      type: object
+                      required:
+                        - index
+                      properties:
+                        index:
+                          type: integer
+                        address:
+                          type: string
+                        sighashTypes:
+                          type: array
+                          items:
+                            type: integer
+                  salePriceSats:
+                    type: integer
+                    description: Output 1 value in satoshis
         "400":
           $ref: "#/components/responses/BadRequest"
         "500":
@@ -3409,8 +3430,9 @@ paths:
         - Stamps
       summary: Complete a seller PSBT with the buyer's funding input
       description: |
-        Adds the buyer's UTXO and change output to a seller PSBT produced by
-        /api/v2/trx/create_psbt, at the requested fee rate.
+        Replaces the placeholder slot in a seller PSBT from /api/v2/trx/create_psbt.
+        Output 0 receives the stamp. Output 1 is the seller's signed payment and is not modified.
+        Does not broadcast. The buyer signs input 0 with SIGHASH_ALL.
       requestBody:
         required: true
         content:
@@ -3431,23 +3453,68 @@ paths:
                   description: Buyer funding UTXO in txid:vout format
                 buyerAddress:
                   type: string
-                  description: Buyer address (receives change)
+                  description: Buyer address. Receives the stamp output and any change.
                 feeRate:
                   type: number
                   description: Fee rate in satoshis per vbyte
+                expectedCpid:
+                  type: string
+                  description: Optional. Reject the swap unless this asset is attached to the seller UTXO.
       responses:
         "200":
-          description: Completed PSBT
+          description: Completed PSBT and a preview to confirm before signing
           content:
             application/json:
               schema:
                 type: object
                 required:
                   - completedPsbt
+                  - inputsToSign
+                  - preview
                 properties:
                   completedPsbt:
                     type: string
-                    description: Hex-encoded completed PSBT
+                    description: Hex-encoded PSBT. Input 1 is already signed by the seller.
+                  inputsToSign:
+                    type: array
+                    description: Buyer signs input 0 with SIGHASH_ALL.
+                    items:
+                      type: object
+                      properties:
+                        index:
+                          type: integer
+                        address:
+                          type: string
+                        sighashTypes:
+                          type: array
+                          items:
+                            type: integer
+                  preview:
+                    type: object
+                    properties:
+                      sellerAddress:
+                        type: string
+                      salePriceSats:
+                        type: integer
+                      assetUtxo:
+                        type: string
+                      assetValueSats:
+                        type: integer
+                      buyerFeeSats:
+                        type: integer
+                      changeSats:
+                        type: integer
+                      buyerInputSats:
+                        type: integer
+                      assets:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            cpid:
+                              type: string
+                            quantity:
+                              type: number
         "400":
           $ref: "#/components/responses/BadRequest"
         "500":

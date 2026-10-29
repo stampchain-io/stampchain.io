@@ -936,7 +936,7 @@ export class CounterpartyApiManager {
 
       return {
         balances,
-        total: response.total || total, // Use response.total if available
+        total: response.total || total,
         next_cursor: response.next_cursor,
       };
     } catch (error) {
@@ -948,6 +948,41 @@ export class CounterpartyApiManager {
       });
       throw error;
     }
+  }
+
+  /**
+   * Assets attached to one UTXO. Empty when the UTXO has no Counterparty
+   * balance. An upstream failure also comes back empty, so a swap refuses
+   * rather than paying for an unknown UTXO.
+   */
+  static async getUtxoBalances(utxo: string): Promise<XcpBalance[]> {
+    const endpoint = `/utxos/${utxo}/balances`;
+    const response = await fetchXcpV2WithCache<any>(
+      endpoint,
+      new URLSearchParams([["limit", "50"]]),
+    );
+    const rows = Array.isArray(response?.result) ? response.result : [];
+    return rows
+      .filter((row: { quantity?: number; asset?: string }) =>
+        (row.quantity ?? 0) > 0 && row.asset
+      )
+      .map((row: {
+        asset: string;
+        quantity: number;
+        address?: string;
+        utxo?: string;
+        utxo_address?: string;
+        divisible?: boolean;
+      }) => ({
+        address: row.address || row.utxo_address || null,
+        cpid: row.asset,
+        quantity: row.quantity,
+        utxo: row.utxo || utxo,
+        utxo_address: row.utxo_address || "",
+        divisible: row.divisible || false,
+        assetName: row.asset,
+        balance: row.quantity,
+      }));
   }
 
   /**
