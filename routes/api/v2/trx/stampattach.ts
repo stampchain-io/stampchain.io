@@ -219,6 +219,14 @@ const composeHandler: Handlers = {
         psbt.addOutput({ script: Buffer.from(out.script), value: out.value });
       }
 
+      // ECX replay marker (no-op on Bitcoin): before the wallet signs. Only
+      // locktime / vin[0]'s sequence change; input order (vin[0] = ARC4 key)
+      // is untouched.
+      const { applyReplayProtection } = await import(
+        "$server/services/chain/chainProfile.ts"
+      );
+      applyReplayProtection(psbt);
+
       logger.info("api", {
         message: "Assembled stampattach outputs (trust-CP + service fee)",
         cpNetworkFee: cpNetworkFee.toString(),

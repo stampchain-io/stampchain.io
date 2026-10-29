@@ -5,6 +5,11 @@ import { getScriptTypeInfo } from "$lib/utils/bitcoin/scripts/scriptTypeUtils.ts
 import { getUTXOForAddress as getUTXOForAddressFromUtils } from "$lib/utils/bitcoin/utxo/utxoUtils.ts";
 import { bytesToHex, hex2bin } from "$lib/utils/data/binary/baseUtils.ts";
 import { logger } from "$lib/utils/logger.ts";
+import {
+  applyReplayProtection,
+  isReplayProtected,
+  SEQUENCE_FINAL,
+} from "$server/services/chain/chainProfile.ts";
 import { CommonUTXOService } from "$server/services/utxo/commonUtxoService.ts";
 import * as bitcoin from "bitcoinjs-lib";
 import { Buffer } from "node:buffer";
@@ -160,6 +165,10 @@ export class BitcoinTransactionBuilderImpl {
     } else {
       console.log("BitcoinTransactionBuilder DEBUG - No change output added, amount too small");
     }
+
+    // ECX replay marker; no-op on Bitcoin. The seller signs this listing, and
+    // every sighash type commits to the locktime, so it must be set now.
+    applyReplayProtection(psbt);
 
     logger.debug("psbt-service", { message: "Created PSBT", psbt: formatPsbtForLogging(psbt) });
 
@@ -645,6 +654,16 @@ export class BitcoinTransactionBuilder {
         address: buyerAddress,
         value: changeValue,
       });
+    }
+
+    // ECX replay marker; no-op on Bitcoin. A listing built by create_psbt
+    // already carries it. Otherwise add it; if the seller has already signed,
+    // bitcoinjs refuses to change the locktime and completion fails rather
+    // than produce a transaction that could be replayed onto Bitcoin.
+    // An input without an explicit sequence serializes as final.
+    const sequences = psbt.txInputs.map((i) => ({ sequence: i.sequence ?? SEQUENCE_FINAL }));
+    if (!isReplayProtected({ locktime: psbt.locktime, ins: sequences })) {
+      applyReplayProtection(psbt);
     }
 
     // Return the updated PSBT hex without signing

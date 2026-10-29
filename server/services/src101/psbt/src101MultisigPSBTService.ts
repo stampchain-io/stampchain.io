@@ -64,6 +64,7 @@ import type { BufferLike } from "$lib/types/utils.d.ts";
 import { BitcoinUtxoManager } from "$server/services/transaction/bitcoinUtxoManager.ts";
 import { CommonUTXOService } from "$server/services/utxo/commonUtxoService.ts";
 import { assertMultisigPayloadDecodesFromInput } from "$lib/utils/bitcoin/minting/src20MultisigGuard.ts";
+import { applyReplayProtection } from "$server/services/chain/chainProfile.ts";
 import type {IPrepareSRC101TX} from "$server/types/services/src101.d.ts";
 import type { PSBTInput, VOUT } from "$types/src20.d.ts";
 import { crypto } from "@std/crypto";
@@ -304,6 +305,10 @@ export class SRC101MultisigPSBTService {
         change: changeAmount.toString(),
         fee: BigInt(fee).toString()
       });
+
+      // ECX replay marker; no-op on Bitcoin. After the ARC4 guard: locktime and
+      // sequence are outside the payload and do not move vin[0].
+      applyReplayProtection(psbt);
 
       return {
         psbtHex: psbt.toHex(),

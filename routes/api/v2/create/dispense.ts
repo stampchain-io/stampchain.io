@@ -229,6 +229,14 @@ const composeHandler: Handlers = {
           psbt.addOutput({ script: Buffer.from(out.script), value: out.value });
         }
 
+        // ECX replay marker (no-op on Bitcoin): before the wallet signs. Only
+        // locktime / vin[0]'s sequence change; input order (vin[0] = ARC4 key)
+        // is untouched.
+        const { applyReplayProtection } = await import(
+          "$server/services/chain/chainProfile.ts"
+        );
+        applyReplayProtection(psbt);
+
         // The buyer's change is the (possibly fee-reduced) CP change output that
         // still pays back to the buyer address; 0 if it was dropped as dust.
         let finalBuyerChange = 0n;
