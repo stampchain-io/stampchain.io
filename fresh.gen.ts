@@ -154,7 +154,6 @@ import * as $test_horizon_html from "./routes/test/horizon.html.ts";
 import * as $test_horizon from "./routes/test/horizon.tsx";
 import * as $test_test_image from "./routes/test/test-image.ts";
 import * as $token_image_txHash_ from "./routes/token-image/[txHash].ts";
-import * as $tool_fairmint_index from "./routes/tool/fairmint/index.tsx";
 import * as $tool_stamp_trade from "./routes/tool/stamp/trade.tsx";
 import * as $upload_index from "./routes/upload/index.tsx";
 import * as $wallet_address_ from "./routes/wallet/[address].tsx";
@@ -331,7 +330,6 @@ import * as $table_HoldersTableBase from "./islands/table/HoldersTableBase.tsx";
 import * as $table_UploadImageTable from "./islands/table/UploadImageTable.tsx";
 import * as $table_index from "./islands/table/index.ts";
 import * as $tool_StatusMessages from "./islands/tool/StatusMessages.tsx";
-import * as $tool_fairmint_FairmintTool from "./islands/tool/fairmint/FairmintTool.tsx";
 import * as $tool_index from "./islands/tool/index.ts";
 import * as $tool_stamp_TradeTool from "./islands/tool/stamp/TradeTool.tsx";
 import * as $tool_stamp_TradeToolLazy from "./islands/tool/stamp/TradeToolLazy.tsx";
@@ -524,7 +522,6 @@ const manifest = {
     "./routes/test/horizon.tsx": $test_horizon,
     "./routes/test/test-image.ts": $test_test_image,
     "./routes/token-image/[txHash].ts": $token_image_txHash_,
-    "./routes/tool/fairmint/index.tsx": $tool_fairmint_index,
     "./routes/tool/stamp/trade.tsx": $tool_stamp_trade,
     "./routes/upload/index.tsx": $upload_index,
     "./routes/wallet/[address].tsx": $wallet_address_,
@@ -753,7 +750,6 @@ const manifest = {
     "./islands/table/UploadImageTable.tsx": $table_UploadImageTable,
     "./islands/table/index.ts": $table_index,
     "./islands/tool/StatusMessages.tsx": $tool_StatusMessages,
-    "./islands/tool/fairmint/FairmintTool.tsx": $tool_fairmint_FairmintTool,
     "./islands/tool/index.ts": $tool_index,
     "./islands/tool/stamp/TradeTool.tsx": $tool_stamp_TradeTool,
     "./islands/tool/stamp/TradeToolLazy.tsx": $tool_stamp_TradeToolLazy,

@@ -218,7 +218,6 @@ export interface TableProps<T = any> {
 //   ErrorStateProps,
 //   ExplorerContentProps,
 //   ExtendedComponentProps,
-//   FairmintToolProps,
 //   FaqAccordionProps,
 //   FlexboxProps,
 //   FormControlProps,
@@ -321,7 +320,6 @@ export interface TableProps<T = any> {
 //   ToastProps,
 //   ToastProviderProps,
 //   ToggleSwitchButtonProps,
-//   ToolFairmintPageProps,
 //   TotalBTCValueProps,
 //   TransactionBadgeProps,
 //   TransactionHexDisplayProps,
@@ -1084,11 +1082,6 @@ export interface StampListingsProps {
   initialData?: Array<any>;
   title?: string;
   subTitle?: string;
-}
-
-export interface ToolFairmintPageProps {
-  fairminters: Array<any>;
-  error?: string;
 }
 
 export interface WalletProviderProps {
@@ -3856,18 +3849,6 @@ export interface ImageModalProps {
   caption?: string;
   isOpen?: boolean;
   onClose?: () => void;
-}
-
-/**
- * FairmintToolProps - Fairmint Tool component props
- */
-export interface FairmintToolProps extends BaseComponentProps {
-  fairminters?: any[];
-  asset?: string;
-  quantity?: number;
-  onSubmit?: (data: any) => void;
-  loading?: boolean;
-  error?: string;
 }
 
 /**

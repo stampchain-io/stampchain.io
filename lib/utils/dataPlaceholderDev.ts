@@ -29,7 +29,6 @@
  *   /block                     routes/block/index.tsx
  *   /block/[block_index]       routes/block/[block_index].tsx
  *   /upload                    routes/upload/index.tsx
- *   /tool/fairmint             routes/tool/fairmint/index.tsx
  *
  * When adding dummy data for one of the routes above, follow the pattern
  * used by the wallet/dashboard routes: export a small set of static
