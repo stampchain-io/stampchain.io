@@ -786,12 +786,6 @@
       "category": "islands"
     },
     {
-      "alias": "$tool",
-      "originalPath": "./islands/tool/index.ts",
-      "pathType": "component",
-      "category": "islands"
-    },
-    {
       "alias": "$text",
       "originalPath": "./components/text/styles.ts",
       "pathType": "component",
@@ -1270,7 +1264,6 @@
     "$content": "../islands/content/index.ts",
     "$section": "../islands/section/index.ts",
     "$card": "../islands/card/index.ts",
-    "$tool": "../islands/tool/index.ts",
     "$text": "../components/text/styles.ts",
     "$button": "../components/button/index.ts",
     "$icon": "../components/icon/index.ts",

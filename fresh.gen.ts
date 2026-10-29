@@ -330,7 +330,6 @@ import * as $table_HoldersTableBase from "./islands/table/HoldersTableBase.tsx";
 import * as $table_UploadImageTable from "./islands/table/UploadImageTable.tsx";
 import * as $table_index from "./islands/table/index.ts";
 import * as $tool_StatusMessages from "./islands/tool/StatusMessages.tsx";
-import * as $tool_index from "./islands/tool/index.ts";
 import * as $tool_stamp_TradeTool from "./islands/tool/stamp/TradeTool.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
@@ -749,7 +748,6 @@ const manifest = {
     "./islands/table/UploadImageTable.tsx": $table_UploadImageTable,
     "./islands/table/index.ts": $table_index,
     "./islands/tool/StatusMessages.tsx": $tool_StatusMessages,
-    "./islands/tool/index.ts": $tool_index,
     "./islands/tool/stamp/TradeTool.tsx": $tool_stamp_TradeTool,
   },
   baseUrl: import.meta.url,

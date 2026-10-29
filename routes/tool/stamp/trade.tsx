@@ -1,6 +1,6 @@
 /* ===== TRADE PAGE ===== */
 import type { PageProps } from "$fresh/server.ts";
-import { StampTradeTool } from "$tool";
+import { StampTradeTool } from "$islands/tool/stamp/TradeTool.tsx";
 
 /* ===== PAGE COMPONENT ===== */
 export default function ToolTradePage(_props: PageProps) {
