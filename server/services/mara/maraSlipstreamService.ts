@@ -9,6 +9,7 @@ import { createPriceServiceCircuitBreaker } from "$/server/utils/circuitBreaker.
 import { logger } from "$lib/utils/logger.ts";
 import { getMaraConfig } from "$/server/config/config.ts";
 import { assertValidMaraConfig } from "$/server/config/maraConfigValidator.ts";
+import { assertBroadcastAllowed } from "$/server/services/chain/chainProfile.ts";
 import type {
   MaraFeeRateResponse,
   MaraSubmissionResponse,
@@ -189,6 +190,9 @@ export class MaraSlipstreamService {
     if (!hex || typeof hex !== 'string' || hex.length === 0) {
       throw new Error("Invalid transaction hex provided");
     }
+
+    // ECX policy gate (no-op under CHAIN=bitcoin). Throws before anything is sent.
+    assertBroadcastAllowed(hex);
 
     logger.info("mara", {
       message: "Submitting transaction to MARA pool",
