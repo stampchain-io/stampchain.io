@@ -4,6 +4,11 @@
  */
 
 import { getRecommendedFees } from "$lib/utils/bitcoin/network/mempool.ts";
+import { getChainId } from "$server/services/chain/chainProfile.ts";
+import {
+  ECX_MIN_FEE_SAT_PER_VB,
+  estimateEcxFeeSatPerVb,
+} from "$server/services/chain/ecxNodeRpc.ts";
 import { dbManager } from "$server/database/databaseManager.ts";
 import { RouteType, getCacheConfig } from "$server/services/infrastructure/cacheService.ts";
 import { FeeSecurityService } from "$server/services/fee/feeSecurityService.ts";
@@ -65,6 +70,39 @@ class MempoolFeeProvider implements FeeProvider {
   }
 }
 
+// ECX (CHAIN=ecx): our ECX node's estimatesmartfee, floored at 1 sat/vB.
+// Blocks are erratic after the fork, so estimates stay noisy for a while;
+// the user's fee cap stays in charge.
+class EcxNodeFeeProvider implements FeeProvider {
+  getName(): string {
+    return "ecx-node";
+  }
+
+  async getFeeEstimate(): Promise<{
+    recommendedFee: number;
+    fastestFee: number;
+    halfHourFee: number;
+    hourFee: number;
+    minimumFee: number;
+    confidence: "high" | "medium" | "low";
+  }> {
+    const [fast, half, hour] = await Promise.all([
+      estimateEcxFeeSatPerVb(1),
+      estimateEcxFeeSatPerVb(3),
+      estimateEcxFeeSatPerVb(6),
+    ]);
+    return {
+      recommendedFee: fast.satPerVb,
+      fastestFee: fast.satPerVb,
+      halfHourFee: half.satPerVb,
+      hourFee: hour.satPerVb,
+      minimumFee: ECX_MIN_FEE_SAT_PER_VB,
+      // No node estimate yet means the floor, not a measured rate.
+      confidence: fast.fromNode ? "medium" : "low",
+    };
+  }
+}
+
 // QuickNode fee provider
 class QuickNodeFeeProvider implements FeeProvider {
   getName(): string {
@@ -122,10 +160,13 @@ export function createProductionFeeService(): FeeServiceDI {
     {
       cacheService: new DatabaseCacheService(),
       priceService: new BTCPriceServiceAdapter(),
-      feeProviders: [
-        new MempoolFeeProvider(),
-        new QuickNodeFeeProvider(),
-      ],
+      // ECX uses only our node: mempool.space and QuickNode quote Bitcoin.
+      feeProviders: getChainId() === "ecx"
+        ? [new EcxNodeFeeProvider()]
+        : [
+          new MempoolFeeProvider(),
+          new QuickNodeFeeProvider(),
+        ],
       securityService: new FeeSecurityServiceAdapter(),
     },
     {
@@ -133,11 +174,14 @@ export function createProductionFeeService(): FeeServiceDI {
       cacheDuration: cacheConfig.duration,
       maxRetries: 3,
       retryDelay: 1000,
-      staticFallbackRates: {
-        conservative: 10,
-        normal: 6,
-        minimum: 1,
-      },
+      // ECX after the fork: near-empty blocks, so fall back to the floor.
+      staticFallbackRates: getChainId() === "ecx"
+        ? { conservative: 2, normal: ECX_MIN_FEE_SAT_PER_VB, minimum: ECX_MIN_FEE_SAT_PER_VB }
+        : {
+          conservative: 10,
+          normal: 6,
+          minimum: 1,
+        },
     }
   );
 }
