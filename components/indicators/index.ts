@@ -15,7 +15,6 @@ export {
 // Skeleton loader components
 export {
   FeeCalculatorSkeleton,
-  SendToolSkeleton,
   SkeletonButton,
   SkeletonContainer,
   SkeletonImage,

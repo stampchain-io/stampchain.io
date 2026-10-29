@@ -224,15 +224,6 @@ const PREFIX_RULES: Array<{
   build: (rest: string) => PageMetadata;
 }> = [
   {
-    prefix: "/tool/stamp/",
-    build: (rest) => ({
-      title: `${humanize(rest)} Stamps | Stampchain Tools`,
-      description: `${
-        humanize(rest)
-      } Bitcoin Stamps from your own wallet. Set the details, review the fee estimate and sign the transaction on stampchain.io.`,
-    }),
-  },
-  {
     prefix: "/howto/",
     build: (rest) => ({
       title: `${humanize(rest)} | Bitcoin Stamps How-To`,

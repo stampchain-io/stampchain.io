@@ -30,7 +30,6 @@ export { default as StampSendsGallery } from "$islands/section/gallery/StampSend
 
 /* ===== HOW TO ===== */
 export * from "$islands/section/howto/StampingHowto.tsx";
-export * from "$islands/section/howto/StampSendHowTo.tsx";
 /* ===== HOW TO BASE TEMPLATES ===== */
 export * from "$components/section/howto/ArticleBase.tsx";
 export * from "$components/section/howto/ArticlesOverviewBase.tsx";

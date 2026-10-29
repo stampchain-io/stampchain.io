@@ -11,7 +11,6 @@
  * -----------
  * Current modules in /islands/section/howto/:
  * - SRC101TransferHowto.tsx
- * - StampSendHowTo.tsx
  * - StampingHowto.tsx
  * - doc.md (this documentation)
  *
@@ -62,9 +61,9 @@
  * Best Practices
  * -------------
  * 1. Naming Convention
- *    - Suffix with "Howto" (e.g. StampSendHowTo, StampingHowto)
+ *    - Suffix with "Howto" (e.g. StampingHowto)
  *    - Use CamelCase
- *    - Be descriptive (e.g., StampSendHowTo)
+ *    - Be descriptive (e.g., StampingHowto)
  *
  * 2. Content Guidelines
  *    - Keep instructions concise

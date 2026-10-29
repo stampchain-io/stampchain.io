@@ -221,7 +221,7 @@
 *    - Base: ModalTool (`info`: StampSendInfo)
 *    - Purpose: Stamp send form
 *    - Note: `openStampSendTool()` from the Tools menu (STAMPS → Send).
-*      The page at /tool/stamp/send is unchanged and is not linked from the menu.
+*      /tool/stamp/send is gone.
 *
 * 20. tool/SRC20DeployTool.tsx
 *    - Base: ModalTool (`info`: SRC20DeployInfo)

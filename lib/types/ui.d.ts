@@ -322,7 +322,6 @@ export interface TableProps<T = any> {
 //   ToastProviderProps,
 //   ToggleSwitchButtonProps,
 //   ToolFairmintPageProps,
-//   ToolStampPageProps,
 //   TotalBTCValueProps,
 //   TransactionBadgeProps,
 //   TransactionHexDisplayProps,
@@ -1085,12 +1084,6 @@ export interface StampListingsProps {
   initialData?: Array<any>;
   title?: string;
   subTitle?: string;
-}
-
-export interface ToolStampPageProps {
-  selectedTab: string;
-  trxType: "multisig" | "olga";
-  error?: string;
 }
 
 export interface ToolFairmintPageProps {
