@@ -233,24 +233,6 @@ const PREFIX_RULES: Array<{
     }),
   },
   {
-    prefix: "/tool/src20/",
-    build: (rest) => ({
-      title: `${humanize(rest)} SRC-20 Tokens | Stampchain Tools`,
-      description: `${
-        humanize(rest)
-      } an SRC-20 token on Bitcoin. Fill in the ticker details, review the fee estimate and sign the transaction in your wallet.`,
-    }),
-  },
-  {
-    prefix: "/tool/src101/",
-    build: (rest) => ({
-      title: `${humanize(rest)} a Bitname | Stampchain Tools`,
-      description: `${
-        humanize(rest)
-      } an SRC-101 bitname on Bitcoin. Fill in the details, review the fee estimate and sign the transaction in your wallet.`,
-    }),
-  },
-  {
     prefix: "/howto/",
     build: (rest) => ({
       title: `${humanize(rest)} | Bitcoin Stamps How-To`,

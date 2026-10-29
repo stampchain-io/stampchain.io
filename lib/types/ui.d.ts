@@ -286,7 +286,6 @@ export interface TableProps<T = any> {
 //   SortProps,
 //   SpinnerProps,
 //   SRC101DetailToolProps,
-//   SRC101RegisterToolProps,
 //   SRC20MintingCompactProps,
 //   SRC20DetailPageProps,
 //   SRC20InputFieldProps,
@@ -323,8 +322,6 @@ export interface TableProps<T = any> {
 //   ToastProviderProps,
 //   ToggleSwitchButtonProps,
 //   ToolFairmintPageProps,
-//   ToolSrc20PageProps,
-//   ToolsSrc101PageProps,
 //   ToolStampPageProps,
 //   TotalBTCValueProps,
 //   TransactionBadgeProps,
@@ -1090,21 +1087,6 @@ export interface StampListingsProps {
   subTitle?: string;
 }
 
-export interface ToolSrc20PageProps {
-  selectedTab: string;
-  trxType: "multisig" | "olga";
-  tick?: string | null;
-  mintStatus?: any;
-  holders?: number;
-  error?: string;
-}
-
-export interface ToolsSrc101PageProps {
-  selectedTab: string;
-  trxType: "multisig" | "olga";
-  error?: string;
-}
-
 export interface ToolStampPageProps {
   selectedTab: string;
   trxType: "multisig" | "olga";
@@ -1224,13 +1206,6 @@ export interface SRC20GalleryProps {
   showLoadingSkeleton?: boolean;
   subTitle?: string;
   serverData?: any;
-}
-
-export interface SRC101RegisterToolProps {
-  trxType?: "olga" | "multisig";
-  onRegister?: (data: any) => void;
-  loading?: boolean;
-  error?: string;
 }
 
 export interface StatusMessagesProps {

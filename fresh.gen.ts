@@ -155,8 +155,6 @@ import * as $test_horizon from "./routes/test/horizon.tsx";
 import * as $test_test_image from "./routes/test/test-image.ts";
 import * as $token_image_txHash_ from "./routes/token-image/[txHash].ts";
 import * as $tool_fairmint_index from "./routes/tool/fairmint/index.tsx";
-import * as $tool_src101_action_ from "./routes/tool/src101/[action].tsx";
-import * as $tool_src20_action_ from "./routes/tool/src20/[action].tsx";
 import * as $tool_stamp_action_ from "./routes/tool/stamp/[action].tsx";
 import * as $tool_stamp_create from "./routes/tool/stamp/create.tsx";
 import * as $tool_stamp_stamping from "./routes/tool/stamp/stamping.tsx";
@@ -289,6 +287,7 @@ import * as $modal_tool_SRC20MintTool from "./islands/modal/tool/SRC20MintTool.t
 import * as $modal_tool_SRC20TransferTool from "./islands/modal/tool/SRC20TransferTool.tsx";
 import * as $modal_tool_StampBuyTool from "./islands/modal/tool/StampBuyTool.tsx";
 import * as $modal_tool_StampSendTool from "./islands/modal/tool/StampSendTool.tsx";
+import * as $modal_tool_XCPFairmintTool from "./islands/modal/tool/XCPFairmintTool.tsx";
 import * as $section_BlockchainStats from "./islands/section/BlockchainStats.tsx";
 import * as $section_FeeCalculatorBase from "./islands/section/FeeCalculatorBase.tsx";
 import * as $section_cta_ContactCta from "./islands/section/cta/ContactCta.tsx";
@@ -316,11 +315,7 @@ import * as $section_gallery_StampSends from "./islands/section/gallery/StampSen
 import * as $section_gallery_StatsBanner from "./islands/section/gallery/StatsBanner.tsx";
 import * as $section_gallery_SwiperStyles from "./islands/section/gallery/SwiperStyles.tsx";
 import * as $section_gallery_TeamBanner from "./islands/section/gallery/TeamBanner.tsx";
-import * as $section_howto_SRC101RegisterHowto from "./islands/section/howto/SRC101RegisterHowto.tsx";
 import * as $section_howto_SRC101TransferHowto from "./islands/section/howto/SRC101TransferHowto.tsx";
-import * as $section_howto_SRC20DeployHowto from "./islands/section/howto/SRC20DeployHowto.tsx";
-import * as $section_howto_SRC20MintHowto from "./islands/section/howto/SRC20MintHowto.tsx";
-import * as $section_howto_SRC20TransferHowto from "./islands/section/howto/SRC20TransferHowto.tsx";
 import * as $section_howto_StampSendHowTo from "./islands/section/howto/StampSendHowTo.tsx";
 import * as $section_howto_StampingHowto from "./islands/section/howto/StampingHowto.tsx";
 import * as $section_index from "./islands/section/index.ts";
@@ -343,10 +338,6 @@ import * as $table_index from "./islands/table/index.ts";
 import * as $tool_StatusMessages from "./islands/tool/StatusMessages.tsx";
 import * as $tool_fairmint_FairmintTool from "./islands/tool/fairmint/FairmintTool.tsx";
 import * as $tool_index from "./islands/tool/index.ts";
-import * as $tool_src101_RegisterTool from "./islands/tool/src101/RegisterTool.tsx";
-import * as $tool_src20_DeployTool from "./islands/tool/src20/DeployTool.tsx";
-import * as $tool_src20_MintTool from "./islands/tool/src20/MintTool.tsx";
-import * as $tool_src20_TransferTool from "./islands/tool/src20/TransferTool.tsx";
 import * as $tool_stamp_SendTool from "./islands/tool/stamp/SendTool.tsx";
 import * as $tool_stamp_StampingTool from "./islands/tool/stamp/StampingTool.tsx";
 import * as $tool_stamp_StampingToolLazy from "./islands/tool/stamp/StampingToolLazy.tsx";
@@ -542,8 +533,6 @@ const manifest = {
     "./routes/test/test-image.ts": $test_test_image,
     "./routes/token-image/[txHash].ts": $token_image_txHash_,
     "./routes/tool/fairmint/index.tsx": $tool_fairmint_index,
-    "./routes/tool/src101/[action].tsx": $tool_src101_action_,
-    "./routes/tool/src20/[action].tsx": $tool_src20_action_,
     "./routes/tool/stamp/[action].tsx": $tool_stamp_action_,
     "./routes/tool/stamp/create.tsx": $tool_stamp_create,
     "./routes/tool/stamp/stamping.tsx": $tool_stamp_stamping,
@@ -712,6 +701,7 @@ const manifest = {
     "./islands/modal/tool/SRC20TransferTool.tsx": $modal_tool_SRC20TransferTool,
     "./islands/modal/tool/StampBuyTool.tsx": $modal_tool_StampBuyTool,
     "./islands/modal/tool/StampSendTool.tsx": $modal_tool_StampSendTool,
+    "./islands/modal/tool/XCPFairmintTool.tsx": $modal_tool_XCPFairmintTool,
     "./islands/section/BlockchainStats.tsx": $section_BlockchainStats,
     "./islands/section/FeeCalculatorBase.tsx": $section_FeeCalculatorBase,
     "./islands/section/cta/ContactCta.tsx": $section_cta_ContactCta,
@@ -750,15 +740,8 @@ const manifest = {
     "./islands/section/gallery/StatsBanner.tsx": $section_gallery_StatsBanner,
     "./islands/section/gallery/SwiperStyles.tsx": $section_gallery_SwiperStyles,
     "./islands/section/gallery/TeamBanner.tsx": $section_gallery_TeamBanner,
-    "./islands/section/howto/SRC101RegisterHowto.tsx":
-      $section_howto_SRC101RegisterHowto,
     "./islands/section/howto/SRC101TransferHowto.tsx":
       $section_howto_SRC101TransferHowto,
-    "./islands/section/howto/SRC20DeployHowto.tsx":
-      $section_howto_SRC20DeployHowto,
-    "./islands/section/howto/SRC20MintHowto.tsx": $section_howto_SRC20MintHowto,
-    "./islands/section/howto/SRC20TransferHowto.tsx":
-      $section_howto_SRC20TransferHowto,
     "./islands/section/howto/StampSendHowTo.tsx": $section_howto_StampSendHowTo,
     "./islands/section/howto/StampingHowto.tsx": $section_howto_StampingHowto,
     "./islands/section/index.ts": $section_index,
@@ -785,10 +768,6 @@ const manifest = {
     "./islands/tool/StatusMessages.tsx": $tool_StatusMessages,
     "./islands/tool/fairmint/FairmintTool.tsx": $tool_fairmint_FairmintTool,
     "./islands/tool/index.ts": $tool_index,
-    "./islands/tool/src101/RegisterTool.tsx": $tool_src101_RegisterTool,
-    "./islands/tool/src20/DeployTool.tsx": $tool_src20_DeployTool,
-    "./islands/tool/src20/MintTool.tsx": $tool_src20_MintTool,
-    "./islands/tool/src20/TransferTool.tsx": $tool_src20_TransferTool,
     "./islands/tool/stamp/SendTool.tsx": $tool_stamp_SendTool,
     "./islands/tool/stamp/StampingTool.tsx": $tool_stamp_StampingTool,
     "./islands/tool/stamp/StampingToolLazy.tsx": $tool_stamp_StampingToolLazy,

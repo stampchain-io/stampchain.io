@@ -227,34 +227,33 @@
 *    - Base: ModalTool (`info`: SRC20DeployInfo)
 *    - Purpose: SRC-20 deploy form
 *    - Note: `openSRC20DeployTool()` from the Tools menu (TOKENS → Deploy).
-*      The page at /tool/src20/deploy is unchanged and is not linked from the menu.
+*      /tool/src20/deploy is gone.
 *
 * 21. tool/SRC20MintTool.tsx
 *    - Base: ModalTool (`info`: SRC20MintInfo)
 *    - Purpose: SRC-20 mint form
 *    - Note: `openSRC20MintTool(tick?)` from the Tools menu (TOKENS → Mint)
 *      and from Mint buttons on SRC-20 tables and the token detail header.
-*      The page at /tool/src20/mint is unchanged and is not linked from the menu.
+*      /tool/src20/mint is gone.
 *
 * 22. tool/SRC20TransferTool.tsx
 *    - Base: ModalTool (`info`: SRC20TransferInfo)
 *    - Purpose: SRC-20 transfer form
 *    - Note: `openSRC20TransferTool()` from the Tools menu (TOKENS → Transfer).
-*      The page at /tool/src20/transfer is unchanged and is not linked from the menu.
+*      /tool/src20/transfer is gone.
 *
 * 23. tool/SRC101RegisterTool.tsx
 *    - Base: ModalTool (`info`: SRC101RegisterInfo)
 *    - Purpose: Bitname register form
 *    - Note: `openSRC101RegisterTool()` from the Tools menu (BITNAME → Register).
 *      If the name is already taken, it calls `openSRC101DetailTool()`, which
-*      uses `openModal` and replaces this tool. The page at /tool/src101/mint
-*      is unchanged and is not linked from the menu.
+*      uses `openModal` and replaces this tool. /tool/src101/mint is gone.
 *
 * 24. tool/SRC101DetailTool.tsx
 *    - Base: ModalTool (no `info`)
 *    - Purpose: Bitname image, name, and owner
 *    - Note: `openSRC101DetailTool({ img, name, root, owner })` from the
-*      register modal and the page register tool when a name is taken.
+*      register modal when a name is taken.
 *      Not in the Tools menu.
 *
 * 25. tool/StampBuyTool.tsx

@@ -101,7 +101,6 @@ Deno.test("routes outside the static map get a derived title, not the site name"
     ["/src20/KEVIN", "KEVIN"],
     ["/collection/utxo_punks", "Utxo Punks"],
     ["/block/966781", "966781"],
-    ["/tool/src20/deploy", "Deploy"],
     ["/howto/template", "Template"],
     ["/stamp/1", "Bitcoin Stamp 1"],
   ];
