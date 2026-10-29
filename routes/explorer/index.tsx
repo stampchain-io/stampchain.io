@@ -26,6 +26,14 @@ import { SRC20Service } from "$server/services/src20/index.ts";
 import type { StampPageProps } from "$types/api.d.ts";
 import type { StampRow } from "$types/stamp.d.ts";
 import type { SRC20Row } from "$types/src20.d.ts";
+import {
+  EcxNativeEmpty,
+  EcxStampViewToggle,
+  type EcxViewState,
+  ecxViewState,
+} from "$components/layout/EcxStampView.tsx";
+import { ecxBlockFloor, getEcxStampView } from "$lib/utils/chain/ecxView.ts";
+import { getChainId } from "$server/services/chain/chainProfile.ts";
 
 /* ===== CONSTANTS ===== */
 const MAX_PAGE_SIZE = 120;
@@ -101,6 +109,20 @@ export const handler: Handlers = {
       | "stamps"
       | "tokens";
 
+    /* ECX only: stamp lists default to ECX-native stamps (block 973728 and
+      later); ?history=inherited shows everything. Token-only lists keep all
+      history. On Bitcoin both stay undefined, so queries and render data are
+      unchanged. */
+    const ecxView = getChainId() === "ecx" && section !== "tokens"
+      ? ecxViewState(url, getEcxStampView(url))
+      : undefined;
+    const floorFrom = ecxView ? ecxBlockFloor(ecxView.view) : undefined;
+    const blockFloor = floorFrom !== undefined
+      ? { from: floorFrom }
+      : undefined;
+    const withEcxView = <T extends Record<string, unknown>>(data: T) =>
+      ecxView ? { ...data, ecxView } : data;
+
     // Read card view mode — "sales" is handled separately via recentSales
     const viewParam = url.searchParams.get("view");
     const cardView: "cardVertical" | "cardSquare" | "cardRow" =
@@ -131,6 +153,9 @@ export const handler: Handlers = {
       let stamps = section === "tokens"
         ? []
         : (stampsByType[selectedTab] ?? all);
+      if (blockFloor) {
+        stamps = stamps.filter((s) => s.block_index >= blockFloor.from);
+      }
 
       // DEV: apply stamp range filter (covers ALL and STAMPS sections)
       const rangeParam = url.searchParams.get("range");
@@ -215,7 +240,7 @@ export const handler: Handlers = {
         ? getDummyExplorerFeedItems(stamps, src20Data?.data ?? [])
         : undefined;
 
-      return ctx.render({
+      return ctx.render(withEcxView({
         stamps,
         mixedItems,
         pagination: {
@@ -233,7 +258,7 @@ export const handler: Handlers = {
         section,
         cardView,
         partial: false,
-      });
+      }));
     }
 
     try {
@@ -384,6 +409,7 @@ export const handler: Handlers = {
               stampMin,
               stampMax,
               amtMax,
+              ...(blockFloor && { blockFloor }),
             }),
             15000,
             "DB timeout after 15000ms",
@@ -448,7 +474,7 @@ export const handler: Handlers = {
             })
             .filter((entry): entry is MixedItem => entry !== null);
 
-          return ctx.render({
+          return ctx.render(withEcxView({
             stamps: [],
             mixedItems,
             total: feedPage.totalStamps,
@@ -467,7 +493,7 @@ export const handler: Handlers = {
             section,
             cardView,
             partial: url.searchParams.has("_fresh"),
-          });
+          }));
         }
 
         const stampFetch = section === "tokens"
@@ -482,6 +508,7 @@ export const handler: Handlers = {
               filterBy,
               ident: NON_SRC20_IDENTS, // always exclude SRC-20 ident
               collectionId,
+              ...(blockFloor && { blockIdentifier: blockFloor }),
               url: url.origin,
             }),
             15000,
@@ -544,10 +571,10 @@ export const handler: Handlers = {
         cardView,
       };
 
-      return ctx.render({
+      return ctx.render(withEcxView({
         ...data,
         partial: url.searchParams.has("_fresh"),
-      });
+      }));
     } catch (error) {
       console.error(error);
       // Preserve the requested section/tab/view so the selector buttons and
@@ -557,7 +584,7 @@ export const handler: Handlers = {
       // look like the section/tab selection isn't taking effect.
       const selectedTab = (url.searchParams.get("type") || "all") as StampType;
       const recentSales = url.searchParams.get("recentSales") === "true";
-      return ctx.render({
+      return ctx.render(withEcxView({
         ...DATA_PLACEHOLDER_PROD_EXPLORER_OVERVIEW_PAGE,
         stamps: [],
         pagination: { total: 0 },
@@ -570,7 +597,7 @@ export const handler: Handlers = {
         section,
         cardView,
         partial: url.searchParams.has("_fresh"),
-      });
+      }));
     }
   },
 };
@@ -593,6 +620,12 @@ export function ExplorerPage(props: StampPageProps) {
 
   const stampsArray = Array.isArray(stamps) ? stamps : [];
   const isRecentSales = selectedTab === "recent_sales";
+  /* ECX only (undefined on Bitcoin): the native/inherited switch, and an
+    empty state in place of the list when an ECX-native list is empty. */
+  const ecxView = (props.data as { ecxView?: EcxViewState }).ecxView;
+  const ecxNativeEmpty = ecxView?.view === "native" && !isRecentSales &&
+    stampsArray.length === 0 && (mixedItems?.length ?? 0) === 0 &&
+    (src20DataCard?.data?.length ?? 0) === 0;
 
   /* ===== RENDER ===== */
   return (
@@ -610,19 +643,23 @@ export function ExplorerPage(props: StampPageProps) {
         sortBy={sortBy as "ASC" | "DESC"}
       />
 
+      {ecxView && <EcxStampViewToggle state={ecxView} />}
+
       {/* Main Content with Pagination */}
-      <ExplorerContent
-        stamps={stampsArray}
-        mixedItems={mixedItems}
-        isRecentSales={isRecentSales}
-        src20DataCard={src20DataCard ?? null}
-        section={section}
-        viewMode={cardView}
-        pagination={{
-          page,
-          totalPages,
-        }}
-      />
+      {ecxNativeEmpty ? <EcxNativeEmpty state={ecxView!} /> : (
+        <ExplorerContent
+          stamps={stampsArray}
+          mixedItems={mixedItems}
+          isRecentSales={isRecentSales}
+          src20DataCard={src20DataCard ?? null}
+          section={section}
+          viewMode={cardView}
+          pagination={{
+            page,
+            totalPages,
+          }}
+        />
+      )}
     </div>
   );
 }

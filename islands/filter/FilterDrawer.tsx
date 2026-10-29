@@ -1,3 +1,4 @@
+import { keepEcxHistory } from "$lib/utils/chain/ecxView.ts";
 import { FilterContentExplorerStamp } from "$islands/filter/FilterContentExplorerStamp.tsx";
 import { FilterContentMarketplace } from "$islands/filter/FilterContentMarketplace.tsx";
 import {
@@ -357,6 +358,9 @@ const FilterDrawer = (
       setOpen(false);
       return; // Cannot navigate during SSR
     }
+
+    // ECX: stay in the inherited-history view if the page was showing it.
+    queryParams = keepEcxHistory(queryParams, existingParams);
 
     const newUrl = globalThis.location.pathname +
       (queryParams ? `?${queryParams}` : "");

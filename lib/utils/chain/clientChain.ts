@@ -8,7 +8,7 @@
  * app layout, so later islands see it too. On Bitcoin nothing is ever set,
  * Header gets no prop, and every helper below returns the pre-ECX value.
  */
-import type { BrandChain } from "$lib/utils/chain/brand.ts";
+import { type BrandChain, stampNumberPrefix } from "$lib/utils/chain/brand.ts";
 
 export interface ClientChainInfo {
   CHAIN: "ecx";
@@ -134,4 +134,38 @@ export function withoutMarketColumns<T>(
 ): T[] {
   if (showMarketData(chain)) return items;
   return items.filter((_, i) => !MARKET_DATA_COLUMNS.has(headers[i] ?? ""));
+}
+
+/* ===== STAMP NUMBERS ===== */
+/**
+ * Mark in front of a displayed stamp number. "ECX #" for an ECX-native
+ * stamp on ECX (`blockIndex` is the stamp's creation block, 973728 or
+ * later). Otherwise what Bitcoin shows: "#", or "Stamp #" with a label.
+ * Pass null when the row's block is not the creation block (sale rows):
+ * unknown reads as inherited. Display only; links, API data and database
+ * values keep the bare number.
+ */
+export function stampPrefix(
+  blockIndex: number | string | null | undefined,
+  bitcoinLabel = "",
+  chain: BrandChain = getClientChainId(),
+): string {
+  const mark = stampNumberPrefix(chain, blockIndex);
+  if (mark !== "#") return mark;
+  return bitcoinLabel ? `${bitcoinLabel} #` : "#";
+}
+
+/**
+ * Class for the mark before a card's stamp number. On ECX a native stamp's
+ * "ECX #" is set as a small label above the number (static/estamps.css) so
+ * long numbers are not cut off in narrow cards. Everything else keeps
+ * "font-light".
+ */
+export function stampPrefixClass(
+  blockIndex: number | string | null | undefined,
+  chain: BrandChain = getClientChainId(),
+): string {
+  return stampNumberPrefix(chain, blockIndex) === "#"
+    ? "font-light"
+    : "font-light estamps-num-prefix";
 }

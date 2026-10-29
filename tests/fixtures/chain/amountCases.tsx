@@ -390,7 +390,10 @@ const COMPONENT_CASES: Case[] = [
     "../../../islands/content/stampDetailContent/StampInfo.tsx",
     "StampInfo",
     {
-      stamp: { ...marketStamp, dispensers: [dispenser] },
+      // A getter, so a test that changes marketStamp sees it here too.
+      get stamp() {
+        return { ...marketStamp, dispensers: [dispenser] };
+      },
       lowestPriceDispenser: dispenser,
       btcPriceUSD: 65000,
       collectionInfo: null,
@@ -423,6 +426,9 @@ const COMPONENT_CASES: Case[] = [
     },
   ],
 ];
+
+/** Stamp inputs the renders read, so a test can vary their creation block. */
+export const AMOUNT_STAMPS = [marketStamp, saleStamp, listedStamp];
 
 export async function renderAmountComponents(): Promise<
   Record<string, string>

@@ -18,7 +18,12 @@ import {
   useLowestPriceDispenser,
 } from "$lib/hooks/useLowestPriceDispenser.ts";
 import { isAtomicIconVisible } from "$lib/utils/bitcoin/stamps/stampUtils.ts";
-import { coinUnit, showMarketData } from "$lib/utils/chain/clientChain.ts";
+import {
+  coinUnit,
+  showMarketData,
+  stampPrefix,
+  stampPrefixClass,
+} from "$lib/utils/chain/clientChain.ts";
 import {
   abbreviateAddress,
   formatFileSize,
@@ -99,6 +104,7 @@ function IconWithTooltip(
 }
 
 /* ===== COMPONENT ===== */
+
 export function StampCard({
   stamp,
   isRecentSale = false,
@@ -110,6 +116,12 @@ export function StampCard({
   variant?: StampCardVariant;
   previewHtml?: string;
 }) {
+  // Creation block for the "ECX #" mark. Sale rows put the sale's block in
+  // block_index, so for them it is unknown and the plain "#" stays.
+  const prefixBlock = isRecentSale || variant === "cardVerticalSale" ||
+      variant === "cardVerticalSaleCompact"
+    ? null
+    : stamp.block_index;
   /* ===== STATE ===== */
   const [loading, setLoading] = useState<boolean>(true);
   const [imageFailed, setImageFailed] = useState<boolean>(false);
@@ -635,7 +647,11 @@ export function StampCard({
               {/* Stamp Number / CPID / Creator */}
               <div class="flex flex-col min-w-0">
                 <div class={`${cardStampNumber} !text-lg`}>
-                  {displayStampHash && <span class="font-light">#</span>}
+                  {displayStampHash && (
+                    <span class={stampPrefixClass(prefixBlock)}>
+                      {stampPrefix(prefixBlock)}
+                    </span>
+                  )}
                   {stampValue}
                 </div>
                 {stamp.cpid && (
@@ -822,7 +838,11 @@ export function StampCard({
               {/* Stamp Number / CPID / Creator */}
               <div class="flex flex-col min-w-0">
                 <div class={`${cardStampNumber} !text-lg`}>
-                  {displayStampHash && <span class="font-light">#</span>}
+                  {displayStampHash && (
+                    <span class={stampPrefixClass(prefixBlock)}>
+                      {stampPrefix(prefixBlock)}
+                    </span>
+                  )}
                   {stampValue}
                 </div>
                 {stamp.cpid && (
@@ -964,7 +984,11 @@ export function StampCard({
               class={`flex items-center justify-center mt-1
               ${cardStampNumber}`}
             >
-              {displayStampHash && <span class="font-light">#</span>}
+              {displayStampHash && (
+                <span class={stampPrefixClass(prefixBlock)}>
+                  {stampPrefix(prefixBlock)}
+                </span>
+              )}
               {stampValue}
             </div>
 
@@ -1223,7 +1247,11 @@ export function StampCard({
               class={`flex items-center justify-center mt-1
               ${cardStampNumber}`}
             >
-              {displayStampHash && <span class="font-light">#</span>}
+              {displayStampHash && (
+                <span class={stampPrefixClass(prefixBlock)}>
+                  {stampPrefix(prefixBlock)}
+                </span>
+              )}
               {stampValue}
             </div>
 
@@ -1387,7 +1415,11 @@ export function StampCard({
               class={`flex items-center justify-center mt-1
               ${cardStampNumber}`}
             >
-              {displayStampHash && <span class="font-light">#</span>}
+              {displayStampHash && (
+                <span class={stampPrefixClass(prefixBlock)}>
+                  {stampPrefix(prefixBlock)}
+                </span>
+              )}
               {stampValue}
             </div>
 
@@ -1494,7 +1526,11 @@ export function StampCard({
             <div
               class={`flex items-center justify-center mt-1 ${cardStampNumberCompact}`}
             >
-              {displayStampHash && <span class="font-light">#</span>}
+              {displayStampHash && (
+                <span class={stampPrefixClass(prefixBlock)}>
+                  {stampPrefix(prefixBlock)}
+                </span>
+              )}
               {stampValue}
             </div>
             <PillWithTooltip

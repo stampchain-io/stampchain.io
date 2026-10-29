@@ -14,9 +14,10 @@ import WebVitalsReporter from "$islands/WebVitalsReporter.tsx";
 import { Footer, NavigatorProvider } from "$layout";
 import { getPageMetadata } from "$lib/utils/pageMetadata.ts";
 import { getClientConfig } from "$server/config/config.ts";
-import { brandPageMetadata } from "$lib/utils/chain/brand.ts";
+import { brandPageMetadata, chainStylesheet } from "$lib/utils/chain/brand.ts";
 import { ChainBanner } from "$components/layout/ChainBanner.tsx";
-import { getChainId } from "$server/services/chain/chainProfile.ts";
+import { chainEnv, getChainId } from "$server/services/chain/chainProfile.ts";
+import { ECX_FORK_BLOCK } from "$lib/utils/chain/ecxView.ts";
 import {
   type ChainLabel,
   getClientChainInfo,
@@ -47,6 +48,7 @@ export default function App({ Component, state, url }: PageProps<unknown>) {
   const chainLabel = (state as { chainLabel?: ChainLabel | null } | undefined)
     ?.chainLabel;
   const clientChain = getClientChainInfo(chain);
+  const chainCss = chainStylesheet(chain);
 
   /* Chain marker for browser code that cannot read the server env (the
     broadcast guard in lib/utils/bitcoin/minting/broadcast.ts). Undefined under
@@ -95,6 +97,11 @@ export default function App({ Component, state, url }: PageProps<unknown>) {
         <link rel="stylesheet" href={asset("/modal.css")} />
         <link rel="preload" href={asset("/slick.css")} as="style" />
         <link rel="stylesheet" href={asset("/slick.css")} />
+        {
+          /* eSTAMPS presentation, ECX only. Every rule in it is scoped to
+            html[data-chain="ecx"], and Bitcoin pages do not load it. */
+        }
+        {chainCss && <link rel="stylesheet" href={asset(chainCss)} />}
 
         {/* ===== FONT LOADING ===== */}
         {
@@ -281,6 +288,11 @@ export default function App({ Component, state, url }: PageProps<unknown>) {
                     height={chainLabel.height}
                     blockHash={chainLabel.blockHash}
                     chain={clientChain}
+                    forkBlock={ECX_FORK_BLOCK}
+                    transactionsOpen={chainEnv().get(
+                      "ECX_BROADCAST_ENABLED",
+                    ) ===
+                      "true"}
                   />
                 )}
                 {clientChain ? <Header chain={clientChain} /> : <Header />}

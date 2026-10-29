@@ -24,6 +24,7 @@ import { summarize_issuances } from "$server/database/index.ts";
 import type { SUBPROTOCOLS } from "$types/base.d.ts";
 import type { XcpBalance } from "$types/services.d.ts";
 import type { StampBalance, StampFilters } from "$types/stamp.d.ts";
+import { type BlockFloor, isBlockFloor } from "$lib/utils/chain/ecxView.ts";
 
 const STAMP_COUNT_REFRESH_MS = 5 * 60 * 1000;
 const stampCountState: {
@@ -50,7 +51,7 @@ export class StampRepository {
     identifier?: string | number | (string | number)[],
     type?: StampType,
     ident?: SUBPROTOCOLS | SUBPROTOCOLS[] | string,
-    blockIdentifier?: number | string,
+    blockIdentifier?: number | string | BlockFloor,
     collectionId?: string | string[],
     filterBy?: StampFilterType[],
     combinedFilters?: (StampSuffixFilter | StampFiletype)[],
@@ -194,8 +195,12 @@ export class StampRepository {
       }
     }
 
-    // Block identifier condition
-    if (blockIdentifier !== undefined) {
+    // Block identifier condition: one block by height or hash, or a floor
+    // ({ from }) for lists that start at a given block (ECX-native stamps).
+    if (isBlockFloor(blockIdentifier)) {
+      whereConditions.push("st.block_index >= ?");
+      queryParams.push(blockIdentifier.from);
+    } else if (blockIdentifier !== undefined) {
       if (
         typeof blockIdentifier === "number" ||
         /^\d+$/.test(blockIdentifier)
@@ -388,6 +393,8 @@ export class StampRepository {
     range?: StampRange | undefined;
     rangeMin?: string | undefined;
     rangeMax?: string | undefined;
+    /** Only stamps in this block or later. */
+    blockFloor?: BlockFloor | undefined;
   }): { subquery: string; params: (string | number)[] } {
     const whereConditions: string[] = [];
     const queryParams: (string | number)[] = [];
@@ -398,7 +405,7 @@ export class StampRepository {
       undefined, // identifier
       options.type,
       options.ident,
-      undefined, // blockIdentifier
+      options.blockFloor, // blockIdentifier
       options.collectionId,
       options.filterBy,
       options.fileType, // combinedFilters
@@ -432,7 +439,7 @@ export class StampRepository {
     type?: StampType;
     ident?: SUBPROTOCOLS | SUBPROTOCOLS[] | string;
     identifier?: string | number | (string | number)[];
-    blockIdentifier?: number | string;
+    blockIdentifier?: number | string | BlockFloor;
     collectionId?: string | string[];
     filterBy?: StampFilterType[];
     suffix?: StampSuffixFilter[];
@@ -813,7 +820,7 @@ export class StampRepository {
     type?: StampType;
     ident?: SUBPROTOCOLS | SUBPROTOCOLS[] | string;
     identifier?: string | number | (string | number)[];
-    blockIdentifier?: number | string;
+    blockIdentifier?: number | string | BlockFloor;
     allColumns?: boolean;
     noPagination?: boolean;
     cacheDuration?: number | "never";

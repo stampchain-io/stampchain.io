@@ -601,6 +601,9 @@ export function Header({ chain }: HeaderProps = {}) {
           {brand.logo.lead}
         </span>
         {brand.logo.tail}
+        {brand.attribution && (
+          <span class="estamps-attribution">{brand.attribution}</span>
+        )}
       </span>
     </LogoIcon>
   );

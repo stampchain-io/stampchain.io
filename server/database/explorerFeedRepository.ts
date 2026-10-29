@@ -9,6 +9,7 @@ import { dbManager } from "$server/database/databaseManager.ts";
 import { SRC20Repository } from "$server/database/src20Repository.ts";
 import { StampRepository } from "$server/database/stampRepository.ts";
 import type { SUBPROTOCOLS } from "$types/base.d.ts";
+import type { BlockFloor } from "$lib/utils/chain/ecxView.ts";
 
 export interface ExplorerFeedRow {
   tx_hash: string;
@@ -65,6 +66,8 @@ export class ExplorerFeedRepository {
     amtMax?: number | string | undefined;
     // Feed ordering by (block_index, tx_index); DESC = newest first (default).
     sortDirection?: "ASC" | "DESC" | undefined;
+    // Both sides: only rows in this block or later (ECX-native view).
+    blockFloor?: BlockFloor | undefined;
   }): Promise<ExplorerFeedPage> {
     const { page = 1, limit = 60 } = options;
     const direction = options.sortDirection === "ASC" ? "ASC" : "DESC";
@@ -79,6 +82,7 @@ export class ExplorerFeedRepository {
       range: options.range,
       rangeMin: options.rangeMin,
       rangeMax: options.rangeMax,
+      blockFloor: options.blockFloor,
     });
 
     const tokenFragment = SRC20Repository.buildFeedFragment({
@@ -86,6 +90,7 @@ export class ExplorerFeedRepository {
       stampMin: options.stampMin,
       stampMax: options.stampMax,
       amtMax: options.amtMax,
+      blockFloor: options.blockFloor,
     });
 
     const safeLimit = Number.isFinite(limit) && limit > 0 ? limit : 60;

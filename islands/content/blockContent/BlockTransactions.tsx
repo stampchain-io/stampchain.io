@@ -2,13 +2,15 @@
 import { useFees } from "$fees";
 import { Icon } from "$icon";
 import { containerBackground, transitionAll } from "$layout";
-import { showMarketData } from "$lib/utils/chain/clientChain.ts";
+import { showMarketData, stampPrefix } from "$lib/utils/chain/clientChain.ts";
 import { unicodeEscapeToEmoji } from "$lib/utils/ui/formatting/emojiUtils.ts";
 import { text, text2xl } from "$text";
 import { useState } from "preact/hooks";
 
 interface BlockStampRow {
   stamp: number | null;
+  /** Creation block (the routes pass full stamp rows). */
+  block_index?: number | null;
   ident?: string;
   tx_hash: string;
   cpid?: string;
@@ -283,7 +285,10 @@ export default function BlockTransactions({
                       key={`${stamp.tx_hash}-${stamp.cpid ?? stamp.stamp}-${i}`}
                       class="flex flex-wrap justify-between gap-x-4 gap-y-1 text-sm py-2 border-b border-[#282D3F]"
                     >
-                      <span>STAMP #{stamp.stamp ?? "—"}</span>
+                      <span>
+                        {stampPrefix(stamp.block_index, "STAMP")}
+                        {stamp.stamp ?? "—"}
+                      </span>
                       <span class="text-[#6E6E6E]">{stamp.ident ?? ""}</span>
                       <span class="text-[#6E6E6E] break-all">
                         {stamp.creator_name || stamp.creator || ""}

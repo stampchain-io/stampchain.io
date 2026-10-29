@@ -1,5 +1,6 @@
 // islands/Toast/NotificationUpdate.tsx
 import { showToast } from "$lib/utils/ui/notifications/toastSignal.ts";
+import { notificationUpdateMessage } from "$lib/utils/ui/notifications/updateAnnouncement.ts";
 import { useEffect } from "preact/hooks";
 
 /**
@@ -8,7 +9,7 @@ import { useEffect } from "preact/hooks";
  *
  * To show a new announcement:
  * 1. Increment NOTIFICATION_UPDATE_VERSION version (e.g., "v1" -> "v2")
- * 2. Update NOTIFICATION_UPDATE_MESSAGE content
+ * 2. Update the message in lib/utils/ui/notifications/updateAnnouncement.ts
  * 3. Adjust timing/behavior if needed
  */
 
@@ -41,17 +42,6 @@ const TYPE = "info" as const;
 const NOTIFICATION_UPDATE_VERSION = "feature-update-v3.4";
 
 /**
- * Message content for update notification
- * Supports multi-line formatting with bullet points
- */
-const NOTIFICATION_UPDATE_MESSAGE = `Create Stamp tool update
-• Redesigned Stamp creator page with Classic, Posh and Recursive modes.
-• New Recursive Stamp builder that lets you add layers of stamp asset images and/or text, tweak the elements, to easily create a new lightweight recursive stamp.
-• Improved fee calculator with transaction fees, bitcoin block and price display.
-
-Please clear browser cache and refresh the page for all updates to take effect.`;
-
-/**
  * Displays a one-time notification for major app updates
  * All configuration is self-contained in this file
  */
@@ -71,8 +61,10 @@ export function NotificationUpdate() {
     // Delay for better UX (let page settle first)
     const timer = setTimeout(() => {
       // Show the toast
+      // Read the chain when the toast opens: the Header island has
+      // published it by then (it hydrates in the same pass, DELAY earlier).
       showToast(
-        NOTIFICATION_UPDATE_MESSAGE,
+        notificationUpdateMessage(),
         TYPE,
         AUTO_DISMISS,
         undefined,

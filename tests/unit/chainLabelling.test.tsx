@@ -144,20 +144,26 @@ Deno.test({
 });
 
 /* ===== ECX ===== */
-Deno.test("ecx: brand helpers say ECX Stamps", () => {
+Deno.test("ecx: brand helpers say eSTAMPS by Stampchain", () => {
   const brand = getChainBrand("ecx");
-  assertEquals(brand.productName, "ECX Stamps");
+  assertEquals(brand.productName, "eSTAMPS");
   assertEquals(brand.chainLabel, "ECX");
-  assertEquals(brand.drawerTitle, "ECX STAMPS");
-  assertEquals(brandText("Bitcoin Stamps", "ecx"), "ECX Stamps");
-  assertEquals(brandText("Bitcoin Stamp #12", "ecx"), "ECX Stamp #12");
+  assertEquals(brand.drawerTitle, "eSTAMPS");
+  assertEquals(brand.logo, { lead: "e", tail: "STAMPS" });
+  assertEquals(brand.attribution, "by Stampchain");
+  assertEquals(brandText("Bitcoin Stamps", "ecx"), "eSTAMPS");
+  assertEquals(brandText("BITCOIN STAMPS", "ecx"), "eSTAMPS");
+  assertEquals(brandText("Bitcoin Stamp", "ecx"), "eSTAMP");
+  // brandText has no block, so a number keeps its plain "#" (an inherited
+  // stamp); ECX-native titles come from stampTitle (tests/unit/estamps).
+  assertEquals(brandText("Bitcoin Stamp #12", "ecx"), "eSTAMP #12");
   assertEquals(
     brandText("Stamp artwork into Bitcoin. Bitcoin block 5 on Bitcoin", "ecx"),
     "Stamp artwork into ECX. ECX block 5 on ECX",
   );
   assertEquals(
     brandText("How to Buy a Bitcoin Stamp, A Bitcoin address", "ecx"),
-    "How to Buy an ECX Stamp, An ECX address",
+    "How to Buy an eSTAMP, An ECX address",
   );
   // wallets and BTC amounts are product decisions, not rebranded
   assertEquals(
@@ -168,7 +174,7 @@ Deno.test("ecx: brand helpers say ECX Stamps", () => {
 
   assertEquals(
     brandPageMetadata(getPageMetadata("/"), "/", "ecx").title,
-    "ECX Stamps: Unprunable UTXO Art | Stampchain",
+    "eSTAMPS: Unprunable UTXO Art | Stampchain",
   );
   assertEquals(
     brandPageMetadata(getPageMetadata("/block/973800"), "/block/973800", "ecx")
@@ -191,19 +197,19 @@ Deno.test("ecx: MetaTags carry the ECX brand in title, OG and site name", () => 
   );
   assert(
     html.includes(
-      "<title>ECX Stamps: Unprunable UTXO Art | Stampchain</title>",
+      "<title>eSTAMPS: Unprunable UTXO Art | Stampchain</title>",
     ),
   );
-  assert(html.includes('property="og:title" content="ECX Stamps: Unprunable'));
-  assert(html.includes('property="og:site_name" content="ECX Stamps"'));
-  assert(html.includes('content="stampchain.io — ECX Stamps block explorer"'));
-  assert(html.includes('"name":"ECX Stamps"'));
+  assert(html.includes('property="og:title" content="eSTAMPS: Unprunable'));
+  assert(html.includes('property="og:site_name" content="eSTAMPS"'));
+  assert(html.includes('content="stampchain.io — eSTAMPS block explorer"'));
+  assert(html.includes('"name":"eSTAMPS"'));
   assert(html.includes("transactions on the ECX blockchain"));
-  assert(!/Bitcoin Stamps/.test(html));
+  assert(!/Bitcoin Stamps|ECX Stamps/.test(html));
   assertEquals(
     renderToString(h(MetaTags, { chain: "ecx" })).match(/<title>(.*?)<\/title>/)
       ?.[1],
-    "ECX Stamps",
+    "eSTAMPS",
   );
 });
 
@@ -301,8 +307,10 @@ Deno.test({
       const html = renderToString(
         h(Header, { chain: { CHAIN: "ecx", EXPLORER_BASE_URL: "" } }),
       );
-      assert(html.includes("ECX</span> STAMPS"));
+      assert(html.includes("e</span>STAMPS"));
+      assert(html.includes('class="estamps-attribution">by Stampchain</span>'));
       assert(!html.includes("STAMP</span>CHAIN"));
+      assert(!/ECX STAMPS|ECX Stamps/.test(html));
       assertEquals(clientChain.getClientChainId(), "ecx");
     } finally {
       clientChain.setClientChain(null);

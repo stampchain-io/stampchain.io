@@ -19,6 +19,14 @@ import {
 } from "$section";
 import { StampController } from "$server/controller/stampController.ts";
 import { SRC20Service } from "$server/services/src20/index.ts";
+import {
+  EcxNativeEmpty,
+  EcxStampViewToggle,
+  type EcxViewState,
+  ecxViewState,
+} from "$components/layout/EcxStampView.tsx";
+import { ecxBlockFloor, getEcxStampView } from "$lib/utils/chain/ecxView.ts";
+import { getChainId } from "$server/services/chain/chainProfile.ts";
 
 /* ===== HELPERS ===== */
 /**
@@ -92,6 +100,8 @@ interface HomePageData extends StampControllerData {
     page: number;
     totalPages: number;
   };
+  // ECX only: ECX-native / inherited-history view of the stamp gallery
+  ecxView?: EcxViewState;
 }
 
 /* ===== SERVER HANDLER ===== */
@@ -106,6 +116,24 @@ export const handler: Handlers<HomePageData> = {
 
     console.log(`[HOMEPAGE] Starting homepage request`);
 
+    /* ECX only: the stamp galleries default to ECX-native stamps (block
+      973728 and later); ?history=inherited shows everything. Undefined on
+      Bitcoin, so its queries and render data are unchanged. */
+    const url = new URL(req.url);
+    const ecxView = getChainId() === "ecx"
+      ? ecxViewState(url, getEcxStampView(url))
+      : undefined;
+    const floorFrom = ecxView ? ecxBlockFloor(ecxView.view) : undefined;
+    const blockFloor = floorFrom !== undefined
+      ? { from: floorFrom }
+      : undefined;
+    const withEcxView = <T extends Record<string, unknown>>(data: T) =>
+      ecxView ? { ...data, ecxView } : data;
+    const aboveFloor = <T extends { block_index?: number }>(rows: T[]) =>
+      blockFloor
+        ? rows.filter((r) => (r.block_index ?? 0) >= blockFloor.from)
+        : rows;
+
     if (DATA_PLACEHOLDER_DEV) {
       const {
         DATA_PLACEHOLDER_DEV_HOME_SRC20_MINTED,
@@ -114,8 +142,17 @@ export const handler: Handlers<HomePageData> = {
         DATA_PLACEHOLDER_DEV_NEW_LISTINGS,
         DATA_PLACEHOLDER_DEV_RECENT_SALES,
       } = await import("$lib/utils/dataPlaceholderDev.ts");
-      return await ctx.render({
+      return await ctx.render(withEcxView({
         ...DATA_PLACEHOLDER_DEV_LANDING_PAGE,
+        ...(blockFloor && {
+          stamps_art: aboveFloor(DATA_PLACEHOLDER_DEV_LANDING_PAGE.stamps_art),
+          stamps_posh: aboveFloor(
+            DATA_PLACEHOLDER_DEV_LANDING_PAGE.stamps_posh,
+          ),
+          stamps_src721: aboveFloor(
+            DATA_PLACEHOLDER_DEV_LANDING_PAGE.stamps_src721,
+          ),
+        }),
         src20Data: {
           minted: DATA_PLACEHOLDER_DEV_HOME_SRC20_MINTED as any,
           minting: DATA_PLACEHOLDER_DEV_HOME_SRC20_MINTING as any,
@@ -134,7 +171,7 @@ export const handler: Handlers<HomePageData> = {
         },
         btcPrice: 65000,
         btcPriceSource: "dummy",
-      });
+      }) as any);
     }
 
     try {
@@ -197,7 +234,12 @@ export const handler: Handlers<HomePageData> = {
       ] = await Promise.allSettled([
         // Stamp homepage data (carousels, galleries)
         fetchWithFallback(
-          () => StampController.getHomePageData(btcPrice, btcPriceData.source),
+          () =>
+            StampController.getHomePageData(
+              btcPrice,
+              btcPriceData.source,
+              blockFloor,
+            ),
           {
             carouselStamps: [],
             stamps_art: [],
@@ -345,7 +387,7 @@ export const handler: Handlers<HomePageData> = {
         : { data: [], total: 0, page: 1, totalPages: 0 };
 
       /* ===== RESPONSE RENDERING ===== */
-      const response = await ctx.render({
+      const response = await ctx.render(withEcxView({
         ...pageResult,
         src20Data: {
           minted: mintedResult as any,
@@ -356,7 +398,7 @@ export const handler: Handlers<HomePageData> = {
         // 🚀 PERFORMANCE: Pass BTC price to components to avoid redundant fetches
         btcPrice: btcPrice,
         btcPriceSource: btcPriceData.source,
-      });
+      }));
 
       return response;
     } catch (error) {
@@ -366,7 +408,7 @@ export const handler: Handlers<HomePageData> = {
       }
 
       // Return the original error/empty state instead of failing completely
-      return await ctx.render(DATA_PLACEHOLDER_PROD_HOME);
+      return await ctx.render(withEcxView(DATA_PLACEHOLDER_PROD_HOME) as any);
     }
   },
 };
@@ -382,7 +424,11 @@ export default function Home({ data }: PageProps<HomePageData>) {
     src20Data,
     recentSalesData,
     newListingsData,
+    ecxView,
   } = data || {};
+  // ECX only: nothing to show in the ECX-native gallery yet.
+  const ecxNativeEmpty = ecxView?.view === "native" &&
+    stamps_art.length + stamps_posh.length + stamps_src721.length === 0;
 
   /* ===== RENDER ===== */
   return (
@@ -405,7 +451,7 @@ export default function Home({ data }: PageProps<HomePageData>) {
         class={`${body} ${containerGap}`}
       >
         {/* ===== CRITICAL ABOVE FOLD CONTENT ===== */}
-        <HomeHeader />
+        {ecxView ? <HomeHeader chain="ecx" /> : <HomeHeader />}
 
         {
           /* ===== DEFERRED IMPORTANT CONTENT =====
@@ -415,16 +461,21 @@ export default function Home({ data }: PageProps<HomePageData>) {
 
         {/* ===== NON-CRITICAL CONTENT ===== */
         }
-        <div style="content-visibility: auto; contain-intrinsic-size: 0 1240px;">
-          <StampGalleryHome
-            stamps_art={stamps_art}
-            stamps_posh={stamps_posh}
-            stamps_src721={stamps_src721}
-            collectionData={collectionData}
-            recentSalesData={recentSalesData?.data || []}
-            newListingsData={newListingsData?.data || []}
-          />
-        </div>
+        {ecxView && <EcxStampViewToggle state={ecxView} />}
+        {ecxNativeEmpty
+          ? <EcxNativeEmpty state={ecxView!} />
+          : (
+            <div style="content-visibility: auto; contain-intrinsic-size: 0 1240px;">
+              <StampGalleryHome
+                stamps_art={stamps_art}
+                stamps_posh={stamps_posh}
+                stamps_src721={stamps_src721}
+                collectionData={collectionData}
+                recentSalesData={recentSalesData?.data || []}
+                newListingsData={newListingsData?.data || []}
+              />
+            </div>
+          )}
 
         {/* ===== BELOW FOLD CONTENT - LAZY LOAD ===== */}
         <div style="content-visibility: auto; contain-intrinsic-size: 0 360px;">

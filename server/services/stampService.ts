@@ -19,6 +19,7 @@ import { CreatorService } from "$server/services/creator/creatorService.ts";
 import { getCacheConfig, RouteType } from "$server/services/infrastructure/cacheService.ts";
 import { BTCPriceService } from "$server/services/price/btcPriceService.ts";
 import type { StampMarketData, XcpBalance } from "$types/index.d.ts";
+import type { BlockFloor } from "$lib/utils/chain/ecxView.ts";
 
 interface StampServiceOptions {
   cacheType: RouteType;
@@ -115,7 +116,7 @@ export class StampService {
     type?: StampType;
     ident?: SUBPROTOCOLS | SUBPROTOCOLS[];
     identifier?: string | number | (string | number)[];
-    blockIdentifier?: number | string;
+    blockIdentifier?: number | string | BlockFloor;
     allColumns?: boolean;
     includeSecondary?: boolean;
     noPagination?: boolean;

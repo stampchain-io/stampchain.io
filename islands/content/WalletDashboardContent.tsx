@@ -8,7 +8,7 @@ import { SortButton } from "$islands/button/SortButton.tsx";
 import SRC20GalleryWallet from "$islands/section/gallery/SRC20GalleryWallet.tsx";
 import { StampGalleryWallet } from "$islands/section/gallery/StampGalleryWallet.tsx";
 import { container1, shadowGlowPurple } from "$layout";
-import { coinUnit } from "$lib/utils/chain/clientChain.ts";
+import { coinUnit, stampPrefix } from "$lib/utils/chain/clientChain.ts";
 import {
   createPaginationHandler,
   getCurrentUrl,
@@ -270,7 +270,9 @@ function DispenserRow(
                 href={`/stamp/${dispenser.stamp.stamp}`}
                 class="!inline-block text-2xl mobileLg:text-4xl font-black bg-gradient-to-r color-primary-gradient color-gradient-hover"
               >
-                {`#${dispenser.stamp.stamp}`}
+                {`${
+                  stampPrefix(dispenser.stamp.block_index)
+                }${dispenser.stamp.stamp}`}
               </a>
             </div>
           </div>

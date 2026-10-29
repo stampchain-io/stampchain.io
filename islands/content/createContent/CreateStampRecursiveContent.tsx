@@ -1,4 +1,5 @@
 /* ===== RECURSIVE STAMP CONTENT ===== */
+import { stampPrefix } from "$lib/utils/chain/clientChain.ts";
 import { Button, buttonHover, ToggleSwitchButton } from "$button";
 import { walletContext } from "$client/wallet/wallet.ts";
 import { inputField, inputNumeric, messageError } from "$form";
@@ -511,7 +512,9 @@ function AssetPreviewCard(
           </div>
           <div class="flex flex-col min-w-0 flex-1 gap-0.5">
             <div class={cardStampNumber}>
-              {stamp.stamp != null && <span class="font-light">#</span>}
+              {stamp.stamp != null && (
+                <span class="font-light">{stampPrefix(stamp.block_index)}</span>
+              )}
               {stamp.stamp != null
                 ? stamp.stamp.toLocaleString("en-US")
                 : stamp.cpid}
