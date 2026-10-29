@@ -7,7 +7,6 @@ export function StatusMessages({
   apiError,
   fileUploadError,
   walletError,
-  maraError,
   transactionHex,
   onCopyHex,
 }: StatusMessagesProps) {
@@ -87,15 +86,6 @@ export function StatusMessages({
           class={`w-full mt-4 ${container1} bg-gradient-to-br from-red-900/15 to-red-800/25 border-red-500/20 p-4`}
         >
           <p class="text-red-400 text-center font-medium">{walletError}</p>
-        </div>
-      )}
-      {maraError && !apiError && (
-        <div
-          class={`w-full mt-4 ${container1} bg-gradient-to-br from-purple-900/15 to-purple-800/25 border-purple-500/20 p-4`}
-        >
-          <p class="text-purple-400 text-center font-medium">
-            MARA Service: {maraError}
-          </p>
         </div>
       )}
     </>

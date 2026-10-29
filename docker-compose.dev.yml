@@ -85,12 +85,6 @@ services:
       APP_DOMAIN: localhost
       ALLOWED_DOMAINS: localhost,127.0.0.1
 
-      # MARA Integration (disabled in dev)
-      ENABLE_MARA_INTEGRATION: 0
-      MARA_API_BASE_URL: https://slipstream.mara.com/rest-api
-      MARA_API_TIMEOUT: 30000
-      MARA_SERVICE_FEE_SATS: 42000
-
       # Minting Service Configuration (disabled in dev)
       MINTING_SERVICE_FEE_ENABLED: 0
     ports:

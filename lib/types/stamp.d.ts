@@ -1594,8 +1594,6 @@ export interface StampTransactionOptions extends TransactionOptions {
   locked: boolean;
   /** Whether asset is divisible */
   divisible: boolean;
-  /** Custom output value for MARA mode (optional) */
-  outputValue?: number;
 
   // Optional dispense-specific properties for stamp purchases
   /** Dispenser source address (for purchases) */
@@ -2056,33 +2054,6 @@ export interface StampPageData {
  * AssertStampClassification - Migrated from typeAssertions.ts
  */
 export type AssertStampClassification<T> = T extends string ? T : never;
-
-/**
- * MARATransactionEstimateConfig - Migrated from maraTransactionSizeEstimator.ts
- */
-export interface MARATransactionEstimateConfig {
-  // Input configuration
-  inputs: Array<{
-    type: ScriptType;
-    isWitness?: boolean;
-  }>;
-
-  // Stamp-specific parameters
-  fileSize: number; // Size of the file in bytes
-  outputValue: number; // Dust value per P2WSH output (1-333)
-
-  // Service fee configuration
-  includeServiceFee: boolean;
-  serviceFeeType?: ScriptType;
-
-  // Change output
-  includeChangeOutput: boolean;
-  changeOutputType?: ScriptType;
-
-  // MARA specific
-  isMaraMode: boolean;
-  maraFeeRate: number; // sats/vB
-}
 
 /**
  * CacheEntry - Migrated from ToolEndpointFeeEstimator.ts

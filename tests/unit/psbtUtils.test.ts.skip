@@ -64,9 +64,7 @@ describe("PSBTUtils", () => {
     it("should validate minimum dust value", () => {
       const address = "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh";
       
-      // Test values below standard dust (typically 546 for P2WPKH)
-      // But MARA allows 1-332 sats
-      const validValues = [1, 100, 330, 332];
+      const validValues = [333, 546, 1000];
       
       validValues.forEach((value) => {
         const testPsbt = new bitcoin.Psbt({ network });
@@ -224,61 +222,6 @@ describe("PSBTUtils", () => {
 
       assertEquals(psbt.txOutputs.length, 2);
       assertEquals(psbt.txOutputs[0].value + psbt.txOutputs[1].value, 660);
-    });
-  });
-
-  describe("MARA-specific dust values", () => {
-    it("should support all MARA dust values (1-332)", () => {
-      const address = "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh";
-      
-      // Test boundary values
-      const boundaryValues = [1, 2, 100, 330, 331, 332];
-      
-      boundaryValues.forEach((value) => {
-        const testPsbt = new bitcoin.Psbt({ network });
-        PSBTUtils.addCustomDustOutput(testPsbt, address, value);
-        
-        assertEquals(testPsbt.txOutputs.length, 1);
-        assertEquals(testPsbt.txOutputs[0].value, value);
-      });
-    });
-
-    it("should create PSBT for MARA stamp transaction", () => {
-      // Typical MARA stamp transaction structure
-      psbt.addInput({
-        hash: Buffer.from("c".repeat(64), "hex"),
-        index: 0,
-        witnessUtxo: {
-          script: Buffer.from("0014" + "c".repeat(40), "hex"),
-          value: 100000, // 0.001 BTC input
-        },
-      });
-
-      // Add stamp output (330 sats)
-      const stampAddress = "bc1qstamp";
-      PSBTUtils.addCustomDustOutput(psbt, stampAddress, 330);
-
-      // Add MARA service fee output (42000 sats)
-      const maraFeeAddress = "bc1qmarafee";
-      psbt.addOutput({
-        address: maraFeeAddress,
-        value: 42000,
-      });
-
-      // Add change output
-      const changeAddress = "bc1qchange";
-      const networkFee = 2000; // Estimated network fee
-      const changeValue = 100000 - 330 - 42000 - networkFee;
-      
-      psbt.addOutput({
-        address: changeAddress,
-        value: changeValue,
-      });
-
-      assertEquals(psbt.txOutputs.length, 3);
-      assertEquals(psbt.txOutputs[0].value, 330); // Stamp dust
-      assertEquals(psbt.txOutputs[1].value, 42000); // MARA fee
-      assertEquals(psbt.txOutputs[2].value, changeValue); // Change
     });
   });
 });

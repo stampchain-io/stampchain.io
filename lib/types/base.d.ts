@@ -454,9 +454,6 @@ export interface ExtendedBaseFeeCalculatorProps extends BaseFeeCalculatorProps {
     editions: number;
   };
   dec?: number;
-  maraMode?: boolean;
-  maraFeeRate?: number | null;
-  isLoadingMaraFee?: boolean;
   progressIndicator?: any;
   cpid?: string;
 }

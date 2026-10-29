@@ -67,28 +67,6 @@ export const DEPRECATED_ENDPOINTS: Record<string, {
 };
 
 /**
- * MARA configuration interface
- */
-export interface MaraConfig {
-  apiBaseUrl: string;
-  apiTimeout: number;
-  serviceFeeAmount: number;
-  serviceFeeAddress: string;
-  enabled: boolean;
-}
-
-/**
- * Default MARA configuration for development
- */
-export const DEFAULT_MARA_CONFIG: MaraConfig = {
-  apiBaseUrl: "https://slipstream.mara.com/rest-api",
-  apiTimeout: 30000,
-  serviceFeeAmount: 42000,
-  serviceFeeAddress: "bc1qhhv6rmxvq5mj2fc3zne2gpjqduy45urapje64m",
-  enabled: true,
-};
-
-/**
  * Counterparty API nodes, tried in order.
  *
  * - XCP_API_URL (CI/tests): the only node, usually a mock server.

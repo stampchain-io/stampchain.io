@@ -234,11 +234,6 @@ export interface TableProps<T = any> {
 //   KeyboardNavigationProps,
 //   LoadingIconProps,
 //   LoadingStateProps,
-//   MaraModeIndicatorProps,
-//   MaraModeWarningModalProps,
-//   MaraServiceUnavailableModalProps,
-//   MaraStatusLinkProps,
-//   MaraSuccessMessageProps,
 //   MarketDataStatusProps,
 //   MetaTagsProps,
 //   MintProgressProps,
@@ -811,78 +806,6 @@ export interface ConnectWalletModalProps {
   onClose?: () => void;
 }
 
-/**
- * Mara Mode Warning Modal props
- */
-export interface MaraModeWarningModalProps {
-  _isOpen?: boolean;
-  onClose?: () => void;
-  title?: string;
-  outputValue?: number;
-  onConfirm?: () => void;
-  onCancel?: () => void;
-}
-
-/**
- * Mara Service Unavailable Modal props
- */
-export interface MaraServiceUnavailableModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title?: string;
-  onSwitchToStandard?: () => void;
-  onRetry?: () => void;
-}
-
-// =============================================================================
-// MARA-SPECIFIC COMPONENT PROPS
-// =============================================================================
-
-/**
- * Mara Status Link component props
- */
-export interface MaraStatusLinkProps extends BaseComponentProps {
-  href?: string;
-  variant?: "primary" | "secondary" | "warning" | "error";
-  target?: "_blank" | "_self";
-  icon?: string;
-  txid?: string;
-  class?: string;
-}
-
-/**
- * Mara mode indicator component props
- */
-export interface MaraModeIndicatorProps extends BaseComponentProps {
-  isActive: boolean;
-  mode?: "standard" | "turbo" | "eco";
-  showLabel?: boolean;
-  size?: ButtonSize;
-  animate?: boolean;
-  outputValue?: number;
-  feeRate?: number;
-  class?: string;
-}
-
-/**
- * Mara success message component props
- */
-export interface MaraSuccessMessageProps extends BaseComponentProps {
-  message?: string;
-  transactionId?: string;
-  showIcon?: boolean;
-  onDismiss?: () => void;
-  autoHideDuration?: number;
-  txid?: string;
-  outputValue?: number;
-  feeRate?: number;
-  poolInfo?: {
-    name: string;
-    hashrate?: string;
-  };
-  class?: string;
-}
-
 // =============================================================================
 // STATUS & BADGE COMPONENT PROPS
 // =============================================================================
@@ -1199,7 +1122,6 @@ export interface StatusMessagesProps {
   apiError?: string | null;
   fileUploadError?: string | null;
   walletError?: string | null;
-  maraError?: string | null;
   transactionHex?: string;
   onCopyHex?: () => void;
   messages?: Array<{
@@ -2586,19 +2508,11 @@ export interface ModalOverlayProps extends BaseComponentProps {
 // ==========================
 
 /**
- * Mara Mode Indicator component props
- */
-
-/**
  * Transaction Status component props
  */
 
 /**
  * Transaction Badge component props
- */
-
-/**
- * Mara Success Message component props
  */
 
 /**
@@ -2849,10 +2763,6 @@ export interface ErrorDisplayProps extends BaseComponentProps {
  */
 
 /**
- * Mara Status Link component props
- */
-
-/**
  * Stat Base component props
  */
 
@@ -2866,14 +2776,6 @@ export interface ErrorDisplayProps extends BaseComponentProps {
 
 /**
  * Shared List component props
- */
-
-/**
- * Mara Service Unavailable Modal component props
- */
-
-/**
- * Mara Mode Warning Modal component props
  */
 
 /**
@@ -3291,9 +3193,6 @@ export interface ExtendedBaseFeeCalculatorProps extends BaseFeeCalculatorProps {
   onTosChange?: (agreed: boolean) => void;
   feeDetails?: FeeDetails;
   mintDetails?: MintDetails;
-  maraMode?: boolean;
-  maraFeeRate?: number | null;
-  isLoadingMaraFee?: boolean;
   progressIndicator?: preact.ComponentChildren;
 }
 

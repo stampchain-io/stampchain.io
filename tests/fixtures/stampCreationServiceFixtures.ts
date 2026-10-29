@@ -21,7 +21,6 @@ export const mockStampParams = {
     service_fee_address: "bc1qservicefeetest123456789abcdefghij0vlvk",
     prefix: "stamp" as const,
     isDryRun: false,
-    outputValue: 330,
   },
 
   minimal: {
@@ -42,17 +41,6 @@ export const mockStampParams = {
     service_fee: 50000,
     service_fee_address: "bc1qservicefeetest123456789abcdefghij0vlvk",
     satsPerVB: 30,
-  },
-
-  maraMode: {
-    sourceWallet: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh0vlvk",
-    assetName: "MARASTAMP",
-    qty: "10",
-    filename: "mara-test.png",
-    file:
-      "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAEElEQVQ4jWNgYGBgGAWjgAEAAJQAAf//",
-    outputValue: 150, // MARA mode (< 330)
-    satsPerVB: 40,
   },
 
   largeFile: {
@@ -212,28 +200,6 @@ export const validationTestCases = [
     },
     shouldPass: false,
     expectedError: "Invalid service fee address",
-  },
-  {
-    name: "Invalid outputValue too low",
-    params: { ...mockStampParams.basic, outputValue: 0 },
-    shouldPass: false,
-    expectedError: "Invalid outputValue: 0",
-  },
-  {
-    name: "Invalid outputValue too high",
-    params: { ...mockStampParams.basic, outputValue: 400 },
-    shouldPass: false,
-    expectedError: "Invalid outputValue: 400",
-  },
-  {
-    name: "Valid outputValue at boundary",
-    params: { ...mockStampParams.basic, outputValue: 332 },
-    shouldPass: true,
-  },
-  {
-    name: "Valid outputValue exactly 333",
-    params: { ...mockStampParams.basic, outputValue: 333 },
-    shouldPass: true,
   },
 ];
 

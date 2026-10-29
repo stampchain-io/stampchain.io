@@ -636,9 +636,6 @@ export interface RawRequestBody {
   service_fee?: number | string;
   service_fee_address?: string;
   isPoshStamp?: boolean;
-  // MARA integration parameters
-  outputValue?: number | string;
-  maraFeeRate?: number | string;
 }
 
 /**
@@ -670,7 +667,6 @@ export interface CreateStampIssuanceParams {
   isDryRun?: boolean;
   service_fee: number;
   service_fee_address: string;
-  outputValue?: number;
 }
 
 /**
@@ -837,93 +833,6 @@ export type MarketplacePageProps = {
  * Internal API endpoint types for system-internal communication
  * These endpoints are secured and used for internal operations only
  */
-
-// MARA Integration API Types
-/**
- * MARA transaction submission request body
- * Used by /api/internal/mara-submit
- */
-export interface MaraSubmitRequest {
-  /** Signed transaction hex string */
-  hex: string;
-  /** Optional stamp ID for logging and tracking */
-  txid?: string;
-  /** Transaction priority level */
-  priority?: "high" | "medium" | "low";
-}
-
-/**
- * MARA transaction submission response
- * Response from /api/internal/mara-submit
- */
-export interface MaraSubmitResponse {
-  /** Transaction ID from MARA */
-  txid: string;
-  /** Submission status */
-  status: "accepted" | "pending" | "rejected";
-  /** Pool identifier */
-  pool: "mara";
-  /** Human-readable message */
-  message: string;
-  /** Estimated blocks until confirmation (optional) */
-  estimatedConfirmation?: number;
-  /** Pool priority level (optional) */
-  poolPriority?: number;
-}
-
-/**
- * MARA health check response
- * Response from /api/internal/mara-health
- */
-export interface MaraHealthResponse {
-  /** Overall health status */
-  status: "healthy" | "degraded" | "unhealthy";
-  /** Timestamp of health check */
-  timestamp: number;
-  /** Component health details */
-  components: {
-    /** MARA integration enabled */
-    enabled: boolean;
-    /** Service configuration valid */
-    configured: boolean;
-    /** Circuit breaker healthy */
-    circuitBreaker: "healthy" | "degraded" | "open" | "unhealthy";
-    /** Recent API performance */
-    apiPerformance: "healthy" | "degraded" | "failing";
-  };
-  /** Health check metrics */
-  metrics: {
-    /** Recent success rate (last 1 hour) */
-    successRate: number;
-    /** Average response time (last 1 hour) */
-    avgResponseTime: number;
-    /** Circuit breaker trips (last 24 hours) */
-    circuitBreakerTrips: number;
-  };
-  /** Health check details */
-  details?: string[];
-}
-
-/**
- * MARA fee rate response
- * Response from /api/internal/mara-fee-rate
- */
-export interface MaraFeeRateResponse {
-  /** Current recommended fee rate (sats/vB) */
-  feeRate: number;
-  /** Fee rate source */
-  source: "mara" | "fallback";
-  /** Confidence level */
-  confidence: "high" | "medium" | "low";
-  /** Timestamp of fee rate */
-  timestamp: number;
-  /** Additional fee rate options */
-  tiers?: {
-    fast: number;
-    medium: number;
-    slow: number;
-  };
-}
 
 // Monitoring & System API Types
 /**
@@ -1869,15 +1778,6 @@ export interface EndpointRegistry {
   "/api/v2/versions/changelog": {
     GET: ChangelogResponse;
   };
-  "/api/internal/mara-submit": {
-    POST: MaraSubmitResponse;
-  };
-  "/api/internal/mara-health": {
-    GET: MaraHealthResponse;
-  };
-  "/api/internal/mara-fee-rate": {
-    GET: MaraFeeRateResponse;
-  };
   "/api/internal/monitoring": {
     GET: MonitoringResponse;
   };
@@ -2294,8 +2194,6 @@ export interface MintRequest {
   divisible: boolean;
   isPoshStamp: boolean;
   dryRun?: boolean;
-  outputValue?: number; // MARA custom dust value
-  maraFeeRate?: number; // MARA-specified fee rate
 }
 
 /**
@@ -2320,49 +2218,6 @@ export interface CounterpartyApiManagerDependencies {
   cacheService: CacheService;
   logger: LoggerService;
   config: CounterpartyApiManagerConfig;
-}
-
-/**
- * MaraSubmissionResponse - Migrated from types.ts
- */
-export interface MaraSubmissionResponse {
-  /** Transaction ID of the submitted transaction */
-  txid: string;
-
-  /** Current status of the submission */
-  status: "accepted" | "pending" | "rejected";
-
-  /** Optional message with additional details */
-  message?: string;
-
-  /** Estimated blocks until confirmation */
-  estimated_confirmation?: number;
-
-  /** Pool priority level assigned */
-  pool_priority?: number;
-
-  /** Unix timestamp of submission */
-  submission_time: number;
-
-  /** Error code if submission failed */
-  error_code?: string;
-}
-
-/**
- * MaraErrorResponse - Migrated from types.ts
- */
-export interface MaraErrorResponse {
-  /** Error message */
-  error: string;
-
-  /** HTTP status code */
-  status: number;
-
-  /** Optional error code for specific error types */
-  code?: string;
-
-  /** Optional additional error details */
-  details?: Record<string, any>;
 }
 
 /**

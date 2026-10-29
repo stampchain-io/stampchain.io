@@ -21,9 +21,6 @@ import * as $api_internal_csrfToken from "./routes/api/internal/csrfToken.ts";
 import * as $api_internal_debug_headers from "./routes/api/internal/debug-headers.ts";
 import * as $api_internal_fee_security from "./routes/api/internal/fee-security.ts";
 import * as $api_internal_fees from "./routes/api/internal/fees.ts";
-import * as $api_internal_mara_fee_rate from "./routes/api/internal/mara-fee-rate.ts";
-import * as $api_internal_mara_health from "./routes/api/internal/mara-health.ts";
-import * as $api_internal_mara_submit from "./routes/api/internal/mara-submit.ts";
 import * as $api_internal_monitoring from "./routes/api/internal/monitoring.ts";
 import * as $api_internal_purge_creator_cache from "./routes/api/internal/purge-creator-cache.ts";
 import * as $api_internal_reset_connection_pool from "./routes/api/internal/reset-connection-pool.ts";
@@ -355,9 +352,6 @@ const manifest = {
     "./routes/api/internal/debug-headers.ts": $api_internal_debug_headers,
     "./routes/api/internal/fee-security.ts": $api_internal_fee_security,
     "./routes/api/internal/fees.ts": $api_internal_fees,
-    "./routes/api/internal/mara-fee-rate.ts": $api_internal_mara_fee_rate,
-    "./routes/api/internal/mara-health.ts": $api_internal_mara_health,
-    "./routes/api/internal/mara-submit.ts": $api_internal_mara_submit,
     "./routes/api/internal/monitoring.ts": $api_internal_monitoring,
     "./routes/api/internal/purge-creator-cache.ts":
       $api_internal_purge_creator_cache,

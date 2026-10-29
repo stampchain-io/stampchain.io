@@ -40,11 +40,6 @@ export class StampToolAdapter
       satsPerVB: options.feeRate,
     };
 
-    // Add outputValue for MARA mode if specified
-    if (options.outputValue !== undefined) {
-      requestBody.outputValue = options.outputValue;
-    }
-
     return requestBody;
   }
 
