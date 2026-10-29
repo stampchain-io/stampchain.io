@@ -313,7 +313,6 @@ import * as $section_gallery_StampSends from "./islands/section/gallery/StampSen
 import * as $section_gallery_StatsBanner from "./islands/section/gallery/StatsBanner.tsx";
 import * as $section_gallery_SwiperStyles from "./islands/section/gallery/SwiperStyles.tsx";
 import * as $section_gallery_TeamBanner from "./islands/section/gallery/TeamBanner.tsx";
-import * as $section_howto_SRC101TransferHowto from "./islands/section/howto/SRC101TransferHowto.tsx";
 import * as $section_index from "./islands/section/index.ts";
 import * as $sorting_SortingComponent from "./islands/sorting/SortingComponent.tsx";
 import * as $sorting_SortingErrorBoundary from "./islands/sorting/SortingErrorBoundary.tsx";
@@ -726,8 +725,6 @@ const manifest = {
     "./islands/section/gallery/StatsBanner.tsx": $section_gallery_StatsBanner,
     "./islands/section/gallery/SwiperStyles.tsx": $section_gallery_SwiperStyles,
     "./islands/section/gallery/TeamBanner.tsx": $section_gallery_TeamBanner,
-    "./islands/section/howto/SRC101TransferHowto.tsx":
-      $section_howto_SRC101TransferHowto,
     "./islands/section/index.ts": $section_index,
     "./islands/sorting/SortingComponent.tsx": $sorting_SortingComponent,
     "./islands/sorting/SortingErrorBoundary.tsx": $sorting_SortingErrorBoundary,
