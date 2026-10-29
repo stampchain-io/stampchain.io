@@ -178,6 +178,17 @@ Deno.test({
         );
         assert(!/Stamp #\d/.test(html[name]), `${name} still says Stamp #`);
       }
+      // In cards the mark is a small label above the number, so long
+      // numbers are not cut off; tables keep it inline.
+      for (const name of NUMBERED.filter((n) => n.startsWith("StampCard."))) {
+        assert(
+          html[name].includes(
+            '<span class="font-light estamps-num-prefix">ECX #</span>',
+          ),
+          `${name}: ECX # is not the card label`,
+        );
+      }
+      assert(!html.StampOverviewRow.includes("estamps-num-prefix"));
       // The number itself and the links to it stay as they were.
       assert(html.StampOverviewRow.includes('href="/stamp/'));
     } finally {
@@ -208,6 +219,23 @@ Deno.test("ecx: view helpers default to ECX-native and keep other params", () =>
       "native",
     ),
     "/explorer",
+  );
+  // Filters rebuilt from scratch keep the inherited view; Bitcoin and the
+  // native view get their query back untouched.
+  assertEquals(
+    view.keepEcxHistory("tokenOp=mint&view=cardRow", "?history=inherited"),
+    "tokenOp=mint&view=cardRow&history=inherited",
+  );
+  assertEquals(
+    view.keepEcxHistory("", "history=inherited"),
+    "history=inherited",
+  );
+  const q = "fileType=png&sortBy=DESC";
+  assertStrictEquals(view.keepEcxHistory(q, "?sortBy=DESC"), q);
+  assertStrictEquals(view.keepEcxHistory(q, new URLSearchParams()), q);
+  assertStrictEquals(
+    view.keepEcxHistory("history=inherited", "history=inherited"),
+    "history=inherited",
   );
   assert(view.isBlockFloor(FLOOR));
   assert(!view.isBlockFloor(973728) && !view.isBlockFloor("973728"));

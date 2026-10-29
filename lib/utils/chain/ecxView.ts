@@ -63,3 +63,23 @@ export function isBlockFloor(value: unknown): value is BlockFloor {
   return typeof value === "object" && value !== null &&
     Number.isInteger((value as BlockFloor).from);
 }
+
+/**
+ * Carry the inherited-history view into a query string built from scratch
+ * (the filter drawer rebuilds its query from the filter state). Returns
+ * `query` unchanged unless `current` asks for inherited history, so it is
+ * the identity on Bitcoin, where the parameter never appears.
+ */
+export function keepEcxHistory(
+  query: string,
+  current: URLSearchParams | string,
+): string {
+  const now = typeof current === "string"
+    ? new URLSearchParams(current)
+    : current;
+  if (now.get(ECX_HISTORY_PARAM) !== ECX_HISTORY_INHERITED) return query;
+  const next = new URLSearchParams(query);
+  if (next.get(ECX_HISTORY_PARAM) === ECX_HISTORY_INHERITED) return query;
+  next.set(ECX_HISTORY_PARAM, ECX_HISTORY_INHERITED);
+  return next.toString();
+}

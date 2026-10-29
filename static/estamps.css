@@ -88,6 +88,25 @@ html[data-chain="ecx"] .stamp-container .stamp-image {
   border-radius: 2px;
 }
 
+/* ===== STAMP NUMBERS IN CARDS ===== */
+/* "ECX #" sits as a small label above the number, so the number keeps the
+   card's full width (long numbers were truncated or clipped otherwise). */
+html[data-chain="ecx"] :has(> .estamps-num-prefix) {
+  flex-wrap: wrap;
+}
+html[data-chain="ecx"] .estamps-num-prefix {
+  display: block;
+  flex-basis: 100%;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  color: var(--estamps-muted);
+}
+html[data-chain="ecx"] .flex.justify-center > .estamps-num-prefix {
+  text-align: center;
+}
+
 /* ===== HEADER WORDMARK ===== */
 html[data-chain="ecx"] .estamps-attribution {
   margin-left: 0.5rem;
