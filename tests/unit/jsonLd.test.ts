@@ -4,7 +4,7 @@
 
 import { assertEquals, assertExists } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
-import { generateStampJsonLd } from "$lib/utils/jsonLd.ts";
+import { blockTimeToIso, generateStampJsonLd } from "$lib/utils/jsonLd.ts";
 import type { StampRow } from "$types/stamp.d.ts";
 
 // Minimal StampRow fixture for testing
@@ -189,6 +189,33 @@ describe("generateStampJsonLd", () => {
       const dateStr = result["datePublished"] as string;
       const parsed = new Date(dateStr);
       assertEquals(isNaN(parsed.getTime()), false);
+    });
+
+    it("accepts an ISO string, as a cached row carries it", () => {
+      const stamp = makeStamp({
+        block_time: "2026-10-29T19:25:59.000Z" as unknown as Date,
+      });
+      const result = generateStampJsonLd(stamp, metaInfo) as Record<
+        string,
+        unknown
+      >;
+      assertEquals(result["datePublished"], "2026-10-29T19:25:59.000Z");
+    });
+
+    it("accepts Unix seconds as a number or digit string", () => {
+      assertEquals(blockTimeToIso(1793301959), "2026-10-29T19:25:59.000Z");
+      assertEquals(blockTimeToIso("1793301959"), "2026-10-29T19:25:59.000Z");
+    });
+
+    it("omits datePublished instead of throwing on an unparseable value", () => {
+      const stamp = makeStamp({ block_time: "not a date" as unknown as Date });
+      const result = generateStampJsonLd(stamp, metaInfo) as Record<
+        string,
+        unknown
+      >;
+      assertEquals("datePublished" in result, false);
+      assertEquals(blockTimeToIso(undefined), undefined);
+      assertEquals(blockTimeToIso(new Date("x")), undefined);
     });
   });
 
