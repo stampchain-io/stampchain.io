@@ -119,6 +119,7 @@ import * as $create_index from "./routes/create/index.tsx";
 import * as $create_posh from "./routes/create/posh.tsx";
 import * as $create_recursive from "./routes/create/recursive.tsx";
 import * as $dashboard_address_ from "./routes/dashboard/[address].tsx";
+import * as $dev_otc from "./routes/dev/otc.tsx";
 import * as $docs_index from "./routes/docs/index.tsx";
 import * as $explorer_index from "./routes/explorer/index.tsx";
 import * as $faq_index from "./routes/faq/index.tsx";
@@ -154,7 +155,6 @@ import * as $test_horizon_html from "./routes/test/horizon.html.ts";
 import * as $test_horizon from "./routes/test/horizon.tsx";
 import * as $test_test_image from "./routes/test/test-image.ts";
 import * as $token_image_txHash_ from "./routes/token-image/[txHash].ts";
-import * as $tool_stamp_trade from "./routes/tool/stamp/trade.tsx";
 import * as $upload_index from "./routes/upload/index.tsx";
 import * as $wallet_address_ from "./routes/wallet/[address].tsx";
 import * as $Toast_NotificationUpdate from "./islands/Toast/NotificationUpdate.tsx";
@@ -204,6 +204,7 @@ import * as $content_index from "./islands/content/index.ts";
 import * as $content_stampDetailContent_StampImage from "./islands/content/stampDetailContent/StampImage.tsx";
 import * as $content_stampDetailContent_StampInfo from "./islands/content/stampDetailContent/StampInfo.tsx";
 import * as $content_stampDetailContent_StampTextContent from "./islands/content/stampDetailContent/StampTextContent.tsx";
+import * as $dev_TradeTool from "./islands/dev/TradeTool.tsx";
 import * as $error_ErrorDisplay from "./islands/error/ErrorDisplay.tsx";
 import * as $filter_FilterComponents from "./islands/filter/FilterComponents.tsx";
 import * as $filter_FilterContentExplorer from "./islands/filter/FilterContentExplorer.tsx";
@@ -283,6 +284,7 @@ import * as $modal_tool_SRC20MintTool from "./islands/modal/tool/SRC20MintTool.t
 import * as $modal_tool_SRC20TransferTool from "./islands/modal/tool/SRC20TransferTool.tsx";
 import * as $modal_tool_StampBuyTool from "./islands/modal/tool/StampBuyTool.tsx";
 import * as $modal_tool_StampSendTool from "./islands/modal/tool/StampSendTool.tsx";
+import * as $modal_tool_StatusMessages from "./islands/modal/tool/StatusMessages.tsx";
 import * as $modal_tool_XCPFairmintTool from "./islands/modal/tool/XCPFairmintTool.tsx";
 import * as $section_BlockchainStats from "./islands/section/BlockchainStats.tsx";
 import * as $section_FeeCalculatorBase from "./islands/section/FeeCalculatorBase.tsx";
@@ -329,8 +331,6 @@ import * as $table_HoldersPieChart from "./islands/table/HoldersPieChart.tsx";
 import * as $table_HoldersTableBase from "./islands/table/HoldersTableBase.tsx";
 import * as $table_UploadImageTable from "./islands/table/UploadImageTable.tsx";
 import * as $table_index from "./islands/table/index.ts";
-import * as $tool_StatusMessages from "./islands/tool/StatusMessages.tsx";
-import * as $tool_stamp_TradeTool from "./islands/tool/stamp/TradeTool.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -483,6 +483,7 @@ const manifest = {
     "./routes/create/posh.tsx": $create_posh,
     "./routes/create/recursive.tsx": $create_recursive,
     "./routes/dashboard/[address].tsx": $dashboard_address_,
+    "./routes/dev/otc.tsx": $dev_otc,
     "./routes/docs/index.tsx": $docs_index,
     "./routes/explorer/index.tsx": $explorer_index,
     "./routes/faq/index.tsx": $faq_index,
@@ -520,7 +521,6 @@ const manifest = {
     "./routes/test/horizon.tsx": $test_horizon,
     "./routes/test/test-image.ts": $test_test_image,
     "./routes/token-image/[txHash].ts": $token_image_txHash_,
-    "./routes/tool/stamp/trade.tsx": $tool_stamp_trade,
     "./routes/upload/index.tsx": $upload_index,
     "./routes/wallet/[address].tsx": $wallet_address_,
   },
@@ -589,6 +589,7 @@ const manifest = {
       $content_stampDetailContent_StampInfo,
     "./islands/content/stampDetailContent/StampTextContent.tsx":
       $content_stampDetailContent_StampTextContent,
+    "./islands/dev/TradeTool.tsx": $dev_TradeTool,
     "./islands/error/ErrorDisplay.tsx": $error_ErrorDisplay,
     "./islands/filter/FilterComponents.tsx": $filter_FilterComponents,
     "./islands/filter/FilterContentExplorer.tsx": $filter_FilterContentExplorer,
@@ -685,6 +686,7 @@ const manifest = {
     "./islands/modal/tool/SRC20TransferTool.tsx": $modal_tool_SRC20TransferTool,
     "./islands/modal/tool/StampBuyTool.tsx": $modal_tool_StampBuyTool,
     "./islands/modal/tool/StampSendTool.tsx": $modal_tool_StampSendTool,
+    "./islands/modal/tool/StatusMessages.tsx": $modal_tool_StatusMessages,
     "./islands/modal/tool/XCPFairmintTool.tsx": $modal_tool_XCPFairmintTool,
     "./islands/section/BlockchainStats.tsx": $section_BlockchainStats,
     "./islands/section/FeeCalculatorBase.tsx": $section_FeeCalculatorBase,
@@ -747,8 +749,6 @@ const manifest = {
     "./islands/table/HoldersTableBase.tsx": $table_HoldersTableBase,
     "./islands/table/UploadImageTable.tsx": $table_UploadImageTable,
     "./islands/table/index.ts": $table_index,
-    "./islands/tool/StatusMessages.tsx": $tool_StatusMessages,
-    "./islands/tool/stamp/TradeTool.tsx": $tool_stamp_TradeTool,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;

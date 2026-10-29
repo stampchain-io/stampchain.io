@@ -278,7 +278,7 @@ const EXTRA_STATIC: Record<string, PageMetadata> = {
     description:
       "Every stamp issued on Bitcoin, newest first. Filter by type, sort by stamp number or price, and open any piece for its full on-chain history.",
   },
-  "/tool/stamp/trade": {
+  "/dev/otc": {
     title: "Trade Bitcoin Stamps with a PSBT",
     description:
       "Attach a stamp to a new UTXO, set a BTC price, and complete the sale by signing a PSBT in your wallet.",
