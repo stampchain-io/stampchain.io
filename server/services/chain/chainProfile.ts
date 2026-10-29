@@ -18,7 +18,7 @@ export const ECX_REPLAY_LOCKTIME = 499_999_998;
 export const SEQUENCE_FINAL = 0xffffffff;
 export const SEQUENCE_RBF = 0xfffffffd;
 
-export function getChainId(env: Pick<typeof Deno.env, "get"> = Deno.env): ChainId {
+export function getChainId(env: Pick<typeof Deno.env, "get"> = chainEnv()): ChainId {
   const raw = (env.get("CHAIN") ?? "bitcoin").trim().toLowerCase();
   if (raw === "" || raw === "bitcoin") return "bitcoin";
   if (raw === "ecx") return "ecx";
@@ -58,6 +58,97 @@ export function assertReplayProtected(txHex: string, chain: ChainId = getChainId
     throw new Error(
       `Refusing ECX broadcast of ${tx.getId()}: locktime ${tx.locktime} / sequences ` +
         `${tx.ins.map((i) => i.sequence.toString(16)).join(",")} lack the replay marker`,
+    );
+  }
+}
+
+/**
+ * Why a broadcast was refused. `status` is the HTTP code an API route should
+ * answer with: 403 when ECX broadcast is switched off, 400 when the
+ * transaction itself is unacceptable (missing replay marker, unparseable).
+ */
+export class BroadcastRefusedError extends Error {
+  constructor(
+    message: string,
+    readonly status: 400 | 403,
+    readonly reason: "broadcast_disabled" | "replay_marker_missing" | "invalid_transaction",
+  ) {
+    super(message);
+    this.name = "BroadcastRefusedError";
+  }
+}
+
+type EnvReader = Pick<typeof Deno.env, "get">;
+
+/**
+ * The process env, read lazily. This module is reachable from the browser
+ * bundle (server/config/config.ts is imported by shared lib/ code), so it
+ * must not touch `Deno` at module load: that threw "Deno is not defined" on
+ * every page. In the browser there is no env, which reads as Bitcoin.
+ */
+const processEnv: EnvReader = {
+  get: (key: string) =>
+    typeof Deno !== "undefined" ? Deno.env.get(key) : undefined,
+};
+let chainEnvSource: EnvReader | null = null;
+
+/** The env the broadcast gate and /config read. The process env unless a test swapped it. */
+export function chainEnv(): EnvReader {
+  return chainEnvSource ?? processEnv;
+}
+
+/**
+ * Test seam: swap the env read by assertBroadcastAllowed and getClientConfig.
+ * Module state is per test worker, so unlike Deno.env.set it cannot leak into
+ * test files running in parallel threads. Returns a restore function.
+ */
+export function setChainEnvForTesting(env: EnvReader): () => void {
+  const previous = chainEnvSource;
+  chainEnvSource = env;
+  return () => {
+    chainEnvSource = previous;
+  };
+}
+
+/**
+ * The single broadcast gate. Every server path that sends a signed
+ * transaction upstream, or accepts one for sending, calls this first.
+ *
+ * Bitcoin (CHAIN unset or "bitcoin"): returns immediately; the hex is not
+ * even parsed. ECX: refuses (403) unless ECX_BROADCAST_ENABLED is exactly
+ * "true", then refuses (400) unless the replay marker is present. Both
+ * variables are read on every call so the flag flips without a deploy.
+ */
+export function assertBroadcastAllowed(
+  txHex: string,
+  env: EnvReader = chainEnv(),
+): void {
+  if (getChainId(env) !== "ecx") return;
+  if (env.get("ECX_BROADCAST_ENABLED") !== "true") {
+    throw new BroadcastRefusedError(
+      "ECX broadcast is disabled (set ECX_BROADCAST_ENABLED=true to enable)",
+      403,
+      "broadcast_disabled",
+    );
+  }
+  try {
+    bitcoin.Transaction.fromHex(txHex);
+  } catch (error) {
+    throw new BroadcastRefusedError(
+      `Refusing ECX broadcast: not a valid signed transaction (${
+        error instanceof Error ? error.message : String(error)
+      })`,
+      400,
+      "invalid_transaction",
+    );
+  }
+  try {
+    assertReplayProtected(txHex, "ecx");
+  } catch (error) {
+    throw new BroadcastRefusedError(
+      error instanceof Error ? error.message : String(error),
+      400,
+      "replay_marker_missing",
     );
   }
 }

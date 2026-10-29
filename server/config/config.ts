@@ -1,5 +1,6 @@
 import "$/server/config/env.ts";
 import { type MaraConfig, createMaraConfigFromEnv } from "$/server/config/maraConfig.ts";
+import { chainEnv, getChainId } from "$/server/services/chain/chainProfile.ts";
 
 type ServerConfig = {
   readonly APP_ROOT: string;
@@ -263,6 +264,9 @@ export function getClientConfig() {
     MINTING_SERVICE_FEE_ADDRESS: serverConfig.MINTING_SERVICE_FEE_ADDRESS,
     DEBUG_NAMESPACES: serverConfig.DEBUG_NAMESPACES,
     IS_DEBUG_ENABLED: serverConfig.IS_DEBUG_ENABLED,
+    // Only present under CHAIN=ecx, so the Bitcoin /config response is unchanged.
+    // The browser uses it to refuse broadcasting to Bitcoin endpoints.
+    ...(getChainId(chainEnv()) === "ecx" ? { CHAIN: "ecx" as const } : {}),
   };
 }
 

@@ -241,6 +241,7 @@ import * as $api_v2_cursed_block from "./routes/api/v2/cursed/block.ts";
 import * as $api_v2_cursed_block_block_index_ from "./routes/api/v2/cursed/block/[block_index].ts";
 import * as $api_v2_cursed_index from "./routes/api/v2/cursed/index.ts";
 import * as $api_v2_docs from "./routes/api/v2/docs.ts";
+import * as $api_v2_ecx_broadcast from "./routes/api/v2/ecx/broadcast.ts";
 import * as $api_v2_error from "./routes/api/v2/error.ts";
 import * as $api_v2_fairmint_compose from "./routes/api/v2/fairmint/compose.ts";
 import * as $api_v2_fairmint_index from "./routes/api/v2/fairmint/index.ts";
@@ -416,6 +417,7 @@ const manifest = {
       $api_v2_cursed_block_block_index_,
     "./routes/api/v2/cursed/index.ts": $api_v2_cursed_index,
     "./routes/api/v2/docs.ts": $api_v2_docs,
+    "./routes/api/v2/ecx/broadcast.ts": $api_v2_ecx_broadcast,
     "./routes/api/v2/error.ts": $api_v2_error,
     "./routes/api/v2/fairmint/compose.ts": $api_v2_fairmint_compose,
     "./routes/api/v2/fairmint/index.ts": $api_v2_fairmint_index,
