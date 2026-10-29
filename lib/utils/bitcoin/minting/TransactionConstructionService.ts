@@ -359,11 +359,6 @@ export class TransactionConstructionService {
           divisible: options.divisible ?? false,
         };
 
-        // Add outputValue for MARA mode if specified
-        if (options.outputValue !== undefined) {
-          stampOptions.outputValue = options.outputValue;
-        }
-
         return stampOptions;
       }
 

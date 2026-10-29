@@ -853,12 +853,6 @@ export type ServerEnvConfig = {
   readonly IS_DEBUG_ENABLED: boolean;
   readonly APP_DOMAIN: string | undefined;
   readonly ALLOWED_DOMAINS: string | undefined;
-  // MARA Integration Configuration
-  readonly MARA_API_BASE_URL?: string;
-  readonly MARA_API_TIMEOUT?: string;
-  readonly MARA_SERVICE_FEE_SATS?: string;
-  readonly MARA_SERVICE_FEE_ADDRESS?: string;
-  readonly ENABLE_MARA_INTEGRATION?: string;
   [key: string]: string | boolean | undefined;
 };
 
@@ -888,70 +882,6 @@ export interface DatabaseConfig {
   // Environment Info
   environment: "development" | "production" | "test";
   isRemoteDatabase: boolean;
-}
-
-/**
- * MaraConfig - Migrated from maraConfig.ts
- */
-export interface MaraConfig {
-  /**
-   * Base URL for MARA Slipstream API
-   * @example "https://slipstream.mara.com/rest-api"
-   */
-  readonly apiBaseUrl: string;
-
-  /**
-   * API request timeout in milliseconds
-   * @minimum 1000
-   * @maximum 60000
-   * @default 30000
-   */
-  readonly apiTimeout: number;
-
-  /**
-   * Service fee amount in satoshis for MARA transactions
-   * Must be exactly 42000 sats as required by MARA
-   * @constant 42000
-   */
-  readonly serviceFeeAmount: number;
-
-  /**
-   * Bitcoin address for MARA service fee collection
-   * Must be a valid Bitcoin address (bech32 format preferred)
-   * @example "bc1qhhv6rmxvq5mj2fc3zne2gpjqduy45urapje64m"
-   */
-  readonly serviceFeeAddress: string;
-
-  /**
-   * Feature flag to enable/disable MARA integration
-   * When false, all MARA functionality is bypassed
-   */
-  readonly enabled: boolean;
-}
-
-/**
- * MaraConfigValidationResult - Migrated from maraConfigValidator.ts
- */
-export interface MaraConfigValidationResult {
-  /**
-   * Whether the configuration is valid
-   */
-  isValid: boolean;
-
-  /**
-   * The validated configuration (if valid) or default config (if disabled)
-   */
-  config: MaraConfig | null;
-
-  /**
-   * Array of validation errors (if any)
-   */
-  errors: string[];
-
-  /**
-   * Array of validation warnings (non-fatal issues)
-   */
-  warnings: string[];
 }
 
 /**
@@ -3792,32 +3722,6 @@ export interface CircuitBreakerOptions {
   monitoringWindow: number;
   timeoutDuration: number;
   name?: string;
-}
-
-/**
- * MaraConfig - Migrated from types.ts
- */
-export interface MaraConfig {
-  /** Base URL for MARA API */
-  API_BASE_URL: string;
-
-  /** Request timeout in milliseconds */
-  API_TIMEOUT: number;
-
-  /** How long to cache fee rates in seconds */
-  FEE_CACHE_DURATION: number;
-
-  /** Service fee amount in satoshis for MARA pool access */
-  SERVICE_FEE_SATS: number;
-
-  /** Bitcoin address for service fee payment */
-  SERVICE_FEE_ADDRESS: string;
-
-  /** Minimum allowed output value in satoshis */
-  MIN_OUTPUT_VALUE: number;
-
-  /** Maximum allowed output value in satoshis */
-  MAX_OUTPUT_VALUE: number;
 }
 
 /**

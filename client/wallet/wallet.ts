@@ -191,46 +191,57 @@ export function getGlobalWallets(): GlobalWalletProviders {
     return {};
   }
 
-  try {
-    // Only log wallet availability on client-side
-    const global = globalThis as unknown as {
-      LeatherProvider?: unknown;
-      okxwallet?: { bitcoin?: unknown };
-      unisat?: unknown;
-      tapwallet?: unknown;
-      phantom?: { bitcoin?: { isPhantom?: boolean } };
-      HorizonWalletProvider?: unknown;
-      wonderWallet?: unknown;
-    };
+  // One extension's getter can throw (SES lockdown, a broken inject).
+  // Read each provider on its own so that does not hide the others.
+  const read = <T>(get: () => T | undefined): T | undefined => {
+    try {
+      return get();
+    } catch {
+      return undefined;
+    }
+  };
 
+  const global = globalThis as unknown as {
+    LeatherProvider?: unknown;
+    okxwallet?: { bitcoin?: unknown };
+    unisat?: unknown;
+    tapwallet?: unknown;
+    phantom?: { bitcoin?: { isPhantom?: boolean } };
+    HorizonWalletProvider?: unknown;
+    wonderWallet?: unknown;
+  };
+
+  const providers: GlobalWalletProviders = {
+    LeatherProvider: read(() => global.LeatherProvider),
+    okxwallet: read(() => global.okxwallet),
+    unisat: read(() => global.unisat),
+    tapwallet: read(() => global.tapwallet),
+    phantom: read(() => global.phantom),
+    HorizonWalletProvider: read(() => global.HorizonWalletProvider),
+    wonderWallet: read(() => global.wonderWallet),
+  };
+
+  try {
     logger.debug("ui", {
       message: "Checking wallet providers (client-side)",
       data: {
-        hasLeather: Boolean(global.LeatherProvider),
-        hasOKX: Boolean(global.okxwallet?.bitcoin),
-        hasUnisat: Boolean(global.unisat),
-        hasTapWallet: Boolean(global.tapwallet),
-        hasPhantom: Boolean(global.phantom?.bitcoin?.isPhantom),
-        hasHorizon: Boolean(global.HorizonWalletProvider),
-        hasWonder: Boolean(global.wonderWallet),
+        hasLeather: Boolean(providers.LeatherProvider),
+        hasOKX: Boolean(read(() => providers.okxwallet?.bitcoin)),
+        hasUnisat: Boolean(providers.unisat),
+        hasTapWallet: Boolean(providers.tapwallet),
+        hasPhantom: Boolean(
+          read(() => providers.phantom?.bitcoin?.isPhantom),
+        ),
+        hasHorizon: Boolean(providers.HorizonWalletProvider),
+        hasWonder: Boolean(providers.wonderWallet),
         timestamp: new Date().toISOString(),
       },
     });
-
-    return {
-      LeatherProvider: global.LeatherProvider,
-      okxwallet: global.okxwallet,
-      unisat: global.unisat,
-      tapwallet: global.tapwallet,
-      phantom: global.phantom,
-      HorizonWalletProvider: global.HorizonWalletProvider,
-      wonderWallet: global.wonderWallet,
-    };
-  } catch (_error) {
-    // Silently handle wallet detection errors to prevent console spam
-    // This can happen when browser extensions are not properly loaded
-    return {};
+  } catch {
+    // Detection already succeeded; a log failure must not drop it.
   }
+
+  return providers;
 }
 
 // Update wallet availability checks

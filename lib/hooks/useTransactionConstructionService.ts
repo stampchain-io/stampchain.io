@@ -188,9 +188,6 @@ export function useTransactionConstructionService(options: EstimationOptions) {
     if (options.data !== undefined) {
       baseOptions.data = options.data;
     }
-    if (options.outputValue !== undefined) {
-      baseOptions.outputValue = options.outputValue;
-    }
 
     return baseOptions;
   }, [
@@ -215,7 +212,6 @@ export function useTransactionConstructionService(options: EstimationOptions) {
     options.root,
     options.name,
     options.data,
-    options.outputValue,
   ]);
 
   // Phase 1: Instant estimation (runs immediately on options change)
@@ -259,7 +255,6 @@ export function useTransactionConstructionService(options: EstimationOptions) {
     memoizedOptions.filename,
     memoizedOptions.quantity,
     memoizedOptions.fileSize,
-    memoizedOptions.outputValue,
   ]);
 
   // Phase 2: Smart tool endpoint estimation (runs when wallet is connected and not submitting)
@@ -311,7 +306,6 @@ export function useTransactionConstructionService(options: EstimationOptions) {
     memoizedOptions.filename,
     memoizedOptions.quantity,
     memoizedOptions.fileSize,
-    memoizedOptions.outputValue,
   ]);
 
   // Phase 3: Exact estimation (manual trigger only)

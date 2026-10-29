@@ -159,12 +159,6 @@ export const STATIC_PAGE_METADATA: Record<string, PageMetadata> = {
       "Moving a bitname to another Bitcoin address. This guide is still being written, and the transfer option has not landed in the Tools menu yet.",
   },
 
-  "/tool/stamp/create": {
-    title: "Create a Bitcoin Stamp | Stamping Tool",
-    description:
-      "Stamp artwork into Bitcoin. Upload a file, set the edition count, choose a custom CPID or posh name, lock the supply and tune the fee before signing.",
-  },
-
   "/create/classic": {
     title: "Create a Classic Stamp | Stampchain",
     description:
@@ -181,12 +175,6 @@ export const STATIC_PAGE_METADATA: Record<string, PageMetadata> = {
     title: "Create a Recursive Stamp | Stampchain",
     description:
       "Build a recursive Bitcoin Stamp from stamps already on-chain. Arrange the layers, name the piece, then sign and broadcast.",
-  },
-
-  "/tool/fairmint": {
-    title: "Fairmint Counterparty Assets | Stampchain",
-    description:
-      "Fairmint an open Counterparty asset. Pick a fairminter or enter an asset name, set the quantity, check the estimated fee and sign in your wallet.",
   },
 
   "/media": {
@@ -223,33 +211,6 @@ const PREFIX_RULES: Array<{
   prefix: string;
   build: (rest: string) => PageMetadata;
 }> = [
-  {
-    prefix: "/tool/stamp/",
-    build: (rest) => ({
-      title: `${humanize(rest)} Stamps | Stampchain Tools`,
-      description: `${
-        humanize(rest)
-      } Bitcoin Stamps from your own wallet. Set the details, review the fee estimate and sign the transaction on stampchain.io.`,
-    }),
-  },
-  {
-    prefix: "/tool/src20/",
-    build: (rest) => ({
-      title: `${humanize(rest)} SRC-20 Tokens | Stampchain Tools`,
-      description: `${
-        humanize(rest)
-      } an SRC-20 token on Bitcoin. Fill in the ticker details, review the fee estimate and sign the transaction in your wallet.`,
-    }),
-  },
-  {
-    prefix: "/tool/src101/",
-    build: (rest) => ({
-      title: `${humanize(rest)} a Bitname | Stampchain Tools`,
-      description: `${
-        humanize(rest)
-      } an SRC-101 bitname on Bitcoin. Fill in the details, review the fee estimate and sign the transaction in your wallet.`,
-    }),
-  },
   {
     prefix: "/howto/",
     build: (rest) => ({
@@ -317,10 +278,10 @@ const EXTRA_STATIC: Record<string, PageMetadata> = {
     description:
       "Every stamp issued on Bitcoin, newest first. Filter by type, sort by stamp number or price, and open any piece for its full on-chain history.",
   },
-  "/tool/stamp/trade": {
-    title: "Trade Bitcoin Stamps | Dispensers and Offers",
+  "/dev/otc": {
+    title: "Trade Bitcoin Stamps with a PSBT",
     description:
-      "Open or take a stamp dispenser on Bitcoin. Set the price and quantity, review the fee estimate and sign the transaction in your wallet.",
+      "Attach a stamp to a new UTXO, set a BTC price, and complete the sale by signing a PSBT in your wallet.",
   },
 };
 

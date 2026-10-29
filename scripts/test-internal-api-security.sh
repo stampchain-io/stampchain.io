@@ -59,7 +59,6 @@ echo ""
 # Test frontend endpoints without auth (should work from browser)
 test_endpoint "/api/internal/fees" 200 "" "Fees endpoint (no auth)"
 test_endpoint "/api/internal/btcPrice" 200 "" "BTC Price endpoint (no auth)"
-test_endpoint "/api/internal/mara-fee-rate" 200 "" "MARA fee rate (no auth)"
 
 # Test frontend endpoints with API key (should also work)
 test_endpoint "/api/internal/fees" 200 "X-API-Key: $API_KEY" "Fees endpoint (with API key)"

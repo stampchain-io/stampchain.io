@@ -37,7 +37,6 @@ const STATIC_PAGES: Array<{
   { path: "/create/classic", priority: "0.7", changefreq: "monthly" },
   { path: "/create/posh", priority: "0.6", changefreq: "monthly" },
   { path: "/create/recursive", priority: "0.6", changefreq: "monthly" },
-  { path: "/tool/fairmint", priority: "0.5", changefreq: "monthly" },
   { path: "/media", priority: "0.4", changefreq: "monthly" },
   { path: "/presskit", priority: "0.4", changefreq: "monthly" },
   { path: "/upload", priority: "0.4", changefreq: "monthly" },

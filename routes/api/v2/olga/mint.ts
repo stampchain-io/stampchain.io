@@ -62,17 +62,6 @@ const composeHandler: Handlers<NormalizedMintResponse | { error: string }> = {
       );
     }
 
-    // MARA mode detection - activated when outputValue is provided and < 330
-    const outputValueNum = body.outputValue !== undefined
-      ? (typeof body.outputValue === "string"
-        ? parseInt(body.outputValue, 10)
-        : body.outputValue)
-      : undefined;
-
-    const isMaraMode = outputValueNum !== undefined &&
-      outputValueNum >= 1 &&
-      outputValueNum < 330; // 330+ uses standard wallet broadcast
-
     let normalizedFees;
     try {
       const feeInputArgs: { satsPerKB?: number; satsPerVB?: number } = {};
@@ -126,31 +115,11 @@ const composeHandler: Handlers<NormalizedMintResponse | { error: string }> = {
 
       normalizedFees = normalizeFeeRate(feeInputArgs);
 
-      // Override with MARA fee rate if in MARA mode and rate provided
-      if (isMaraMode && body.maraFeeRate) {
-        const maraFeeRateNum = typeof body.maraFeeRate === "string"
-          ? parseFloat(body.maraFeeRate)
-          : body.maraFeeRate;
-
-        // MARA provides fee rate in sats/vB
-        normalizedFees.normalizedSatsPerVB = maraFeeRateNum;
-        normalizedFees.normalizedSatsPerKB = maraFeeRateNum * 1000;
-
-        logger.info("api", {
-          message: "Using MARA fee rate override",
-          maraFeeRate: maraFeeRateNum,
-          normalizedSatsPerVB: normalizedFees.normalizedSatsPerVB,
-          normalizedSatsPerKB: normalizedFees.normalizedSatsPerKB,
-        });
-      }
-
       // Log fee rate for debugging
       console.log("🔧 /api/v2/olga/mint: Processing with fee rate", {
         rawFeeRate: body.feeRate,
         rawSatsPerVB: body.satsPerVB,
         rawSatsPerKB: body.satsPerKB,
-        maraFeeRate: body.maraFeeRate,
-        isMaraMode,
         normalizedFees,
         isDryRun: body.dryRun,
       });
@@ -243,41 +212,15 @@ const composeHandler: Handlers<NormalizedMintResponse | { error: string }> = {
       }
     }
 
-    // Validate outputValue range if provided
-    if (
-      outputValueNum !== undefined &&
-      (outputValueNum < 1 || outputValueNum > 1000) // Allow higher values for standard mode
-    ) {
-      return ApiResponseUtil.badRequest(
-        "Invalid outputValue: must be between 1 and 5000",
-      );
-    }
+    const serviceFeeNum = body.service_fee !== undefined
+      ? (typeof body.service_fee === "string"
+        ? parseInt(body.service_fee, 10)
+        : body.service_fee)
+      : parseInt(serverConfig.MINTING_SERVICE_FEE_FIXED_SATS, 10);
 
-    // Service fee override logic for MARA mode
-    const serviceFeeNum = isMaraMode
-      ? 42000 // MARA pool access fee (42k sats)
-      : (body.service_fee !== undefined
-        ? (typeof body.service_fee === "string"
-          ? parseInt(body.service_fee, 10)
-          : body.service_fee)
-        : parseInt(serverConfig.MINTING_SERVICE_FEE_FIXED_SATS, 10));
-
-    const serviceFeeAddr = isMaraMode
-      ? "bc1qhhv6rmxvq5mj2fc3zne2gpjqduy45urapje64m" // MARA service fee address
-      : (body.service_fee_address !== undefined
-        ? body.service_fee_address
-        : serverConfig.MINTING_SERVICE_FEE_ADDRESS || ""); // Provide ultimate fallback for string
-
-    // Log MARA mode status
-    if (isMaraMode) {
-      logger.info("api", {
-        message: "MARA mode activated",
-        outputValue: outputValueNum,
-        serviceFee: serviceFeeNum,
-        serviceFeeAddress: serviceFeeAddr,
-        maraFeeRate: body.maraFeeRate,
-      });
-    }
+    const serviceFeeAddr = body.service_fee_address !== undefined
+      ? body.service_fee_address
+      : serverConfig.MINTING_SERVICE_FEE_ADDRESS || "";
 
     const createIssuanceParams: CreateStampIssuanceParams = {
       sourceWallet: effectiveSourceWallet,
@@ -294,7 +237,6 @@ const composeHandler: Handlers<NormalizedMintResponse | { error: string }> = {
       isDryRun: isDryRun,
       service_fee: serviceFeeNum,
       service_fee_address: serviceFeeAddr,
-      ...(outputValueNum !== undefined && { outputValue: outputValueNum }),
     };
 
     try {

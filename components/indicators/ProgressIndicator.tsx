@@ -193,21 +193,3 @@ export function Spinner({
     />
   );
 }
-
-// Skeleton loader for fee fetching
-export function FeeSkeletonLoader() {
-  return (
-    <div class="animate-pulse">
-      <div class="flex items-center gap-2 mb-2">
-        <div class="h-4 w-12 bg-color-grey-semidark rounded" />
-        <div class="h-6 w-16 bg-color-grey-semidark rounded" />
-        <div class="h-4 w-20 bg-color-grey-semidark rounded" />
-      </div>
-      <div class="flex items-center gap-2">
-        <div class="h-3 w-24 bg-color-grey-semidark rounded" />
-        <div class="h-4 w-12 bg-color-grey-semidark rounded" />
-        <div class="h-3 w-16 bg-color-grey-semidark rounded" />
-      </div>
-    </div>
-  );
-}

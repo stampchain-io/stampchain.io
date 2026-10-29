@@ -92,7 +92,7 @@ function categorizeAlias(alias: string, path: string): ImportMapEntry['pathType'
   }
   
   // Component shortcuts
-  if (alias.match(/^(\$freshNav|\$layout|\$header|\$content|\$section|\$card|\$tool|\$text|\$button|\$icon|\$form|\$notification|\$table|\$fee|\$fees|\$animation|\$progressiveFees)$/)) {
+  if (alias.match(/^(\$freshNav|\$layout|\$header|\$content|\$section|\$card|\$text|\$button|\$icon|\$form|\$notification|\$table|\$fee|\$fees|\$animation|\$progressiveFees)$/)) {
     return 'component';
   }
   

@@ -247,18 +247,21 @@ export function useFairmintForm(fairminters: any[]) {
     }
   }, [fees, feeLoading, feeSource, isUsingFallback, lastGoodDataAge]);
 
-  const handleAssetChange = (e: Event) => {
-    const selectedAsset = (e.target as HTMLSelectElement).value;
+  const selectAsset = (asset: string) => {
     const selectedFairminter = fairminters.find(
-      (fm) => fm.asset === selectedAsset,
+      (fm) => fm.asset === asset,
     );
     setFormState((prev) => ({
       ...prev,
-      asset: selectedAsset,
+      asset,
       quantity: selectedFairminter
-        ? selectedFairminter.max_mint_per_tx
+        ? String(selectedFairminter.max_mint_per_tx ?? prev.quantity)
         : prev.quantity,
     }));
+  };
+
+  const handleAssetChange = (e: Event) => {
+    selectAsset((e.target as HTMLSelectElement).value);
   };
 
   const handleInputChange = (e: Event, field: string) => {
@@ -414,6 +417,7 @@ export function useFairmintForm(fairminters: any[]) {
 
   return {
     formState,
+    selectAsset,
     handleAssetChange,
     handleInputChange,
     handleSubmit,

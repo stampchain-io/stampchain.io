@@ -3,7 +3,7 @@
 // Re-export existing indicator components
 export * from "./indicators/index.ts";
 
-// Enhanced UI components with skeleton loading and performance utilities
+// Enhanced UI components with performance utilities
 export * from "./ui/index.ts";
 
 // Re-export layout components

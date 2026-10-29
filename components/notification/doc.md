@@ -613,7 +613,6 @@ As outlined in [Issue #860](https://github.com/stampchain-io/stampchain.io/issue
 4. **Enhanced Tool Integration**
    - Move all tool error messaging to toast notifications
    - Review info messages for manual dismissal requirements
-   - Standardize MARA message handling
 
 ## Related Components
 

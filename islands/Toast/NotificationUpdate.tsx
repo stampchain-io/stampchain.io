@@ -16,7 +16,7 @@ import { useEffect } from "preact/hooks";
  * Feature flag to enable/disable the notification
  * Set to false to prevent notification from showing
  */
-const SHOW_NOTIFICATION = true;
+const SHOW_NOTIFICATION = false;
 
 /**
  * Delay before showing notification (milliseconds)

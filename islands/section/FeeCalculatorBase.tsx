@@ -1,6 +1,5 @@
 import { Button, ButtonProcessing } from "$button";
 import { ToggleSwitchButton } from "$components/button/ToggleSwitchButton.tsx";
-import { MaraModeBadge } from "$components/indicators/MaraModeIndicator.tsx";
 import { handleModalClose } from "$components/layout/ModalBase.tsx";
 import { useFees } from "$fees";
 import { Icon } from "$icon";
@@ -60,9 +59,6 @@ export function FeeCalculatorBase({
     editions: 0,
   },
   dec,
-  maraMode = false,
-  maraFeeRate = null,
-  isLoadingMaraFee = false,
   progressIndicator,
   cpid,
 }: ExtendedBaseFeeCalculatorProps) {
@@ -213,33 +209,14 @@ export function FeeCalculatorBase({
 
   // Recommended fee (rendered inside BlockchainStats, above its divider)
   const renderRecommendedFee = () => {
-    if (isLoadingMaraFee) {
-      return (
-        <div class="animate-pulse flex items-center gap-2">
-          <div class="h-3 w-24 bg-color-neutral-500 rounded" />
-          <div class="h-3 w-12 bg-color-neutral-500 rounded" />
-        </div>
-      );
-    }
-
     return (
       <div class="flex flex-col">
-        {maraMode && (
-          <div
-            className="relative cursor-help"
-            title="MARA Pool: Direct mining pool submission for non-standard transactions"
-          >
-            <MaraModeBadge />
-          </div>
-        )}
         <h6 class="font-light text-xs text-color-neutral-300 cursor-default select-none text-nowrap">
           <span class="text-color-neutral-500 pr-2">
-            {maraMode ? "MARA REQUIRED" : "RECOMMENDED"}
+            RECOMMENDED
           </span>
           <span class="font-medium">
-            {maraMode && maraFeeRate !== null
-              ? maraFeeRate
-              : fees?.recommendedFee
+            {fees?.recommendedFee
               ? fees.recommendedFee
               : <span class="animate-pulse">XX</span>}
           </span>{" "}
@@ -251,15 +228,6 @@ export function FeeCalculatorBase({
 
   // Selected fee label (slider is rendered full-width below this row)
   const renderFeeSelector = () => {
-    if (isLoadingMaraFee) {
-      return (
-        <div class="animate-pulse flex items-center gap-2">
-          <div class="h-4 w-8 bg-color-neutral-500 rounded" />
-          <div class="h-5 w-10 bg-color-neutral-500 rounded" />
-        </div>
-      );
-    }
-
     return (
       <h6 class="font-light text-sm text-color-primary-400 cursor-default select-none">
         <span class="text-color-neutral-500 pr-2.5">FEE</span>
@@ -380,18 +348,6 @@ export function FeeCalculatorBase({
           </h6>
 
           {/* Service Fee - Display if available in feeDetails */}
-          {/* #region agent log */}
-          {(() => {
-            console.log("[DEBUG-e6a2b1] HypA serviceFee:", {
-              serviceFee: feeDetails?.serviceFee,
-              exprResult: feeDetails?.serviceFee && feeDetails.serviceFee > 0,
-              exprType:
-                typeof (feeDetails?.serviceFee && feeDetails.serviceFee > 0),
-              maraMode,
-            });
-            return null;
-          })()}
-          {/* #endregion */}
           {!!feeDetails?.serviceFee && feeDetails.serviceFee > 0 && (
             <h6 class={textXs}>
               <span class={labelXs}>
@@ -681,19 +637,12 @@ export function FeeCalculatorBase({
             </div>
           )}
         </div>
-        {!isLoadingMaraFee && (
-          <div
-            className={`${maraMode ? "opacity-50 cursor-not-allowed" : ""}`}
-          >
-            <RangeSlider
-              value={fee ?? 0}
-              onChange={onSliderChange}
-              valueToPosition={feeToSliderPos}
-              positionToValue={sliderPosToFee}
-              disabled={maraMode}
-            />
-          </div>
-        )}
+        <RangeSlider
+          value={fee ?? 0}
+          onChange={onSliderChange}
+          valueToPosition={feeToSliderPos}
+          positionToValue={sliderPosToFee}
+        />
       </div>
 
       <div class="mt-5 flex flex-row justify-between items-center">
@@ -712,16 +661,13 @@ export function FeeCalculatorBase({
                   <span class="hidden min-[420px]:inline pl-2.5">~</span>
                 )}
                 {(() => {
-                  // Add MARA service fee if in MARA mode
-                  const maraServiceFee = maraMode ? 42000 : 0;
-                  const totalWithMaraFee = feeDetails.totalValue +
-                    maraServiceFee;
+                  const estimateTotal = feeDetails.totalValue;
 
                   return coinType === "BTC"
                     ? (
                       <>
                         <span class="font-bold pl-2.5 min-[420px]:pl-1.5">
-                          {formatSatoshisToBTC(totalWithMaraFee, {
+                          {formatSatoshisToBTC(estimateTotal, {
                             includeSymbol: false,
                           })}
                         </span>{" "}
@@ -734,7 +680,7 @@ export function FeeCalculatorBase({
                       <>
                         <span class="font-bold">
                           {BTCPrice !== undefined
-                            ? (totalWithMaraFee / 1e8 * BTCPrice).toFixed(2)
+                            ? (estimateTotal / 1e8 * BTCPrice).toFixed(2)
                             : "N/A"}
                         </span>{" "}
                         <span class="font-light">
@@ -802,24 +748,27 @@ export function FeeCalculatorBase({
 
       <div class="flex flex-col items-end mt-7.5 gap-3">
         <div class="relative flex items-center">
-          <input
-            type="checkbox"
-            id="tosAgreed"
-            checked={tosAgreed}
-            onChange={(e) => {
-              const target = e.target as HTMLInputElement;
-              onTosChange(target.checked);
-              setAllowHover(false);
-              setCanHoverSelected(false);
-            }}
-            className="absolute w-0 h-0 opacity-0"
-          />
+          {
+            /* Nested, with no id. A shared id is document-wide, so a tool
+              modal opened over a page that already has a calculator would
+              toggle the page checkbox instead of its own. */
+          }
           <label
-            htmlFor="tosAgreed"
             className="flex items-center cursor-pointer group"
             onMouseEnter={handleCheckboxMouseEnter}
             onMouseLeave={handleCheckboxMouseLeave}
           >
+            <input
+              type="checkbox"
+              checked={tosAgreed}
+              onChange={(e) => {
+                const target = e.target as HTMLInputElement;
+                onTosChange(target.checked);
+                setAllowHover(false);
+                setCanHoverSelected(false);
+              }}
+              className="absolute w-0 h-0 opacity-0"
+            />
             <div
               className={`
                 relative flex items-center justify-center

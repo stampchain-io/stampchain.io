@@ -8,6 +8,7 @@ import {
   buildCpPsbtInput,
   buildCpPsbtInputsFromRawTx,
 } from "$lib/utils/bitcoin/psbt/cpRawTxInputs.ts";
+import { resolveAttachDestinationVout } from "$lib/utils/bitcoin/psbt/attachDestinationVout.ts";
 import { buildServiceFeeOutputs } from "$lib/utils/bitcoin/psbt/serviceFeeOutputs.ts";
 import { getServiceFeeConfig } from "$server/config/config.ts";
 import { StampController } from "$server/controller/stampController.ts";
@@ -219,6 +220,15 @@ const composeHandler: Handlers = {
         psbt.addOutput({ script: Buffer.from(out.script), value: out.value });
       }
 
+      // The stamp lands on destination_vout, or the first non-OP_RETURN
+      // output. A service-fee splice can shift that index, so resolve it
+      // against the outputs the wallet will actually sign.
+      const attachDestinationVout = resolveAttachDestinationVout(
+        cpOutputs,
+        finalOutputs,
+        options?.destination_vout,
+      );
+
       logger.info("api", {
         message: "Assembled stampattach outputs (trust-CP + service fee)",
         cpNetworkFee: cpNetworkFee.toString(),
@@ -235,6 +245,7 @@ const composeHandler: Handlers = {
         inputsToSign,
         estimatedFee: Number(totalFee),
         estimatedVsize: cpTx.virtualSize(),
+        attachDestinationVout,
       }, { forceNoCache: true });
     } catch (error: unknown) {
       const errorMessage = error instanceof Error

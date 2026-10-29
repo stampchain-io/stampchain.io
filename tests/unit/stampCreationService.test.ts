@@ -2,6 +2,7 @@ import { assert, assertEquals, assertExists, assertRejects } from "@std/assert";
 import { beforeEach, describe, it } from "jsr:@std/testing@1.0.14/bdd";
 import { returnsNext, Stub, stub } from "@std/testing@1.0.14/mock";
 
+import { TX_CONSTANTS } from "$constants";
 import { StampCreationService } from "$server/services/stamp/stampCreationService.ts";
 import {
   createMockServices,
@@ -22,6 +23,10 @@ import {
 
 describe("StampCreationService", () => {
   describe("createStampIssuance", () => {
+    it("uses the standard dust size", () => {
+      assertEquals(TX_CONSTANTS.DUST_SIZE, 333);
+    });
+
     describe("Input validation", () => {
       for (const testCase of validationTestCases) {
         it(`should ${testCase.shouldPass ? "accept" : "reject"} ${testCase.name}`, async () => {
@@ -160,99 +165,6 @@ describe("StampCreationService", () => {
         try {
           const result = await StampCreationService.createStampIssuance(params);
           assertExists(result);
-        } finally {
-          createIssuanceStub.restore();
-          generatePSBTStub.restore();
-        }
-      });
-    });
-
-    describe("Output value validation", () => {
-      it("should accept valid output values in range 1-332", async () => {
-        for (const outputValue of [1, 100, 200, 332]) {
-          const params = { ...mockStampParams.basic, outputValue };
-
-          const createIssuanceStub = stub(
-            StampCreationService as any,
-            "createIssuanceTransaction",
-            returnsNext([Promise.resolve({ tx_hex: "mockTxHex" })]),
-          );
-          const generatePSBTStub = stub(
-            StampCreationService as any,
-            "generatePSBT",
-            returnsNext([Promise.resolve(mockPSBTResults.successful)]),
-          );
-
-          try {
-            const result = await StampCreationService.createStampIssuance(
-              params,
-            );
-            assertExists(result);
-          } finally {
-            createIssuanceStub.restore();
-            generatePSBTStub.restore();
-          }
-        }
-      });
-
-      it("should accept exactly 333 as valid output value", async () => {
-        const params = { ...mockStampParams.basic, outputValue: 333 };
-
-        const createIssuanceStub = stub(
-          StampCreationService as any,
-          "createIssuanceTransaction",
-          returnsNext([Promise.resolve({ tx_hex: "mockTxHex" })]),
-        );
-        const generatePSBTStub = stub(
-          StampCreationService as any,
-          "generatePSBT",
-          returnsNext([Promise.resolve(mockPSBTResults.successful)]),
-        );
-
-        try {
-          const result = await StampCreationService.createStampIssuance(params);
-          assertExists(result);
-        } finally {
-          createIssuanceStub.restore();
-          generatePSBTStub.restore();
-        }
-      });
-
-      it("should reject output values outside valid ranges", async () => {
-        const invalidValues = [0, -1, 334, 400, 1000];
-
-        for (const outputValue of invalidValues) {
-          const params = { ...mockStampParams.basic, outputValue };
-
-          await assertRejects(
-            () => StampCreationService.createStampIssuance(params),
-            Error,
-            `Invalid outputValue: ${outputValue}`,
-          );
-        }
-      });
-
-      it("should use default dust value when outputValue is undefined", async () => {
-        const params = { ...mockStampParams.basic };
-        delete (params as any).outputValue;
-
-        const createIssuanceStub = stub(
-          StampCreationService as any,
-          "createIssuanceTransaction",
-          returnsNext([Promise.resolve({ tx_hex: "mockTxHex" })]),
-        );
-        const generatePSBTStub = stub(
-          StampCreationService as any,
-          "generatePSBT",
-          returnsNext([Promise.resolve(mockPSBTResults.successful)]),
-        );
-
-        try {
-          const result = await StampCreationService.createStampIssuance(params);
-          assertExists(result);
-
-          // Verify default dust value was used (should be called with TX_CONSTANTS.DUST_SIZE)
-          // This would be verified by checking the generatePSBT call arguments
         } finally {
           createIssuanceStub.restore();
           generatePSBTStub.restore();
@@ -741,7 +653,7 @@ describe("StampCreationService", () => {
           assert(Array.isArray(callArgs[5])); // cip33Addresses
           assert(typeof callArgs[6] === "number"); // fileSize
           assertEquals(callArgs[7], false); // isDryRun
-          assert(typeof callArgs[8] === "number"); // dustValue
+          assertEquals(callArgs[8], undefined); // no preselected inputs from the stub
         } finally {
           createIssuanceStub.restore();
           generatePSBTStub.restore();
@@ -900,64 +812,6 @@ describe("StampCreationService", () => {
 
         // Should handle large service fees without issues
         assert(result.total_output_value > 1000000);
-      } finally {
-        createIssuanceStub.restore();
-        generatePSBTStub.restore();
-      }
-    });
-  });
-
-  describe("MARA mode integration", () => {
-    it("should handle MARA mode stamps (outputValue < 330)", async () => {
-      const params = mockStampParams.maraMode;
-
-      const createIssuanceStub = stub(
-        StampCreationService as any,
-        "createIssuanceTransaction",
-        returnsNext([Promise.resolve({ tx_hex: "mockTxHex" })]),
-      );
-      const generatePSBTStub = stub(
-        StampCreationService as any,
-        "generatePSBT",
-        returnsNext([Promise.resolve(mockPSBTResults.successful)]),
-      );
-
-      try {
-        const result = await StampCreationService.createStampIssuance(params);
-        assertExists(result);
-
-        // Verify MARA mode parameters were passed correctly
-        const generatePSBTCall = generatePSBTStub.calls[0];
-        const dustValue = generatePSBTCall.args[8];
-        assertEquals(dustValue, 150); // MARA mode value
-      } finally {
-        createIssuanceStub.restore();
-        generatePSBTStub.restore();
-      }
-    });
-
-    it("should handle non-MARA mode stamps (outputValue >= 330)", async () => {
-      const params = { ...mockStampParams.basic, outputValue: 333 };
-
-      const createIssuanceStub = stub(
-        StampCreationService as any,
-        "createIssuanceTransaction",
-        returnsNext([Promise.resolve({ tx_hex: "mockTxHex" })]),
-      );
-      const generatePSBTStub = stub(
-        StampCreationService as any,
-        "generatePSBT",
-        returnsNext([Promise.resolve(mockPSBTResults.successful)]),
-      );
-
-      try {
-        const result = await StampCreationService.createStampIssuance(params);
-        assertExists(result);
-
-        // Verify non-MARA mode parameters were passed correctly
-        const generatePSBTCall = generatePSBTStub.calls[0];
-        const dustValue = generatePSBTCall.args[8];
-        assertEquals(dustValue, 333);
       } finally {
         createIssuanceStub.restore();
         generatePSBTStub.restore();

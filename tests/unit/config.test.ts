@@ -1,8 +1,8 @@
 /**
  * Tests for server/config/config.ts
  *
- * Tests the server configuration module including environment variable handling,
- * MARA configuration, and client configuration generation.
+ * Tests the server configuration module including environment variable handling
+ * and client configuration generation.
  */
 
 import { assert, assertEquals, assertExists } from "@std/assert";
@@ -32,11 +32,6 @@ describe("Server Config Module", () => {
       "DEBUG",
       "APP_DOMAIN",
       "ALLOWED_DOMAINS",
-      "MARA_API_BASE_URL",
-      "MARA_API_TIMEOUT",
-      "MARA_SERVICE_FEE_SATS",
-      "MARA_SERVICE_FEE_ADDRESS",
-      "ENABLE_MARA_INTEGRATION",
     ];
 
     envVars.forEach((key) => {
@@ -207,120 +202,6 @@ describe("Server Config Module", () => {
       Deno.env.set("ALLOWED_DOMAINS", "example.com,test.com");
       const { serverConfig } = await import("../../server/config/config.ts");
       assertEquals(serverConfig.ALLOWED_DOMAINS, "example.com,test.com");
-    });
-  });
-
-  describe("MARA configuration getters", () => {
-    it("should return default MARA_API_BASE_URL", async () => {
-      const { serverConfig } = await import("../../server/config/config.ts");
-      assertEquals(
-        serverConfig.MARA_API_BASE_URL,
-        "https://slipstream.mara.com/rest-api",
-      );
-    });
-
-    it("should return env value for MARA_API_BASE_URL", async () => {
-      Deno.env.set("MARA_API_BASE_URL", "https://custom.mara.api");
-      const { serverConfig } = await import("../../server/config/config.ts");
-      assertEquals(serverConfig.MARA_API_BASE_URL, "https://custom.mara.api");
-    });
-
-    it("should return default MARA_API_TIMEOUT", async () => {
-      const { serverConfig } = await import("../../server/config/config.ts");
-      assertEquals(serverConfig.MARA_API_TIMEOUT, "30000");
-    });
-
-    it("should return env value for MARA_API_TIMEOUT", async () => {
-      Deno.env.set("MARA_API_TIMEOUT", "60000");
-      const { serverConfig } = await import("../../server/config/config.ts");
-      assertEquals(serverConfig.MARA_API_TIMEOUT, "60000");
-    });
-
-    it("should return default MARA_SERVICE_FEE_SATS", async () => {
-      const { serverConfig } = await import("../../server/config/config.ts");
-      assertEquals(serverConfig.MARA_SERVICE_FEE_SATS, "42000");
-    });
-
-    it("should return env value for MARA_SERVICE_FEE_SATS", async () => {
-      Deno.env.set("MARA_SERVICE_FEE_SATS", "50000");
-      const { serverConfig } = await import("../../server/config/config.ts");
-      assertEquals(serverConfig.MARA_SERVICE_FEE_SATS, "50000");
-    });
-
-    it("should return default MARA_SERVICE_FEE_ADDRESS", async () => {
-      const { serverConfig } = await import("../../server/config/config.ts");
-      assertEquals(
-        serverConfig.MARA_SERVICE_FEE_ADDRESS,
-        "bc1qhhv6rmxvq5mj2fc3zne2gpjqduy45urapje64m",
-      );
-    });
-
-    it("should return env value for MARA_SERVICE_FEE_ADDRESS", async () => {
-      Deno.env.set("MARA_SERVICE_FEE_ADDRESS", "bc1qcustom123");
-      const { serverConfig } = await import("../../server/config/config.ts");
-      assertEquals(serverConfig.MARA_SERVICE_FEE_ADDRESS, "bc1qcustom123");
-    });
-
-    it("should return default ENABLE_MARA_INTEGRATION", async () => {
-      const { serverConfig } = await import("../../server/config/config.ts");
-      assertEquals(serverConfig.ENABLE_MARA_INTEGRATION, "0");
-    });
-
-    it("should return env value for ENABLE_MARA_INTEGRATION", async () => {
-      Deno.env.set("ENABLE_MARA_INTEGRATION", "1");
-      const { serverConfig } = await import("../../server/config/config.ts");
-      assertEquals(serverConfig.ENABLE_MARA_INTEGRATION, "1");
-    });
-  });
-
-  describe("getMaraConfig function", () => {
-    it("should return config even when ENABLE_MARA_INTEGRATION is disabled (MARA is always available)", async () => {
-      // MARA is always enabled in the implementation
-      Deno.env.set("ENABLE_MARA_INTEGRATION", "0");
-
-      const { getMaraConfig } = await import("../../server/config/config.ts");
-      const config = getMaraConfig();
-
-      assertExists(config);
-      assertEquals(config!.enabled, true); // MARA is always enabled
-    });
-
-    it("should return MaraConfig when MARA integration is enabled", async () => {
-      // Enable MARA with minimal required config
-      Deno.env.set("ENABLE_MARA_INTEGRATION", "1");
-      Deno.env.set("MARA_API_BASE_URL", "https://test.mara.api");
-
-      const { getMaraConfig } = await import("../../server/config/config.ts");
-      const config = getMaraConfig();
-
-      if (config) {
-        assertExists(config);
-        assertEquals(config.enabled, true);
-        assertEquals(config.apiBaseUrl, "https://test.mara.api");
-      }
-    });
-
-    it("should return null and log error for invalid MARA config", async () => {
-      // Set invalid MARA configuration
-      Deno.env.set("ENABLE_MARA_INTEGRATION", "1");
-      Deno.env.set("MARA_API_BASE_URL", "invalid-url");
-
-      // Capture console.error
-      const originalConsoleError = console.error;
-      let errorLogged = false;
-      console.error = () => {
-        errorLogged = true;
-      };
-
-      try {
-        const { getMaraConfig } = await import("../../server/config/config.ts");
-        const config = getMaraConfig();
-
-        assertEquals(config, null);
-        assert(errorLogged, "Should have logged an error");
-      } finally {
-        console.error = originalConsoleError;
-      }
     });
   });
 

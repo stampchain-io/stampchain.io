@@ -1,6 +1,9 @@
 /* ===== STAMP BUY TOOL MODAL ===== */
 import { useTransactionForm } from "$client/hooks/useTransactionForm.ts";
-import { walletContext } from "$client/wallet/wallet.ts";
+import {
+  checkWalletAvailability,
+  walletContext,
+} from "$client/wallet/wallet.ts";
 import { handleModalClose } from "$components/layout/ModalBase.tsx";
 import {
   inputFieldGrow,
@@ -207,6 +210,24 @@ export function StampBuyTool({
       return;
     }
 
+    // A restored session can still name Unisat after the extension is gone.
+    // Signing would then fail with "Unisat wallet not connected".
+    if (
+      wallet.provider === "unisat" && !checkWalletAvailability("unisat")
+    ) {
+      stackConnectWalletModal();
+      return;
+    }
+
+    // Counterparty rejects a dispense whose source is the dispenser address.
+    if (dispenser?.source && wallet.address === dispenser.source) {
+      showToast(
+        "You can't buy from your own dispenser.",
+        "error",
+      );
+      return;
+    }
+
     await handleSubmit(async () => {
       // Get exact fee estimation before submitting - StampingTool pattern
       try {
@@ -261,14 +282,19 @@ export function StampBuyTool({
         const errorData = await response.json().catch(() => ({
           error: "Failed to parse error from server.",
         }));
-        const detailedError = errorData.error ||
-          "Failed to create dispense transaction (unknown server error).";
+        const rawError = errorData?.error;
+        const detailedError = typeof rawError === "string" && rawError
+          ? rawError
+          : "Failed to create dispense transaction (unknown server error).";
         logger.error("ui", {
           message: "API error creating dispense transaction",
           details: detailedError,
           status: response.status,
         });
-        throw new Error("Failed to prepare transaction. Please try again.");
+        const toastError = detailedError.length > 160
+          ? `${detailedError.substring(0, 160)}...`
+          : detailedError;
+        throw new Error(toastError);
       }
 
       const responseData = await response.json();
@@ -342,6 +368,8 @@ export function StampBuyTool({
             "Signing reported success, but critical data missing.",
           );
         }
+      } else if (signResult.error === "Unisat wallet not connected") {
+        stackConnectWalletModal();
       } else if (!signResult.cancelled) {
         const signErrorMsg = signResult.error || "Unknown signing error";
         logger.error("ui", {

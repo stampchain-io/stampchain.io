@@ -35,8 +35,6 @@ export const LOG_NAMESPACES = {
   BROADCAST: "broadcast",
   PSBT: "psbt",
   PSBT_SERVICE: "psbt-service",
-  MARA: "mara",
-  MARA_SUBMISSION: "mara-submission",
 
   // Token protocols
   SRC20: "src20",

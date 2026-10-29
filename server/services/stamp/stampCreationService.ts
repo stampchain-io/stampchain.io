@@ -4,7 +4,6 @@ import { isUserFundsError } from "$server/services/src20/userFundsError.ts";
 import { base64ToHex } from "$lib/utils/data/binary/baseUtils.ts";
 import { FileToAddressUtils } from "$lib/utils/bitcoin/encoding/fileToAddressUtils.ts";
 import { estimateMintingTransactionSize } from "$lib/utils/bitcoin/minting/transactionSizes.ts";
-import { estimateMARATransactionSize } from "$lib/utils/bitcoin/minting/maraTransactionSizeEstimator.ts";
 import { extractOutputs } from "$lib/utils/bitcoin/minting/transactionUtils.ts";
 import { applyReplayProtection } from "$server/services/chain/chainProfile.ts";
 import {
@@ -54,7 +53,6 @@ export class StampCreationService {
     service_fee_address = "",
     prefix = "stamp",
     isDryRun = false,
-    outputValue
   }: {
     sourceWallet: string;
     assetName?: string;
@@ -68,20 +66,13 @@ export class StampCreationService {
     service_fee_address?: string;
     prefix?: "stamp" | "file" | "glyph";
     isDryRun?: boolean;
-    outputValue?: number;
   }) {
     // Validate and normalize fee rate
     const { normalizedSatsPerVB } = normalizeFeeRate({
       ...(satsPerVB !== undefined && { satsPerVB }),
     });
 
-    // Validate outputValue if provided (must be 1-332 or exactly 333)
-    const dustValue = outputValue !== undefined ? outputValue : TX_CONSTANTS.DUST_SIZE;
-    if (outputValue !== undefined) {
-      if (!((outputValue >= 1 && outputValue <= 332) || outputValue === 333)) {
-        throw new Error(`Invalid outputValue: ${outputValue}. Must be 1-332 or exactly 333.`);
-      }
-    }
+    const dustValue = TX_CONSTANTS.DUST_SIZE;
 
     logger.info("stamp-create", {
       message: "Starting createStampIssuance with params",
@@ -98,7 +89,6 @@ export class StampCreationService {
       service_fee_address,
       prefix,
       isDryRun,
-      outputValue,
       dustValue
     });
 
@@ -143,7 +133,6 @@ export class StampCreationService {
         file, // Pass file data for accurate size calculation
         service_fee,
         service_fee_address,
-        outputValue: dustValue, // Pass the dust value for accurate fee estimation
         cip33Addresses,
       });
 
@@ -162,7 +151,6 @@ export class StampCreationService {
         cip33Addresses,
         fileSize,
         isDryRun || false,
-        dustValue,
         result.orderedInputs,
       );
 
@@ -256,7 +244,6 @@ export class StampCreationService {
     cip33Addresses: string[],
     fileSize: number,
     isDryRun: boolean,
-    dustValue: number = TX_CONSTANTS.DUST_SIZE,
     // Inputs pre-selected by createStampIssuance and pinned to CP via inputs_set,
     // already ordered raw-value descending (CP's ARC4-key sort order). When
     // provided, these are used verbatim instead of running an independent
@@ -270,6 +257,7 @@ export class StampCreationService {
     let totalDustValue = 0;
     let actualEstimatedSize = 0;
     let actualExactFeeNeeded = 0;
+    const dustValue = TX_CONSTANTS.DUST_SIZE;
 
     try {
       logger.debug("stamp-create", { message: "Starting PSBT generation with params", address, satsPerVB, service_fee, recipient_fee, cip33AddressCount: cip33Addresses.length, fileSize });
@@ -307,53 +295,21 @@ export class StampCreationService {
         const selectedUTXOs = dummyUTXOs.slice(0, Math.min(estimatedInputs, dummyUTXOs.length));
         const totalInputValue = selectedUTXOs.reduce((sum, utxo) => sum + utxo.value, 0);
 
-        // Calculate accurate estimated size based on realistic inputs
-        // Use MARA estimator for MARA mode (outputValue < 330)
-        const isMaraMode = dustValue < 330;
-        
-        let dryRunEstimatedSize: number;
-        if (isMaraMode) {
-          // Use MARA-specific estimator for accurate calculation
-          const maraEstimate = estimateMARATransactionSize({
-            inputs: selectedUTXOs.map(() => ({
-              type: "P2WPKH" as ScriptType,
-              isWitness: true
+        const dryRunEstimatedSize = estimateMintingTransactionSize({
+          inputs: selectedUTXOs.map(() => ({
+            type: "P2WPKH" as ScriptType,
+            isWitness: true
+          })),
+          outputs: [
+            { type: "OP_RETURN" as ScriptType }, // OP_RETURN
+            ...cip33Addresses.map(() => ({
+              type: "P2WSH" as ScriptType
             })),
-            fileSize,
-            outputValue: dustValue,
-            includeServiceFee: service_fee > 0,
-            serviceFeeType: "P2WPKH" as ScriptType,
-            includeChangeOutput: true,
-            changeOutputType: "P2WPKH" as ScriptType,
-            isMaraMode: true,
-            maraFeeRate: satsPerVB
-          });
-          dryRunEstimatedSize = maraEstimate.estimatedSize;
-          
-          logger.info("stamp-create", {
-            message: "MARA mode dry run estimation",
-            maraEstimate,
-            dustValue,
-            chunkCount: maraEstimate.chunkCount
-          });
-        } else {
-          // Use standard estimator for non-MARA mode
-          dryRunEstimatedSize = estimateMintingTransactionSize({
-            inputs: selectedUTXOs.map(() => ({
-              type: "P2WPKH" as ScriptType,
-              isWitness: true
-            })),
-            outputs: [
-              { type: "OP_RETURN" as ScriptType }, // OP_RETURN
-              ...cip33Addresses.map(() => ({
-                type: "P2WSH" as ScriptType
-              })),
-              ...(service_fee > 0 ? [{ type: "P2WPKH" as ScriptType }] : []) // service fee if applicable
-            ],
-            includeChangeOutput: true,
-            changeOutputType: "P2WPKH" as ScriptType
-          });
-        }
+            ...(service_fee > 0 ? [{ type: "P2WPKH" as ScriptType }] : []) // service fee if applicable
+          ],
+          includeChangeOutput: true,
+          changeOutputType: "P2WPKH" as ScriptType
+        });
 
         const estimatedFee = Math.ceil(dryRunEstimatedSize * satsPerVB);
         totalOutputValue = totalDustValue + service_fee;
@@ -556,51 +512,21 @@ export class StampCreationService {
       });
 
       // Recalculate the exact fee with the actual number of inputs selected
-      // Use MARA estimator for MARA mode (outputValue < 330)
-      const isMaraMode = dustValue < 330;
-      
-      if (isMaraMode) {
-        // Use MARA-specific estimator for accurate calculation
-        const maraEstimate = estimateMARATransactionSize({
-          inputs: inputs.map((input: UTXO) => ({
-            type: (input.scriptType || "P2WPKH") as ScriptType,
-            isWitness: true
+      actualEstimatedSize = estimateMintingTransactionSize({
+        inputs: inputs.map((input: UTXO) => ({
+          type: (input.scriptType || "P2WPKH") as ScriptType,
+          isWitness: true
+        })),
+        outputs: [
+          { type: "OP_RETURN" as ScriptType }, // OP_RETURN
+          ...cip33Addresses.map(() => ({
+            type: "P2WSH" as ScriptType
           })),
-          fileSize,
-          outputValue: dustValue,
-          includeServiceFee: service_fee > 0,
-          serviceFeeType: "P2WPKH" as ScriptType,
-          includeChangeOutput: true,
-          changeOutputType: "P2WPKH" as ScriptType,
-          isMaraMode: true,
-          maraFeeRate: satsPerVB
-        });
-        actualEstimatedSize = maraEstimate.estimatedSize;
-        
-        logger.info("stamp-create", {
-          message: "MARA mode actual estimation with selected inputs",
-          maraEstimate,
-          dustValue,
-          inputCount: inputs.length
-        });
-      } else {
-        // Use standard estimator for non-MARA mode
-        actualEstimatedSize = estimateMintingTransactionSize({
-          inputs: inputs.map((input: UTXO) => ({
-            type: (input.scriptType || "P2WPKH") as ScriptType,
-            isWitness: true
-          })),
-          outputs: [
-            { type: "OP_RETURN" as ScriptType }, // OP_RETURN
-            ...cip33Addresses.map(() => ({
-              type: "P2WSH" as ScriptType
-            })),
-            { type: "P2WPKH" as ScriptType } // service fee
-          ],
-          includeChangeOutput: true,
-          changeOutputType: "P2WPKH" as ScriptType
-        });
-      }
+          { type: "P2WPKH" as ScriptType } // service fee
+        ],
+        includeChangeOutput: true,
+        changeOutputType: "P2WPKH" as ScriptType
+      });
 
       actualExactFeeNeeded = Math.ceil(actualEstimatedSize * satsPerVB);
 
@@ -811,7 +737,6 @@ export class StampCreationService {
     file,
     service_fee,
     service_fee_address = "",
-    outputValue,
     cip33Addresses,
   }: {
     sourceWallet: string;
@@ -825,7 +750,6 @@ export class StampCreationService {
     file: string;
     service_fee: number;
     service_fee_address?: string;
-    outputValue?: number;
     // CIP33 P2WSH data-output addresses (used to size coin selection); optional
     // so existing callers/tests that don't compute them still type-check — when
     // omitted they're derived from `file`.
@@ -838,7 +762,7 @@ export class StampCreationService {
         throw new Error(`Invalid source wallet address: ${walletValidation.error}`);
       }
 
-      logger.info("stamp-create", { message: "Starting createIssuanceTransaction with params", sourceWallet, assetName, qty, locked, divisible, description, satsPerKB, isDryRun: isDryRun, isDryRunType: typeof isDryRun, outputValue });
+      logger.info("stamp-create", { message: "Starting createIssuanceTransaction with params", sourceWallet, assetName, qty, locked, divisible, description, satsPerKB, isDryRun: isDryRun, isDryRunType: typeof isDryRun });
 
       // For dryRun, return mock transaction data to avoid UTXO lookup
       if (isDryRun === true) {
@@ -869,7 +793,7 @@ export class StampCreationService {
         }
 
         const estimatedFee = Math.ceil(estimatedSize * (satsPerKB / 1000));
-        const dustValue = outputValue !== undefined ? outputValue : TX_CONSTANTS.DUST_SIZE;
+        const dustValue = TX_CONSTANTS.DUST_SIZE;
         const totalDustValue = cip33ChunkCount * dustValue; // Each P2WSH output has dust
 
         logger.info("stamp-create", {
@@ -881,7 +805,6 @@ export class StampCreationService {
           estimatedFee,
           totalDustValue,
           dustValue,
-          outputValue,
           hasServiceFee: service_fee > 0,
           breakdown: {
             base: 10,
@@ -909,7 +832,7 @@ export class StampCreationService {
       // Select the funding UTXOs and pin them to Counterparty so CP derives the
       // ARC4 OP_RETURN key from a UTXO we control. Selection + composition live
       // together: we select precisely in order to compose against that set.
-      const issuanceDustValue = outputValue ?? TX_CONSTANTS.DUST_SIZE;
+      const issuanceDustValue = TX_CONSTANTS.DUST_SIZE;
       const issuanceCip33Addresses = cip33Addresses ??
         (FileToAddressUtils.fileToAddresses(base64ToHex(file)) as string[]);
       const selected = await this.selectIssuanceInputs(

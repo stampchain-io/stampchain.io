@@ -29,11 +29,6 @@
  *   /block                     routes/block/index.tsx
  *   /block/[block_index]       routes/block/[block_index].tsx
  *   /upload                    routes/upload/index.tsx
- *   /tool/stamp/create         routes/tool/stamp/create.tsx
- *   /tool/fairmint             routes/tool/fairmint/index.tsx
- *   /tool/src20/[action]       routes/tool/src20/[action].tsx (only when
- *                               `?tick=` is set — mint/deploy/transfer forms
- *                               otherwise work fine without a DB call)
  *
  * When adding dummy data for one of the routes above, follow the pattern
  * used by the wallet/dashboard routes: export a small set of static

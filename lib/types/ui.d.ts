@@ -218,7 +218,6 @@ export interface TableProps<T = any> {
 //   ErrorStateProps,
 //   ExplorerContentProps,
 //   ExtendedComponentProps,
-//   FairmintToolProps,
 //   FaqAccordionProps,
 //   FlexboxProps,
 //   FormControlProps,
@@ -235,11 +234,6 @@ export interface TableProps<T = any> {
 //   KeyboardNavigationProps,
 //   LoadingIconProps,
 //   LoadingStateProps,
-//   MaraModeIndicatorProps,
-//   MaraModeWarningModalProps,
-//   MaraServiceUnavailableModalProps,
-//   MaraStatusLinkProps,
-//   MaraSuccessMessageProps,
 //   MarketDataStatusProps,
 //   MetaTagsProps,
 //   MintProgressProps,
@@ -286,7 +280,6 @@ export interface TableProps<T = any> {
 //   SortProps,
 //   SpinnerProps,
 //   SRC101DetailToolProps,
-//   SRC101RegisterToolProps,
 //   SRC20MintingCompactProps,
 //   SRC20DetailPageProps,
 //   SRC20InputFieldProps,
@@ -322,10 +315,6 @@ export interface TableProps<T = any> {
 //   ToastProps,
 //   ToastProviderProps,
 //   ToggleSwitchButtonProps,
-//   ToolFairmintPageProps,
-//   ToolSrc20PageProps,
-//   ToolsSrc101PageProps,
-//   ToolStampPageProps,
 //   TotalBTCValueProps,
 //   TransactionBadgeProps,
 //   TransactionHexDisplayProps,
@@ -817,78 +806,6 @@ export interface ConnectWalletModalProps {
   onClose?: () => void;
 }
 
-/**
- * Mara Mode Warning Modal props
- */
-export interface MaraModeWarningModalProps {
-  _isOpen?: boolean;
-  onClose?: () => void;
-  title?: string;
-  outputValue?: number;
-  onConfirm?: () => void;
-  onCancel?: () => void;
-}
-
-/**
- * Mara Service Unavailable Modal props
- */
-export interface MaraServiceUnavailableModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title?: string;
-  onSwitchToStandard?: () => void;
-  onRetry?: () => void;
-}
-
-// =============================================================================
-// MARA-SPECIFIC COMPONENT PROPS
-// =============================================================================
-
-/**
- * Mara Status Link component props
- */
-export interface MaraStatusLinkProps extends BaseComponentProps {
-  href?: string;
-  variant?: "primary" | "secondary" | "warning" | "error";
-  target?: "_blank" | "_self";
-  icon?: string;
-  txid?: string;
-  class?: string;
-}
-
-/**
- * Mara mode indicator component props
- */
-export interface MaraModeIndicatorProps extends BaseComponentProps {
-  isActive: boolean;
-  mode?: "standard" | "turbo" | "eco";
-  showLabel?: boolean;
-  size?: ButtonSize;
-  animate?: boolean;
-  outputValue?: number;
-  feeRate?: number;
-  class?: string;
-}
-
-/**
- * Mara success message component props
- */
-export interface MaraSuccessMessageProps extends BaseComponentProps {
-  message?: string;
-  transactionId?: string;
-  showIcon?: boolean;
-  onDismiss?: () => void;
-  autoHideDuration?: number;
-  txid?: string;
-  outputValue?: number;
-  feeRate?: number;
-  poolInfo?: {
-    name: string;
-    hashrate?: string;
-  };
-  class?: string;
-}
-
 // =============================================================================
 // STATUS & BADGE COMPONENT PROPS
 // =============================================================================
@@ -1090,32 +1007,6 @@ export interface StampListingsProps {
   subTitle?: string;
 }
 
-export interface ToolSrc20PageProps {
-  selectedTab: string;
-  trxType: "multisig" | "olga";
-  tick?: string | null;
-  mintStatus?: any;
-  holders?: number;
-  error?: string;
-}
-
-export interface ToolsSrc101PageProps {
-  selectedTab: string;
-  trxType: "multisig" | "olga";
-  error?: string;
-}
-
-export interface ToolStampPageProps {
-  selectedTab: string;
-  trxType: "multisig" | "olga";
-  error?: string;
-}
-
-export interface ToolFairmintPageProps {
-  fairminters: Array<any>;
-  error?: string;
-}
-
 export interface WalletProviderProps {
   key?: WalletProviders; // Added optional key prop
   providerKey: WalletProviders;
@@ -1226,19 +1117,11 @@ export interface SRC20GalleryProps {
   serverData?: any;
 }
 
-export interface SRC101RegisterToolProps {
-  trxType?: "olga" | "multisig";
-  onRegister?: (data: any) => void;
-  loading?: boolean;
-  error?: string;
-}
-
 export interface StatusMessagesProps {
   submissionMessage?: string | { message: string; txid?: string } | null;
   apiError?: string | null;
   fileUploadError?: string | null;
   walletError?: string | null;
-  maraError?: string | null;
   transactionHex?: string;
   onCopyHex?: () => void;
   messages?: Array<{
@@ -2625,19 +2508,11 @@ export interface ModalOverlayProps extends BaseComponentProps {
 // ==========================
 
 /**
- * Mara Mode Indicator component props
- */
-
-/**
  * Transaction Status component props
  */
 
 /**
  * Transaction Badge component props
- */
-
-/**
- * Mara Success Message component props
  */
 
 /**
@@ -2888,10 +2763,6 @@ export interface ErrorDisplayProps extends BaseComponentProps {
  */
 
 /**
- * Mara Status Link component props
- */
-
-/**
  * Stat Base component props
  */
 
@@ -2905,14 +2776,6 @@ export interface ErrorDisplayProps extends BaseComponentProps {
 
 /**
  * Shared List component props
- */
-
-/**
- * Mara Service Unavailable Modal component props
- */
-
-/**
- * Mara Mode Warning Modal component props
  */
 
 /**
@@ -3330,9 +3193,6 @@ export interface ExtendedBaseFeeCalculatorProps extends BaseFeeCalculatorProps {
   onTosChange?: (agreed: boolean) => void;
   feeDetails?: FeeDetails;
   mintDetails?: MintDetails;
-  maraMode?: boolean;
-  maraFeeRate?: number | null;
-  isLoadingMaraFee?: boolean;
   progressIndicator?: preact.ComponentChildren;
 }
 
@@ -3891,18 +3751,6 @@ export interface ImageModalProps {
 }
 
 /**
- * FairmintToolProps - Fairmint Tool component props
- */
-export interface FairmintToolProps extends BaseComponentProps {
-  fairminters?: any[];
-  asset?: string;
-  quantity?: number;
-  onSubmit?: (data: any) => void;
-  loading?: boolean;
-  error?: string;
-}
-
-/**
  * MintProgressProps - Mint Progress component props
  */
 export interface MintProgressProps extends BaseComponentProps {
@@ -4376,10 +4224,3 @@ export type PaginationSort = "asc" | "desc";
 
 /** Unified sorting type for various components */
 export type Sort = "ASC" | "DESC" | { key: string; direction: PaginationSort };
-
-/**
- * Skeleton Loader Component Props
- */
-export interface SkeletonLoaderProps {
-  className?: string;
-}

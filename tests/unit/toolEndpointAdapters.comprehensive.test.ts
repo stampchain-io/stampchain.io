@@ -36,42 +36,6 @@ import {
 describe("StampToolAdapter - Comprehensive Coverage", () => {
   const adapter = new StampToolAdapter();
 
-  describe("buildRequestBody - Additional Coverage", () => {
-    it("should handle outputValue parameter for MARA mode", () => {
-      const options: StampTransactionOptions = {
-        walletAddress: "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4",
-        file: "test-data",
-        filename: "test.png",
-        quantity: 1,
-        locked: true,
-        divisible: false,
-        feeRate: 10,
-        dryRun: true,
-        outputValue: 150, // MARA mode value
-      };
-
-      const requestBody = adapter.buildRequestBody(options);
-      assertEquals(requestBody.outputValue, 150);
-    });
-
-    it("should omit outputValue when undefined", () => {
-      const options: StampTransactionOptions = {
-        walletAddress: "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4",
-        file: "test-data",
-        filename: "test.png",
-        quantity: 1,
-        locked: true,
-        divisible: false,
-        feeRate: 10,
-        dryRun: true,
-        // outputValue not specified
-      };
-
-      const requestBody = adapter.buildRequestBody(options);
-      assertEquals("outputValue" in requestBody, false);
-    });
-  });
-
   describe("parseResponse - Error Conditions", () => {
     it("should throw ToolResponseError for null response", () => {
       assertThrows(

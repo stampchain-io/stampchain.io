@@ -2,7 +2,6 @@ import { Button } from "$button";
 import { Icon } from "$icon";
 import { transitionAll } from "$layout";
 import type {
-  MaraSuccessMessageProps,
   TransactionBadgeProps,
   TransactionStatusProps,
 } from "$types/ui.d.ts";
@@ -58,8 +57,8 @@ export function TransactionStatus({
       case "submitted":
         return {
           icon: "send",
-          title: "Transaction Submitted to MARA",
-          description: "Your transaction has been sent to the MARA mining pool",
+          title: "Transaction Submitted",
+          description: "Your transaction has been broadcast",
           color: "purple",
           bgColor: "purple-900/20",
           borderColor: "purple-500/30",
@@ -258,79 +257,3 @@ export function TransactionBadge(
   );
 }
 
-// MARA-specific success message component
-
-export function MaraSuccessMessage({
-  txid,
-  outputValue,
-  feeRate,
-  poolInfo = { name: "MARA Pool" },
-  class: className = "",
-}: MaraSuccessMessageProps) {
-  return (
-    <div
-      class={`bg-purple-900/20 backdrop-blur-sm border border-purple-500/30 rounded-2xl p-4 ${className}`}
-    >
-      <div class="flex items-start gap-3">
-        <div class="p-2 bg-purple-500/20 rounded-2xl">
-          <Icon
-            type="icon"
-            name="rocket"
-            size="md"
-            weight="normal"
-            color="custom"
-            className="fill-purple-400"
-          />
-        </div>
-
-        <div class="flex-1">
-          <h3 class="text-purple-300 font-semibold text-base mb-2">
-            Successfully Submitted to MARA Pool! 🎉
-          </h3>
-
-          <div class="space-y-2 text-sm text-purple-300/80">
-            <p>
-              Your non-standard transaction with {outputValue}{" "}
-              sat outputs has been accepted by {poolInfo.name}.
-            </p>
-
-            <div class="grid grid-cols-2 gap-2 mt-3">
-              <div class="bg-purple-900/30 rounded p-2">
-                <span class="text-xs text-purple-400/60 block">
-                  Output Value
-                </span>
-                <span class="text-purple-300 font-medium">
-                  {outputValue} sats
-                </span>
-              </div>
-              <div class="bg-purple-900/30 rounded p-2">
-                <span class="text-xs text-purple-400/60 block">
-                  Fee Rate
-                </span>
-                <span class="text-purple-300 font-medium">
-                  {feeRate} sat/vB
-                </span>
-              </div>
-            </div>
-
-            {poolInfo.hashrate && (
-              <div class="bg-purple-900/30 rounded p-2">
-                <span class="text-xs text-purple-400/60 block">
-                  Pool Hashrate
-                </span>
-                <span class="text-purple-300 font-medium">
-                  {poolInfo.hashrate}
-                </span>
-              </div>
-            )}
-
-            <p class="text-xs text-purple-400/60 mt-3">
-              Transaction ID:{" "}
-              <span class="font-mono">{txid?.slice(0, 16)}...</span>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}

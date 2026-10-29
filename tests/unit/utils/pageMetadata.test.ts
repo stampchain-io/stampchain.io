@@ -37,8 +37,6 @@ const SITEMAP_PATHS = [
   "/howto/leatherconnect",
   "/howto/leathercreate",
   "/howto/transferbitname",
-  "/tool/stamp/create",
-  "/tool/fairmint",
   "/media",
   "/presskit",
   "/upload",
@@ -101,7 +99,6 @@ Deno.test("routes outside the static map get a derived title, not the site name"
     ["/src20/KEVIN", "KEVIN"],
     ["/collection/utxo_punks", "Utxo Punks"],
     ["/block/966781", "966781"],
-    ["/tool/src20/deploy", "Deploy"],
     ["/howto/template", "Template"],
     ["/stamp/1", "Bitcoin Stamp 1"],
   ];
@@ -138,8 +135,8 @@ Deno.test("derived metadata is clamped to the same limits", () => {
   assert(longAddress.title.length <= MAX_TITLE_LENGTH);
 });
 
-Deno.test("each create page has its own title, distinct from the stamping tool", () => {
-  const titles = ["/create/classic", "/create/posh", "/create/recursive", "/tool/stamp/create"]
+Deno.test("each create page has its own title", () => {
+  const titles = ["/create/classic", "/create/posh", "/create/recursive"]
     .map((path) => getPageMetadata(path).title);
   assertEquals(new Set(titles).size, titles.length, `create titles collide: ${titles.join(" / ")}`);
   assertEquals(getPageMetadata("/create/recursive").title, "Create a Recursive Stamp | Stampchain");
@@ -154,12 +151,21 @@ Deno.test("trailing slashes and unknown paths resolve sensibly", () => {
 // for an unmatched path IS the 404 page's title. Before this, _404.tsx carried
 // its own <Head><title>, the _app title rendered alongside it, and the page
 // shipped two. Verified in served HTML, not in source.
+Deno.test("otc trade metadata describes a PSBT sale", () => {
+  const meta = getPageMetadata("/dev/otc");
+  assert(meta.title.length <= MAX_TITLE_LENGTH, meta.title);
+  assert(meta.description.length <= MAX_DESCRIPTION_LENGTH, meta.description);
+  assert(meta.title.toLowerCase().includes("psbt"));
+  assert(!meta.description.toLowerCase().includes("dispenser"));
+});
+
 Deno.test("unmatched paths get the not-found entry, not the home page's", () => {
   for (
     const path of [
       "/no/such/page",
       "/faq/nope",
       "/marketplace/nope",
+      "/tool/stamp/trade",
       "/tool/stamp/stamping",
     ]
   ) {
