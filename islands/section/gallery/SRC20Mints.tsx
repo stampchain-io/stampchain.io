@@ -1,4 +1,5 @@
 /* ===== SRC20 RECENT MINTS GALLERY COMPONENT ===== */
+/* ===== The component is not used - was part of the tool pages UI - keep for future implementation ===== */
 import { SRC20MintingCompact } from "$card";
 import { containerBackground, EmptyState } from "$layout";
 import {

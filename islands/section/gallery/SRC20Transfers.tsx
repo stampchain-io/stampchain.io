@@ -1,4 +1,5 @@
 /* ===== SRC20 RECENT TRANSFERS GALLERY COMPONENT ===== */
+/* ===== The component is not used - was part of the tool pages UI - keep for future implementation ===== */
 import { StampCard } from "$card";
 import { containerBackground, EmptyState } from "$layout";
 import type { StampTransaction } from "$lib/types/stamping.ts";
