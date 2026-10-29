@@ -10,10 +10,6 @@ import { ApiResponseUtil } from "$lib/utils/api/responses/apiResponseUtil.ts";
 import { MaraSlipstreamService } from "$/server/services/mara/maraSlipstreamService.ts";
 import { logger } from "$lib/utils/logger.ts";
 import { InternalRouteGuard } from "$server/services/security/internalRouteGuard.ts";
-import {
-  assertBroadcastAllowed,
-  BroadcastRefusedError,
-} from "$server/services/chain/chainProfile.ts";
 
 interface MaraSubmitRequest {
   /** Signed transaction hex string */
@@ -71,10 +67,6 @@ export const handler: Handlers = {
         return ApiResponseUtil.badRequest("Invalid hex format");
       }
 
-      // ECX policy gate (no-op under CHAIN=bitcoin): 403 when ECX broadcast
-      // is disabled, 400 when the replay marker is missing.
-      assertBroadcastAllowed(body.hex);
-
       const priority = body.priority || "high";
 
       logger.info("api", {
@@ -118,17 +110,6 @@ export const handler: Handlers = {
         forceNoCache: true,
       });
     } catch (error) {
-      if (error instanceof BroadcastRefusedError) {
-        logger.warn("api", {
-          message: "MARA submission refused by chain broadcast gate",
-          reason: error.reason,
-          error: error.message,
-        });
-        return error.status === 403
-          ? ApiResponseUtil.forbidden(error.message)
-          : ApiResponseUtil.badRequest(error.message);
-      }
-
       const errorMessage = error instanceof Error
         ? error.message
         : "Failed to submit transaction to MARA";

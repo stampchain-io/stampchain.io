@@ -13,7 +13,6 @@ import { ToastProvider } from "$islands/Toast/ToastProvider.tsx";
 import WebVitalsReporter from "$islands/WebVitalsReporter.tsx";
 import { Footer, NavigatorProvider } from "$layout";
 import { getPageMetadata } from "$lib/utils/pageMetadata.ts";
-import { getClientConfig } from "$server/config/config.ts";
 
 /* ===== ROOT COMPONENT ===== */
 export default function App({ Component, state, url }: PageProps<unknown>) {
@@ -30,18 +29,12 @@ export default function App({ Component, state, url }: PageProps<unknown>) {
     title and search results could not tell the FAQ from the explorer. */
   const pageMeta = getPageMetadata(url.pathname);
 
-  /* Chain marker for browser code that cannot read the server env (the
-    broadcast guard in lib/utils/bitcoin/minting/broadcast.ts). Undefined under
-    Bitcoin, so the attribute is not rendered and the HTML is unchanged. */
-  const chain = getClientConfig().CHAIN;
-
   /* ===== RENDER ===== */
   return (
     <html
       lang="en"
       data-page-type={isStampPage ? "stamp" : "other"}
       data-pathname={url.pathname}
-      data-chain={chain}
     >
       {/* ===== HEAD SECTION ===== */}
       <Head>
