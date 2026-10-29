@@ -1,5 +1,4 @@
 /* ===== STATUS MESSAGES ===== */
-/*@baba-move file*/
 import { container1, transitionColors } from "$layout";
 import type { StatusMessagesProps } from "$types/ui.d.ts";
 
