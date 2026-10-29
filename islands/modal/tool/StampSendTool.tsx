@@ -5,6 +5,7 @@ import { ProgressiveEstimationIndicator } from "$components/indicators/Progressi
 import {
   inputField,
   inputFieldDropdown,
+  inputFieldDropdownHover,
   inputFieldGrow,
   inputFieldGrowDigits,
   inputFieldGrowStyle,
@@ -21,7 +22,6 @@ import {
   imagePreviewTool,
   loaderSpinGrey,
   rowForm,
-  transitionColors,
 } from "$layout";
 import { useTransactionConstructionService } from "$lib/hooks/useTransactionConstructionService.ts";
 import {
@@ -649,19 +649,19 @@ export function StampSendTool() {
                         e.preventDefault();
                         handleStampSelect(stamp.stamp?.toString() ?? "");
                       }}
-                      class={`flex items-center gap-5 px-2 py-2 border-b-[1px] border-color-border last:border-b-0 hover:bg-color-background/60 hover:border-color-border ${transitionColors} cursor-pointer`}
+                      class={inputFieldDropdownHover}
                     >
                       <img
                         src={`/api/v2/stamp/${stamp.stamp}/preview`}
                         alt=""
-                        class="w-7 h-7 rounded object-contain pixelart flex-shrink-0"
+                        class="w-5 h-5 rounded-sm object-contain pixelart flex-shrink-0"
                         onError={handleImageError}
                       />
                       <div class="flex items-center justify-between flex-1 min-w-0">
-                        <span class="text-sm font-medium text-color-neutral-400">
+                        <span class="text-xs font-medium text-color-neutral-200">
                           #{stamp.stamp}
                         </span>
-                        <span class="hidden min-[480px]:block text-xs font-normal text-color-neutral-500">
+                        <span class="hidden min-[480px]:block text-[0.625rem] font-normal text-color-neutral-500">
                           {stamp.unbound_quantity} EDITIONS
                         </span>
                       </div>

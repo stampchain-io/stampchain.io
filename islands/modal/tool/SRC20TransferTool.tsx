@@ -371,14 +371,14 @@ export function SRC20TransferTool(
                 {searchResults.map((result) => (
                   <li
                     key={result.tick}
-                    class={`${inputFieldDropdownHover}`}
+                    class={inputFieldDropdownHover}
                     onClick={() => handleDropDown(result.tick, result.amt)}
                     onMouseDown={(e) => e.preventDefault()}
                     role="option"
                     aria-selected={formState.token === result.tick}
                   >
                     {result.tick}
-                    <h6 class="text-xs text-color-grey">
+                    <h6 class="text-xs text-color-neutral-500">
                       {stripTrailingZeros(result.amt)}
                     </h6>
                   </li>

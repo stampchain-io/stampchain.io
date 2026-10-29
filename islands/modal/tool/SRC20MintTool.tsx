@@ -569,10 +569,8 @@ export function SRC20MintTool({
                       }}
                       class={`${inputFieldDropdownHover}`}
                     >
-                      <div class="pt-[1px]">
-                        {result.tick}
-                      </div>
-                      <div class="text-xs text-color-grey">
+                      {result.tick}
+                      <div class="text-xs text-color-neutral-500">
                         {(result.progress || 0).toFixed(1)}%
                       </div>
                     </li>
