@@ -332,7 +332,6 @@ import * as $table_index from "./islands/table/index.ts";
 import * as $tool_StatusMessages from "./islands/tool/StatusMessages.tsx";
 import * as $tool_index from "./islands/tool/index.ts";
 import * as $tool_stamp_TradeTool from "./islands/tool/stamp/TradeTool.tsx";
-import * as $tool_stamp_TradeToolLazy from "./islands/tool/stamp/TradeToolLazy.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -752,7 +751,6 @@ const manifest = {
     "./islands/tool/StatusMessages.tsx": $tool_StatusMessages,
     "./islands/tool/index.ts": $tool_index,
     "./islands/tool/stamp/TradeTool.tsx": $tool_stamp_TradeTool,
-    "./islands/tool/stamp/TradeToolLazy.tsx": $tool_stamp_TradeToolLazy,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;
