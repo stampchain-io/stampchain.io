@@ -12,11 +12,18 @@ const ecxOrigin = (): string | undefined => {
   try {
     if (typeof document !== "undefined") {
       // @ts-ignore - globalThis.location exists in browser
-      return document.documentElement?.dataset?.chain === "ecx" ? globalThis.location.origin : undefined;
+      return document.documentElement?.dataset?.chain === "ecx"
+        ? globalThis.location.origin
+        : undefined;
     }
-    if (typeof Deno !== "undefined" && Deno.env.get("CHAIN")?.trim().toLowerCase() === "ecx") {
+    if (
+      typeof Deno !== "undefined" &&
+      Deno.env.get("CHAIN")?.trim().toLowerCase() === "ecx"
+    ) {
       const domain = Deno.env.get("APP_DOMAIN")?.trim();
-      return domain ? `https://${domain.replace(/^https?:\/\//, "")}` : undefined;
+      return domain
+        ? `https://${domain.replace(/^https?:\/\//, "")}`
+        : undefined;
     }
   } catch {
     // fall through to the Bitcoin default
