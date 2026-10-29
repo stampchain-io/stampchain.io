@@ -3,10 +3,41 @@ import type { SRC20Row } from "$types/src20.d.ts";
 import type { StampRow } from "$types/stamp.d.ts";
 
 /**
+ * Under CHAIN=ecx, stamp files and /content/ live on the ECX host (ECX-native
+ * stamps do not exist on stampchain.io). Browser: the page's own origin when
+ * <html data-chain="ecx">. Server: APP_DOMAIN, read behind a typeof-Deno guard
+ * so browser bundles never touch Deno.env. Undefined on Bitcoin.
+ */
+const ecxOrigin = (): string | undefined => {
+  try {
+    if (typeof document !== "undefined") {
+      // @ts-ignore - globalThis.location exists in browser
+      return document.documentElement?.dataset?.chain === "ecx"
+        ? globalThis.location.origin
+        : undefined;
+    }
+    if (
+      typeof Deno !== "undefined" &&
+      Deno.env.get("CHAIN")?.trim().toLowerCase() === "ecx"
+    ) {
+      const domain = Deno.env.get("APP_DOMAIN")?.trim();
+      return domain
+        ? `https://${domain.replace(/^https?:\/\//, "")}`
+        : undefined;
+    }
+  } catch {
+    // fall through to the Bitcoin default
+  }
+  return undefined;
+};
+
+/**
  * Get the base URL for the current environment
  * Used for constructing fully qualified URLs
  */
 export const getBaseUrl = (): string => {
+  const ecx = ecxOrigin();
+  if (ecx) return ecx;
   // Client-side: Check if we're on localhost for development
   if (typeof window !== "undefined") {
     try {
@@ -28,6 +59,8 @@ export const getBaseUrl = (): string => {
  * Used for assets that only exist on the CDN
  */
 export const getCdnUrl = (): string => {
+  const ecx = ecxOrigin();
+  if (ecx) return ecx;
   return "https://stampchain.io";
 };
 
