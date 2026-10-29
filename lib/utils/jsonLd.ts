@@ -23,6 +23,27 @@ const SATS_PER_BTC = 100_000_000;
  * @param lowestPriceDispenser - Optional dispenser with the lowest price
  * @returns Schema.org-compliant JSON-LD object
  */
+/**
+ * ISO date for a stamp's block_time, or undefined when it does not parse.
+ * block_time reaches the page as a Date from the database, an ISO string when
+ * the row came through the JSON cache, or Unix seconds from some API shapes.
+ * The old code assumed seconds for anything that was not a Date, so a cached
+ * row gave NaN and toISOString() threw, failing the whole stamp page.
+ */
+export function blockTimeToIso(value: unknown): string | undefined {
+  let date: Date | undefined;
+  if (value instanceof Date) {
+    date = value;
+  } else if (typeof value === "number") {
+    date = new Date(value * 1000);
+  } else if (typeof value === "string" && value.trim() !== "") {
+    date = /^\d+$/.test(value.trim())
+      ? new Date(Number(value) * 1000)
+      : new Date(value);
+  }
+  return date && !Number.isNaN(date.getTime()) ? date.toISOString() : undefined;
+}
+
 export function generateStampJsonLd(
   stamp: StampRow,
   metaInfo: { url: string; baseUrl: string },
@@ -34,6 +55,7 @@ export function generateStampJsonLd(
   lowestPriceDispenser?: { satoshirate: number } | null | undefined,
   chain: BrandChain = "bitcoin",
 ): object {
+  const datePublished = blockTimeToIso(stamp.block_time);
   const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": ["ImageObject", "CreativeWork"],
@@ -44,9 +66,7 @@ export function generateStampJsonLd(
       "@type": "Person",
       name: stamp.creator_name || stamp.creator,
     },
-    datePublished: stamp.block_time instanceof Date
-      ? stamp.block_time.toISOString()
-      : new Date(Number(stamp.block_time) * 1000).toISOString(),
+    ...(datePublished ? { datePublished } : {}),
     encodingFormat: stamp.stamp_mimetype,
     ...(stamp.file_size_bytes != null
       ? { contentSize: `${stamp.file_size_bytes} bytes` }
