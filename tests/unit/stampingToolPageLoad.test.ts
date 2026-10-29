@@ -1,8 +1,8 @@
 /**
  * Test for StampingTool page load scenario
  *
- * Simulates the exact conditions when a user loads /tool/stamp/create
- * to identify why the "Bad Request: Missing required fields" occurs.
+ * Simulates stamp estimation when no file is selected yet,
+ * the state that used to produce "Bad Request: Missing required fields".
  */
 
 import {
@@ -16,7 +16,7 @@ describe("StampingTool Page Load Scenario", () => {
   const estimator = new TransactionConstructionService();
 
   it("should simulate exact page load conditions", () => {
-    // This simulates the exact state when /tool/stamp/create loads
+    // No file selected yet: the estimator must not require mint fields
     const pageLoadOptions: EstimationOptions = {
       toolType: "stamp",
       feeRate: 10, // Default fee rate

@@ -20,5 +20,4 @@ export {
   SkeletonImage,
   SkeletonInput,
   SkeletonText,
-  StampingToolSkeleton,
 } from "./SkeletonLoader.tsx";

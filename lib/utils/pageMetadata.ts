@@ -159,12 +159,6 @@ export const STATIC_PAGE_METADATA: Record<string, PageMetadata> = {
       "Moving a bitname to another Bitcoin address. This guide is still being written, and the transfer option has not landed in the Tools menu yet.",
   },
 
-  "/tool/stamp/create": {
-    title: "Create a Bitcoin Stamp | Stamping Tool",
-    description:
-      "Stamp artwork into Bitcoin. Upload a file, set the edition count, choose a custom CPID or posh name, lock the supply and tune the fee before signing.",
-  },
-
   "/create/classic": {
     title: "Create a Classic Stamp | Stampchain",
     description:

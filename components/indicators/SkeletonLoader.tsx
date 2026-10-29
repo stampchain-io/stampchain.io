@@ -4,7 +4,6 @@
 
 import { Icon } from "$icon";
 import { containerColForm, containerRowForm, loaderSkeleton } from "$layout";
-import type { SkeletonLoaderProps } from "$types/ui.d.ts";
 
 /* ===== BASIC SKELETON COMPONENTS ===== */
 /* Skeleton container */
@@ -232,39 +231,5 @@ export function FeeCalculatorSkeleton() {
         </div>
       </div>
     </SkeletonContainer>
-  );
-}
-
-/* ===== TOOL-SPECIFIC SKELETON LOADERS ===== */
-/* ===== STAMP TOOLS ===== */
-/* CREATE STAMP TOOL */
-export function StampingToolSkeleton({ className = "" }: SkeletonLoaderProps) {
-  return (
-    <div class={`space-y-5 mobileLg:space-y-7.5 ${className}`}>
-      <SkeletonContainer>
-        {/* Left Column Skeleton - Image upload */}
-        <div class={`${containerColForm} !w-[100px]`}>
-          <SkeletonImage />
-        </div>
-
-        {/* Right Column Skeleton - Token details */}
-        <div class={`${containerColForm} justify-between items-end`}>
-          <div class={`${containerRowForm} justify-end`}>
-            {/* Toggle switch skeleton */}
-            <SkeletonToggle />
-          </div>
-          <div class={`${containerRowForm} justify-end items-center gap-5`}>
-            {/* Editions text skeleton */}
-            <SkeletonText lines={1} widths={["w-[88px]"]} />
-
-            {/* Editions input skeleton */}
-            <SkeletonInput width="w-10" />
-          </div>
-        </div>
-      </SkeletonContainer>
-
-      {/* Fee calculator skeleton */}
-      <FeeCalculatorSkeleton />
-    </div>
   );
 }

@@ -4344,10 +4344,3 @@ export type PaginationSort = "asc" | "desc";
 
 /** Unified sorting type for various components */
 export type Sort = "ASC" | "DESC" | { key: string; direction: PaginationSort };
-
-/**
- * Skeleton Loader Component Props
- */
-export interface SkeletonLoaderProps {
-  className?: string;
-}

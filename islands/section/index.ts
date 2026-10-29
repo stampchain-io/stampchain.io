@@ -29,7 +29,6 @@ export { default as StampSendsGallery } from "$islands/section/gallery/StampSend
 /* export { default as SRC101RegistersGallery } from "$islands/section/gallery/SRC101Registers.tsx"; */
 
 /* ===== HOW TO ===== */
-export * from "$islands/section/howto/StampingHowto.tsx";
 /* ===== HOW TO BASE TEMPLATES ===== */
 export * from "$components/section/howto/ArticleBase.tsx";
 export * from "$components/section/howto/ArticlesOverviewBase.tsx";

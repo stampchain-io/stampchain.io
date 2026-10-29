@@ -37,7 +37,6 @@ const SITEMAP_PATHS = [
   "/howto/leatherconnect",
   "/howto/leathercreate",
   "/howto/transferbitname",
-  "/tool/stamp/create",
   "/tool/fairmint",
   "/media",
   "/presskit",
@@ -137,8 +136,8 @@ Deno.test("derived metadata is clamped to the same limits", () => {
   assert(longAddress.title.length <= MAX_TITLE_LENGTH);
 });
 
-Deno.test("each create page has its own title, distinct from the stamping tool", () => {
-  const titles = ["/create/classic", "/create/posh", "/create/recursive", "/tool/stamp/create"]
+Deno.test("each create page has its own title", () => {
+  const titles = ["/create/classic", "/create/posh", "/create/recursive"]
     .map((path) => getPageMetadata(path).title);
   assertEquals(new Set(titles).size, titles.length, `create titles collide: ${titles.join(" / ")}`);
   assertEquals(getPageMetadata("/create/recursive").title, "Create a Recursive Stamp | Stampchain");
