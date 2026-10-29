@@ -8,7 +8,7 @@
  * app layout, so later islands see it too. On Bitcoin nothing is ever set,
  * Header gets no prop, and every helper below returns the pre-ECX value.
  */
-import type { BrandChain } from "$lib/utils/chain/brand.ts";
+import { type BrandChain, stampNumberPrefix } from "$lib/utils/chain/brand.ts";
 
 export interface ClientChainInfo {
   CHAIN: "ecx";
@@ -134,4 +134,18 @@ export function withoutMarketColumns<T>(
 ): T[] {
   if (showMarketData(chain)) return items;
   return items.filter((_, i) => !MARKET_DATA_COLUMNS.has(headers[i] ?? ""));
+}
+
+/* ===== STAMP NUMBERS ===== */
+/**
+ * Mark in front of a displayed stamp number: "#" (or "Stamp #" with a
+ * label) on Bitcoin, "ECX #" on ECX. Display only; links, API data and
+ * database values keep the bare number.
+ */
+export function stampPrefix(
+  bitcoinLabel = "",
+  chain: BrandChain = getClientChainId(),
+): string {
+  if (chain === "ecx") return stampNumberPrefix(chain);
+  return bitcoinLabel ? `${bitcoinLabel} #` : "#";
 }

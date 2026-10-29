@@ -16,6 +16,7 @@ import {
 } from "$layout";
 import {
   showMarketData,
+  stampPrefix,
   withoutMarketColumns,
 } from "$lib/utils/chain/clientChain.ts";
 import {
@@ -130,7 +131,7 @@ export function WalletStampOverviewRowCompact(
           {stamp.stamp != null
             ? (
               <>
-                <span class="font-light">#</span>
+                <span class="font-light">{stampPrefix()}</span>
                 {stamp.stamp}
               </>
             )

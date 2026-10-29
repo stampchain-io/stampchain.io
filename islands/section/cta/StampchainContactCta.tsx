@@ -2,6 +2,26 @@
 import { Button } from "$button";
 import { containerBackground } from "$layout";
 import { subtitleNeutral, text, textLg, titleNeutral } from "$text";
+import { getClientChainId } from "$lib/utils/chain/clientChain.ts";
+
+/* ===== ECX COPY ===== */
+// eSTAMPS is Stampchain's ECX site: say who runs it, keep it short.
+function EstampsContactCopy() {
+  return (
+    <div class={`flex flex-col ${text}`}>
+      <p>
+        <span class={textLg}>
+          <b>
+            eSTAMPS is built and run by Stampchain, the team behind the Bitcoin
+            Stamps protocol.
+          </b>
+        </span>
+        <br />
+        The same explorer and stamping tools, indexing ECX from its first block.
+      </p>
+    </div>
+  );
+}
 
 /* ===== COMPONENT ===== */
 export const StampchainContactCta = () => {
@@ -21,29 +41,33 @@ export const StampchainContactCta = () => {
           STAMPS
         </h4>
         {/* ===== CONTENT SECTION ===== */}
-        <div class={`flex flex-col ${text}`}>
-          <p>
-            <span class={textLg}>
-              <b>
-                As the architects of the Bitcoin Stamps protocol, we've been at
-                the forefront of the ecosystem since its inception.
-              </b>
-            </span>
-            <br />
-            Our platform combines deep technical expertise with user-friendly
-            tools to help you create, collect, and trade Bitcoin Stamps with
-            confidence.
-          </p>
-          <p>
-            <b>We empower creators and collectors by:</b>
-            <br />
-            • Providing battle-tested tools developed by the original Bitcoin
-            Stamps team <br />
-            • Maintaining the most comprehensive knowledge base for Stamps
-            technology
-            {/* • Offering expert guidance on stamp creation, trading, and collection management */}
-          </p>
-        </div>
+        {getClientChainId() === "ecx"
+          ? <EstampsContactCopy />
+          : (
+            <div class={`flex flex-col ${text}`}>
+              <p>
+                <span class={textLg}>
+                  <b>
+                    As the architects of the Bitcoin Stamps protocol, we've been
+                    at the forefront of the ecosystem since its inception.
+                  </b>
+                </span>
+                <br />
+                Our platform combines deep technical expertise with
+                user-friendly tools to help you create, collect, and trade
+                Bitcoin Stamps with confidence.
+              </p>
+              <p>
+                <b>We empower creators and collectors by:</b>
+                <br />
+                • Providing battle-tested tools developed by the original
+                Bitcoin Stamps team <br />
+                • Maintaining the most comprehensive knowledge base for Stamps
+                technology
+                {/* • Offering expert guidance on stamp creation, trading, and collection management */}
+              </p>
+            </div>
+          )}
       </div>
 
       {/* ===== BUTTONS SECTION ===== */}

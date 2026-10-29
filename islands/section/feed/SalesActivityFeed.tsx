@@ -3,6 +3,7 @@ import { ExplorerLink } from "$components/layout/ExplorerLink.tsx";
 import {
   addressExplorerUrl,
   showMarketData,
+  stampPrefix,
   txExplorerUrl,
 } from "$lib/utils/chain/clientChain.ts";
 import { Icon, LoadingIcon } from "$icon";
@@ -107,7 +108,7 @@ export default function SalesActivityFeed({
               <div class="w-12 h-12 bg-gray-700 rounded-2xl border-2 border-gray-600 overflow-hidden">
                 <img
                   src={`/api/v2/stamps/src/${sale.tx_hash}?size=small`}
-                  alt={`Stamp #${sale.stamp}`}
+                  alt={`${stampPrefix("Stamp")}${sale.stamp}`}
                   class="w-full h-full object-cover"
                   loading="lazy"
                 />
@@ -122,7 +123,8 @@ export default function SalesActivityFeed({
                 {/* Stamp identifier and price */}
                 <div class="flex items-center gap-2 mb-1">
                   <span class="text-white font-bold text-sm">
-                    Stamp #{sale.stamp}
+                    {stampPrefix("Stamp")}
+                    {sale.stamp}
                   </span>
                   <span class="text-gray-400 text-xs">sold for</span>
                   <span class="text-green-400 font-mono font-bold text-sm">

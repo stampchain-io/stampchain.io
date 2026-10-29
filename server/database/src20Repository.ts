@@ -87,8 +87,10 @@ export class SRC20Repository {
     stampMin?: number | string | undefined;
     stampMax?: number | string | undefined;
     amtMax?: number | string | undefined;
+    /** Only operations in this block or later (ECX-native view). */
+    blockFloor?: { from: number } | undefined;
   }): { subquery: string; params: (string | number)[] } {
-    const { op, tick, stampMin, stampMax, amtMax } = options;
+    const { op, tick, stampMin, stampMax, amtMax, blockFloor } = options;
     const whereConditions: string[] = [];
     const queryParams: (string | number)[] = [];
     let needsStampJoin = false;
@@ -130,6 +132,11 @@ export class SRC20Repository {
     if (amtMax != null) {
       whereConditions.push(`CAST(src20.amt AS DECIMAL) <= ?`);
       queryParams.push(amtMax);
+    }
+
+    if (blockFloor) {
+      whereConditions.push(`src20.block_index >= ?`);
+      queryParams.push(blockFloor.from);
     }
 
     const joinClause = needsStampJoin

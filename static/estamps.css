@@ -1,0 +1,294 @@
+/* ===== eSTAMPS PRESENTATION (ECX ONLY) ===== */
+/*
+ * Loaded by routes/_app.tsx only under CHAIN=ecx, and every rule is scoped
+ * to html[data-chain="ecx"], so Bitcoin pages neither load nor match it.
+ * Plain CSS on purpose: no new Tailwind utilities, so the shared
+ * styles.css build is unchanged.
+ */
+
+html[data-chain="ecx"] {
+  --estamps-amber: #f5b13d;
+  --estamps-amber-strong: #f59e0b;
+  --estamps-amber-soft: rgba(245, 177, 61, 0.12);
+  --estamps-ink: #0a0a0a;
+  --estamps-mat-from: #24221f;
+  --estamps-mat-to: #161513;
+  --estamps-mat-edge: rgba(255, 255, 255, 0.09);
+  --estamps-text: #e5e5e5;
+  --estamps-muted: #a3a3a3;
+}
+
+/* ===== BUTTONS: AMBER, OUTLINED ===== */
+/* Buttons (components/button/styles.ts) colour themselves from
+   --color-button. Point it at amber, and draw the filled variant as an
+   outline that fills on hover, like the outline variant. */
+html[data-chain="ecx"] :is(a, button)[class*="[--color-button:"] {
+  --color-button: var(--estamps-amber);
+}
+html[data-chain="ecx"] :is(a, button)[class*="bg-[var(--color-button)]"] {
+  background-color: transparent;
+  color: var(--color-button);
+}
+html[data-chain="ecx"] :is(a, button)[class*="[--color-button:"]:hover,
+html[data-chain="ecx"] :is(a, button)[class*="[--color-button:"]:focus-visible {
+  background-color: var(--color-button);
+  color: var(--estamps-ink);
+}
+html[data-chain="ecx"] :is(a, button)[class*="[--color-button:"]:focus-visible {
+  outline: 2px solid var(--estamps-amber);
+  outline-offset: 2px;
+}
+
+/* Stand-alone eSTAMPS button (empty states). */
+html[data-chain="ecx"] .estamps-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.25rem;
+  padding: 0 1.25rem;
+  border: 1px solid var(--estamps-amber);
+  border-radius: 9999px;
+  color: var(--estamps-amber);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  transition: background-color 150ms, color 150ms;
+}
+html[data-chain="ecx"] .estamps-button:hover,
+html[data-chain="ecx"] .estamps-button:focus-visible {
+  background-color: var(--estamps-amber);
+  color: var(--estamps-ink);
+}
+html[data-chain="ecx"] .estamps-button:focus-visible {
+  outline: 2px solid var(--estamps-amber);
+  outline-offset: 2px;
+}
+
+/* ===== ARTWORK MOUNTS ===== */
+/* A neutral mat around every stamp image, so artwork of any palette sits on
+   the same quiet frame. The transparency checkerboard (::before) stays,
+   but only inside the window. */
+html[data-chain="ecx"] .stamp-container {
+  box-sizing: border-box;
+  padding: 7%;
+  background: linear-gradient(
+    145deg,
+    var(--estamps-mat-from),
+    var(--estamps-mat-to)
+  );
+  box-shadow: inset 0 0 0 1px var(--estamps-mat-edge);
+}
+html[data-chain="ecx"] .stamp-container::before {
+  inset: 7%;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6);
+}
+html[data-chain="ecx"] .stamp-container .stamp-image {
+  border-radius: 2px;
+}
+
+/* ===== HEADER WORDMARK ===== */
+html[data-chain="ecx"] .estamps-attribution {
+  margin-left: 0.5rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.625rem;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--estamps-muted);
+}
+
+/* ===== CHAIN BANNER ===== */
+html[data-chain="ecx"] .estamps-banner {
+  row-gap: 0.25rem;
+  letter-spacing: 0.03em;
+}
+html[data-chain="ecx"] .estamps-banner__group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.375rem;
+}
+html[data-chain="ecx"] .estamps-banner__group + .estamps-banner__group {
+  padding-left: 0.5rem;
+  border-left: 1px solid #404040;
+}
+html[data-chain="ecx"] .estamps-banner .estamps-banner__chain {
+  color: var(--estamps-amber);
+}
+html[data-chain="ecx"] .estamps-banner__warn {
+  color: var(--estamps-amber);
+}
+
+/* ===== ECX-NATIVE / INHERITED SWITCH ===== */
+html[data-chain="ecx"] .estamps-view {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0.75rem 0 1.25rem;
+}
+html[data-chain="ecx"] .estamps-view__options {
+  display: inline-flex;
+  align-self: flex-start;
+  max-width: 100%;
+  padding: 3px;
+  border: 1px solid #404040;
+  border-radius: 9999px;
+}
+html[data-chain="ecx"] .estamps-view__option {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0 0.875rem;
+  border-radius: 9999px;
+  color: var(--estamps-muted);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color 150ms, color 150ms;
+}
+html[data-chain="ecx"] .estamps-view__option:hover {
+  color: var(--estamps-amber);
+}
+html[data-chain="ecx"] .estamps-view__option:focus-visible {
+  outline: 2px solid var(--estamps-amber);
+  outline-offset: 2px;
+}
+html[data-chain="ecx"] .estamps-view__option--active,
+html[data-chain="ecx"] .estamps-view__option--active:hover {
+  background-color: var(--estamps-amber-soft);
+  box-shadow: inset 0 0 0 1px var(--estamps-amber);
+  color: var(--estamps-amber);
+}
+html[data-chain="ecx"] .estamps-view__hint {
+  margin: 0;
+  color: var(--estamps-muted);
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+/* ===== EMPTY ECX-NATIVE LIST ===== */
+html[data-chain="ecx"] .estamps-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.5rem 0 1.5rem;
+  padding: 2.5rem 1.25rem;
+  border: 1px dashed #525252;
+  border-radius: 1.5rem;
+  text-align: center;
+}
+html[data-chain="ecx"] .estamps-empty__title {
+  margin: 0;
+  color: var(--estamps-text);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+html[data-chain="ecx"] .estamps-empty__text {
+  max-width: 34rem;
+  margin: 0;
+  color: var(--estamps-muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+html[data-chain="ecx"] .estamps-empty .estamps-button {
+  margin-top: 0.5rem;
+}
+
+/* ===== HOME HERO ===== */
+html[data-chain="ecx"] .estamps-hero {
+  height: 340px;
+  gap: 0;
+}
+html[data-chain="ecx"] .estamps-hero__shade {
+  background: linear-gradient(
+    to bottom,
+    rgba(10, 10, 10, 0.94),
+    rgba(10, 10, 10, 0.78) 55%,
+    rgba(0, 0, 0, 0.94)
+  );
+}
+html[data-chain="ecx"] .estamps-hero__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  width: min(100%, 40rem);
+  padding: 0 0.5rem;
+  text-align: center;
+}
+html[data-chain="ecx"] .estamps-hero__title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375rem;
+  margin: 0;
+  line-height: 1;
+}
+html[data-chain="ecx"] .estamps-hero__mark {
+  color: var(--estamps-text);
+  font-size: clamp(2.5rem, 12vw, 4.5rem);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-shadow: 0.04em 0.04em 0.06em rgba(0, 0, 0, 0.75);
+}
+html[data-chain="ecx"] .estamps-hero__e {
+  color: var(--estamps-amber);
+}
+html[data-chain="ecx"] .estamps-hero__by {
+  color: var(--estamps-muted);
+  font-size: clamp(0.75rem, 2.5vw, 0.9375rem);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+html[data-chain="ecx"] .estamps-hero__lead {
+  margin: 0.5rem 0 0;
+  color: var(--estamps-text);
+  font-size: clamp(0.9375rem, 2.6vw, 1.125rem);
+  font-weight: 600;
+  line-height: 1.35;
+}
+html[data-chain="ecx"] .estamps-hero__note {
+  margin: 0;
+  max-width: 30rem;
+  color: var(--estamps-muted);
+  font-size: clamp(0.8125rem, 2vw, 0.875rem);
+  line-height: 1.45;
+}
+
+@media (min-width: 768px) {
+  html[data-chain="ecx"] .estamps-hero {
+    height: 420px;
+  }
+}
+
+/* Narrow screens: each banner fact gets its own line, no separators. */
+@media (max-width: 567px) {
+  html[data-chain="ecx"] .estamps-banner__group {
+    width: 100%;
+  }
+  html[data-chain="ecx"] .estamps-banner__group + .estamps-banner__group {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+@media (max-width: 359px) {
+  html[data-chain="ecx"] .estamps-view__option {
+    padding: 0 0.625rem;
+    font-size: 0.625rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-chain="ecx"] .estamps-button,
+  html[data-chain="ecx"] .estamps-view__option {
+    transition: none;
+  }
+}

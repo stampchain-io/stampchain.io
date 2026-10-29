@@ -1,4 +1,5 @@
 /* ===== MARKETPLACE LISTINGS TABLE COMPONENT ===== */
+import { stampPrefix } from "$lib/utils/chain/clientChain.ts";
 import { Button } from "$button";
 import { ActivityLevelIndicator } from "$components/indicators/ActivityLevelIndicator.tsx";
 import { colGroup } from "$components/layout/types.ts";
@@ -181,7 +182,7 @@ export function StampListingsRow({ stamp }: StampListingsRowProps) {
           {stamp.stamp != null
             ? (
               <>
-                <span class="font-light">#</span>
+                <span class="font-light">{stampPrefix()}</span>
                 {stamp.stamp}
               </>
             )

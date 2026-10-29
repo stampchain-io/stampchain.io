@@ -159,10 +159,20 @@ export async function captureSql(): Promise<
   };
 }
 
-/** The update announcement text, read from the island's source. */
+/**
+ * The Bitcoin update announcement text, read from source: the island held
+ * it before the eSTAMPS change, lib/utils/ui/notifications/ after it.
+ */
 export async function notificationSource(): Promise<string> {
-  const src = await Deno.readTextFile(
-    new URL("../../../islands/Toast/NotificationUpdate.tsx", import.meta.url),
-  );
-  return src.match(/NOTIFICATION_UPDATE_MESSAGE = `([^`]*)`/)?.[1] ?? "";
+  for (
+    const file of [
+      "../../../islands/Toast/NotificationUpdate.tsx",
+      "../../../lib/utils/ui/notifications/updateAnnouncement.ts",
+    ]
+  ) {
+    const src = await Deno.readTextFile(new URL(file, import.meta.url));
+    const m = src.match(/NOTIFICATION_UPDATE_MESSAGE = `([^`]*)`/);
+    if (m) return m[1];
+  }
+  return "";
 }

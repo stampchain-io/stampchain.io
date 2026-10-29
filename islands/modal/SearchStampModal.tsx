@@ -1,4 +1,5 @@
 /* @baba - commentary + global styles */
+import { stampPrefix } from "$lib/utils/chain/clientChain.ts";
 import { SearchErrorDisplay, SearchInputField } from "$form";
 import { Icon, PlaceholderImage } from "$icon";
 import { closeModal, openModal, searchState } from "$islands/modal/states.ts";
@@ -246,7 +247,8 @@ function SearchContent({
                       />
                       <div class="flex flex-col flex-1">
                         <span class="text-sm font-medium text-color-neutral-400">
-                          #{result.stamp} - {result.cpid}
+                          {stampPrefix()}
+                          {result.stamp} - {result.cpid}
                         </span>
                         <span class="text-xs text-color-neutral-500 truncate">
                           {result.creator?.startsWith("bc1p")

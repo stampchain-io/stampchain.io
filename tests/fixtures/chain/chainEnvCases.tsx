@@ -182,7 +182,7 @@ if (!isEcx) {
   Deno.test({
     ...opts,
     name:
-      `${mode}: every page header shows ECX, height and hash; brand is ECX Stamps`,
+      `${mode}: every page header shows ECX, height and hash; brand is eSTAMPS`,
     async fn() {
       const chainLabel = await label.getChainLabel();
       clientChain.setClientChain(null);
@@ -198,8 +198,20 @@ if (!isEcx) {
       assert(
         html.includes(`href="https://ecx.example/block/${TIP.block_hash}"`),
       );
-      assert(html.includes("ECX</span> STAMPS"));
+      assert(html.includes("e</span>STAMPS"));
+      assert(html.includes('class="estamps-attribution">by Stampchain</span>'));
       assert(!html.includes("STAMP</span>CHAIN"));
+      // The banner keeps the indexed tip, the fork block and service
+      // readiness apart. ECX_BROADCAST_ENABLED is unset in this child.
+      assert(html.includes("INDEXED BLOCK <span"));
+      assert(
+        html.includes('FORK BLOCK <span class="font-mono">973,728</span>'),
+      );
+      assert(html.includes("TRANSACTIONS NOT OPEN YET"));
+      assert(html.includes('data-chain-status="indexing"'));
+      assert(!/ECX STAMPS|ECX Stamps/.test(html));
+      assert(html.includes("IMMORTALISED ART STORED ON ECX"));
+      assert(!html.includes("STORED ON BITCOIN"));
       // _app passed the chain to the Header island as a prop (Fresh
       // serialises it for the browser); Header published it while rendering.
       assertEquals(clientChain.getClientChain(), {

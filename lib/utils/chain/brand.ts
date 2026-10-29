@@ -13,6 +13,26 @@ import type { PageMetadata } from "$lib/utils/pageMetadata.ts";
 /** Mirrors `ChainId` in server/services/chain/chainProfile.ts. */
 export type BrandChain = "bitcoin" | "ecx";
 
+/* ===== STAMP NUMBERS ===== */
+/**
+ * What goes in front of a stamp number on ECX pages: "ECX #4242". Display
+ * only; API data and database values keep the bare number.
+ */
+const ECX_STAMP_NUMBER_PREFIX = "ECX #";
+
+/** "#" on Bitcoin, "ECX #" on ECX. */
+export function stampNumberPrefix(chain: BrandChain = "bitcoin"): string {
+  return chain === "ecx" ? ECX_STAMP_NUMBER_PREFIX : "#";
+}
+
+/** "#4242" on Bitcoin, "ECX #4242" on ECX. */
+export function formatStampNumber(
+  stamp: number | string | null | undefined,
+  chain: BrandChain = "bitcoin",
+): string {
+  return `${stampNumberPrefix(chain)}${stamp ?? ""}`;
+}
+
 export interface ChainBrand {
   /** Short chain label shown in the page header; null on Bitcoin. */
   chainLabel: string | null;
@@ -22,6 +42,8 @@ export interface ChainBrand {
   logo: { lead: string; tail: string };
   /** Mobile drawer title. */
   drawerTitle: string;
+  /** Who runs the site, shown next to the logo; null on Bitcoin. */
+  attribution: string | null;
 }
 
 const BITCOIN_BRAND: ChainBrand = {
@@ -29,13 +51,16 @@ const BITCOIN_BRAND: ChainBrand = {
   productName: "Bitcoin Stamps",
   logo: { lead: "STAMP", tail: "CHAIN" },
   drawerTitle: "STAMPCHAIN",
+  attribution: null,
 };
 
+/** The ECX product is eSTAMPS, built and run by Stampchain. */
 const ECX_BRAND: ChainBrand = {
   chainLabel: "ECX",
-  productName: "ECX Stamps",
-  logo: { lead: "ECX", tail: " STAMPS" },
-  drawerTitle: "ECX STAMPS",
+  productName: "eSTAMPS",
+  logo: { lead: "e", tail: "STAMPS" },
+  drawerTitle: "eSTAMPS",
+  attribution: "by Stampchain",
 };
 
 export function getChainBrand(chain: BrandChain = "bitcoin"): ChainBrand {
@@ -43,21 +68,34 @@ export function getChainBrand(chain: BrandChain = "bitcoin"): ChainBrand {
 }
 
 /**
+ * Extra stylesheet for the chain's presentation, or null. ECX loads the
+ * eSTAMPS styles (static/estamps.css, every rule scoped to
+ * html[data-chain="ecx"]); Bitcoin loads nothing extra.
+ */
+export function chainStylesheet(chain: BrandChain = "bitcoin"): string | null {
+  return chain === "ecx" ? "/estamps.css" : null;
+}
+
+/**
  * Rewrites that turn copy which names Bitcoin as the chain into ECX copy.
- * Order matters: the product name goes first so "Bitcoin Stamps" never
- * becomes "ECX Stamps" by way of a generic "Bitcoin" rule. "BTC" amounts and
- * historical references ("the Bitcoin Stamps meta-protocol") are left alone;
- * see ECX_UNBRANDED_PATHS.
+ * Order matters: stamp numbers go first ("Bitcoin Stamp #12" is "ECX #12"),
+ * then the product name, so "Bitcoin Stamps" never becomes "ECX Stamps" by
+ * way of a generic "Bitcoin" rule. "BTC" amounts and historical references
+ * ("the Bitcoin Stamps meta-protocol") are left alone; see
+ * ECX_UNBRANDED_PATHS.
  */
 const ECX_REWRITES: ReadonlyArray<readonly [RegExp, string]> = [
-  // "a Bitcoin Stamp" -> "an ECX Stamp" (ECX starts with a vowel sound)
+  [/\bBitcoin Stamp #/g, ECX_STAMP_NUMBER_PREFIX],
+  // "a Bitcoin Stamp" -> "an eSTAMP", "a Bitcoin block" -> "an ECX block":
+  // both names start with a vowel sound.
+  [/\b([Aa]) Bitcoin Stamp\b/g, "$1n eSTAMP"],
   [
-    /\b([Aa]) Bitcoin (Stamps?|block|Block|blockchain|UTXOs|address|NFT)\b/g,
+    /\b([Aa]) Bitcoin (block|Block|blockchain|UTXOs|address|NFT)\b/g,
     "$1n ECX $2",
   ],
-  [/\bBitcoin Stamps\b/g, "ECX Stamps"],
-  [/\bBitcoin Stamp\b/g, "ECX Stamp"],
-  [/\bBITCOIN STAMPS\b/g, "ECX STAMPS"],
+  [/\bBitcoin Stamps\b/g, "eSTAMPS"],
+  [/\bBitcoin Stamp\b/g, "eSTAMP"],
+  [/\bBITCOIN STAMPS\b/g, "eSTAMPS"],
   [/\bBitcoin (block|Block|blockchain|UTXOs|address|NFT)\b/g, "ECX $1"],
   [/\b(on|into|to) Bitcoin\b/g, "$1 ECX"],
 ];

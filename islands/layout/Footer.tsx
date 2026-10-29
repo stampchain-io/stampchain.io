@@ -1,5 +1,6 @@
 /* ===== FOOTER COMPONENT ===== */
 import { Icon } from "$icon";
+import { getClientChainId } from "$lib/utils/chain/clientChain.ts";
 import { containerBackground } from "$layout";
 import {
   copyright,
@@ -140,7 +141,9 @@ export function Footer() {
               </span>
             </h5>
             <h6 class={tagline}>
-              IMMORTALISED ART STORED ON BITCOIN
+              {getClientChainId() === "ecx"
+                ? "IMMORTALISED ART STORED ON ECX"
+                : "IMMORTALISED ART STORED ON BITCOIN"}
             </h6>
           </div>
 

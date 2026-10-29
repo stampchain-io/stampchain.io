@@ -21,6 +21,7 @@ import { RouteType } from "$server/services/infrastructure/cacheService.ts";
 import type { PaginatedStampBalanceResponseBody } from "$types/api.d.ts";
 import type { StampBalance, StampRow } from "$types/stamp.d.ts";
 import type { HolderRow, ProcessedHolder } from "$types/wallet.d.ts";
+import type { BlockFloor } from "$lib/utils/chain/ecxView.ts";
 
 export class StampController {
   static async getStamps({
@@ -96,7 +97,7 @@ export class StampController {
     type?: StampType;
     allColumns?: boolean;
     identifier?: string | number | (string | number)[];
-    blockIdentifier?: string | number;
+    blockIdentifier?: string | number | BlockFloor;
     creatorAddress?: string;
     noPagination?: boolean;
     cacheDuration?: number;
@@ -539,6 +540,8 @@ export class StampController {
     limit: number;
     type: StampType;
     sortBy?: "ASC" | "DESC";
+    /** Only stamps in this block or later. */
+    blockFloor?: BlockFloor;
   }[]) {
     const results = await Promise.all(
       categories.map(async (category) => {
@@ -550,7 +553,8 @@ export class StampController {
           ident: category.idents,
           noPagination: false,
           skipTotalCount: true,
-          includeSecondary: false
+          includeSecondary: false,
+          ...(category.blockFloor && { blockIdentifier: category.blockFloor }),
         });
 
         return {
@@ -564,7 +568,16 @@ export class StampController {
     return results;
   }
 
-  static async getHomePageData(btcPrice?: number, btcPriceSource?: string) {
+  /**
+   * `blockFloor` limits the stamp galleries (latest creations, posh) to
+   * stamps in that block or later: the ECX-native home page. Unset on
+   * Bitcoin, where the queries are unchanged.
+   */
+  static async getHomePageData(
+    btcPrice?: number,
+    btcPriceSource?: string,
+    blockFloor?: BlockFloor,
+  ) {
     try {
       console.log("[StampController] getHomePageData started");
       const overallStartTime = Date.now();
@@ -584,9 +597,9 @@ export class StampController {
           ...(btcPriceSource !== undefined && { btcPriceSource })
         }),
         this.getMultipleStampCategories([
-          { idents: ["STAMP", "SRC-721"], limit: 8, type: "stamps", sortBy: "DESC" },
-          { idents: ["SRC-721"], limit: 12, type: "stamps", sortBy: "DESC"  },
-          { idents: ["STAMP"], limit: 24, type: "stamps", sortBy: "DESC" }, // Art stamps with DESC order
+          { idents: ["STAMP", "SRC-721"], limit: 8, type: "stamps", sortBy: "DESC", ...(blockFloor && { blockFloor }) },
+          { idents: ["SRC-721"], limit: 12, type: "stamps", sortBy: "DESC", ...(blockFloor && { blockFloor }) },
+          { idents: ["STAMP"], limit: 24, type: "stamps", sortBy: "DESC", ...(blockFloor && { blockFloor }) }, // Art stamps with DESC order
         ]),
         CollectionController.getCollectionStamps({
           limit: 4,
@@ -615,6 +628,7 @@ export class StampController {
           groupBy: 'collection_id',        // Optimize collection query
           groupBySubquery: true,           // Use window function for better performance
           collectionStampLimit: 16,        // Limit stamps per collection
+          ...(blockFloor && { blockIdentifier: blockFloor }),
           ...(btcPrice !== undefined && { btcPrice }),
           ...(btcPriceSource !== undefined && { btcPriceSource })
         });

@@ -1,3 +1,4 @@
+import { stampPrefix } from "$lib/utils/chain/clientChain.ts";
 import { CollectionButton, PaginationButtons, SelectorButtons } from "$button";
 import { SearchErrorDisplay, SearchInputField } from "$form";
 import { Icon, PlaceholderImage } from "$icon";
@@ -168,7 +169,7 @@ function StampSearchCell(
             class={`${containerPill} font-semibold text-xs
             text-color-neutral-200 !px-1.5 !py-0.5`}
           >
-            <span class="font-light">#</span>
+            <span class="font-light">{stampPrefix()}</span>
             {cell.stamp}
           </div>
         </div>

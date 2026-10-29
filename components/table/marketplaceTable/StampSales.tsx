@@ -1,6 +1,6 @@
 /* ===== MARKETPLACE SALES TABLE COMPONENT ===== */
 import { ExplorerLink } from "$components/layout/ExplorerLink.tsx";
-import { txExplorerUrl } from "$lib/utils/chain/clientChain.ts";
+import { stampPrefix, txExplorerUrl } from "$lib/utils/chain/clientChain.ts";
 import { colGroup } from "$components/layout/types.ts";
 import { PlaceholderImage } from "$icon";
 import StampTextContent from "$islands/content/stampDetailContent/StampTextContent.tsx";
@@ -153,7 +153,7 @@ export function MarketplaceSalesRow({ stamp }: MarketplaceSalesRowProps) {
           {stamp.stamp != null
             ? (
               <>
-                <span class="font-light">#</span>
+                <span class="font-light">{stampPrefix()}</span>
                 {stamp.stamp}
               </>
             )

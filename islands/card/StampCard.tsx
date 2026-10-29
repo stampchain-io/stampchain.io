@@ -18,7 +18,11 @@ import {
   useLowestPriceDispenser,
 } from "$lib/hooks/useLowestPriceDispenser.ts";
 import { isAtomicIconVisible } from "$lib/utils/bitcoin/stamps/stampUtils.ts";
-import { coinUnit, showMarketData } from "$lib/utils/chain/clientChain.ts";
+import {
+  coinUnit,
+  showMarketData,
+  stampPrefix,
+} from "$lib/utils/chain/clientChain.ts";
 import {
   abbreviateAddress,
   formatFileSize,
@@ -635,7 +639,9 @@ export function StampCard({
               {/* Stamp Number / CPID / Creator */}
               <div class="flex flex-col min-w-0">
                 <div class={`${cardStampNumber} !text-lg`}>
-                  {displayStampHash && <span class="font-light">#</span>}
+                  {displayStampHash && (
+                    <span class="font-light">{stampPrefix()}</span>
+                  )}
                   {stampValue}
                 </div>
                 {stamp.cpid && (
@@ -822,7 +828,9 @@ export function StampCard({
               {/* Stamp Number / CPID / Creator */}
               <div class="flex flex-col min-w-0">
                 <div class={`${cardStampNumber} !text-lg`}>
-                  {displayStampHash && <span class="font-light">#</span>}
+                  {displayStampHash && (
+                    <span class="font-light">{stampPrefix()}</span>
+                  )}
                   {stampValue}
                 </div>
                 {stamp.cpid && (
@@ -964,7 +972,9 @@ export function StampCard({
               class={`flex items-center justify-center mt-1
               ${cardStampNumber}`}
             >
-              {displayStampHash && <span class="font-light">#</span>}
+              {displayStampHash && (
+                <span class="font-light">{stampPrefix()}</span>
+              )}
               {stampValue}
             </div>
 
@@ -1223,7 +1233,9 @@ export function StampCard({
               class={`flex items-center justify-center mt-1
               ${cardStampNumber}`}
             >
-              {displayStampHash && <span class="font-light">#</span>}
+              {displayStampHash && (
+                <span class="font-light">{stampPrefix()}</span>
+              )}
               {stampValue}
             </div>
 
@@ -1387,7 +1399,9 @@ export function StampCard({
               class={`flex items-center justify-center mt-1
               ${cardStampNumber}`}
             >
-              {displayStampHash && <span class="font-light">#</span>}
+              {displayStampHash && (
+                <span class="font-light">{stampPrefix()}</span>
+              )}
               {stampValue}
             </div>
 
@@ -1494,7 +1508,9 @@ export function StampCard({
             <div
               class={`flex items-center justify-center mt-1 ${cardStampNumberCompact}`}
             >
-              {displayStampHash && <span class="font-light">#</span>}
+              {displayStampHash && (
+                <span class="font-light">{stampPrefix()}</span>
+              )}
               {stampValue}
             </div>
             <PillWithTooltip
