@@ -23,6 +23,7 @@ import {
   loaderSpinGrey,
   rowForm,
 } from "$layout";
+import { useInputfieldDropdown } from "$lib/hooks/useInputfieldDropdown.ts";
 import { useTransactionConstructionService } from "$lib/hooks/useTransactionConstructionService.ts";
 import {
   getStampImageSrc,
@@ -33,7 +34,7 @@ import { FeeCalculatorBase } from "$section";
 import { labelXs, valueSm } from "$text";
 import type { StampRow } from "$types/stamp.d.ts";
 import type { JSX, TargetedEvent } from "preact";
-import { useEffect, useRef, useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 
 /* ===== OPENER ===== */
 export function openStampSendTool() {
@@ -75,15 +76,7 @@ export function StampSendTool() {
     JSX.Element | null
   >(null);
 
-  /* ===== DROPDOWN STATE ===== */
-  const [openDrop, setOpenDrop] = useState(false);
-  const [dropdownAnimation, setDropdownAnimation] = useState<
-    "enter" | "exit" | null
-  >(null);
-
-  /* ===== REFS ===== */
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const animationTimeoutRef = useRef<number | null>(null);
+  const dropdown = useInputfieldDropdown();
 
   /* ===== FORM HANDLING ===== */
   const {
@@ -128,46 +121,6 @@ export function StampSendTool() {
   const [exactFeeDetails, setExactFeeDetails] = useState<
     typeof progressiveFeeDetails | null
   >(null);
-
-  /* ===== DROPDOWN ANIMATION HANDLER ===== */
-  const closeDropdownWithAnimation = () => {
-    setDropdownAnimation("exit");
-    if (animationTimeoutRef.current) {
-      clearTimeout(animationTimeoutRef.current);
-    }
-    animationTimeoutRef.current = setTimeout(() => {
-      setOpenDrop(false);
-      setDropdownAnimation(null);
-    }, 200);
-  };
-
-  /* ===== ANIMATION CLEANUP ===== */
-  useEffect(() => {
-    return () => {
-      if (animationTimeoutRef.current) {
-        clearTimeout(animationTimeoutRef.current);
-      }
-    };
-  }, []);
-
-  /* ===== CLICK-OUTSIDE HANDLER ===== */
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
-      ) {
-        closeDropdownWithAnimation();
-      }
-    };
-
-    if (openDrop) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [openDrop]);
 
   useEffect(() => {
     setExactFeeDetails(null);
@@ -313,7 +266,7 @@ export function StampSendTool() {
         cpid: selectedItem.cpid,
       }));
 
-      closeDropdownWithAnimation();
+      dropdown.close();
     }
   };
 
@@ -579,9 +532,9 @@ export function StampSendTool() {
             {/* ===== STAMP DROPDOWN ===== */}
             <div
               class={`relative ${
-                openDrop && stamps.data.length > 0 ? "input-open" : ""
+                dropdown.isOpen && stamps.data.length > 0 ? "input-open" : ""
               }`}
-              ref={dropdownRef}
+              ref={dropdown.containerRef}
             >
               {/* Trigger */}
               <div
@@ -590,14 +543,7 @@ export function StampSendTool() {
                     ? "cursor-default"
                     : "cursor-pointer"
                 }`}
-                onClick={() => {
-                  if (openDrop) {
-                    closeDropdownWithAnimation();
-                  } else {
-                    setOpenDrop(true);
-                    setDropdownAnimation("enter");
-                  }
-                }}
+                onClick={() => dropdown.toggle()}
               >
                 {selectedStamp
                   ? (
@@ -631,16 +577,9 @@ export function StampSendTool() {
               </div>
 
               {/* Dropdown list */}
-              {(openDrop || dropdownAnimation === "exit") &&
-                stamps.data.length > 0 && (
+              {dropdown.isOpen && stamps.data.length > 0 && (
                 <ul
-                  class={`${inputFieldDropdown} max-h-[134px] ${
-                    dropdownAnimation === "exit"
-                      ? "dropdown-exit"
-                      : dropdownAnimation === "enter"
-                      ? "dropdown-enter"
-                      : ""
-                  }`}
+                  class={`${inputFieldDropdown} max-h-[134px] ${dropdown.listClass}`}
                 >
                   {stamps.data.map((stamp) => (
                     <li

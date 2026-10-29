@@ -15,6 +15,7 @@ import {
   handleModalClose,
   rowResponsiveForm,
 } from "$layout";
+import { useInputfieldDropdown } from "$lib/hooks/useInputfieldDropdown.ts";
 import { useTransactionConstructionService } from "$lib/hooks/useTransactionConstructionService.ts";
 import { logger } from "$lib/utils/logger.ts";
 import { mapProgressiveFeeDetails } from "$lib/utils/performance/fees/fee-estimation-utils.ts";
@@ -55,17 +56,13 @@ export function SRC20TransferTool(
   const [tosAgreed, setTosAgreed] = useState(false);
   const [balances, setBalances] = useState<Balance[]>([]);
   const [searchResults, setSearchResults] = useState<Balance[]>([]);
-  const [openDrop, setOpenDrop] = useState<boolean>(false);
   const [isSelecting, setIsSelecting] = useState(false);
-  // Animation state for dropdown
-  const [dropdownAnimation, setDropdownAnimation] = useState<
-    "enter" | "exit" | null
-  >(null);
+  const dropdown = useInputfieldDropdown();
 
   /* ===== REFS ===== */
-  const dropdownRef = useRef<HTMLDivElement>(null);
   const tokenInputRef = useRef<HTMLInputElement>(null);
-  const animationTimeoutRef = useRef<number | null>(null);
+  const isInputFocusedRef = useRef(false);
+  const blurTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   /* ===== WALLET CONTEXT ===== */
   const { wallet, isConnected, showConnectModal } = walletContext;
@@ -134,85 +131,65 @@ export function SRC20TransferTool(
     }
   };
 
-  /* ===== DROPDOWN ANIMATION HANDLER ===== */
-  const closeDropdownWithAnimation = () => {
-    setDropdownAnimation("exit");
-    if (animationTimeoutRef.current) {
-      clearTimeout(animationTimeoutRef.current);
-    }
-    animationTimeoutRef.current = setTimeout(() => {
-      setOpenDrop(false);
-      setDropdownAnimation(null);
-    }, 200); // Match animation duration
-  };
-
-  /* ===== CLICK OUTSIDE HANDLER ===== */
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        closeDropdownWithAnimation();
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  /* ===== ANIMATION CLEANUP ===== */
   useEffect(() => {
     return () => {
-      if (animationTimeoutRef.current) {
-        clearTimeout(animationTimeoutRef.current);
+      if (blurTimeoutRef.current !== null) {
+        clearTimeout(blurTimeoutRef.current);
       }
     };
   }, []);
 
   /* ===== TOKEN SELECTION HANDLER ===== */
   const handleDropDown = (ticker: string, _amount: string) => {
-    closeDropdownWithAnimation();
+    isInputFocusedRef.current = false;
+    dropdown.close();
+    setSearchResults([]);
     setIsSelecting(true);
 
     const selectedBalance = balances.find((b) => b.tick === ticker);
-    if (selectedBalance) {
-      const maxAmount = stripTrailingZeros(selectedBalance.amt);
-      setFormState((prev) => ({
-        ...prev,
-        token: ticker,
-        amt: "",
-        maxAmount: maxAmount,
-      }));
-
-      // Focus amount input after selection
-      setTimeout(() => {
-        const amountInput = document.querySelector(
-          "[data-amount-input]",
-        ) as HTMLInputElement;
-        if (amountInput) {
-          amountInput.placeholder = `Amount (MAX: ${maxAmount})`;
-          amountInput.focus();
-          setIsSelecting(false);
-        }
-      }, 100);
+    if (!selectedBalance) {
+      setIsSelecting(false);
+      return;
     }
+
+    const maxAmount = stripTrailingZeros(selectedBalance.amt);
+    setFormState((prev) => ({
+      ...prev,
+      token: ticker,
+      amt: "",
+      maxAmount: maxAmount,
+    }));
+
+    // Focus amount input after selection
+    setTimeout(() => {
+      const amountInput = document.querySelector(
+        "[data-amount-input]",
+      ) as HTMLInputElement;
+      if (amountInput) {
+        amountInput.placeholder = `Amount (MAX: ${maxAmount})`;
+        amountInput.focus();
+      }
+      setIsSelecting(false);
+    }, 100);
   };
 
   /* ===== TOKEN INPUT HANDLERS ===== */
   const handleTokenFieldFocus = () => {
+    isInputFocusedRef.current = true;
     if (!formState.token?.trim() && !isSelecting) {
       setSearchResults(balances);
-      setOpenDrop(true);
-      setDropdownAnimation("enter");
+      dropdown.open();
     }
   };
 
   const handleTokenBlur = () => {
-    setTimeout(() => {
-      closeDropdownWithAnimation();
+    isInputFocusedRef.current = false;
+    if (blurTimeoutRef.current !== null) {
+      clearTimeout(blurTimeoutRef.current);
+    }
+    blurTimeoutRef.current = setTimeout(() => {
+      blurTimeoutRef.current = null;
+      dropdown.close();
       setIsSelecting(false);
     }, 200);
   };
@@ -228,6 +205,8 @@ export function SRC20TransferTool(
     }
 
     const delayDebounceFn = setTimeout(() => {
+      if (!isInputFocusedRef.current) return;
+
       const filteredResults = balances.filter((item) => {
         const regex = new RegExp(formState.token, "i");
         return regex.test(item.tick);
@@ -235,10 +214,9 @@ export function SRC20TransferTool(
 
       setSearchResults(filteredResults);
       if (filteredResults.length > 0) {
-        setOpenDrop(true);
-        setDropdownAnimation("enter");
+        dropdown.open();
       } else {
-        closeDropdownWithAnimation();
+        dropdown.close();
       }
     }, 300);
 
@@ -297,8 +275,7 @@ export function SRC20TransferTool(
     const newValue = value.toUpperCase();
     if (newValue !== formState.token && !isSelecting) {
       handleInputChange(newValue, "token");
-      setOpenDrop(true);
-      setDropdownAnimation("enter");
+      dropdown.open();
     }
   };
 
@@ -335,11 +312,11 @@ export function SRC20TransferTool(
           {/* Token Input with Dropdown */}
           <div
             class={`relative ${
-              openDrop && searchResults.length > 0 && !isSelecting
+              dropdown.isOpen && searchResults.length > 0 && !isSelecting
                 ? "input-open"
                 : ""
             }`}
-            ref={dropdownRef}
+            ref={dropdown.containerRef}
           >
             <SRC20InputField
               type="text"
@@ -353,18 +330,9 @@ export function SRC20TransferTool(
             />
 
             {/* Token Dropdown */}
-            {(openDrop || dropdownAnimation === "exit") &&
-              searchResults.length > 0 && !isSelecting && (
+            {dropdown.isOpen && searchResults.length > 0 && !isSelecting && (
               <ul
-                class={`${inputFieldDropdown} max-h-[111px] min-[420px]:max-h-[74px]
-                ${
-                  dropdownAnimation === "exit"
-                    ? "dropdown-exit"
-                    : dropdownAnimation === "enter"
-                    ? "dropdown-enter"
-                    : ""
-                }
-              `}
+                class={`${inputFieldDropdown} max-h-[111px] min-[420px]:max-h-[74px] ${dropdown.listClass}`}
                 role="listbox"
                 aria-label="Available tokens"
               >

@@ -11,6 +11,7 @@ import {
 } from "$form";
 import { ModalTool, openModalTool } from "$islands/modal/tool/ModalTool.tsx";
 import { container2, containerColForm, handleModalClose } from "$layout";
+import { useInputfieldDropdown } from "$lib/hooks/useInputfieldDropdown.ts";
 import { useTransactionConstructionService } from "$lib/hooks/useTransactionConstructionService.ts";
 import type { Fairminter } from "$lib/types/services.d.ts";
 import { logger } from "$lib/utils/logger.ts";
@@ -49,14 +50,11 @@ export function XCPFairmintTool() {
   const [fairminters, setFairminters] = useState<Fairminter[]>([]);
   const [tosAgreed, setTosAgreed] = useState(false);
   const [searchResults, setSearchResults] = useState<Fairminter[]>([]);
-  const [openDrop, setOpenDrop] = useState(false);
   const [isSelecting, setIsSelecting] = useState(false);
-  const [dropdownAnimation, setDropdownAnimation] = useState<
-    "enter" | "exit" | null
-  >(null);
+  const dropdown = useInputfieldDropdown();
 
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const animationTimeoutRef = useRef<number | null>(null);
+  const isInputFocusedRef = useRef(false);
+  const blurTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pickedAssetRef = useRef<string | null>(null);
 
   const { wallet, isConnected, showConnectModal } = walletContext;
@@ -107,38 +105,11 @@ export function XCPFairmintTool() {
     typeof progressiveFeeDetails | null
   >(null);
 
-  const closeDropdownWithAnimation = () => {
-    setDropdownAnimation("exit");
-    if (animationTimeoutRef.current) {
-      clearTimeout(animationTimeoutRef.current);
-    }
-    animationTimeoutRef.current = setTimeout(() => {
-      setOpenDrop(false);
-      setDropdownAnimation(null);
-    }, 200);
-  };
-
   useEffect(() => {
     return () => {
-      if (animationTimeoutRef.current) {
-        clearTimeout(animationTimeoutRef.current);
+      if (blurTimeoutRef.current !== null) {
+        clearTimeout(blurTimeoutRef.current);
       }
-    };
-  }, []);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        closeDropdownWithAnimation();
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -183,15 +154,15 @@ export function XCPFairmintTool() {
     if (!query || pickedAssetRef.current === query) return;
 
     const delay = setTimeout(() => {
+      if (!isInputFocusedRef.current) return;
       const filtered = openFairminters.filter((fairminter) =>
         matchesFairminter(fairminter, query)
       );
       setSearchResults(filtered);
       if (filtered.length > 0) {
-        setOpenDrop(true);
-        setDropdownAnimation("enter");
+        dropdown.open();
       } else {
-        closeDropdownWithAnimation();
+        dropdown.close();
       }
     }, 300);
 
@@ -224,20 +195,25 @@ export function XCPFairmintTool() {
   };
 
   const handleAssetFocus = () => {
+    isInputFocusedRef.current = true;
     if (isSelecting) return;
     const filtered = openFairminters.filter((fairminter) =>
       matchesFairminter(fairminter, formState.asset)
     );
     setSearchResults(filtered);
     if (filtered.length > 0) {
-      setOpenDrop(true);
-      setDropdownAnimation("enter");
+      dropdown.open();
     }
   };
 
   const handleAssetBlur = () => {
-    setTimeout(() => {
-      closeDropdownWithAnimation();
+    isInputFocusedRef.current = false;
+    if (blurTimeoutRef.current !== null) {
+      clearTimeout(blurTimeoutRef.current);
+    }
+    blurTimeoutRef.current = setTimeout(() => {
+      blurTimeoutRef.current = null;
+      dropdown.close();
       setIsSelecting(false);
     }, 200);
   };
@@ -252,14 +228,16 @@ export function XCPFairmintTool() {
   };
 
   const handlePick = (asset: string) => {
+    isInputFocusedRef.current = false;
     setIsSelecting(true);
     pickedAssetRef.current = asset;
     selectAsset(asset);
-    closeDropdownWithAnimation();
+    dropdown.close();
+    setSearchResults([]);
     setTimeout(() => setIsSelecting(false), 100);
   };
 
-  const showList = (openDrop || dropdownAnimation === "exit") &&
+  const showList = dropdown.isOpen &&
     searchResults.length > 0 && !isSelecting;
 
   return (
@@ -273,7 +251,7 @@ export function XCPFairmintTool() {
       >
         <div
           class={`relative ${showList ? "input-open" : ""}`}
-          ref={dropdownRef}
+          ref={dropdown.containerRef}
         >
           <SRC20InputField
             type="text"
@@ -286,13 +264,7 @@ export function XCPFairmintTool() {
 
           {showList && (
             <ul
-              class={`${inputFieldDropdown} max-h-[174px] ${
-                dropdownAnimation === "exit"
-                  ? "dropdown-exit"
-                  : dropdownAnimation === "enter"
-                  ? "dropdown-enter"
-                  : ""
-              }`}
+              class={`${inputFieldDropdown} max-h-[174px] ${dropdown.listClass}`}
               role="listbox"
               aria-label="Open fairminters"
             >

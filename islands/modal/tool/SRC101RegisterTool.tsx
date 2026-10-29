@@ -16,6 +16,7 @@ import {
   handleModalClose,
   shadowGlowPurpleSm,
 } from "$layout";
+import { useInputfieldDropdown } from "$lib/hooks/useInputfieldDropdown.ts";
 import { useTransactionConstructionService } from "$lib/hooks/useTransactionConstructionService.ts";
 import { logger } from "$lib/utils/logger.ts";
 import { mapProgressiveFeeDetails } from "$lib/utils/performance/fees/fee-estimation-utils.ts";
@@ -51,8 +52,7 @@ export function SRC101RegisterTool(
   const [isExist, setIsExist] = useState(true);
   const [checkStatus, setCheckStatus] = useState(false);
   const [isChecking, setIsChecking] = useState(false);
-  const [openTldDropdown, setOpenTldDropdown] = useState(false);
-  const tldDropdownRef = useRef<HTMLDivElement>(null);
+  const dropdown = useInputfieldDropdown();
   const tooltipOriginRef = useRef<HTMLDivElement>(null);
   const [isTldTooltipVisible, setIsTldTooltipVisible] = useState(false);
   const [allowTldTooltip, setAllowTldTooltip] = useState(true);
@@ -61,10 +61,6 @@ export function SRC101RegisterTool(
     y: 0,
   });
   const tldTooltipTimeoutRef = useRef<number | null>(null);
-  const [dropdownAnimation, setDropdownAnimation] = useState<
-    "enter" | "exit" | null
-  >(null);
-  const animationTimeoutRef = useRef<number | null>(null);
 
   const {
     getBestEstimate,
@@ -121,50 +117,16 @@ export function SRC101RegisterTool(
     }
   };
 
-  /* Only listen while the list is open, so a click elsewhere (e.g. the
-     AVAILABILITY button) never re-opens the closed list on top of it. */
-  useEffect(() => {
-    if (!openTldDropdown) return;
-
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        tldDropdownRef.current &&
-        !tldDropdownRef.current.contains(event.target as Node)
-      ) {
-        closeDropdownWithAnimation();
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [openTldDropdown]);
-
   useEffect(() => {
     return () => {
-      if (animationTimeoutRef.current) {
-        clearTimeout(animationTimeoutRef.current);
-      }
       if (tldTooltipTimeoutRef.current) {
         globalThis.clearTimeout(tldTooltipTimeoutRef.current);
       }
     };
   }, []);
 
-  const closeDropdownWithAnimation = () => {
-    setDropdownAnimation("exit");
-    if (animationTimeoutRef.current) {
-      clearTimeout(animationTimeoutRef.current);
-    }
-    animationTimeoutRef.current = setTimeout(() => {
-      setOpenTldDropdown(false);
-      setDropdownAnimation(null);
-    }, 200);
-  };
-
   const handleTldSelect = (tld: ROOT_DOMAIN_TYPES) => {
-    closeDropdownWithAnimation();
+    dropdown.close();
     handleInputChange(
       {
         target: { value: tld },
@@ -176,7 +138,7 @@ export function SRC101RegisterTool(
   /* The modal card is transformed, so the tooltip is positioned from a
      fixed anchor instead of inside the scrolling field. */
   const placeTldTooltip = () => {
-    const tld = tldDropdownRef.current?.getBoundingClientRect();
+    const tld = dropdown.containerRef.current?.getBoundingClientRect();
     const origin = tooltipOriginRef.current?.getBoundingClientRect();
     if (!tld) return;
     setTldTooltipPosition({
@@ -281,20 +243,18 @@ export function SRC101RegisterTool(
             />
           </div>
 
-          <div class="relative w-[64px] shrink-0" ref={tldDropdownRef}>
+          <div
+            class="relative w-[64px] shrink-0"
+            ref={dropdown.containerRef}
+          >
             <div
               class={`h-8 px-3 ${container2Hover} ${shadowGlowPurpleSm}
                 font-normal text-xs text-color-neutral-200 text-right
                 cursor-pointer flex items-center justify-end ${
-                openTldDropdown ? "input-open-bottom" : ""
+                dropdown.isOpen ? "input-open-bottom" : ""
               }`}
               onClick={() => {
-                if (openTldDropdown) {
-                  closeDropdownWithAnimation();
-                } else {
-                  setOpenTldDropdown(true);
-                  setDropdownAnimation("enter");
-                }
+                dropdown.toggle();
                 setAllowTldTooltip(false);
                 setIsTldTooltipVisible(false);
               }}
@@ -304,15 +264,9 @@ export function SRC101RegisterTool(
             >
               {formState.root}
             </div>
-            {(openTldDropdown || dropdownAnimation === "exit") && (
+            {dropdown.isOpen && (
               <ul
-                class={`${inputFieldDropdown} max-h-[146px] ${
-                  dropdownAnimation === "exit"
-                    ? "dropdown-exit pointer-events-none"
-                    : dropdownAnimation === "enter"
-                    ? "dropdown-enter"
-                    : ""
-                }`}
+                class={`${inputFieldDropdown} max-h-[146px] ${dropdown.listClass}`}
               >
                 {ROOT_DOMAINS.map((tld) => (
                   <li
