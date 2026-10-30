@@ -488,8 +488,9 @@ Deno.test("Mempool utilities - URL construction", async () => {
     "Should call fees endpoint",
   );
   assert(
-    calledUrls[1].includes("/v1/blocks/tip/height"),
-    "Should call block height endpoint",
+    calledUrls[1].endsWith("/blocks/tip/height") &&
+      !calledUrls[1].includes("/v1/"),
+    "Should call the esplora block height endpoint (no /v1 prefix)",
   );
   assert(
     calledUrls[2].includes("/tx/test123/hex"),

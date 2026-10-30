@@ -124,7 +124,9 @@ export const getRecommendedFees = async (
 
 export const getCurrentBlock = async (retries = 0): Promise<number | null> => {
   try {
-    const endpoint = `${MEMPOOL_API_BASE_URL}/v1/blocks/tip/height`;
+    // Esplora-standard path: served by mempool.space and by esplora-only
+    // explorers (the ECX explorer has no /v1 prefix).
+    const endpoint = `${MEMPOOL_API_BASE_URL}/blocks/tip/height`;
     const response = await fetch(endpoint);
     if (!response.ok) {
       throw new Error(
