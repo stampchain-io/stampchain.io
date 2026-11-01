@@ -3,7 +3,7 @@
  *
  * Bitcoin: the pages, components and SQL this change touches match
  * bitcoinEstampsBaseline.json, captured from the code before it. ECX: the
- * eSTAMPS brand, "ECX #" stamp numbers, the ECX-native default view with its
+ * eSTAMPS brand, eSTAMP numbers, the ECX-native default view with its
  * empty state and inherited-history switch, the chain banner and the
  * chain-neutral update announcement.
  *
@@ -62,9 +62,11 @@ const { StampController } = await import(
 const ECX_CHAIN = {
   CHAIN: "ecx",
   EXPLORER_BASE_URL: "https://explorer.ecash.ninja",
+  ECX_FIRST_STAMP: 1_507_458,
 } as const;
 const FORK = 973_728;
 const FLOOR = { from: FORK };
+const ESTAMP0 = 1_507_458;
 
 /* ===== BITCOIN: UNCHANGED ===== */
 Deno.test({
@@ -93,16 +95,18 @@ Deno.test("bitcoin: update announcement, prefixes and brand are unchanged", () =
     notificationUpdateMessage("bitcoin"),
     baseline.notification,
   );
-  assertEquals(clientChain.stampPrefix(973_800), "#");
-  assertEquals(clientChain.stampPrefix(973_800, "Stamp"), "Stamp #");
-  assertEquals(clientChain.stampPrefixClass(973_800), "font-light");
-  assertEquals(brand.stampNumberPrefix(), "#");
-  assertEquals(brand.stampNumberPrefix("bitcoin", 973_800), "#");
-  assertEquals(brand.formatStampNumber(4242), "#4242");
-  assertEquals(
-    brand.stampTitle(4242, "bitcoin", 973_800),
-    "Bitcoin Stamp #4242",
-  );
+  // No eSTAMP numbers on Bitcoin, even for stamps past the ECX boundary.
+  for (const n of [4242, ESTAMP0, ESTAMP0 + 5]) {
+    assertEquals(clientChain.stampPrefix(n), "#");
+    assertEquals(clientChain.stampPrefix(n, "Stamp"), "Stamp #");
+    assertStrictEquals(clientChain.stampNumberText(n), n);
+    assertEquals(clientChain.stampPrefixClass(n), "font-light");
+    assertEquals(clientChain.clientEstampNumber(n), null);
+    assertEquals(brand.stampNumberPrefix(n), "#");
+    assertEquals(brand.formatStampNumber(n), `#${n}`);
+    assertEquals(brand.stampTitle(n), `Bitcoin Stamp #${n}`);
+    assertEquals(brand.stampTitle(n, "bitcoin"), `Bitcoin Stamp #${n}`);
+  }
   assertEquals(brand.getChainBrand("bitcoin").attribution, null);
   // HomeHeader's default and explicit Bitcoin forms are the same markup
   assertEquals(
@@ -151,48 +155,70 @@ Deno.test("ecx: eSTAMPS styles load on ECX only, and only match ECX pages", asyn
 });
 
 /* ===== ECX: BRAND AND STAMP NUMBERS ===== */
-Deno.test("ecx: only ECX-native stamps (block >= 973728) read ECX #<n>", () => {
-  // native: created at or after the fork
-  assertEquals(brand.stampNumberPrefix("ecx", FORK), "ECX #");
-  assertEquals(brand.formatStampNumber(4242, "ecx", 973_800), "ECX #4242");
-  assertEquals(clientChain.stampPrefix(FORK, "Stamp", "ecx"), "ECX #");
-  assertEquals(clientChain.stampPrefix("973800", "", "ecx"), "ECX #");
-  assertEquals(
-    clientChain.stampPrefixClass(FORK, "ecx"),
-    "font-light estamps-num-prefix",
-  );
-  assertEquals(brand.stampTitle(4242, "ecx", FORK), "ECX #4242");
-  // inherited, sale rows (null) and unknown blocks: what Bitcoin shows
-  for (const block of [FORK - 1, 0, null, undefined, "x"]) {
-    assertEquals(brand.stampNumberPrefix("ecx", block as any), "#");
-    assertEquals(clientChain.stampPrefix(block as any, "", "ecx"), "#");
-    assertEquals(
-      clientChain.stampPrefix(block as any, "Stamp", "ecx"),
-      "Stamp #",
-    );
-    assertEquals(
-      clientChain.stampPrefixClass(block as any, "ecx"),
-      "font-light",
-    );
+Deno.test("estampNumber: counts from ECX_FIRST_STAMP, null before it and on Bitcoin", () => {
+  assertEquals(brand.ECX_FIRST_STAMP_DEFAULT, ESTAMP0);
+  assertEquals(brand.estampNumber(ESTAMP0 - 1, ESTAMP0), null);
+  assertEquals(brand.estampNumber(ESTAMP0, ESTAMP0), 0);
+  assertEquals(brand.estampNumber(ESTAMP0 + 1, ESTAMP0), 1);
+  assertEquals(brand.estampNumber(String(ESTAMP0 + 7), ESTAMP0), 7);
+  // Bitcoin: no first eSTAMP
+  assertEquals(brand.estampNumber(ESTAMP0, null), null);
+  assertEquals(brand.estampNumber(ESTAMP0 + 1, null), null);
+  // cursed, unnumbered and junk
+  for (const n of [-1, -1849, 0, null, undefined, "", " ", "x", "1e6", 1.5]) {
+    assertEquals(brand.estampNumber(n as any, ESTAMP0), null, String(n));
   }
-  assertEquals(brand.stampTitle(12, "ecx", FORK - 1), "eSTAMP #12");
-  assertEquals(brand.stampTitle(12, "ecx"), "eSTAMP #12");
+  // another boundary
+  assertEquals(brand.estampNumber(10, 10), 0);
+  assertEquals(brand.estampNumber(9, 10), null);
 });
 
-// Rows whose block_index is the stamp's creation block.
-const NATIVE_NUMBERED = [
+Deno.test("ecx: ECX-native stamps read eSTAMP #<n>, inherited keep their number", () => {
+  // native: eSTAMP #0 is stamp 1507458
+  assertEquals(brand.stampNumberPrefix(ESTAMP0, ESTAMP0), "eSTAMP #");
+  assertEquals(brand.formatStampNumber(ESTAMP0, ESTAMP0), "eSTAMP #0");
+  assertEquals(brand.formatStampNumber(ESTAMP0 + 1, ESTAMP0), "eSTAMP #1");
+  assertEquals(
+    clientChain.stampPrefix(ESTAMP0, "Stamp", ECX_CHAIN),
+    "eSTAMP #",
+  );
+  assertEquals(
+    clientChain.stampPrefix(String(ESTAMP0), "", ECX_CHAIN),
+    "eSTAMP #",
+  );
+  assertEquals(clientChain.stampNumberText(ESTAMP0 + 3, ECX_CHAIN), 3);
+  assertEquals(clientChain.clientEstampNumber(ESTAMP0, ECX_CHAIN), 0);
+  assertEquals(
+    clientChain.stampPrefixClass(ESTAMP0, ECX_CHAIN),
+    "font-light estamps-num-prefix",
+  );
+  assertEquals(brand.stampTitle(ESTAMP0, "ecx", ESTAMP0), "eSTAMP #0");
+  assertEquals(brand.stampTitle(ESTAMP0 + 12, "ecx", ESTAMP0), "eSTAMP #12");
+  // inherited, cursed and missing numbers: what Bitcoin shows
+  for (const n of [ESTAMP0 - 1, 4242, 0, -5, null, undefined]) {
+    assertEquals(brand.stampNumberPrefix(n, ESTAMP0), "#");
+    assertEquals(clientChain.stampPrefix(n, "", ECX_CHAIN), "#");
+    assertEquals(clientChain.stampPrefix(n, "Stamp", ECX_CHAIN), "Stamp #");
+    assertStrictEquals(clientChain.stampNumberText(n, ECX_CHAIN), n);
+    assertEquals(clientChain.stampPrefixClass(n, ECX_CHAIN), "font-light");
+  }
+  // An inherited stamp's title is not "eSTAMP #12": that is a native stamp.
+  assertEquals(brand.stampTitle(12, "ecx", ESTAMP0), "Stamp #12");
+  assertEquals(brand.stampTitle(12, "ecx"), "Stamp #12");
+});
+
+// Cards, tables and the detail view, sale rows included: the eSTAMP
+// number comes from the stamp number, not from a block.
+const NUMBERED = [
   "StampCard.cardVerticalListing",
   "StampCard.cardHorizontalListing",
   "StampCard.cardVerticalDetail",
+  "StampCard.recentSale",
   "WalletStampOverview",
   "WalletStampOverviewCompact",
   "StampListings",
   "StampInfo",
   "StampOverviewRow",
-];
-// Sale rows: block_index is the sale's block, so the mark stays plain.
-const SALE_NUMBERED = [
-  "StampCard.recentSale",
   "MarketplaceSales",
   "SalesActivityFeed",
 ];
@@ -201,76 +227,76 @@ async function renderNumbered() {
   return { ...await renderAmountComponents(), ...await renderLinks() };
 }
 
+/** Render with every fixture stamp renumbered to `numbers(i)`. */
+async function renderWithStampNumbers(numbers: (i: number) => number) {
+  const stamps = [...AMOUNT_STAMPS, LINK_STAMP];
+  const saved = stamps.map((s) => s.stamp);
+  stamps.forEach((s, i) => s.stamp = numbers(i));
+  try {
+    clientChain.setClientChain(ECX_CHAIN);
+    const ecx = await renderNumbered();
+    clientChain.setClientChain(null);
+    const btc = await renderNumbered();
+    return { ecx, btc };
+  } finally {
+    stamps.forEach((s, i) => s.stamp = saved[i]);
+    clientChain.setClientChain(null);
+  }
+}
+
 Deno.test({
   ...opts,
-  name: "ecx: native stamps show ECX # in cards, tables and the detail view",
+  name:
+    "ecx: native stamps show eSTAMP #<n> in cards, tables and the detail view",
   async fn() {
-    clientChain.setClientChain(ECX_CHAIN);
-    try {
-      const html = await renderNumbered();
-      for (const name of NATIVE_NUMBERED) {
-        assert(html[name].includes("ECX #"), `${name} shows no ECX #`);
-        assert(
-          !html[name].includes(">#</span>"),
-          `${name} still shows a bare #`,
-        );
-      }
-      // In cards the mark is a small label above the number, so long
-      // numbers are not cut off; tables keep it inline.
-      for (
-        const name of NATIVE_NUMBERED.filter((n) => n.startsWith("StampCard."))
-      ) {
-        assert(
-          html[name].includes(
-            '<span class="font-light estamps-num-prefix">ECX #</span>',
-          ),
-          `${name}: ECX # is not the card label`,
-        );
-      }
-      assert(!html.StampOverviewRow.includes("estamps-num-prefix"));
-      for (const name of SALE_NUMBERED) {
-        assert(!html[name].includes("ECX #"), `${name}: sale row says ECX #`);
-      }
-      assert(html.StampOverviewRow.includes('href="/stamp/'));
-    } finally {
-      clientChain.setClientChain(null);
+    // eSTAMP #40 and up: no other number in the fixtures starts with 4x.
+    const { ecx, btc } = await renderWithStampNumbers((i) => ESTAMP0 + 40 + i);
+    for (const name of NUMBERED) {
+      assert(ecx[name].includes("eSTAMP #"), `${name} shows no eSTAMP #`);
+      assert(!btc[name].includes("eSTAMP"), `${name}: Bitcoin says eSTAMP`);
+      assert(!ecx[name].includes("ECX #"), `${name} still says ECX #`);
     }
+    // The number shown is the eSTAMP number, not the stamp number.
+    assert(ecx.StampOverviewRow.includes("eSTAMP #</span>43<"));
+    assert(!ecx.StampOverviewRow.includes(`>${ESTAMP0 + 43}<`));
+    assert(btc.StampOverviewRow.includes(`>#</span>${ESTAMP0 + 43}<`));
+    // Links are untouched: they never use the eSTAMP number.
+    assert(ecx.StampOverviewRow.includes('href="/stamp/'));
+    assert(!ecx.StampOverviewRow.includes('href="/stamp/43"'));
+    // The detail view shows the stamp number as secondary text.
+    assert(ecx.StampInfo.includes(`>Stamp #${ESTAMP0 + 40}</h6>`));
+    assert(!btc.StampInfo.includes(">Stamp #"));
+    // In cards the mark is a small label above the number, so long
+    // numbers are not cut off; tables keep it inline.
+    for (const name of NUMBERED.filter((n) => n.startsWith("StampCard."))) {
+      assert(
+        ecx[name].includes(
+          '<span class="font-light estamps-num-prefix">eSTAMP #</span>',
+        ),
+        `${name}: eSTAMP # is not the card label`,
+      );
+    }
+    assert(!ecx.StampOverviewRow.includes("estamps-num-prefix"));
   },
 });
 
 Deno.test({
   ...opts,
-  name: "ecx: inherited stamps keep the plain # Bitcoin shows",
+  name: "ecx: inherited stamps keep the plain # and number Bitcoin shows",
   async fn() {
-    const stamps = [...AMOUNT_STAMPS, LINK_STAMP];
-    const saved = stamps.map((s) => s.block_index);
-    stamps.forEach((s) => s.block_index = FORK - 1);
-    try {
-      clientChain.setClientChain(ECX_CHAIN);
-      const ecx = await renderNumbered();
-      clientChain.setClientChain(null);
-      const btc = await renderNumbered();
-      const marks = (h: string) =>
-        [...h.matchAll(
-          /<span class="font-light">(#)<\/span>|(Stamp #|STAMP #)/g,
-        )]
-          .length;
-      for (const name of [...NATIVE_NUMBERED, ...SALE_NUMBERED]) {
-        assert(
-          !ecx[name].includes("ECX #"),
-          `${name} says ECX # for an inherited stamp`,
-        );
-        assert(!ecx[name].includes("estamps-num-prefix"), name);
-        assert(
-          marks(btc[name]) > 0,
-          `${name}: no # on Bitcoin, test is vacuous`,
-        );
-        assertEquals(marks(ecx[name]), marks(btc[name]), name);
-      }
-    } finally {
-      stamps.forEach((s, i) => s.block_index = saved[i]);
-      clientChain.setClientChain(null);
+    const { ecx, btc } = await renderWithStampNumbers((i) => ESTAMP0 - 1 - i);
+    const marks = (h: string) =>
+      [...h.matchAll(
+        /<span class="font-light">(#)<\/span>|(Stamp #|STAMP #)/g,
+      )]
+        .length;
+    for (const name of NUMBERED) {
+      assert(!ecx[name].includes("eSTAMP #"), `${name}: eSTAMP # on inherited`);
+      assert(!ecx[name].includes("estamps-num-prefix"), name);
+      assert(marks(btc[name]) > 0, `${name}: no # on Bitcoin, test is vacuous`);
+      assertEquals(marks(ecx[name]), marks(btc[name]), name);
     }
+    assert(ecx.StampOverviewRow.includes(`>#</span>${ESTAMP0 - 4}<`));
   },
 });
 

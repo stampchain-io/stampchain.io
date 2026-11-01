@@ -1,6 +1,10 @@
 /* ===== MARKETPLACE SALES TABLE COMPONENT ===== */
 import { ExplorerLink } from "$components/layout/ExplorerLink.tsx";
-import { stampPrefix, txExplorerUrl } from "$lib/utils/chain/clientChain.ts";
+import {
+  stampNumberText,
+  stampPrefix,
+  txExplorerUrl,
+} from "$lib/utils/chain/clientChain.ts";
 import { colGroup } from "$components/layout/types.ts";
 import { PlaceholderImage } from "$icon";
 import StampTextContent from "$islands/content/stampDetailContent/StampTextContent.tsx";
@@ -153,14 +157,10 @@ export function MarketplaceSalesRow({ stamp }: MarketplaceSalesRowProps) {
           {stamp.stamp != null
             ? (
               <>
-                {
-                  /* Sale rows: block_index is the sale block. ECX sends the
-                  creation block as stamp_block_index; Bitcoin does not. */
-                }
                 <span class="font-light">
-                  {stampPrefix(stamp.stamp_block_index ?? null)}
+                  {stampPrefix(stamp.stamp)}
                 </span>
-                {stamp.stamp}
+                {stampNumberText(stamp.stamp)}
               </>
             )
             : <span class="text-color-neutral-500">N/A</span>}

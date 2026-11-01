@@ -397,9 +397,8 @@ export class StampService {
     const btcPriceUSD = btcPriceData.price;
 
     // Transform the data to match schema (EnhancedStampSale format)
-    // ECX only: block_index on a sale row is the sale's block, so the card
-    // needs the stamp's creation block separately to tell an ECX-native
-    // stamp ("ECX #") from an inherited one. Absent on Bitcoin, so its
+    // ECX only: block_index on a sale row is the sale's block, so the row
+    // also carries the stamp's creation block. Absent on Bitcoin, so its
     // response shape is unchanged.
     const isEcx = getChainId() === "ecx";
     const recentSales = result.stamps.map((stamp: any, index: number) => {

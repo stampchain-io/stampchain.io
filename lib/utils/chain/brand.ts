@@ -9,53 +9,80 @@
  * same bytes it did before chain labelling existed.
  */
 import type { PageMetadata } from "$lib/utils/pageMetadata.ts";
-import { isEcxNativeBlock } from "$lib/utils/chain/ecxView.ts";
 
 /** Mirrors `ChainId` in server/services/chain/chainProfile.ts. */
 export type BrandChain = "bitcoin" | "ecx";
 
 /* ===== STAMP NUMBERS ===== */
 /**
- * What goes in front of an ECX-native stamp's number: "ECX #4242". Stamps
- * created before the fork (block 973728) keep the plain "#" they have on
- * Bitcoin, where they carry the same numbers. Display only; API data and
- * database values keep the bare number.
+ * eSTAMP numbers count ECX-native stamps from 0. The first stamp created on
+ * ECX (Bitcoin-sequence stamp 1507458, block 973731) is eSTAMP #0, the next
+ * is eSTAMP #1, and so on. Stamps inherited from Bitcoin (below 1507458)
+ * have no eSTAMP number and keep the number they carry on Bitcoin. The stamp
+ * number itself is unchanged everywhere: database, links, API `stamp`.
+ *
+ * Callers pass the chain's first eSTAMP as `firstStamp`; null means the
+ * chain has no eSTAMP numbers (Bitcoin). The server reads it from
+ * ECX_FIRST_STAMP (getEcxFirstStamp in server/services/chain/chainProfile.ts);
+ * islands get it from getClientChain().
  */
-export const ECX_STAMP_NUMBER_PREFIX = "ECX #";
+export const ECX_FIRST_STAMP_DEFAULT = 1_507_458;
+export const ESTAMP_NUMBER_PREFIX = "eSTAMP #";
 
-/** "ECX #" for an ECX-native stamp on ECX; "#" otherwise. */
-export function stampNumberPrefix(
-  chain: BrandChain = "bitcoin",
-  blockIndex?: number | string | null,
-): string {
-  return chain === "ecx" && isEcxNativeBlock(blockIndex)
-    ? ECX_STAMP_NUMBER_PREFIX
-    : "#";
+/**
+ * A stamp's eSTAMP number, or null: on Bitcoin (`firstStamp` null), for an
+ * inherited stamp, and for cursed (negative) numbers, which are below any
+ * first eSTAMP. A cursed stamp created on ECX after the fork would also get
+ * null and show its plain cursed number; none exist so far.
+ */
+export function estampNumber(
+  stamp: number | string | null | undefined,
+  firstStamp: number | null,
+): number | null {
+  if (firstStamp === null) return null;
+  const n = typeof stamp === "string"
+    ? (/^-?\d+$/.test(stamp.trim()) ? Number(stamp) : NaN)
+    : stamp;
+  if (typeof n !== "number" || !Number.isSafeInteger(n) || n < firstStamp) {
+    return null;
+  }
+  return n - firstStamp;
 }
 
-/** "#4242", or "ECX #4242" for an ECX-native stamp on ECX. */
+/** "eSTAMP #" for a stamp with an eSTAMP number; "#" otherwise. */
+export function stampNumberPrefix(
+  stamp: number | string | null | undefined,
+  firstStamp: number | null = null,
+): string {
+  return estampNumber(stamp, firstStamp) === null ? "#" : ESTAMP_NUMBER_PREFIX;
+}
+
+/** "#4242", or "eSTAMP #0" for an ECX-native stamp on ECX. */
 export function formatStampNumber(
   stamp: number | string | null | undefined,
-  chain: BrandChain = "bitcoin",
-  blockIndex?: number | string | null,
+  firstStamp: number | null = null,
 ): string {
-  return `${stampNumberPrefix(chain, blockIndex)}${stamp ?? ""}`;
+  const estamp = estampNumber(stamp, firstStamp);
+  return estamp === null
+    ? `#${stamp ?? ""}`
+    : `${ESTAMP_NUMBER_PREFIX}${estamp}`;
 }
 
 /**
  * Page title for a stamp: "Bitcoin Stamp #4242" on Bitcoin. On ECX an
- * ECX-native stamp is "ECX #4242"; an inherited one keeps its plain number
- * under the product name, "eSTAMP #4242".
+ * ECX-native stamp is "eSTAMP #0"; an inherited one is "Stamp #4242", not
+ * "eSTAMP #4242", which would name a different, ECX-native stamp.
  */
 export function stampTitle(
   stamp: number | string | null | undefined,
   chain: BrandChain = "bitcoin",
-  blockIndex?: number | string | null,
+  firstStamp: number | null = null,
 ): string {
-  if (chain === "ecx" && isEcxNativeBlock(blockIndex)) {
-    return `${ECX_STAMP_NUMBER_PREFIX}${stamp ?? ""}`;
-  }
-  return brandText(`Bitcoin Stamp #${stamp ?? ""}`, chain);
+  if (chain !== "ecx") return `Bitcoin Stamp #${stamp ?? ""}`;
+  const estamp = estampNumber(stamp, firstStamp);
+  return estamp === null
+    ? `Stamp #${stamp ?? ""}`
+    : `${ESTAMP_NUMBER_PREFIX}${estamp}`;
 }
 
 export interface ChainBrand {

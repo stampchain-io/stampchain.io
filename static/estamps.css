@@ -89,7 +89,7 @@ html[data-chain="ecx"] .stamp-container .stamp-image {
 }
 
 /* ===== STAMP NUMBERS IN CARDS ===== */
-/* "ECX #" sits as a small label above the number, so the number keeps the
+/* "eSTAMP #" sits as a small label above the number, so the number keeps the
    card's full width (long numbers were truncated or clipped otherwise). */
 html[data-chain="ecx"] :has(> .estamps-num-prefix) {
   flex-wrap: wrap;

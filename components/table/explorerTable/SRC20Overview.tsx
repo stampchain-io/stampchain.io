@@ -1,6 +1,10 @@
 /* ===== SRC20 EXPLORER TABLE COMPONENT ===== */
 import { ExplorerLink } from "$components/layout/ExplorerLink.tsx";
-import { txExplorerUrl } from "$lib/utils/chain/clientChain.ts";
+import {
+  stampNumberText,
+  stampPrefix,
+  txExplorerUrl,
+} from "$lib/utils/chain/clientChain.ts";
 import { colGroup } from "$components/layout/types.ts";
 import { Icon, PlaceholderImage } from "$icon";
 import {
@@ -116,8 +120,8 @@ export function SRC20OverviewRow({ src20 }: SRC20OverviewRowProps) {
               target="_top"
               class={cardRowStampNumber}
             >
-              <span class="font-light">#</span>
-              {src20.stamp.toLocaleString()}
+              <span class="font-light">{stampPrefix(src20.stamp)}</span>
+              {stampNumberText(src20.stamp).toLocaleString()}
             </a>
           )
           : <span class="text-color-neutral-500">—</span>}

@@ -10,6 +10,10 @@
  * Bitcoin ignores the locktime and the transaction IS replayable.
  */
 import * as bitcoin from "bitcoinjs-lib";
+import {
+  ECX_FIRST_STAMP_DEFAULT,
+  estampNumber,
+} from "$lib/utils/chain/brand.ts";
 
 export type ChainId = "bitcoin" | "ecx";
 
@@ -23,6 +27,69 @@ export function getChainId(env: Pick<typeof Deno.env, "get"> = chainEnv()): Chai
   if (raw === "" || raw === "bitcoin") return "bitcoin";
   if (raw === "ecx") return "ecx";
   throw new Error(`Unsupported CHAIN=${raw}; expected "bitcoin" or "ecx"`);
+}
+
+/**
+ * Stamp number of eSTAMP #0 (see lib/utils/chain/brand.ts), or null on
+ * Bitcoin, where ECX_FIRST_STAMP is never read.
+ */
+export function getEcxFirstStamp(
+  env: Pick<typeof Deno.env, "get"> = chainEnv(),
+): number | null {
+  return getChainId(env) === "ecx" ? readEcxFirstStamp(env) : null;
+}
+
+/**
+ * ECX_FIRST_STAMP, or 1507458 (the first stamp created on ECX) when unset.
+ * A value that is not a non-negative integer throws, like an unsupported
+ * CHAIN. ECX only: callers check the chain first.
+ */
+export function readEcxFirstStamp(env: Pick<typeof Deno.env, "get">): number {
+  const raw = (env.get("ECX_FIRST_STAMP") ?? "").trim();
+  if (raw === "") return ECX_FIRST_STAMP_DEFAULT;
+  if (!/^\d+$/.test(raw) || !Number.isSafeInteger(Number(raw))) {
+    throw new Error(
+      `Unsupported ECX_FIRST_STAMP=${raw}; expected a non-negative integer`,
+    );
+  }
+  return Number(raw);
+}
+
+/** A stamp's eSTAMP number on this server's chain; null on Bitcoin and for inherited stamps. */
+export function estampNumberFor(
+  stamp: number | string | null | undefined,
+  env: Pick<typeof Deno.env, "get"> = chainEnv(),
+): number | null {
+  return estampNumber(stamp, getEcxFirstStamp(env));
+}
+
+/**
+ * JSON.stringify step for ECX API responses: a stamp object (one with a
+ * `stamp` number plus a `cpid` or `tx_hash`) gains `estamp_number` right
+ * after `stamp`; null for an inherited stamp. Anything else is returned as
+ * is. Bitcoin never calls this, so its responses carry no such field.
+ */
+export function withEstampNumber(value: unknown, firstStamp: number): unknown {
+  if (value === null || typeof value !== "object" || Array.isArray(value)) {
+    return value;
+  }
+  const row = value as Record<string, unknown>;
+  const stamp = row.stamp;
+  if (
+    !Object.hasOwn(row, "stamp") ||
+    !(stamp === null || typeof stamp === "number" ||
+      typeof stamp === "string") ||
+    !(Object.hasOwn(row, "cpid") || Object.hasOwn(row, "tx_hash"))
+  ) {
+    return value;
+  }
+  const out: Record<string, unknown> = {};
+  for (const [key, field] of Object.entries(row)) {
+    if (key === "estamp_number") continue;
+    out[key] = field;
+    if (key === "stamp") out.estamp_number = estampNumber(stamp, firstStamp);
+  }
+  return out;
 }
 
 /** Public origin of the Bitcoin site. */
