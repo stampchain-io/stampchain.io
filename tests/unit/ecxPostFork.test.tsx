@@ -1,6 +1,6 @@
 /**
  * ECX post-fork follow-ups: canonical origin, the ECX-native switch on the
- * SRC-20 transaction list, and "ECX #" on sale rows. Each case also checks
+ * SRC-20 transaction list, and eSTAMP numbers on sale rows. Each case also checks
  * that Bitcoin output stays as it was.
  *
  * Nothing here sets Deno.env; the chain is a parameter or client chain state.
@@ -30,6 +30,7 @@ const env = (vars: Record<string, string>) => ({
 const ECX_CHAIN = {
   CHAIN: "ecx",
   EXPLORER_BASE_URL: "https://explorer.ecash.ninja",
+  ECX_FIRST_STAMP: 1_507_458,
 } as const;
 
 /* ===== SITE ORIGIN ===== */
@@ -151,35 +152,25 @@ const saleRow = (extra: Record<string, unknown> = {}) => ({
 
 Deno.test({
   ...opts,
-  name: "sales table: ECX shows ECX # from the creation block",
+  name: "sales table: ECX shows the eSTAMP number from the stamp number",
   fn() {
     clientChain.setClientChain(ECX_CHAIN);
+    const row = (extra: Record<string, unknown>) =>
+      renderToString(
+        h(
+          "table",
+          null,
+          h(MarketplaceSalesRow, { stamp: saleRow(extra) as any }),
+        ),
+      );
     try {
-      const native = renderToString(
-        h(
-          "table",
-          null,
-          h(MarketplaceSalesRow, {
-            stamp: saleRow({ stamp_block_index: 973731 }) as any,
-          }),
-        ),
-      );
-      assertStringIncludes(native, "ECX #");
-      const inherited = renderToString(
-        h(
-          "table",
-          null,
-          h(MarketplaceSalesRow, {
-            stamp: saleRow({ stamp_block_index: 800000 }) as any,
-          }),
-        ),
-      );
-      assert(!inherited.includes("ECX #"));
-      // No creation block: unknown reads as inherited, never as native.
-      const unknown = renderToString(
-        h("table", null, h(MarketplaceSalesRow, { stamp: saleRow() as any })),
-      );
-      assert(!unknown.includes("ECX #"));
+      // The sale's block_index does not matter, nor does stamp_block_index.
+      const native = row({ stamp: 1507460 });
+      assertStringIncludes(native, "eSTAMP #</span>2<");
+      assert(!native.includes(">1507460<"));
+      const inherited = row({ stamp: 1507457, stamp_block_index: 973731 });
+      assert(!inherited.includes("eSTAMP"));
+      assertStringIncludes(inherited, ">#</span>1507457<");
     } finally {
       clientChain.setClientChain(null);
     }
@@ -188,7 +179,7 @@ Deno.test({
 
 Deno.test({
   ...opts,
-  name: "sales table: Bitcoin ignores stamp_block_index",
+  name: "sales table: Bitcoin shows the plain stamp number",
   fn() {
     clientChain.setClientChain(null);
     const html = renderToString(
@@ -200,6 +191,7 @@ Deno.test({
         }),
       ),
     );
-    assert(!html.includes("ECX #"));
+    assert(!html.includes("eSTAMP"));
+    assertStringIncludes(html, ">#</span>1507458<");
   },
 });

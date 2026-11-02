@@ -4045,12 +4045,24 @@ components:
         - satoshirate
         - btcrate
         - origin
+    EstampNumber:
+      type: integer
+      nullable: true
+      description: >-
+        ECX deployment only (ecx.stampchain.io, CHAIN=ecx): the eSTAMP number,
+        which counts stamps created on ECX from 0. eSTAMP #0 is stamp 1507458
+        (ECX_FIRST_STAMP), so the value is stamp - 1507458. null for stamps
+        inherited from Bitcoin (stamp below 1507458) and for cursed (negative)
+        stamps. The field is absent on stampchain.io (Bitcoin). The stamp
+        field is unchanged.
     StampRow:
       type: object
       properties:
         stamp:
           type: number
           nullable: true
+        estamp_number:
+          $ref: "#/components/schemas/EstampNumber"
         block_index:
           type: number
         cpid:
@@ -4109,6 +4121,8 @@ components:
           type: number
           nullable: true
           description: "Stamp number"
+        estamp_number:
+          $ref: "#/components/schemas/EstampNumber"
         cpid:
           type: string
           description: "Counterparty asset ID"
@@ -4138,6 +4152,8 @@ components:
         stamp:
           type: number
           nullable: true
+        estamp_number:
+          $ref: "#/components/schemas/EstampNumber"
         block_index:
           type: number
         cpid:
@@ -4181,6 +4197,8 @@ components:
         stamp:
           type: number
           nullable: true
+        estamp_number:
+          $ref: "#/components/schemas/EstampNumber"
         block_index:
           type: number
         cpid:
@@ -4525,6 +4543,8 @@ components:
       properties:
         stamp:
           type: number
+        estamp_number:
+          $ref: "#/components/schemas/EstampNumber"
         tx_hash:
           type: string
         stamp_url:
@@ -6430,6 +6450,8 @@ components:
         stamp_number:
           type: integer
           description: Stamp number
+        estamp_number:
+          $ref: "#/components/schemas/EstampNumber"
         source:
           type: string
           description: Seller's address

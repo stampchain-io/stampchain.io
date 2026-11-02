@@ -1,6 +1,10 @@
 /* ===== STAMP EXPLORER TABLE COMPONENT ===== */
 import { ExplorerLink } from "$components/layout/ExplorerLink.tsx";
-import { stampPrefix, txExplorerUrl } from "$lib/utils/chain/clientChain.ts";
+import {
+  stampNumberText,
+  stampPrefix,
+  txExplorerUrl,
+} from "$lib/utils/chain/clientChain.ts";
 import { colGroup } from "$components/layout/types.ts";
 import { Icon, PlaceholderImage } from "$icon";
 import StampTextContent from "$islands/content/stampDetailContent/StampTextContent.tsx";
@@ -132,8 +136,8 @@ export function StampOverviewRow({ stamp }: StampOverviewRowProps) {
           {stamp.stamp != null
             ? (
               <>
-                <span class="font-light">{stampPrefix(stamp.block_index)}</span>
-                {stamp.stamp}
+                <span class="font-light">{stampPrefix(stamp.stamp)}</span>
+                {stampNumberText(stamp.stamp)}
               </>
             )
             : "—"}

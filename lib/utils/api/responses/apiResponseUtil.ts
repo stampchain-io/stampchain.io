@@ -6,6 +6,10 @@ import {
   RouteType,
 } from "$server/services/infrastructure/cacheService.ts";
 import { serverConfig } from "$server/config/config.ts";
+import {
+  getEcxFirstStamp,
+  withEstampNumber,
+} from "$server/services/chain/chainProfile.ts";
 
 // Import types for internal use and re-export for server code
 import type { ApiErrorResponse, APIResponse } from "$lib/types/api.ts";
@@ -122,6 +126,18 @@ export class ApiResponseUtil {
   }
 
   private static serializeWithBigInt(data: unknown): string {
+    // ECX: every stamp object also carries its eSTAMP number.
+    const firstStamp = getEcxFirstStamp();
+    if (firstStamp !== null) {
+      return JSON.stringify(
+        data,
+        (_key, value) =>
+          typeof value === "bigint"
+            ? value.toString()
+            : withEstampNumber(value, firstStamp),
+      );
+    }
+
     // Fast path: if no BigInts, use regular JSON.stringify
     if (!this.hasBigInt(data)) {
       return JSON.stringify(data);

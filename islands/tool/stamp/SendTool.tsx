@@ -1,7 +1,7 @@
 /* ===== STAMP SEND TOOL ===== */
 /* Single implementation for /tool/stamp/send (variant "page") and the
    STAMP SEND modal (variant "modal", islands/modal/tool/StampSendTool.tsx). */
-import { stampPrefix } from "$lib/utils/chain/clientChain.ts";
+import { stampNumberText, stampPrefix } from "$lib/utils/chain/clientChain.ts";
 import { useTransactionForm } from "$client/hooks/useTransactionForm.ts";
 import { walletContext } from "$client/wallet/wallet.ts";
 import { ProgressiveEstimationIndicator } from "$components/indicators/ProgressiveEstimationIndicator.tsx";
@@ -639,8 +639,8 @@ export function StampSendTool({ variant = "page" }: StampSendToolProps = {}) {
                 {selectedStamp
                   ? (
                     <span class={`font-medium ${stampLabel}`}>
-                      {stampPrefix(selectedStamp.block_index)}
-                      {selectedStamp.stamp}
+                      {stampPrefix(selectedStamp.stamp)}
+                      {stampNumberText(selectedStamp.stamp)}
                     </span>
                   )
                   : !wallet?.address
@@ -697,8 +697,8 @@ export function StampSendTool({ variant = "page" }: StampSendToolProps = {}) {
                       />
                       <div class="flex items-center justify-between flex-1 min-w-0">
                         <span class={`text-sm font-medium ${stampLabel}`}>
-                          {stampPrefix(stamp.block_index)}
-                          {stamp.stamp}
+                          {stampPrefix(stamp.stamp)}
+                          {stampNumberText(stamp.stamp)}
                         </span>
                         <span
                           class={`hidden min-[480px]:block text-xs font-normal ${

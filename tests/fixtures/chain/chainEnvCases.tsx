@@ -167,6 +167,7 @@ if (!isEcx) {
       assertEquals(clientChain.getClientChain(), {
         CHAIN: "ecx",
         EXPLORER_BASE_URL: "https://ecx.example/",
+        ECX_FIRST_STAMP: 1_507_458,
       });
       // skipAppLayout routes render no header, so no lookup is needed
       const direct: any = {
@@ -217,6 +218,7 @@ if (!isEcx) {
       assertEquals(clientChain.getClientChain(), {
         CHAIN: "ecx",
         EXPLORER_BASE_URL: "https://ecx.example/",
+        ECX_FIRST_STAMP: 1_507_458,
       });
       clientChain.setClientChain(null);
     },

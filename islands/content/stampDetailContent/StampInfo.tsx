@@ -2,7 +2,10 @@
 import { stampTitle } from "$lib/utils/chain/brand.ts";
 import { ExplorerLink } from "$components/layout/ExplorerLink.tsx";
 import {
+  clientEstampNumber,
+  getClientChain,
   getClientChainId,
+  stampNumberText,
   stampPrefix,
   txExplorerUrl,
 } from "$lib/utils/chain/clientChain.ts";
@@ -722,7 +725,11 @@ export function StampInfo(
   // Effect to handle document title updates
   useEffect(() => {
     document.title = `${
-      stampTitle(stamp.stamp, getClientChainId(), stamp.block_index)
+      stampTitle(
+        stamp.stamp,
+        getClientChainId(),
+        getClientChain()?.ECX_FIRST_STAMP ?? null,
+      )
     } - stampchain.io`;
     return () => {
       document.title = "stampchain.io";
@@ -761,9 +768,11 @@ export function StampInfo(
                   ? (
                     <>
                       <span className="font-light">
-                        {stampPrefix(stamp.block_index)}
+                        {stampPrefix(stamp.stamp)}
                       </span>
-                      <span className="font-black">{stamp.stamp}</span>
+                      <span className="font-black">
+                        {stampNumberText(stamp.stamp)}
+                      </span>
                     </>
                   )
                   : isPoshStamp(stamp.cpid)
@@ -775,12 +784,24 @@ export function StampInfo(
                   : (
                     <>
                       <span className="font-light">
-                        {stampPrefix(stamp.block_index)}
+                        {stampPrefix(stamp.stamp)}
                       </span>
-                      <span className="font-black">{stamp.stamp}</span>
+                      <span className="font-black">
+                        {stampNumberText(stamp.stamp)}
+                      </span>
                     </>
                   )}
               </h2>
+
+              {
+                /* ECX: an eSTAMP also shows its stamp number, the one in
+                links and the API. */
+              }
+              {clientEstampNumber(stamp.stamp) !== null && (
+                <h6 className={`${subtitlePrimary} -mt-1 pb-1 block`}>
+                  Stamp #{stamp.stamp}
+                </h6>
+              )}
 
               {isSrc20Stamp() && stamp.cpid && (
                 <h6 className={`${subtitlePrimary} -mt-1 pb-1 block`}>
@@ -790,8 +811,8 @@ export function StampInfo(
 
               {(!isSrc20Stamp() && isPoshStamp(stamp.cpid)) && (
                 <h5 className={`${subtitlePrimary} -mt-1.5 block`}>
-                  {stampPrefix(stamp.block_index)}
-                  {stamp.stamp}
+                  {stampPrefix(stamp.stamp)}
+                  {stampNumberText(stamp.stamp)}
                 </h5>
               )}
 

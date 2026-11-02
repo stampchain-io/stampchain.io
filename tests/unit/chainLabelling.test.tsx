@@ -41,7 +41,11 @@ const amountBaseline = JSON.parse(
   ),
 );
 const ECX_EXPLORER = "https://explorer.ecash.ninja";
-const ECX_CHAIN = { CHAIN: "ecx", EXPLORER_BASE_URL: ECX_EXPLORER } as const;
+const ECX_CHAIN = {
+  CHAIN: "ecx",
+  EXPLORER_BASE_URL: ECX_EXPLORER,
+  ECX_FIRST_STAMP: 1_507_458,
+} as const;
 
 /* ===== ENV-DEPENDENT CASES, ONE CLEAN CHILD PROCESS PER CHAIN ===== */
 const CHILD = new URL("../fixtures/chain/chainEnvCases.tsx", import.meta.url);
@@ -230,19 +234,33 @@ Deno.test({
     assertEquals(b, a);
     assertEquals(db.queries - before, 1, "second call must hit the memo");
     assertEquals(
-      label.getClientChainInfo("ecx", { get: () => " https://ecx.example " }),
-      { CHAIN: "ecx", EXPLORER_BASE_URL: "https://ecx.example" },
+      label.getClientChainInfo("ecx", {
+        get: (k) =>
+          k === "ECX_EXPLORER_URL" ? " https://ecx.example " : undefined,
+      }),
+      {
+        CHAIN: "ecx",
+        EXPLORER_BASE_URL: "https://ecx.example",
+        ECX_FIRST_STAMP: 1_507_458,
+      },
     );
     // unset: the default ECX explorer; set to "": no explorer, links hidden
     assertEquals(label.getClientChainInfo("ecx", { get: () => undefined }), {
       CHAIN: "ecx",
       EXPLORER_BASE_URL: ECX_EXPLORER,
+      ECX_FIRST_STAMP: 1_507_458,
     });
     assertEquals(label.ECX_DEFAULT_EXPLORER_URL, ECX_EXPLORER);
-    assertEquals(label.getClientChainInfo("ecx", { get: () => "" }), {
-      CHAIN: "ecx",
-      EXPLORER_BASE_URL: "",
-    });
+    assertEquals(
+      label.getClientChainInfo("ecx", {
+        get: (k) => k === "ECX_EXPLORER_URL" ? "" : undefined,
+      }),
+      {
+        CHAIN: "ecx",
+        EXPLORER_BASE_URL: "",
+        ECX_FIRST_STAMP: 1_507_458,
+      },
+    );
   },
 });
 
@@ -305,7 +323,13 @@ Deno.test({
     clientChain.setClientChain(null);
     try {
       const html = renderToString(
-        h(Header, { chain: { CHAIN: "ecx", EXPLORER_BASE_URL: "" } }),
+        h(Header, {
+          chain: {
+            CHAIN: "ecx",
+            EXPLORER_BASE_URL: "",
+            ECX_FIRST_STAMP: 1_507_458,
+          },
+        }),
       );
       assert(html.includes("e</span>STAMPS"));
       assert(html.includes('class="estamps-attribution">by Stampchain</span>'));
@@ -323,7 +347,11 @@ Deno.test({
   name: "ecx: explorer links use the configured explorer, or are dropped",
   async fn() {
     try {
-      clientChain.setClientChain({ CHAIN: "ecx", EXPLORER_BASE_URL: "" });
+      clientChain.setClientChain({
+        CHAIN: "ecx",
+        EXPLORER_BASE_URL: "",
+        ECX_FIRST_STAMP: 1_507_458,
+      });
       assertEquals(clientChain.txExplorerUrl(TX), null);
       assertEquals(clientChain.addressExplorerUrl(ADDR), null);
       assertEquals(clientChain.explorerHomeUrl(), null);
@@ -337,6 +365,7 @@ Deno.test({
       clientChain.setClientChain({
         CHAIN: "ecx",
         EXPLORER_BASE_URL: "https://ecx.example/",
+        ECX_FIRST_STAMP: 1_507_458,
       });
       assertEquals(
         clientChain.txExplorerUrl(TX, "blockchain.com"),
@@ -617,7 +646,7 @@ Deno.test({
       ),
     );
     assert(
-      !banner({ CHAIN: "ecx", EXPLORER_BASE_URL: "" } as any).includes(
+      !banner({ CHAIN: "ecx", EXPLORER_BASE_URL: "", ECX_FIRST_STAMP: 1_507_458 } as any).includes(
         "href=",
       ),
     );

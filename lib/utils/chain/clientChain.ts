@@ -8,7 +8,11 @@
  * app layout, so later islands see it too. On Bitcoin nothing is ever set,
  * Header gets no prop, and every helper below returns the pre-ECX value.
  */
-import { type BrandChain, stampNumberPrefix } from "$lib/utils/chain/brand.ts";
+import {
+  type BrandChain,
+  estampNumber,
+  stampNumberPrefix,
+} from "$lib/utils/chain/brand.ts";
 
 export interface ClientChainInfo {
   CHAIN: "ecx";
@@ -18,6 +22,8 @@ export interface ClientChainInfo {
    * hidden when empty.
    */
   EXPLORER_BASE_URL: string;
+  /** Stamp number of eSTAMP #0, from ECX_FIRST_STAMP on the server. */
+  ECX_FIRST_STAMP: number;
 }
 
 let current: ClientChainInfo | null = null;
@@ -137,35 +143,61 @@ export function withoutMarketColumns<T>(
 }
 
 /* ===== STAMP NUMBERS ===== */
+/** First eSTAMP of the published chain, or null (Bitcoin). */
+function firstEstamp(info: ClientChainInfo | null): number | null {
+  return info ? info.ECX_FIRST_STAMP : null;
+}
+
+/** eSTAMP number of a stamp on the published chain; null on Bitcoin and for inherited stamps. */
+export function clientEstampNumber(
+  stamp: number | string | null | undefined,
+  info: ClientChainInfo | null = current,
+): number | null {
+  return estampNumber(stamp, firstEstamp(info));
+}
+
 /**
- * Mark in front of a displayed stamp number. "ECX #" for an ECX-native
- * stamp on ECX (`blockIndex` is the stamp's creation block, 973728 or
- * later). Otherwise what Bitcoin shows: "#", or "Stamp #" with a label.
- * Pass null when the row's block is not the creation block (sale rows):
- * unknown reads as inherited. Display only; links, API data and database
- * values keep the bare number.
+ * Mark in front of a displayed stamp number: "eSTAMP #" for an ECX-native
+ * stamp on ECX. Otherwise what Bitcoin shows: "#", or "Stamp #" with a
+ * label. Pair it with stampNumberText(), which swaps in the eSTAMP number.
+ * Display only; links, API data and database values keep the stamp number.
  */
 export function stampPrefix(
-  blockIndex: number | string | null | undefined,
+  stamp: number | string | null | undefined,
   bitcoinLabel = "",
-  chain: BrandChain = getClientChainId(),
+  info: ClientChainInfo | null = current,
 ): string {
-  const mark = stampNumberPrefix(chain, blockIndex);
+  const mark = stampNumberPrefix(stamp, firstEstamp(info));
   if (mark !== "#") return mark;
   return bitcoinLabel ? `${bitcoinLabel} #` : "#";
 }
 
 /**
+ * The number shown after stampPrefix(): the eSTAMP number for an ECX-native
+ * stamp on ECX, else `stamp` itself, untouched.
+ */
+export function stampNumberText<T>(
+  stamp: T,
+  info: ClientChainInfo | null = current,
+): T | number {
+  const estamp = estampNumber(
+    stamp as unknown as number | string | null | undefined,
+    firstEstamp(info),
+  );
+  return estamp === null ? stamp : estamp;
+}
+
+/**
  * Class for the mark before a card's stamp number. On ECX a native stamp's
- * "ECX #" is set as a small label above the number (static/estamps.css) so
- * long numbers are not cut off in narrow cards. Everything else keeps
+ * "eSTAMP #" is set as a small label above the number (static/estamps.css)
+ * so long numbers are not cut off in narrow cards. Everything else keeps
  * "font-light".
  */
 export function stampPrefixClass(
-  blockIndex: number | string | null | undefined,
-  chain: BrandChain = getClientChainId(),
+  stamp: number | string | null | undefined,
+  info: ClientChainInfo | null = current,
 ): string {
-  return stampNumberPrefix(chain, blockIndex) === "#"
+  return clientEstampNumber(stamp, info) === null
     ? "font-light"
     : "font-light estamps-num-prefix";
 }

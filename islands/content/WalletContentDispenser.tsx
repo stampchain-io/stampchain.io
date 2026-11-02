@@ -1,4 +1,5 @@
 /* ===== WALLET CONTENT DISPENSER COMPONENT ===== */
+import { stampNumberText, stampPrefix } from "$lib/utils/chain/clientChain.ts";
 import { Button } from "$button";
 import { StampImage } from "$content";
 import { Icon } from "$icon";
@@ -155,8 +156,10 @@ function StampStats({
           label="STAMP"
           value={
             <>
-              <span className="font-light">#</span>
-              {stampData.stamp}
+              <span className="font-light">
+                {stampPrefix(stampData.stamp)}
+              </span>
+              {stampNumberText(stampData.stamp)}
             </>
           }
           href={`/stamp/${stampData.stamp}`}

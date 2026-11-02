@@ -95,3 +95,17 @@ export function keepEcxHistory(
   next.set(ECX_HISTORY_PARAM, ECX_HISTORY_INHERITED);
   return next.toString();
 }
+
+/**
+ * ECX accepts /stamp/e<N> for eSTAMP #N. Returns the stamp page it stands
+ * for, /stamp/<firstStamp + N>, or null when `id` is not of that form or the
+ * chain has no eSTAMP numbers (`firstStamp` null, Bitcoin).
+ */
+export function estampPagePath(
+  id: string,
+  firstStamp: number | null,
+): string | null {
+  if (firstStamp === null) return null;
+  const match = /^e(\d{1,15})$/i.exec(id);
+  return match ? `/stamp/${firstStamp + Number(match[1])}` : null;
+}

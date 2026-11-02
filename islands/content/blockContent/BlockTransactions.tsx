@@ -2,7 +2,11 @@
 import { useFees } from "$fees";
 import { Icon } from "$icon";
 import { containerBackground, transitionAll } from "$layout";
-import { showMarketData, stampPrefix } from "$lib/utils/chain/clientChain.ts";
+import {
+  showMarketData,
+  stampNumberText,
+  stampPrefix,
+} from "$lib/utils/chain/clientChain.ts";
 import { unicodeEscapeToEmoji } from "$lib/utils/ui/formatting/emojiUtils.ts";
 import { text, text2xl } from "$text";
 import { useState } from "preact/hooks";
@@ -286,8 +290,8 @@ export default function BlockTransactions({
                       class="flex flex-wrap justify-between gap-x-4 gap-y-1 text-sm py-2 border-b border-[#282D3F]"
                     >
                       <span>
-                        {stampPrefix(stamp.block_index, "STAMP")}
-                        {stamp.stamp ?? "—"}
+                        {stampPrefix(stamp.stamp, "STAMP")}
+                        {stampNumberText(stamp.stamp) ?? "—"}
                       </span>
                       <span class="text-[#6E6E6E]">{stamp.ident ?? ""}</span>
                       <span class="text-[#6E6E6E] break-all">

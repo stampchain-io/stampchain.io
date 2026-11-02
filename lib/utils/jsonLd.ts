@@ -54,12 +54,13 @@ export function generateStampJsonLd(
   } | null,
   lowestPriceDispenser?: { satoshirate: number } | null | undefined,
   chain: BrandChain = "bitcoin",
+  firstStamp: number | null = null,
 ): object {
   const datePublished = blockTimeToIso(stamp.block_time);
   const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": ["ImageObject", "CreativeWork"],
-    name: stampTitle(stamp.stamp, chain, stamp.block_index),
+    name: stampTitle(stamp.stamp, chain, firstStamp),
     contentUrl: metaInfo.url,
     thumbnailUrl: `${metaInfo.baseUrl}/${stamp.stamp}.png`,
     creator: {

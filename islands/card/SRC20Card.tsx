@@ -6,7 +6,11 @@ import {
   containerPill,
   transitionAll,
 } from "$layout";
-import { showMarketData } from "$lib/utils/chain/clientChain.ts";
+import {
+  showMarketData,
+  stampNumberText,
+  stampPrefix,
+} from "$lib/utils/chain/clientChain.ts";
 import { unicodeEscapeToEmoji } from "$lib/utils/ui/formatting/emojiUtils.ts";
 import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { getSRC20ImageSrc } from "$lib/utils/ui/media/imageUtils.ts";
@@ -235,8 +239,8 @@ export function SRC20Card(
       <div class="mt-2 flex justify-center gap-3">
         {src20.stamp != null && (
           <div class={`${cardStampNumber}`}>
-            <span class="font-light">#</span>
-            {src20.stamp.toLocaleString()}
+            <span class="font-light">{stampPrefix(src20.stamp)}</span>
+            {stampNumberText(src20.stamp).toLocaleString()}
           </div>
         )}
       </div>
@@ -476,8 +480,8 @@ export function SRC20Card(
           {src20.stamp != null && (
             <div class="flex justify-center">
               <div class={cardStampNumber}>
-                <span class="font-light">#</span>
-                {src20.stamp.toLocaleString()}
+                <span class="font-light">{stampPrefix(src20.stamp)}</span>
+                {stampNumberText(src20.stamp).toLocaleString()}
               </div>
             </div>
           )}

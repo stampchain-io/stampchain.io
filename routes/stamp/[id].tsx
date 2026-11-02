@@ -2,7 +2,11 @@
 /*@baba-365+390*/
 
 import { stampTitle } from "$lib/utils/chain/brand.ts";
-import { getChainId } from "$server/services/chain/chainProfile.ts";
+import { estampPagePath } from "$lib/utils/chain/ecxView.ts";
+import {
+  getChainId,
+  getEcxFirstStamp,
+} from "$server/services/chain/chainProfile.ts";
 import { StampImage, StampInfo } from "$content";
 import { Head } from "$fresh/runtime.ts";
 import { Handlers } from "$fresh/server.ts";
@@ -11,6 +15,7 @@ import {
   DATA_PLACEHOLDER_DEV,
   DATA_PLACEHOLDER_PROD_STAMP_DETAIL_PAGE,
 } from "$lib/utils/dataPlaceholderProd.ts";
+import { WebResponseUtil } from "$lib/utils/api/responses/webResponseUtil.ts";
 import { ErrorHandlingUtils } from "$lib/utils/errorHandling.ts";
 import { generateStampJsonLd } from "$lib/utils/jsonLd.ts";
 import { logger, LogNamespace } from "$lib/utils/logger.ts";
@@ -62,6 +67,14 @@ export const handler: Handlers<StampData> = {
         ...getDummyStampDetailPage(ctx.params.id),
         url: req.url,
       });
+    }
+    // ECX: /stamp/e<N> is eSTAMP #N; send it to the stamp's own page.
+    const estampPath = estampPagePath(ctx.params.id, getEcxFirstStamp());
+    if (estampPath) {
+      return WebResponseUtil.redirect(
+        `${estampPath}${new URL(req.url).search}`,
+        302,
+      );
     }
     try {
       const { id } = ctx.params;
@@ -267,7 +280,7 @@ export default function StampDetailPage(props: StampDetailPageProps) {
   const title = htmlTitle
     ? htmlTitle.toUpperCase()
     : stamp?.cpid?.startsWith("A")
-    ? stampTitle(stamp?.stamp, getChainId(), stamp?.block_index)
+    ? stampTitle(stamp?.stamp, getChainId(), getEcxFirstStamp())
     : stamp?.cpid ?? "Stamp Not Found";
 
   // Update the getMetaImageInfo and add dimension handling
@@ -315,6 +328,7 @@ export default function StampDetailPage(props: StampDetailPageProps) {
       collectionInfo,
       lowestPriceDispenser,
       getChainId(),
+      getEcxFirstStamp(),
     )
     : null;
 
@@ -409,7 +423,7 @@ export default function StampDetailPage(props: StampDetailPageProps) {
           content={stampTitle(
             stamp?.stamp || "",
             getChainId(),
-            stamp?.block_index,
+            getEcxFirstStamp(),
           )}
           key="twitter:image:alt"
         />

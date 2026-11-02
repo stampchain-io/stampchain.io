@@ -7,7 +7,11 @@
  * `withChainHeaders`, which returns its input untouched.
  */
 import { BlockRepository } from "$server/database/blockRepository.ts";
-import { type ChainId, getChainId } from "$server/services/chain/chainProfile.ts";
+import {
+  type ChainId,
+  getChainId,
+  readEcxFirstStamp,
+} from "$server/services/chain/chainProfile.ts";
 import type { ClientChainInfo } from "$lib/utils/chain/clientChain.ts";
 
 export interface ChainLabel {
@@ -95,6 +99,7 @@ export const ECX_DEFAULT_EXPLORER_URL = "https://explorer.ecash.ninja";
 /**
  * What islands need to know about the chain; null on Bitcoin.
  * ECX_EXPLORER_URL overrides the explorer; set it to "" to hide the links.
+ * ECX_FIRST_STAMP sets eSTAMP #0 (readEcxFirstStamp).
  */
 export function getClientChainInfo(
   chain: ChainId = getChainId(),
@@ -102,7 +107,11 @@ export function getClientChainInfo(
 ): ClientChainInfo | null {
   if (chain === "bitcoin") return null;
   const explorer = env.get("ECX_EXPLORER_URL") ?? ECX_DEFAULT_EXPLORER_URL;
-  return { CHAIN: chain, EXPLORER_BASE_URL: explorer.trim() };
+  return {
+    CHAIN: chain,
+    EXPLORER_BASE_URL: explorer.trim(),
+    ECX_FIRST_STAMP: readEcxFirstStamp(env),
+  };
 }
 
 /**
