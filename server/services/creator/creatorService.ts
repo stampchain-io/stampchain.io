@@ -1,4 +1,6 @@
 import { verifySignature } from "$lib/utils/security/cryptoUtils.ts";
+import type { CreatorSearchResult } from "$lib/types/creator.ts";
+import { CreatorRepository } from "$server/database/creatorRepository.ts";
 import { SecurityService } from "$server/services/security/securityService.ts";
 import { SRC101Service } from "$server/services/src101/index.ts";
 import { StampService } from "$server/services/stampService.ts";
@@ -8,6 +10,10 @@ const CREATOR_NAME_MIN_LENGTH = 1;
 const CREATOR_NAME_PATTERN = /^[a-zA-Z0-9 .\-_']+$/;
 
 export class CreatorService {
+  static async searchCreators(query: string): Promise<CreatorSearchResult[]> {
+    return await CreatorRepository.searchCreators(query);
+  }
+
   static validateCreatorName(
     name: string,
   ): { valid: boolean; sanitized?: string; message?: string } {
