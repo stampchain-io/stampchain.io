@@ -658,6 +658,7 @@ export function ExplorerPage(props: StampPageProps) {
           src20DataCard={src20DataCard ?? null}
           section={section}
           viewMode={cardView}
+          sortBy={sortBy as "ASC" | "DESC"}
           pagination={{
             page,
             totalPages,

@@ -2201,10 +2201,9 @@ export interface ExplorerContentProps extends BaseComponentProps {
   loading?: boolean;
   error?: string;
   stamps?: import("./stamp.d.ts").StampRow[];
-  // Pre-ordered, pre-paginated stamp+token feed for the "all" section
-  // (built server-side by ExplorerFeedRepository). When provided,
-  // ExplorerContent renders it directly instead of merging/sorting
-  // `stamps` and `src20DataCard.data` client-side.
+  // Pre-paginated stamp+token feed for the "all" section, built server-side
+  // by ExplorerFeedRepository. ExplorerContent displays these page records
+  // earliest first instead of merging `stamps` and `src20DataCard.data`.
   mixedItems?:
     | (
       | {
@@ -2218,6 +2217,7 @@ export interface ExplorerContentProps extends BaseComponentProps {
     )[]
     | undefined;
   isRecentSales?: boolean;
+  sortBy?: "ASC" | "DESC";
   pagination?: {
     page: number;
     totalPages: number;
