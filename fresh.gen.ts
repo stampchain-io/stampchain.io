@@ -235,6 +235,7 @@ import * as $api_v2_collections_index from "./routes/api/v2/collections/index.ts
 import * as $api_v2_counterparty_version from "./routes/api/v2/counterparty/version.ts";
 import * as $api_v2_create_dispense from "./routes/api/v2/create/dispense.ts";
 import * as $api_v2_create_send from "./routes/api/v2/create/send.ts";
+import * as $api_v2_creators_search from "./routes/api/v2/creators/search.ts";
 import * as $api_v2_cursed_id_ from "./routes/api/v2/cursed/[id].ts";
 import * as $api_v2_cursed_middleware from "./routes/api/v2/cursed/_middleware.ts";
 import * as $api_v2_cursed_block from "./routes/api/v2/cursed/block.ts";
@@ -410,6 +411,7 @@ const manifest = {
     "./routes/api/v2/counterparty/version.ts": $api_v2_counterparty_version,
     "./routes/api/v2/create/dispense.ts": $api_v2_create_dispense,
     "./routes/api/v2/create/send.ts": $api_v2_create_send,
+    "./routes/api/v2/creators/search.ts": $api_v2_creators_search,
     "./routes/api/v2/cursed/[id].ts": $api_v2_cursed_id_,
     "./routes/api/v2/cursed/_middleware.ts": $api_v2_cursed_middleware,
     "./routes/api/v2/cursed/block.ts": $api_v2_cursed_block,

@@ -2824,6 +2824,37 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
+  /api/v2/creators/search:
+    get:
+      operationId: searchCreators
+      tags:
+        - Stamps
+      summary: Search users by display name or wallet address
+      description: |
+        Case-insensitive literal substring search over creator display names,
+        active primary .btc names, and their wallet addresses. Creator display
+        names take precedence over primary .btc names for the same address.
+        Returns at most 10 distinct users, with exact matches first.
+      parameters:
+        - name: q
+          in: query
+          description: Display name, primary .btc name, or wallet address. Empty queries return no results.
+          schema:
+            type: string
+            maxLength: 128
+          example: "Alice Smith"
+      responses:
+        "200":
+          description: Matching user profiles
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreatorSearchResponseBody"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
   /api/v2/stamps/search:
     get:
       operationId: searchStamps
@@ -4114,6 +4145,28 @@ components:
           type: number
           nullable: true
           description: "Market capitalization in USD (supply * floorPrice * BTC/USD rate)"
+    CreatorSearchResult:
+      type: object
+      required:
+        - address
+        - name
+      properties:
+        address:
+          type: string
+          description: User's Bitcoin wallet address
+        name:
+          type: string
+          description: Creator display name or active primary .btc name
+    CreatorSearchResponseBody:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          maxItems: 10
+          items:
+            $ref: "#/components/schemas/CreatorSearchResult"
     StampSearchResult:
       type: object
       properties:

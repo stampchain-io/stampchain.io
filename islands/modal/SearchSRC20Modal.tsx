@@ -1,11 +1,17 @@
 /*@baba-styles is not config properly*/
 import { SearchErrorDisplay, SearchInputField } from "$form";
-import { Icon } from "$icon";
-import { closeModal, openModal, searchState } from "$islands/modal/states.ts";
+import {
+  closeModal,
+  globalModal,
+  openModal,
+  searchState,
+} from "$islands/modal/states.ts";
+import { WalletSearchResultRow } from "$components/ui/WalletSearchResultRow.tsx";
 import { container1, ModalSearchBase, transitionColors } from "$layout";
-import { generateSearchErrorMessage } from "$lib/utils/data/search/searchInputClassifier.ts";
-import { isValidBitcoinAddress } from "$lib/utils/typeGuards.ts";
-import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
+import {
+  navigationSearchError,
+  searchNavigation,
+} from "$lib/utils/ui/search/navigationSearch.ts";
 import {
   constructStampUrl,
   toCleanSrc20ImageUrl,
@@ -22,74 +28,40 @@ export function openSRC20Search() {
     current: null,
   } as preact.RefObject<HTMLInputElement>;
 
+  let searchId = 0;
   const handleSearch = async () => {
     const currentTerm = searchState.value.term;
+    const requestId = ++searchId;
+    const isCurrentSearch = () =>
+      requestId === searchId &&
+      searchState.value.term === currentTerm &&
+      globalModal.value.content === modalContent;
 
     if (!currentTerm?.trim()) {
       searchState.value = {
         ...searchState.value,
+        isLoading: false,
         error: "",
         results: [],
       };
       return;
     }
 
-    searchState.value = { ...searchState.value, isLoading: true };
+    searchState.value = { ...searchState.value, isLoading: true, error: "" };
     try {
-      const response = await fetch(
-        `/api/v2/src20/search?q=${encodeURIComponent(currentTerm.trim())}`,
-        {
-          headers: {
-            "X-API-Version": "2.3",
-          },
-        },
-      );
-      const data = await response.json();
-
-      if (
-        !response.ok || !data.data || data.data.length === 0
-      ) {
-        // For valid addresses with no results, show a
-        // link to the wallet page instead of an error
-        if (isValidBitcoinAddress(currentTerm.trim())) {
-          searchState.value = {
-            ...searchState.value,
-            isLoading: false,
-            error: "",
-            results: [
-              {
-                _addressLink: true,
-                address: currentTerm.trim(),
-              },
-            ],
-          };
-          return;
-        }
-        searchState.value = {
-          ...searchState.value,
-          isLoading: false,
-          error: generateSearchErrorMessage(
-            currentTerm.trim(),
-            "src20",
-          ),
-          results: [],
-        };
-        return;
-      }
-
-      // For valid address searches, prepend a wallet link row
-      const addressRow = isValidBitcoinAddress(currentTerm.trim())
-        ? [{ _addressLink: true, address: currentTerm.trim() }]
-        : [];
-
+      const results = await searchNavigation(currentTerm, "src20");
+      if (!isCurrentSearch()) return;
       searchState.value = {
         ...searchState.value,
         isLoading: false,
-        error: "",
-        results: [...addressRow, ...data.data],
+        error: results.length
+          ? ""
+          : navigationSearchError(currentTerm, "src20"),
+        results,
       };
     } catch (err) {
-      console.error("SRC20 Search Error:", err);
+      if (!isCurrentSearch()) return;
+      console.error("Navigation Search Error:", err);
       searchState.value = {
         ...searchState.value,
         isLoading: false,
@@ -103,8 +75,9 @@ export function openSRC20Search() {
   searchState.value = { term: "", error: "", isLoading: false, results: [] };
   const modalContent = (
     <ModalSearchBase
-      title="Search SRC-20 Tokens"
+      title="Search SRC-20 & Users"
       onClose={() => {
+        searchId++;
         searchState.value = {
           term: "",
           error: "",
@@ -116,7 +89,13 @@ export function openSRC20Search() {
       <SearchContent
         searchTerm={searchState.value.term}
         setSearchTerm={(term) => {
-          searchState.value = { ...searchState.value, term };
+          searchId++;
+          searchState.value = {
+            term,
+            error: "",
+            results: [],
+            isLoading: false,
+          };
         }}
         error={searchState.value.error}
         results={searchState.value.results || []}
@@ -152,7 +131,12 @@ function SearchContent({
   // Shared hooks
   useAutoFocus(inputRef, autoFocus);
   useDebouncedSearch(searchState.value.term, onSearch, 300, () => {
-    searchState.value = { ...searchState.value, error: "", results: [] };
+    searchState.value = {
+      ...searchState.value,
+      isLoading: false,
+      error: "",
+      results: [],
+    };
   });
 
   const handleResultClick = (tick: string) => {
@@ -169,7 +153,7 @@ function SearchContent({
         value={searchState.value.term}
         onChange={setSearchTerm}
         onSearch={onSearch}
-        placeholder="TOKEN, ADDY OR TX HASH"
+        placeholder="USER, TOKEN, ADDRESS OR TX HASH"
         inputRef={inputRef}
         autoFocus={autoFocus}
         hasError={!!error}
@@ -185,34 +169,10 @@ function SearchContent({
               (result) =>
                 result._addressLink
                   ? (
-                    <li
-                      key="address-link"
-                      onClick={() =>
-                        navigateSSRSafe(
-                          `/wallet/${result.address}`,
-                        )}
-                      class={`flex items-center gap-5 px-7.5 py-1.5 hover:bg-color-background/60 ${transitionColors} cursor-pointer`}
-                    >
-                      <div class="w-10 h-10 rounded bg-color-background/30 flex items-center justify-center">
-                        <Icon
-                          type="icon"
-                          name="wallet"
-                          weight="normal"
-                          size="md"
-                          color="neutral400"
-                        />
-                      </div>
-                      <div class="flex flex-col flex-1 min-w-0">
-                        <span class="text-sm font-medium text-color-grey-light">
-                          VIEW WALLET
-                        </span>
-                        <span class="text-xs text-color-grey truncate">
-                          {result.address?.startsWith("bc1p")
-                            ? abbreviateAddress(result.address, 20)
-                            : result.address}
-                        </span>
-                      </div>
-                    </li>
+                    <WalletSearchResultRow
+                      key={`wallet-${result.address}`}
+                      result={result}
+                    />
                   )
                   : (
                     <li
