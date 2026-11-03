@@ -107,6 +107,8 @@ Deno.test("creator search SQL returns distinct named users and current primary b
   creator.run("exact", "ALICE");
   creator.run("underscore", "Alice_Smith");
   creator.run("override", "Custom Artist");
+  creator.run("arwyn-wallet", "Arwyn");
+  creator.run("vivalavandal-wallet", "VIVALAVANDAL");
   const domain = db.prepare(
     `INSERT INTO ${SRC101_OWNERS_TABLE} VALUES (?, ?, ?, ?, ?)`,
   );
@@ -160,6 +162,18 @@ Deno.test("creator search SQL returns distinct named users and current primary b
       { address: "override", name: "Custom Artist" },
     ]);
     assertEquals(await CreatorRepository.searchCreators("no match"), []);
+
+    // Plain display names are searchable without owning a primary .btc name.
+    for (const query of ["ARWYN", "arwyn", "ArWyN", "arw"]) {
+      assertEquals(await CreatorRepository.searchCreators(query), [
+        { address: "arwyn-wallet", name: "Arwyn" },
+      ]);
+    }
+    for (const query of ["VIVALAVANDAL", "vivalavandal", "vandal"]) {
+      assertEquals(await CreatorRepository.searchCreators(query), [
+        { address: "vivalavandal-wallet", name: "VIVALAVANDAL" },
+      ]);
+    }
 
     for (let i = 0; i < 15; i++) {
       creator.run(`limit${i}`, `Limit Artist ${i}`);
