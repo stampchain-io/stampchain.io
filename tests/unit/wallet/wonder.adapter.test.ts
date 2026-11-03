@@ -28,6 +28,7 @@ import {
   broadcastRawTX,
   checkWonder,
   connectWonder,
+  ensureWonderReady,
   isWonderInstalled,
   signMessage,
   signPSBT,
@@ -329,15 +330,69 @@ Deno.test("connectWonder: reports an error instead of a false success on zero ac
 });
 
 Deno.test("connectWonder: surfaces a rejected approval as an error toast", async () => {
+  let attempts = 0;
   const stub = buildStub({
-    requestAccounts: () => Promise.reject(new Error("User rejected request")),
+    requestAccounts: () => {
+      attempts += 1;
+      return Promise.reject(new Error("User rejected request"));
+    },
   });
   await withProvider(stub, async () => {
     const { toasts, addToast } = toastRecorder();
     await connectWonder(addToast);
+    assertEquals(attempts, 1);
     assertEquals(toasts.length, 1);
     assertEquals(toasts[0].type, "error");
     assertEquals(toasts[0].message.startsWith("Failed to connect"), true);
+    assertEquals(walletContext.isConnected, false);
+  });
+});
+
+const backgroundDown = () =>
+  Promise.reject({
+    code: 4900,
+    message: "Wallet background unavailable — retry.",
+  });
+
+Deno.test("connectWonder: retries one background-unavailable failure", async () => {
+  let attempts = 0;
+  const stub = buildStub({
+    requestAccounts: () => {
+      attempts += 1;
+      if (attempts === 1) return backgroundDown();
+      return Promise.resolve({ accounts: [ADDRESS], proof: {} });
+    },
+  });
+  await withProvider(stub, async () => {
+    const { toasts, addToast } = toastRecorder();
+    await connectWonder(addToast);
+    assertEquals(attempts, 2);
+    assertEquals(toasts, [
+      { message: "Connected using Wonder Wallet.", type: "success" },
+    ]);
+    assertEquals(walletContext.isConnected, true);
+    assertEquals(walletContext.wallet.address, ADDRESS);
+  });
+});
+
+Deno.test("connectWonder: toasts after the background stays unavailable", async () => {
+  let attempts = 0;
+  const stub = buildStub({
+    requestAccounts: () => {
+      attempts += 1;
+      return backgroundDown();
+    },
+  });
+  await withProvider(stub, async () => {
+    const { toasts, addToast } = toastRecorder();
+    await connectWonder(addToast);
+    assertEquals(attempts, 4);
+    assertEquals(toasts.length, 1);
+    assertEquals(toasts[0].type, "error");
+    assertEquals(
+      toasts[0].message.includes("background unavailable"),
+      true,
+    );
     assertEquals(walletContext.isConnected, false);
   });
 });
@@ -380,6 +435,26 @@ Deno.test("provider events: late-injected provider gets accountsChanged and disc
     disconnect?.();
     assertEquals(walletContext.isConnected, false);
     await settleToasts();
+  });
+});
+
+// ============================================================================
+// ensureWonderReady
+// ============================================================================
+
+Deno.test("ensureWonderReady: resolves true when the init event fires", async () => {
+  await withProvider(undefined, async () => {
+    const pending = ensureWonderReady(1000);
+    installProvider(buildStub());
+    globalThis.dispatchEvent(new Event("wonder-wallet#initialized"));
+    assertEquals(await pending, true);
+  });
+});
+
+Deno.test("ensureWonderReady: resolves false when the provider stays missing", async () => {
+  await withProvider(undefined, async () => {
+    assertEquals(await ensureWonderReady(40), false);
+    assertEquals(checkWonder(), false);
   });
 });
 

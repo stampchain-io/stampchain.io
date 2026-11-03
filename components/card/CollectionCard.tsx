@@ -301,6 +301,8 @@ export function CollectionCard(
                       key={index}
                       src={imageUrl}
                       alt=""
+                      loading="lazy"
+                      decoding="async"
                       className={`w-full h-full object-contain pixelart`}
                     />
                   </div>
@@ -592,6 +594,8 @@ export function CollectionCardHorizontal(
                       key={index}
                       src={imageUrl}
                       alt=""
+                      loading="lazy"
+                      decoding="async"
                       className={`w-full h-full object-contain pixelart`}
                     />
                   </div>

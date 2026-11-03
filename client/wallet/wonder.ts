@@ -16,10 +16,75 @@ import { signal } from "@preact/signals";
 
 export const isWonderInstalled = signal<boolean>(false);
 
+const WONDER_INIT_EVENT = "wonder-wallet#initialized";
+const WONDER_DISCOVER_EVENT = "wonder-wallet#discover";
+// First sendMessage after Chrome suspends the MV3 worker fails. Wonder
+// reports that as code 4900 and documents it as safe to retry.
+const WONDER_RETRY_DELAYS_MS = [200, 500, 1000];
+
 export const checkWonder = () => {
   const isAvailable = checkWalletAvailability("wonder");
   isWonderInstalled.value = isAvailable;
   return isAvailable;
+};
+
+const backgroundUnavailable = (error: unknown): boolean => {
+  if (typeof error === "string") {
+    return error.toLowerCase().includes("background unavailable");
+  }
+  if (error instanceof Error) {
+    return error.message.toLowerCase().includes("background unavailable");
+  }
+  if (!error || typeof error !== "object") return false;
+  const record = error as { code?: unknown; message?: unknown };
+  if (record.code === 4900) return true;
+  return typeof record.message === "string" &&
+    record.message.toLowerCase().includes("background unavailable");
+};
+
+const delay = (ms: number): Promise<void> =>
+  new Promise((resolve) => setTimeout(resolve, ms));
+
+// One attempt plus a retry per delay. User rejection (4001) is not retried.
+const withWonderRetry = async <T>(run: () => Promise<T>): Promise<T> => {
+  for (
+    let attempt = 0;
+    attempt <= WONDER_RETRY_DELAYS_MS.length;
+    attempt++
+  ) {
+    try {
+      return await run();
+    } catch (error) {
+      const canRetry = attempt < WONDER_RETRY_DELAYS_MS.length &&
+        backgroundUnavailable(error);
+      if (!canRetry) throw error;
+      await delay(WONDER_RETRY_DELAYS_MS[attempt]);
+    }
+  }
+  throw new Error("Wonder Wallet background unavailable");
+};
+
+// inpage.js sets window.wonderWallet, then fires the init event. A click
+// that lands before that script runs should wait, not show the install toast.
+export const ensureWonderReady = (
+  timeoutMs = 1000,
+): Promise<boolean> => {
+  if (checkWonder()) return Promise.resolve(true);
+  if (typeof globalThis.addEventListener !== "function") {
+    return Promise.resolve(false);
+  }
+  return new Promise((resolve) => {
+    const timer = setTimeout(() => {
+      globalThis.removeEventListener(WONDER_INIT_EVENT, onInit);
+      resolve(checkWonder());
+    }, timeoutMs);
+    function onInit() {
+      clearTimeout(timer);
+      resolve(checkWonder());
+    }
+    globalThis.addEventListener(WONDER_INIT_EVENT, onInit, { once: true });
+    globalThis.dispatchEvent(new Event(WONDER_DISCOVER_EVENT));
+  });
 };
 
 const getProvider = () => {
@@ -74,7 +139,9 @@ export const connectWonder = async (
       );
       return;
     }
-    const accounts = toAccounts(await wonder.requestAccounts());
+    const accounts = toAccounts(
+      await withWonderRetry(() => wonder.requestAccounts()),
+    );
     if (accounts.length === 0) {
       logger.error("ui", {
         message: "Wonder Wallet returned no accounts",
@@ -123,10 +190,10 @@ const handleAccountsChanged = async (rawAccounts: unknown) => {
   const wallet = {} as Wallet;
   wallet.accounts = accounts;
   wallet.address = accounts[0];
-  const publicKey = await wonder.getPublicKey();
+  const publicKey = await withWonderRetry(() => wonder.getPublicKey());
   wallet.publicKey = typeof publicKey === "string" ? publicKey : "";
   wallet.addressType = addressTypeFor(accounts[0]);
-  const balance = await wonder.getBalances();
+  const balance = await withWonderRetry(() => wonder.getBalances());
   const confirmed = balance?.confirmed ?? 0;
   const unconfirmed = balance?.unconfirmed ?? 0;
   wallet.btcBalance = {
@@ -156,7 +223,7 @@ if (wonderAtLoad) {
   registerProviderEvents(wonderAtLoad);
 } else if (typeof globalThis.addEventListener === "function") {
   globalThis.addEventListener(
-    "wonder-wallet#initialized",
+    WONDER_INIT_EVENT,
     () => registerProviderEvents(getProvider()),
     { once: true },
   );

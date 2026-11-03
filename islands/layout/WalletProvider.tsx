@@ -6,7 +6,7 @@ import { phantomProvider } from "$client/wallet/phantom.ts";
 import { tapWalletProvider } from "$client/wallet/tapwallet.ts";
 import { unisatProvider } from "$client/wallet/unisat.ts";
 import { checkWalletAvailability } from "$client/wallet/wallet.ts";
-import { wonderProvider } from "$client/wallet/wonder.ts";
+import { ensureWonderReady, wonderProvider } from "$client/wallet/wonder.ts";
 import { xverseProvider } from "$client/wallet/xverse.ts";
 import { WALLET_PROVIDERS } from "$constants";
 import { useModalLayer } from "$islands/modal/states.ts";
@@ -68,8 +68,13 @@ export function WalletProvider(
         throw new Error(`Unsupported wallet provider: ${providerKey}`);
       }
 
-      // Check if wallet extension is installed before attempting connection
-      if (!checkWalletAvailability(providerKey)) {
+      // Wonder injects after document_start. Wait for that event before
+      // telling the user the extension is missing.
+      let walletReady = checkWalletAvailability(providerKey);
+      if (!walletReady && providerKey === "wonder") {
+        walletReady = await ensureWonderReady();
+      }
+      if (!walletReady) {
         const installUrl = providerInfo.installUrl;
         if (installUrl && isHttpInstallUrl(installUrl)) {
           showToast(
@@ -83,7 +88,7 @@ export function WalletProvider(
                   href={installUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="link-neutral-200 hover:text-color-secondary-400"
+                  class="link-neutral-200 hover:text-color-hover"
                 >
                   {providerInfo.name} webwallet extension
                 </a>.
