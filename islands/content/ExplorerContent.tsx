@@ -18,17 +18,10 @@ export function ExplorerContent({
   src20DataCard,
   section = "all",
   viewMode = "cardVertical",
+  sortBy = "DESC",
 }: ExplorerContentProps) {
-  // `mixedItems` (when provided) is a pre-ordered, pre-paginated feed built
-  // server-side by ExplorerFeedRepository — a single DB-level UNION ALL of
-  // stamps and SRC-20 transactions ordered by block_index/tx_index, so it's
-  // already correctly interwoven and safe to render as-is. Falling back to
-  // a client-side merge below is only for callers that haven't switched to
-  // the unified feed yet (e.g. dev placeholder data, or filter combinations
-  // that still use two independently-paginated queries) — in that case the
-  // two datasets aren't guaranteed to share the same time window, so this
-  // sort can only make the *contents already fetched* look ordered, not
-  // guarantee correct interleaving across pages.
+  // The server selects each page's records. Keep those page groups intact
+  // for both the unified feed and the separate stamp/token queries.
   const mixed: MixedItem[] = mixedItems ?? (() => {
     const stampItems: MixedItem[] = (stamps ?? []).map((s) => ({
       kind: "stamp",
@@ -39,17 +32,40 @@ export function ExplorerContent({
       item: s,
     }));
 
-    return [...stampItems, ...src20Items].sort(
-      (a, b) => Number(b.item.block_index) - Number(a.item.block_index),
-    );
+    return [...stampItems, ...src20Items];
   })();
 
   /* ===== FILTER by section ===== */
-  const visible: MixedItem[] = section === "stamps"
+  const sectionItems: MixedItem[] = section === "stamps"
     ? mixed.filter((e) => e.kind === "stamp")
     : section === "tokens"
     ? mixed.filter((e) => e.kind === "src20")
     : mixed;
+
+  // Read each page from earliest to latest without changing its membership
+  // or mutating the server data. Recent sales retain their sale-time order.
+  const visible = (() => {
+    if (isRecentSales) return sectionItems;
+    if (mixedItems) {
+      // The unified feed knows the transaction order even when hydrated
+      // tokens omit tx_index. Reverse that order rather than sorting again.
+      return sortBy === "ASC" ? sectionItems : [...sectionItems].reverse();
+    }
+
+    return [...sectionItems].sort((a, b) => {
+      const blockDiff = Number(a.item.block_index) - Number(b.item.block_index);
+      if (blockDiff !== 0) return blockDiff;
+
+      const aTxIndex = (a.item as { tx_index?: number | null }).tx_index;
+      const bTxIndex = (b.item as { tx_index?: number | null }).tx_index;
+      if (aTxIndex == null || bTxIndex == null) return 0;
+      const aIndex = Number(aTxIndex);
+      const bIndex = Number(bTxIndex);
+      return Number.isFinite(aIndex) && Number.isFinite(bIndex)
+        ? aIndex - bIndex
+        : 0;
+    });
+  })();
 
   /* ===== RENDER ===== */
   return (
