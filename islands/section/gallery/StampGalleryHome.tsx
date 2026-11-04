@@ -1,5 +1,6 @@
 /* ===== STAMP GALLERY HOME COMPONENT ===== */
 import { containerBackground, containerGap } from "$layout";
+import type { BrandChain } from "$lib/utils/chain/brand.ts";
 import {
   StampGallery,
   StampListingsGallery,
@@ -27,7 +28,9 @@ export function StampGalleryHome({
   collectionData: _collectionData = [],
   recentSalesData = [],
   newListingsData = [],
-}: StampGalleryHomeProps) {
+  chain = "bitcoin",
+}: StampGalleryHomeProps & { chain?: BrandChain }) {
+  const isEcx = chain === "ecx";
   /* ===== SECTION CONFIGURATION ===== */
   // Combine Classic, Posh, and Recursive stamps into a single gallery,
   // sorted by recency (tx_index) so the latest stamps across all types
@@ -36,14 +39,13 @@ export function StampGalleryHome({
     .sort((a, b) => (b.tx_index ?? 0) - (a.tx_index ?? 0));
 
   const CombinedArtStampsSection: StampGalleryProps = {
-    title: "ART STAMPS",
-    subTitle: "LATEST CREATIONS",
+    ...(isEcx ? {} : { title: "ART STAMPS", subTitle: "LATEST CREATIONS" }),
     type: "all",
     stamps: combinedStamps,
     variant: "cardSquare" as const,
     viewAllLink: "/explorer?section=stamps",
     gridClass: `
-      grid w-full gap-6
+      ${isEcx ? "estamps-art-grid " : ""}grid w-full gap-6
       grid-cols-2 min-[420px]:grid-cols-3 mobileMd:grid-cols-4 mobileLg:grid-cols-5 tablet:grid-cols-6 desktop:grid-cols-7
       auto-rows-fr
     `,
@@ -63,9 +65,14 @@ export function StampGalleryHome({
         gap-12 mobileLg:gap-24 desktop:gap-36
       ">
       {/* ===== STAMPS SECTION ===== */}
-      <div class={`${containerBackground} ${containerGap}`}>
+      <div
+        class={`${
+          isEcx ? "estamps-gallery-surface " : ""
+        }${containerBackground} ${containerGap}`}
+      >
         {/* ===== LATEST CREATIONS ===== */}
-        <StampGallery {...CombinedArtStampsSection} />
+        {isEcx && <h2 class="estamps-section-title">Latest creations</h2>}
+        <StampGallery {...CombinedArtStampsSection} showStampNumbers={isEcx} />
 
         {/* ===== NEW LISTINGS ===== */}
         <StampListingsGallery

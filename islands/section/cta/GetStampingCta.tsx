@@ -1,10 +1,39 @@
 /* ===== GET STAMPING CTA COMPONENT ===== */
 import { Button } from "$button";
 import { containerBackground, containerGap } from "$layout";
+import type { BrandChain } from "$lib/utils/chain/brand.ts";
 import { subtitleNeutral, text, titleNeutral } from "$text";
 
+interface GetStampingCtaProps {
+  chain?: BrandChain;
+}
+
 /* ===== COMPONENT ===== */
-export default function GetStampingCta() {
+export default function GetStampingCta(
+  { chain = "bitcoin" }: GetStampingCtaProps = {},
+) {
+  if (chain === "ecx") {
+    return (
+      <section class="estamps-create-intro">
+        <div>
+          <p class="estamps-eyebrow">For artists</p>
+          <h2>Make your mark.</h2>
+          <p>
+            Explore Classic, Posh and Recursive Stamps with Stampchain’s
+            creation tools. Read the guide before getting started.
+          </p>
+        </div>
+        <div class="estamps-actions">
+          <a class="estamps-button estamps-button-secondary" href="/faq">
+            Read the FAQ
+          </a>
+          <a class="estamps-button estamps-button-secondary" href="/create">
+            Create a Stamp <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </section>
+    );
+  }
   /* ===== STATE ===== */
 
   /* ===== RENDER ===== */

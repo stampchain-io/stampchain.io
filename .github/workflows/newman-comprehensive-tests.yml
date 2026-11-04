@@ -319,6 +319,16 @@ jobs:
             comment += '- [Newman Testing Documentation](docs/NEWMAN_COMPREHENSIVE_TESTING.md)\n';
             comment += '- [API Endpoint Coverage](docs/API_ENDPOINT_AUDIT.md)\n';
             
+            // The job summary is available even when a fork token cannot comment.
+            await core.summary.addRaw(comment).write();
+
+            const headRepository = context.payload.pull_request.head.repo?.full_name;
+            const baseRepository = `${context.repo.owner}/${context.repo.repo}`;
+            if (headRepository !== baseRepository) {
+              core.info('Newman report saved to the job summary; skipping PR comments for a fork.');
+              return;
+            }
+
             // Find existing comment
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
@@ -984,6 +994,16 @@ jobs:
             comment += '\n### 📎 Resources\n\n';
             comment += '- [Test Reports Artifact](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})\n';
 
+            // The job summary is available even when a fork token cannot comment.
+            await core.summary.addRaw(comment).write();
+
+            const headRepository = context.payload.pull_request.head.repo?.full_name;
+            const baseRepository = `${context.repo.owner}/${context.repo.repo}`;
+            if (headRepository !== baseRepository) {
+              core.info('Newman report saved to the job summary; skipping PR comments for a fork.');
+              return;
+            }
+
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -1178,6 +1198,16 @@ jobs:
 
             [View detailed results artifact](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
             `;
+
+            // The job summary is available even when a fork token cannot comment.
+            await core.summary.addRaw(comment).write();
+
+            const headRepository = context.payload.pull_request.head.repo?.full_name;
+            const baseRepository = `${context.repo.owner}/${context.repo.repo}`;
+            if (headRepository !== baseRepository) {
+              core.info('Schema contract report saved to the job summary; skipping PR comments for a fork.');
+              return;
+            }
 
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,

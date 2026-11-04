@@ -94,8 +94,8 @@ jobs:
           path: reports/performance-baselines.json
           retention-days: 90
 
-      - name: Comment PR with performance results
-        if: github.event_name == 'pull_request'
+      # Summaries are available on every run; fork PR tokens cannot comment.
+      - name: Report performance results
         continue-on-error: true
         uses: actions/github-script@v9
         with:
@@ -121,7 +121,17 @@ jobs:
 
               View detailed results in the [benchmark artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
 
-              github.rest.issues.createComment({
+              await core.summary.addRaw(comment).write();
+
+              if (context.eventName !== 'pull_request') return;
+              const headRepository = context.payload.pull_request.head.repo?.full_name;
+              const baseRepository = `${context.repo.owner}/${context.repo.repo}`;
+              if (headRepository !== baseRepository) {
+                core.info('Performance report saved to the job summary; skipping PR comments for a fork.');
+                return;
+              }
+
+              await github.rest.issues.createComment({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,

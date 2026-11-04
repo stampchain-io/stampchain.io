@@ -331,8 +331,8 @@ Deno.test({
           },
         }),
       );
-      assert(html.includes("e</span>STAMPS"));
-      assert(html.includes('class="estamps-attribution">by Stampchain</span>'));
+      assert(html.includes('role="img" aria-label="eSTAMPS"'));
+      assert(html.includes("Powered by Stampchain"));
       assert(!html.includes("STAMP</span>CHAIN"));
       assert(!/ECX STAMPS|ECX Stamps/.test(html));
       assertEquals(clientChain.getClientChainId(), "ecx");
@@ -646,7 +646,13 @@ Deno.test({
       ),
     );
     assert(
-      !banner({ CHAIN: "ecx", EXPLORER_BASE_URL: "", ECX_FIRST_STAMP: 1_507_458 } as any).includes(
+      !banner(
+        {
+          CHAIN: "ecx",
+          EXPLORER_BASE_URL: "",
+          ECX_FIRST_STAMP: 1_507_458,
+        } as any,
+      ).includes(
         "href=",
       ),
     );
@@ -659,17 +665,27 @@ Deno.test({
   sanitizeOps: false,
   sanitizeResources: false,
   async fn() {
-    const { BlockRepository } = await import("$server/database/blockRepository.ts");
+    const { BlockRepository } = await import(
+      "$server/database/blockRepository.ts"
+    );
     const mod = await import("$server/services/chain/chainLabel.ts");
     const { stub } = await import("@std/testing/mock");
     mod.resetChainLabelCache();
-    const s = stub(BlockRepository, "getLastBlockWithHashFromDb", () => new Promise(() => {}) as never);
+    const s = stub(
+      BlockRepository,
+      "getLastBlockWithHashFromDb",
+      () => new Promise(() => {}) as never,
+    );
     try {
       const started = Date.now();
       const label = await mod.getChainLabel("ecx");
       const waited = Date.now() - started;
-      if (!label || label.chain !== "ecx" || label.height !== null) throw new Error(JSON.stringify(label));
-      if (waited > mod.TIP_BUDGET_MS + 500) throw new Error(`waited ${waited}ms`);
+      if (!label || label.chain !== "ecx" || label.height !== null) {
+        throw new Error(JSON.stringify(label));
+      }
+      if (waited > mod.TIP_BUDGET_MS + 500) {
+        throw new Error(`waited ${waited}ms`);
+      }
     } finally {
       s.restore();
       mod.resetChainLabelCache();

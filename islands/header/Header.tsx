@@ -1,4 +1,5 @@
 /* ===== HEADER COMPONENT ===== */
+import { EStampsWordmark } from "$components/brand/EStampsWordmark.tsx";
 import { Icon, LogoIcon } from "$icon";
 import { getChainBrand } from "$lib/utils/chain/brand.ts";
 import {
@@ -92,6 +93,7 @@ export function Header({ chain }: HeaderProps = {}) {
   // chain here, during render, reaches every island hydrated after it.
   setClientChain(chain);
   const brand = getChainBrand(chain?.CHAIN);
+  const isEcx = chain?.CHAIN === "ecx";
   const [open, setOpen] = useState(false);
   const [currentPath, setCurrentPath] = useState<string | null>(null);
   const [drawerContent, setDrawerContent] = useState<
@@ -516,11 +518,13 @@ export function Header({ chain }: HeaderProps = {}) {
               />
             </div>
             <h6
-              class={`-mt-[3px] -mr-3 font-black text-lg text-color-neutral-800 tracking-wide select-none ${
-                type === "menu" ? "italic pr-0.5" : ""
-              }`}
+              class={isEcx && type === "menu"
+                ? "estamps-drawer-title"
+                : `-mt-[3px] -mr-3 font-black text-lg text-color-neutral-800 tracking-wide select-none ${
+                  type === "menu" ? "italic pr-0.5" : ""
+                }`}
             >
-              {getTitle()}
+              {isEcx && type === "menu" ? <EStampsWordmark /> : getTitle()}
             </h6>
           </div>
           {getContent()}
@@ -590,39 +594,60 @@ export function Header({ chain }: HeaderProps = {}) {
   };
 
   /* ===== LOGO ICON ===== */
-  const logoIcon = (
-    <LogoIcon
-      href="/home"
-      f-partial="/home"
-      onClick={() => setCurrentPath("home")}
-    >
-      <span class={`${logoHeader} hidden tablet:inline`}>
-        <span class={`group-hover:text-color-hover ${transitionColors}`}>
-          {brand.logo.lead}
+  const logoIcon = isEcx
+    ? (
+      <a
+        href="/home"
+        f-partial="/home"
+        onClick={() => setCurrentPath("home")}
+        class="estamps-header-brand"
+      >
+        <EStampsWordmark />
+        <span class="estamps-attribution">Powered by Stampchain</span>
+      </a>
+    )
+    : (
+      <LogoIcon
+        href="/home"
+        f-partial="/home"
+        onClick={() => setCurrentPath("home")}
+      >
+        <span class={`${logoHeader} hidden tablet:inline`}>
+          <span class={`group-hover:text-color-hover ${transitionColors}`}>
+            {brand.logo.lead}
+          </span>
+          {brand.logo.tail}
         </span>
-        {brand.logo.tail}
-        {brand.attribution && (
-          <span class="estamps-attribution">{brand.attribution}</span>
-        )}
-      </span>
-    </LogoIcon>
-  );
+      </LogoIcon>
+    );
 
   /* ===== COMPONENT RENDER ===== */
   return (
-    <header class="mobileLg:flex justify-between items-center max-w-desktop w-full mx-auto
-     px-shell-mobile mobileLg:px-shell-tablet tablet:px-shell-desktop
-     pt-shell-mobile mobileLg:pt-shell-tablet tablet:pt-shell-desktop pb-5">
+    <header
+      class={isEcx
+        ? "estamps-header mobileLg:flex justify-between items-center max-w-desktop w-full mx-auto px-shell-mobile mobileLg:px-shell-tablet tablet:px-shell-desktop pt-shell-mobile mobileLg:pt-shell-tablet tablet:pt-shell-desktop pb-5"
+        : "mobileLg:flex justify-between items-center max-w-desktop w-full mx-auto px-shell-mobile mobileLg:px-shell-tablet tablet:px-shell-desktop pt-shell-mobile mobileLg:pt-shell-tablet tablet:pt-shell-desktop pb-5"}
+    >
       {/* ===== MOBILE NAVIGATION ===== */}
-      <div class="mobileLg:hidden flex items-center w-full relative z-header">
+      <div
+        class={`mobileLg:hidden flex items-center w-full relative z-header${
+          isEcx ? " estamps-header-mobile" : ""
+        }`}
+      >
         <div
-          class={`flex items-center justify-between w-full py-0.5 px-5 ${container1} !rounded-full`}
+          class={`flex items-center justify-between w-full py-0.5 px-5 ${container1} !rounded-full${
+            isEcx ? " estamps-header-bar" : ""
+          }`}
         >
           {/* Left: Logo Icon */}
           {logoIcon}
 
           {/* Right: Search, Tools, Wallet and Menu Buttons */}
-          <div class="flex items-center gap-1 -mr-2">
+          <div
+            class={`flex items-center gap-1 -mr-2${
+              isEcx ? " estamps-header-actions" : ""
+            }`}
+          >
             <SearchButton />
             {ToolsButton({
               onOpenDrawer: openDrawer,
@@ -638,24 +663,36 @@ export function Header({ chain }: HeaderProps = {}) {
       </div>
 
       {/* ===== TABLET/DESKTOP NAVIGATION ===== */}
-      <div class="hidden mobileLg:flex items-center w-full relative z-header">
+      <div
+        class={`hidden mobileLg:flex items-center w-full relative z-header${
+          isEcx ? " estamps-header-desktop" : ""
+        }`}
+      >
         <div
           class={`relative flex items-center justify-between w-full
              py-0.5 px-4
-             ${container1} !rounded-full`}
+             ${container1} !rounded-full${isEcx ? " estamps-header-bar" : ""}`}
         >
           {/* Left: Logo Icon */}
           {logoIcon}
 
           {/* Center: Navigation Links (only when NAV_POSITION === "center") */}
           {NAV_POSITION === "center" && (
-            <div class="absolute left-1/2 -translate-x-1/2 flex items-center gap-5">
+            <div
+              class={`absolute left-1/2 -translate-x-1/2 flex items-center gap-5${
+                isEcx ? " estamps-header-nav" : ""
+              }`}
+            >
               {renderNavLinks()}
             </div>
           )}
 
           {/* Right: Icon Buttons (nav links prepended when NAV_POSITION === "right") */}
-          <div class="flex items-center gap-1">
+          <div
+            class={`flex items-center gap-1${
+              isEcx ? " estamps-header-actions" : ""
+            }`}
+          >
             {NAV_POSITION === "right" && (
               <div class="flex items-center gap-5 mr-2">
                 {renderNavLinks()}

@@ -1,4 +1,5 @@
 /* ===== FOOTER COMPONENT ===== */
+import { EStampsWordmark } from "$components/brand/EStampsWordmark.tsx";
 import { Icon } from "$icon";
 import { getClientChainId } from "$lib/utils/chain/clientChain.ts";
 import { containerBackground } from "$layout";
@@ -116,14 +117,14 @@ const socialLinks = [
 
 /* ===== MAIN FOOTER COMPONENT ===== */
 export function Footer() {
+  const isEcx = getClientChainId() === "ecx";
   /* ===== COMPONENT RENDER ===== */
   return (
-    <footer class="
-      flex flex-col tablet:flex-row justify-between max-w-desktop w-full mx-auto
-      px-shell-mobile mobileLg:px-shell-tablet tablet:px-shell-desktop
-      pt-5 pb-shell-mobile mobileLg:pb-shell-tablet tablet:pb-shell-desktop
-      gap-2 mobileMd:gap-3 tablet:gap-4
-    ">
+    <footer
+      class={isEcx
+        ? "estamps-footer flex flex-col tablet:flex-row justify-between max-w-desktop w-full mx-auto px-shell-mobile mobileLg:px-shell-tablet tablet:px-shell-desktop pt-5 pb-shell-mobile mobileLg:pb-shell-tablet tablet:pb-shell-desktop gap-2 mobileMd:gap-3 tablet:gap-4"
+        : " flex flex-col tablet:flex-row justify-between max-w-desktop w-full mx-auto px-shell-mobile mobileLg:px-shell-tablet tablet:px-shell-desktop pt-5 pb-shell-mobile mobileLg:pb-shell-tablet tablet:pb-shell-desktop gap-2 mobileMd:gap-3 tablet:gap-4 "}
+    >
       {/* ===== MOBILE SMALL CENTER SECTION - MOBILE MEDIUM+ LEFT SECTION ===== */}
       <div
         class={`${containerBackground} !py-2.5 tablet:flex-row justify-between`}
@@ -135,16 +136,28 @@ export function Footer() {
       ">
           {/* ===== LOGO AND TAGLINE ===== */}
           <div class="flex flex-col items-center mobileMd:items-start">
-            <h5 class={logoFooter}>
-              STAMP<span class="text-color-neutral-400">
-                CHAIN
-              </span>
-            </h5>
-            <h6 class={tagline}>
-              {getClientChainId() === "ecx"
-                ? "IMMORTALISED ART STORED ON ECX"
-                : "IMMORTALISED ART STORED ON BITCOIN"}
-            </h6>
+            {isEcx
+              ? (
+                <div class="estamps-footer-brand">
+                  <EStampsWordmark />
+                  <a class="estamps-attribution" href="https://stampchain.io/">
+                    Powered by Stampchain
+                  </a>
+                  <p class="estamps-footer-tagline">Art, collected on ECX.</p>
+                </div>
+              )
+              : (
+                <>
+                  <h5 class={logoFooter}>
+                    STAMP<span class="text-color-neutral-400">
+                      CHAIN
+                    </span>
+                  </h5>
+                  <h6 class={tagline}>
+                    IMMORTALISED ART STORED ON BITCOIN
+                  </h6>
+                </>
+              )}
           </div>
 
           {/* ===== SOCIAL MEDIA ICONS ===== */}

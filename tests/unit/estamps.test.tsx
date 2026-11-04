@@ -495,7 +495,8 @@ Deno.test({
 
 Deno.test({
   ...opts,
-  name: "ecx: home shows eSTAMPS by Stampchain, and an honest empty gallery",
+  name:
+    "ecx: art-led home preserves native numbering and honest gallery states",
   fn() {
     const url = new URL("https://ecx.stampchain.io/");
     clientChain.setClientChain(ECX_CHAIN);
@@ -503,15 +504,34 @@ Deno.test({
       const empty = normalize(renderToString(
         h(Home as any, { data: { ecxView: ecxViewState(url, "native") }, url }),
       ));
-      assert(empty.includes('<span class="estamps-hero__e">e</span>STAMPS'));
+      assert(empty.includes("<h1>A new home for Stamps art.</h1>"));
+      assert(empty.includes('href="/explorer?section=stamps"'));
+      assert(empty.includes('href="/howto"'));
       assert(
-        empty.includes('<span class="estamps-hero__by">by Stampchain</span>'),
+        empty.includes('alt="A collage of artworks from the Stamps community"'),
       );
       assert(empty.includes("ECX-native stamps start at block 973,728."));
       assert(!empty.includes("BECAUSE SATS DON'T EXIST"));
       assert(empty.includes("NO ECX-NATIVE STAMPS YET"));
       assert(empty.includes('href="/?history=inherited"'));
-      assert(!empty.includes("LATEST CREATIONS"));
+      assert(!empty.includes("Latest creations"));
+
+      const native = normalize(renderToString(
+        h(Home as any, {
+          data: {
+            stamps_art: [{ ...stamp, stamp: ESTAMP0 }],
+            ecxView: ecxViewState(url, "native"),
+          },
+          url,
+        }),
+      ));
+      assert(!native.includes("NO ECX-NATIVE STAMPS"));
+      assert(native.includes("Latest creations"));
+      assertEquals(currentOption(native), "ECX-NATIVE");
+      assert(native.includes('<p class="estamps-art-caption">eSTAMP #0</p>'));
+      assert(
+        !native.includes(`<p class="estamps-art-caption">#${ESTAMP0}</p>`),
+      );
 
       const inherited = normalize(renderToString(
         h(Home as any, {
@@ -523,15 +543,12 @@ Deno.test({
         }),
       ));
       assert(!inherited.includes("NO ECX-NATIVE STAMPS"));
-      assert(inherited.includes("LATEST CREATIONS"));
+      assert(inherited.includes("Latest creations"));
+      assert(inherited.includes('<p class="estamps-art-caption">#4242</p>'));
       assertEquals(currentOption(inherited), "INHERITED HISTORY");
       assert(!/ECX Stamps/.test(empty + inherited));
-      // "Bitcoin Stamps" only as Stampchain's protocol history.
-      assert(
-        empty.includes(
-          "eSTAMPS is built and run by Stampchain, the team behind the Bitcoin Stamps protocol.",
-        ),
-      );
+      assert(empty.includes('href="/faq"'));
+      assert(empty.includes('href="/create"'));
       assert(!empty.includes("trade Bitcoin Stamps"));
     } finally {
       clientChain.setClientChain(null);

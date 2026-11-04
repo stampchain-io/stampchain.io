@@ -199,8 +199,8 @@ if (!isEcx) {
       assert(
         html.includes(`href="https://ecx.example/block/${TIP.block_hash}"`),
       );
-      assert(html.includes("e</span>STAMPS"));
-      assert(html.includes('class="estamps-attribution">by Stampchain</span>'));
+      assert(html.includes('role="img" aria-label="eSTAMPS"'));
+      assert(html.includes("Powered by Stampchain"));
       assert(!html.includes("STAMP</span>CHAIN"));
       // The banner keeps the indexed tip, the fork block and service
       // readiness apart. ECX_BROADCAST_ENABLED is unset in this child.
@@ -211,7 +211,7 @@ if (!isEcx) {
       assert(html.includes("TRANSACTIONS NOT OPEN YET"));
       assert(html.includes('data-chain-status="indexing"'));
       assert(!/ECX STAMPS|ECX Stamps/.test(html));
-      assert(html.includes("IMMORTALISED ART STORED ON ECX"));
+      assert(html.includes("Art, collected on ECX."));
       assert(!html.includes("STORED ON BITCOIN"));
       // _app passed the chain to the Header island as a prop (Fresh
       // serialises it for the browser); Header published it while rendering.
