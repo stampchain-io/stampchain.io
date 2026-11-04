@@ -154,9 +154,8 @@ jobs:
 
       - name: Create PR Comment with Quality Results
         if: github.event_name == 'pull_request'
-        # Fork PRs receive a read-only GITHUB_TOKEN; commenting fails with
-        # HttpError 403 "Resource not accessible by integration". Don't fail
-        # the whole job on that — the quality checks above are what matter.
+        # Save every report to the job summary. Fork PR tokens are read-only,
+        # so skip the comment API for forks and use that summary instead.
         continue-on-error: true
         uses: actions/github-script@v9
         with:
@@ -270,6 +269,16 @@ jobs:
               comment += '**Note:** This is a non-blocking warning.\n\n';
             } else {
               comment += '### ✅ Response Pattern Check Passed\n\n';
+            }
+
+            // The job summary is available even when a fork token cannot comment.
+            await core.summary.addRaw(comment).write();
+
+            const headRepository = context.payload.pull_request.head.repo?.full_name;
+            const baseRepository = `${context.repo.owner}/${context.repo.repo}`;
+            if (headRepository !== baseRepository) {
+              core.info('Quality report saved to the job summary; skipping PR comments for a fork.');
+              return;
             }
 
             // Find existing comment

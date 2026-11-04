@@ -21,6 +21,7 @@ const EXCEPTIONS = [
   "routes/test/",
   "routes/_middleware.ts", // Complex middleware with custom headers
   "routes/api/v2/stamp/[stamp]/preview.ts", // Binary image processing with specialized headers
+  "routes/token-image/[txHash].ts", // Raw SVG/empty error bodies with sandbox CSP; not HTML or JSON
 ];
 
 interface ResponseIssue {
