@@ -4,6 +4,7 @@ import { StampCard } from "$card";
 import { BREAKPOINTS } from "$constants";
 import { SortButton } from "$islands/button/SortButton.tsx";
 import { EmptyState } from "$layout";
+import { stampNumberText, stampPrefix } from "$lib/utils/chain/clientChain.ts";
 import { useLoadingSkeleton } from "$lib/hooks/useLoadingSkeleton.ts";
 import { subtitlePrimary, titlePrimary } from "$text";
 import type { StampGalleryProps, StampRow } from "$types/stamp.d.ts";
@@ -27,7 +28,8 @@ export default function StampGallery({
   sortBy = "ASC",
   swiperSlidesPerView = 3,
   swiperBreakpoints,
-}: StampGalleryProps) {
+  showStampNumbers = false,
+}: StampGalleryProps & { showStampNumbers?: boolean }) {
   /* ===== STATE ===== */
   const swiperRef = useRef<Swiper | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -239,6 +241,12 @@ export default function StampGallery({
                       isRecentSale={isRecentSales}
                       variant={variant}
                     />
+                    {showStampNumbers && typeof stamp.stamp === "number" && (
+                      <p class="estamps-art-caption">
+                        {stampPrefix(stamp.stamp)}
+                        {stampNumberText(stamp.stamp)}
+                      </p>
+                    )}
                   </div>
                 ))
               )}

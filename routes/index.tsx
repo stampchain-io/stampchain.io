@@ -448,7 +448,7 @@ export default function Home({ data }: PageProps<HomePageData>) {
       }
       {/* ===== MAIN CONTENT ===== */}
       <div
-        class={`${body} ${containerGap}`}
+        class={`${body} ${containerGap}${ecxView ? " estamps-home" : ""}`}
       >
         {/* ===== CRITICAL ABOVE FOLD CONTENT ===== */}
         {ecxView ? <HomeHeader chain="ecx" /> : <HomeHeader />}
@@ -467,6 +467,7 @@ export default function Home({ data }: PageProps<HomePageData>) {
           : (
             <div style="content-visibility: auto; contain-intrinsic-size: 0 1240px;">
               <StampGalleryHome
+                {...(ecxView && { chain: "ecx" as const })}
                 stamps_art={stamps_art}
                 stamps_posh={stamps_posh}
                 stamps_src721={stamps_src721}
@@ -480,7 +481,7 @@ export default function Home({ data }: PageProps<HomePageData>) {
         {/* ===== BELOW FOLD CONTENT - LAZY LOAD ===== */}
         <div style="content-visibility: auto; contain-intrinsic-size: 0 360px;">
           <div class="mb-5 mobileLg:mb-7.5">
-            <GetStampingCta />
+            <GetStampingCta {...(ecxView && { chain: "ecx" as const })} />
           </div>
 
           <div

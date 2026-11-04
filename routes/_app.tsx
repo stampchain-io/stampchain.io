@@ -124,10 +124,25 @@ export default function App({ Component, state, url }: PageProps<unknown>) {
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
-        />
+        {chain === "ecx"
+          ? (
+            <>
+              <link
+                rel="stylesheet"
+                href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap"
+              />
+              <link
+                rel="stylesheet"
+                href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"
+              />
+            </>
+          )
+          : (
+            <link
+              rel="stylesheet"
+              href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+            />
+          )}
 
         {/* ===== CRITICAL STYLES ===== */}
         <style>
@@ -275,7 +290,7 @@ export default function App({ Component, state, url }: PageProps<unknown>) {
       {/* ===== BODY SECTION ===== */}
       <body class="!relative min-h-screen overflow-x-hidden overflow-hidden">
         {/* ===== BACKGROUND ANIMATION===== */}
-        <BackgroundTopology />
+        {chain !== "ecx" && <BackgroundTopology />}
 
         {/* ===== MAIN CONTENT WRAPPER ===== */}
         {

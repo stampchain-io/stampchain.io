@@ -1,23 +1,521 @@
-/* ===== eSTAMPS PRESENTATION (ECX ONLY) ===== */
-/*
- * Loaded by routes/_app.tsx only under CHAIN=ecx, and every rule is scoped
- * to html[data-chain="ecx"], so Bitcoin pages neither load nor match it.
- * Plain CSS on purpose: no new Tailwind utilities, so the shared
- * styles.css build is unchanged.
- */
-
+/* eSTAMPS presentation layer. Loaded only on ECX; never changes chain logic. */
 html[data-chain="ecx"] {
-  --estamps-amber: #f5b13d;
-  --estamps-amber-strong: #f59e0b;
-  --estamps-amber-soft: rgba(245, 177, 61, 0.12);
-  --estamps-ink: #0a0a0a;
+  color-scheme: dark;
+  --estamps-ink: #0b0b0c;
+  --estamps-surface: #151516;
+  --estamps-line: #303033;
+  --estamps-text: #f4f2ed;
+  --estamps-muted: #aaa8a2;
+  --estamps-amber-soft: rgba(232, 168, 74, .12);
   --estamps-mat-from: #24221f;
   --estamps-mat-to: #161513;
-  --estamps-mat-edge: rgba(255, 255, 255, 0.09);
-  --estamps-text: #e5e5e5;
-  --estamps-muted: #a3a3a3;
+  --estamps-mat-edge: rgba(255, 255, 255, .09);
+  --estamps-amber: #e8a84a;
+  --estamps-sans: "Satoshi", system-ui, sans-serif;
+  --estamps-mono: "JetBrains Mono", ui-monospace, monospace;
+  /* Existing shared controls already consume these tokens. */
+  --color-primary-50: #fff9ed;
+  --color-primary-100: #fceac7;
+  --color-primary-200: #f6d599;
+  --color-primary-300: #efbf70;
+  --color-primary-400: var(--estamps-amber);
+  --color-primary-500: #ce8f35;
+  --color-primary-600: #ad7024;
+  --color-primary-700: #87541d;
+  --color-primary-800: #633e19;
+  --color-primary-900: #412a15;
+  --color-primary-950: #24190f;
+  --color-purple: var(--estamps-amber);
+  --color-purple-semilight: var(--estamps-amber);
+  --color-purple-light: #efbf70;
+  background: var(--estamps-ink);
 }
 
+html[data-chain="ecx"] body {
+  background: var(--estamps-ink);
+  color: var(--estamps-text);
+  font-family: var(--estamps-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+html[data-chain="ecx"] :is(.font-montserrat, .font-sans) {
+  font-family: var(--estamps-sans);
+}
+
+html[data-chain="ecx"] .font-mono {
+  font-family: var(--estamps-mono);
+}
+
+html[data-chain="ecx"] main,
+html[data-chain="ecx"] .estamps-header,
+html[data-chain="ecx"] .estamps-footer,
+html[data-chain="ecx"] .estamps-banner {
+  max-width: 1440px;
+}
+
+/* Bridge the existing Tailwind accent utilities without changing BTC output. */
+html[data-chain="ecx"] :is(
+  .text-color-primary-300,
+  .text-color-primary-400,
+  .text-color-primary-500,
+  .text-color-purple,
+  .text-color-purple-light,
+  .text-color-hover
+) {
+  color: var(--estamps-amber);
+}
+
+html[data-chain="ecx"] .stroke-color-primary-500 {
+  stroke: var(--estamps-muted);
+}
+
+html[data-chain="ecx"] :is(
+  [class~="hover:text-color-hover"]:hover,
+  .group:hover [class~="group-hover:text-color-hover"]
+) {
+  color: var(--estamps-amber);
+}
+
+html[data-chain="ecx"] :is(
+  [class~="hover:border-color-hover"]:hover,
+  [class~="focus:border-color-primary-400"]:focus
+) {
+  border-color: var(--estamps-amber);
+}
+
+html[data-chain="ecx"] :is(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid var(--estamps-amber);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* Keep the indexed tip, fork reference and transaction readiness distinct. */
+html[data-chain="ecx"] .estamps-banner {
+  gap: 4px 8px;
+  padding-top: 12px;
+  padding-bottom: 6px;
+  color: var(--estamps-muted);
+  font-family: var(--estamps-mono);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+html[data-chain="ecx"] .estamps-chain-note {
+  margin-left: auto;
+}
+
+html[data-chain="ecx"] .estamps-header {
+  padding-top: 16px;
+  padding-bottom: 24px;
+}
+
+html[data-chain="ecx"] .estamps-header-bar {
+  min-height: 92px;
+  padding: 18px 0;
+  border: 0;
+  border-bottom: 1px solid var(--estamps-line);
+  border-radius: 0 !important;
+  background: var(--estamps-ink);
+  backdrop-filter: none;
+}
+
+html[data-chain="ecx"] .estamps-header-brand,
+html[data-chain="ecx"] .estamps-footer-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  text-decoration: none;
+}
+
+html[data-chain="ecx"] .estamps-wordmark {
+  display: inline-flex;
+  align-items: baseline;
+  color: var(--estamps-text);
+  font-family: var(--estamps-sans);
+  font-size: 30px;
+  font-weight: 500;
+  font-style: normal;
+  letter-spacing: -1.6px;
+  line-height: 1;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+html[data-chain="ecx"] .estamps-wordmark-e {
+  color: var(--estamps-amber);
+  font-size: 1.25em;
+  letter-spacing: -.075em;
+  margin-right: .05em;
+}
+
+html[data-chain="ecx"] .estamps-attribution {
+  color: var(--estamps-muted);
+  font-family: var(--estamps-sans);
+  font-size: 12px;
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: .01em;
+  line-height: 1.4;
+  text-transform: none;
+}
+
+html[data-chain="ecx"] .estamps-header-nav {
+  position: static;
+  transform: none;
+  gap: 24px;
+  margin-inline: 24px;
+}
+
+html[data-chain="ecx"] .estamps-header-nav :is(a, button, span) {
+  text-transform: none;
+  font-size: 13px;
+  letter-spacing: 0;
+}
+
+html[data-chain="ecx"] .estamps-header-actions {
+  gap: 8px;
+  margin-right: 0;
+}
+
+html[data-chain="ecx"] .estamps-header-actions button {
+  min-width: 40px;
+  min-height: 40px;
+}
+
+html[data-chain="ecx"] .estamps-header-actions svg {
+  stroke: var(--estamps-muted);
+}
+
+html[data-chain="ecx"] .estamps-header-actions button:hover svg {
+  stroke: var(--estamps-amber);
+}
+
+/* Art and readable copy replace the darkened background treatment. */
+html[data-chain="ecx"] .estamps-home {
+  gap: 48px;
+}
+
+html[data-chain="ecx"] .estamps-hero {
+  display: grid;
+  grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: 48px;
+  padding-block: 20px 12px;
+}
+
+html[data-chain="ecx"] .estamps-eyebrow {
+  margin: 0 0 20px;
+  color: var(--estamps-muted);
+  font-family: var(--estamps-mono);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: .1em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+html[data-chain="ecx"] .estamps-hero h1 {
+  max-width: 11ch;
+  margin: 0 0 24px;
+  color: var(--estamps-text);
+  font-size: clamp(40px, 4.6vw, 64px);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -.045em;
+  text-transform: none;
+}
+
+html[data-chain="ecx"] .estamps-history-note {
+  max-width: 48ch;
+  margin: 20px 0 0;
+  color: var(--estamps-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+html[data-chain="ecx"] .estamps-intro {
+  max-width: 34ch;
+  margin: 0 0 28px;
+  color: var(--estamps-muted);
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+html[data-chain="ecx"] .estamps-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+html[data-chain="ecx"] [class~="border-[var(--color-button)]"] {
+  border-radius: 4px;
+  min-height: 36px;
+  font-size: 12px;
+}
+
+html[data-chain="ecx"] .estamps-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 44px;
+  padding: 12px 18px;
+  border: 1px solid var(--estamps-line);
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-decoration: none;
+  transition: background-color .15s, border-color .15s;
+}
+
+html[data-chain="ecx"] .estamps-button-primary {
+  color: var(--estamps-ink);
+  background: var(--estamps-amber);
+  border-color: var(--estamps-amber);
+}
+
+html[data-chain="ecx"] .estamps-button-primary:hover {
+  background: #efbf70;
+  border-color: #efbf70;
+}
+
+html[data-chain="ecx"] .estamps-button-secondary {
+  color: var(--estamps-text);
+  background: transparent;
+}
+
+html[data-chain="ecx"] .estamps-button-secondary:hover {
+  background: var(--estamps-surface);
+  border-color: var(--estamps-muted);
+}
+
+html[data-chain="ecx"] .estamps-hero-art {
+  min-width: 0;
+  margin: 0;
+}
+
+html[data-chain="ecx"] .estamps-art-mount {
+  padding: 14px;
+  background: var(--estamps-surface);
+}
+
+html[data-chain="ecx"] .estamps-art-mount img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+html[data-chain="ecx"] .estamps-hero-art figcaption {
+  margin-top: 12px;
+  color: var(--estamps-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+html[data-chain="ecx"] .estamps-gallery-surface {
+  padding: 32px 0 0;
+  border: 0;
+  border-top: 1px solid var(--estamps-line);
+  border-radius: 0;
+  background: transparent;
+  backdrop-filter: none;
+}
+
+html[data-chain="ecx"] .estamps-home :is(h1, h2, h3, h4).uppercase {
+  margin-top: 0;
+  color: var(--estamps-text);
+  font-weight: 500;
+  letter-spacing: -.02em;
+  text-transform: none;
+}
+
+html[data-chain="ecx"] .estamps-home h2.uppercase {
+  color: var(--estamps-muted);
+  font-size: 16px;
+  font-weight: 400;
+  margin-bottom: 24px;
+}
+
+html[data-chain="ecx"] .estamps-art-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+}
+
+html[data-chain="ecx"] .estamps-art-grid > div {
+  min-width: 0;
+}
+
+html[data-chain="ecx"] .estamps-art-grid .max-w-72 {
+  max-width: none;
+  height: auto;
+}
+
+html[data-chain="ecx"] .estamps-art-grid a.group {
+  padding: 12px;
+  border: 1px solid var(--estamps-line);
+  border-radius: 4px;
+  background: var(--estamps-surface);
+  box-shadow: none;
+}
+
+html[data-chain="ecx"] .estamps-art-grid a.group:hover {
+  box-shadow: none;
+  border-color: var(--estamps-muted);
+}
+
+html[data-chain="ecx"] .estamps-section-title {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 500;
+  letter-spacing: -.03em;
+  line-height: 1.2;
+}
+
+html[data-chain="ecx"] .estamps-art-caption {
+  margin: 12px 0 0;
+  color: var(--estamps-muted);
+  font-family: var(--estamps-mono);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+html[data-chain="ecx"] .estamps-art-grid .stamp-container {
+  border-radius: 2px;
+}
+
+html[data-chain="ecx"] .estamps-art-grid .stamp-container img {
+  object-fit: contain;
+}
+
+/* A missing image stays a neutral placeholder, never a competing brand colour. */
+html[data-chain="ecx"] .stamp-container .from-color-primary-300 {
+  background: var(--estamps-surface);
+  border-radius: 4px;
+}
+
+html[data-chain="ecx"] .estamps-create-intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 32px;
+  padding: 32px;
+  background: var(--estamps-surface);
+}
+
+html[data-chain="ecx"] .estamps-create-intro h2 {
+  margin: 0 0 16px;
+  font-size: 32px;
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: -.03em;
+}
+
+html[data-chain="ecx"] .estamps-create-intro p:not(.estamps-eyebrow) {
+  max-width: 50ch;
+  margin: 0;
+  color: var(--estamps-muted);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+html[data-chain="ecx"] .estamps-create-intro .estamps-actions {
+  flex-shrink: 0;
+}
+
+html[data-chain="ecx"] .estamps-footer {
+  padding-top: 40px;
+}
+
+html[data-chain="ecx"] .estamps-footer-tagline {
+  margin-top: 12px;
+  color: var(--estamps-muted);
+  font-size: 14px;
+}
+
+@media (max-width: 1023px) {
+  html[data-chain="ecx"] .estamps-header-desktop {
+    display: none;
+  }
+
+  html[data-chain="ecx"] .estamps-header-mobile {
+    display: flex;
+  }
+
+  html[data-chain="ecx"] .estamps-hero {
+    gap: 28px;
+  }
+
+  html[data-chain="ecx"] .estamps-art-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  html[data-chain="ecx"] .estamps-create-intro {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 767px) {
+  html[data-chain="ecx"] .estamps-chain-note {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  html[data-chain="ecx"] .estamps-hero {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding-top: 12px;
+  }
+
+  html[data-chain="ecx"] .estamps-art-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  html[data-chain="ecx"] .estamps-create-intro {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 479px) {
+  html[data-chain="ecx"] .estamps-header-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  html[data-chain="ecx"] .estamps-header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  html[data-chain="ecx"] .estamps-header-actions button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  html[data-chain="ecx"] .estamps-art-grid {
+    grid-template-columns: 1fr;
+  }
+
+  html[data-chain="ecx"] .estamps-hero h1 {
+    font-size: 42px;
+  }
+
+  html[data-chain="ecx"] .estamps-home {
+    gap: 36px;
+  }
+
+  html[data-chain="ecx"] .estamps-art-mount {
+    padding: 10px;
+  }
+}
+
+/* Preserve current ECX status, history controls and stamp numbering. */
 /* ===== BUTTONS: AMBER, OUTLINED ===== */
 /* Buttons (components/button/styles.ts) colour themselves from
    --color-button. Point it at amber, and draw the filled variant as an
@@ -39,31 +537,6 @@ html[data-chain="ecx"] :is(a, button)[class*="[--color-button:"]:focus-visible {
   outline-offset: 2px;
 }
 
-/* Stand-alone eSTAMPS button (empty states). */
-html[data-chain="ecx"] .estamps-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 2.25rem;
-  padding: 0 1.25rem;
-  border: 1px solid var(--estamps-amber);
-  border-radius: 9999px;
-  color: var(--estamps-amber);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-decoration: none;
-  transition: background-color 150ms, color 150ms;
-}
-html[data-chain="ecx"] .estamps-button:hover,
-html[data-chain="ecx"] .estamps-button:focus-visible {
-  background-color: var(--estamps-amber);
-  color: var(--estamps-ink);
-}
-html[data-chain="ecx"] .estamps-button:focus-visible {
-  outline: 2px solid var(--estamps-amber);
-  outline-offset: 2px;
-}
 
 /* ===== ARTWORK MOUNTS ===== */
 /* A neutral mat around every stamp image, so artwork of any palette sits on
@@ -107,17 +580,6 @@ html[data-chain="ecx"] .flex.justify-center > .estamps-num-prefix {
   text-align: center;
 }
 
-/* ===== HEADER WORDMARK ===== */
-html[data-chain="ecx"] .estamps-attribution {
-  margin-left: 0.5rem;
-  font-family: "Montserrat", sans-serif;
-  font-size: 0.625rem;
-  font-style: normal;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: none;
-  color: var(--estamps-muted);
-}
 
 /* ===== CHAIN BANNER ===== */
 html[data-chain="ecx"] .estamps-banner {
@@ -220,72 +682,6 @@ html[data-chain="ecx"] .estamps-empty .estamps-button {
   margin-top: 0.5rem;
 }
 
-/* ===== HOME HERO ===== */
-html[data-chain="ecx"] .estamps-hero {
-  height: 340px;
-  gap: 0;
-}
-html[data-chain="ecx"] .estamps-hero__shade {
-  background: linear-gradient(
-    to bottom,
-    rgba(10, 10, 10, 0.94),
-    rgba(10, 10, 10, 0.78) 55%,
-    rgba(0, 0, 0, 0.94)
-  );
-}
-html[data-chain="ecx"] .estamps-hero__body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-  width: min(100%, 40rem);
-  padding: 0 0.5rem;
-  text-align: center;
-}
-html[data-chain="ecx"] .estamps-hero__title {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.375rem;
-  margin: 0;
-  line-height: 1;
-}
-html[data-chain="ecx"] .estamps-hero__mark {
-  color: var(--estamps-text);
-  font-size: clamp(2.5rem, 12vw, 4.5rem);
-  font-weight: 900;
-  letter-spacing: 0.02em;
-  text-shadow: 0.04em 0.04em 0.06em rgba(0, 0, 0, 0.75);
-}
-html[data-chain="ecx"] .estamps-hero__e {
-  color: var(--estamps-amber);
-}
-html[data-chain="ecx"] .estamps-hero__by {
-  color: var(--estamps-muted);
-  font-size: clamp(0.75rem, 2.5vw, 0.9375rem);
-  font-weight: 500;
-  letter-spacing: 0.08em;
-}
-html[data-chain="ecx"] .estamps-hero__lead {
-  margin: 0.5rem 0 0;
-  color: var(--estamps-text);
-  font-size: clamp(0.9375rem, 2.6vw, 1.125rem);
-  font-weight: 600;
-  line-height: 1.35;
-}
-html[data-chain="ecx"] .estamps-hero__note {
-  margin: 0;
-  max-width: 30rem;
-  color: var(--estamps-muted);
-  font-size: clamp(0.8125rem, 2vw, 0.875rem);
-  line-height: 1.45;
-}
-
-@media (min-width: 768px) {
-  html[data-chain="ecx"] .estamps-hero {
-    height: 420px;
-  }
-}
 
 /* Narrow screens: each banner fact gets its own line, no separators. */
 @media (max-width: 567px) {

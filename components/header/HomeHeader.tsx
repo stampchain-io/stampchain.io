@@ -3,6 +3,10 @@ import type { BrandChain } from "$lib/utils/chain/brand.ts";
 import { ECX_FORK_BLOCK } from "$lib/utils/chain/ecxView.ts";
 import { ComponentChildren } from "preact";
 
+interface HomeHeaderProps {
+  chain?: BrandChain;
+}
+
 function TitleText({
   children,
   class: className = "",
@@ -25,48 +29,49 @@ function TitleText({
   );
 }
 
-/* ===== ECX: eSTAMPS BY STAMPCHAIN ===== */
-function EstampsHomeHeader() {
-  return (
-    <header
-      class={`relative overflow-hidden flex flex-col items-center justify-center ${containerBackground} estamps-hero`}
-    >
-      <div class="absolute inset-0 z-0">
-        <img
-          src="/img/components/stamps-collage-1920.webp"
-          alt=""
-          width={1920}
-          height={1280}
-          fetchpriority="high"
-          decoding="async"
-          className="w-full h-full object-cover"
-        />
-        <div class="absolute inset-0 estamps-hero__shade" />
-      </div>
-      <div class="relative z-10 estamps-hero__body">
-        <h1 class="estamps-hero__title">
-          <span class="estamps-hero__mark">
-            <span class="estamps-hero__e">e</span>STAMPS
-          </span>
-          <span class="estamps-hero__by">by Stampchain</span>
-        </h1>
-        <p class="estamps-hero__lead">
-          Unprunable art and SRC-20 tokens, stamped on ECX.
-        </p>
-        <p class="estamps-hero__note">
-          ECX-native stamps start at block{" "}
-          {ECX_FORK_BLOCK.toLocaleString("en-US")}. Earlier stamps are history
-          ECX inherited from Bitcoin.
-        </p>
-      </div>
-    </header>
-  );
-}
-
-export function HomeHeader(
-  { chain = "bitcoin" }: { chain?: BrandChain } = {},
-) {
-  if (chain === "ecx") return <EstampsHomeHeader />;
+export function HomeHeader({ chain = "bitcoin" }: HomeHeaderProps = {}) {
+  if (chain === "ecx") {
+    return (
+      <header class="estamps-hero">
+        <div class="estamps-hero-copy">
+          <p class="estamps-eyebrow">Art on ECX</p>
+          <h1>A new home for Stamps art.</h1>
+          <p class="estamps-intro">
+            Explore digital artworks and collections in the ECX ecosystem.
+          </p>
+          <div class="estamps-actions">
+            <a
+              class="estamps-button estamps-button-primary"
+              href="/explorer?section=stamps"
+            >
+              Explore art <span aria-hidden="true">↗</span>
+            </a>
+            <a class="estamps-button estamps-button-secondary" href="/howto">
+              How it works
+            </a>
+          </div>
+          <p class="estamps-history-note">
+            ECX-native stamps start at block{" "}
+            {ECX_FORK_BLOCK.toLocaleString("en-US")}. Earlier stamps are history
+            ECX inherited from Bitcoin.
+          </p>
+        </div>
+        <figure class="estamps-hero-art">
+          <div class="estamps-art-mount">
+            <img
+              src="/img/components/stamps-collage-1920.webp"
+              alt="A collage of artworks from the Stamps community"
+              width={1920}
+              height={1280}
+              fetchpriority="high"
+              decoding="async"
+            />
+          </div>
+          <figcaption>From the Stamps community</figcaption>
+        </figure>
+      </header>
+    );
+  }
   return (
     <header
       class={`
