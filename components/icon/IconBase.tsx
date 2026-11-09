@@ -147,6 +147,12 @@ export function Icon(props: IconVariants) {
       atom: "atom",
       dispenserListings: "imagesStar",
 
+      // Leaderboard Specific Icons
+      trophy: "trophy",
+      firstPlace: "medal1",
+      secondPlace: "medal2",
+      thirdPlace: "medal3",
+
       // Wallet Specific Icons
       view: "eye",
       hide: "eyeSlash",

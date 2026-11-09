@@ -1,10 +1,5 @@
 /* ===== HEADER COMPONENT ===== */
 import { Icon, LogoIcon } from "$icon";
-import { getChainBrand } from "$lib/utils/chain/brand.ts";
-import {
-  type ClientChainInfo,
-  setClientChain,
-} from "$lib/utils/chain/clientChain.ts";
 import { MenuButton } from "$islands/button/MenuButton.tsx";
 import { SearchButton } from "$islands/button/SearchButton.tsx";
 import { ToolsButton } from "$islands/button/ToolsButton.tsx";
@@ -20,6 +15,11 @@ import {
   CREATE_NAV_LINKS,
 } from "$lib/constants/navConstants.ts";
 import { useFees } from "$lib/hooks/useFees.ts";
+import { getChainBrand } from "$lib/utils/chain/brand.ts";
+import {
+  type ClientChainInfo,
+  setClientChain,
+} from "$lib/utils/chain/clientChain.ts";
 import { tooltipIcon } from "$notification";
 import {
   eyebrowNeutral,
@@ -45,6 +45,11 @@ interface NavLink {
 /* ===== DESKTOP NAVIGATION CONFIGURATION ===== */
 const desktopNavLinks: NavLink[] = [
   {
+    title: "Create",
+    href: CREATE_NAV_HREF,
+    subLinks: CREATE_NAV_LINKS,
+  },
+  {
     title: "Marketplace",
     href: "/marketplace",
     icon: "artStamp",
@@ -55,6 +60,11 @@ const desktopNavLinks: NavLink[] = [
     icon: "artStamps",
   },
   {
+    title: "Leaderboard",
+    href: "/leaderboard",
+    icon: "leaderboard",
+  },
+  {
     title: "Tokens",
     href: "/src20",
     icon: "src20Token",
@@ -63,11 +73,6 @@ const desktopNavLinks: NavLink[] = [
     title: "Explorer",
     href: "/explorer",
     icon: "explorer",
-  },
-  {
-    title: "Create",
-    href: CREATE_NAV_HREF,
-    subLinks: CREATE_NAV_LINKS,
   },
 ];
 
