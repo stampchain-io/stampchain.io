@@ -1356,6 +1356,8 @@ export interface SortProps {
   onChangeSort?: (newSortBy: "ASC" | "DESC") => void;
   sortParam?: string;
   searchParams?: URLSearchParams;
+  /** Set `page` back to 1 when the sort direction changes. */
+  resetPage?: boolean;
 }
 
 export interface SortingProviderProps {

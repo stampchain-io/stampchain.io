@@ -6,3 +6,4 @@ export {
   CollectionCardSquare,
   CollectionCardVertical,
 } from "./CollectionCard.tsx";
+export { LeaderboardCard } from "./LeaderboardCard.tsx";

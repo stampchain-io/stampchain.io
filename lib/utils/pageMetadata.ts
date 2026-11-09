@@ -69,6 +69,12 @@ export const STATIC_PAGE_METADATA: Record<string, PageMetadata> = {
       "Curated Bitcoin Stamps collections from KEVIN to STAMPEPES, each with its stamp count, holder count and lowest listed price.",
   },
 
+  "/leaderboard": {
+    title: "Bitcoin Stamps Leaderboard | Top Wallets",
+    description:
+      "The 500 wallets holding the most Bitcoin Stamps, or the highest floor-price value of those stamps.",
+  },
+
   "/explorer": {
     title: "Bitcoin Stamps Explorer | Stamps and SRC-20",
     description:

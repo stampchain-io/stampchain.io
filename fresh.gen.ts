@@ -21,6 +21,7 @@ import * as $api_internal_csrfToken from "./routes/api/internal/csrfToken.ts";
 import * as $api_internal_debug_headers from "./routes/api/internal/debug-headers.ts";
 import * as $api_internal_fee_security from "./routes/api/internal/fee-security.ts";
 import * as $api_internal_fees from "./routes/api/internal/fees.ts";
+import * as $api_internal_leaderboard_refresh from "./routes/api/internal/leaderboard-refresh.ts";
 import * as $api_internal_mara_fee_rate from "./routes/api/internal/mara-fee-rate.ts";
 import * as $api_internal_mara_health from "./routes/api/internal/mara-health.ts";
 import * as $api_internal_mara_submit from "./routes/api/internal/mara-submit.ts";
@@ -382,6 +383,8 @@ const manifest = {
     "./routes/api/internal/debug-headers.ts": $api_internal_debug_headers,
     "./routes/api/internal/fee-security.ts": $api_internal_fee_security,
     "./routes/api/internal/fees.ts": $api_internal_fees,
+    "./routes/api/internal/leaderboard-refresh.ts":
+      $api_internal_leaderboard_refresh,
     "./routes/api/internal/mara-fee-rate.ts": $api_internal_mara_fee_rate,
     "./routes/api/internal/mara-health.ts": $api_internal_mara_health,
     "./routes/api/internal/mara-submit.ts": $api_internal_mara_submit,

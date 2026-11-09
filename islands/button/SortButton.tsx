@@ -5,7 +5,8 @@ import type { SortProps } from "$types/ui.d.ts";
 import { useEffect, useRef, useState } from "preact/hooks";
 
 export function SortButton(
-  { searchParams, initSort, sortParam = "sortBy" }: SortProps,
+  { searchParams, initSort, sortParam = "sortBy", resetPage = false }:
+    SortProps,
 ) {
   // Determine the current sort direction. `initSort` (the server-derived
   // value passed down as a prop) is preferred over reading the URL on the
@@ -38,6 +39,7 @@ export function SortButton(
     if (IS_BROWSER && globalThis.location) {
       const url = new URL(globalThis.location.href);
       url.searchParams.set(sortParam, newSort);
+      if (resetPage) url.searchParams.set("page", "1");
       return url.toString();
     }
 
@@ -46,6 +48,7 @@ export function SortButton(
     const url = new URL("/", "http://localhost");
     searchParams?.forEach((value, key) => url.searchParams.set(key, value));
     url.searchParams.set(sortParam, newSort);
+    if (resetPage) url.searchParams.set("page", "1");
     return url.toString();
   };
 

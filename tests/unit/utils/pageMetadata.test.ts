@@ -23,6 +23,7 @@ const SITEMAP_PATHS = [
   "/marketplace",
   "/src20",
   "/collection",
+  "/leaderboard",
   "/explorer",
   "/block",
   "/about",
