@@ -31,7 +31,7 @@ export default function LeaderboardGallery({
 
   return (
     <div>
-      <div class="grid grid-cols-1 gap-5">
+      <div class="flex flex-col gap-3">
         {entries.map((entry) => (
           <LeaderboardCard
             key={entry.address}

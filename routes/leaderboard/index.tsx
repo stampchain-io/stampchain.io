@@ -3,11 +3,11 @@ import { FreshContext, Handlers, PageProps } from "$fresh/server.ts";
 import { LeaderboardHeader } from "$header";
 import { LeaderboardContent } from "$islands/content/LeaderboardContent.tsx";
 import { containerBackground } from "$layout";
-import { presentLeaderboard } from "$lib/utils/leaderboard/rank.ts";
 import {
   DATA_PLACEHOLDER_DEV,
   DATA_PLACEHOLDER_PROD_LEADERBOARD_PAGE,
 } from "$lib/utils/dataPlaceholderProd.ts";
+import { presentLeaderboard } from "$lib/utils/leaderboard/rank.ts";
 import { getChainId } from "$server/services/chain/chainProfile.ts";
 import { getLeaderboardPage } from "$server/services/leaderboard/leaderboardService.ts";
 import type {
@@ -82,7 +82,6 @@ export default function LeaderboardPage(
         sortBy={data.sortBy}
         total={data.total}
         showValuation={data.showValuation}
-        generatedAt={data.generatedAt}
         escrowIncluded={data.escrowIncluded}
       />
       <LeaderboardContent data={data} />

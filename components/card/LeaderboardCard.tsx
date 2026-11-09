@@ -82,16 +82,18 @@ export function LeaderboardCard(
       class={`${container2Hover} ${shadowGlowPurple} flex flex-col gap-5 p-5`}
     >
       <div class="flex w-full items-start justify-between gap-5">
-        <div class="flex flex-1 items-center gap-3 min-w-0">
-          <Icon
-            type="icon"
-            name="trophy"
-            weight="bold"
-            size="xl"
-            color="custom"
-            className="stroke-color-primary-400 shrink-0"
-          />
-          <span class={`${cardSupply} text-base`}>{entry.rank}</span>
+        <div class="flex flex-col min-w-0">
+          <div class="flex items-center gap-1">
+            <Icon
+              type="icon"
+              name="trophy"
+              weight="custom"
+              size="lg"
+              color="neutral400"
+              className="[stroke-width:1.75] shrink-0"
+            />
+            <h6 class="font-medium text-lg text-neutral-400">{entry.rank}</h6>
+          </div>
           <UserProfileIcon wrapperClassName="min-w-0">
             <span class={`${cardCreator} block min-w-0 truncate !text-left`}>
               {name}

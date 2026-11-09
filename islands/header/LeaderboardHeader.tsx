@@ -7,7 +7,6 @@ import {
   getCurrentPathname,
   safeNavigate,
 } from "$lib/utils/navigation/freshNavigationUtils.ts";
-import { updatedAgoLabel } from "$lib/utils/leaderboard/rank.ts";
 import { formatNumberWithCommas } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { subtitleNeutral, titlePrimary } from "$text";
 import type {
@@ -22,14 +21,12 @@ function LeaderboardHeader(
     sortBy,
     total,
     showValuation,
-    generatedAt,
     escrowIncluded,
   }: {
     metric: LeaderboardMetric;
     sortBy: LeaderboardSort;
     total: number;
     showValuation: boolean;
-    generatedAt: number | null;
     escrowIncluded: boolean;
   },
 ) {
@@ -43,7 +40,6 @@ function LeaderboardHeader(
     safeNavigate(getCurrentPathname() + (query ? `?${query}` : ""));
   }, []);
 
-  const updated = updatedAgoLabel(generatedAt);
   const options = showValuation
     ? [
       { value: "stamps", label: "STAMPS" },
@@ -56,7 +52,6 @@ function LeaderboardHeader(
       <div class="relative flex flex-row justify-between items-start w-full">
         <div class="flex flex-col gap-1">
           <h1 class={`-mt-2 ${titlePrimary}`}>LEADERBOARD</h1>
-          {updated && <p class={subtitleNeutral}>{updated}</p>}
           {!escrowIncluded && (
             <p class={subtitleNeutral}>LISTINGS NOT INCLUDED YET</p>
           )}

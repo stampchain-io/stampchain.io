@@ -1,5 +1,5 @@
 /* ===== LEADERBOARD PODIUM + GALLERY ===== */
-import { Icon } from "$icon";
+import { Icon, UserProfileIcon } from "$icon";
 import LeaderboardGallery from "$islands/section/gallery/LeaderboardGallery.tsx";
 import { container2 } from "$layout";
 import {
@@ -19,23 +19,26 @@ const MEDALS: Record<
   {
     name: "firstPlace" | "secondPlace" | "thirdPlace";
     stroke: string;
-    minH: string;
+    step: string;
   }
 > = {
   1: {
     name: "firstPlace",
     stroke: "stroke-color-secondary-400",
-    minH: "min-h-[220px]",
+    step:
+      "relative z-[2] -mx-px min-h-[132px] mobileLg:min-h-[176px] border border-color-secondary-400 bg-gradient-to-b from-color-secondary-400/25 to-color-neutral-900",
   },
   2: {
     name: "secondPlace",
     stroke: "stroke-color-neutral-400",
-    minH: "min-h-[180px]",
+    step:
+      "relative z-[1] min-h-[100px] mobileLg:min-h-[136px] border border-color-neutral-400 bg-gradient-to-b from-color-neutral-700/60 to-color-neutral-900",
   },
   3: {
     name: "thirdPlace",
-    stroke: "stroke-color-secondary-600",
-    minH: "min-h-[150px]",
+    stroke: "stroke-color-secondary-800",
+    step:
+      "relative z-0 min-h-[76px] mobileLg:min-h-[104px] border border-color-secondary-800 bg-gradient-to-b from-color-secondary-800/20 to-color-neutral-900",
   },
 };
 
@@ -50,30 +53,44 @@ function PodiumStep(
   const name = entry.creatorName || abbreviateAddress(entry.address, 6);
   const stamps = formatNumberWithCommas(entry.stampCount);
   const value = formatBTC(entry.floorValueBtc, { includeSymbol: true });
-  const primary = metric === "valuation" && showValuation ? value : stamps;
-  const secondary = metric === "valuation" && showValuation ? stamps : value;
+  const stampsFirst = metric !== "valuation" || !showValuation;
+  const stampClass = stampsFirst
+    ? "font-bold text-sm mobileLg:text-base text-color-neutral-100"
+    : "text-xs text-color-neutral-400";
+  const valueClass = stampsFirst
+    ? "text-xs text-color-neutral-400"
+    : "font-bold text-sm mobileLg:text-base text-color-neutral-100";
   return (
     <a
       href={`/wallet/${entry.address}`}
-      class={`flex flex-col items-center justify-end gap-2 w-full min-w-0 overflow-hidden ${medal.minH} px-2 py-3`}
+      class="flex flex-col items-center justify-end gap-1 w-full min-w-0"
     >
-      <Icon
-        type="icon"
-        name={medal.name}
-        weight="bold"
-        size="custom"
-        color="custom"
-        className={`${medal.stroke} w-8 h-8 mobileLg:w-10 mobileLg:h-10`}
+      <UserProfileIcon
+        className={`w-6 h-6 mobileLg:w-8 mobileLg:h-8 ${medal.stroke}`}
       />
-      <span class="max-w-full font-bold text-sm text-color-primary-400 text-center truncate">
+      <h6 class="max-w-full px-1 font-bold text-xs mobileLg:text-sm text-color-neutral-200 text-center truncate">
         {name}
-      </span>
-      <span class="font-bold text-base mobileLg:text-lg text-color-neutral-200">
-        {primary}
-      </span>
-      {showValuation && (
-        <span class="text-sm text-color-neutral-400">{secondary}</span>
-      )}
+      </h6>
+      <div
+        class={`flex w-full flex-col items-center justify-between
+          mt-1 px-1.5 pt-0 pb-3
+        rounded-xl rounded-b-none border-b-0 ${medal.step}`}
+      >
+        <Icon
+          type="icon"
+          name={medal.name}
+          weight="bold"
+          size="custom"
+          color="custom"
+          className={`-mt-0.5 ${medal.stroke} w-6 h-6 mobileLg:w-8 mobileLg:h-8`}
+        />
+        <div class="flex flex-col items-center max-w-full">
+          <h6 class={`max-w-full truncate ${stampClass}`}>{stamps}</h6>
+          {showValuation && (
+            <h6 class={`max-w-full truncate ${valueClass}`}>{value}</h6>
+          )}
+        </div>
+      </div>
     </a>
   );
 }
@@ -86,23 +103,25 @@ export function LeaderboardContent(
   const hasPodium = slots.some(Boolean);
 
   return (
-    <div class="flex flex-col gap-5 w-full">
+    <div class="flex flex-col gap-5 w-full pt-3">
       {data.error && <p class={subtitleNeutral}>{data.error}</p>}
       {hasPodium
         ? (
-          <div class={`${container2} grid grid-cols-3 items-end gap-2 p-3`}>
-            {slots.map((entry, index) =>
-              entry
-                ? (
-                  <PodiumStep
-                    key={entry.address}
-                    entry={entry}
-                    metric={data.metric}
-                    showValuation={data.showValuation}
-                  />
-                )
-                : <div key={`empty-${index}`} />
-            )}
+          <div class={`${container2} flex justify-center p-3 pb-0`}>
+            <div class="grid w-full max-w-[280px] mobileMd:max-w-[320px] mobileLg:max-w-[400px] tablet:max-w-[520px] grid-cols-3 items-end gap-0">
+              {slots.map((entry, index) =>
+                entry
+                  ? (
+                    <PodiumStep
+                      key={entry.address}
+                      entry={entry}
+                      metric={data.metric}
+                      showValuation={data.showValuation}
+                    />
+                  )
+                  : <div key={`empty-${index}`} />
+              )}
+            </div>
           </div>
         )
         : !data.error && (

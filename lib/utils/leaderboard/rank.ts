@@ -441,14 +441,3 @@ export function presentLeaderboard(
     entries: shown.slice(start, start + query.pageSize).map(toEntry),
   };
 }
-
-export function updatedAgoLabel(
-  generatedAt: number | null,
-  now = Date.now(),
-): string | null {
-  if (generatedAt == null) return null;
-  const minutes = Math.max(0, Math.floor((now - generatedAt) / 60000));
-  if (minutes < 60) return `UPDATED ${minutes}M AGO`;
-  const hours = Math.floor(minutes / 60);
-  return `UPDATED ${hours}H AGO`;
-}
