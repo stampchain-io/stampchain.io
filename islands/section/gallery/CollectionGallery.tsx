@@ -110,7 +110,7 @@ export default function CollectionGallery({
       ? gridCardSm
       : viewMode === "cardVertical"
       ? gridCardMd
-      : "grid grid-cols-1 tablet:grid-cols-2 gap-5");
+      : "grid grid-cols-1 tablet:grid-cols-2 gap-3");
   const CardComponent = viewMode === "cardSquare"
     ? CollectionCardSquare
     : viewMode === "cardVertical"

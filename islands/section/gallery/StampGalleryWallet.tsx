@@ -29,7 +29,7 @@ export function StampGalleryWallet({
   enablePartialNavigation = true,
   showLoadingSkeleton = true,
   gridClass =
-    "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4",
+    "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3",
   variant = "cardVerticalDetail",
 }: StampGalleryWalletProps) {
   // ===== STATE =====
@@ -272,7 +272,7 @@ export function StampGalleryWallet({
 
     return (
       <div class="absolute inset-0 bg-black/50 flex items-center justify-center z-10 rounded-2xl">
-        <div class="flex flex-col items-center gap-4">
+        <div class="flex flex-col items-center gap-3">
           <LoadingIcon />
           <div class="text-white text-sm">Loading stamps...</div>
         </div>
