@@ -26,7 +26,7 @@ const MEDALS: Record<
     name: "firstPlace",
     stroke: "stroke-color-secondary-400",
     step:
-      "relative z-[2] -mx-px min-h-[160px] mobileLg:min-h-[180px] border-color-secondary-400 bg-gradient-to-b from-color-secondary-400/30 to-color-neutral-900",
+      "relative z-[2] -mx-px min-h-[170px] mobileLg:min-h-[200px] border-color-secondary-400 bg-gradient-to-b from-color-secondary-400/30 to-color-neutral-900",
   },
   2: {
     name: "secondPlace",
@@ -38,7 +38,7 @@ const MEDALS: Record<
     name: "thirdPlace",
     stroke: "stroke-color-secondary-800",
     step:
-      "relative z-0 -ml-1 min-h-[100px] mobileLg:min-h-[120px] border-color-secondary-800 bg-gradient-to-b from-color-secondary-800/30 to-color-neutral-900",
+      "relative z-0 -ml-1 min-h-[90px] mobileLg:min-h-[100px] border-color-secondary-800 bg-gradient-to-b from-color-secondary-800/30 to-color-neutral-900",
   },
 };
 
@@ -112,7 +112,7 @@ export function LeaderboardContent(
         <h2 class={`${subtitlePrimary} self-start`}>TOP WHALES</h2>
         {hasPodium
           ? (
-            <div class="grid w-full max-w-[360px] mobileMd:max-w-[420px] mobileLg:max-w-[480px] tablet:max-w-[540px] grid-cols-3 items-end">
+            <div class="grid w-full max-w-[360px] mobileMd:max-w-[420px] mobileLg:max-w-[480px] tablet:max-w-[520px] grid-cols-3 items-end">
               {slots.map((entry, index) =>
                 entry
                   ? (
