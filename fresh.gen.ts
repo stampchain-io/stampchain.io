@@ -166,6 +166,7 @@ import * as $tool_stamp_stamping from "./routes/tool/stamp/stamping.tsx";
 import * as $tool_stamp_trade from "./routes/tool/stamp/trade.tsx";
 import * as $upload_index from "./routes/upload/index.tsx";
 import * as $wallet_address_ from "./routes/wallet/[address].tsx";
+import * as $wallet_address_settings from "./routes/wallet/[address]/settings.tsx";
 import * as $Toast_NotificationUpdate from "./islands/Toast/NotificationUpdate.tsx";
 import * as $Toast_ToastComponent from "./islands/Toast/ToastComponent.tsx";
 import * as $Toast_ToastProvider from "./islands/Toast/ToastProvider.tsx";
@@ -202,6 +203,7 @@ import * as $content_WalletContent from "./islands/content/WalletContent.tsx";
 import * as $content_WalletContentDispenser from "./islands/content/WalletContentDispenser.tsx";
 import * as $content_WalletDashboardContent from "./islands/content/WalletDashboardContent.tsx";
 import * as $content_WalletDashboardDetails from "./islands/content/WalletDashboardDetails.tsx";
+import * as $content_WalletSettingsContent from "./islands/content/WalletSettingsContent.tsx";
 import * as $content_blockContent_BlockSelector from "./islands/content/blockContent/BlockSelector.tsx";
 import * as $content_blockContent_BlockTransactions from "./islands/content/blockContent/BlockTransactions.tsx";
 import * as $content_createContent_CreateStampBase from "./islands/content/createContent/CreateStampBase.tsx";
@@ -560,6 +562,7 @@ const manifest = {
     "./routes/tool/stamp/trade.tsx": $tool_stamp_trade,
     "./routes/upload/index.tsx": $upload_index,
     "./routes/wallet/[address].tsx": $wallet_address_,
+    "./routes/wallet/[address]/settings.tsx": $wallet_address_settings,
   },
   islands: {
     "./islands/Toast/NotificationUpdate.tsx": $Toast_NotificationUpdate,
@@ -604,6 +607,8 @@ const manifest = {
       $content_WalletDashboardContent,
     "./islands/content/WalletDashboardDetails.tsx":
       $content_WalletDashboardDetails,
+    "./islands/content/WalletSettingsContent.tsx":
+      $content_WalletSettingsContent,
     "./islands/content/blockContent/BlockSelector.tsx":
       $content_blockContent_BlockSelector,
     "./islands/content/blockContent/BlockTransactions.tsx":

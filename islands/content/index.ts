@@ -20,6 +20,7 @@ export { LeaderboardContent } from "$islands/content/LeaderboardContent.tsx";
 /* ===== WALLET ===== */
 export { default as WalletContent } from "$islands/content/WalletContent.tsx";
 export { default as WalletDashboardContent } from "$islands/content/WalletDashboardContent.tsx";
+export { WalletSettingsContent } from "$islands/content/WalletSettingsContent.tsx";
 
 /* ===== FAQ ===== */
 export * from "$islands/content/faqContent/AccordionBase.tsx";

@@ -1,6 +1,7 @@
 import {
   DEFAULT_METADATA,
   getPageMetadata,
+  isNoIndexPath,
   MAX_DESCRIPTION_LENGTH,
   MAX_TITLE_LENGTH,
   NOT_FOUND_METADATA,
@@ -207,4 +208,44 @@ Deno.test("address pages keep the whole address in the title when it fits", () =
       );
     }
   }
+});
+
+Deno.test("wallet settings has its own title and is not indexed", () => {
+  const holdings = "bc1qf8cedqguh2ucc3fgsphmgt789q9szh35vtl38m";
+  const cases: Array<[string, boolean]> = [
+    ["1AY8vMC7R1UbYCczrVUlmv7iqPhSABguJP", true],
+    [holdings, true],
+    [
+      "bc1p8w6zr5e2q60s0r8al4tvmsfer77c0eqc8j55gk8r7hzv39zhs2lqa8p0k6",
+      false,
+    ],
+  ];
+
+  for (const [address, shouldFit] of cases) {
+    const path = `/wallet/${address}/settings`;
+    const meta = getPageMetadata(path);
+    assert(
+      meta.title.length <= MAX_TITLE_LENGTH,
+      `${path} title is ${meta.title.length} chars: ${meta.title}`,
+    );
+    assert(
+      meta.description.length <= MAX_DESCRIPTION_LENGTH,
+      `${path} description is ${meta.description.length} chars`,
+    );
+    assertEquals(meta.title.includes(address), shouldFit);
+    assert(meta.description.includes(address));
+    assert(meta.title.includes("Wallet Settings"));
+    assertNotEquals(
+      meta.title,
+      getPageMetadata(`/wallet/${address}`).title,
+    );
+    assertEquals(isNoIndexPath(path), true);
+  }
+
+  assertEquals(isNoIndexPath(`/wallet/${holdings}`), false);
+  assertEquals(isNoIndexPath("/wallet/settings"), false);
+  assertEquals(
+    isNoIndexPath(`/wallet/${holdings}/settings/extra`),
+    false,
+  );
 });

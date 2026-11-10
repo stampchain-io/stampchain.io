@@ -20,6 +20,7 @@ export * from "$islands/header/CollectionOverviewHeader.tsx";
 export * from "$islands/header/LeaderboardHeader.tsx";
 
 /* ===== WALLET ===== */
+export { WalletSettingsHeader } from "$components/header/WalletSettingsHeader.tsx";
 export { default as WalletDashboardHeader } from "$islands/header/WalletDashboardHeader.tsx";
 export { default as WalletHeaderContent } from "$islands/header/WalletHeaderContent.tsx";
 
