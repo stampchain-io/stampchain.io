@@ -20,7 +20,7 @@ import {
   failureAction,
   floorsFromDispensers,
   HARD_TTL_SECONDS,
-  IMAGE_MIMETYPES,
+  THUMBNAIL_MIMETYPES,
   intersectCpids,
   LEADERBOARD_PAGE_SIZE,
   mergeThumbnails,
@@ -46,7 +46,7 @@ import {
 const CACHE_KEY = "btc:stamps:leaderboard:v1";
 const RETRY_KEY = "btc:stamps:leaderboard:v1:escrow-retry";
 
-const IMAGE_TYPES = new Set(IMAGE_MIMETYPES);
+const THUMBNAIL_TYPES = new Set(THUMBNAIL_MIMETYPES);
 const BURN = new Set(BURN_ADDRESSES);
 
 let inflight: Promise<LeaderboardSnapshot> | null = null;
@@ -305,7 +305,7 @@ async function imagesFor(
   if (escrowCpids.size > 0) {
     const rows = await LeaderboardRepository.getStampImages([...escrowCpids]);
     for (const row of rows) {
-      if (!row.url || !IMAGE_TYPES.has(row.mimetype)) continue;
+      if (!row.url || !THUMBNAIL_TYPES.has(row.mimetype)) continue;
       const floor = effectiveFloor(row.cpid, dispenserFloors, storedFloors);
       imageByCpid.set(row.cpid, {
         url: row.url,

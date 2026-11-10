@@ -6,7 +6,7 @@
  */
 import {
   BURN_ADDRESSES,
-  IMAGE_MIMETYPES,
+  THUMBNAIL_MIMETYPES,
 } from "$lib/utils/leaderboard/rank.ts";
 
 export interface SqlQuery {
@@ -130,11 +130,15 @@ export function imagesByAddressQuery(
   const excludeSql = excluded.length
     ? `AND st.cpid NOT IN (${placeholders(excluded.length)})`
     : "";
+  const mimeSlots = placeholders(THUMBNAIL_MIMETYPES.length);
   return {
     sql: `
-      SELECT address, stamp_url, floor_price_btc, stamp FROM (
+      SELECT
+        address, stamp_url, floor_price_btc, stamp, stamp_mimetype
+      FROM (
         SELECT h.address AS address, st.stamp_url AS stamp_url,
                m.floor_price_btc AS floor_price_btc, st.stamp AS stamp,
+               st.stamp_mimetype AS stamp_mimetype,
                ROW_NUMBER() OVER (
                  PARTITION BY h.address
                  ORDER BY (m.floor_price_btc IS NULL),
@@ -144,13 +148,16 @@ export function imagesByAddressQuery(
         INNER JOIN (${ONE_STAMP}) st ON st.cpid = h.cpid
         LEFT JOIN stamp_market_data m ON m.cpid = h.cpid
         WHERE h.address IN (${placeholders(addresses.length)})
-          AND st.stamp_url IS NOT NULL AND st.stamp_url <> ''
-          AND st.stamp_mimetype IN (${placeholders(IMAGE_MIMETYPES.length)})
+          AND (
+            st.stamp_mimetype = 'text/html'
+            OR (st.stamp_url IS NOT NULL AND st.stamp_url <> '')
+          )
+          AND st.stamp_mimetype IN (${mimeSlots})
           ${excludeSql}
       ) ranked
       WHERE rn <= 16
     `,
-    params: [...addresses, ...IMAGE_MIMETYPES, ...excluded],
+    params: [...addresses, ...THUMBNAIL_MIMETYPES, ...excluded],
   };
 }
 

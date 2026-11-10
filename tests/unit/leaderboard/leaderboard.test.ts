@@ -18,6 +18,7 @@ import {
   rankWallets,
   type RawDispenser,
   recomputeSeller,
+  thumbnailUrl,
   usableDispensers,
   type WalletTotal,
 } from "$lib/utils/leaderboard/rank.ts";
@@ -384,4 +385,18 @@ Deno.test("holder aggregate joins one row per CPID", () => {
   const images = imagesByAddressQuery(["addr"], []);
   assert(images.sql.includes("ROW_NUMBER()"));
   assert(images.sql.includes("rn <= 16"));
+  assert(images.sql.includes("stamp_mimetype"));
+  assert(images.params.includes("text/html"));
+  assert(images.params.includes("image/png"));
+});
+
+Deno.test("html thumbnails use the preview route", () => {
+  const file = "https://stampchain.io/content/stamp.html";
+  const png = "https://stampchain.io/stamps/a.png";
+  assertEquals(
+    thumbnailUrl("text/html", file, 42),
+    "/api/v2/stamp/42/preview?placeholderOnFail=true",
+  );
+  assertEquals(thumbnailUrl("image/png", png, 42), png);
+  assertEquals(thumbnailUrl("text/html", file, 0), "");
 });

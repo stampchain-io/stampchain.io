@@ -37,6 +37,29 @@ export const IMAGE_MIMETYPES: readonly string[] = [
   "image/svg+xml",
 ];
 
+/** Image types plus HTML, whose card paints the PNG preview route. */
+export const THUMBNAIL_MIMETYPES: readonly string[] = [
+  ...IMAGE_MIMETYPES,
+  "text/html",
+];
+
+/**
+ * URL an img can paint. HTML stamps point at the preview PNG; image
+ * stamps keep the stored file URL.
+ */
+export function thumbnailUrl(
+  mimetype: string,
+  stampUrl: string,
+  stamp: number,
+): string {
+  if (mimetype === "text/html") {
+    return stamp > 0
+      ? `/api/v2/stamp/${stamp}/preview?placeholderOnFail=true`
+      : "";
+  }
+  return stampUrl;
+}
+
 const LAYER_KEY = /^t\d+$/;
 
 export interface Src721Body {

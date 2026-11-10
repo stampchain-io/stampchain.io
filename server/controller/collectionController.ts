@@ -1,5 +1,8 @@
 
-import { getStampImageSrc } from "$lib/utils/ui/media/imageUtils.ts";
+import {
+  getStampImageSrc,
+  getStampPreviewUrl,
+} from "$lib/utils/ui/media/imageUtils.ts";
 import { CollectionService } from "$server/services/core/collectionService.ts";
 import { StampService } from "$server/services/stampService.ts";
 import type { CollectionQueryParams, CollectionRow, CollectionWithCreators, PaginatedCollectionResponseBody } from "$server/types/collection.d.ts";
@@ -105,7 +108,10 @@ export class CollectionController {
               // This ensures the grouping logic below works correctly
               stamp.collection_id = collectionId;
 
-              const imageUrl = await getStampImageSrc(stamp);
+              const imageUrl = stamp.stamp_mimetype === "text/html" &&
+                  typeof stamp.stamp === "number" && stamp.stamp > 0
+                ? getStampPreviewUrl(stamp, { placeholderOnFail: true })
+                : await getStampImageSrc(stamp);
               if (imageUrl && stamps.length < 12 && !stamps.includes(imageUrl)) {
                 stamps.push(imageUrl);
               }

@@ -3,8 +3,7 @@
  * Uses executeQuery, never executeQueryWithCache: a cached query that
  * mentions stamp_market_data or balances is wiped on every new block.
  */
-import { dbManager } from "$server/database/databaseManager.ts";
-import type { SqlQuery } from "$lib/utils/leaderboard/sql.ts";
+import { thumbnailUrl } from "$lib/utils/leaderboard/rank.ts";
 import {
   aggregateQuery,
   creatorNamesQuery,
@@ -15,7 +14,9 @@ import {
   src721BodiesQuery,
   stampFlagsQuery,
   stampImagesByCpidQuery,
+  type SqlQuery,
 } from "$lib/utils/leaderboard/sql.ts";
+import { dbManager } from "$server/database/databaseManager.ts";
 
 const CHUNK = 400;
 
@@ -163,23 +164,31 @@ export class LeaderboardRepository {
     return runChunks(
       addresses,
       (chunk) => imagesByAddressQuery(chunk, excluded),
-      (row) => ({
-        address: text(row.address),
-        url: text(row.stamp_url),
-        floor: numOrNull(row.floor_price_btc),
-        stamp: num(row.stamp),
-      }),
+      (row) => {
+        const stamp = num(row.stamp);
+        const mimetype = text(row.stamp_mimetype);
+        return {
+          address: text(row.address),
+          url: thumbnailUrl(mimetype, text(row.stamp_url), stamp),
+          floor: numOrNull(row.floor_price_btc),
+          stamp,
+        };
+      },
     );
   }
 
   static getStampImages(cpids: string[]): Promise<StampImageRow[]> {
-    return runChunks(cpids, stampImagesByCpidQuery, (row) => ({
-      cpid: text(row.cpid),
-      url: text(row.stamp_url),
-      stamp: num(row.stamp),
-      mimetype: text(row.stamp_mimetype),
-      floor: numOrNull(row.floor_price_btc),
-    }));
+    return runChunks(cpids, stampImagesByCpidQuery, (row) => {
+      const stamp = num(row.stamp);
+      const mimetype = text(row.stamp_mimetype);
+      return {
+        cpid: text(row.cpid),
+        url: thumbnailUrl(mimetype, text(row.stamp_url), stamp),
+        stamp,
+        mimetype,
+        floor: numOrNull(row.floor_price_btc),
+      };
+    });
   }
 
   static async getCreatorNames(
