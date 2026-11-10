@@ -43,7 +43,7 @@ export function LeaderboardCard(
     showValuation: boolean;
   },
 ) {
-  const name = entry.creatorName || abbreviateAddress(entry.address, 6);
+  const name = entry.creatorName || abbreviateAddress(entry.address, 10);
   const stampPill = (
     <PillWithTooltip
       label="STAMPS"
@@ -79,34 +79,35 @@ export function LeaderboardCard(
   return (
     <a
       href={`/wallet/${entry.address}`}
-      class={`${container2Hover} ${shadowGlowPurple} flex flex-col gap-5 p-5`}
+      class={`${container2Hover} ${shadowGlowPurple} flex flex-col p-5`}
     >
       <div class="flex w-full items-start justify-between gap-5">
-        <div class="flex flex-col min-w-0">
-          <div class="flex items-center gap-1">
-            <Icon
-              type="icon"
-              name="trophy"
-              weight="custom"
-              size="lg"
-              color="neutral400"
-              className="[stroke-width:1.75] shrink-0"
-            />
-            <h6 class="font-medium text-lg text-neutral-400">{entry.rank}</h6>
-          </div>
-          <UserProfileIcon wrapperClassName="min-w-0">
-            <span class={`${cardCreator} block min-w-0 truncate !text-left`}>
-              {name}
-            </span>
-          </UserProfileIcon>
+        <div class="flex items-center gap-1">
+          <Icon
+            type="icon"
+            name="trophy"
+            weight="custom"
+            size="lg"
+            color="neutral400"
+            className="[stroke-width:1.75] shrink-0"
+          />
+          <h6 class="font-medium text-lg text-neutral-400">{entry.rank}</h6>
         </div>
         <div class="flex flex-wrap justify-end gap-2 shrink-0">{pills}</div>
       </div>
+      <div class="flex min-w-0">
+        <UserProfileIcon wrapperClassName="min-w-0">
+          <h6 class={`${cardCreator} block min-w-0 !text-base !text-left`}>
+            {name}
+          </h6>
+        </UserProfileIcon>
+      </div>
+
       {entry.images.length > 0 && (
         <div class="grid grid-cols-4 min-[420px]:grid-cols-6 mobileMd:grid-cols-7 mobileLg:grid-cols-8 min-[880px]:grid-cols-9 tablet:grid-cols-[repeat(14,minmax(0,1fr))] desktop:grid-cols-[repeat(16,minmax(0,1fr))] gap-5">
           {entry.images.slice(0, 16).map((url, index) => (
             <div
-              class={`w-full rounded-xl aspect-stamp image-rendering-pixelated overflow-hidden ${
+              class={`w-full rounded-xl aspect-stamp overflow-hidden ${
                 GALLERY_IMAGE_VISIBILITY[index] ?? ""
               }`}
             >
@@ -115,7 +116,7 @@ export function LeaderboardCard(
                 alt=""
                 loading="lazy"
                 decoding="async"
-                class="w-full h-full object-contain"
+                class="w-full h-full object-contain pixelart"
               />
             </div>
           ))}

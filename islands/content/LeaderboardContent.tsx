@@ -7,7 +7,7 @@ import {
   formatBTC,
   formatNumberWithCommas,
 } from "$lib/utils/ui/formatting/formatUtils.ts";
-import { subtitleNeutral } from "$text";
+import { subtitlePrimary, textSm } from "$text";
 import type {
   LeaderboardEntry,
   LeaderboardMetric,
@@ -26,19 +26,19 @@ const MEDALS: Record<
     name: "firstPlace",
     stroke: "stroke-color-secondary-400",
     step:
-      "relative z-[2] -mx-px min-h-[132px] mobileLg:min-h-[176px] border border-color-secondary-400 bg-gradient-to-b from-color-secondary-400/25 to-color-neutral-900",
+      "relative z-[2] -mx-px min-h-[160px] mobileLg:min-h-[180px] border-color-secondary-400 bg-gradient-to-b from-color-secondary-400/30 to-color-neutral-900",
   },
   2: {
     name: "secondPlace",
     stroke: "stroke-color-neutral-400",
     step:
-      "relative z-[1] min-h-[100px] mobileLg:min-h-[136px] border border-color-neutral-400 bg-gradient-to-b from-color-neutral-700/60 to-color-neutral-900",
+      "relative z-[1] -mr-1 min-h-[130px] mobileLg:min-h-[150px] border-color-neutral-400 bg-gradient-to-b from-color-neutral-700/60 to-color-neutral-900",
   },
   3: {
     name: "thirdPlace",
     stroke: "stroke-color-secondary-800",
     step:
-      "relative z-0 min-h-[76px] mobileLg:min-h-[104px] border border-color-secondary-800 bg-gradient-to-b from-color-secondary-800/20 to-color-neutral-900",
+      "relative z-0 -ml-1 min-h-[100px] mobileLg:min-h-[120px] border-color-secondary-800 bg-gradient-to-b from-color-secondary-800/30 to-color-neutral-900",
   },
 };
 
@@ -66,15 +66,15 @@ function PodiumStep(
       class="flex flex-col items-center justify-end gap-1 w-full min-w-0"
     >
       <UserProfileIcon
-        className={`w-6 h-6 mobileLg:w-8 mobileLg:h-8 ${medal.stroke}`}
+        className={`w-6 h-6 mobileLg:w-8 mobileLg:h-8 [stroke-width:1.5] ${medal.stroke}`}
       />
-      <h6 class="max-w-full px-1 font-bold text-xs mobileLg:text-sm text-color-neutral-200 text-center truncate">
+      <h6 class="max-w-full px-2 font-bold text-xs mobileLg:text-sm text-color-neutral-200 text-center truncate">
         {name}
       </h6>
       <div
         class={`flex w-full flex-col items-center justify-between
-          mt-1 px-1.5 pt-0 pb-3
-        rounded-xl rounded-b-none border-b-0 ${medal.step}`}
+          mt-2 px-1.5 pt-0 pb-3 border-2 border-b-0
+        rounded-lg rounded-b-none ${medal.step}`}
       >
         <Icon
           type="icon"
@@ -82,7 +82,7 @@ function PodiumStep(
           weight="bold"
           size="custom"
           color="custom"
-          className={`-mt-0.5 ${medal.stroke} w-6 h-6 mobileLg:w-8 mobileLg:h-8`}
+          className={`-mt-[3px] ${medal.stroke} w-8 h-8 mobileLg:w-10 mobileLg:h-10`}
         />
         <div class="flex flex-col items-center max-w-full">
           <h6 class={`max-w-full truncate ${stampClass}`}>{stamps}</h6>
@@ -103,12 +103,16 @@ export function LeaderboardContent(
   const hasPodium = slots.some(Boolean);
 
   return (
-    <div class="flex flex-col gap-5 w-full pt-3">
-      {data.error && <p class={subtitleNeutral}>{data.error}</p>}
-      {hasPodium
-        ? (
-          <div class={`${container2} flex justify-center p-3 pb-0`}>
-            <div class="grid w-full max-w-[280px] mobileMd:max-w-[320px] mobileLg:max-w-[400px] tablet:max-w-[520px] grid-cols-3 items-end gap-0">
+    <div class="flex flex-col gap-3 w-full pt-3">
+      <div
+        class={`${container2} flex flex-col items-center p-3 ${
+          hasPodium ? "pb-0" : ""
+        }`}
+      >
+        <h2 class={`${subtitlePrimary} self-start`}>TOP WHALES</h2>
+        {hasPodium
+          ? (
+            <div class="grid w-full max-w-[360px] mobileMd:max-w-[420px] mobileLg:max-w-[480px] tablet:max-w-[540px] grid-cols-3 items-end">
               {slots.map((entry, index) =>
                 entry
                   ? (
@@ -122,13 +126,13 @@ export function LeaderboardContent(
                   : <div key={`empty-${index}`} />
               )}
             </div>
-          </div>
-        )
-        : !data.error && (
-          <div class={`${container2} p-5`}>
-            <p class={subtitleNeutral}>NO WALLETS YET</p>
-          </div>
-        )}
+          )
+          : (
+            <p class={`${textSm} self-start`}>
+              {data.error || "No Rankings available."}
+            </p>
+          )}
+      </div>
       <LeaderboardGallery
         entries={data.entries}
         metric={data.metric}

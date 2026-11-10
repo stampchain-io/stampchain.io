@@ -2,7 +2,7 @@
 import { SelectorButtons } from "$button";
 import { SortButton } from "$islands/button/SortButton.tsx";
 import { ViewButton } from "$islands/button/ViewButton.tsx";
-import { containerIcon, PillContentCount, ScrollFadeRow } from "$layout";
+import { containerIcon, PillContentCount } from "$layout";
 import {
   getCurrentPathname,
   safeNavigate,
@@ -58,17 +58,15 @@ function LeaderboardHeader(
         </div>
         <PillContentCount value={formatNumberWithCommas(total)} />
       </div>
-      <ScrollFadeRow deps={[metric, sortBy]}>
-        <div class="shrink-0">
-          <SelectorButtons
-            options={options}
-            value={metric}
-            onChange={handleMetricChange}
-            size="xs"
-            color="primary"
-          />
-        </div>
-        <div class="shrink-0 flex ml-auto gap-3">
+      <div class="flex flex-row items-center w-full min-w-0 gap-3">
+        <SelectorButtons
+          options={options}
+          value={metric}
+          onChange={handleMetricChange}
+          size="xs"
+          color="primary"
+        />
+        <div class="flex ml-auto gap-3">
           <div class={containerIcon}>
             <ViewButton viewMode="cardHorizontal" modes={["cardHorizontal"]} />
           </div>
@@ -76,7 +74,7 @@ function LeaderboardHeader(
             <SortButton initSort={sortBy} resetPage />
           </div>
         </div>
-      </ScrollFadeRow>
+      </div>
     </div>
   );
 }
