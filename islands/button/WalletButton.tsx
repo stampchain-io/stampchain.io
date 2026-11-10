@@ -36,7 +36,7 @@ interface WalletButtonProps {
 /* ===== WALLET CONFIGURATION ===== */
 const getWalletLinks = (address: string): WalletLink[] => [
   { title: "DASHBOARD", href: `/wallet/${address}` },
-  { title: "SETTINGS", href: `/wallet/${address}/settings` },
+  // { title: "SETTINGS", href: `/wallet/${address}/settings` },
   { title: "DISCONNECT" },
 ];
 
@@ -292,14 +292,16 @@ export const WalletButton = (
           >
             Dashboard
           </a>
-          <a
+          {
+            /* <a
             href={`/wallet/${address}/settings`}
             class={isActive(`/wallet/${address}/settings`)
               ? `${navSublinkActiveDesktop}`
               : `${navSublinkDesktop}`}
           >
             Settings
-          </a>
+          </a> */
+          }
           <a
             onClick={() => walletSignOut()}
             class={`${navSublinkDesktop}`}
