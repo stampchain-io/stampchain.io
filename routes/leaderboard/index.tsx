@@ -14,7 +14,18 @@ import type {
   LeaderboardMetric,
   LeaderboardPageData,
   LeaderboardSort,
+  LeaderboardViewMode,
 } from "$types/leaderboard.d.ts";
+
+type LeaderboardRouteData = LeaderboardPageData & {
+  viewMode: LeaderboardViewMode;
+};
+
+function readViewMode(url: URL): LeaderboardViewMode {
+  return url.searchParams.get("view") === "cardRow"
+    ? "cardRow"
+    : "cardHorizontal";
+}
 
 function readQuery(url: URL, showValuation: boolean): {
   metric: LeaderboardMetric;
@@ -37,24 +48,29 @@ function readQuery(url: URL, showValuation: boolean): {
   };
 }
 
-export const handler: Handlers<LeaderboardPageData> = {
+export const handler: Handlers<LeaderboardRouteData> = {
   async GET(req: Request, ctx: FreshContext) {
     const url = new URL(req.url);
     const showValuation = getChainId() === "bitcoin";
     const query = readQuery(url, showValuation);
+    const viewMode = readViewMode(url);
     try {
       if (DATA_PLACEHOLDER_DEV) {
         const { DATA_PLACEHOLDER_DEV_LEADERBOARD_SNAPSHOT } = await import(
           "$lib/utils/dataPlaceholderDev.ts"
         );
-        return ctx.render(
-          presentLeaderboard(
+        return ctx.render({
+          ...presentLeaderboard(
             DATA_PLACEHOLDER_DEV_LEADERBOARD_SNAPSHOT,
             { ...query, pageSize: 20 },
           ),
-        );
+          viewMode,
+        });
       }
-      return ctx.render(await getLeaderboardPage(query));
+      return ctx.render({
+        ...(await getLeaderboardPage(query)),
+        viewMode,
+      });
     } catch (error) {
       console.error("Error in leaderboard:", error);
       return ctx.render({
@@ -62,6 +78,7 @@ export const handler: Handlers<LeaderboardPageData> = {
         metric: query.metric,
         sortBy: query.sortBy,
         showValuation,
+        viewMode,
         error: "Service temporarily unavailable",
       });
     }
@@ -69,7 +86,7 @@ export const handler: Handlers<LeaderboardPageData> = {
 };
 
 export default function LeaderboardPage(
-  { data }: PageProps<LeaderboardPageData>,
+  { data }: PageProps<LeaderboardRouteData>,
 ) {
   return (
     <div
@@ -83,8 +100,9 @@ export default function LeaderboardPage(
         total={data.total}
         showValuation={data.showValuation}
         escrowIncluded={data.escrowIncluded}
+        viewMode={data.viewMode}
       />
-      <LeaderboardContent data={data} />
+      <LeaderboardContent data={data} viewMode={data.viewMode} />
     </div>
   );
 }

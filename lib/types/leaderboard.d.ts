@@ -2,6 +2,7 @@
 
 export type LeaderboardMetric = "stamps" | "valuation";
 export type LeaderboardSort = "ASC" | "DESC";
+export type LeaderboardViewMode = "cardHorizontal" | "cardRow";
 
 export interface LeaderboardWallet {
   address: string;

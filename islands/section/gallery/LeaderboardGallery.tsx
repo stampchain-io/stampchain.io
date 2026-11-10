@@ -1,15 +1,18 @@
 /* ===== LEADERBOARD GALLERY ===== */
 import { PaginationButtons } from "$button";
 import { LeaderboardCard } from "$components/card/LeaderboardCard.tsx";
+import { LeaderboardTable } from "$components/table/leaderboardTable/LeaderboardTable.tsx";
 import type {
   LeaderboardEntry,
   LeaderboardMetric,
+  LeaderboardViewMode,
 } from "$types/leaderboard.d.ts";
 
 export interface LeaderboardGalleryProps {
   entries: LeaderboardEntry[];
   metric: LeaderboardMetric;
   showValuation: boolean;
+  viewMode?: LeaderboardViewMode;
   pagination?: {
     page: number;
     totalPages: number;
@@ -20,6 +23,7 @@ export default function LeaderboardGallery({
   entries,
   metric,
   showValuation,
+  viewMode = "cardHorizontal",
   pagination,
 }: LeaderboardGalleryProps) {
   const handlePageChange = (page: number) => {
@@ -31,16 +35,25 @@ export default function LeaderboardGallery({
 
   return (
     <div>
-      <div class="flex flex-col gap-3">
-        {entries.map((entry) => (
-          <LeaderboardCard
-            key={entry.address}
-            entry={entry}
-            metric={metric}
+      {viewMode === "cardRow"
+        ? (
+          <LeaderboardTable
+            entries={entries}
             showValuation={showValuation}
           />
-        ))}
-      </div>
+        )
+        : (
+          <div class="flex flex-col gap-3">
+            {entries.map((entry) => (
+              <LeaderboardCard
+                key={entry.address}
+                entry={entry}
+                metric={metric}
+                showValuation={showValuation}
+              />
+            ))}
+          </div>
+        )}
       {pagination && pagination.totalPages > 1 && (
         <PaginationButtons
           page={pagination.page}

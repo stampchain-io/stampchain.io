@@ -12,6 +12,7 @@ import type {
   LeaderboardEntry,
   LeaderboardMetric,
   LeaderboardPageData,
+  LeaderboardViewMode,
 } from "$types/leaderboard.d.ts";
 
 const MEDALS: Record<
@@ -96,7 +97,10 @@ function PodiumStep(
 }
 
 export function LeaderboardContent(
-  { data }: { data: LeaderboardPageData },
+  { data, viewMode }: {
+    data: LeaderboardPageData;
+    viewMode: LeaderboardViewMode;
+  },
 ) {
   const byRank = new Map(data.podium.map((entry) => [entry.rank, entry]));
   const slots = [byRank.get(2), byRank.get(1), byRank.get(3)];
@@ -137,6 +141,7 @@ export function LeaderboardContent(
         entries={data.entries}
         metric={data.metric}
         showValuation={data.showValuation}
+        viewMode={viewMode}
         pagination={{
           page: data.page,
           totalPages: data.totalPages,

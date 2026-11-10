@@ -12,6 +12,7 @@ import { subtitleNeutral, titlePrimary } from "$text";
 import type {
   LeaderboardMetric,
   LeaderboardSort,
+  LeaderboardViewMode,
 } from "$types/leaderboard.d.ts";
 import { useCallback } from "preact/hooks";
 
@@ -22,12 +23,14 @@ function LeaderboardHeader(
     total,
     showValuation,
     escrowIncluded,
+    viewMode,
   }: {
     metric: LeaderboardMetric;
     sortBy: LeaderboardSort;
     total: number;
     showValuation: boolean;
     escrowIncluded: boolean;
+    viewMode: LeaderboardViewMode;
   },
 ) {
   const handleMetricChange = useCallback((value: string) => {
@@ -68,7 +71,10 @@ function LeaderboardHeader(
         />
         <div class="flex ml-auto gap-3">
           <div class={containerIcon}>
-            <ViewButton viewMode="cardHorizontal" modes={["cardHorizontal"]} />
+            <ViewButton
+              viewMode={viewMode}
+              modes={["cardHorizontal", "cardRow"]}
+            />
           </div>
           <div class={containerIcon}>
             <SortButton initSort={sortBy} resetPage />
