@@ -1,20 +1,129 @@
 /* ===== WALLET SETTINGS CONTENT ===== */
 import { Button } from "$button";
 import { walletContext } from "$client/wallet/wallet.ts";
+import { InputField, inputTextarea } from "$form";
+import { Icon } from "$icon";
+import { container2, containerIcon, containerRowForm, StatItem } from "$layout";
 import { walletOwnsAddress } from "$lib/utils/wallet/ownership.ts";
-import { labelSm, subtitlePrimary, text, textSm } from "$text";
+import { labelXs, subtitlePrimary, text, textSm } from "$text";
+import type { ComponentChildren } from "preact";
 import { useEffect, useState } from "preact/hooks";
 
-const PROFILE_FIELDS = [
-  "AVATAR",
-  "NAME",
-  "BIO",
-  "WEBSITE",
-  "EMAIL",
-  "X",
-  "TELEGRAM",
-  "INSTAGRAM",
-];
+function EditButton({ label }: { label: string }) {
+  return (
+    <div class={`${containerIcon} !justify-center`}>
+      <Icon
+        type="iconButton"
+        name="edit"
+        weight="normal"
+        size="containerIcon"
+        color="neutral400"
+        ariaLabel={label}
+        onClick={(e) => e.preventDefault()}
+      />
+    </div>
+  );
+}
+
+function Field(
+  { label, children, class: extraClass = "" }: {
+    label: string;
+    children: ComponentChildren;
+    class?: string;
+  },
+) {
+  return (
+    <div class={`flex min-w-0 flex-col gap-1 ${extraClass}`}>
+      <h6 class={`${labelXs} ml-3`}>{label}</h6>
+      {children}
+    </div>
+  );
+}
+
+function ProfileAvatar() {
+  return (
+    <div
+      class={`${container2} flex shrink-0 items-center
+        justify-center w-fit h-fit !rounded-full p-0.5`}
+    >
+      <Icon
+        type="icon"
+        name="userCircle"
+        weight="extraLight"
+        size="custom"
+        color="custom"
+        className="h-16 w-16 stroke-color-neutral-500"
+        ariaLabel="Avatar"
+      />
+    </div>
+  );
+}
+
+function ProfileFields() {
+  return (
+    <div class="flex w-full flex-col gap-3 mobileLg:flex-row">
+      <div
+        class={`${container2} flex w-full min-w-0 flex-col p-3
+          mobileLg:w-1/2`}
+      >
+        <div class="mb-2 flex items-center justify-between">
+          <h2 class={`${subtitlePrimary} !mb-0`}>PROFILE</h2>
+          <EditButton label="Edit profile" />
+        </div>
+        <div class="flex flex-col gap-3">
+          <ProfileAvatar />
+          <Field label="NAME">
+            <InputField type="text" placeholder="Artist or user name" />
+          </Field>
+          <Field label="BITNAME">
+            <InputField type="text" placeholder="Preferred bitname" />
+          </Field>
+          <Field label="BIO">
+            <textarea
+              class={inputTextarea}
+              placeholder="Details about yourself"
+            />
+          </Field>
+        </div>
+      </div>
+      <div
+        class={`${container2} flex w-full min-w-0 flex-col p-3
+          mobileLg:w-1/2`}
+      >
+        <div class="mb-2 flex items-center justify-between">
+          <h3 class={`${subtitlePrimary} !mb-0`}>SOCIALS</h3>
+          <EditButton label="Edit socials" />
+        </div>
+        <div class="flex flex-col gap-3">
+          <div class={containerRowForm}>
+            <Field label="WEBSITE" class="flex-1">
+              <InputField type="text" placeholder="example.com" />
+            </Field>
+            <Field label="EMAIL" class="flex-1">
+              <InputField type="email" placeholder="your@email.com" />
+            </Field>
+          </div>
+          <div class={containerRowForm}>
+            <Field label="X" class="flex-1">
+              <InputField type="text" placeholder="@username" />
+            </Field>
+            <Field label="TELEGRAM" class="flex-1">
+              <InputField type="text" placeholder="@username" />
+            </Field>
+          </div>
+          <div class={containerRowForm}>
+            <Field label="INSTAGRAM" class="flex-1">
+              <InputField type="text" placeholder="@username" />
+            </Field>
+            <Field label="STAMPMAP" class="flex-1">
+              <InputField type="text" placeholder="pixel coordinates" />
+            </Field>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function WalletSettingsContent({ address }: { address: string }) {
   const { wallet, isConnected, showConnectModal } = walletContext;
@@ -67,22 +176,46 @@ function WalletSettingsContent({ address }: { address: string }) {
 
   return (
     <div class="flex flex-col gap-3 w-full">
-      <div class="flex flex-col">
-        <h2 class={subtitlePrimary}>PROFILE</h2>
-        {PROFILE_FIELDS.map((field) => (
-          <h6 key={field} class={labelSm}>{field}</h6>
-        ))}
-      </div>
-      <div class="flex flex-col">
-        <h3 class={subtitlePrimary}>LINKED ADDRESSES</h3>
-        <h6 class={labelSm}>LINK BITCOIN ADDRESSES</h6>
-      </div>
-      <div class="flex flex-col">
-        <h3 class={subtitlePrimary}>TERMS OF SERVICE</h3>
-        <h6 class={labelSm}>ACCEPT TERMS OF SERVICE</h6>
-        <a href="/termsofservice" class={textSm}>
-          Read the Terms of Service
-        </a>
+      <ProfileFields />
+      <div class="flex w-full flex-col gap-3 mobileLg:flex-row">
+        <div
+          class={`${container2} flex w-full min-w-0 flex-col p-3
+            mobileLg:w-1/2`}
+        >
+          <div class="mb-2 flex items-center justify-between">
+            <h3 class={`${subtitlePrimary} !mb-0`}>
+              INTERCONNECTED WALLETS
+            </h3>
+            <EditButton label="Edit interconnected wallets" />
+          </div>
+          <div class="flex flex-col gap-3">
+            <StatItem
+              label="MAIN WALLET"
+              value={wallet.address}
+              valueClass="!whitespace-normal break-all"
+            />
+            <StatItem
+              label="INTERCONNECTED WALLET ADDRESSES"
+              value="NO ADDITIONAL ADDRESSES CONNECTED"
+            />
+          </div>
+        </div>
+        <div
+          class={`${container2} flex w-full min-w-0 flex-col p-3
+            mobileLg:w-1/2`}
+        >
+          <div class="mb-2 flex items-center justify-between">
+            <h3 class={`${subtitlePrimary} !mb-0`}>WEBSITE CUSTOMIZATION</h3>
+            <EditButton label="Edit website customization" />
+          </div>
+          <StatItem
+            label="TERMS OF SERVICE"
+            value="ACCEPT TERMS OF SERVICES GLOBALLY"
+          />
+          <a href="/termsofservice" class={textSm}>
+            Read the Terms of Service
+          </a>
+        </div>
       </div>
     </div>
   );
