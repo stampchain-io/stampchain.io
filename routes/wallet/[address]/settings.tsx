@@ -9,7 +9,7 @@ export default function WalletSettingsPage(props: PageProps) {
 
   return (
     <div
-      class={containerBackground}
+      class={`${containerBackground} gap-3`}
       f-client-nav
       data-partial={`/wallet/${address}/settings`}
     >

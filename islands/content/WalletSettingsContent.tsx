@@ -3,27 +3,11 @@ import { Button } from "$button";
 import { walletContext } from "$client/wallet/wallet.ts";
 import { InputField, inputTextarea } from "$form";
 import { Icon } from "$icon";
-import { container2, containerIcon, containerRowForm, StatItem } from "$layout";
+import { container2, containerRowForm, StatItem } from "$layout";
 import { walletOwnsAddress } from "$lib/utils/wallet/ownership.ts";
-import { labelXs, subtitlePrimary, text, textSm } from "$text";
+import { labelXs, subtitlePrimary, text } from "$text";
 import type { ComponentChildren } from "preact";
 import { useEffect, useState } from "preact/hooks";
-
-function EditButton({ label }: { label: string }) {
-  return (
-    <div class={`${containerIcon} !justify-center`}>
-      <Icon
-        type="iconButton"
-        name="edit"
-        weight="normal"
-        size="containerIcon"
-        color="neutral400"
-        ariaLabel={label}
-        onClick={(e) => e.preventDefault()}
-      />
-    </div>
-  );
-}
 
 function Field(
   { label, children, class: extraClass = "" }: {
@@ -66,10 +50,7 @@ function ProfileFields() {
         class={`${container2} flex w-full min-w-0 flex-col p-3
           mobileLg:w-1/2`}
       >
-        <div class="mb-2 flex items-center justify-between">
-          <h2 class={`${subtitlePrimary} !mb-0`}>PROFILE</h2>
-          <EditButton label="Edit profile" />
-        </div>
+        <h2 class={subtitlePrimary}>PROFILE</h2>
         <div class="flex flex-col gap-3">
           <ProfileAvatar />
           <Field label="NAME">
@@ -90,10 +71,7 @@ function ProfileFields() {
         class={`${container2} flex w-full min-w-0 flex-col p-3
           mobileLg:w-1/2`}
       >
-        <div class="mb-2 flex items-center justify-between">
-          <h3 class={`${subtitlePrimary} !mb-0`}>SOCIALS</h3>
-          <EditButton label="Edit socials" />
-        </div>
+        <h3 class={subtitlePrimary}>SOCIALS</h3>
         <div class="flex flex-col gap-3">
           <div class={containerRowForm}>
             <Field label="WEBSITE" class="flex-1">
@@ -182,20 +160,15 @@ function WalletSettingsContent({ address }: { address: string }) {
           class={`${container2} flex w-full min-w-0 flex-col p-3
             mobileLg:w-1/2`}
         >
-          <div class="mb-2 flex items-center justify-between">
-            <h3 class={`${subtitlePrimary} !mb-0`}>
-              INTERCONNECTED WALLETS
-            </h3>
-            <EditButton label="Edit interconnected wallets" />
-          </div>
+          <h3 class={subtitlePrimary}>INTERLINK WALLETS</h3>
           <div class="flex flex-col gap-3">
             <StatItem
-              label="MAIN WALLET"
+              label="CONNECTED WALLET ADDRESS"
               value={wallet.address}
               valueClass="!whitespace-normal break-all"
             />
             <StatItem
-              label="INTERCONNECTED WALLET ADDRESSES"
+              label="INTERLINKED WALLETS"
               value="NO ADDITIONAL ADDRESSES CONNECTED"
             />
           </div>
@@ -204,17 +177,11 @@ function WalletSettingsContent({ address }: { address: string }) {
           class={`${container2} flex w-full min-w-0 flex-col p-3
             mobileLg:w-1/2`}
         >
-          <div class="mb-2 flex items-center justify-between">
-            <h3 class={`${subtitlePrimary} !mb-0`}>WEBSITE CUSTOMIZATION</h3>
-            <EditButton label="Edit website customization" />
-          </div>
+          <h3 class={subtitlePrimary}>WEBSITE CUSTOMIZATION</h3>
           <StatItem
             label="TERMS OF SERVICE"
             value="ACCEPT TERMS OF SERVICES GLOBALLY"
           />
-          <a href="/termsofservice" class={textSm}>
-            Read the Terms of Service
-          </a>
         </div>
       </div>
     </div>

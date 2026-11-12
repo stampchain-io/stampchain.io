@@ -253,6 +253,7 @@ import * as $header_SRC20OverviewHeader from "./islands/header/SRC20OverviewHead
 import * as $header_WalletDashboardHeader from "./islands/header/WalletDashboardHeader.tsx";
 import * as $header_WalletHeader from "./islands/header/WalletHeader.tsx";
 import * as $header_WalletHeaderContent from "./islands/header/WalletHeaderContent.tsx";
+import * as $header_WalletSettingsHeader from "./islands/header/WalletSettingsHeader.tsx";
 import * as $header_index from "./islands/header/index.ts";
 import * as $layout_AnimationControlsManager from "./islands/layout/AnimationControlsManager.tsx";
 import * as $layout_BackgroundTopology from "./islands/layout/BackgroundTopology.tsx";
@@ -284,6 +285,7 @@ import * as $modal_info_StampCreatePoshInfo from "./islands/modal/info/StampCrea
 import * as $modal_info_StampCreateRecursiveInfo from "./islands/modal/info/StampCreateRecursiveInfo.tsx";
 import * as $modal_info_StampCreateRecursiveShortcuts from "./islands/modal/info/StampCreateRecursiveShortcuts.tsx";
 import * as $modal_info_StampSendInfo from "./islands/modal/info/StampSendInfo.tsx";
+import * as $modal_info_WalletSettingsInfo from "./islands/modal/info/WalletSettingsInfo.tsx";
 import * as $modal_states from "./islands/modal/states.ts";
 import * as $modal_tool_BTCAddressTool from "./islands/modal/tool/BTCAddressTool.tsx";
 import * as $modal_tool_BTCDonateTool from "./islands/modal/tool/BTCDonateTool.tsx";
@@ -679,6 +681,7 @@ const manifest = {
     "./islands/header/WalletDashboardHeader.tsx": $header_WalletDashboardHeader,
     "./islands/header/WalletHeader.tsx": $header_WalletHeader,
     "./islands/header/WalletHeaderContent.tsx": $header_WalletHeaderContent,
+    "./islands/header/WalletSettingsHeader.tsx": $header_WalletSettingsHeader,
     "./islands/header/index.ts": $header_index,
     "./islands/layout/AnimationControlsManager.tsx":
       $layout_AnimationControlsManager,
@@ -716,6 +719,8 @@ const manifest = {
     "./islands/modal/info/StampCreateRecursiveShortcuts.tsx":
       $modal_info_StampCreateRecursiveShortcuts,
     "./islands/modal/info/StampSendInfo.tsx": $modal_info_StampSendInfo,
+    "./islands/modal/info/WalletSettingsInfo.tsx":
+      $modal_info_WalletSettingsInfo,
     "./islands/modal/states.ts": $modal_states,
     "./islands/modal/tool/BTCAddressTool.tsx": $modal_tool_BTCAddressTool,
     "./islands/modal/tool/BTCDonateTool.tsx": $modal_tool_BTCDonateTool,
