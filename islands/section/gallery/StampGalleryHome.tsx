@@ -43,7 +43,7 @@ export function StampGalleryHome({
     variant: "cardSquare" as const,
     viewAllLink: "/explorer?section=stamps",
     gridClass: `
-      grid w-full gap-6
+      grid w-full gap-3
       grid-cols-2 min-[420px]:grid-cols-3 mobileMd:grid-cols-4 mobileLg:grid-cols-5 tablet:grid-cols-6 desktop:grid-cols-7
       auto-rows-fr
     `,

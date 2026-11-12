@@ -40,6 +40,11 @@ const navLinks: NavLink[] = [
     icon: "artStamps",
   },
   {
+    title: "Leaderboard",
+    href: "/leaderboard",
+    icon: "leaderboard",
+  },
+  {
     title: "Tokens",
     href: "/src20",
     icon: "src20Token",

@@ -69,6 +69,12 @@ export const STATIC_PAGE_METADATA: Record<string, PageMetadata> = {
       "Curated Bitcoin Stamps collections from KEVIN to STAMPEPES, each with its stamp count, holder count and lowest listed price.",
   },
 
+  "/leaderboard": {
+    title: "Bitcoin Stamps Leaderboard | Top Wallets",
+    description:
+      "The 500 wallets holding the most Bitcoin Stamps, or the highest floor-price value of those stamps.",
+  },
+
   "/explorer": {
     title: "Bitcoin Stamps Explorer | Stamps and SRC-20",
     description:
@@ -294,11 +300,25 @@ const PREFIX_RULES: Array<{
   },
   {
     prefix: "/wallet/",
-    build: (rest) => ({
-      title: addressTitle(rest, "Stamps Wallet", "Bitcoin Stamps Wallet"),
-      description:
-        `Stamps, SRC-20 balances and BTC held by ${rest}, plus everything this address has created, listed or sold on Bitcoin.`,
-    }),
+    build: (rest) => {
+      const segments = rest.split("/").filter(Boolean);
+      if (segments.length === 2 && segments[1] === "settings") {
+        const address = segments[0];
+        return {
+          title: addressTitle(
+            address,
+            "Wallet Settings",
+            "Wallet Settings",
+          ),
+          description: `Wallet settings for ${address} on stampchain.io.`,
+        };
+      }
+      return {
+        title: addressTitle(rest, "Stamps Wallet", "Bitcoin Stamps Wallet"),
+        description:
+          `Stamps, SRC-20 balances and BTC held by ${rest}, plus everything this address has created, listed or sold on Bitcoin.`,
+      };
+    },
   },
   {
     prefix: "/dashboard/",
@@ -402,6 +422,13 @@ function normalize(pathname: string): string {
  */
 /** Paths that still match a route pattern but render the 404 page. */
 const RETIRED_PATHS = new Set(["/tool/stamp/stamping"]);
+
+/** True for `/wallet/:address/settings`. Those pages are owner-only. */
+export function isNoIndexPath(pathname: string): boolean {
+  const parts = normalize(pathname).split("/").filter(Boolean);
+  return parts.length === 3 && parts[0] === "wallet" &&
+    parts[2] === "settings" && parts[1].length > 0;
+}
 
 export function getPageMetadata(pathname: string): PageMetadata {
   const path = normalize(pathname);

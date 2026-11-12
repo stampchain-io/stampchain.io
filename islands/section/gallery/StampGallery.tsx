@@ -43,7 +43,7 @@ export default function StampGallery({
   /* ===== DATA PROCESSING ===== */
   const filteredStamps = stamps || [];
 
-  const containerClass = gridClass ?? "grid grid-cols-2 gap-4";
+  const containerClass = gridClass ?? "grid grid-cols-2 gap-3";
 
   const resolvedSwiperBreakpoints = swiperBreakpoints || {
     360: { slidesPerView: 3 }, // mobileSm

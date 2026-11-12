@@ -1,5 +1,5 @@
-import type { MetaTagsProps } from "$types/ui.d.ts";
 import { brandText, getChainBrand } from "$lib/utils/chain/brand.ts";
+import type { MetaTagsProps } from "$types/ui.d.ts";
 
 const OPENGRAPH_IMAGE = "https://stampchain.io/img/logo/opengraph-1200x630.png";
 
@@ -13,6 +13,8 @@ export function MetaTags({
   skipOgMeta = false,
   canonicalUrl,
   ogUrl,
+  noindex = false,
+  nofollow = false,
   chain = "bitcoin",
   origin = "https://stampchain.io",
 }: MetaTagsProps) {
@@ -25,6 +27,9 @@ export function MetaTags({
     : "stampchain.io";
   const resolvedCanonical = canonicalUrl || origin;
   const resolvedOgUrl = ogUrl || resolvedCanonical;
+  const robots = `${noindex ? "noindex" : "index"}, ${
+    nofollow ? "nofollow" : "follow"
+  }`;
 
   return (
     <>
@@ -46,7 +51,7 @@ export function MetaTags({
         )}
       />
       <meta name="author" content="stampchain.io" />
-      <meta name="robots" content="index, follow" />
+      <meta name="robots" content={robots} />
 
       {/* Icons */}
       {

@@ -90,12 +90,12 @@ export const containerRowForm = "flex w-full gap-3";
 // fewest (largest cards). Shared by WalletContent, ExplorerContent,
 // MarketplaceContent — keeps column counts/gap consistent across pages.
 export const gridCardSm =
-  "grid grid-cols-3 mobileMd:grid-cols-4 mobileLg:grid-cols-5 tablet:grid-cols-6 desktop:grid-cols-8 gap-5 w-full auto-rows-fr";
+  "grid grid-cols-3 mobileMd:grid-cols-4 mobileLg:grid-cols-5 tablet:grid-cols-6 desktop:grid-cols-8 gap-3 w-full auto-rows-fr";
 export const gridCardMd =
-  "grid grid-cols-2 mobileMd:grid-cols-3 mobileLg:grid-cols-4 tablet:grid-cols-5 desktop:grid-cols-6 gap-5 w-full auto-rows-fr";
+  "grid grid-cols-2 mobileMd:grid-cols-3 mobileLg:grid-cols-4 tablet:grid-cols-5 desktop:grid-cols-6 gap-3 w-full auto-rows-fr";
 // Not in use yet — reserved for a future, even larger card tier.
 export const gridCardLg =
-  "grid grid-cols-1 mobileMd:grid-cols-2 mobileLg:grid-cols-3 tablet:grid-cols-4 desktop:grid-cols-5 gap-5 w-full auto-rows-fr";
+  "grid grid-cols-1 mobileMd:grid-cols-2 mobileLg:grid-cols-3 tablet:grid-cols-4 desktop:grid-cols-5 gap-3 w-full auto-rows-fr";
 
 // Md-tier variants sized for the wallet page's split-panel layout — the
 // stamps panel is desktop:w-2/3 (more columns), the tokens panel is

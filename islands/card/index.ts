@@ -13,4 +13,7 @@ export { SRC20OverviewCompact } from "$components/table/src20OverviewTable/SRC20
 /* ===== COLLECTION CARDS ===== */
 export * from "$components/card/CollectionCard.tsx";
 
+/* ===== LEADERBOARD CARDS ===== */
+export { LeaderboardCard } from "$components/card/LeaderboardCard.tsx";
+
 /* ===== DISPENSER CARDS ===== */
