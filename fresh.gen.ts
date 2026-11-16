@@ -171,6 +171,7 @@ import * as $Toast_NotificationUpdate from "./islands/Toast/NotificationUpdate.t
 import * as $Toast_ToastComponent from "./islands/Toast/ToastComponent.tsx";
 import * as $Toast_ToastProvider from "./islands/Toast/ToastProvider.tsx";
 import * as $WebVitalsReporter from "./islands/WebVitalsReporter.tsx";
+import * as $button_AddRemoveButton from "./islands/button/AddRemoveButton.tsx";
 import * as $button_CollectionButton from "./islands/button/CollectionButton.tsx";
 import * as $button_EditButton from "./islands/button/EditButton.tsx";
 import * as $button_FilterButton from "./islands/button/FilterButton.tsx";
@@ -572,6 +573,7 @@ const manifest = {
     "./islands/Toast/ToastComponent.tsx": $Toast_ToastComponent,
     "./islands/Toast/ToastProvider.tsx": $Toast_ToastProvider,
     "./islands/WebVitalsReporter.tsx": $WebVitalsReporter,
+    "./islands/button/AddRemoveButton.tsx": $button_AddRemoveButton,
     "./islands/button/CollectionButton.tsx": $button_CollectionButton,
     "./islands/button/EditButton.tsx": $button_EditButton,
     "./islands/button/FilterButton.tsx": $button_FilterButton,
