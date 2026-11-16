@@ -4,12 +4,14 @@ import { walletContext } from "$client/wallet/wallet.ts";
 import { inputCheckbox, InputField, inputTextarea } from "$form";
 import { Icon } from "$icon";
 import { AddRemoveButton } from "$islands/button/AddRemoveButton.tsx";
-import { container2, containerRowForm, StatItem } from "$layout";
+import { container2, containerIcon, containerRowForm, StatItem } from "$layout";
+import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
 import { walletOwnsAddress } from "$lib/utils/wallet/ownership.ts";
+import { tooltipImage } from "$notification";
 import { labelXs, subtitlePrimary, text, valueSm } from "$text";
 import { signal } from "@preact/signals";
 import type { ComponentChildren } from "preact";
-import { useEffect, useState } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 
 /**
  * Shared by the settings header and this island. Close and check both
@@ -20,17 +22,28 @@ export const walletSettingsEditing = signal(false);
 interface SettingsField {
   label: string;
   placeholder: string;
+  /** Read-view text. Falls back to the placeholder when omitted. */
+  value?: string;
   type?: "text" | "email";
   multiline?: boolean;
   wrap?: boolean;
 }
 
 const PROFILE_FIELDS: SettingsField[] = [
-  { label: "NAME", placeholder: "Artist or user name" },
-  { label: "BITNAME", placeholder: "Preferred bitname" },
+  {
+    label: "NAME",
+    placeholder: "Artist and user name",
+    value: "ANONYMOUS",
+  },
+  {
+    label: "BITNAME",
+    placeholder: "Preferred bitname",
+    value: "NO BITNAME IN THE WALLET",
+  },
   {
     label: "BIO",
     placeholder: "Details about yourself",
+    value: "NOTHING ADDED YET",
     multiline: true,
     wrap: true,
   },
@@ -38,16 +51,41 @@ const PROFILE_FIELDS: SettingsField[] = [
 
 const SOCIAL_ROWS: SettingsField[][] = [
   [
-    { label: "WEBSITE", placeholder: "example.com" },
-    { label: "EMAIL", placeholder: "your@email.com", type: "email" },
+    {
+      label: "WEBSITE",
+      placeholder: "example.com",
+      value: "NO WEBSITE ADDED",
+    },
+    {
+      label: "EMAIL",
+      placeholder: "your@email.com",
+      type: "email",
+      value: "NO EMAIL ADDRESS",
+    },
   ],
   [
-    { label: "X", placeholder: "@username" },
-    { label: "TELEGRAM", placeholder: "@username" },
+    {
+      label: "X",
+      placeholder: "username",
+      value: "NO X USER PROFILE",
+    },
+    {
+      label: "TELEGRAM",
+      placeholder: "username",
+      value: "NO TELEGRAM PROFILE",
+    },
   ],
   [
-    { label: "INSTAGRAM", placeholder: "@username" },
-    { label: "STAMPMAP", placeholder: "pixel coordinates" },
+    {
+      label: "INSTAGRAM",
+      placeholder: "username",
+      value: "NO INSTAGRAM ACCOUNT",
+    },
+    {
+      label: "STAMPMAP",
+      placeholder: "Bitcoin wallet address",
+      value: "NO STAMPMAP ADDRESS",
+    },
   ],
 ];
 
@@ -69,22 +107,168 @@ function Field(
   );
 }
 
-function ProfileAvatar() {
-  return (
-    <div
-      class={`${container2} flex shrink-0 items-center
-        justify-center w-fit h-fit !rounded-full p-0.5`}
-    >
+const AVATAR_TOOLTIP_DELAY_MS = 1500;
+
+function ProfileAvatar({ editing }: { editing: boolean }) {
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const tooltipTimeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
+
+  useEffect(() => {
+    if (!editing) setIsTooltipVisible(false);
+  }, [editing]);
+
+  useEffect(() => {
+    if (!isTooltipVisible) return;
+
+    const handleGlobalMouseMove = (e: globalThis.MouseEvent) => {
+      setTooltipPosition({ x: e.clientX, y: e.clientY });
+    };
+
+    document.addEventListener("mousemove", handleGlobalMouseMove);
+    return () =>
+      document.removeEventListener("mousemove", handleGlobalMouseMove);
+  }, [isTooltipVisible]);
+
+  useEffect(() => {
+    return () => {
+      if (tooltipTimeoutRef.current) {
+        globalThis.clearTimeout(tooltipTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const handleFileChange = (e: Event) => {
+    const input = e.currentTarget as HTMLInputElement;
+    const selected = input.files?.[0];
+    if (!selected || !selected.type.startsWith("image/")) return;
+    setPreviewUrl(URL.createObjectURL(selected));
+  };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    setTooltipPosition({ x: e.clientX, y: e.clientY });
+  };
+
+  const handleMouseEnter = () => {
+    if (tooltipTimeoutRef.current) {
+      globalThis.clearTimeout(tooltipTimeoutRef.current);
+    }
+    tooltipTimeoutRef.current = globalThis.setTimeout(() => {
+      setIsTooltipVisible(true);
+    }, AVATAR_TOOLTIP_DELAY_MS);
+  };
+
+  const handleMouseLeave = () => {
+    if (tooltipTimeoutRef.current) {
+      globalThis.clearTimeout(tooltipTimeoutRef.current);
+    }
+    setIsTooltipVisible(false);
+  };
+
+  const hideTooltip = () => setIsTooltipVisible(false);
+
+  const avatar = previewUrl
+    ? (
+      <img
+        src={previewUrl}
+        alt="Avatar"
+        class="h-16 w-16 rounded-full object-cover"
+      />
+    )
+    : (
       <Icon
         type="icon"
-        name="userCircle"
+        name="userProfile"
         weight="extraLight"
         size="custom"
         color="custom"
-        className="h-16 w-16 stroke-color-neutral-500"
+        className={`h-16 w-16 stroke-color-neutral-600 ${
+          editing ? "group-hover:stroke-color-hover" : ""
+        }`}
         ariaLabel="Avatar"
       />
+    );
+
+  const avatarFace = (
+    <div
+      class={`${container2} flex shrink-0 items-center justify-center
+        w-fit h-fit !rounded-full p-0.5`}
+    >
+      {avatar}
     </div>
+  );
+
+  return (
+    <>
+      <div
+        class="relative w-fit"
+        {...(editing
+          ? {
+            onMouseMove: handleMouseMove,
+            onMouseEnter: handleMouseEnter,
+            onMouseLeave: handleMouseLeave,
+            onMouseDown: hideTooltip,
+            onClick: hideTooltip,
+          }
+          : {})}
+      >
+        {editing && (
+          <input
+            id="profile-avatar-upload"
+            type="file"
+            class="hidden"
+            accept="image/*"
+            onChange={handleFileChange}
+          />
+        )}
+        {editing
+          ? (
+            <label
+              for="profile-avatar-upload"
+              class="group relative block cursor-pointer"
+            >
+              {avatarFace}
+              <span
+                class={`${containerIcon} !absolute -bottom-2.5 -right-2.5
+                 shrink-0 !justify-center !gap-0 !p-1`}
+              >
+                <Icon
+                  type="icon"
+                  name="edit"
+                  weight="bold"
+                  size="lg"
+                  color="custom"
+                  className="stroke-color-neutral-600
+                    group-hover:stroke-color-hover"
+                  ariaLabel="Update profile avatar image"
+                />
+              </span>
+            </label>
+          )
+          : avatarFace}
+      </div>
+      {editing && (
+        <div
+          class={`${tooltipImage} !fixed pointer-events-none ${
+            isTooltipVisible ? "opacity-100" : "opacity-0"
+          }`}
+          style={{
+            left: `${tooltipPosition.x}px`,
+            top: `${tooltipPosition.y - 6}px`,
+            transform: "translate(-50%, -100%)",
+          }}
+        >
+          UPDATE PROFILE AVATAR IMAGE
+        </div>
+      )}
+    </>
   );
 }
 
@@ -117,7 +301,7 @@ function SettingsStat({ field }: { field: SettingsField }) {
   return (
     <StatItem
       label={field.label}
-      value={field.placeholder.toUpperCase()}
+      value={field.value ?? field.placeholder.toUpperCase()}
       valueClass={field.wrap
         ? "!whitespace-normal break-all"
         : "!whitespace-normal"}
@@ -130,7 +314,7 @@ function ProfilePanel({ editing }: { editing: boolean }) {
     <div class={panelClass}>
       <h2 class={` ${subtitlePrimary} -mt-1`}>PROFILE</h2>
       <div class="flex flex-col gap-3">
-        <ProfileAvatar />
+        <ProfileAvatar editing={editing} />
         {PROFILE_FIELDS.map((field) =>
           editing
             ? <SettingsInput key={field.label} field={field} />
@@ -147,18 +331,24 @@ function SocialsPanel({ editing }: { editing: boolean }) {
       <h3 class={` ${subtitlePrimary} -mt-1`}>SOCIALS</h3>
       <div class="flex flex-col gap-3">
         {SOCIAL_ROWS.map((row) => (
-          <div class={containerRowForm} key={row[0].label}>
+          <div
+            class={`${containerRowForm} flex-col mobileMd:flex-row mobileLg:flex-col min-[940px]:flex-row`}
+            key={row[0].label}
+          >
             {row.map((field) =>
               editing
                 ? (
                   <SettingsInput
                     key={field.label}
                     field={field}
-                    class="flex-1"
+                    class="w-full mobileMd:flex-1 mobileLg:flex-none min-[940px]:flex-1"
                   />
                 )
                 : (
-                  <div key={field.label} class="min-w-0 flex-1">
+                  <div
+                    key={field.label}
+                    class="min-w-0 w-full mobileMd:flex-1 mobileLg:flex-none min-[940px]:flex-1"
+                  >
                     <SettingsStat field={field} />
                   </div>
                 )
@@ -169,8 +359,6 @@ function SocialsPanel({ editing }: { editing: boolean }) {
     </div>
   );
 }
-
-const INTERLINK_PLACEHOLDER = "NO ADDITIONAL ADDRESSES CONNECTED";
 
 function InterlinkEditRows() {
   const [rowIds, setRowIds] = useState<number[]>([0]);
@@ -200,7 +388,7 @@ function InterlinkEditRows() {
             <div class="min-w-0 flex-1">
               <InputField
                 type="text"
-                placeholder={INTERLINK_PLACEHOLDER}
+                placeholder="Bitcoin wallet address"
               />
             </div>
             <AddRemoveButton
@@ -217,6 +405,17 @@ function InterlinkEditRows() {
   );
 }
 
+function ShortFullText(
+  { short, full }: { short: string; full: string },
+) {
+  return (
+    <>
+      <span class="min-[420px]:hidden">{short}</span>
+      <span class="hidden min-[420px]:inline">{full}</span>
+    </>
+  );
+}
+
 function InterlinkPanel(
   { editing, connectedAddress }: {
     editing: boolean;
@@ -229,13 +428,23 @@ function InterlinkPanel(
       <div class="flex flex-col gap-3">
         <StatItem
           label="CONNECTED WALLET ADDRESS"
-          value={connectedAddress}
+          value={
+            <ShortFullText
+              short={abbreviateAddress(connectedAddress, 12)}
+              full={connectedAddress}
+            />
+          }
           valueClass="!whitespace-normal break-all"
         />
         {editing ? <InterlinkEditRows /> : (
           <StatItem
             label="INTERLINKED WALLETS"
-            value={INTERLINK_PLACEHOLDER}
+            value={
+              <ShortFullText
+                short="NO ADDITIONAL ADDRESSES"
+                full="NO ADDITIONAL ADDRESSES CONNECTED"
+              />
+            }
           />
         )}
       </div>
@@ -243,10 +452,15 @@ function InterlinkPanel(
   );
 }
 
-const TERMS_LABEL = "ACCEPT TERMS OF SERVICES GLOBALLY";
+const TERMS_ACCEPTED = "ACCEPTED GLOBALLY";
+const TERMS_NOT_ACCEPTED = "NOT ACCEPTED";
 
-function PreferencesEdit() {
-  const [accepted, setAccepted] = useState(false);
+function PreferencesEdit(
+  { accepted, onAccepted }: {
+    accepted: boolean;
+    onAccepted: (accepted: boolean) => void;
+  },
+) {
   const [canHover, setCanHover] = useState(true);
 
   return (
@@ -256,14 +470,15 @@ function PreferencesEdit() {
         onMouseLeave={() => setCanHover(true)}
       >
         <span class={`${valueSm} min-w-0 flex-1 !whitespace-normal`}>
-          "ACCEPT TERMS OF SERVICES GLOBALLY"
+          ACCEPT TERMS OF SERVICES GLOBALLY
         </span>
         <input
           type="checkbox"
-          class={`${inputCheckbox(accepted, canHover)} shrink-0`}
+          class={`${inputCheckbox(accepted, canHover)} w-4 h-4
+            shrink-0 ${accepted ? "" : "border-neutral-600"}`}
           checked={accepted}
           onChange={(e) => {
-            setAccepted(e.currentTarget.checked);
+            onAccepted(e.currentTarget.checked);
             setCanHover(false);
           }}
         />
@@ -273,15 +488,24 @@ function PreferencesEdit() {
 }
 
 function PreferencesPanel({ editing }: { editing: boolean }) {
+  const [accepted, setAccepted] = useState(false);
+
   return (
     <div class={panelClass}>
       <h3 class={` ${subtitlePrimary} -mt-1`}>PREFERENCES</h3>
-      {editing ? <PreferencesEdit /> : (
-        <StatItem
-          label="TERMS OF SERVICE"
-          value={TERMS_LABEL}
-        />
-      )}
+      {editing
+        ? (
+          <PreferencesEdit
+            accepted={accepted}
+            onAccepted={setAccepted}
+          />
+        )
+        : (
+          <StatItem
+            label="TERMS OF SERVICE"
+            value={accepted ? TERMS_ACCEPTED : TERMS_NOT_ACCEPTED}
+          />
+        )}
     </div>
   );
 }

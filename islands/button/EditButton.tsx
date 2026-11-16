@@ -21,6 +21,8 @@ interface EditButtonProps {
 
 const TOOLTIP_DELAY_MS = 1500;
 
+type TooltipId = "edit" | "dismiss" | "save";
+
 /* ===== COMPONENT ===== */
 /**
  * Edit icon pill. Click expands it into close and check; either of those
@@ -39,27 +41,27 @@ export function EditButton({
     if (editing === undefined) setInternalEditing(next);
     onEditingChange?.(next);
   };
-  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
-  const [allowTooltip, setAllowTooltip] = useState(true);
+  const [tooltipId, setTooltipId] = useState<TooltipId | null>(null);
   const tooltipTimeoutRef = useRef<number | null>(null);
 
-  const handleMouseEnter = () => {
-    if (!allowTooltip || isEditing) return;
-
+  const clearTooltipTimer = () => {
     if (tooltipTimeoutRef.current) {
       globalThis.clearTimeout(tooltipTimeoutRef.current);
+      tooltipTimeoutRef.current = null;
     }
+  };
+
+  const scheduleTooltip = (id: TooltipId) => {
+    clearTooltipTimer();
+    setTooltipId(null);
     tooltipTimeoutRef.current = globalThis.setTimeout(() => {
-      setIsTooltipVisible(true);
+      setTooltipId(id);
     }, TOOLTIP_DELAY_MS);
   };
 
-  const handleMouseLeave = () => {
-    if (tooltipTimeoutRef.current) {
-      globalThis.clearTimeout(tooltipTimeoutRef.current);
-    }
-    setIsTooltipVisible(false);
-    setAllowTooltip(true);
+  const hideTooltip = () => {
+    clearTooltipTimer();
+    setTooltipId(null);
   };
 
   useEffect(() => {
@@ -70,23 +72,22 @@ export function EditButton({
     };
   }, []);
 
-  const stopTooltip = () => {
-    if (tooltipTimeoutRef.current) {
-      globalThis.clearTimeout(tooltipTimeoutRef.current);
-    }
-    setIsTooltipVisible(false);
-    setAllowTooltip(false);
+  const tooltipClass = (id: TooltipId) => {
+    const visible = tooltipId === id &&
+      (id === "edit" ? !isEditing : isEditing);
+    return `${tooltipIcon} ${visible ? "opacity-100" : "opacity-0"}`;
   };
 
   const openEditor = (e: MouseEvent) => {
     e.preventDefault();
-    stopTooltip();
     setEditing(true);
+    // Pointer stays on this icon, which is now the close control.
+    scheduleTooltip("dismiss");
   };
 
   const closeEditor = (e: MouseEvent, action: "confirm" | "cancel") => {
     e.preventDefault();
-    stopTooltip();
+    hideTooltip();
     setEditing(false);
     if (action === "confirm") onConfirm?.();
     else onCancel?.();
@@ -99,11 +100,13 @@ export function EditButton({
   return (
     <div
       class="relative flex items-center"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onMouseLeave={hideTooltip}
     >
       <div class={`${containerIcon} !justify-start !gap-0`}>
-        <div class="relative shrink-0">
+        <div
+          class="relative shrink-0"
+          onMouseEnter={() => scheduleTooltip(isEditing ? "dismiss" : "edit")}
+        >
           <div
             class={`transition-opacity duration-200 ${
               isEditing ? "pointer-events-none opacity-0" : "opacity-100"
@@ -132,35 +135,51 @@ export function EditButton({
               weight="normal"
               size="containerIcon"
               color="neutral400"
-              ariaLabel="Cancel editing"
+              ariaLabel="Dismiss changes"
               onClick={isEditing ? (e) => closeEditor(e, "cancel") : undefined}
             />
           </div>
-        </div>
-        <div
-          class={`min-w-0 overflow-hidden transition-[max-width,opacity]
-            duration-300 ease-out ${actionClass}`}
-          aria-hidden={!isEditing}
-        >
-          <div class="pl-2 tablet:pl-1">
-            <Icon
-              type="iconButton"
-              name="check"
-              weight="normal"
-              size="containerIcon"
-              color="neutral400"
-              ariaLabel="Save settings"
-              onClick={isEditing ? (e) => closeEditor(e, "confirm") : undefined}
-            />
+          <div class={tooltipClass("edit")}>
+            EDIT SETTINGS
+          </div>
+          <div class={tooltipClass("dismiss")}>
+            DISMISS CHANGES
           </div>
         </div>
-      </div>
-      <div
-        class={`${tooltipIcon} ${
-          isTooltipVisible && !isEditing ? "opacity-100" : "opacity-0"
-        }`}
-      >
-        EDIT
+        <div class="relative">
+          <div
+            class={`min-w-0 overflow-hidden transition-[max-width,opacity]
+              duration-300 ease-out ${actionClass}`}
+            aria-hidden={!isEditing}
+          >
+            <div class="pl-2 tablet:pl-1">
+              <Icon
+                type="iconButton"
+                name="check"
+                weight="normal"
+                size="containerIcon"
+                color="neutral400"
+                ariaLabel="Save settings"
+                onMouseEnter={() => {
+                  if (isEditing) scheduleTooltip("save");
+                }}
+                onClick={isEditing
+                  ? (e) => closeEditor(e, "confirm")
+                  : undefined}
+              />
+            </div>
+          </div>
+          {
+            /* The check icon's width animation clips overflow. This box
+              matches that icon button (w-4 plus p-[5px]) so the tooltip
+              can sit above it, outside the clip. */
+          }
+          <div class="pointer-events-none absolute bottom-0 right-0 size-[26px]">
+            <div class={tooltipClass("save")}>
+              SAVE SETTINGS
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -141,7 +141,7 @@ export const iconStyles = {
 
   /* ===== WEIGHT VARIANTS ===== */
   weight: {
-    extraLight: "[stroke-width:0.75]", // used for loading icon and tool image icons - change to 0.5 and rename usage
+    extraLight: "[stroke-width:0.5]", // used for loading icon and tool image icons
     light: "[stroke-width:0.75]",
     normal: "[stroke-width:1.0]",
     bold: "[stroke-width:1.25]",

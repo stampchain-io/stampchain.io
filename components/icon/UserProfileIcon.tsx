@@ -1,6 +1,6 @@
 /* ===== USER PROFILE ICON COMPONENT ===== */
 /*
- * Shared "creator/artist" avatar icon (userCircle) used wherever a creator
+ * Shared "creator/artist" avatar icon (userProfileCircle) used wherever a creator
  * name or address is displayed - cards, detail headers, etc. Defaults match
  * the compact card usage; pass size/weight/className to match other
  * contexts (e.g. detail headers use size="md" or size="lg" with
@@ -50,7 +50,7 @@ export function UserProfileIcon({
   const icon = (
     <Icon
       type="icon"
-      name="userCircle"
+      name="userProfileCircle"
       weight={weight}
       size={size}
       color="custom"
