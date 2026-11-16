@@ -13,7 +13,7 @@ export default function WalletSettingsPage(props: PageProps) {
       f-client-nav
       data-partial={`/wallet/${address}/settings`}
     >
-      <WalletSettingsHeader />
+      <WalletSettingsHeader address={address} />
       <WalletSettingsContent address={address} />
     </div>
   );
