@@ -161,6 +161,8 @@ export function Icon(props: IconVariants) {
       copy: "copy",
       edit: "pencil",
       pencil: "pencil",
+      check: "check",
+      plus: "plus",
 
       // SRC-101 Specific Icons
       chartUp: "chartUp",

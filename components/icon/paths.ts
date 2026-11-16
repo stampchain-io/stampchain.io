@@ -441,6 +441,10 @@ export const plus = [
   "M12 4V20M20 12H4",
 ];
 
+export const check = [
+  "M5 14L8.5 17.5L19 6.5",
+];
+
 /* ===== UI ICONS ===== */
 export const userCircle = [
   "M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z",
