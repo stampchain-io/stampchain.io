@@ -28,7 +28,7 @@ export function AuthorSection({ name, twitter, website }: AuthorProps) {
             weight="normal"
             size="md"
             color="neutral400"
-            href={`https://twitter.com/${twitter}`}
+            href={`https://x.com/${twitter}`}
             target="_blank"
             rel="noopener noreferrer"
           />
