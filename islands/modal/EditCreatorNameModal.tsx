@@ -4,17 +4,21 @@ import { walletContext } from "$client/wallet/wallet.ts";
 import { inputField } from "$form";
 import { closeModal } from "$islands/modal/states.ts";
 import { ModalBase } from "$layout";
+import {
+  CREATOR_NAME_CANCELLED,
+  CREATOR_NAME_MAX_LENGTH,
+  CREATOR_NAME_NOT_OWNER,
+  CREATOR_NAME_WALLET_REQUIRED,
+  submitCreatorName,
+  validateCreatorName,
+} from "$lib/utils/creator/creatorNameClient.ts";
 import { logger } from "$lib/utils/logger.ts";
-import { getCSRFToken } from "$lib/utils/security/clientSecurityUtils.ts";
 import { showToast } from "$lib/utils/ui/notifications/toastSignal.ts";
 import { walletOwnsAddress } from "$lib/utils/wallet/ownership.ts";
 import { labelSm } from "$text";
 import { useState } from "preact/hooks";
 
-/* ===== CONSTANTS ===== */
-const CREATOR_NAME_MAX_LENGTH = 25;
-const CREATOR_NAME_MIN_LENGTH = 1;
-const CREATOR_NAME_PATTERN = /^[a-zA-Z0-9 .\-_']+$/;
+export { validateCreatorName };
 
 /* ===== TYPES ===== */
 export interface EditCreatorNameModalProps {
@@ -26,35 +30,6 @@ export interface EditCreatorNameModalProps {
   address: string;
   currentName?: string;
   onSuccess?: (newName: string) => void;
-}
-
-/* ===== VALIDATION ===== */
-export function validateCreatorName(
-  name: string,
-): { valid: boolean; message?: string } {
-  const trimmed = name.trim();
-
-  if (trimmed.length < CREATOR_NAME_MIN_LENGTH) {
-    return { valid: false, message: "Creator name cannot be empty" };
-  }
-
-  if (trimmed.length > CREATOR_NAME_MAX_LENGTH) {
-    return {
-      valid: false,
-      message:
-        `Creator name must be ${CREATOR_NAME_MAX_LENGTH} characters or fewer (got ${trimmed.length})`,
-    };
-  }
-
-  if (!CREATOR_NAME_PATTERN.test(trimmed)) {
-    return {
-      valid: false,
-      message:
-        "Creator name can only contain letters, numbers, spaces, periods, hyphens, underscores, and apostrophes",
-    };
-  }
-
-  return { valid: true };
 }
 
 /* ===== COMPONENT ===== */
@@ -98,17 +73,14 @@ function EditCreatorNameModal({
   const handleSubmit = async () => {
     // Guard: wallet must be connected
     if (!wallet?.address) {
-      showToast("Please connect your wallet first", "error");
+      showToast(CREATOR_NAME_WALLET_REQUIRED, "error");
       return;
     }
 
     // Guard: the profile address must belong to the connected wallet
     // (payment or ordinals address). Never sign/submit for a foreign address.
     if (!walletOwnsAddress(wallet, address)) {
-      showToast(
-        "The connected wallet does not control this address",
-        "error",
-      );
+      showToast(CREATOR_NAME_NOT_OWNER, "error");
       return;
     }
 
@@ -119,127 +91,33 @@ function EditCreatorNameModal({
       return;
     }
 
-    const trimmedName = newName.trim();
-
     setIsSubmitting(true);
     setValidationError(null);
 
     try {
-      // Step 1: Fetch CSRF token
-      let csrfToken: string;
-      try {
-        csrfToken = await getCSRFToken();
-      } catch (err) {
-        logger.error("ui", {
-          message: "Failed to fetch CSRF token",
-          error: err instanceof Error ? err.message : String(err),
-          component: "EditCreatorNameModal",
-        });
-        throw new Error("Failed to fetch security token. Please try again.");
-      }
-
-      // Step 2: Request wallet signature
-      const timestamp = Date.now().toString();
-      const message = `Update creator name to ${trimmedName} at ${timestamp}`;
-
-      logger.debug("ui", {
-        message: "Requesting wallet signature",
-        messageToSign: message,
-        component: "EditCreatorNameModal",
-      });
-
-      // Sign with the profile address itself, so the server-side check
-      // (signature must verify against the address being updated) holds for
-      // secondary addresses such as the Xverse ordinals address.
-      let signature: string;
-      try {
-        const rawSignature = await walletContext.signMessage(message, address);
-        console.log(
-          "[EditCreatorName] signMessage returned:",
-          typeof rawSignature,
-          rawSignature
-            ? `(${String(rawSignature).length} chars)`
-            : rawSignature,
-        );
-        if (!rawSignature || typeof rawSignature !== "string") {
-          throw new Error(
-            `Wallet returned invalid signature (got ${typeof rawSignature})`,
-          );
-        }
-        signature = rawSignature;
-      } catch (err) {
-        const errMsg = err instanceof Error ? err.message : String(err);
-        // User cancellation — don't show an error toast
-        if (
-          errMsg.toLowerCase().includes("cancel") ||
-          errMsg.toLowerCase().includes("reject") ||
-          errMsg.toLowerCase().includes("denied") ||
-          errMsg === "cancelled"
-        ) {
-          showToast("Signature request was cancelled", "info");
-          return;
-        }
-        logger.error("ui", {
-          message: "Wallet signature failed",
-          error: errMsg,
-          component: "EditCreatorNameModal",
-        });
-        throw new Error(`Signing failed: ${errMsg}`);
-      }
-
-      // Step 3: POST to API
-      logger.debug("ui", {
-        message: "Submitting creator name update",
+      const result = await submitCreatorName({
         address,
-        newName: trimmedName,
+        name: newName,
+        wallet,
+        signMessage: (message, signAddress) =>
+          walletContext.signMessage(message, signAddress),
         component: "EditCreatorNameModal",
       });
 
-      const response = await fetch("/api/internal/creatorName", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-Token": csrfToken,
-        },
-        body: JSON.stringify({
-          address,
-          newName: trimmedName,
-          signature,
-          timestamp,
-          csrfToken,
-        }),
-      });
-
-      const responseData = await response.json().catch(() => ({
-        error: "Failed to parse server response",
-      }));
-
-      if (!response.ok) {
-        const detail = responseData.error ||
-          responseData.message ||
-          "Failed to update creator name";
-        logger.error("ui", {
-          message: "Creator name update API error",
-          detail,
-          status: response.status,
-          component: "EditCreatorNameModal",
-        });
-        throw new Error(detail);
+      if (result.status === "cancelled") {
+        showToast(CREATOR_NAME_CANCELLED, "info");
+        return;
+      }
+      if (result.status === "error") {
+        setValidationError(result.message);
+        return;
       }
 
-      // Step 4: Show success
-      const updatedName = responseData.creatorName ?? trimmedName;
-      logger.debug("ui", {
-        message: "Creator name updated successfully",
-        updatedName,
-        component: "EditCreatorNameModal",
-      });
-
-      setSuccessName(updatedName);
-      showToast(`Creator name updated to "${updatedName}"`, "success");
+      setSuccessName(result.name);
+      showToast(`Creator name updated to "${result.name}"`, "success");
 
       if (onSuccess) {
-        onSuccess(updatedName);
+        onSuccess(result.name);
       }
 
       // Auto-close after brief success display
@@ -250,11 +128,6 @@ function EditCreatorNameModal({
       const errMsg = err instanceof Error
         ? err.message
         : "An unexpected error occurred";
-      logger.error("ui", {
-        message: "Creator name update failed",
-        error: errMsg,
-        component: "EditCreatorNameModal",
-      });
       setValidationError(errMsg);
     } finally {
       setIsSubmitting(false);

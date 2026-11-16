@@ -6,8 +6,11 @@ import { useEffect, useRef, useState } from "preact/hooks";
 
 /* ===== TYPES ===== */
 interface EditButtonProps {
-  /** Check icon. The control returns to the edit icon either way. */
-  onConfirm?: () => void;
+  /**
+   * Check icon. `false` or a thrown error keeps edit mode open.
+   * A missing return value closes it.
+   */
+  onConfirm?: () => boolean | void | Promise<boolean | void>;
   /** Close icon. The control returns to the edit icon either way. */
   onCancel?: () => void;
   /**
@@ -35,6 +38,8 @@ export function EditButton({
   onEditingChange,
 }: EditButtonProps) {
   const [internalEditing, setInternalEditing] = useState(false);
+  const [isConfirming, setIsConfirming] = useState(false);
+  const confirmingRef = useRef(false);
   const isEditing = editing ?? internalEditing;
 
   const setEditing = (next: boolean) => {
@@ -85,17 +90,38 @@ export function EditButton({
     scheduleTooltip("dismiss");
   };
 
-  const closeEditor = (e: MouseEvent, action: "confirm" | "cancel") => {
+  const closeEditor = async (
+    e: MouseEvent,
+    action: "confirm" | "cancel",
+  ) => {
     e.preventDefault();
+    if (confirmingRef.current) return;
     hideTooltip();
-    setEditing(false);
-    if (action === "confirm") onConfirm?.();
-    else onCancel?.();
+    if (action === "cancel") {
+      setEditing(false);
+      onCancel?.();
+      return;
+    }
+
+    confirmingRef.current = true;
+    setIsConfirming(true);
+    try {
+      const result = await onConfirm?.();
+      if (result !== false) setEditing(false);
+    } catch {
+      // A thrown confirm stays in edit mode.
+    } finally {
+      confirmingRef.current = false;
+      setIsConfirming(false);
+    }
   };
 
-  const actionClass = isEditing
-    ? "max-w-[2.125rem] opacity-100 tablet:max-w-[1.875rem]"
-    : "pointer-events-none max-w-0 opacity-0";
+  const actionClass = !isEditing
+    ? "pointer-events-none max-w-0 opacity-0"
+    : isConfirming
+    ? `pointer-events-none max-w-[2.125rem] opacity-40
+      tablet:max-w-[1.875rem]`
+    : "max-w-[2.125rem] opacity-100 tablet:max-w-[1.875rem]";
 
   return (
     <div

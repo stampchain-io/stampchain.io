@@ -1,6 +1,6 @@
-import { create, Header, verify } from "djwt/mod.ts";
-import { serverConfig } from "$server/config/config.ts";
 import { logger } from "$lib/utils/logger.ts";
+import { serverConfig } from "$server/config/config.ts";
+import { create, Header, verify } from "djwt/mod.ts";
 
 interface CSRFPayload {
   exp: number;
@@ -14,14 +14,26 @@ export class SecurityService {
     if (this.SECRET_KEY) return this.SECRET_KEY;
 
     const key = serverConfig.CSRF_SECRET_KEY;
-    if (!key) {
-      logger.error("stamps", {
-        message: "CSRF secret key not configured",
-      });
-      throw new Error("CSRF_SECRET_KEY is not set in the server configuration");
+    if (key) {
+      this.SECRET_KEY = key;
+      return this.SECRET_KEY;
     }
-    this.SECRET_KEY = key;
-    return this.SECRET_KEY;
+
+    // Local dev often has no CSRF_SECRET_KEY. The route guard skips the
+    // header check in development, but creator-name updates still validate
+    // the body token, so issue and check must share a secret.
+    if (serverConfig.IS_DEVELOPMENT) {
+      logger.debug("stamps", {
+        message: "Using development CSRF secret",
+      });
+      this.SECRET_KEY = "development-csrf-secret";
+      return this.SECRET_KEY;
+    }
+
+    logger.error("stamps", {
+      message: "CSRF secret key not configured",
+    });
+    throw new Error("CSRF_SECRET_KEY is not set in the server configuration");
   }
 
   static async generateCSRFToken(): Promise<string> {
@@ -72,7 +84,7 @@ export class SecurityService {
   static async validateCSRFToken(token: string): Promise<boolean> {
     try {
       const secretKey = this.getSecretKey();
-      
+
       logger.debug("stamps", {
         message: "Starting CSRF token validation",
         tokenLength: token.length,
@@ -92,7 +104,7 @@ export class SecurityService {
 
       // First verify the token signature
       const verifiedToken = await verify(token, key);
-      
+
       logger.debug("stamps", {
         message: "Token verification details",
         hasVerifiedToken: !!verifiedToken,
@@ -132,7 +144,7 @@ export class SecurityService {
 
       const currentTime = Date.now() / 1000;
       const isValid = currentTime <= payload.exp;
-      
+
       logger.debug("stamps", {
         message: "CSRF token validation result",
         tokenLength: token.length,
@@ -156,4 +168,4 @@ export class SecurityService {
       return false;
     }
   }
-} 
+}

@@ -2,7 +2,10 @@
 import { walletContext } from "$client/wallet/wallet.ts";
 import { EditButton } from "$islands/button/EditButton.tsx";
 import { InfoButton } from "$islands/button/InfoButton.tsx";
-import { walletSettingsEditing } from "$islands/content/WalletSettingsContent.tsx";
+import {
+  walletSettingsEditing,
+  walletSettingsSave,
+} from "$islands/content/WalletSettingsContent.tsx";
 import { WalletSettingsInfo } from "$islands/modal/info/WalletSettingsInfo.tsx";
 import { walletOwnsAddress } from "$lib/utils/wallet/ownership.ts";
 import { titlePrimary } from "$text";
@@ -29,6 +32,7 @@ export function WalletSettingsHeader({ address }: { address: string }) {
             onEditingChange={(editing) => {
               walletSettingsEditing.value = editing;
             }}
+            onConfirm={() => walletSettingsSave.value?.() ?? true}
           />
         )}
         <InfoButton modal={<WalletSettingsInfo />} />

@@ -5,7 +5,16 @@ import { inputCheckbox, InputField, inputTextarea } from "$form";
 import { Icon } from "$icon";
 import { AddRemoveButton } from "$islands/button/AddRemoveButton.tsx";
 import { container2, containerIcon, containerRowForm, StatItem } from "$layout";
+import {
+  CREATOR_NAME_CANCELLED,
+  CREATOR_NAME_MAX_LENGTH,
+  CREATOR_NAME_NOT_OWNER,
+  CREATOR_NAME_WALLET_REQUIRED,
+  decideCreatorNameSave,
+  submitCreatorName,
+} from "$lib/utils/creator/creatorNameClient.ts";
 import { abbreviateAddress } from "$lib/utils/ui/formatting/formatUtils.ts";
+import { showToast } from "$lib/utils/ui/notifications/toastSignal.ts";
 import { walletOwnsAddress } from "$lib/utils/wallet/ownership.ts";
 import { tooltipImage } from "$notification";
 import { labelXs, subtitlePrimary, text, valueSm } from "$text";
@@ -14,10 +23,18 @@ import type { ComponentChildren } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
 
 /**
- * Shared by the settings header and this island. Close and check both
- * set it back to false; check does not persist anything yet.
+ * Shared by the settings header and this island. Close sets it false
+ * immediately. Check sets it false only after the name save succeeds.
  */
 export const walletSettingsEditing = signal(false);
+
+/**
+ * Registered while the settings content is mounted for an owner.
+ * The header check button awaits it. True leaves edit mode.
+ */
+export const walletSettingsSave = signal<
+  (() => Promise<boolean>) | null
+>(null);
 
 interface SettingsField {
   label: string;
@@ -29,11 +46,13 @@ interface SettingsField {
   wrap?: boolean;
 }
 
+const NAME_PLACEHOLDER = "Artist and user name";
+const ANONYMOUS_NAME = "ANONYMOUS";
+
 const PROFILE_FIELDS: SettingsField[] = [
   {
     label: "NAME",
-    placeholder: "Artist and user name",
-    value: "ANONYMOUS",
+    placeholder: NAME_PLACEHOLDER,
   },
   {
     label: "BITNAME",
@@ -309,17 +328,90 @@ function SettingsStat({ field }: { field: SettingsField }) {
   );
 }
 
-function ProfilePanel({ editing }: { editing: boolean }) {
+function NameField(
+  {
+    editing,
+    displayName,
+    draft,
+    error,
+    disabled,
+    onDraft,
+  }: {
+    editing: boolean;
+    displayName: string | null;
+    draft: string;
+    error: string | null;
+    disabled: boolean;
+    onDraft: (value: string) => void;
+  },
+) {
+  if (!editing) {
+    return (
+      <SettingsStat
+        field={{
+          label: "NAME",
+          placeholder: NAME_PLACEHOLDER,
+          value: displayName || ANONYMOUS_NAME,
+        }}
+      />
+    );
+  }
+
+  return (
+    <Field label="NAME">
+      <InputField
+        type="text"
+        placeholder={NAME_PLACEHOLDER}
+        value={draft}
+        maxLength={CREATOR_NAME_MAX_LENGTH + 5}
+        disabled={disabled}
+        onInput={(e) => onDraft(e.currentTarget.value)}
+        {...(error ? { error } : {})}
+      />
+    </Field>
+  );
+}
+
+function ProfilePanel(
+  {
+    editing,
+    displayName,
+    draft,
+    nameError,
+    nameDisabled,
+    onDraft,
+  }: {
+    editing: boolean;
+    displayName: string | null;
+    draft: string;
+    nameError: string | null;
+    nameDisabled: boolean;
+    onDraft: (value: string) => void;
+  },
+) {
   return (
     <div class={panelClass}>
       <h2 class={` ${subtitlePrimary} -mt-1`}>PROFILE</h2>
       <div class="flex flex-col gap-3">
         <ProfileAvatar editing={editing} />
-        {PROFILE_FIELDS.map((field) =>
-          editing
+        {PROFILE_FIELDS.map((field) => {
+          if (field.label === "NAME") {
+            return (
+              <NameField
+                key={field.label}
+                editing={editing}
+                displayName={displayName}
+                draft={draft}
+                error={nameError}
+                disabled={nameDisabled}
+                onDraft={onDraft}
+              />
+            );
+          }
+          return editing
             ? <SettingsInput key={field.label} field={field} />
-            : <SettingsStat key={field.label} field={field} />
-        )}
+            : <SettingsStat key={field.label} field={field} />;
+        })}
       </div>
     </div>
   );
@@ -510,22 +602,135 @@ function PreferencesPanel({ editing }: { editing: boolean }) {
   );
 }
 
-function WalletSettingsContent({ address }: { address: string }) {
+function WalletSettingsContent(
+  {
+    address,
+    storedName: storedNameProp,
+    displayName: displayNameProp,
+  }: {
+    address: string;
+    storedName: string | null;
+    displayName: string | null;
+  },
+) {
   const { wallet, isConnected, showConnectModal } = walletContext;
   const [mounted, setMounted] = useState(false);
+  const [storedName, setStoredName] = useState(storedNameProp);
+  const [displayName, setDisplayName] = useState(displayNameProp);
+  const [draft, setDraft] = useState(storedNameProp ?? "");
+  const [nameError, setNameError] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const storedNameRef = useRef(storedNameProp);
+  const wasEditingRef = useRef(walletSettingsEditing.value);
+  const skipDraftResetRef = useRef(false);
+  const saveNameRef = useRef<() => Promise<boolean>>(() =>
+    Promise.resolve(false)
+  );
+
+  useEffect(() => {
+    storedNameRef.current = storedName;
+  }, [storedName]);
 
   useEffect(() => {
     setMounted(true);
     return () => {
       walletSettingsEditing.value = false;
+      walletSettingsSave.value = null;
     };
   }, []);
+
+  useEffect(() => {
+    if (walletSettingsEditing.value) return;
+    setStoredName(storedNameProp);
+    setDisplayName(displayNameProp);
+    setDraft(storedNameProp ?? "");
+    storedNameRef.current = storedNameProp;
+    setNameError(null);
+  }, [storedNameProp, displayNameProp]);
+
+  useEffect(() => {
+    const editing = walletSettingsEditing.value;
+    if (wasEditingRef.current && !editing) {
+      if (skipDraftResetRef.current) {
+        skipDraftResetRef.current = false;
+      } else {
+        setDraft(storedNameRef.current ?? "");
+        setNameError(null);
+      }
+    }
+    wasEditingRef.current = editing;
+  }, [walletSettingsEditing.value]);
 
   const isOwner = mounted && isConnected &&
     walletOwnsAddress(wallet, address);
 
   useEffect(() => {
     if (!isOwner) walletSettingsEditing.value = false;
+  }, [isOwner]);
+
+  const handleDraft = (value: string) => {
+    setDraft(value);
+    if (nameError) setNameError(null);
+  };
+
+  saveNameRef.current = async () => {
+    if (isSaving) return false;
+    const decision = decideCreatorNameSave(draft, storedNameRef.current);
+    if (decision.action === "unchanged") return true;
+    if (decision.action === "invalid") {
+      setNameError(decision.message);
+      return false;
+    }
+
+    setIsSaving(true);
+    setNameError(null);
+    try {
+      const result = await submitCreatorName({
+        address,
+        name: decision.name,
+        wallet,
+        signMessage: (message, signAddress) =>
+          walletContext.signMessage(message, signAddress),
+        component: "WalletSettingsContent",
+      });
+
+      if (result.status === "cancelled") {
+        showToast(CREATOR_NAME_CANCELLED, "info");
+        return false;
+      }
+      if (result.status === "error") {
+        if (
+          result.message === CREATOR_NAME_WALLET_REQUIRED ||
+          result.message === CREATOR_NAME_NOT_OWNER
+        ) {
+          showToast(result.message, "error");
+        }
+        setNameError(result.message);
+        return false;
+      }
+
+      skipDraftResetRef.current = true;
+      storedNameRef.current = result.name;
+      setStoredName(result.name);
+      setDisplayName(result.name);
+      setDraft(result.name);
+      setNameError(null);
+      showToast(`Creator name updated to "${result.name}"`, "success");
+      return true;
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!isOwner) {
+      walletSettingsSave.value = null;
+      return;
+    }
+    walletSettingsSave.value = () => saveNameRef.current();
+    return () => {
+      walletSettingsSave.value = null;
+    };
   }, [isOwner]);
 
   if (!isOwner) {
@@ -571,7 +776,14 @@ function WalletSettingsContent({ address }: { address: string }) {
   return (
     <div class="flex flex-col gap-3 w-full">
       <div class="flex w-full flex-col gap-3 mobileLg:flex-row">
-        <ProfilePanel editing={editing} />
+        <ProfilePanel
+          editing={editing}
+          displayName={displayName}
+          draft={draft}
+          nameError={nameError}
+          nameDisabled={isSaving}
+          onDraft={handleDraft}
+        />
         <SocialsPanel editing={editing} />
       </div>
       <div class="flex w-full flex-col gap-3 mobileLg:flex-row">
