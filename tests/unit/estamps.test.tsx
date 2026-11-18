@@ -4,8 +4,8 @@
  * Bitcoin: the pages, components and SQL this change touches match
  * bitcoinEstampsBaseline.json, captured from the code before it. ECX: the
  * eSTAMPS brand, eSTAMP numbers, the ECX-native default view with its
- * empty state and inherited-history switch, the chain banner and the
- * chain-neutral update announcement.
+ * empty state and inherited-history switch, the chain banner and an
+ * update announcement that omits the value-ranking line.
  *
  * Nothing here sets Deno.env (parallel test files share it). The chain is a
  * parameter, client chain state or render data; CHAIN-in-env cases live in
@@ -44,7 +44,11 @@ const { ChainBanner, indexStatus } = await import(
 const { HomeHeader } = await import("$components/header/HomeHeader.tsx");
 const { default: Home } = await import("../../routes/index.tsx");
 const { ExplorerPage } = await import("../../routes/explorer/index.tsx");
-const { notificationUpdateMessage, NOTIFICATION_UPDATE_MESSAGE } = await import(
+const {
+  notificationUpdateMessage,
+  NOTIFICATION_UPDATE_MESSAGE,
+  NOTIFICATION_UPDATE_MESSAGE_ECX,
+} = await import(
   "$lib/utils/ui/notifications/updateAnnouncement.ts"
 );
 const { AMOUNT_STAMPS, renderAmountComponents } = await import(
@@ -579,15 +583,21 @@ Deno.test("ecx: banner separates indexed block, fork block and readiness", () =>
 });
 
 /* ===== ECX: UPDATE ANNOUNCEMENT ===== */
-Deno.test("ecx: update announcement names neither Bitcoin nor a price", () => {
+Deno.test("ecx: update announcement omits value ranking and names neither Bitcoin nor a price", () => {
   const ecx = notificationUpdateMessage("ecx");
+  assertStrictEquals(ecx, NOTIFICATION_UPDATE_MESSAGE_ECX);
+  assert(!ecx.includes("or by value"));
   assert(!/bitcoin|price/i.test(ecx), ecx);
-  assert(/transaction fees and current block display/.test(ecx));
+  assert(/https:\/\/ecx\.stampchain\.io\/leaderboard\//.test(ecx));
   clientChain.setClientChain(ECX_CHAIN);
   try {
     assertStrictEquals(notificationUpdateMessage(), ecx);
   } finally {
     clientChain.setClientChain(null);
   }
-  assert(/bitcoin block and price/.test(notificationUpdateMessage("bitcoin")));
+  assert(NOTIFICATION_UPDATE_MESSAGE.includes("or by value"));
+  assertStrictEquals(
+    notificationUpdateMessage("bitcoin"),
+    NOTIFICATION_UPDATE_MESSAGE,
+  );
 });

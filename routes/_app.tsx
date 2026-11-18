@@ -1,4 +1,5 @@
 /* ===== ROOT APP LAYOUT ROUTE ===== */
+import { ChainBanner } from "$components/layout/ChainBanner.tsx";
 import { MetaTags } from "$components/layout/MetaTags.tsx";
 import { ResourceHints } from "$components/layout/PerformanceUtils.tsx";
 import { asset, Head, Partial } from "$fresh/runtime.ts";
@@ -12,20 +13,19 @@ import { NotificationUpdate } from "$islands/Toast/NotificationUpdate.tsx";
 import { ToastProvider } from "$islands/Toast/ToastProvider.tsx";
 import WebVitalsReporter from "$islands/WebVitalsReporter.tsx";
 import { Footer, NavigatorProvider } from "$layout";
-import { getPageMetadata } from "$lib/utils/pageMetadata.ts";
-import { getClientConfig } from "$server/config/config.ts";
 import { brandPageMetadata, chainStylesheet } from "$lib/utils/chain/brand.ts";
-import { ChainBanner } from "$components/layout/ChainBanner.tsx";
+import { ECX_FORK_BLOCK } from "$lib/utils/chain/ecxView.ts";
+import { getPageMetadata, isNoIndexPath } from "$lib/utils/pageMetadata.ts";
+import { getClientConfig } from "$server/config/config.ts";
+import {
+  type ChainLabel,
+  getClientChainInfo,
+} from "$server/services/chain/chainLabel.ts";
 import {
   chainEnv,
   getChainId,
   siteOrigin,
 } from "$server/services/chain/chainProfile.ts";
-import { ECX_FORK_BLOCK } from "$lib/utils/chain/ecxView.ts";
-import {
-  type ChainLabel,
-  getClientChainInfo,
-} from "$server/services/chain/chainLabel.ts";
 
 /* ===== ROOT COMPONENT ===== */
 export default function App({ Component, state, url }: PageProps<unknown>) {
@@ -83,6 +83,7 @@ export default function App({ Component, state, url }: PageProps<unknown>) {
           ogUrl={`${origin}${url.pathname}`}
           origin={origin}
           chain={chain}
+          noindex={isNoIndexPath(url.pathname)}
         />
 
         {/* ===== ENHANCED RESOURCE PRELOADING ===== */}

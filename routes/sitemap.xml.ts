@@ -18,6 +18,7 @@ const STATIC_PAGES: Array<{
   { path: "/marketplace", priority: "0.9", changefreq: "daily" },
   { path: "/src20", priority: "0.9", changefreq: "hourly" },
   { path: "/collection", priority: "0.8", changefreq: "daily" },
+  { path: "/leaderboard", priority: "0.7", changefreq: "daily" },
   { path: "/explorer", priority: "0.8", changefreq: "hourly" },
   // Block explorer page is still WIP (not linked in nav) — deprioritized
   // until it's fully wired up.

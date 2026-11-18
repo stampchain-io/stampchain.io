@@ -5,6 +5,7 @@ export { FeeCalculatorBase } from "$islands/section/FeeCalculatorBase.tsx";
 /* ===== GALLERIES ===== */
 export { default as CollectionGallery } from "$islands/section/gallery/CollectionGallery.tsx";
 export { default as CollectionGalleryBanner } from "$islands/section/gallery/CollectionGalleryBanner.tsx";
+export { default as LeaderboardGallery } from "$islands/section/gallery/LeaderboardGallery.tsx";
 export * from "$islands/section/gallery/SRC20Gallery.tsx";
 export { default as StampGallery } from "$islands/section/gallery/StampGallery.tsx";
 export * from "$islands/section/gallery/StampGalleryHome.tsx";

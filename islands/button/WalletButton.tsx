@@ -36,7 +36,7 @@ interface WalletButtonProps {
 /* ===== WALLET CONFIGURATION ===== */
 const getWalletLinks = (address: string): WalletLink[] => [
   { title: "DASHBOARD", href: `/wallet/${address}` },
-
+  // { title: "SETTINGS", href: `/wallet/${address}/settings` },
   { title: "DISCONNECT" },
 ];
 
@@ -90,6 +90,11 @@ export const WalletButton = (
     if (!href || !currentPath) return false;
     const hrefPath = href.split("?")[0];
     return currentPath === hrefPath || currentPath.startsWith(`${hrefPath}/`);
+  };
+
+  const isExact = (href?: string) => {
+    if (!href || !currentPath) return false;
+    return currentPath.split("?")[0] === href.split("?")[0];
   };
 
   /* ===== COPY EVENT HANDLERS ===== */
@@ -281,12 +286,22 @@ export const WalletButton = (
           <hr class="!mt-2 !mb-2" />
           <a
             href={`/wallet/${address}`}
-            class={isActive(`/wallet/${address}`)
+            class={isExact(`/wallet/${address}`)
               ? `${navSublinkActiveDesktop}`
               : `${navSublinkDesktop}`}
           >
             Dashboard
           </a>
+          {
+            /* <a
+            href={`/wallet/${address}/settings`}
+            class={isActive(`/wallet/${address}/settings`)
+              ? `${navSublinkActiveDesktop}`
+              : `${navSublinkDesktop}`}
+          >
+            Settings
+          </a> */
+          }
           <a
             onClick={() => walletSignOut()}
             class={`${navSublinkDesktop}`}
@@ -314,7 +329,10 @@ export const WalletButton = (
                 }
               }}
               class={`${
-                link.href && link.title === "DASHBOARD" && isActive(link.href)
+                link.href &&
+                  (link.title === "DASHBOARD"
+                    ? isExact(link.href)
+                    : isActive(link.href))
                   ? navLinkActiveMobile
                   : navLinkMobile
               }`}

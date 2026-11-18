@@ -12,6 +12,7 @@
  *
  * ===== ROUTES WITH DUMMY DATA (as of 2026-08-23) =====
  *   /                          routes/index.tsx
+ *   /leaderboard               routes/leaderboard/index.tsx
  *   /stamp/[id]                routes/stamp/[id].tsx
  *   /marketplace               routes/marketplace/index.tsx
  *   /explorer                  routes/explorer/index.tsx
@@ -1608,3 +1609,55 @@ export function getDummyWalletDashboardPage(
     dispensersSortBy: params.dispensersSortBy,
   };
 }
+
+/* ===== LEADERBOARD ===== */
+const LEADERBOARD_THUMB =
+  "https://stampchain.io/stamps/6c7ff116f4ac8fe76d763946e9d917ca270f3b95c3b3949a478635fa617324ca.png";
+
+export const DATA_PLACEHOLDER_DEV_LEADERBOARD_SNAPSHOT = {
+  generated_at: new Date("2026-11-09T10:00:00.000Z").getTime(),
+  last_block: 975170,
+  escrow_included: true,
+  wallets: {
+    bc1qleaderboard0000000000000000000000001: {
+      address: "bc1qleaderboard0000000000000000000000001",
+      creator_name: "Stamp Keeper",
+      stamp_count: 420,
+      floor_value_btc: 1.25,
+      images: [LEADERBOARD_THUMB, LEADERBOARD_THUMB],
+    },
+    bc1qleaderboard0000000000000000000000002: {
+      address: "bc1qleaderboard0000000000000000000000002",
+      creator_name: "Floor Whale",
+      stamp_count: 80,
+      floor_value_btc: 4.5,
+      images: [LEADERBOARD_THUMB],
+    },
+    bc1qleaderboard0000000000000000000000003: {
+      address: "bc1qleaderboard0000000000000000000000003",
+      creator_name: null,
+      stamp_count: 210,
+      floor_value_btc: 0.8,
+      images: [LEADERBOARD_THUMB, LEADERBOARD_THUMB, LEADERBOARD_THUMB],
+    },
+    bc1qleaderboard0000000000000000000000004: {
+      address: "bc1qleaderboard0000000000000000000000004",
+      creator_name: "Layer Fan",
+      stamp_count: 40,
+      floor_value_btc: 0.15,
+      images: [],
+    },
+  },
+  by_stamps: [
+    "bc1qleaderboard0000000000000000000000001",
+    "bc1qleaderboard0000000000000000000000003",
+    "bc1qleaderboard0000000000000000000000002",
+    "bc1qleaderboard0000000000000000000000004",
+  ],
+  by_valuation: [
+    "bc1qleaderboard0000000000000000000000002",
+    "bc1qleaderboard0000000000000000000000001",
+    "bc1qleaderboard0000000000000000000000003",
+    "bc1qleaderboard0000000000000000000000004",
+  ],
+};

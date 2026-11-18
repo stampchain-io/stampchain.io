@@ -350,7 +350,7 @@ export default function SRC20GalleryWallet({
 
     return (
       <div class="absolute inset-0 bg-black/50 flex items-center justify-center z-10 rounded-2xl">
-        <div class="flex flex-col items-center gap-4">
+        <div class="flex flex-col items-center gap-2">
           <LoadingIcon />
           <div class="text-white text-sm">Loading SRC-20 tokens...</div>
         </div>

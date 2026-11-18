@@ -1,0 +1,88 @@
+/* ===== LEADERBOARD HEADER ===== */
+import { SelectorButtons } from "$button";
+import { SortButton } from "$islands/button/SortButton.tsx";
+import { ViewButton } from "$islands/button/ViewButton.tsx";
+import { containerIcon, PillContentCount } from "$layout";
+import {
+  getCurrentPathname,
+  safeNavigate,
+} from "$lib/utils/navigation/freshNavigationUtils.ts";
+import { formatNumberWithCommas } from "$lib/utils/ui/formatting/formatUtils.ts";
+import { subtitleNeutral, titlePrimary } from "$text";
+import type {
+  LeaderboardMetric,
+  LeaderboardSort,
+  LeaderboardViewMode,
+} from "$types/leaderboard.d.ts";
+import { useCallback } from "preact/hooks";
+
+function LeaderboardHeader(
+  {
+    metric,
+    sortBy,
+    total,
+    showValuation,
+    escrowIncluded,
+    viewMode,
+  }: {
+    metric: LeaderboardMetric;
+    sortBy: LeaderboardSort;
+    total: number;
+    showValuation: boolean;
+    escrowIncluded: boolean;
+    viewMode: LeaderboardViewMode;
+  },
+) {
+  const handleMetricChange = useCallback((value: string) => {
+    if (typeof globalThis === "undefined" || !globalThis?.location) return;
+    const params = new URLSearchParams(globalThis.location.search);
+    if (value === "valuation") params.set("metric", "valuation");
+    else params.delete("metric");
+    params.set("page", "1");
+    const query = params.toString();
+    safeNavigate(getCurrentPathname() + (query ? `?${query}` : ""));
+  }, []);
+
+  const options = showValuation
+    ? [
+      { value: "stamps", label: "STAMPS" },
+      { value: "valuation", label: "VALUATION" },
+    ]
+    : [{ value: "stamps", label: "STAMPS" }];
+
+  return (
+    <div class="flex flex-col w-full gap-1.5">
+      <div class="relative flex flex-row justify-between items-start w-full">
+        <div class="flex flex-col gap-1">
+          <h1 class={`-mt-2 ${titlePrimary}`}>LEADERBOARD</h1>
+          {!escrowIncluded && (
+            <p class={subtitleNeutral}>LISTINGS NOT INCLUDED YET</p>
+          )}
+        </div>
+        <PillContentCount value={formatNumberWithCommas(total)} />
+      </div>
+      <div class="flex flex-row items-center w-full min-w-0 gap-3">
+        <SelectorButtons
+          options={options}
+          value={metric}
+          onChange={handleMetricChange}
+          size="xs"
+          color="primary"
+        />
+        <div class="flex ml-auto gap-3">
+          <div class={containerIcon}>
+            <ViewButton
+              viewMode={viewMode}
+              modes={["cardHorizontal", "cardRow"]}
+            />
+          </div>
+          <div class={containerIcon}>
+            <SortButton initSort={sortBy} resetPage />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export { LeaderboardHeader };

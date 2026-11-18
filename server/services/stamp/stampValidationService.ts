@@ -1,6 +1,20 @@
 import { CounterpartyApiManager } from "$server/services/counterpartyApiService.ts";
 import { generateRandomNumber } from "$lib/utils/data/numbers/numberUtils.ts";
+import { logger } from "$lib/utils/logger.ts";
+import { XCP_BASE_UNITS } from "$lib/utils/xcp/xcpWalletBalance.ts";
 import { isCpid } from "$lib/utils/typeGuards.ts";
+
+/** Named (B-Z) Counterparty issuance costs 0.5 XCP. */
+const NAMED_ASSET_ISSUANCE_XCP_BASE_UNITS = 50_000_000;
+const NAMED_ASSET_PATTERN = /^[B-Z][A-Z]{0,12}$/;
+
+/** Wallet cannot pay the 0.5 XCP fee for a named stamp. */
+export class InsufficientXcpError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "InsufficientXcpError";
+  }
+}
 
 export class StampValidationService {
   static readonly AVAILABILITY_UNKNOWN_MESSAGE =
@@ -42,7 +56,6 @@ export class StampValidationService {
       return this.generateAvailableAssetName();
     }
 
-    // FIXME: We need to check and validate the users address has XCP in the wallet for a cleaner error than 'insufficient funds'
     // FIXME: this should also likely check the qty on the issuance value
 
     const upperCaseAssetName = assetName.toUpperCase();
@@ -60,5 +73,57 @@ export class StampValidationService {
     }
 
     return upperCaseAssetName;
+  }
+
+  /**
+   * Named assets cost 0.5 XCP. Numeric A-CPIDs return without a balance
+   * lookup. Throws InsufficientXcpError when the spendable send balance is
+   * short. Balance-lookup failures propagate unchanged.
+   */
+  static async assertSpendableXcpForNamedAsset(
+    address: string,
+    assetName: string,
+  ): Promise<void> {
+    const upperCaseAssetName = assetName.toUpperCase();
+    if (!NAMED_ASSET_PATTERN.test(upperCaseAssetName)) return;
+
+    logger.info("api", {
+      message: "Performing XCP balance check for POSH stamp",
+      assetName: upperCaseAssetName,
+      wallet: address,
+    });
+
+    const balancesResult = await CounterpartyApiManager
+      .getXcpBalancesByAddress(
+        address,
+        "XCP",
+        false,
+        { type: "send" },
+      );
+
+    const availableBaseUnits = balancesResult.balances.reduce(
+      (sum, row) => {
+        if (row.cpid !== "XCP") return sum;
+        const quantity = Number(row.quantity);
+        if (!Number.isFinite(quantity) || quantity <= 0) return sum;
+        return sum + quantity;
+      },
+      0,
+    );
+    if (availableBaseUnits < NAMED_ASSET_ISSUANCE_XCP_BASE_UNITS) {
+      const required = NAMED_ASSET_ISSUANCE_XCP_BASE_UNITS / XCP_BASE_UNITS;
+      const available = availableBaseUnits / XCP_BASE_UNITS;
+      throw new InsufficientXcpError(
+        "Insufficient XCP for POSH stamp issuance. " +
+          `Required: ${required} XCP, Available: ${available} XCP.`,
+      );
+    }
+
+    logger.info("api", {
+      message: "XCP balance sufficient for POSH stamp",
+      assetName: upperCaseAssetName,
+      wallet: address,
+      xcpBalanceBaseUnits: availableBaseUnits,
+    });
   }
 }

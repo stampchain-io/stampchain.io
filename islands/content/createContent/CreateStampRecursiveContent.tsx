@@ -480,7 +480,7 @@ function AssetPreviewCard(
     >
       <Icon
         type="iconButton"
-        name="userCircle"
+        name="userProfileCircle"
         weight="normal"
         size="containerIcon"
         color="primary400"
@@ -544,7 +544,7 @@ function AssetPreviewCard(
             <div class={`${containerIcon}`}>
               <Icon
                 type="iconButton"
-                name="userCircle"
+                name="userProfileCircle"
                 weight="normal"
                 size="containerIcon"
                 color="neutral400"

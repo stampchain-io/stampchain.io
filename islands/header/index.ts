@@ -16,7 +16,11 @@ export * from "$islands/header/SRC20OverviewHeader.tsx";
 export * from "$islands/header/CollectionDetailHeader.tsx";
 export * from "$islands/header/CollectionOverviewHeader.tsx";
 
+/* ===== LEADERBOARD ===== */
+export * from "$islands/header/LeaderboardHeader.tsx";
+
 /* ===== WALLET ===== */
+export { WalletSettingsHeader } from "$islands/header/WalletSettingsHeader.tsx";
 export { default as WalletDashboardHeader } from "$islands/header/WalletDashboardHeader.tsx";
 export { default as WalletHeaderContent } from "$islands/header/WalletHeaderContent.tsx";
 

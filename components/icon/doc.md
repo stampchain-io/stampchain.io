@@ -399,7 +399,7 @@ export function TwitterLink() {
       weight="bold"
       size="md"
       color="primary400"
-      href="https://twitter.com/stampchain_io"
+      href="https://x.com/stampchain_io"
       target="_blank"
       rel="noopener noreferrer"
       ariaLabel="Follow us on Twitter"
@@ -865,7 +865,7 @@ All icons share these SVG attributes:
   weight="bold"
   size="md"
   color="primary500"
-  href="https://twitter.com/stampchain_io"
+  href="https://x.com/stampchain_io"
   target="_blank"
   rel="noopener noreferrer"
 />

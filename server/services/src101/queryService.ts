@@ -1,7 +1,7 @@
-import type {
-  SRC101OwnerParams, SRC101TokenidsParams, SRC101TxParams, SRC101ValidTxParams, SRC101ValidTxTotalCountParams, Src101BalanceParams 
-} from "$types/src101.d.ts";
 import { SRC101Repository } from "$server/database/src101Repository.ts";
+import type {
+  SRC101OwnerParams, SRC101TokenidsParams, SRC101TxParams, SRC101ValidTxParams, SRC101ValidTxTotalCountParams, Src101BalanceParams
+} from "$types/src101.d.ts";
 
 export class SRC101QueryService {
   static async getTotalSrc101TXFromSRC101TableCount(
@@ -163,6 +163,17 @@ export class SRC101QueryService {
       return await SRC101Repository.getPrimaryDomainForAddress(address);
     } catch (error) {
       console.error("Error getting primary domain for address:", error);
+      throw error;
+    }
+  }
+
+  static async getDomainsForAddress(
+    address: string,
+  ): Promise<{ name: string; primary: boolean }[]> {
+    try {
+      return await SRC101Repository.getDomainsForAddress(address);
+    } catch (error) {
+      console.error("Error getting domains for address:", error);
       throw error;
     }
   }

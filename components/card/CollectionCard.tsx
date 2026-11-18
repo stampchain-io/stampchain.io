@@ -11,7 +11,6 @@ import {
   abbreviateAddress,
   formatBTC,
 } from "$lib/utils/ui/formatting/formatUtils.ts";
-import { tooltipButtonInCollapsible } from "$notification";
 import {
   cardCreator,
   cardFileSize,
@@ -22,130 +21,7 @@ import {
   valueSm,
 } from "$text";
 import type { CollectionWithOptionalMarketData } from "$types/index.d.ts";
-import type { ComponentChildren } from "preact";
-import { createPortal } from "preact/compat";
-import { useEffect, useRef, useState } from "preact/hooks";
-
-// Gap between the tooltip and the pill/screen edge, and the min distance
-// the tooltip must keep from the viewport edges.
-const TOOLTIP_GAP = 8;
-const TOOLTIP_VIEWPORT_MARGIN = 8;
-
-/* ===== PILL WITH TOOLTIP (instant on hover, no delay/timeout) ===== */
-// Cards (e.g. CollectionCardHorizontal) clip their content with
-// overflow-hidden to round the background image's corners, which would
-// clip a plain `absolute` tooltip - `position: fixed` (via
-// getBoundingClientRect, same pattern as StampingTool's
-// tooltipButtonInCollapsible) escapes that clipping.
-//
-// However, an ancestor further up the tree (a backdrop-blur container)
-// creates its own containing block for `position: fixed` descendants per
-// the CSS spec (backdrop-filter/filter/transform all do this), which
-// would make the tooltip resolve its position against that ancestor
-// instead of the viewport - and since that ancestor scrolls with the
-// page, the tooltip would drift further off the longer you scroll. A
-// portal to `document.body` sidesteps this entirely, matching the
-// pattern already used for dropdowns/drawers elsewhere (e.g.
-// islands/header/Header.tsx).
-function PillWithTooltip(
-  { label, className, children }: {
-    label: string;
-    className: string;
-    children: ComponentChildren;
-  },
-) {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const tooltipRef = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
-  // `left`/`top` are the tooltip's anchor point: horizontally it's the
-  // pill's center (paired with `translateX(-50%)` below, so it's
-  // centered by construction rather than by a manual width subtraction).
-  // `shiftX` nudges that anchor inward only when the pill sits close
-  // enough to a viewport edge that a centered tooltip would otherwise
-  // render off-screen.
-  const [position, setPosition] = useState({ left: 0, top: 0, shiftX: 0 });
-
-  const updatePosition = () => {
-    const pillRect = wrapperRef.current?.getBoundingClientRect();
-    const tooltipRect = tooltipRef.current?.getBoundingClientRect();
-    if (!pillRect || !tooltipRect) return;
-
-    const pillCenterX = pillRect.left + pillRect.width / 2;
-    const halfTooltipWidth = tooltipRect.width / 2;
-    const viewportWidth = globalThis.innerWidth;
-
-    let shiftX = 0;
-    const overflowLeft = TOOLTIP_VIEWPORT_MARGIN -
-      (pillCenterX - halfTooltipWidth);
-    const overflowRight = (pillCenterX + halfTooltipWidth) -
-      (viewportWidth - TOOLTIP_VIEWPORT_MARGIN);
-    if (overflowLeft > 0) {
-      shiftX = overflowLeft;
-    } else if (overflowRight > 0) {
-      shiftX = -overflowRight;
-    }
-
-    // Prefer displaying above the pill; flip below if there isn't enough
-    // room above (e.g. the pill sits near the top of the viewport).
-    let top = pillRect.top - tooltipRect.height - TOOLTIP_GAP;
-    if (top < TOOLTIP_VIEWPORT_MARGIN) {
-      top = pillRect.bottom + TOOLTIP_GAP;
-    }
-
-    setPosition({ left: pillCenterX, top, shiftX });
-  };
-
-  // Keep the tooltip glued to the pill if the page scrolls/resizes while
-  // it's still visible, instead of freezing at the position captured on
-  // hover-enter.
-  useEffect(() => {
-    if (!isVisible) return;
-    globalThis.addEventListener("scroll", updatePosition, {
-      passive: true,
-      capture: true,
-    });
-    globalThis.addEventListener("resize", updatePosition, { passive: true });
-    return () => {
-      globalThis.removeEventListener("scroll", updatePosition, {
-        capture: true,
-      } as EventListenerOptions);
-      globalThis.removeEventListener("resize", updatePosition);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isVisible]);
-
-  const handleMouseEnter = () => {
-    updatePosition();
-    setIsVisible(true);
-  };
-
-  return (
-    <div
-      ref={wrapperRef}
-      class="relative"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={() => setIsVisible(false)}
-    >
-      <div class={className}>{children}</div>
-      {typeof document !== "undefined" && createPortal(
-        <div
-          ref={tooltipRef}
-          class={`${tooltipButtonInCollapsible} !mt-0 ${
-            isVisible ? "opacity-100" : "opacity-0"
-          }`}
-          style={{
-            left: `${position.left}px`,
-            top: `${position.top}px`,
-            transform: `translateX(calc(-50% + ${position.shiftX}px))`,
-          }}
-        >
-          {label}
-        </div>,
-        document.body,
-      )}
-    </div>
-  );
-}
+import { PillWithTooltip } from "./PillWithTooltip.tsx";
 
 /* ===== HELPERS ===== */
 // Visibility per gallery image index, aligned to the grid's column counts:

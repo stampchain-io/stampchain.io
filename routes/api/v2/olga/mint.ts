@@ -3,17 +3,14 @@ import { isUserFundsError } from "$server/services/src20/userFundsError.ts";
 import { FreshContext, Handlers } from "$fresh/server.ts";
 // MintStampInputData import removed as RawRequestBody is now explicitly defined
 import { ApiResponseUtil } from "$lib/utils/api/responses/apiResponseUtil.ts";
-import { SATOSHIS_PER_BTC } from "$constants"; // For XCP decimal handling if values are not base units
 import { logger } from "$lib/utils/logger.ts"; // Import logger
 import { serverConfig } from "$server/config/config.ts";
 import {
+  InsufficientXcpError,
   StampCreationService,
   StampValidationService,
 } from "$server/services/stamp/index.ts";
-import {
-  CounterpartyApiManager,
-  normalizeFeeRate,
-} from "$server/services/counterpartyApiService.ts";
+import { normalizeFeeRate } from "$server/services/counterpartyApiService.ts";
 import { getProductionFeeService } from "$server/services/fee/feeServiceFactory.ts";
 import type {
   CreateStampIssuanceParams,
@@ -184,51 +181,19 @@ const composeHandler: Handlers<NormalizedMintResponse | { error: string }> = {
       );
     }
 
-    // XCP Check for POSH stamps - Only required for actual execution (dryRun: false)
-    if (
-      body.isPoshStamp && validatedAssetName && effectiveSourceWallet &&
-      !isDryRun
-    ) {
+    // Named (B-Z) assets cost 0.5 XCP. Use the caller's wallet, never the
+    // dry-run dummy substituted when sourceWallet is missing. Numeric A-CPIDs
+    // return immediately inside the service.
+    if (validatedAssetName && body.sourceWallet) {
       try {
-        logger.info("api", {
-          message: "Performing XCP balance check for POSH stamp",
-          assetName: validatedAssetName,
-          wallet: effectiveSourceWallet,
-        });
-        const balancesResult = await CounterpartyApiManager
-          .getXcpBalancesByAddress(
-            effectiveSourceWallet,
-            "XCP",
-          ); // Fetch specific XCP balance
-
-        const xcpAsset = balancesResult.balances.find((b) => b.cpid === "XCP");
-        const xcpBalance = xcpAsset ? xcpAsset.quantity : 0;
-
-        // Standard cost for issuing a named asset in Counterparty is 0.5 XCP.
-        // XCP has 8 decimal places, so 0.5 XCP = 50,000,000 base units.
-        const requiredXcpBaseUnits = 50000000;
-
-        logger.debug("api", {
-          message: "XCP Balance Check Details",
-          assetName: validatedAssetName,
-          wallet: effectiveSourceWallet,
-          xcpBalanceBaseUnits: xcpBalance,
-          requiredXcpBaseUnits,
-          xcpAssetFound: !!xcpAsset,
-        });
-
-        if (xcpBalance < requiredXcpBaseUnits) {
-          const xcpBalanceDecimal = xcpBalance / SATOSHIS_PER_BTC; // Display as decimal XCP
-          const requiredXcpDecimal = requiredXcpBaseUnits / SATOSHIS_PER_BTC;
-          return ApiResponseUtil.badRequest(
-            `Insufficient XCP for POSH stamp issuance. Required: ${requiredXcpDecimal} XCP, Available: ${xcpBalanceDecimal} XCP.`,
-          );
-        }
-        logger.info("api", {
-          message: "XCP balance sufficient for POSH stamp",
-          assetName: validatedAssetName,
-        });
+        await StampValidationService.assertSpendableXcpForNamedAsset(
+          body.sourceWallet,
+          validatedAssetName,
+        );
       } catch (xcpError) {
+        if (xcpError instanceof InsufficientXcpError) {
+          return ApiResponseUtil.badRequest(xcpError.message);
+        }
         logger.error("api", {
           message: "Error during XCP balance check",
           assetName: validatedAssetName,
@@ -238,6 +203,7 @@ const composeHandler: Handlers<NormalizedMintResponse | { error: string }> = {
           stack: xcpError instanceof Error ? xcpError.stack : undefined,
         });
         return ApiResponseUtil.internalError(
+          xcpError,
           "Error checking XCP balance for POSH stamp issuance.",
         );
       }

@@ -93,3 +93,19 @@ export const DATA_PLACEHOLDER_PROD_STAMP_DETAIL_PAGE = {
 export const DATA_PLACEHOLDER_PROD_TOKEN_DETAIL_PAGE = {
   error: "Internal server error",
 };
+
+/* ===== LEADERBOARD (routes/leaderboard/index.tsx) ===== */
+export const DATA_PLACEHOLDER_PROD_LEADERBOARD_PAGE = {
+  error: "Service temporarily unavailable",
+  metric: "stamps" as const,
+  sortBy: "DESC" as const,
+  page: 1,
+  pageSize: 20,
+  total: 0,
+  totalPages: 1,
+  generatedAt: null,
+  escrowIncluded: true,
+  showValuation: true,
+  podium: [],
+  entries: [],
+};

@@ -147,14 +147,24 @@ export function Icon(props: IconVariants) {
       atom: "atom",
       dispenserListings: "imagesStar",
 
+      // Leaderboard Specific Icons
+      trophy: "trophy",
+      firstPlace: "medal1",
+      secondPlace: "medal2",
+      thirdPlace: "medal3",
+
       // Wallet Specific Icons
       view: "eye",
       hide: "eyeSlash",
-      userCircle: "userCircle",
+      userProfileCircle: "userProfileCircle",
+      userProfile: "userProfile",
+      userProfileEdit: "userProfileEdit",
       collection: "images",
       copy: "copy",
       edit: "pencil",
       pencil: "pencil",
+      check: "check",
+      plus: "plus",
 
       // SRC-101 Specific Icons
       chartUp: "chartUp",
