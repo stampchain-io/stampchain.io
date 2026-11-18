@@ -1,5 +1,5 @@
 /* ===== WALLET SETTINGS CONTENT ===== */
-import { Button } from "$button";
+import { Button, ToggleButton } from "$button";
 import { walletContext } from "$client/wallet/wallet.ts";
 import { inputCheckbox, InputField, inputTextarea } from "$form";
 import { Icon } from "$icon";
@@ -57,7 +57,6 @@ const PROFILE_FIELDS: SettingsField[] = [
   {
     label: "BITNAME",
     placeholder: "Preferred bitname",
-    value: "NO BITNAME IN THE WALLET",
   },
   {
     label: "BIO",
@@ -120,7 +119,7 @@ function Field(
 ) {
   return (
     <div class={`flex min-w-0 flex-col gap-1 ${extraClass}`}>
-      <h6 class={`${labelXs} ml-3`}>{label}</h6>
+      <h6 class={labelXs}>{label}</h6>
       {children}
     </div>
   );
@@ -331,18 +330,24 @@ function SettingsStat({ field }: { field: SettingsField }) {
 function NameField(
   {
     editing,
-    displayName,
+    creatorName,
     draft,
     error,
     disabled,
     onDraft,
+    primaryBitname,
+    usingBitname,
+    onToggleBitname,
   }: {
     editing: boolean;
-    displayName: string | null;
+    creatorName: string | null;
     draft: string;
     error: string | null;
     disabled: boolean;
     onDraft: (value: string) => void;
+    primaryBitname: string | null;
+    usingBitname: boolean;
+    onToggleBitname: () => void;
   },
 ) {
   if (!editing) {
@@ -351,42 +356,134 @@ function NameField(
         field={{
           label: "NAME",
           placeholder: NAME_PLACEHOLDER,
-          value: displayName || ANONYMOUS_NAME,
+          value: creatorName || ANONYMOUS_NAME,
         }}
       />
     );
   }
 
+  const inputClass = [
+    primaryBitname ? "!pr-28" : "",
+    usingBitname ? "opacity-40 cursor-not-allowed" : "",
+  ].filter(Boolean).join(" ");
+
   return (
     <Field label="NAME">
-      <InputField
-        type="text"
-        placeholder={NAME_PLACEHOLDER}
-        value={draft}
-        maxLength={CREATOR_NAME_MAX_LENGTH + 5}
-        disabled={disabled}
-        onInput={(e) => onDraft(e.currentTarget.value)}
-        {...(error ? { error } : {})}
-      />
+      <div class="relative">
+        <InputField
+          type="text"
+          placeholder={NAME_PLACEHOLDER}
+          value={draft}
+          disabled={disabled || usingBitname}
+          onInput={(e) => onDraft(e.currentTarget.value)}
+          {...(inputClass ? { class: inputClass } : {})}
+          {...(usingBitname ? {} : { maxLength: CREATOR_NAME_MAX_LENGTH + 5 })}
+          {...(error ? { error } : {})}
+        />
+        {primaryBitname && (
+          <div class="absolute right-3 top-0.5 z-10">
+            <ToggleButton
+              options={["BITNAME"]}
+              selected={usingBitname ? ["BITNAME"] : []}
+              mode="multi"
+              color="neutral"
+              size="sm"
+              spacing="tight"
+              onChange={(value) => {
+                if (disabled) return;
+                const next = Array.isArray(value) &&
+                  value.includes("BITNAME");
+                if (next !== usingBitname) onToggleBitname();
+              }}
+            />
+          </div>
+        )}
+      </div>
     </Field>
+  );
+}
+
+const NO_BITNAME_DOMAINS = "NO BITNAME DOMAINS IN THE WALLET";
+
+interface SettingsBitname {
+  name: string;
+  primary: boolean;
+}
+
+function BitnameName(
+  { name, primary }: { name: string; primary: boolean },
+) {
+  const className = primary
+    ? `${valueSm} !whitespace-normal`
+    : "font-medium text-xs text-color-neutral-500 select-none !whitespace-normal";
+  return (
+    <h6 class={className}>
+      {name}
+      <span class="font-light">.btc</span>
+    </h6>
+  );
+}
+
+function BitnameField(
+  { domains }: { domains: SettingsBitname[] },
+) {
+  const primary = domains.filter((domain) => domain.primary);
+  const others = domains.filter((domain) => !domain.primary);
+
+  return (
+    <div class="flex min-w-0 flex-col -space-y-0.5">
+      <h5 class={labelXs}>BITNAME</h5>
+      {domains.length === 0
+        ? (
+          <h6 class={`${valueSm} !whitespace-normal`}>
+            {NO_BITNAME_DOMAINS}
+          </h6>
+        )
+        : (
+          <div class="flex flex-col">
+            {primary.map((domain) => (
+              <BitnameName
+                key={`primary-${domain.name}`}
+                name={domain.name}
+                primary
+              />
+            ))}
+            {others.map((domain) => (
+              <BitnameName
+                key={domain.name}
+                name={domain.name}
+                primary={false}
+              />
+            ))}
+          </div>
+        )}
+    </div>
   );
 }
 
 function ProfilePanel(
   {
     editing,
-    displayName,
+    creatorName,
     draft,
     nameError,
     nameDisabled,
     onDraft,
+    bitnames,
+    primaryBitname,
+    usingBitname,
+    onToggleBitname,
   }: {
     editing: boolean;
-    displayName: string | null;
+    creatorName: string | null;
     draft: string;
     nameError: string | null;
     nameDisabled: boolean;
     onDraft: (value: string) => void;
+    bitnames: SettingsBitname[];
+    primaryBitname: string | null;
+    usingBitname: boolean;
+    onToggleBitname: () => void;
   },
 ) {
   return (
@@ -400,13 +497,19 @@ function ProfilePanel(
               <NameField
                 key={field.label}
                 editing={editing}
-                displayName={displayName}
+                creatorName={creatorName}
                 draft={draft}
                 error={nameError}
                 disabled={nameDisabled}
                 onDraft={onDraft}
+                primaryBitname={primaryBitname}
+                usingBitname={usingBitname}
+                onToggleBitname={onToggleBitname}
               />
             );
+          }
+          if (field.label === "BITNAME") {
+            return <BitnameField key={field.label} domains={bitnames} />;
           }
           return editing
             ? <SettingsInput key={field.label} field={field} />
@@ -605,22 +708,22 @@ function PreferencesPanel({ editing }: { editing: boolean }) {
 function WalletSettingsContent(
   {
     address,
-    storedName: storedNameProp,
-    displayName: displayNameProp,
+    creatorName: creatorNameProp,
+    bitnames,
   }: {
     address: string;
-    storedName: string | null;
-    displayName: string | null;
+    creatorName: string | null;
+    bitnames: SettingsBitname[];
   },
 ) {
   const { wallet, isConnected, showConnectModal } = walletContext;
   const [mounted, setMounted] = useState(false);
-  const [storedName, setStoredName] = useState(storedNameProp);
-  const [displayName, setDisplayName] = useState(displayNameProp);
-  const [draft, setDraft] = useState(storedNameProp ?? "");
+  const [creatorName, setCreatorName] = useState(creatorNameProp);
+  const [draft, setDraft] = useState(creatorNameProp ?? "");
   const [nameError, setNameError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-  const storedNameRef = useRef(storedNameProp);
+  const [usingBitname, setUsingBitname] = useState(false);
+  const creatorNameRef = useRef(creatorNameProp);
   const wasEditingRef = useRef(walletSettingsEditing.value);
   const skipDraftResetRef = useRef(false);
   const saveNameRef = useRef<() => Promise<boolean>>(() =>
@@ -628,8 +731,8 @@ function WalletSettingsContent(
   );
 
   useEffect(() => {
-    storedNameRef.current = storedName;
-  }, [storedName]);
+    creatorNameRef.current = creatorName;
+  }, [creatorName]);
 
   useEffect(() => {
     setMounted(true);
@@ -641,20 +744,21 @@ function WalletSettingsContent(
 
   useEffect(() => {
     if (walletSettingsEditing.value) return;
-    setStoredName(storedNameProp);
-    setDisplayName(displayNameProp);
-    setDraft(storedNameProp ?? "");
-    storedNameRef.current = storedNameProp;
+    setCreatorName(creatorNameProp);
+    setDraft(creatorNameProp ?? "");
+    creatorNameRef.current = creatorNameProp;
+    setUsingBitname(false);
     setNameError(null);
-  }, [storedNameProp, displayNameProp]);
+  }, [creatorNameProp]);
 
   useEffect(() => {
     const editing = walletSettingsEditing.value;
     if (wasEditingRef.current && !editing) {
+      setUsingBitname(false);
       if (skipDraftResetRef.current) {
         skipDraftResetRef.current = false;
       } else {
-        setDraft(storedNameRef.current ?? "");
+        setDraft(creatorNameRef.current ?? "");
         setNameError(null);
       }
     }
@@ -673,9 +777,25 @@ function WalletSettingsContent(
     if (nameError) setNameError(null);
   };
 
+  const primaryBitname = bitnames.find((domain) => domain.primary)?.name ??
+    null;
+  const primaryBitnameLabel = primaryBitname ? `${primaryBitname}.btc` : null;
+
+  const toggleBitname = () => {
+    if (isSaving || !primaryBitnameLabel) return;
+    if (usingBitname) {
+      setUsingBitname(false);
+      setDraft(creatorName ?? "");
+    } else {
+      setUsingBitname(true);
+      setDraft(primaryBitnameLabel);
+    }
+    setNameError(null);
+  };
+
   saveNameRef.current = async () => {
     if (isSaving) return false;
-    const decision = decideCreatorNameSave(draft, storedNameRef.current);
+    const decision = decideCreatorNameSave(draft, creatorNameRef.current);
     if (decision.action === "unchanged") return true;
     if (decision.action === "invalid") {
       setNameError(decision.message);
@@ -710,9 +830,8 @@ function WalletSettingsContent(
       }
 
       skipDraftResetRef.current = true;
-      storedNameRef.current = result.name;
-      setStoredName(result.name);
-      setDisplayName(result.name);
+      creatorNameRef.current = result.name;
+      setCreatorName(result.name);
       setDraft(result.name);
       setNameError(null);
       showToast(`Creator name updated to "${result.name}"`, "success");
@@ -778,11 +897,15 @@ function WalletSettingsContent(
       <div class="flex w-full flex-col gap-3 mobileLg:flex-row">
         <ProfilePanel
           editing={editing}
-          displayName={displayName}
+          creatorName={creatorName}
           draft={draft}
           nameError={nameError}
           nameDisabled={isSaving}
           onDraft={handleDraft}
+          bitnames={bitnames}
+          primaryBitname={primaryBitnameLabel}
+          usingBitname={usingBitname}
+          onToggleBitname={toggleBitname}
         />
         <SocialsPanel editing={editing} />
       </div>

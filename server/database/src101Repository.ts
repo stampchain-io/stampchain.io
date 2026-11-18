@@ -8,13 +8,13 @@ import {
   SRC101_TABLE,
 } from "$constants";
 import { dbManager } from "$server/database/databaseManager.ts";
-import type { 
-  SRC101ValidTxTotalCountParams, 
-  Src101BalanceParams, 
-  SRC101TokenidsParams, 
-  SRC101TxParams, 
+import type {
+  Src101BalanceParams,
+  SRC101OwnerParams,
+  SRC101TokenidsParams,
+  SRC101TxParams,
   SRC101ValidTxParams,
-  SRC101OwnerParams
+  SRC101ValidTxTotalCountParams
 } from "$types/src101.d.ts";
 
 export class SRC101Repository {
@@ -500,6 +500,40 @@ export class SRC101Repository {
     }
 
     return null;
+  }
+
+  /**
+   * Unexpired domains owned by an address. Primary (`prim = 1`) rows
+   * come first, then the rest, newest update first within each group.
+   */
+  static async getDomainsForAddress(
+    address: string,
+  ): Promise<{ name: string; primary: boolean }[]> {
+    const sqlQuery = `
+      SELECT tokenid_utf8, prim
+      FROM ${SRC101_OWNERS_TABLE}
+      WHERE owner = ? AND expire_timestamp > ?
+      ORDER BY prim DESC, last_update DESC
+    `;
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+    const result = await this.db.executeQueryWithCache(
+      sqlQuery,
+      [address, currentTimestamp],
+      60 * 2,
+    ) as { rows?: { tokenid_utf8?: unknown; prim?: unknown }[] };
+
+    const rows = result?.rows ?? [];
+    const domains: { name: string; primary: boolean }[] = [];
+    for (const row of rows) {
+      if (typeof row.tokenid_utf8 !== "string") continue;
+      const name = row.tokenid_utf8.trim();
+      if (!name) continue;
+      domains.push({
+        name,
+        primary: row.prim === 1 || row.prim === "1" || row.prim === true,
+      });
+    }
+    return domains;
   }
 
   static async getTotalSrc101TokenidsCount(
