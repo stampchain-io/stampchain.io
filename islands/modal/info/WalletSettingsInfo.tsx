@@ -13,7 +13,7 @@ export const WalletSettingsInfo = () => {
         Maximum avatar image size is 2MB, 500x500px.<br />
         Username must be between 1 and 25 characters and can contain letters,
         numbers, spaces, periods, hyphens, underscores, and apostrophes. Add a
-        short bio description of yourself (max 100 characters).
+        short bio description of yourself (max 255 characters).
       </p>
       <p class={textSm}>
         Website must be a valid URL.<br />
@@ -23,8 +23,15 @@ export const WalletSettingsInfo = () => {
         links to your Stampmap profile.
       </p>
       <p class={textSm}>
-        Add more details here...<br />
-        Interlinked wallet addresses must be valid Bitcoin wallet addresses.
+        Interlinked wallet addresses must be valid Bitcoin addresses you
+        control. They share this profile's name, avatar, bio, and social links.
+        This wallet cannot send, mint, or sign for an interlinked address.
+        <br />
+        Enter the address and sign with this wallet, then connect the other
+        wallet and sign there before it is saved. An address can belong to one
+        profile only. The Stampmap address is separate and is not interlinked.
+        Removing an address asks that wallet to sign. The list is public on the
+        wallet page.
       </p>
       <p class={textSm}>
         Accept the Terms of Service to globally dismiss the message when
