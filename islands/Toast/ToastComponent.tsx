@@ -10,6 +10,66 @@ import {
   notificationHeader,
 } from "$notification";
 import type { ToastComponentProps } from "$types/ui.d.ts";
+import type { ComponentChildren } from "preact";
+
+const LINK_PATTERN =
+  /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)|https?:\/\/[^\s<>]+/g;
+
+/** This site, including ECX. Other hosts open in a new tab. */
+function isStampchainHost(hostname: string): boolean {
+  return hostname === "stampchain.io" ||
+    hostname.endsWith(".stampchain.io");
+}
+
+/** Underlined link. stampchain.io stays in this tab, on the same path. */
+function toastLink(label: string, writtenUrl: string) {
+  let href = writtenUrl;
+  let internal = false;
+  try {
+    const url = new URL(writtenUrl);
+    if (isStampchainHost(url.hostname)) {
+      href = `${url.pathname}${url.search}${url.hash}`;
+      internal = true;
+    }
+  } catch {
+    href = writtenUrl;
+  }
+  return internal ? <a href={href} class="link-neutral-200">{label}</a> : (
+    <a
+      href={href}
+      class="link-neutral-200"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {label}
+    </a>
+  );
+}
+
+/**
+ * Turn markdown links and bare http(s) URLs into underlined links.
+ * `[ranking](https://stampchain.io/leaderboard/)` shows the word only.
+ */
+function linkify(text: string): ComponentChildren[] {
+  const nodes: ComponentChildren[] = [];
+  let last = 0;
+  for (const match of text.matchAll(LINK_PATTERN)) {
+    const index = match.index ?? 0;
+    if (index > last) nodes.push(text.slice(last, index));
+    if (match[1] && match[2]) {
+      nodes.push(toastLink(match[1], match[2]));
+      last = index + match[0].length;
+      continue;
+    }
+    const raw = match[0];
+    const written = raw.replace(/[),.;]+$/, "");
+    nodes.push(toastLink(written, written));
+    if (written.length < raw.length) nodes.push(raw.slice(written.length));
+    last = index + raw.length;
+  }
+  if (last < text.length) nodes.push(text.slice(last));
+  return nodes;
+}
 
 export const ToastComponent = (
   {
@@ -132,20 +192,26 @@ export const ToastComponent = (
           {isUpdate
             ? (
               <>
-                <div class={notificationHeader}>{firstLine}</div>
-                {middleLines.length > 0 && (
-                  <div class={`${notificationBody} whitespace-pre-line`}>
-                    {middleLines.join("\n")}
-                  </div>
+                <div class={notificationHeader}>{linkify(firstLine)}</div>
+                {middleLines.map((line, index) =>
+                  line.trim() === ""
+                    ? <div key={index} class="h-4" />
+                    : (
+                      <div key={index} class={notificationBody}>
+                        {linkify(line)}
+                      </div>
+                    )
                 )}
                 {lines.length > 1 && (
-                  <div class={`${notificationFooter} mt-1`}>{lastLine}</div>
+                  <div class={`${notificationFooter} mt-1`}>
+                    {linkify(lastLine)}
+                  </div>
                 )}
               </>
             )
             : (
               <>
-                <div class={notificationBody}>{firstLine}</div>
+                <div class={notificationBody}>{linkify(firstLine)}</div>
                 {body
                   ? (
                     <div class={notificationBody}>
@@ -154,7 +220,7 @@ export const ToastComponent = (
                   )
                   : remainingLines.length > 0 && (
                     <div class={`${notificationBody} whitespace-pre-line`}>
-                      {remainingLines.join("\n")}
+                      {linkify(remainingLines.join("\n"))}
                     </div>
                   )}
               </>

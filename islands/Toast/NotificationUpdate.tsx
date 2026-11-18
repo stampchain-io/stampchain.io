@@ -17,7 +17,7 @@ import { useEffect } from "preact/hooks";
  * Feature flag to enable/disable the notification
  * Set to false to prevent notification from showing
  */
-const SHOW_NOTIFICATION = false;
+const SHOW_NOTIFICATION = true;
 
 /**
  * Delay before showing notification (milliseconds)
@@ -39,7 +39,7 @@ const TYPE = "info" as const;
  * localStorage key for tracking if update notification has been shown
  * INCREMENT VERSION for each new major update announcement
  */
-const NOTIFICATION_UPDATE_VERSION = "feature-update-v3.4";
+const NOTIFICATION_UPDATE_VERSION = "feature-update-v3.5";
 
 /**
  * Displays a one-time notification for major app updates

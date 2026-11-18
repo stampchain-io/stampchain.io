@@ -163,5 +163,5 @@
       }
     ]
   },
-  "notification": "Create Stamp tool update\n• Redesigned Stamp creator page with Classic, Posh and Recursive modes.\n• New Recursive Stamp builder that lets you add layers of stamp asset images and/or text, tweak the elements, to easily create a new lightweight recursive stamp.\n• Improved fee calculator with transaction fees, bitcoin block and price display.\n\nPlease clear browser cache and refresh the page for all updates to take effect."
+  "notification": "New Leaderboard Page\n• Leaderboard with top 500 ranking wallets and top 3 stamp whale collectors.\n• View rankings by amount of stamps collected, or by value.\n• Check out your [ranking](https://stampchain.io/leaderboard/).\n\nPlease clear browser cache and refresh the page for all updates to take effect."
 }
