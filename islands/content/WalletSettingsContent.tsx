@@ -637,7 +637,7 @@ function InterlinkPanel(
             value={
               <ShortFullText
                 short="NO ADDITIONAL ADDRESSES"
-                full="NO ADDITIONAL ADDRESSES CONNECTED"
+                full="NO ADDITIONAL ADDRESSES INTERLINKED"
               />
             }
           />
